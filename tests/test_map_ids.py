@@ -429,7 +429,18 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
         "status": "mapped",
         "mapped_ids": {"uniprot": "P19367"},
         "confidence": 0.91,
-        "candidates": [{"uniprot": "P19367"}],
+        # A candidate that actually describes P19367. The identity ladder fails
+        # closed, so an accession with no name/organism/score beside it is
+        # unverified evidence -- which is not what this test is about.
+        "candidates": [
+            {
+                "uniprot": "P19367",
+                "accession": "P19367",
+                "protein_name": "Hexokinase-1",
+                "organism": "Homo sapiens",
+                "score": 0.91,
+            }
+        ],
     }
 
     with patch("t2pw.mapping.map_ids.map_protein_uniprot", return_value=api_result) as api_lookup:
@@ -642,7 +653,15 @@ def test_map_payload_returns_payload_and_report_without_mutating_input(tmp_path:
                     "provider": "UniProt",
                     "mapped_ids": {"uniprot": "P19367"},
                     "confidence": 0.99,
-                    "candidates": [],
+                    "candidates": [
+                        {
+                            "uniprot": "P19367",
+                            "accession": "P19367",
+                            "protein_name": "Hexokinase-1",
+                            "organism": "Homo sapiens",
+                            "score": 0.99,
+                        }
+                    ],
                 },
             ), \
             patch(

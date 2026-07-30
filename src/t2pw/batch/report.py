@@ -44,6 +44,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
+# Single-sourced from the gate so the two vocabularies cannot drift. The import is
+# cheap and offline: ``t2pw.rag.eligibility`` pulls in only ``t2pw.config``.
+from t2pw.rag.eligibility import INELIGIBLE_OUTCOMES as _ELIGIBILITY_INELIGIBLE_OUTCOMES
+
 #: Report width. Notepad-friendly, and the same number the pipeline reports use.
 WIDTH = 100
 
@@ -59,6 +63,14 @@ STATUS_TIMEOUT = "timeout"
 STATUS_SKIPPED = "skipped"
 STATUS_UNREADABLE = "unreadable"
 STATUS_UNKNOWN = "unknown"
+#: A paper the eligibility gate screened out (``t2pw.rag.eligibility``). It is
+#: NOT a failure and not even a run: nothing was attempted, so nothing failed.
+#: Screened papers normally never reach the manifest at all -- they are
+#: ``skipped.json`` records -- but a row carrying an ``ineligible_*`` /
+#: ``insufficient_metadata`` / ``scope_conflict`` status must not be scored as an
+#: extraction or research-mode defect just because the word is unrecognised.
+#: ``_norm_status`` folds those spellings here and ``_is_failure`` excludes it.
+STATUS_INELIGIBLE = "ineligible"
 
 #: Triage classes, worst first. ``research-defect`` is the pure case (strict
 #: passed, research did not); ``broken`` also counts as a research-mode defect
@@ -113,6 +125,12 @@ _PASS_WORDS = frozenset({"pass", "passed", "ok", "success", "succeeded", "green"
 _FAIL_WORDS = frozenset({"fail", "failed", "failure", "error", "errored", "crash", "red", "false"})
 _TIMEOUT_WORDS = frozenset({"timeout", "timed_out", "timedout", "time-out", "hung"})
 _SKIP_WORDS = frozenset({"skip", "skipped", "not_run", "notrun", "pending"})
+#: Statuses/outcomes meaning "screened out before the pipeline ran". Sourced from
+#: the eligibility outcome vocabulary so the two cannot drift.
+_INELIGIBLE_WORDS = frozenset(
+    {"ineligible", "not_eligible", "screened_out", "insufficient_metadata"}
+    | set(_ELIGIBILITY_INELIGIBLE_OUTCOMES)
+)
 
 
 # ---------------------------------------------------------------------------
@@ -144,6 +162,11 @@ def _norm_status(value: Any) -> str:
         return STATUS_TIMEOUT
     if raw in _SKIP_WORDS or raw.startswith("skip"):
         return STATUS_SKIPPED
+    # Before the failure words: "ineligible_pathway" contains neither "fail" nor
+    # "error", so it used to land in STATUS_UNKNOWN -- which _is_failure counts as
+    # a failure. A screened paper is not a failed run.
+    if raw in _INELIGIBLE_WORDS or raw.startswith("ineligible"):
+        return STATUS_INELIGIBLE
     if raw in _FAIL_WORDS or "fail" in raw or "error" in raw:
         return STATUS_FAIL
     return STATUS_UNKNOWN
@@ -161,7 +184,12 @@ def _norm_mode(value: Any) -> str:
 
 
 def _is_failure(status: str) -> bool:
-    """A run that did not produce its artifacts. Timeouts count as failures."""
+    """A run that did not produce its artifacts. Timeouts count as failures.
+
+    ``STATUS_INELIGIBLE`` deliberately does not: the paper was screened out before
+    the pipeline touched it, so counting it would put a Fournier's-gangrene case
+    report in the morning's ranked fix-list as an extraction defect.
+    """
     return status in (STATUS_FAIL, STATUS_TIMEOUT, STATUS_UNKNOWN)
 
 
@@ -398,6 +426,11 @@ class ModeRun:
         return self.status == STATUS_SKIPPED
 
     @property
+    def ineligible(self) -> bool:
+        """Screened out by the eligibility gate -- neither a pass nor a failure."""
+        return self.status == STATUS_INELIGIBLE
+
+    @property
     def warned(self) -> bool:
         """Passed, but did not produce one of the things it exists to produce."""
         return bool(self.passed and (self.warnings or self.file_errors))
@@ -447,6 +480,10 @@ class PaperTriage:
         if strict is None or research is None:
             return CLASS_INCOMPLETE
         if strict.skipped or research.skipped:
+            return CLASS_INCOMPLETE
+        # A screened-out paper is "incomplete", never "broken" or a research
+        # defect: the pipeline was never asked to do anything with it.
+        if strict.ineligible or research.ineligible:
             return CLASS_INCOMPLETE
         if strict.passed and research.passed:
             return CLASS_OK
@@ -584,6 +621,7 @@ def _tally(rows: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
         "rows": len(rows or []),
         "timeouts": 0,
         "skipped": 0,
+        "ineligible": 0,
         "warned": 0,
         "write_failures": 0,
         MODE_STRICT: {"pass": 0, "fail": 0, "warned": 0},
@@ -605,6 +643,8 @@ def _tally(rows: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
                 counts["timeouts"] += 1
             elif run.skipped:
                 counts["skipped"] += 1
+            elif run.ineligible:
+                counts["ineligible"] += 1
             if run.warned:
                 counts["warned"] += 1
             counts["write_failures"] += len(run.file_errors)
@@ -650,6 +690,9 @@ def build_summary(
     )
     out.append(f"timeouts         : {tally['timeouts']}")
     out.append(f"skipped          : {tally['skipped']}")
+    # Screened out by the eligibility gate. Reported for visibility only -- these
+    # are NOT failures and never enter the ranked fix-list.
+    out.append(f"ineligible       : {tally['ineligible']}  (screened out, not failures)")
     # Counted apart from "pass" on purpose: these runs did not fail, but they did
     # not produce their deliverable either, so the night is NOT all green.
     out.append(
@@ -1052,6 +1095,7 @@ __all__ = [
     "STATUS_PASS",
     "STATUS_FAIL",
     "STATUS_TIMEOUT",
+    "STATUS_INELIGIBLE",
     "STATUS_SKIPPED",
     "STATUS_UNREADABLE",
     "CLASS_OK",

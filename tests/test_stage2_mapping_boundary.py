@@ -78,11 +78,20 @@ def _unmapped_result() -> dict[str, Any]:
 
 
 def _best_effort_protein_result() -> dict[str, Any]:
+    """A weak-but-usable match: low enough to be flagged, above the identity floor.
+
+    ``0.62`` sits between ``_REAL_PROTEIN_MIN_SCORE`` (0.5, below which a scored
+    candidate is not a verified identity at all) and the 0.78 line that makes a
+    mapping ``low_confidence``. That is the band these tests are about -- see
+    ``test_sub_threshold_best_effort_match_is_not_a_verified_identity`` for the
+    other side of the floor.
+    """
+
     return {
         "status": "mapped",
         "provider": "UniProt",
         "source": "api",
-        "confidence": 0.42,
+        "confidence": 0.62,
         "chosen_rule": "best_effort_fallback",
         "best_effort": True,
         "method": "fuzzy_search",
@@ -90,7 +99,8 @@ def _best_effort_protein_result() -> dict[str, Any]:
         "candidates": [
             {
                 "accession": "Q9TEST",
-                "score": 0.42,
+                "protein_name": "resolved enzyme",
+                "score": 0.62,
                 "organism": "Arabidopsis thaliana",
             }
         ],
@@ -212,7 +222,7 @@ def test_mapping_metadata_policy_and_uncertainty_are_explicit(tmp_path: Path) ->
     protein = mapped["entities"]["proteins"][0]
     assert protein["mapping_meta"]["best_effort"] is True
     assert protein["mapping_meta"]["method"] == "fuzzy_search"
-    assert protein["mapping_meta"]["confidence"] == 0.42
+    assert protein["mapping_meta"]["confidence"] == 0.62
     assert protein["mapping_meta"]["candidates"][0]["accession"] == "Q9TEST"
     protein_log = next(
         row
@@ -220,7 +230,7 @@ def test_mapping_metadata_policy_and_uncertainty_are_explicit(tmp_path: Path) ->
         if row["entity_type"] == "protein" and row["name"] == "resolved enzyme"
     )
     assert protein_log["best_effort"] is True
-    assert protein_log["confidence"] == 0.42
+    assert protein_log["confidence"] == 0.62
     assert protein_log["chosen_rule"] == "best_effort_fallback"
     assert result["report"]["summary"]["low_confidence_mappings"] == 1
     assert result["report"]["summary"]["best_effort_mappings"] == 1

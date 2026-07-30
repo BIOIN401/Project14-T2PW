@@ -466,7 +466,14 @@ def test_multi_protein_complex_does_not_stand_in_for_one_member() -> None:
     assert payload["processes"]["reactions"][0]["enzymes"][-1]["entity_type"] == "protein"
 
 
-def test_prune_disconnected_proteins_keeps_identified_proteins() -> None:
+def test_prune_disconnected_proteins_removes_unused_proteins_mapped_or_not() -> None:
+    """Being mapped says the identifier is right, not that the pathway uses it.
+
+    Sparing a mapped degree-0 protein here never saved the row: the connectivity
+    gate a few calls later rejected it anyway. Strict export therefore quarantines
+    both, and ``quarantined_proteins`` records which one had been verified.
+    """
+
     payload = {
         "entities": {
             "proteins": [
@@ -482,13 +489,77 @@ def test_prune_disconnected_proteins_keeps_identified_proteins() -> None:
 
     pruned = prune_disconnected_proteins(payload, report=report)
 
-    assert pruned == ["unidentified enzyme"]
-    assert [row["name"] for row in payload["entities"]["proteins"]] == ["identified enzyme"]
-    assert report["summary"]["pruned_disconnected_proteins"] == ["unidentified enzyme"]
-    assert report["summary"]["pruned_disconnected_proteins_count"] == 1
+    assert pruned == ["identified enzyme", "unidentified enzyme"]
+    assert payload["entities"]["proteins"] == []
+    assert report["summary"]["pruned_disconnected_proteins_count"] == 2
+    assert report["summary"]["unused_proteins_quarantined"] == 2
+    quarantined = {row["name"]: row for row in payload["quarantined_proteins"]}
+    assert quarantined["identified enzyme"]["had_external_identity"] is True
+    assert quarantined["identified enzyme"]["external_identity"] == "P00001"
+    assert quarantined["unidentified enzyme"]["had_external_identity"] is False
+    assert all(
+        row["reason"] == "degree_zero_after_normalization"
+        for row in payload["quarantined_proteins"]
+    )
+
+
+def test_prune_disconnected_proteins_retains_and_flags_in_research_mode() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "identified enzyme", "uniprot": "P00001"},
+                {"name": "unidentified enzyme"},
+            ],
+            "compounds": [],
+            "protein_complexes": [],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+    report = {"summary": {}, "actions": []}
+
+    pruned = prune_disconnected_proteins(payload, report=report, mode="research")
+
+    assert pruned == []
+    assert [row["name"] for row in payload["entities"]["proteins"]] == [
+        "identified enzyme",
+        "unidentified enzyme",
+    ]
+    assert "quarantined_proteins" not in payload
+    assert report["summary"]["unused_proteins_flagged_for_review"] == 2
+    flagged = {
+        row["name"]
+        for row in report["actions"]
+        if row.get("type") == "research_mode_disconnected_protein_flagged"
+    }
+    assert flagged == {"identified enzyme", "unidentified enzyme"}
+
+
+def test_prune_disconnected_proteins_keeps_components_of_surviving_complexes() -> None:
+    """A component's edge runs through its complex; it is not a degree-0 orphan."""
+
+    payload = {
+        "entities": {
+            "proteins": [{"name": "Unknown", "uniprot": "Unknown"}],
+            "compounds": [],
+            "protein_complexes": [
+                {"name": "N-methyl nucleosidase", "components": [{"name": "Unknown"}]}
+            ],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    assert prune_disconnected_proteins(payload, report={"summary": {}, "actions": []}) == []
+    assert [row["name"] for row in payload["entities"]["proteins"]] == ["Unknown"]
 
 
 def test_normalize_process_payload_returns_gate_failure_in_report() -> None:
+    """Strict normalization now resolves the orphan instead of handing it to the gate.
+
+    The unused mapped protein is quarantined by the cleanup passes, so the gate
+    it used to fail is no longer reached -- the prune/gate contradiction. The
+    checkpoint assertions are what this test is really for.
+    """
+
     payload = {
         "entities": {
             "proteins": [{"name": "mapped orphan enzyme", "uniprot": "P00001"}],
@@ -504,10 +575,11 @@ def test_normalize_process_payload_returns_gate_failure_in_report() -> None:
         on_checkpoint=lambda name, _payload, _report: checkpoints.append(name),
     )
 
-    assert [row["name"] for row in normalized["entities"]["proteins"]] == ["mapped orphan enzyme"]
-    assert report["gate"]["ok"] is False
-    assert report["summary"]["gate_error_count"] >= 1
-    assert any("Protein has degree 0" in err["reason"] for err in report["gate"]["errors"])
+    assert normalized["entities"]["proteins"] == []
+    assert [row["name"] for row in normalized["quarantined_proteins"]] == ["mapped orphan enzyme"]
+    assert report["summary"]["unused_proteins_quarantined"] >= 1
+    assert report["gate"]["ok"] is True
+    assert not any("Protein has degree 0" in err["reason"] for err in report["gate"]["errors"])
     assert "attach_enzymes_from_reaction_evidence" in checkpoints
     assert "run_strict_post_normalization_gates" in checkpoints
 

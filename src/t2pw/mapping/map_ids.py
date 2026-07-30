@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -14,11 +15,15 @@ from xml.etree import ElementTree
 import requests
 
 from t2pw.pipeline.entity_identity import (
+    IDENTITY_PLACEHOLDER,
+    IDENTITY_UNRESOLVED,
+    IDENTITY_VERIFIED,
     PATHBANK_UNKNOWN_FALLBACK_RULE,
     PATHBANK_UNKNOWN_PROTEIN_ID,
     PATHBANK_UNKNOWN_PROTEIN_NAME,
     PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
     component_stoichiometry,
+    compound_name_block_rule,
     has_protein_external_identity,
     is_generated_complex_wrapper,
     is_pathbank_unknown_protein,
@@ -4467,24 +4472,19 @@ def _candidate_for_shipped_ids(
 def _is_pathbank_protein_identity(candidate: Any, source: str) -> bool:
     """True when the shipped protein identity is a curated PathBank protein row.
 
-    Those rows are exempt from rejection, and the exemption is not a hedge -- it
-    is what the data says. Replaying the gate over run 2026-07-28_0919 rejected
-    exactly three PathBank-sourced protein matches and all three were correct:
+    This used to grant a blanket exemption from the name gate, on the argument
+    that PathBank names a protein by what it does and stores the legacy gene
+    symbol -- so 'LpxL' -> P0ACV0 "Lipid A biosynthesis lauroyl acyltransferase"
+    (gene ``htrB``) shares no word with either field and is still correct.
 
-        'LpxL'             -> P0ACV0 "Lipid A biosynthesis lauroyl acyltransferase"
-        'LpxM'             -> P24205 "Lipid A biosynthesis (KDO)2-(lauroyl)-lipid
-                              IVA acyltransferase"
-        'Pgp phosphatases' -> P18200 "Phosphatidylglycerophosphatase A"
-
-    PathBank names a protein by what it does, and its gene_name column often holds
-    the older symbol (P0ACV0 is stored as 'htrB', P24205 as 'msbB', P18200 as
-    'pgpA'), so a gene-symbol entity name shares no word with either field even
-    though the identity is right. The eight UniProt-sourced rejections in the same
-    replay were all genuinely wrong, which is where the gate earns its keep.
-
-    The exemption cannot launder a bad accession either: PathBankDbResolver.
-    map_protein_by_ids filters by species, so the human P08235 that 'mcr genes'
-    shipped could never come back as an E. coli PathBank protein row.
+    The argument is true and the exemption was still wrong, because it was
+    applied *before* any other evidence was weighed and returned "nothing to
+    judge" rather than "judged and passed". Under a fail-closed ladder those are
+    the same value, so provenance alone was shipping accessions. What survives
+    is the narrow, honest part: PathBank supplies no score, so a PathBank row
+    may pass the score rung unscored -- after clearing name and species on its
+    own evidence like everything else. Three matches of the LpxL shape now route
+    to the Unknown-backed placeholder instead of shipping unverified.
     """
     row = _safe_dict(candidate)
     if _to_positive_int(row.get("pathbank_protein_id")):
@@ -4543,9 +4543,13 @@ def _name_gate_verdict(
         return gate
 
     candidate = _candidate_for_shipped_ids(candidates, ids, kind)
-    if kind == "protein" and _is_pathbank_protein_identity(candidate, source):
-        gate["reason"] = "pathbank_protein_row"
-        return gate
+    # NO blanket exemption for PathBank rows. It used to return ``skip`` here,
+    # which under a fail-closed ladder is indistinguishable from a pass and let
+    # any curated row ship on provenance alone. A PathBank candidate now proves
+    # itself the same way as any other -- shared name token, exact gene symbol,
+    # or an audited alias. What it still gets is the *score* waiver in
+    # verify_real_protein_identity, because PathBank supplies no score; that is
+    # a missing field, not missing identity evidence.
 
     names: List[str] = []
     if candidate is not None:
@@ -4648,6 +4652,483 @@ def _novel_result_from_name_gate(result: Dict[str, Any], *, kind: str, gate: Dic
     return _with_resolution(novel, "novel", issue=_NAME_GATE_ISSUE, order_step=_NAME_GATE_ORDER_STEP)
 
 
+# ── the real-protein-identity ladder ────────────────────────────────────────
+#
+# One authority for "may this identifier be shipped as the identity of this
+# entity?". Every route that can write a real accession onto a protein row goes
+# through it: the DB resolver, the UniProt API resolver, a cache hit, an
+# identifier an earlier mapping pass already wrote, the second pass's
+# promotion-from-row-metadata, the Phase-2 API fallback, and the ambiguous
+# candidate list. Failing it is not an error -- it routes a legitimate actor to
+# the Unknown-backed functional complex instead, which is the whole point: a
+# real enzyme without a verified accession still ships, honestly labelled.
+
+#: Below this, a *scored* candidate is not a verified identity. Calibrated
+#: against the resolver's own scale: ``_score_compound_candidate`` and the
+#: UniProt ladder emit 1.0 for an exact name/accession hit and drop into the low
+#: 0.3-0.5 band for a partial token overlap.
+_REAL_PROTEIN_MIN_SCORE = 0.5
+#: How far the winner must beat the runner-up before "the top candidate" is an
+#: answer rather than a coin flip. Two candidates inside this band are ambiguous.
+_REAL_PROTEIN_MIN_MARGIN = 0.1
+_REAL_PROTEIN_ID_SENTINELS = frozenset({"", "unknown", "n/a", "na", "none", "null", "-"})
+#: The ladder fails closed. This is what it returns when there is nothing to
+#: judge on -- no candidate row for the shipped accession, no organism on either
+#: side, no resolved name, no score outside a curated PathBank row. It is not a
+#: refutation, and the caller must route it to the Unknown-backed placeholder
+#: rather than dropping the actor: "we cannot confirm this" and "this is wrong"
+#: have the same effect on the identifier and opposite effects on the biology.
+_IDENTITY_EVIDENCE_MISSING = "identity_evidence_missing"
+
+
+def _is_real_protein_identifier(value: Any) -> bool:
+    """Whether a value is a usable accession rather than a sentinel."""
+
+    text = str(value or "").strip()
+    return bool(text) and text.casefold() not in _REAL_PROTEIN_ID_SENTINELS
+
+
+def _real_protein_ids(mapped_ids: Dict[str, Any]) -> Dict[str, str]:
+    ids = _safe_dict(mapped_ids)
+    out: Dict[str, str] = {}
+    for key in ("uniprot", "drugbank"):
+        if _is_real_protein_identifier(ids.get(key)):
+            out[key] = str(ids[key]).strip()
+    if _to_positive_int(ids.get("pathbank_protein_id")):
+        out["pathbank_protein_id"] = str(_to_positive_int(ids.get("pathbank_protein_id")))
+    return out
+
+
+def _candidate_is_protein_shaped(candidate: Any) -> bool:
+    """Entity-type compatibility: does this candidate row describe a protein?
+
+    A candidate with no protein-side field at all (no accession, no gene, no
+    pathbank_protein_id, no protein_name) is a compound row that reached the
+    protein route -- the 'PhoP' -> PathBank compound 721 "NAD" shape.
+    """
+
+    row = _safe_dict(candidate)
+    if not row:
+        # No candidate row to judge; the identifier itself is the only evidence.
+        return True
+    for key in ("accession", "uniprot", "uniprot_id", "protein_name", "gene_name", "gene", "gene_names"):
+        if str(row.get(key) or "").strip() or _safe_list(row.get(key)):
+            return True
+    if _to_positive_int(row.get("pathbank_protein_id")):
+        return True
+    # Positively compound-shaped rows are rejected; an unrecognised shape is not.
+    return not any(
+        str(row.get(key) or "").strip()
+        for key in ("pathbank_compound_id", "chebi", "kegg", "hmdb", "pubchem", "cas")
+    )
+
+
+def _is_genus_level_scope(organism: str) -> bool:
+    """True when the requested organism names a genus rather than a species.
+
+    A single meaningful token ("Escherichia", "Bacillus") is a genus-level
+    request. A binomial is not, and neither is a strain-qualified name.
+    """
+
+    tokens = [token for token in _normalize_name(organism).split(" ") if token]
+    return len(tokens) == 1
+
+
+def _candidate_species_verdict(candidate: Any, organism: str) -> str:
+    """Species/taxon compatibility: ``ok`` / ``genus_level`` / ``mismatch`` / ``unknown``.
+
+    ``ok`` requires affirmative agreement:
+
+    * the same NCBI taxonomy id, or
+    * the same normalized binomial, or
+    * strain / subspecies qualification of that binomial -- UniProt writes
+      "Escherichia coli K-12" where the payload says "Escherichia coli", and
+      the qualified name must extend the requested one *at a word boundary*.
+
+    ``genus_level`` is returned only when the caller asked for a genus and the
+    candidate sits in it. It is a weaker relation than ``ok`` and is recorded as
+    such, because "same genus" once accepted *Escherichia coli* for
+    *Escherichia fergusonii* -- two different organisms whose proteins are not
+    interchangeable.
+
+    ``unknown`` means one side is silent. It is no longer a pass: an identity
+    with no species evidence is unverified and routes to the placeholder, which
+    is the honest outcome for "we cannot tell".
+    """
+
+    row = _safe_dict(candidate)
+    requested = _canonical_name(organism)
+    if not requested:
+        return "unknown"
+    declared = _canonical_name(str(row.get("organism") or row.get("species") or ""))
+    requested_taxon = str(row.get("requested_taxonomy_id") or "").strip()
+    declared_taxon = str(row.get("taxonomy_id") or row.get("taxon_id") or "").strip()
+    if requested_taxon and declared_taxon:
+        return "ok" if requested_taxon == declared_taxon else "mismatch"
+    if not declared:
+        return "unknown"
+    requested_norm = _normalize_name(requested)
+    declared_norm = _normalize_name(declared)
+    if not requested_norm or not declared_norm:
+        return "unknown"
+    if requested_norm == declared_norm:
+        return "ok"
+    if _is_genus_level_scope(requested):
+        # "Escherichia" was asked for; "Escherichia coli" answers it, but the
+        # relation is genus-level and the record must not call it exact.
+        return "genus_level" if declared_norm.startswith(f"{requested_norm} ") else "mismatch"
+    # Strain / subspecies qualification, at a word boundary so that
+    # "Escherichia coli" never matches "Escherichia colicinogenes".
+    if declared_norm.startswith(f"{requested_norm} ") or requested_norm.startswith(f"{declared_norm} "):
+        return "ok"
+    return "mismatch"
+
+
+def _candidate_identifies_result_choice(candidate: Any, result: Dict[str, Any]) -> bool:
+    """Whether ``result``'s own ``mapped_ids`` name this exact candidate.
+
+    Result-level ``confidence`` describes the accession the resolver *chose*
+    this pass. When the row is shipping a different accession -- which is the
+    normal case on the second mapping pass, since ``_merge_mapped_ids`` keeps
+    whatever arrived first -- that confidence belongs to somebody else and
+    reading it would let a weak identity borrow a strong one's score.
+    """
+
+    chosen = _safe_dict(result).get("mapped_ids")
+    if not isinstance(chosen, dict) or not chosen:
+        return False
+    return _candidate_matches_shipped_ids(candidate, chosen, "protein")
+
+
+def _candidate_score(candidate: Any, result: Dict[str, Any]) -> float:
+    """Score for the shipped identity, or -1.0 when it has none of its own.
+
+    Candidate-local first, always. The result-level confidence is consulted only
+    when the result's own ``mapped_ids`` identify this same candidate.
+    """
+
+    values: List[float] = []
+    row = _safe_dict(candidate)
+    for key in ("score", "confidence"):
+        raw = row.get(key)
+        if isinstance(raw, (int, float)) and not isinstance(raw, bool):
+            values.append(float(raw))
+    if row and _candidate_identifies_result_choice(row, result):
+        raw = _safe_dict(result).get("confidence")
+        if isinstance(raw, (int, float)) and not isinstance(raw, bool):
+            values.append(float(raw))
+    positive = [value for value in values if value > 0.0]
+    return max(positive) if positive else -1.0
+
+
+def verify_real_protein_identity(
+    entity_name: str,
+    *,
+    candidates: List[Any],
+    mapped_ids: Dict[str, Any],
+    organism: str = "",
+    source: str = "",
+    resolved_name: str = "",
+    result: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Decide whether ``mapped_ids`` is a *verified real* identity for ``entity_name``.
+
+    **The ladder fails closed**: every rung must pass *affirmatively*. Missing
+    evidence is not a pass, and it is not a rejection either -- it returns
+    :data:`_IDENTITY_EVIDENCE_MISSING`, and the caller routes the actor to the
+    Unknown-backed functional complex. The export keeps the biology; what it
+    loses is the false claim that the accession was confirmed.
+
+    The rungs, in order, each recorded in ``checks``:
+
+    1. ``identifier_resolution`` -- a non-sentinel UniProt/DrugBank/PathBank id.
+    2. ``entity_type`` -- the entity name is not one the compound rules own
+       (``coenzyme A``), a candidate row describing the *shipped* identifier
+       exists, and it is protein-shaped.
+    3. ``species`` -- ``ok`` (same taxon id, same binomial, or a strain
+       qualification of it) or ``genus_level`` when the request was genus-level.
+       ``unknown`` is missing evidence.
+    4. ``name`` -- :func:`_name_gate_verdict` must return ``keep``: canonical
+       name, recognised/audited alias, or exact gene/locus symbol. A ``skip``
+       verdict means the gate had nothing to judge on, which is missing
+       evidence.
+    5. ``score`` -- at least :data:`_REAL_PROTEIN_MIN_SCORE`. Only a curated
+       PathBank row may be unscored, because that provider supplies no score;
+       it has already had to pass name and species on its own evidence.
+    6. ``margin`` -- at least :data:`_REAL_PROTEIN_MIN_MARGIN` over the best
+       rival candidate that also passed 2-4 and names a *different* accession.
+    """
+
+    payload_result = _safe_dict(result)
+    verdict: Dict[str, Any] = {
+        "verified": False,
+        "reason": "",
+        "entity_name": str(entity_name or ""),
+        "organism": str(organism or ""),
+        "checks": {},
+        "score": -1.0,
+        "margin": -1.0,
+    }
+    checks: Dict[str, Any] = verdict["checks"]
+
+    real_ids = _real_protein_ids(mapped_ids)
+    checks["identifier_resolution"] = "ok" if real_ids else "no_real_identifier"
+    if not real_ids:
+        verdict["reason"] = "no_real_identifier"
+        return verdict
+    verdict["identity"] = ", ".join(f"{key}:{value}" for key, value in sorted(real_ids.items()))
+
+    blocked_rule = compound_name_block_rule(entity_name)
+    if blocked_rule:
+        checks["entity_type"] = f"entity_name_is_a_compound:{blocked_rule}"
+        verdict["reason"] = "entity_type_incompatible"
+        return verdict
+
+    candidate = _candidate_for_shipped_ids(candidates, _safe_dict(mapped_ids), "protein")
+    # Fail closed. Nothing describes the accession we are about to ship as this
+    # entity's identity, so there is no evidence to verify -- and "no evidence"
+    # is not a pass. The caller routes this to the Unknown-backed placeholder,
+    # so the actor still exports; what it may not do is claim a real mapping.
+    if candidate is None:
+        checks["candidate_evidence"] = "no_candidate_describes_the_shipped_identifier"
+        verdict["reason"] = _IDENTITY_EVIDENCE_MISSING
+        return verdict
+    checks["candidate_evidence"] = "ok"
+    is_pathbank_row = _to_positive_int(_safe_dict(candidate).get("pathbank_protein_id")) is not None
+
+    if not _candidate_is_protein_shaped(candidate):
+        checks["entity_type"] = "candidate_is_not_protein_shaped"
+        verdict["reason"] = "entity_type_incompatible"
+        return verdict
+    checks["entity_type"] = "ok"
+
+    species = _candidate_species_verdict(candidate, organism)
+    checks["species"] = species
+    if species == "mismatch":
+        verdict["reason"] = "species_mismatch"
+        return verdict
+    if species == "unknown":
+        # One side is silent about the organism. A protein identity that cannot
+        # be tied to a taxon is not verified, whichever side the silence is on.
+        verdict["reason"] = _IDENTITY_EVIDENCE_MISSING
+        return verdict
+    verdict["species_compatibility"] = species
+
+    gate = _name_gate_verdict(
+        entity_name,
+        candidates=candidates,
+        mapped_ids=_safe_dict(mapped_ids),
+        kind="protein",
+        organism=organism,
+        fallback_name=resolved_name,
+        source=source,
+    )
+    verdict["name_gate"] = gate
+    checks["name"] = str(gate.get("verdict") or "")
+    if gate.get("verdict") == "reject":
+        verdict["reason"] = _NAME_GATE_ISSUE
+        return verdict
+    if gate.get("verdict") != "keep":
+        # ``skip`` means the gate found nothing to judge on -- no resolved name,
+        # no comparable tokens. Affirmative name evidence is required, so this
+        # is missing evidence rather than a refutation.
+        checks["name"] = f"skip:{gate.get('reason') or 'no_name_evidence'}"
+        verdict["reason"] = _IDENTITY_EVIDENCE_MISSING
+        return verdict
+
+    score = _candidate_score(candidate, payload_result)
+    verdict["score"] = score
+    if score < 0.0:
+        # Unscored is tolerated only for a curated PathBank row, whose provider
+        # supplies no score at all -- and it has already had to pass name and
+        # species on its own evidence to get here.
+        if not is_pathbank_row:
+            checks["score"] = "unscored_non_pathbank_candidate"
+            verdict["reason"] = _IDENTITY_EVIDENCE_MISSING
+            return verdict
+        checks["score"] = "skipped_unscored_pathbank_row"
+    elif score < _REAL_PROTEIN_MIN_SCORE:
+        checks["score"] = f"below_minimum:{score:.2f}<{_REAL_PROTEIN_MIN_SCORE}"
+        verdict["reason"] = "score_below_minimum"
+        return verdict
+    else:
+        checks["score"] = "ok"
+
+    rivals: List[Tuple[float, str]] = []
+    shipped_accession = str(real_ids.get("uniprot") or real_ids.get("drugbank") or "").casefold()
+    for other in _safe_list(candidates):
+        if not isinstance(other, dict) or other is candidate:
+            continue
+        accession = str(other.get("accession") or other.get("uniprot") or "").strip().casefold()
+        if not accession or (shipped_accession and accession == shipped_accession):
+            continue
+        if not _candidate_is_protein_shaped(other):
+            continue
+        if _candidate_species_verdict(other, organism) == "mismatch":
+            continue
+        if not any(
+            _names_share_meaningful_token(entity_name, value) for value in _candidate_display_names(other)
+        ) and not any(
+            _normalize_name(entity_name) == _normalize_name(symbol)
+            for symbol in _candidate_symbol_names(other)
+        ):
+            continue
+        rivals.append((_candidate_score(other, {}), accession))
+
+    if rivals:
+        best_rival = max(score_value for score_value, _ in rivals)
+        margin = (score if score >= 0.0 else 0.0) - (best_rival if best_rival >= 0.0 else 0.0)
+        verdict["margin"] = margin
+        verdict["competing_accessions"] = sorted({accession for _, accession in rivals})[:8]
+        if margin < _REAL_PROTEIN_MIN_MARGIN:
+            checks["margin"] = f"insufficient:{margin:.2f}<{_REAL_PROTEIN_MIN_MARGIN}"
+            verdict["reason"] = "ambiguous_insufficient_margin"
+            return verdict
+        checks["margin"] = "ok"
+    else:
+        checks["margin"] = "no_competing_candidate"
+
+    verdict["verified"] = True
+    verdict["reason"] = "verified_real_protein"
+    return verdict
+
+
+#: Widest evidence excerpt copied into mapping_meta. ``enzyme_cues`` measures
+#: the genuine model-emitted evidence sentences of the reference runs at 22-157
+#: characters, with the next value up at 4,636 -- a retrieved corpus, not a
+#: sentence. 200 clears the longest real sentence and truncates every blob, so a
+#: placeholder's metadata stays readable instead of carrying a paper inside it.
+_EVIDENCE_EXCERPT_CHARS = 200
+
+
+def _bounded_evidence_digest(value: Any) -> Dict[str, Any]:
+    """A citable, bounded stand-in for evidence the actor already carries.
+
+    The full text is never copied: `rag/conform.py` flattens retrieved evidence
+    into one string, and one reference payload's reaction #14 is 139,576
+    characters made of the same 4,812-character passage 29 times. The excerpt
+    identifies the claim to a reader, the hash identifies it to a diff, and the
+    length says how much was left behind.
+    """
+
+    text = value if isinstance(value, str) else json.dumps(value, sort_keys=True, default=str)
+    text = text.strip()
+    digest: Dict[str, Any] = {
+        "chars": len(text),
+        "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        "excerpt": text[:_EVIDENCE_EXCERPT_CHARS],
+    }
+    digest["truncated"] = len(text) > _EVIDENCE_EXCERPT_CHARS
+    return digest
+
+
+def _first_present(*sources: Any) -> Any:
+    """First non-empty value of ``key`` across the given rows.
+
+    Called as ``_first_present(actor, protein_row, "evidence")``; the trailing
+    argument is the key. Returns ``None`` when no row carries it, which is what
+    lets the caller record "absent" instead of an empty string that reads like
+    a present-but-blank field.
+    """
+
+    *rows, key = sources
+    for row in rows:
+        value = _safe_dict(row).get(key)
+        if value not in (None, "", [], {}):
+            return value
+    return None
+
+
+def _resolve_ambiguous_protein_candidates(
+    entity_name: str,
+    *,
+    organism: str,
+    result: Dict[str, Any],
+) -> Tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
+    """Pick the one candidate that survives the identity ladder, or none.
+
+    Returns ``(chosen, ambiguity)``. ``chosen`` is ``None`` whenever zero or two
+    or more candidates verify, or when the survivors disagree about the
+    accession -- list order is never a tie-break. ``ambiguity`` records the
+    census so the report can say what was refused and why.
+    """
+
+    candidates = [row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)]
+    source = str(result.get("source") or "")
+    verified: List[Dict[str, Any]] = []
+    rejections: List[Dict[str, str]] = []
+
+    for candidate in candidates:
+        accession = str(candidate.get("uniprot") or candidate.get("accession") or "").strip()
+        pathbank_id = _to_positive_int(candidate.get("pathbank_protein_id"))
+        if not _is_real_protein_identifier(accession) and not pathbank_id:
+            rejections.append({"accession": accession, "reason": "no_real_identifier"})
+            continue
+        mapped_ids: Dict[str, Any] = {}
+        if _is_real_protein_identifier(accession):
+            mapped_ids["uniprot"] = accession
+        if pathbank_id:
+            mapped_ids["pathbank_protein_id"] = str(pathbank_id)
+        verdict = verify_real_protein_identity(
+            entity_name,
+            # Judged against the full list, so the margin rung sees its rivals.
+            candidates=candidates,
+            mapped_ids=mapped_ids,
+            organism=organism,
+            source=source,
+            resolved_name=str(candidate.get("protein_name") or candidate.get("name") or ""),
+            result={"confidence": candidate.get("score", candidate.get("confidence"))},
+        )
+        if verdict.get("verified"):
+            verified.append(
+                {
+                    "mapped_ids": mapped_ids,
+                    "pathbank_protein_id": pathbank_id,
+                    "accession": accession,
+                    "identity_verdict": verdict,
+                }
+            )
+        else:
+            rejections.append({"accession": accession, "reason": str(verdict.get("reason") or "")})
+
+    distinct = {row["accession"].casefold() for row in verified if row["accession"]}
+    ambiguity: Dict[str, Any] = {
+        "candidate_count": len(candidates),
+        "verified_count": len(verified),
+        "verified_accessions": sorted(distinct)[:8],
+        "rejections": rejections[:8],
+    }
+    if not verified:
+        ambiguity["reason"] = "no_candidate_passed_identity_verification"
+        return None, ambiguity
+    if len(distinct) > 1:
+        ambiguity["reason"] = "multiple_candidates_passed_identity_verification"
+        return None, ambiguity
+    ambiguity["reason"] = "single_candidate_passed_identity_verification"
+    return verified[0], ambiguity
+
+
+def _novel_result_from_identity_verdict(result: Dict[str, Any], verdict: Dict[str, Any]) -> Dict[str, Any]:
+    """Turn a failed identity verdict into the resolver's existing ``novel`` shape."""
+
+    gate = _safe_dict(verdict.get("name_gate")) or {
+        "verdict": "reject",
+        "reason": str(verdict.get("reason") or ""),
+        "entity_name": str(verdict.get("entity_name") or ""),
+        "kind": "protein",
+        "identity": str(verdict.get("identity") or ""),
+    }
+    novel = _novel_result_from_name_gate(result, kind="protein", gate=gate)
+    novel["identity_verdict"] = verdict
+    # ``resolution.issue`` stays the shared name-gate code so nothing downstream
+    # has to learn a second vocabulary. ``failed_check`` names the rung that
+    # actually caught it, and is omitted when it would only repeat the issue.
+    failed_check = str(verdict.get("reason") or "")
+    if failed_check and failed_check != _NAME_GATE_ISSUE:
+        _safe_dict(novel.get("resolution"))["failed_check"] = failed_check
+    return novel
+
+
 def _apply_name_plausibility_gate(
     result: Dict[str, Any],
     entity_name: str,
@@ -4655,16 +5136,40 @@ def _apply_name_plausibility_gate(
     kind: str,
     organism: str = "",
 ) -> Dict[str, Any]:
-    """Name-plausibility gate for one resolver result.
+    """Identity gate for one resolver result.
 
     Run 2026-07-28_0919 shipped PhoP as NAD+, pmrHFIJKLM as the lactose operon
     repressor and 'mcr genes' as the human mineralocorticoid receptor, all with
     resolution status "matched" and 0 gate errors. Nothing downstream can catch
     that: every gate we own checks that an identifier is *present* and *well
     formed*, never that it names the same molecule. This is the check that does.
+
+    For ``kind="protein"`` this is the full six-rung ladder
+    (:func:`verify_real_protein_identity`); compounds keep the name-only gate,
+    which is the only one their route has ever had.
     """
     if not isinstance(result, dict) or result.get("status") != "mapped":
         return result
+    if kind == "protein":
+        # The sentinel is a declared placeholder, not a real-identity claim, and
+        # must not be judged as one.
+        if str(result.get("chosen_rule") or "") == _PATHBANK_UNKNOWN_FALLBACK_RULE:
+            return result
+        verdict = verify_real_protein_identity(
+            entity_name,
+            candidates=_safe_list(result.get("candidates")),
+            mapped_ids=_safe_dict(result.get("mapped_ids")),
+            organism=organism,
+            source=str(result.get("source") or ""),
+            resolved_name=str(result.get("resolved_name") or ""),
+            result=result,
+        )
+        if verdict.get("verified"):
+            result.setdefault("identity_verdict", verdict)
+            if _safe_dict(verdict.get("name_gate")).get("verdict") == "keep":
+                result.setdefault("name_gate", verdict["name_gate"])
+            return result
+        return _novel_result_from_identity_verdict(result, verdict)
     gate = _name_gate_verdict(
         entity_name,
         candidates=_safe_list(result.get("candidates")),
@@ -4784,14 +5289,75 @@ def _enforce_shipped_identity_names(
                 "note": "entity row already carried an identifier from an earlier mapping pass",
             }
 
+    fallback_name = str(meta.get("resolved_name") or result.get("resolved_name") or "")
+    source_text = str(result.get("source") or meta.get("source") or "")
+    if kind == "protein":
+        # The pre-existing-identifier route. An accession an *earlier* pass wrote
+        # onto the row has never been through the ladder in this pass, and
+        # _merge_mapped_ids keeps whichever value arrived first -- which is how
+        # 'mcr genes' shipped P08235 while the audit trail described P24200.
+        if is_pathbank_unknown_protein(row):
+            report["identity_status"] = IDENTITY_PLACEHOLDER
+            return report
+        verdict = verify_real_protein_identity(
+            entity_name,
+            candidates=pool,
+            mapped_ids=shipped,
+            organism=organism,
+            source=source_text,
+            resolved_name=fallback_name,
+            result=result,
+        )
+        report["identity_verdict"] = verdict
+        gate = _safe_dict(verdict.get("name_gate"))
+        report["gate"] = gate
+        meta["identity_verdict"] = verdict
+        if verdict.get("verified"):
+            report["identity_status"] = IDENTITY_VERIFIED
+            meta["identity_status"] = IDENTITY_VERIFIED
+            return report
+        rejected_ids = dict(shipped)
+        if candidate is not None:
+            rejected_ids.update(
+                {
+                    key: value
+                    for key, value in _safe_dict(candidate.get("mapped_ids")).items()
+                    if str(value or "").strip()
+                }
+            )
+        removed = _strip_rejected_identifiers(row, rejected_ids, kind=kind)
+        report["rejected"] = True
+        report["removed_ids"] = removed
+        report["identity_status"] = IDENTITY_UNRESOLVED
+        meta["identity_status"] = IDENTITY_UNRESOLVED
+        meta["name_gate"] = gate
+        meta["rejected_mapped_ids"] = removed
+        meta["chosen_rule"] = "novel_protein"
+        meta["confidence"] = 0.0
+        # One issue code for "this identifier does not name this entity",
+        # whichever rung caught it -- downstream consumers key off this string.
+        # Which rung it was lives in ``failed_check`` and ``identity_verdict``.
+        meta["resolution"] = {
+            "status": "novel",
+            "issue": _NAME_GATE_ISSUE,
+            "order_step": _NAME_GATE_ORDER_STEP,
+        }
+        failed_check = str(verdict.get("reason") or "")
+        if failed_check and failed_check != _NAME_GATE_ISSUE:
+            meta["resolution"]["failed_check"] = failed_check
+        if _safe_list(meta.get("candidates")):
+            meta["rejected_candidates"] = _safe_list(meta.get("candidates"))[:8]
+        meta["candidates"] = []
+        return report
+
     gate = _name_gate_verdict(
         entity_name,
         candidates=pool,
         mapped_ids=shipped,
         kind=kind,
         organism=organism,
-        fallback_name=str(meta.get("resolved_name") or result.get("resolved_name") or ""),
-        source=str(result.get("source") or meta.get("source") or ""),
+        fallback_name=fallback_name,
+        source=source_text,
     )
     report["gate"] = gate
     if gate.get("verdict") != "reject":
@@ -5658,6 +6224,11 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     processes = _safe_dict(mapped.setdefault("processes", {}))
     reactions = _safe_list(processes.get("reactions"))
     pathway_organism = _extract_global_organism(mapped)
+    compound_names = {
+        _normalize_name(str(row.get("name") or ""))
+        for row in _safe_list(entities.get("compounds"))
+        if isinstance(row, dict) and _normalize_name(str(row.get("name") or ""))
+    }
     summary = {
         "reaction_enzyme_unknown_fallbacks": 0,
         "transporter_unknown_fallbacks": 0,
@@ -5668,6 +6239,8 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
         "unknown_fallbacks_skipped_non_enzyme_reference": 0,
         "unknown_fallbacks_skipped_unusable_name": 0,
         "unknown_fallbacks_skipped_real_mapping": 0,
+        "unknown_fallbacks_skipped_no_role_evidence": 0,
+        "unsupported_process_claims_quarantined": 0,
     }
     actions: List[Dict[str, Any]] = []
 
@@ -5780,6 +6353,123 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     def _has_non_transporter_reference(name_norm: str) -> bool:
         return _has_disqualifying_reference(name_norm, allowed_role="transporter")
 
+    def _role_evidence(
+        actor_dict: Dict[str, Any],
+        source_row: Optional[Dict[str, Any]],
+        *,
+        name: str,
+        role: str,
+        allowed_role: str,
+    ) -> Dict[str, Any]:
+        """What authorizes the fallback for this actor, stated for what it is.
+
+        Canonical membership in ``reactions[].enzymes`` or
+        ``transports[].transporters`` is enough to authorize the placeholder --
+        the payload asserts the role there and nowhere else does it mean
+        anything. But membership is a *structural* assertion, not a sourced one,
+        so it is recorded as ``role_basis="canonical_actor_membership"`` and
+        ``direct_evidence_present`` says separately whether the actor or its
+        protein row actually carries evidence/provenance/source_refs. Calling
+        the collection itself "direct evidence" would be the same dishonest
+        audit trail this policy exists to remove.
+
+        Two things withdraw the authorization outright:
+
+        * the declared role is not the one the collection means -- an inhibitor
+          or a substrate parked in ``enzymes`` is not a catalysis claim; and
+        * the actor names a compound, which cannot hold a catalytic role at all
+          (the ``coenzyme A`` class of misfiling).
+
+        In both cases the process claim is quarantined instead. Wrapping an
+        unsupported claim in a functional complex would manufacture an enzyme
+        the paper never stated, which is worse than a missing identifier.
+        """
+
+        vocabulary = (
+            {"", "catalyst", "enzyme", "catalyses", "catalyzes", "biocatalyst"}
+            if allowed_role == "enzyme"
+            else {"", "transporter", "carrier", "pump", "translocator", "permease", "transport"}
+        )
+        declared = _canonical_name(str(role or "")).casefold()
+        detail: Dict[str, Any] = {"declared_role": declared, "allowed_role": allowed_role}
+        blocked = compound_name_block_rule(name, compound_names=compound_names)
+        if blocked:
+            detail["reason"] = f"actor_names_a_compound:{blocked}"
+            detail["ok"] = False
+            return detail
+        if declared not in vocabulary:
+            detail["reason"] = f"declared_role_is_not_a_{allowed_role}_claim"
+            detail["ok"] = False
+            return detail
+
+        row = _safe_dict(source_row)
+        detail["role_basis"] = "canonical_actor_membership"
+        detail["reason"] = "canonical_actor_membership"
+        detail["ok"] = True
+        provenance = _first_present(actor_dict, row, "provenance")
+        source_refs = _first_present(actor_dict, row, "source_refs")
+        evidence = _first_present(actor_dict, row, "evidence")
+        if provenance is not None:
+            detail["provenance"] = provenance
+        if source_refs is not None:
+            detail["source_refs"] = source_refs
+        if evidence is not None:
+            detail["evidence_digest"] = _bounded_evidence_digest(evidence)
+        detail["direct_evidence_present"] = bool(
+            provenance is not None or source_refs is not None or evidence is not None
+        )
+        return detail
+
+    def _quarantine_process_claim(
+        pointer: str,
+        actor_dict: Dict[str, Any],
+        *,
+        name: str,
+        role: str,
+        evidence: Dict[str, Any],
+    ) -> None:
+        bucket = mapped.get("quarantined_process_claims")
+        if not isinstance(bucket, list):
+            bucket = []
+            mapped["quarantined_process_claims"] = bucket
+        bucket.append(
+            {
+                "json_pointer": pointer,
+                "actor": name,
+                "role": role,
+                "action": "quarantined_from_process_actors",
+                "reason": str(evidence.get("reason") or "no_direct_role_evidence"),
+                "role_evidence": evidence,
+                "original_actor": deepcopy(actor_dict),
+            }
+        )
+        summary["unsupported_process_claims_quarantined"] += 1
+        actions.append(
+            {
+                "type": "unsupported_process_claim_quarantined",
+                "json_pointer": pointer,
+                "actor": name,
+                "reason": str(evidence.get("reason") or "no_direct_role_evidence"),
+            }
+        )
+
+    def _placeholder_failure_reason(source_row: Optional[Dict[str, Any]]) -> str:
+        """Why real mapping failed for this actor, taken from its own audit trail."""
+
+        meta = _safe_dict(_safe_dict(source_row).get("mapping_meta"))
+        resolution = _safe_dict(meta.get("resolution"))
+        verdict = _safe_dict(meta.get("identity_verdict"))
+        for value in (
+            verdict.get("reason"),
+            resolution.get("failed_check"),
+            resolution.get("issue"),
+            meta.get("chosen_rule"),
+        ):
+            text = str(value or "").strip()
+            if text and text not in {"novel_protein", "matched"}:
+                return text
+        return "all_normal_protein_identity_strategies_failed"
+
     def _ensure_unknown_species() -> bool:
         species_rows = _safe_list(entities.setdefault("species", []))
         for row in species_rows:
@@ -5876,12 +6566,14 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                 },
             }
         )
+        candidate["identity_status"] = IDENTITY_PLACEHOLDER
         candidate.setdefault("mapping_meta", {}).update(
             {
                 "provider": "PathBankDB",
                 "source": "db",
                 "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
                 "confidence": 0.0,
+                "identity_status": IDENTITY_PLACEHOLDER,
                 "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
                 "fallback_used": True,
                 "fallback_reason": "all_normal_protein_identity_strategies_failed",
@@ -5979,6 +6671,9 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     rewritten.append(dict(actor_dict))
                     summary["unknown_fallbacks_skipped_real_mapping"] += 1
                     continue
+                role_evidence = _role_evidence(
+                    actor_dict, source_complex, name=name, role=role, allowed_role="enzyme"
+                )
             else:
                 if source_protein is None:
                     rewritten.append(dict(actor_dict))
@@ -5991,6 +6686,19 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     rewritten.append(dict(actor_dict))
                     summary["unknown_fallbacks_skipped_non_enzyme_reference"] += 1
                     continue
+                role_evidence = _role_evidence(
+                    actor_dict, source_protein, name=name, role=role, allowed_role="enzyme"
+                )
+
+            if not role_evidence.get("ok"):
+                # Referenced, but with no evidence for the role it claims: the
+                # claim is quarantined instead of being dressed up as a
+                # functional complex.
+                summary["unknown_fallbacks_skipped_no_role_evidence"] += 1
+                _quarantine_process_claim(
+                    pointer, actor_dict, name=name, role=role, evidence=role_evidence
+                )
+                continue
 
             sentinel = _ensure_unknown_protein()
             if sentinel is None:
@@ -6039,14 +6747,21 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     "components": [component],
                 }
             )
+            complex_row["identity_status"] = IDENTITY_PLACEHOLDER
             complex_row.setdefault("mapping_meta", {}).update(
                 {
                     "provider": "PathBankDB",
                     "source": "db",
                     "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
                     "confidence": 0.0,
+                    # Never reported as a real UniProt mapping: the status says
+                    # placeholder, the reason says why real mapping failed, and
+                    # the role evidence says why the actor was kept at all.
+                    "identity_status": IDENTITY_PLACEHOLDER,
                     "fallback_used": True,
                     "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                    "real_mapping_failure_reason": _placeholder_failure_reason(source_protein),
+                    "role_evidence": role_evidence,
                     "cross_species_placeholder": True,
                     "target_organism": target_organism,
                     "functional_enzyme_name": name,
@@ -6058,6 +6773,18 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     },
                 }
             )
+            # Provenance and source_refs are citations and copy cheaply; the
+            # evidence text does not, so only a bounded excerpt + hash rides
+            # along. ``role_evidence`` above already carries the same digest.
+            for keep_key in ("provenance", "source_refs"):
+                value = _first_present(actor_dict, source_protein, keep_key)
+                if value is not None:
+                    complex_row["mapping_meta"].setdefault(keep_key, value)
+            evidence_value = _first_present(actor_dict, source_protein, "evidence")
+            if evidence_value is not None:
+                complex_row["mapping_meta"].setdefault(
+                    "evidence_digest", _bounded_evidence_digest(evidence_value)
+                )
             updated_actor = {
                 "entity": name,
                 "entity_type": "protein_complex",
@@ -6172,6 +6899,9 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     rewritten_transporters.append(dict(actor_dict))
                     summary["unknown_fallbacks_skipped_real_mapping"] += 1
                     continue
+                role_evidence = _role_evidence(
+                    actor_dict, source_complex, name=name, role=role, allowed_role="transporter"
+                )
             else:
                 if source_protein is None:
                     rewritten_transporters.append(dict(actor_dict))
@@ -6184,6 +6914,16 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     rewritten_transporters.append(dict(actor_dict))
                     summary["unknown_fallbacks_skipped_non_enzyme_reference"] += 1
                     continue
+                role_evidence = _role_evidence(
+                    actor_dict, source_protein, name=name, role=role, allowed_role="transporter"
+                )
+
+            if not role_evidence.get("ok"):
+                summary["unknown_fallbacks_skipped_no_role_evidence"] += 1
+                _quarantine_process_claim(
+                    pointer, actor_dict, name=name, role=role, evidence=role_evidence
+                )
+                continue
 
             sentinel = _ensure_unknown_protein()
             if sentinel is None:
@@ -6232,14 +6972,18 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     "components": [component],
                 }
             )
+            complex_row["identity_status"] = IDENTITY_PLACEHOLDER
             complex_row.setdefault("mapping_meta", {}).update(
                 {
                     "provider": "PathBankDB",
                     "source": "db",
                     "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
                     "confidence": 0.0,
+                    "identity_status": IDENTITY_PLACEHOLDER,
                     "fallback_used": True,
                     "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                    "real_mapping_failure_reason": _placeholder_failure_reason(source_protein),
+                    "role_evidence": role_evidence,
                     "cross_species_placeholder": True,
                     "target_organism": target_organism,
                     "functional_enzyme_name": name,
@@ -6251,6 +6995,18 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     },
                 }
             )
+            # Provenance and source_refs are citations and copy cheaply; the
+            # evidence text does not, so only a bounded excerpt + hash rides
+            # along. ``role_evidence`` above already carries the same digest.
+            for keep_key in ("provenance", "source_refs"):
+                value = _first_present(actor_dict, source_protein, keep_key)
+                if value is not None:
+                    complex_row["mapping_meta"].setdefault(keep_key, value)
+            evidence_value = _first_present(actor_dict, source_protein, "evidence")
+            if evidence_value is not None:
+                complex_row["mapping_meta"].setdefault(
+                    "evidence_digest", _bounded_evidence_digest(evidence_value)
+                )
             updated_actor = {
                 "entity": name,
                 "entity_type": "protein_complex",
@@ -6303,6 +7059,49 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                 for row in protein_locations
                 if _normalize_name(_participant_name(row)) not in removed_norms
             ]
+        # A superseded protein must not survive as a dangling component of some
+        # *other* complex: the strict gate reads components against the declared
+        # protein list, so a stale reference would fail the payload for a row
+        # this pass deliberately removed. The wrapped complex itself already
+        # holds the sentinel; anywhere else the reference is dropped, and a
+        # complex left with nothing gets the sentinel so it stays exportable.
+        for complex_row in complexes:
+            if not isinstance(complex_row, dict):
+                continue
+            components = _safe_list(complex_row.get("components"))
+            if not components:
+                continue
+            kept_components = [
+                component
+                for component in components
+                if _normalize_name(_component_name(component)) not in removed_norms
+            ]
+            if len(kept_components) == len(components):
+                continue
+            if not kept_components and _ensure_unknown_protein() is not None:
+                kept_components = [
+                    {
+                        "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                        "stoichiometry": 1,
+                        "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                        "mapped_ids": {
+                            "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                            "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                        },
+                    }
+                ]
+            complex_row["components"] = kept_components
+            actions.append(
+                {
+                    "type": "superseded_protein_component_reference_repaired",
+                    "protein_complex": str(complex_row.get("name") or ""),
+                    "removed_components": sorted(
+                        _normalize_name(_component_name(component))
+                        for component in components
+                        if _normalize_name(_component_name(component)) in removed_norms
+                    ),
+                }
+            )
 
     return {"summary": summary, "actions": actions}
 
@@ -6668,6 +7467,13 @@ def map_payload(
     # to do with the entity name (PhoP -> NAD, pmrHFIJKLM -> LacI, 'mcr genes' ->
     # human mineralocorticoid receptor, all shipped by run 2026-07-28_0919).
     name_gate_rejections = 0
+    # Protein export policy counters. See docs/protein_export_policy.md.
+    ambiguous_real_candidates_rejected = 0
+    false_protein_promotions_blocked = int(
+        _safe_dict(_safe_dict(mapped.get("protein_export_policy")).get("summary")).get(
+            "false_protein_promotions_blocked", 0
+        )
+    )
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -6747,6 +7553,12 @@ def map_payload(
                 status = "unmapped"
                 reason = _NAME_GATE_ISSUE
             else:
+                protein["mapping_meta"].setdefault(
+                    "identity_status",
+                    IDENTITY_PLACEHOLDER
+                    if str(result.get("chosen_rule") or "") == _PATHBANK_UNKNOWN_FALLBACK_RULE
+                    else IDENTITY_VERIFIED,
+                )
                 proteins_mapped += 1
                 if source == "db":
                     proteins_mapped_by_db += 1
@@ -6758,32 +7570,66 @@ def map_payload(
             str(result.get("reason", "")) == "ambiguous"
             or _safe_dict(result.get("resolution")).get("status") == "ambiguous"
         ) and _safe_list(result.get("candidates")):
-            # Fix 2 — Ambiguous proteins: pick the first candidate that has a UniProt ID
+            # An ambiguous candidate list is resolved by evidence or not at all.
+            # It used to be resolved by list order ("first candidate with a
+            # UniProt ID"), which is not a decision -- the resolver returns
+            # candidates in query order, so the winner was whichever organism
+            # UniProt happened to rank first. Every candidate now runs the same
+            # ladder as a normal result; a lone survivor with sufficient margin
+            # is a real mapping, and anything else routes to the Unknown-backed
+            # functional complex further down Stage 6.
             protein_ambiguous += 1
-            _amb_candidates = _safe_list(result.get("candidates"))
-            _first_with_uniprot = next(
-                (c for c in _amb_candidates if isinstance(c, dict) and str(c.get("uniprot") or "").strip()),
-                None,
+            chosen, ambiguity = _resolve_ambiguous_protein_candidates(
+                name,
+                organism=organism,
+                result=result,
             )
-            if _first_with_uniprot:
-                _amb_uniprot = str(_first_with_uniprot["uniprot"]).strip()
-                _amb_mapped: Dict[str, str] = {"uniprot": _amb_uniprot}
-                if _first_with_uniprot.get("pathbank_protein_id"):
-                    _amb_mapped["pathbank_protein_id"] = str(_first_with_uniprot["pathbank_protein_id"])
-                protein["mapped_ids"] = _merge_mapped_ids(_safe_dict(protein.get("mapped_ids")), _amb_mapped)
-                protein["mapping_meta"]["chosen_rule"] = "ambiguous_first_candidate"
+            protein["mapping_meta"]["ambiguity"] = ambiguity
+            if chosen is not None:
+                protein["mapped_ids"] = _merge_mapped_ids(
+                    _safe_dict(protein.get("mapped_ids")), _safe_dict(chosen.get("mapped_ids"))
+                )
+                if chosen.get("pathbank_protein_id"):
+                    protein["pathbank_protein_id"] = int(chosen["pathbank_protein_id"])
+                    protein["mapping_meta"]["pathbank_protein_id"] = int(chosen["pathbank_protein_id"])
+                protein["mapping_meta"]["chosen_rule"] = "ambiguous_verified_single_candidate"
+                protein["mapping_meta"]["identity_status"] = IDENTITY_VERIFIED
+                protein["mapping_meta"]["identity_verdict"] = chosen.get("identity_verdict")
                 protein["mapping_meta"]["resolution"] = {
                     "status": "matched",
-                    "issue": "ambiguous_resolved_by_first",
-                    "order_step": "ambiguous_first_candidate",
+                    "issue": "ambiguous_resolved_by_identity_verification",
+                    "order_step": "ambiguous_verified_single_candidate",
                 }
                 proteins_mapped += 1
-                proteins_mapped_by_db += 1
+                if source == "db":
+                    proteins_mapped_by_db += 1
+                else:
+                    proteins_mapped_by_api += 1
                 status = "mapped"
                 reason = ""
             else:
+                ambiguous_real_candidates_rejected += 1
+                # Candidates are moved aside, never left in place: the second
+                # mapping pass promotes mapping_meta.candidates back to a match,
+                # which would re-admit by order what was just refused on evidence.
+                protein["mapping_meta"]["rejected_candidates"] = [
+                    row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)
+                ][:8]
+                protein["mapping_meta"]["candidates"] = []
+                protein["mapping_meta"]["chosen_rule"] = "ambiguous_unverified"
+                protein["mapping_meta"]["identity_status"] = IDENTITY_UNRESOLVED
+                protein["mapping_meta"]["resolution"] = {
+                    "status": "ambiguous",
+                    "issue": str(ambiguity.get("reason") or "ambiguous_unverified"),
+                    "order_step": "ambiguous_identity_verification",
+                }
                 status = "unmapped"
-                reason = "ambiguous"
+                reason = "ambiguous_unverified"
+                identity_report = _enforce_shipped_identity_names(
+                    protein, result, kind="protein", entity_name=name, organism=organism
+                )
+                if identity_report.get("rejected"):
+                    name_gate_rejections += 1
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
@@ -6910,10 +7756,29 @@ def map_payload(
 
         _remove_norms = _dropped_norms - _still_needed
         if _remove_norms:
-            entities["proteins"] = [
-                _p for _p in _safe_list(entities.get("proteins"))
-                if not (isinstance(_p, dict) and _normalize_name(str(_p.get("name") or "")) in _remove_norms)
-            ]
+            _quarantine_bucket = mapped.get("quarantined_proteins")
+            if not isinstance(_quarantine_bucket, list):
+                _quarantine_bucket = []
+                mapped["quarantined_proteins"] = _quarantine_bucket
+            _kept_proteins: List[Any] = []
+            for _p in _safe_list(entities.get("proteins")):
+                if (
+                    isinstance(_p, dict)
+                    and _normalize_name(str(_p.get("name") or "")) in _remove_norms
+                ):
+                    _quarantine_bucket.append(
+                        {
+                            "name": _canonical_name(str(_p.get("name") or "")),
+                            "reason": "unresolved_complex_component_no_longer_referenced",
+                            "pass": "map_payload.structural_cleanup",
+                            "action": "quarantined_from_entities_proteins",
+                            "had_external_identity": has_protein_external_identity(_p),
+                            "original_row": deepcopy(_p),
+                        }
+                    )
+                    continue
+                _kept_proteins.append(_p)
+            entities["proteins"] = _kept_proteins
             proteins = _safe_list(entities.get("proteins"))
 
     # Phase 2: UniProt API fallback (with gap-model LLM synonym expansion) for every
@@ -6939,7 +7804,7 @@ def map_payload(
                 continue
             try:
                 _api_result = map_protein_uniprot(client, _p_name, _p_org)
-                # Same gate as the main protein loop. This fallback is where run
+                # Same ladder as the main protein loop. This fallback is where run
                 # 2026-07-28_0919 first wrote UniProt P08235 (human
                 # mineralocorticoid receptor) onto the E. coli entity 'mcr genes';
                 # it calls map_protein_uniprot with no row aliases, so its ladder
@@ -6961,7 +7826,17 @@ def map_payload(
                                 "order_step": "api_uniprot_fallback",
                             },
                         })
-                        proteins_mapped += 1
+                        # Re-judged on the merged row, not on the result: the row
+                        # may already have carried a different accession, and
+                        # _merge_mapped_ids keeps the older one.
+                        _api_report = _enforce_shipped_identity_names(
+                            _p_row, _api_result, kind="protein", entity_name=_p_name, organism=_p_org
+                        )
+                        if _api_report.get("rejected"):
+                            name_gate_rejections += 1
+                        else:
+                            _p_row["mapping_meta"]["identity_status"] = IDENTITY_VERIFIED
+                            proteins_mapped += 1
             except Exception:
                 pass
     # ─────────────────────────────────────────────────────────────────────────
@@ -7304,6 +8179,63 @@ def map_payload(
         or str(row.get("resolution_status") or "") == "ambiguous"
     ]
     ambiguous_log_ids = {id(row) for row in ambiguous_log_rows}
+
+    # ── protein export policy census ─────────────────────────────────────────
+    # Read off the final payload, not off the counters, so it reports what
+    # actually shipped. The four protein outcomes are mutually exclusive by
+    # construction: verified real, Unknown-backed placeholder, sentinel, or a
+    # bare unresolved row -- and the last of those is the number that says
+    # whether strict export can succeed.
+    verified_real_proteins = 0
+    bare_unresolved_proteins_remaining = 0
+    for row in proteins:
+        if not isinstance(row, dict) or not _canonical_name(str(row.get("name") or "")):
+            continue
+        if is_pathbank_unknown_protein(row):
+            continue
+        if str(_safe_dict(row.get("mapping_meta")).get("identity_status") or "") == IDENTITY_PLACEHOLDER:
+            continue
+        if has_protein_external_identity(row):
+            verified_real_proteins += 1
+        else:
+            bare_unresolved_proteins_remaining += 1
+    unknown_backed_functional_complexes = sum(
+        1
+        for row in protein_complexes
+        if isinstance(row, dict)
+        and _safe_dict(row.get("mapping_meta")).get("chosen_rule") == _PATHBANK_UNKNOWN_FALLBACK_RULE
+        and any(
+            _to_positive_int(_safe_dict(component).get("pathbank_protein_id"))
+            == _PATHBANK_UNKNOWN_PROTEIN_ID
+            for component in _safe_list(row.get("components"))
+        )
+    )
+    unused_proteins_quarantined = len(
+        [row for row in _safe_list(mapped.get("quarantined_proteins")) if isinstance(row, dict)]
+    )
+    # Carried forward, not replaced: Stage 3 counted what it refused to promote
+    # and what it quarantined, and that record has no other home.
+    policy_summary = dict(
+        _safe_dict(_safe_dict(mapped.get("protein_export_policy")).get("summary"))
+    )
+    policy_summary.update(
+        {
+            "verified_real_proteins": verified_real_proteins,
+            "unknown_backed_functional_complexes": unknown_backed_functional_complexes,
+            "ambiguous_real_candidates_rejected": ambiguous_real_candidates_rejected,
+            "unused_proteins_quarantined": unused_proteins_quarantined,
+            "false_protein_promotions_blocked": false_protein_promotions_blocked,
+            "bare_unresolved_proteins_remaining": bare_unresolved_proteins_remaining,
+        }
+    )
+    protein_export_policy = {
+        "stage": "post_mapping",
+        "summary": policy_summary,
+        "minimum_score": _REAL_PROTEIN_MIN_SCORE,
+        "minimum_margin": _REAL_PROTEIN_MIN_MARGIN,
+    }
+    mapped["protein_export_policy"] = protein_export_policy
+
     summary = {
         "proteins_total": proteins_total,
         "proteins_mapped": proteins_mapped,
@@ -7348,6 +8280,7 @@ def map_payload(
         ),
     }
     summary.update(_safe_dict(enzyme_complex_report.get("summary")))
+    summary.update(_safe_dict(protein_export_policy.get("summary")))
 
     report = {
         "summary": summary,
@@ -7355,6 +8288,7 @@ def map_payload(
         "entities": logs,
         "enzyme_complex_conversion": enzyme_complex_report,
         "mapping_metadata_policy": mapping_metadata_policy,
+        "protein_export_policy": protein_export_policy,
     }
     return {"payload": mapped, "report": report}
 
@@ -7475,6 +8409,18 @@ def resolve_mapping_gaps(
                 result = db.map_compound_by_name(name)
         except Exception as exc:  # noqa: BLE001
             result = {"status": "error", "reason": str(exc), "candidates": [], "confidence": 0.0, "chosen_rule": ""}
+
+        if etype == "protein":
+            # The gap resolver is a real-ID route like any other: it writes a
+            # UniProt accession straight onto the row from a *name* lookup, which
+            # is exactly the query shape that resolved 'pmrHFIJKLM' to the lactose
+            # operon repressor. Curated PathBank protein rows keep their
+            # exemption inside the ladder, so a legitimate gap fill still lands.
+            result = _apply_name_plausibility_gate(
+                result, name, kind="protein", organism=organism
+            )
+        elif etype == "compound":
+            result = _apply_name_plausibility_gate(result, name, kind="compound")
 
         resolved = result.get("status") == "mapped"
         if resolved:

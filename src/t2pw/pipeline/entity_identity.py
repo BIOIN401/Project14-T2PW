@@ -9,6 +9,12 @@ PATHBANK_UNKNOWN_PROTEIN_NAME = "Unknown"
 PATHBANK_UNKNOWN_PROTEIN_UNIPROT = "Unknown"
 PATHBANK_UNKNOWN_FALLBACK_RULE = "pathbank_unknown_protein_fallback"
 
+#: ``mapping_meta.identity_status`` values. One authoritative vocabulary, so a
+#: reader never has to infer "is this a real match?" from a rule name.
+IDENTITY_VERIFIED = "verified"
+IDENTITY_PLACEHOLDER = "placeholder"
+IDENTITY_UNRESOLVED = "unresolved"
+
 
 def _mapping(value: Any) -> Mapping[str, Any]:
     return value if isinstance(value, dict) else {}
@@ -85,6 +91,137 @@ def is_pathbank_unknown_protein(row: Any) -> bool:
             or meta.get("cross_species_placeholder") is True
         )
     )
+
+
+def identity_status(row: Any) -> str:
+    """The declared identity status of a protein / protein_complex row.
+
+    Falls back to inferring it from the sentinel shape so a row written before
+    ``identity_status`` existed still reports honestly.
+    """
+
+    if not isinstance(row, dict):
+        return ""
+    meta = _mapping(row.get("mapping_meta"))
+    declared = _canonical(row.get("identity_status") or meta.get("identity_status")).casefold()
+    if declared:
+        return declared
+    if is_pathbank_unknown_protein(row):
+        return IDENTITY_PLACEHOLDER
+    if meta.get("cross_species_placeholder") is True or meta.get("fallback_used") is True:
+        return IDENTITY_PLACEHOLDER
+    if has_protein_external_identity(row):
+        return IDENTITY_VERIFIED
+    return IDENTITY_UNRESOLVED
+
+
+def is_placeholder_identity(row: Any) -> bool:
+    """Whether the row admits it is a placeholder rather than a real mapping."""
+
+    return identity_status(row) == IDENTITY_PLACEHOLDER
+
+
+def placeholder_claims_real_identity(row: Any) -> str:
+    """Return the rule id when a placeholder row is posing as a real mapping.
+
+    A placeholder that ships a plausible UniProt accession, or that reports a
+    ``matched`` resolution, is the one failure mode no other gate can see: every
+    identity check passes and the pathway is wrong. Returns ``""`` for a
+    correctly-formed placeholder.
+    """
+
+    if not isinstance(row, dict) or not is_placeholder_identity(row):
+        return ""
+    meta = _mapping(row.get("mapping_meta"))
+    accession = _canonical(
+        row.get("uniprot")
+        or row.get("uniprot_id")
+        or _mapping(row.get("mapped_ids")).get("uniprot")
+    )
+    if accession and accession.casefold() != PATHBANK_UNKNOWN_PROTEIN_UNIPROT.casefold():
+        return "placeholder_ships_real_uniprot_accession"
+    drugbank = _canonical(
+        row.get("drugbank")
+        or row.get("drugbank_id")
+        or _mapping(row.get("mapped_ids")).get("drugbank")
+    )
+    if drugbank:
+        return "placeholder_ships_real_drugbank_accession"
+    resolution = _mapping(meta.get("resolution"))
+    if _canonical(resolution.get("status")).casefold() == "matched":
+        return "placeholder_reports_matched_resolution"
+    if meta.get("fallback_used") is not True:
+        return "placeholder_does_not_record_fallback_used"
+    return ""
+
+
+# ── compound-vs-protein name shape ──────────────────────────────────────────
+#
+# PROTEIN_LIKE_RE matches the substring "enzyme", which is inside "coenzyme":
+# every "coenzyme A" name in run 2026-07-28_2122 was therefore read as a protein
+# and filed in entities.proteins, where it can never acquire a UniProt ID. Eight
+# of that night's 27 distinct post-gate issue codes are one of two cofactors
+# misfiled this way. These two rules say what the regex cannot: a CoA- or
+# ACP-bound acyl name is a metabolite, and the enzyme that acts on it is not.
+
+def _moiety_tokens(value: Any) -> str:
+    """Space-separated word tokens, punctuation-insensitive (``succinyl-CoA`` -> ``succinyl coa``)."""
+
+    text = re.sub(r"[^a-z0-9]+", " ", _canonical(value).casefold())
+    return re.sub(r"\s+", " ", text).strip()
+
+
+#: Words that make a name the *catalyst* rather than the substrate. ``\w+ase``
+#: covers dehydratase/ligase/synthase/...; the denylist keeps ordinary English
+#: words that merely end in "ase" from disqualifying a real metabolite name.
+_ENZYME_HEAD_NOUN_RE = re.compile(
+    r"\b(?:[a-z]{3,}ase|synthase|carrier\s+protein|protein|complex|subunit|enzyme"
+    r"|receptor|transporter|symporter|antiporter|permease|factor|domain)\b",
+    flags=re.IGNORECASE,
+)
+_NON_ENZYME_ASE_WORDS = frozenset(
+    {"base", "case", "phase", "increase", "decrease", "release", "disease", "purchase", "database"}
+)
+#: Words that name the ACP *protein* rather than a loaded acyl species -- but
+#: only as the whole prefix. ``acyl-ACP`` is the generic carrier; ``trans-2-acyl-ACP``
+#: is a specific metabolite, and the moiety qualifier in front is what says so.
+_ACP_PROTEIN_STATE_PREFIXES = frozenset({"holo", "apo", "free", "acyl", "unloaded", "loaded"})
+
+
+def _has_enzyme_head_noun(name: str) -> bool:
+    for match in _ENZYME_HEAD_NOUN_RE.finditer(_canonical(name)):
+        if match.group(0).strip().casefold() not in _NON_ENZYME_ASE_WORDS:
+            return True
+    return False
+
+
+def compound_moiety_verdict(name: Any) -> str:
+    """Rule id when ``name`` denotes a carrier-bound metabolite, else ``""``.
+
+    ``coa_thioester`` covers free CoA and every acyl-CoA/acyl-coenzyme A;
+    ``acp_thioester`` covers acyl-ACP species such as ``beta-hydroxyacyl-ACP``.
+    Both defer to :func:`_has_enzyme_head_noun`, so ``succinyl-CoA synthetase``
+    and ``beta-hydroxyacyl-ACP dehydratase`` stay proteins -- the distinction the
+    regex could not make.
+    """
+
+    tokens = _moiety_tokens(name).split()
+    if not tokens or _has_enzyme_head_noun(name):
+        return ""
+    if "coa" in tokens:
+        return "coa_thioester"
+    for index in range(len(tokens) - 1):
+        if tokens[index] == "coenzyme" and tokens[index + 1] == "a":
+            return "coa_thioester"
+    if "acp" in tokens:
+        index = tokens.index("acp")
+        # Bare "ACP", and "holo-/apo-/acyl-ACP", are the carrier protein itself.
+        # Anything with a moiety qualifier ahead of that -- "malonyl-ACP",
+        # "trans-2-acyl-ACP" -- names the loaded species, which is a metabolite.
+        state_prefix_only = index == 1 and tokens[0] in _ACP_PROTEIN_STATE_PREFIXES
+        if index > 0 and not state_prefix_only:
+            return "acp_thioester"
+    return ""
 
 
 def component_stoichiometry(component: Any) -> Optional[int]:
@@ -204,6 +341,7 @@ def route_entity_for_mapping(
     *,
     protein_like_names: Optional[Set[str]] = None,
     lenient_names: bool = False,
+    compound_names: Optional[Set[str]] = None,
 ) -> Dict[str, str]:
     """Classify an entity for compound, protein, or complex ID mapping.
 
@@ -215,6 +353,15 @@ def route_entity_for_mapping(
     it keeps whatever route its own wording implies. Explicit type hints still
     win, and the biochemical-colon rules (``18:1-CoA``) are unaffected because
     they already route away from complex.
+
+    ``compound_names`` is the payload's own compound registry. A name the
+    payload already declares as a compound, or one whose shape says it is a
+    carrier-bound metabolite (:func:`compound_moiety_verdict`), is never handed
+    to the protein mapper on the strength of the name regex alone -- that is the
+    ``coenzyme A`` -> "contains 'enzyme'" -> protein defect. An explicit type
+    hint and an explicit protein declaration both still outrank it, so nothing
+    that was declared a protein changes route. ``blocked_rule`` records the
+    block so a caller can count it instead of the block being invisible.
     """
 
     name = _canonical(entity_name)
@@ -229,6 +376,33 @@ def route_entity_for_mapping(
         return {"route": "complex", "reason": "complex_entity"}
     if norm in protein_like_set:
         return {"route": "protein", "reason": "known_protein_like"}
+    blocked = compound_name_block_rule(name, compound_names=compound_names)
+    if blocked:
+        return {
+            "route": "compound",
+            "reason": "declared_or_shaped_as_compound",
+            "blocked_rule": blocked,
+        }
     if _looks_protein_like_name(name):
         return {"route": "protein", "reason": "name_pattern"}
     return {"route": "compound", "reason": "default_compound_route"}
+
+
+def compound_name_block_rule(
+    name: Any,
+    *,
+    compound_names: Optional[Set[str]] = None,
+) -> str:
+    """Rule id when ``name`` must be read as a compound, else ``""``.
+
+    Two independent sources, in order: the payload's own compound registry
+    (authoritative -- the extractor said so) and the carrier-moiety name shape
+    (the backstop for a participant that never got a registry row).
+    """
+
+    norm = _normalize(name)
+    if not norm:
+        return ""
+    if norm in {value for value in (compound_names or set()) if value}:
+        return "compound_registry"
+    return compound_moiety_verdict(name)

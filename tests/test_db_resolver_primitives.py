@@ -699,7 +699,17 @@ class TestResolveMappingGaps:
         ])
         mapped_result = {
             "status": "mapped", "confidence": 0.9, "chosen_rule": "db_top_candidate_relaxed",
-            "candidates": [{"name": "Albumin", "uniprot": "P02768"}],
+            # Organism and score are what map_protein_by_name_species really
+            # returns, and the identity ladder fails closed without them.
+            "candidates": [
+                {
+                    "name": "Albumin",
+                    "uniprot": "P02768",
+                    "organism": "Homo sapiens",
+                    "pathbank_protein_id": 500,
+                    "score": 0.9,
+                }
+            ],
             "mapped_ids": {"uniprot": "P02768"},
             "pathbank_protein_id": 500,
         }
@@ -775,7 +785,16 @@ class TestResolveMappingGaps:
         ])
         mapped_result = {
             "status": "mapped", "confidence": 0.88, "chosen_rule": "db_top_candidate_relaxed",
-            "candidates": [{"name": "Transferrin"}], "mapped_ids": {"uniprot": "P02787"},
+            "candidates": [
+                {
+                    "name": "Transferrin",
+                    "uniprot": "P02787",
+                    "organism": "Homo sapiens",
+                    "pathbank_protein_id": 600,
+                    "score": 0.88,
+                }
+            ],
+            "mapped_ids": {"uniprot": "P02787"},
             "pathbank_protein_id": 600,
         }
         with patch.object(r, "map_protein_by_name_species", return_value=mapped_result):

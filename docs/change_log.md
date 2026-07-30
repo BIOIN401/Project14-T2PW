@@ -5,6 +5,290 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Six corrections to the paper-eligibility gate: the false claim could still get back in (2026-07-29, branch `research-mode`)
+
+Follow-up to the entry below; full rules in `docs/paper_eligibility.md`.
+
+**Error.** The first pass at the gate removed the request-stamping bug at the source but
+left six ways for its consequences to survive, four of which were demonstrable on the real
+2026-07-28_2122 data.
+
+1. *A legacy acquisition cache could reintroduce the false organism.* Cache files written
+   before the split have no schema version and every candidate row's `organism` is the
+   organism the search asked for. `_as_batch_paper` promoted `candidate.organism` into
+   `observed_organisms` unconditionally, so reading one cached row put
+   `"Escherichia coli"` back on the Fournier's-gangrene case report as an *observation*.
+2. *`apply_stage0_observation` had no caller outside its tests.* The rule that Stage 0 may
+   observe but not overwrite was implemented and verified in isolation and enforced
+   nowhere.
+3. *Species matching was too loose in one direction and unrepresented in the other.*
+   `Escherichia` (bare genus) inferred `Escherichia coli`, and same-genus/different-species
+   was silently folded into `match`, so `E. coli` vs `E. fergusonii` and `B. subtilis` vs
+   `B. cereus` scored a full organism bonus with no signal that they were not the requested
+   species.
+4. *"Anchored" was a document-level test.* A pathway alias anywhere plus a generic word
+   ("mechanism", "inhibition", "flux") anywhere else counted as mechanistic evidence. With
+   abstracts, that admitted all five real cholesterol false-positive shapes — `SQLE`,
+   `CYP51A1` and `DHCR24` named among differentially expressed hits from a proteomic or
+   transcriptomic screen, and `PMC12993329`/`PMC12705669` naming the molecule with no local
+   reaction at all.
+5. *The fixed `want * 3` over-fetch outlived its calibration.* It was sized for a fetcher
+   that took every hit with retrievable full text. Against a gate that rejects 21 of 28,
+   one 3x pull under-delivers every topic, silently.
+6. *The screening input was not persisted.* A rejection in `skipped.json` could not be
+   reproduced offline, and the dry-run tool had no abstract to work from, so it could only
+   ever screen titles.
+
+**Why.** Each is the same class of mistake: a rule enforced at one seam and assumed at the
+others. The split was made at the fetchers but not at the cache reader; the immutability
+rule was written but not called; "same organism" was tested for equality-or-containment
+rather than by species; locality was named in the design but implemented as a whole-document
+keyword scan; and the funnel's sizing constant was never revisited when the funnel gained a
+filter.
+
+**Fix.**
+
+* *Cache schema.* `CACHE_SCHEMA_VERSION = 2`. `migrate_cached_payload` runs on read and
+  demotes a legacy stamped `organism` to `requested_organism`, clearing the observed side
+  and keeping everything else, so an existing offline cache stays usable rather than being
+  discarded. `search_candidates` reports `cache_schema_migrated`;
+  `CandidatePaper.from_dict` applies the same demotion for any other reader; detection is
+  on key presence, not value. The unconditional `candidate.organism` promotion is gone —
+  `_as_batch_paper` now reads every observed field from the decision, which also makes
+  `BatchPaper.observed_organisms`, `organism_match` and `eligibility["observed_organisms"]`
+  unable to disagree (`BatchPaper.scope_disagreements()` asserts it,
+  `eligibility_summary` reports it).
+* *Stage-0 boundary.* `driver._reconcile_stage0_scope` runs right after stage 1 succeeds —
+  the first point where the app's `session_state["pathway_context"]` and the plan's request
+  both exist. It records the observation always, and on a contradiction writes a
+  `scope_conflict.json` artifact, adds the `scope_conflict` issue code, and stops the run
+  with `status="scope_conflict"`, which `report._norm_status` folds out of the failure tally.
+  The request is never rewritten. Configurable via
+  `RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS`.
+* *Species precision.* `organism_match` gains `genus_level`. Exact binomials and
+  strain-qualified forms are `match`; same genus/different species and bare-genus mentions
+  are `genus_level` — permitted, but scored at 0.25 instead of 1.0, warned about, and
+  flagged for review. The lexicon holds species-level aliases only; genera drive a binomial
+  scan that can observe a species the lexicon has never seen.
+* *Local evidence.* Anchoring is judged per pathway mention, in its sentence or a
+  12-token window. `pathway_head` never anchors; the framing vocabulary
+  (`mechanism`/`inhibition`/`flux`/bare `-ase`) is excluded from the strong set, as are
+  `biosynthesis`/`biosynthetic` (which sit inside the aliases and let them self-certify);
+  and in a document that announces itself as a screen, a pathway-specific term anchors only
+  if the pathway is named in the title. Every decision carries a `classification`:
+  `mechanistic` / `context_only` / `omics_only` / `off_topic`.
+* *Filling the count.* `fetch_papers` escalates the search per topic until the requested
+  count is filled, the source runs dry, or `eligibility_candidate_ceiling` candidates have
+  been examined, and reports the funnel (requested / examined / eligible / ineligible /
+  duplicate / no_full_text / accepted, per topic and overall, with every short topic and
+  its stop reason) through a `stats` out-param that the runner logs and stores at
+  `plan["eligibility"]["acquisition"]`.
+* *Persisted input.* `screening_input` stores the title, the abstract bounded to 4000
+  chars, and the SHA-256 of the full abstract, so a `skipped.json` rejection replays
+  offline. The dry-run tool prefers the plan's stored abstract automatically, falls back to
+  a bounded lead window recovered from `01_source_text.txt` for legacy plans, and marks
+  anything short of a publisher abstract `provisional`.
+
+**Measured on the real 2026-07-28_2122 plan** (17 labelled papers: the 6 known junk papers
+and the 5 cholesterol false-positive shapes as negatives, the 5 genuine Lpx/Men/PPOX/Ent
+reaction papers plus the enterobactin review as positives): with cached abstracts,
+precision 1.00, recall 1.00, 7 of 28 accepted. Title-only: precision 1.00, recall 0.33,
+with all four misses flagged for manual review — the contextual rule cannot confirm
+mechanism from a title, which is what `provisional` has always meant.
+
+**Pipeline consistency:** every correction tightens or instruments an existing seam rather
+than adding one. The gate still sits entirely in the acquisition layer, `eligibility` still
+imports nothing but `t2pw.config`, and the Stage-0 boundary reads the app's own session
+state without touching the app.
+
+---
+
+## Only plausibly-mechanistic papers enter the pipeline; requested scope stops being stamped as observed (2026-07-29, branch `research-mode`)
+
+Full rules in `docs/paper_eligibility.md`; this entry is the error/why/fix record.
+
+**Error.** Two separate failures with one shared consequence. Run 2026-07-28_2122 planned 28
+papers and ran each of them twice. Six of the 28 were papers no pathway extractor could ever
+have succeeded on: a Fournier's-gangrene case report (`PMC12971581`, fetched for *lipid A
+biosynthesis in E. coli*), a river-resistome surveillance study (`PMC13139079`), two poultry/turkey
+ESBL virulence surveys (`PMC12649316`, `PMC12737783`, fetched for *enterobactin biosynthesis*), a
+COVID-19 lncRNA comorbidity study (`PMC12797059`) and a gene-set-evolution tool (`PMC12898691`).
+Each cost a full-text download plus two app runs, and then arrived in the morning triage filed as
+an *extraction failure* — so debugging went into the extractor for papers that were never about
+the requested pathway. Separately, every `CandidatePaper` in the plan carried
+`organism: "Escherichia coli"` (or `Homo sapiens`, …) whether or not the paper had anything to do
+with that organism — including the Fournier's case report, which is *Ochrobactrum anthropi*.
+
+**Why.**
+
+1. *Retrievable full text was the only admission criterion.* `batch/fetch.fetch_papers` took every
+   candidate a topic query returned, fetched its text, and planned it. There was no cheap
+   metadata gate anywhere before the expensive work.
+2. *Requested metadata was written into observed fields.* Every acquire fetcher passed
+   `organism=organism` — the organism the *search asked for* — onto the candidate, and
+   `_as_batch_paper` did `candidate.organism or spec.organism`. Downstream, a stamped organism is
+   indistinguishable from a reported one, so the single organism check that did exist
+   (`select._organism_score`) was pinned at 1.0 and could never fire. "We asked for E. coli" and
+   "this paper is about E. coli" were the same field.
+3. *`ineligible_*` was an unrecognised status.* `report._norm_status` mapped anything it did not
+   recognise to `STATUS_UNKNOWN`, and `_is_failure` counts `STATUS_UNKNOWN` as a failure — so even
+   an explicitly screened-out paper would have been scored as a defect.
+
+**Fix.**
+
+* New `src/t2pw/rag/eligibility.py`: a deterministic, offline title/abstract scorer (fixed
+  lexicons, word-boundary regexes, arithmetic — no network, no LLM, no clock). Positive evidence:
+  pathway aliases, expected enzyme/metabolite terms, reaction/mechanism language, organism/taxonomy
+  match, reconstruction and enzyme-characterization language. Negative evidence: incompatible
+  organism, clinical case report, epidemiology/prevalence survey, animal-virulence survey for an
+  unrelated pathway, software-only, pathway named only in background, no mechanistic pathway terms.
+  Eight explicit outcomes. Thresholds are `RAG_ELIGIBILITY_*` config, defaulted in `RAG_DEFAULTS`.
+* Eligibility requires a **pathway anchor** — a pathway-name alias or a pathway-specific
+  enzyme/metabolite. The bare head compound scores but does not anchor: naming "cholesterol" is not
+  evidence a paper is about cholesterol *biosynthesis*, and treating it as an anchor admitted four
+  cholesterol-signalling and cholesterol-in-cancer papers.
+* `RequestedScope` is a frozen dataclass and `apply_stage0_observation` returns it untouched, with
+  Stage 0's reading landing in `ObservedContext` (`observed_pathways` / `observed_organisms` /
+  `aliases` / `ambiguities`). A strong Stage-0 contradiction yields `conflicts` for the caller to
+  act on; it can no longer re-point the batch at whatever a paper turned out to be about.
+* `fetch_papers` runs the gate **before** `fetch_full_text`, so a rejected paper costs one keyword
+  scan. `CandidatePaper` and `BatchPaper` gained `requested_pathway` / `requested_organism` /
+  `observed_pathways` / `observed_organisms` / `organism_match`; `organism` now means only "what the
+  paper reports" and no code path backfills it from the request. Pinned ids bypass the score
+  (`pinned_override`) but still record every mismatch as a warning.
+* Screened papers become `skipped.json` records with their eligibility report and get no paper
+  folder and no manifest row, so they cannot reach the triage. Belt and braces:
+  `report.STATUS_INELIGIBLE` folds the `ineligible_*` spellings out of `_is_failure` and into
+  `incomplete`, and the summary counts them on their own line.
+* `plan.json` persists the per-paper eligibility report and a top-level block with the thresholds
+  the run was screened with, the per-outcome tally and the manual-inspection list.
+* `scripts/eligibility_dry_run.py` re-screens a stored plan offline and reports what would be
+  accepted or rejected, marking title-only verdicts provisional.
+
+**Pipeline consistency:** the gate sits entirely in the acquisition layer, before Stage 0 —
+it changes which papers reach the pipeline, never what the pipeline does with one. The dependency
+arrow still points RAG → core only (`eligibility` imports nothing but `t2pw.config`), and the
+requested/observed split makes the existing `select._organism_score` check meaningful for the
+first time rather than replacing it.
+
+---
+
+## One authoritative protein export policy: verify real identities, place the rest honestly (2026-07-29, branch `research-mode`)
+
+Full policy in `docs/protein_export_policy.md`; this entry is the error/why/fix record.
+
+**Error.** Two opposite failures shipped from the same seam. Run 2026-07-28_0919 exported
+`PhoP` as NAD+, `pmrHFIJKLM operon` as the lactose operon repressor and `mcr genes` as the human
+mineralocorticoid receptor, every one of them with `resolution.status == "matched"` and zero gate
+errors. Run 2026-07-28_2122 failed all 16 strict legs, 7 of them at the post-pipeline gates,
+largely on enzymes the papers state clearly and no database has ever heard of. Between them,
+`entities.proteins` was accumulating cofactors: 8 of that night's 27 distinct post-gate issue
+codes are `coenzyme A (CoA)` or `succinyl-coenzyme A (ScoA)` filed as a protein.
+
+**Why.** Three independent causes, each with the same shape — a check that measured the wrong
+thing and reported success.
+
+1. *No identity check on a real accession.* `map_payload` resolved an ambiguous candidate list by
+   taking `next(c for c in candidates if c.get("uniprot"))` — literally list order, recorded as
+   `chosen_rule: "ambiguous_first_candidate"` and `status: "matched"`. Every other real-ID route
+   (cached hit, pre-existing id from the first mapping pass, second-pass promotion from row
+   metadata, the Phase-2 UniProt fallback, `resolve_mapping_gaps`) had at most the name gate, and
+   two had nothing at all.
+2. *`PROTEIN_LIKE_RE` matches `enzyme`, which is inside `coenzyme`.* `_is_protein_like` therefore
+   answered yes for `coenzyme A (CoA)` even when the payload's own compound registry said
+   otherwise, and `promote_catalysts` moved it into `entities.proteins`, where it can never
+   acquire a UniProt id and the identity gate fires forever.
+3. *The prune/gate contradiction.* `prune_disconnected_proteins` and
+   `drop_process_orphan_proteins` spared a degree-0 protein that carried an external identifier;
+   `run_strict_post_normalization_gates` then rejected it for being degree-0. Sparing it never
+   saved it — four of PMC12444477's strict-leg errors existed for no other reason.
+
+**Fix.** One authority, `map_ids.verify_real_protein_identity`, with six recorded rungs — entity
+type, species/taxon, name/alias/gene, identifier resolution, minimum score (0.5), margin over
+rivals (0.1) — applied at *every* route that can write a real accession onto a protein row.
+`ambiguous_first_candidate` is deleted: a candidate list is resolved on evidence or not at all,
+and a lone survivor with sufficient margin is `ambiguous_verified_single_candidate`.
+
+An actor that fails verification but has a usable functional name and direct role evidence is not
+dropped — it goes to the strengthened `_apply_pathbank_unknown_enzyme_fallback`, which preserves
+the functional name on a generated `protein_complex` backed by PathBank Unknown 9659, stamps
+`identity_status="placeholder"` with the evidence and the real reason mapping failed, and is
+counted separately from `verified_real_proteins` so a placeholder can never be read as a real
+UniProt match. An actor with *no* role evidence — an inhibitor parked in `enzymes`, a cofactor in
+the actor list — has its process claim quarantined instead; wrapping an unsupported claim would
+manufacture an enzyme the paper never stated.
+
+`entity_identity.compound_name_block_rule` fixes the promotion, keyed off the payload's own
+compound registry first and a carrier-moiety name shape second, both deferring to an enzyme
+head-noun check so `succinyl-CoA` is a metabolite and `succinyl-CoA synthetase` is not. Strict
+mode now quarantines an unused protein whether or not it is mapped (into
+`payload["quarantined_proteins"]`, with what it carried); research mode retains and flags it, and
+both passes run in both modes so the research census exists at all.
+
+**Measured, offline, on the compact fixtures.** `tests/fixtures/baseline_2026_07_28` gate census
+is byte-identical before and after except `disconnected_mapped_protein`, which goes from 1 gate
+error ("Protein has degree 0 after normalization: FabA") to 0 with FabA quarantined and its
+verified identity recorded. On the cofactor payload: 5 gate errors before, 1 after — the four
+`coenzyme A`/`succinyl-coenzyme A` errors are gone because the rows never leave
+`entities.compounds`, and the one that remains is the genuine missing identity of `ALAS`. On the
+ambiguous payload: `O34362` (*Bacillus subtilis*) shipped before for a *Camellia sinensis*
+pathway as `status: matched`; after, it is refused and the actor points at a functional complex
+named `MenD` backed by the sentinel.
+
+### Correction, same day: the ladder was failing *open*
+
+The first cut of the ladder treated "nothing to judge on" as a pass at four
+separate rungs, which meant an accession with no candidate row, no organism, no
+resolved name and no score verified cleanly — the exact shape of `mcr genes` ->
+P08235. It now fails closed with `identity_evidence_missing` and routes to the
+placeholder, so nothing is dropped and nothing is claimed. Four further
+corrections landed with it:
+
+* **Species.** Blanket same-genus agreement passed `Escherichia coli` for
+  `Escherichia fergusonii` and `Bacillus subtilis` for `Bacillus cereus`.
+  Agreement now requires a taxonomy id, the same binomial, or a strain
+  qualification of it at a word boundary. Genus-level acceptance survives only
+  when the *request* was genus-level and is recorded as `genus_level`, never as
+  an exact species match.
+* **PathBank.** The blanket name exemption is gone: it fired before any other
+  evidence was weighed and returned `skip`, which a fail-closed ladder cannot
+  distinguish from a pass, so curated provenance alone was shipping accessions.
+  A PathBank row now proves itself on a name token, an exact gene symbol or an
+  audited alias; it keeps only the *score* waiver, because that provider supplies
+  no score. Cost, accepted and recorded: three matches of the `LpxL` -> P0ACV0
+  shape (entity is the modern symbol, PathBank stores `htrB`) were right and now
+  become placeholders.
+* **Score attribution.** `_candidate_score` took `max(candidate, result)`, so on
+  the second mapping pass a weak shipped accession borrowed the confidence of the
+  *different* accession the resolver had just chosen. Result-level confidence is
+  now read only when `result.mapped_ids` identifies the same candidate.
+* **Role support.** Canonical membership in `enzymes`/`transporters` still
+  authorizes the placeholder, but it is recorded as
+  `role_basis: canonical_actor_membership` with a separate
+  `direct_evidence_present` flag, and the raw evidence text is replaced by a
+  bounded `evidence_digest` (200-char excerpt + sha256 + length). Calling
+  collection membership "evidence", or copying a 139,576-character flattened
+  corpus into `mapping_meta`, were both the same dishonesty in miniature.
+
+Ten test fixtures across six files were given the candidate rows a real resolver
+returns (organism, name, score) rather than the bare `{"uniprot": "..."}` they
+carried; under a fail-closed ladder those stubs were asserting that unverifiable
+evidence verifies. One pre-existing flake was fixed on the way:
+`test_query_ladder_never_issues_a_bare_operon_query` reaches
+`map_protein_uniprot`'s third tier, which calls the LLM over the network, and its
+answer sometimes contained the very `operon` token the test forbids.
+
+**Contracts deliberately changed**, each because it pinned the defect rather than the design:
+`test_prune_disconnected_proteins_keeps_identified_proteins` (mapped orphans are now quarantined,
+not spared for the gate to reject), `test_normalize_process_payload_returns_gate_failure_in_report`
+(the orphan is resolved before the gate), and
+`test_strict_mode_still_enforces_connectivity_on_the_same_payload` (same reversal, renamed). The
+shared best-effort fixture in `test_stage2_mapping_boundary.py` moved 0.42 -> 0.62 so it stays in
+the band those tests are about — below the 0.78 low-confidence line, above the 0.5 identity
+floor — with the other side of the floor pinned separately.
+
+---
+
 ## Pre-run readiness: the scope filter proved live end to end, and the night's arithmetic (2026-07-28, branch `research-mode`)
 
 Written in the last hour before the overnight corpus run, and deliberately narrow. **No new

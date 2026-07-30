@@ -50,6 +50,7 @@ mistaken for a night that happened.
 from __future__ import annotations
 
 import json
+import inspect
 import os
 import re
 import shutil
@@ -65,7 +66,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.batch import driver, report
 from t2pw.batch.driver import MODE_RESEARCH, MODE_STRICT, RunOutcome
-from t2pw.batch.fetch import BatchPaper, fetch_papers
+from t2pw.batch.fetch import BatchPaper, eligibility_summary, fetch_papers
 from t2pw.paths import PROJECT_ROOT
 
 # ── Run-directory layout ───────────────────────────────────────────────────
@@ -574,6 +575,18 @@ def _plan_record(paper: BatchPaper) -> Dict[str, Any]:
     record.pop("full_text", None)  # it lives in 01_source_text.txt, not here
     record["chars"] = len(paper.full_text)
     return record
+
+
+def _plan_eligibility(
+    papers: Sequence[BatchPaper],
+    skipped: Sequence[Dict[str, Any]],
+    stats: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """The plan's eligibility block; never lets a reporting slip sink a run."""
+    try:
+        return eligibility_summary(papers, skipped, stats=stats)
+    except Exception:  # noqa: BLE001 - a summary is a nicety, the plan is not
+        return {"error": traceback.format_exc(limit=2)}
 
 
 def paper_from_plan(run_dir: Path, slug: str) -> Dict[str, Any]:
@@ -1816,8 +1829,30 @@ def _plan_for_fresh_run(
     if not topics_text.strip():
         log(f"topics file is empty or missing: {topics_path}")
     log(f"fetching papers (topics={topics_path}, limit={limit if limit else 'none'}) ...")
+    # ``stats`` is an out-param. Inspect the callable before invoking it so an
+    # old test fake without that keyword still works. Catching TypeError and
+    # retrying would also catch a TypeError raised *inside* a modern fetcher,
+    # causing a second acquisition attempt (and potentially duplicate network
+    # work) while hiding the real fault.
+    fetch_stats: Dict[str, Any] = {}
     try:
-        papers, skipped = fetch_fn(topics_text, limit=limit)
+        try:
+            signature = inspect.signature(fetch_fn)
+            accepts_stats = (
+                "stats" in signature.parameters
+                or any(
+                    parameter.kind is inspect.Parameter.VAR_KEYWORD
+                    for parameter in signature.parameters.values()
+                )
+            )
+        except (TypeError, ValueError):
+            # Some extension/builtin callables have no inspectable signature.
+            # Prefer the current contract and let any error surface once.
+            accepts_stats = True
+        if accepts_stats:
+            papers, skipped = fetch_fn(topics_text, limit=limit, stats=fetch_stats)
+        else:
+            papers, skipped = fetch_fn(topics_text, limit=limit)
     except Exception:  # noqa: BLE001 - fetch_papers promises not to raise, but
         log("paper acquisition crashed; see plan.json for the traceback")
         papers, skipped = [], [{"reason": "fetch_crashed", "detail": traceback.format_exc()}]
@@ -1839,12 +1874,32 @@ def _plan_for_fresh_run(
         "limit": limit,
         "papers": [_plan_record(paper) for paper in papers],
         "skipped": len(skipped),
+        # The eligibility gate's own account: the thresholds this run was screened
+        # with, the per-outcome tally, and the ids flagged for manual inspection.
+        # Persisted here so a plan is self-describing -- a paper that never entered
+        # the pipeline is explained by the plan, not inferred from its absence.
+        "eligibility": _plan_eligibility(papers, skipped, fetch_stats),
     }
     save_plan(run_dir, plan)
     for paper in papers:
         log(f"  + {paper.slug}  ({len(paper.full_text)} chars)  {paper.title or '(untitled)'}")
     log(f"planned {len(papers)} paper(s) x {len(modes)} mode(s) = {len(papers) * len(modes)} run(s); "
         f"{len(skipped)} candidate(s) skipped (see {SKIPPED_NAME})")
+    if fetch_stats:
+        log(
+            "acquisition funnel: requested "
+            f"{fetch_stats.get('requested')}, examined {fetch_stats.get('examined')}, "
+            f"eligible {fetch_stats.get('eligible')}, ineligible "
+            f"{fetch_stats.get('ineligible')}, no_full_text "
+            f"{fetch_stats.get('no_full_text')}, accepted {fetch_stats.get('accepted')}"
+        )
+        for short in _safe_list(fetch_stats.get("topics_short")):
+            row = _safe_dict(short)
+            log(
+                f"  ! topic under-delivered: {row.get('topic')} "
+                f"({row.get('accepted')}/{row.get('requested')}, "
+                f"stopped: {row.get('stop_reason')})"
+            )
     return plan
 
 

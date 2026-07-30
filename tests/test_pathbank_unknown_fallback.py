@@ -179,14 +179,31 @@ def _unmapped_result() -> dict:
 
 
 def _mapped_result(accession: str = "Q9TEST") -> dict:
+    """A real match, with the candidate row that describes it.
+
+    The candidate is not decoration: the identity ladder fails closed, so an
+    accession that nothing in the result describes is unverified evidence rather
+    than a verified mapping. A resolver that really matched this protein returns
+    this row.
+    """
+
     return {
         "status": "mapped",
         "provider": "UniProt",
         "source": "api",
         "confidence": 0.99,
         "chosen_rule": "reviewed_exact",
+        "resolved_name": "N-methyl nucleosidase",
         "mapped_ids": {"uniprot": accession},
-        "candidates": [],
+        "candidates": [
+            {
+                "accession": accession,
+                "uniprot": accession,
+                "protein_name": "N-methyl nucleosidase",
+                "organism": "Camellia sinensis",
+                "score": 0.99,
+            }
+        ],
         "resolution": {"status": "matched", "order_step": "api_uniprot"},
     }
 

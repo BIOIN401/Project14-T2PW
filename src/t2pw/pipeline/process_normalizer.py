@@ -8,8 +8,16 @@ from copy import deepcopy
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
 from t2pw.pipeline.entity_identity import (
+    PATHBANK_UNKNOWN_FALLBACK_RULE,
+    PATHBANK_UNKNOWN_PROTEIN_ID,
+    PATHBANK_UNKNOWN_PROTEIN_NAME,
+    PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    compound_name_block_rule,
     has_protein_external_identity,
     is_generated_complex_wrapper,
+    is_pathbank_unknown_protein,
+    is_placeholder_identity,
+    placeholder_claims_real_identity,
     protein_external_identity,
     protein_species_context,
     route_entity_for_mapping,
@@ -550,6 +558,10 @@ def _new_report() -> Dict[str, Any]:
             "pruned_disconnected_proteins": [],
             "pruned_disconnected_proteins_count": 0,
             "alias_example_mappings": [],
+            # Protein export policy counters. See docs/protein_export_policy.md.
+            "false_protein_promotions_blocked": 0,
+            "unused_proteins_quarantined": 0,
+            "unused_proteins_flagged_for_review": 0,
         },
         "rewrite_map": {},
         "actions": [],
@@ -709,9 +721,45 @@ def _dedupe_named_rows(rows: List[Dict[str, Any]]) -> None:
     rows[:] = list(by_norm.values())
 
 
+def _declared_compound_norms(payload: Dict[str, Any]) -> Set[str]:
+    """Names the payload itself files as compounds, minus any it also declares a protein.
+
+    ``BIOCHEMICAL_ALIAS_MAP`` is folded in on both sides -- a synonym key and the
+    canonical name it collapses to name the same molecule, and this pass may run
+    before or after :func:`apply_biochemical_aliases` rewrote it.
+    """
+
+    compounds, proteins, complexes = _entity_lists(payload)
+    declared_protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    norms: Set[str] = set()
+    for row in compounds:
+        if not isinstance(row, dict):
+            continue
+        for value in [row.get("name"), *_safe_list(row.get("synonyms")), *_safe_list(row.get("aliases"))]:
+            norm = _normalize(_canonical(str(value or "")))
+            if norm:
+                norms.add(norm)
+    for key, canonical in BIOCHEMICAL_ALIAS_MAP.items():
+        if _normalize(canonical) in norms or _normalize(key) in norms:
+            norms.add(_normalize(key))
+            norms.add(_normalize(canonical))
+    return norms - declared_protein_norms
+
+
+def _compound_promotion_block_rule(name: str, payload: Dict[str, Any]) -> str:
+    """Rule id when ``name`` may not be promoted to a protein, else ``""``.
+
+    Delegates to the shared leaf predicate so mapping and normalization make the
+    same call, and hands it this payload's compound registry.
+    """
+
+    return compound_name_block_rule(name, compound_names=_declared_compound_norms(payload))
+
+
 def _protein_like_norms(payload: Dict[str, Any]) -> Set[str]:
     _, proteins, complexes = _entity_lists(payload)
     norms = _entity_name_norms(proteins)
+    compound_norms = _declared_compound_norms(payload)
     for row in complexes:
         if not isinstance(row, dict):
             continue
@@ -719,8 +767,13 @@ def _protein_like_norms(payload: Dict[str, Any]) -> Set[str]:
         if name:
             norms.add(_normalize(name))
         for component in _safe_list(row.get("components")):
-            if isinstance(component, str) and component.strip() and PROTEIN_LIKE_RE.search(component):
-                norms.add(_normalize(component))
+            if not (isinstance(component, str) and component.strip() and PROTEIN_LIKE_RE.search(component)):
+                continue
+            # Same rule as _is_protein_like: a component the payload registers as
+            # a compound is not made protein-like by the regex matching it.
+            if compound_name_block_rule(component, compound_names=compound_norms):
+                continue
+            norms.add(_normalize(component))
     return norms
 
 
@@ -733,6 +786,12 @@ def _is_protein_like(name: str, payload: Dict[str, Any]) -> bool:
     protein_like_set = _protein_like_norms(payload)
     if norm in protein_like_set:
         return True
+    # Ordered before the router and the regex on purpose: both of those answer
+    # "does this name look like a protein?", and for 'coenzyme A' the honest
+    # answer to that question is yes and the honest answer to "is this a
+    # protein?" is no. An explicit protein/complex declaration already won above.
+    if _compound_promotion_block_rule(name, payload):
+        return False
     try:
         routed = route_entity_for_mapping(name, "compound", protein_like_names=protein_like_set)
         if str(routed.get("route", "")).strip().lower() in {"protein", "complex"}:
@@ -2080,21 +2139,73 @@ def drop_unresolved_complex_component_proteins(
     return payload
 
 
+def _quarantine_protein(
+    payload: Dict[str, Any],
+    row: Dict[str, Any],
+    *,
+    reason: str,
+    pass_name: str,
+) -> None:
+    """Record a protein removed by a cleanup pass, with why and what it carried.
+
+    Strict export deletes these rows; deleting an entity a paper stated without
+    leaving a trace is how a reviewer loses the ability to tell "we dropped it"
+    from "we never saw it". The list rides on the payload beside
+    ``quarantined_locked_reactions``, which is the same idea for processes.
+    """
+
+    bucket = payload.get("quarantined_proteins")
+    if not isinstance(bucket, list):
+        bucket = []
+        payload["quarantined_proteins"] = bucket
+    bucket.append(
+        {
+            "name": _canonical(str(row.get("name", ""))),
+            "reason": reason,
+            "pass": pass_name,
+            "action": "quarantined_from_entities_proteins",
+            "had_external_identity": has_protein_external_identity(row),
+            "external_identity": protein_external_identity(row),
+            "identity_status": (
+                "placeholder" if is_placeholder_identity(row)
+                else ("verified" if has_protein_external_identity(row) else "unresolved")
+            ),
+            "original_row": deepcopy(row),
+        }
+    )
+
+
 def drop_process_orphan_proteins(
     payload: Dict[str, Any],
     *,
     report: Optional[Dict[str, Any]] = None,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Dict[str, Any]:
-    """Drop proteins from entities that are never referenced in any process and have no external identity.
+    """Drop proteins that no surviving process references.
 
     This catches the case where extraction produces individual subunit entries (e.g., NdmC, NdmD,
     NdmE) while the reactions only reference the complex form (e.g., NdmCDE complex), leaving the
     subunits as degree-0 orphans that would fail the hard-gate connectivity check.
+
+    An external identifier used to exempt a row here, which is the prune/gate
+    contradiction: the pass spared a mapped-but-unreferenced protein and the
+    connectivity gate three calls later failed the payload for exactly that row
+    (four of PMC12444477's strict-leg errors in run 2026-07-28_2122). Being
+    mapped says the identifier is right, not that the pathway uses it -- so
+    strict mode now quarantines an unused protein whether or not it is mapped,
+    and ``mode="research"`` keeps it and flags it instead.
+
+    Components of a surviving protein_complex are never orphans: their edge runs
+    through the complex, and that is what makes the Unknown-backed functional
+    complex's sentinel component survive this pass.
     """
     rep = report if isinstance(report, dict) else _new_report()
     summary = _safe_dict(rep.setdefault("summary", {}))
     summary.setdefault("orphan_proteins_dropped", 0)
+    summary.setdefault("unused_proteins_quarantined", 0)
+    summary.setdefault("unused_proteins_flagged_for_review", 0)
     rep.setdefault("actions", [])
+    retain_and_flag = is_research(mode)
 
     entities = _safe_dict(payload.setdefault("entities", {}))
     proteins = _safe_list(entities.get("proteins"))
@@ -2153,11 +2264,36 @@ def drop_process_orphan_proteins(
             continue
         name = _canonical(str(protein.get("name", "")))
         norm = _normalize(name)
-        if norm and norm not in process_ref_norms and not has_protein_external_identity(protein):
-            summary["orphan_proteins_dropped"] += 1
-            rep["actions"].append({"type": "orphan_protein_dropped", "name": name})
-        else:
+        if not norm or norm in process_ref_norms:
             kept.append(protein)
+            continue
+        if retain_and_flag:
+            summary["unused_proteins_flagged_for_review"] += 1
+            rep["actions"].append(
+                {
+                    "type": "research_mode_unused_protein_flagged",
+                    "name": name,
+                    "reason": "not_referenced_by_any_surviving_process",
+                    "had_external_identity": has_protein_external_identity(protein),
+                }
+            )
+            kept.append(protein)
+            continue
+        summary["orphan_proteins_dropped"] += 1
+        summary["unused_proteins_quarantined"] += 1
+        _quarantine_protein(
+            payload,
+            protein,
+            reason="not_referenced_by_any_surviving_process",
+            pass_name="drop_process_orphan_proteins",
+        )
+        rep["actions"].append(
+            {
+                "type": "orphan_protein_dropped",
+                "name": name,
+                "had_external_identity": has_protein_external_identity(protein),
+            }
+        )
 
     entities["proteins"] = kept
     return payload
@@ -3572,6 +3708,8 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
     complex_norms = _entity_name_norms(complexes)
     scaffold_norms = _scaffold_norms(payload)
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("false_protein_promotions_blocked", 0)
 
     for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
@@ -3607,6 +3745,19 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             norm = _normalize(token)
             is_protein_token = norm in protein_norms or _is_protein_like(token, payload)
             if not is_protein_token:
+                # Counted only when the protein-like regex WOULD have promoted it:
+                # that is the population this guard exists to hold back, and a
+                # silently-corrected count would read as "nothing was wrong".
+                if norm not in protein_norms and PROTEIN_LIKE_RE.search(token):
+                    blocked_rule = _compound_promotion_block_rule(token, payload)
+                    if blocked_rule:
+                        summary["false_protein_promotions_blocked"] += 1
+                        rep.setdefault("actions", []).append({
+                            "type": "false_protein_promotion_blocked",
+                            "json_pointer": f"/processes/reactions/{ridx}/inputs",
+                            "name": token,
+                            "rule": blocked_rule,
+                        })
                 kept_inputs.append(token)
                 continue
             if norm in scaffold_norms:
@@ -4124,8 +4275,21 @@ def prune_disconnected_proteins(
     payload: Dict[str, Any],
     *,
     report: Optional[Dict[str, Any]] = None,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> List[str]:
-    """Remove degree-0 proteins only when they have no external identity."""
+    """Remove degree-0 proteins, quarantining what was removed.
+
+    An external identifier no longer exempts a row. Strict export is the
+    PathWhiz importer's contract and the connectivity gate below rejects a
+    degree-0 protein regardless of identity, so sparing a mapped one here only
+    moved the failure three calls downstream -- it never saved the row. What
+    identity *does* change is the record: ``quarantined_proteins`` says whether
+    what was dropped had been verified, so an unused mapped protein is visible
+    rather than silently absent.
+
+    ``mode="research"`` keeps every degree-0 protein and flags it instead, and a
+    component of a surviving protein_complex is exempt in both modes.
+    """
     from t2pw.pipeline.qa_graph import build_graph, degrees, get_entities, node
 
     rep = report if isinstance(report, dict) else None
@@ -4133,7 +4297,10 @@ def prune_disconnected_proteins(
     if rep is not None:
         summary.setdefault("pruned_disconnected_proteins", [])
         summary.setdefault("pruned_disconnected_proteins_count", 0)
+        summary.setdefault("unused_proteins_quarantined", 0)
+        summary.setdefault("unused_proteins_flagged_for_review", 0)
         rep.setdefault("actions", [])
+    retain_and_flag = is_research(mode)
 
     adj, _ = build_graph(payload)
     deg = degrees(adj)
@@ -4156,13 +4323,31 @@ def prune_disconnected_proteins(
 
     proteins_list = _safe_list(_safe_dict(payload.get("entities")).get("proteins"))
     pruned: List[str] = []
+    flagged: List[Dict[str, Any]] = []
     kept: List[Any] = []
     for row in proteins_list:
         if not isinstance(row, dict):
             kept.append(row)
             continue
         name = _canonical(str(row.get("name", "")))
-        if name in disconnected and not has_protein_external_identity(row):
+        if name in disconnected:
+            if retain_and_flag:
+                flagged.append(
+                    {
+                        "type": "research_mode_disconnected_protein_flagged",
+                        "name": name,
+                        "reason": "degree_zero_after_normalization",
+                        "had_external_identity": has_protein_external_identity(row),
+                    }
+                )
+                kept.append(row)
+                continue
+            _quarantine_protein(
+                payload,
+                row,
+                reason="degree_zero_after_normalization",
+                pass_name="prune_disconnected_proteins",
+            )
             pruned.append(name)
             continue
         kept.append(row)
@@ -4172,10 +4357,17 @@ def prune_disconnected_proteins(
     if rep is not None:
         summary["pruned_disconnected_proteins"] = pruned
         summary["pruned_disconnected_proteins_count"] = len(pruned)
+        summary["unused_proteins_quarantined"] = (
+            int(summary.get("unused_proteins_quarantined", 0)) + len(pruned)
+        )
+        summary["unused_proteins_flagged_for_review"] = (
+            int(summary.get("unused_proteins_flagged_for_review", 0)) + len(flagged)
+        )
         actions = rep.setdefault("actions", [])
         if isinstance(actions, list):
             for name in pruned:
                 actions.append({"type": "disconnected_protein_pruned", "name": name})
+            actions.extend(flagged)
     return pruned
 
 
@@ -4440,6 +4632,24 @@ def run_strict_post_normalization_gates(
                 f"Protein '{pname}' is missing a UniProt or DrugBank identifier.",
                 row_digest(row),
             )
+        # A placeholder that ships a plausible accession, or reports a "matched"
+        # resolution, is the one shape every other check here waves through: the
+        # identity gate above sees an identifier and stops. Strict export accepts
+        # a *correctly formed* Unknown-backed placeholder and refuses one posing
+        # as a real UniProt match.
+        posing = placeholder_claims_real_identity(row)
+        if posing:
+            _add_error(
+                f"/entities/proteins/{idx}",
+                f"Protein '{pname}' is a placeholder presented as a real mapping ({posing}).",
+                build_detail(
+                    name=pname,
+                    rule=posing,
+                    identity_status="placeholder",
+                    external_identity=ext_id,
+                    row=row_digest(row),
+                ),
+            )
     for idx, row in enumerate(_safe_list(entities.get("protein_complexes"))):
         if not isinstance(row, dict):
             continue
@@ -4519,6 +4729,27 @@ def run_strict_post_normalization_gates(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing a UniProt or DrugBank identifier.",
                     row_digest(match, pointer=protein_pointer_by_norm.get(_normalize(_canonical(cname)), "")),
+                )
+            # An Unknown-backed functional complex is accepted -- that is the
+            # whole point of the fallback -- but only when its component is the
+            # real PathBank sentinel. A component *named* "Unknown" that does not
+            # carry id 9659 / uniprot "Unknown" / the fallback rule is a
+            # malformed placeholder, and it must not inherit the acceptance.
+            if _normalize(_canonical(cname)) == _normalize(PATHBANK_UNKNOWN_PROTEIN_NAME) and not (
+                is_pathbank_unknown_protein(match)
+            ):
+                _add_error(
+                    f"/entities/protein_complexes/{idx}/components/{cidx}",
+                    f"Generated protein complex '{pcname}' is backed by a malformed Unknown placeholder: "
+                    f"component protein '{match.get('name')}' is not the PathBank Unknown sentinel "
+                    f"({PATHBANK_UNKNOWN_PROTEIN_ID}).",
+                    build_detail(
+                        component_name=cname,
+                        expected_pathbank_protein_id=PATHBANK_UNKNOWN_PROTEIN_ID,
+                        expected_uniprot=PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                        expected_chosen_rule=PATHBANK_UNKNOWN_FALLBACK_RULE,
+                        component_row=row_digest(match),
+                    ),
                 )
 
     for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
@@ -5257,11 +5488,15 @@ def normalize_process_payload(
                 "mode chose to keep"
             ),
         )
-    else:
-        drop_process_orphan_proteins(data, report=report)
-        _checkpoint("drop_process_orphan_proteins")
-        prune_disconnected_proteins(data, report=report)
-        _checkpoint("prune_disconnected_proteins")
+    # Both passes now take the mode themselves: research keeps every unused
+    # protein and flags it (which is what the relaxation notes above describe),
+    # strict quarantines it. Calling them in both modes is what makes the
+    # research-mode census -- ``unused_proteins_flagged_for_review`` -- exist at
+    # all; skipping them outright produced no record of what was preserved.
+    drop_process_orphan_proteins(data, report=report, mode=mode)
+    _checkpoint("drop_process_orphan_proteins")
+    prune_disconnected_proteins(data, report=report, mode=mode)
+    _checkpoint("prune_disconnected_proteins")
     try:
         gate_details = run_strict_post_normalization_gates(
             data,
@@ -5325,4 +5560,36 @@ def normalize_process_payload(
             report["actor_contract"] = actor_contract
     else:
         assert actor_contract.get("ok") is True, actor_contract.get("errors")
+    _stamp_protein_export_policy(data, report)
     return data, report
+
+
+def _stamp_protein_export_policy(payload: Dict[str, Any], report: Dict[str, Any]) -> None:
+    """Publish this stage's protein-policy counters onto the payload.
+
+    Stage 6 (``map_ids.map_payload``) owns the full census, but two of the six
+    numbers can only be counted here -- a promotion this stage refused and a row
+    it quarantined leave no trace in the mapped payload. Carrying them on the
+    payload is what lets the mapping report print one complete census instead of
+    a number that silently starts at zero.
+    """
+
+    summary = _safe_dict(report.get("summary"))
+    block = payload.get("protein_export_policy")
+    if not isinstance(block, dict):
+        block = {}
+        payload["protein_export_policy"] = block
+    existing = _safe_dict(block.get("summary"))
+    existing.update(
+        {
+            "false_protein_promotions_blocked": int(
+                summary.get("false_protein_promotions_blocked", 0)
+            ),
+            "unused_proteins_quarantined": int(summary.get("unused_proteins_quarantined", 0)),
+            "unused_proteins_flagged_for_review": int(
+                summary.get("unused_proteins_flagged_for_review", 0)
+            ),
+        }
+    )
+    block["summary"] = existing
+    block["stage"] = "post_normalization"

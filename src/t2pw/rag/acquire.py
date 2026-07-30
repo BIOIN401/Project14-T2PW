@@ -35,9 +35,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 from xml.etree import ElementTree
 
 from t2pw.config import rag_config
@@ -80,36 +80,82 @@ _MAX_GAP_TERMS = 6
 class CandidatePaper:
     """A single paper fetched by acquisition, before selection (WP2).
 
-    Fields match the WP1 brief exactly. ``id`` carries the best full-text handle
-    available for the record (a PMCID when one exists, else a PMID or DOI);
-    ``source`` is the acquiring source name. ``full_text`` is populated lazily by
-    :func:`fetch_full_text` and is ``""`` straight out of :func:`search_candidates`.
+    ``id`` carries the best full-text handle available for the record (a PMCID
+    when one exists, else a PMID or DOI); ``source`` is the acquiring source
+    name. ``full_text`` is populated lazily by :func:`fetch_full_text` and is
+    ``""`` straight out of :func:`search_candidates`.
+
+    Requested vs observed
+    ---------------------
+    ``organism`` means "the organism **this paper** reports", and is empty when
+    the paper's own metadata does not say. It used to be filled with the organism
+    the *search asked for* -- every fetcher passed ``organism=organism`` -- which
+    made every candidate claim to be about the requested organism and silently
+    pinned ``select._organism_score`` at 1.0. The request now lives in its own
+    fields (``requested_pathway`` / ``requested_organism``) and the paper's own
+    reading in ``observed_pathways`` / ``observed_organisms``, both populated by
+    ``t2pw.rag.eligibility``; ``organism_match`` records the comparison
+    (``match`` / ``mismatch`` / ``unknown``). Nothing copies a requested value
+    into an observed field.
     """
 
     id: str
     source: str
     title: str = ""
     abstract: str = ""
+    #: Organism the PAPER reports; "" when its metadata does not say.
     organism: str = ""
     full_text: str = ""
     source_uri: str = ""
     year: str = ""
+    #: What the caller asked for -- never evidence about the paper.
+    requested_pathway: str = ""
+    requested_organism: str = ""
+    #: What the paper itself reports (filled by the eligibility screen).
+    observed_pathways: List[str] = field(default_factory=list)
+    observed_organisms: List[str] = field(default_factory=list)
+    organism_match: str = "unknown"
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "CandidatePaper":
+        """Rebuild a candidate, demoting a legacy stamped ``organism``.
+
+        A row written before 2026-07-29 has an ``organism`` that came from the
+        SEARCH, not from the paper, and none of the requested/observed keys. Such a
+        row must never be read as observed-organism evidence, so its ``organism``
+        is moved to ``requested_organism`` and the observed side is left empty.
+        Detection is on key *presence*, not value: the current serializer always
+        writes all five fields (``asdict``), so "none of them present" is a
+        reliable legacy signal and an empty-but-present field stays empty.
+        """
         payload = _safe_dict(data)
+        legacy = is_legacy_candidate_row(payload)
+        organism = str(payload.get("organism") or "")
+        requested_organism = str(payload.get("requested_organism") or "")
+        if legacy and organism:
+            requested_organism = requested_organism or organism
+            organism = ""
         return cls(
             id=str(payload.get("id") or ""),
             source=str(payload.get("source") or ""),
             title=str(payload.get("title") or ""),
             abstract=str(payload.get("abstract") or ""),
-            organism=str(payload.get("organism") or ""),
+            organism=organism,
             full_text=str(payload.get("full_text") or ""),
             source_uri=str(payload.get("source_uri") or ""),
             year=str(payload.get("year") or ""),
+            requested_pathway=str(payload.get("requested_pathway") or ""),
+            requested_organism=requested_organism,
+            observed_pathways=[
+                str(item or "") for item in _safe_list(payload.get("observed_pathways"))
+            ],
+            observed_organisms=[
+                str(item or "") for item in _safe_list(payload.get("observed_organisms"))
+            ],
+            organism_match=str(payload.get("organism_match") or "unknown"),
         )
 
     def identity_keys(self) -> List[str]:
@@ -126,7 +172,83 @@ class CandidatePaper:
 
 # ---------------------------------------------------------------------------
 # On-disk cache (offline-first) — one JSON file per query hash.
+#
+# Cache schema versions
+# ---------------------
+# 1 (implicit, no ``schema_version`` key) — written before 2026-07-29. Every
+#   candidate row's ``organism`` was the organism the SEARCH asked for, stamped on
+#   regardless of what the paper said, and the requested/observed fields did not
+#   exist. Reading such a row as observed evidence would reintroduce exactly the
+#   false claim this change removed — e.g. the cached Fournier's-gangrene row
+#   asserting "Escherichia coli".
+# 2 — requested and observed metadata are separate fields; ``organism`` means only
+#   what the paper reports.
+#
+# A version-1 file is **migrated on read**, not discarded: the offline guarantee
+# matters more than tidiness, so a legacy cache stays usable (titles, abstracts,
+# ids and URIs are all still valid) and only the organism claim is demoted.
 # ---------------------------------------------------------------------------
+#: Current acquisition-cache payload schema. Bump when a candidate row's meaning
+#: changes, and add a migration branch to :func:`migrate_cached_payload`.
+CACHE_SCHEMA_VERSION = 2
+
+#: The fields whose presence proves a row was written by the post-split
+#: serializer. Absence of ALL of them means version 1.
+_SPLIT_SCOPE_KEYS = (
+    "requested_pathway",
+    "requested_organism",
+    "observed_pathways",
+    "observed_organisms",
+    "organism_match",
+)
+
+
+def is_legacy_candidate_row(row: Dict[str, Any]) -> bool:
+    """True when ``row`` predates the requested/observed split (schema 1)."""
+    payload = _safe_dict(row)
+    return not any(key in payload for key in _SPLIT_SCOPE_KEYS)
+
+
+def migrate_cached_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+    """Bring one cache payload up to :data:`CACHE_SCHEMA_VERSION`.
+
+    Returns ``(payload, migrated)``. The only substantive change is demoting a
+    legacy stamped ``organism`` to ``requested_organism`` and clearing the
+    observed side, so a legacy row can never be mistaken for a paper's own
+    organism report. Everything else in the row survives, which keeps an existing
+    offline cache usable.
+    """
+    data = _safe_dict(payload)
+    try:
+        version = int(data.get("schema_version") or 1)
+    except (TypeError, ValueError):
+        version = 1
+    if version >= CACHE_SCHEMA_VERSION:
+        return data, False
+
+    rows = _safe_list(data.get("candidates"))
+    migrated_rows: List[Dict[str, Any]] = []
+    for row in rows:
+        item = dict(_safe_dict(row))
+        if is_legacy_candidate_row(item):
+            stamped = str(item.get("organism") or "").strip()
+            if stamped:
+                item["requested_organism"] = stamped
+                item["organism"] = ""
+            item.setdefault("requested_pathway", "")
+            item.setdefault("requested_organism", "")
+            item["observed_pathways"] = []
+            item["observed_organisms"] = []
+            item["organism_match"] = "unknown"
+        migrated_rows.append(item)
+
+    out = dict(data)
+    out["candidates"] = migrated_rows
+    out["schema_version"] = CACHE_SCHEMA_VERSION
+    out["migrated_from_schema_version"] = version
+    return out, True
+
+
 def _default_cache_dir() -> Path:
     return PROJECT_ROOT / "data" / "rag_index" / "acquire_cache"
 
@@ -331,6 +453,9 @@ def _europepmc_uri(item: Dict[str, Any], primary_id: str) -> str:
 def _fetch_europepmc(
     client: Any, context: Dict[str, Any], *, page_size: int, organism: str
 ) -> List[CandidatePaper]:
+    # ``organism`` is the organism the SEARCH asked for. It is recorded as
+    # ``requested_organism`` only -- writing it to ``organism`` (the paper's own
+    # reported organism) is the stamping bug this whole change exists to remove.
     query = build_query(context)
     if not query:
         return []
@@ -364,7 +489,7 @@ def _fetch_europepmc(
                 source="europepmc",
                 title=str(item.get("title") or "").strip(),
                 abstract=str(item.get("abstractText") or "").strip(),
-                organism=organism,
+                requested_organism=organism,
                 source_uri=_europepmc_uri(item, primary_id),
                 year=_year(item.get("pubYear")),
             )
@@ -465,8 +590,10 @@ def _fetch_ncbi(
         paper = _parse_pubmed_article(node)
         if paper is None:
             continue
-        if organism and not paper.organism:
-            paper.organism = organism
+        # Record the SEARCH organism as the request. PubMed's XML does carry MeSH
+        # organism headings, but this parser does not read them, so the paper's
+        # own ``organism`` stays empty -> "unknown", not "whatever we asked for".
+        paper.requested_organism = organism
         papers.append(paper)
     return papers
 
@@ -512,7 +639,7 @@ def _fetch_crossref(
                 source="crossref",
                 title=title,
                 abstract=str(item.get("abstract") or "").strip(),
-                organism=organism,
+                requested_organism=organism,
                 source_uri=f"https://doi.org/{doi}",
                 year=year,
             )
@@ -558,7 +685,7 @@ def _fetch_semanticscholar(
                 source="semanticscholar",
                 title=str(item.get("title") or "").strip(),
                 abstract=str(item.get("abstract") or "").strip(),
-                organism=organism,
+                requested_organism=organism,
                 source_uri=uri,
                 year=_year(item.get("year")),
             )
@@ -604,7 +731,7 @@ def _fetch_biorxiv(
                 source="biorxiv",
                 title=title,
                 abstract=abstract,
-                organism=organism,
+                requested_organism=organism,
                 source_uri=f"https://doi.org/{doi}",
                 year=_year(item.get("date")),
             )
@@ -734,6 +861,9 @@ def search_candidates(
     if use_cache and not refresh:
         cached = cache.get(key)
         if cached is not None:
+            # A pre-2026-07-29 cache file is migrated in memory, never trusted as
+            # written: its ``organism`` was the requested one stamped on every row.
+            cached, migrated = migrate_cached_payload(cached)
             if isinstance(status, dict):
                 status.update(
                     {
@@ -741,6 +871,10 @@ def search_candidates(
                         "empty_query": False,
                         "from_cache": True,
                         "requests": [],
+                        "cache_schema_version": cached.get(
+                            "schema_version", CACHE_SCHEMA_VERSION
+                        ),
+                        "cache_schema_migrated": migrated,
                     }
                 )
             return [
@@ -786,6 +920,7 @@ def search_candidates(
         cache.set(
             key,
             {
+                "schema_version": CACHE_SCHEMA_VERSION,
                 "query": cache_payload,
                 "candidates": [paper.to_dict() for paper in deduped],
             },
@@ -897,9 +1032,12 @@ def fetch_full_text(
 
 
 __all__ = [
+    "CACHE_SCHEMA_VERSION",
     "CandidatePaper",
     "AcquireCache",
-    "search_candidates",
-    "fetch_full_text",
     "build_query",
+    "fetch_full_text",
+    "is_legacy_candidate_row",
+    "migrate_cached_payload",
+    "search_candidates",
 ]

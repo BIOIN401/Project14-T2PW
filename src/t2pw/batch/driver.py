@@ -84,6 +84,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from t2pw.paths import PACKAGE_ROOT
 from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
 from t2pw.pipeline.failure_detail import headline as _detail_headline
+from t2pw.rag.eligibility import (
+    OUTCOME_SCOPE_CONFLICT,
+    RequestedScope,
+    apply_stage0_observation,
+    thresholds_from_config,
+)
 
 # ── Export-mode radio labels, exactly as the app spells them ───────────────
 STRICT = "Strict PWML"
@@ -130,6 +136,11 @@ _STATUS_PASS = "pass"
 _STATUS_FAIL = "fail"
 _STATUS_TIMEOUT = "timeout"
 _STATUS_ERROR = "error"
+#: Stage 0 read a pathway/organism that contradicts what the batch asked for. NOT
+#: a failure: nothing is broken, this paper is simply not the paper the topic line
+#: was asking for. ``report._norm_status`` folds it out of the failure tally, so it
+#: can never enter the ranked fix-list. See :func:`_reconcile_stage0_scope`.
+_STATUS_SCOPE_CONFLICT = OUTCOME_SCOPE_CONFLICT
 
 # ── failure_kind vocabulary ───────────────────────────────────────────────
 KIND_CONTRACT = "contract"
@@ -155,6 +166,13 @@ DETAIL_LIMIT = 8000
 #: never triggered. Not a failure -- but it must be impossible to mistake for a
 #: run that produced the research deliverable.
 WARN_NO_RESEARCH_REPORT = "no research report: RAG did not trigger for this paper"
+
+#: Warning text used when a Stage-0 scope conflict is recorded but not acted on
+#: (``RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS=false``).
+WARN_SCOPE_CONFLICT_PREFIX = "stage-0 scope conflict (recorded, run continued): "
+
+#: Artifact naming the requested vs Stage-0-observed scope and the conflicts.
+SCOPE_CONFLICT_NAME = "scope_conflict.json"
 
 #: Warning text when the app rendered no extraction-focus box but the paper had a
 #: topic to name in it. Not a failure -- but a topic-fetched review will then be
@@ -444,13 +462,115 @@ def _extraction_focus(paper: Any) -> str:
     paper was chosen precisely because a human already knows what it is about.
     """
 
-    topic = _paper_field(paper, ("topic",))
+    topic = _paper_field(paper, ("requested_pathway", "topic"))
     if not topic:
         return ""
-    organism = _paper_field(paper, ("organism",))
+    # The REQUESTED organism, deliberately. This box states the scope the batch
+    # asked for; it must not be filled from whatever organism the paper turned out
+    # to mention, which would re-point extraction at the paper's own scope.
+    # ``organism`` is the pre-2026-07-29 plan-record spelling, kept so an older run
+    # directory still resumes.
+    organism = _paper_field(paper, ("requested_organism", "organism"))
     if organism and organism.lower() not in topic.lower():
         return f"{topic} in {organism}"
     return topic
+
+
+def _requested_scope(paper: Any) -> RequestedScope:
+    """The batch's REQUEST for this paper, read from its plan record.
+
+    ``requested_pathway`` / ``requested_organism`` are the current spelling;
+    ``topic`` / ``organism`` are what a plan written before 2026-07-29 carries (and
+    there ``organism`` WAS the requested organism -- it was stamped onto every
+    paper regardless of what the paper reported). A paper with no topic is a pinned
+    id: a human chose it, so there is no request to contradict.
+    """
+    pathway = _paper_field(paper, ("requested_pathway", "topic"))
+    organism = _paper_field(paper, ("requested_organism", "organism"))
+    return RequestedScope(
+        requested_pathway=pathway,
+        requested_organism=organism,
+        pinned=not pathway,
+    )
+
+
+def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
+    """Fold Stage 0's reading of this paper into the run, without rewriting the request.
+
+    WHY this lives here
+    -------------------
+    ``t2pw.rag.eligibility.apply_stage0_observation`` encodes the rule that the
+    batch's requested pathway/organism is immutable and that Stage 0 may only
+    contribute *observations*. This is its production boundary: the app has just
+    finished Stage 0 and stored its context in
+    ``st.session_state["pathway_context"]``, and the plan record next to it carries
+    what the batch asked for. Nowhere else do both halves exist at once.
+
+    WHY a conflict stops the run
+    ----------------------------
+    The screening gate decides from a title and abstract; Stage 0 has read the
+    whole paper. When it comes back saying "cholesterol biosynthesis in Homo
+    sapiens" for a paper the topics file asked for as "lipid A biosynthesis in
+    Escherichia coli", continuing spends the audit, the DB mapping and the export
+    on a paper that is not the one requested -- and the one thing that must never
+    happen is adopting the paper's apparent scope as the batch's request, which
+    would silently change what the whole batch is about. So the run stops with an
+    explicit :data:`_STATUS_SCOPE_CONFLICT`, which is *not* a failure: nothing is
+    broken. Set ``RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS=false`` to annotate and
+    carry on instead.
+
+    Returns ``True`` when the caller should stop driving this run.
+    """
+    scope = _requested_scope(paper)
+    if scope.pinned:
+        return False  # a pinned paper has no request to contradict
+    stage0 = _ss(at, "pathway_context")
+    if not isinstance(stage0, dict) or not stage0:
+        return False  # Stage 0 said nothing readable; nothing to reconcile
+
+    unchanged, observed, conflicts = apply_stage0_observation(scope, stage0)
+    outcome.observed_context = observed.to_dict()
+    # Recorded, and asserted: the request that comes back is the request that went
+    # in. If this ever trips, something rewrote the batch's scope.
+    if (unchanged.requested_pathway, unchanged.requested_organism) != (
+        scope.requested_pathway,
+        scope.requested_organism,
+    ):  # pragma: no cover - defensive; RequestedScope is frozen
+        outcome.warnings.append(
+            "requested scope was altered during Stage-0 reconciliation; ignored"
+        )
+    outcome.counts["stage0_observed_pathways"] = len(observed.observed_pathways)
+    outcome.counts["stage0_observed_organisms"] = len(observed.observed_organisms)
+    if not conflicts:
+        return False
+
+    outcome.scope_conflicts = list(conflicts)
+    outcome.counts["scope_conflicts"] = len(conflicts)
+    if OUTCOME_SCOPE_CONFLICT not in outcome.issue_codes:
+        outcome.issue_codes.append(OUTCOME_SCOPE_CONFLICT)
+    outcome.artifacts[SCOPE_CONFLICT_NAME] = _json_text(
+        {
+            "requested": scope.to_dict(),
+            "observed": observed.to_dict(),
+            "conflicts": list(conflicts),
+            "stage0_context": {
+                key: stage0.get(key)
+                for key in ("pathway_name", "likely_organism", "document_type")
+            },
+        }
+    )
+    detail = "; ".join(conflicts)
+    if thresholds_from_config().stage0_conflict_aborts:
+        outcome.status = _STATUS_SCOPE_CONFLICT
+        outcome.failure_kind = ""
+        outcome.message = (
+            "Stage 0 read a scope that contradicts the batch request, so this paper "
+            f"is not the paper the topic line asked for: {detail}"
+        )
+        outcome.detail = detail
+        return True
+    outcome.warnings.append(f"{WARN_SCOPE_CONFLICT_PREFIX}{detail}")
+    return False
 
 
 def _find_by_label(elements: Any, prefix: str) -> Any:
@@ -541,10 +661,20 @@ class RunOutcome:
     artifacts: Dict[str, Any] = field(default_factory=dict)
     counts: Dict[str, Any] = field(default_factory=dict)
     warnings: List[str] = field(default_factory=list)
+    #: Ways Stage 0's reading of this paper contradicts the batch's REQUEST. Set
+    #: by :func:`_reconcile_stage0_scope`; the request itself is never rewritten.
+    scope_conflicts: List[str] = field(default_factory=list)
+    #: What Stage 0 observed (pathways / organisms / aliases / ambiguities). Kept
+    #: separate from the request so neither can be mistaken for the other.
+    observed_context: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def passed(self) -> bool:
         return self.status == _STATUS_PASS
+
+    @property
+    def scope_conflicted(self) -> bool:
+        return self.status == _STATUS_SCOPE_CONFLICT
 
     def files(self) -> List[Dict[str, Any]]:
         """``[{"name":..., "bytes": n}, ...]`` -- the manifest's ``files`` field."""
@@ -575,7 +705,7 @@ class RunOutcome:
     def to_dict(self) -> Dict[str, Any]:
         """A JSON-Lines manifest row. Artifact *contents* are never included."""
 
-        return {
+        row: Dict[str, Any] = {
             "paper_id": self.paper_id,
             "mode": self.mode,
             "status": self.status,
@@ -589,6 +719,13 @@ class RunOutcome:
             "files": self.files(),
             "warnings": list(self.warnings),
         }
+        # Only present when there was something to say, so an unaffected run's row
+        # is byte-identical to before.
+        if self.scope_conflicts:
+            row["scope_conflicts"] = list(self.scope_conflicts)
+        if self.observed_context:
+            row["observed_context"] = dict(self.observed_context)
+        return row
 
 
 # ---------------------------------------------------------------------------
@@ -1348,6 +1485,15 @@ def _drive(
         return
 
     outcome.stage = STAGE_STAGE1
+
+    # ── 3b. Reconcile Stage 0's reading with what the batch REQUESTED ──────
+    # First point in the run where both halves exist: the app has stored its
+    # Stage-0 context and the plan record says what was asked for. The request is
+    # never rewritten from the observation -- see _reconcile_stage0_scope.
+    if _reconcile_stage0_scope(at, paper, outcome):
+        _add_common_artifacts(at, {}, outcome.artifacts)
+        return
+
     merged_counts = _payload_counts(_ss(at, "final_payload"))
     outcome.counts.update(merged_counts)
     if not merged_counts["reactions"] and not merged_counts["transports"]:

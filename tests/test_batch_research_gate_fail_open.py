@@ -481,26 +481,36 @@ def test_the_old_argument_is_what_manufactured_those_errors() -> None:
     assert all("degree 0 after normalization" in e["reason"] for e in errors)
 
 
-def test_strict_mode_still_enforces_connectivity_on_the_same_payload() -> None:
-    """The strict twin: nothing about strict mode's connectivity policy moved.
+def test_strict_mode_resolves_the_same_orphans_instead_of_failing_on_them() -> None:
+    """The strict twin, after the prune/gate contradiction was resolved.
 
-    Note which strict behaviour this pins. These orphans each carry a UniProt id,
-    and ``prune_disconnected_proteins`` spares an externally identified protein --
-    so strict mode does not delete them here, it *reports* them, and the degree-0
-    rule is exactly what turns them into four gate errors. That report is the
-    thing ``enforce_all_proteins_connected=not is_research(mode)`` must leave
-    untouched in strict mode. (Strict deletion of an *unidentified* orphan is
-    pinned separately by
-    ``tests/test_research_mode_normalizer.py::test_strict_mode_deletes_the_unwired_protein``.)
+    This test used to assert the contradiction itself: these four orphans each
+    carry a UniProt id, ``prune_disconnected_proteins`` spared an externally
+    identified protein, and the degree-0 rule three calls later then failed the
+    payload for exactly the rows the prune had refused to touch. Sparing them
+    never saved them -- it only moved the failure downstream.
+
+    Strict mode now quarantines an unused protein whether or not it is mapped,
+    so the gate has nothing left to reject and ``quarantined_proteins`` records
+    what went and that it had been verified. What this test still pins is that
+    the *rule* is unchanged in strict mode: ``enforce_all_proteins_connected``
+    is still True there, which is why a degree-0 protein must not reach it.
     """
 
     data, report = normalize_process_payload(_orphan_payload(), mode=PATHWHIZ)
 
-    assert report["gate"]["ok"] is False
-    errors = report["gate"]["errors"]
-    assert len(errors) == 4
-    assert all("degree 0 after normalization" in e["reason"] for e in errors)
-    assert report["summary"]["gate_error_count"] == 4
+    names = {str(row.get("name")) for row in data["entities"]["proteins"]}
+    assert not any(name.startswith("Orphan factor") for name in names)
+    quarantined = {str(row.get("name")) for row in data["quarantined_proteins"]}
+    assert {f"Orphan factor {i}" for i in range(4)} <= quarantined
+    assert all(
+        row["had_external_identity"] is True
+        for row in data["quarantined_proteins"]
+        if str(row.get("name", "")).startswith("Orphan factor")
+    )
+    assert report["gate"]["ok"] is True
+    assert report["summary"]["gate_error_count"] == 0
+    assert report["summary"]["unused_proteins_quarantined"] >= 4
     # ...and a strict report still carries no research bookkeeping at all.
     assert "export_mode" not in report
     assert "research_mode_relaxations" not in report["summary"]

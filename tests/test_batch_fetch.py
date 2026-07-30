@@ -7,6 +7,15 @@ parsing (all three line shapes plus comments/blanks), pinned-id detection,
 "empty full text is a skip, not a paper", Windows-safe and length-bounded slugs,
 cross-topic de-duplication, the total ``limit`` cap, and the hard guarantee that
 ``fetch_papers`` never raises.
+
+Why the plumbing tests pass ``screen=False``
+--------------------------------------------
+These tests exercise the fetcher's *plumbing* with synthetic topics ("topic A")
+and synthetic titles ("Hit"), which the title/abstract eligibility gate correctly
+rejects as having nothing to do with any requested pathway. Turning the gate off
+keeps each test about the one thing it is testing. The gate itself -- and its
+integration through ``fetch_papers`` -- is covered by
+``tests/test_paper_eligibility.py`` against real paper titles.
 """
 
 from __future__ import annotations
@@ -183,6 +192,7 @@ def test_empty_full_text_becomes_a_skip_not_a_paper() -> None:
         [TopicSpec(topic="topic A", organism="Escherichia coli", count=3)],
         search_fn=search,
         fetch_text_fn=_texter({"PMC1": "full body text"}),
+        screen=False,
     )
     assert [p.paper_id for p in papers] == ["PMC1"]
     assert papers[0].full_text == "full body text"
@@ -224,6 +234,7 @@ def test_deduplicates_the_same_paper_across_topics() -> None:
         [TopicSpec(topic="topic A", count=2), TopicSpec(topic="topic B", count=2)],
         search_fn=search,
         fetch_text_fn=_texter({"PMC1": "body"}),
+        screen=False,
     )
     assert [p.paper_id for p in papers] == ["PMC1"]
     assert papers[0].topic == "topic A"
@@ -245,6 +256,7 @@ def test_limit_caps_total_papers_across_topics() -> None:
         limit=3,
         search_fn=search,
         fetch_text_fn=_texter(texts),
+        screen=False,
     )
     assert len(papers) == 3
     assert len({p.slug for p in papers}) == 3
@@ -259,6 +271,7 @@ def test_per_topic_count_is_respected() -> None:
         [TopicSpec(topic="topic A", count=2)],
         search_fn=search,
         fetch_text_fn=_texter(texts),
+        screen=False,
     )
     assert len(papers) == 2
 
@@ -297,11 +310,17 @@ def test_fetch_papers_accepts_a_raw_topics_string_and_records_the_query() -> Non
         "# comment\ntopic A | Escherichia coli | 1\n",
         search_fn=search,
         fetch_text_fn=_texter({"PMC1": "body"}),
+        screen=False,
     )
     assert len(papers) == 1
     assert papers[0].query == '"topic A"'
     assert papers[0].topic == "topic A"
-    assert papers[0].organism == "Escherichia coli"
+    # The topics line asked for E. coli; that is the REQUESTED organism. Nothing
+    # observed it, so ``observed_organisms`` stays empty -- see
+    # tests/test_paper_eligibility.py.
+    assert papers[0].requested_pathway == "topic A"
+    assert papers[0].requested_organism == "Escherichia coli"
+    assert papers[0].observed_organisms == []
     ctx = search.calls[0]["context"]  # type: ignore[attr-defined]
     assert ctx["pathway_name"] == "topic A"
     assert ctx["likely_organism"] == "Escherichia coli"
@@ -321,7 +340,9 @@ def test_monkeypatched_module_defaults_are_used_when_no_fakes_injected(
     monkeypatch.setattr(
         batch_fetch, "fetch_full_text", lambda candidate, **kwargs: "patched body"
     )
-    papers, skipped = fetch_papers([TopicSpec(topic="topic A", count=1)])
+    papers, skipped = fetch_papers(
+        [TopicSpec(topic="topic A", count=1)], screen=False
+    )
     assert [p.paper_id for p in papers] == ["PMC7"]
     assert skipped == []
 
@@ -332,7 +353,8 @@ def test_describe_is_readable_and_excludes_the_full_text() -> None:
         title="Lipid A biosynthesis",
         source_uri="https://europepmc.org/article/PMC/PMC1",
         year="2019",
-        organism="Escherichia coli",
+        requested_pathway="lipid A biosynthesis",
+        requested_organism="Escherichia coli",
         topic="lipid A biosynthesis",
         query='"lipid A biosynthesis" AND "Escherichia coli"',
         full_text="beta-hydroxymyristoyl body text",
@@ -359,6 +381,7 @@ def test_no_full_text_candidate_uses_prefetched_text_when_present() -> None:
         [TopicSpec(topic="topic A", count=1)],
         search_fn=_searcher({"topic A": [prefetched]}),
         fetch_text_fn=_never,
+        screen=False,
     )
     assert [p.full_text for p in papers] == ["inline body"]
     assert skipped == []

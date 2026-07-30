@@ -1235,3 +1235,254 @@ def test_dict_and_candidate_paper_shapes_are_both_accepted(tmp_path: Path) -> No
 
     assert as_dict.paper_id == "PMC7" and as_dict.status == "pass"
     assert as_candidate.paper_id == "PMC8" and as_candidate.status == "pass"
+
+
+# ---------------------------------------------------------------------------
+# Stage-0 scope reconciliation, driven through the real app boundary.
+#
+# ``t2pw.rag.eligibility.apply_stage0_observation`` encodes the rule that the
+# batch's requested pathway/organism is immutable and that Stage 0 may only add
+# observations. Its production caller is ``driver._reconcile_stage0_scope``, which
+# runs right after stage 1 succeeds and reads the app's own
+# ``st.session_state["pathway_context"]``. These tests exercise that caller by
+# driving a fixture app; calling the helper directly would prove nothing about
+# whether the production path is wired.
+# ---------------------------------------------------------------------------
+def _stage0_stanza(context: object) -> str:
+    """Make the fixture app store a Stage-0 context, as the real app does."""
+    return f'    st.session_state["pathway_context"] = {_lit(context)}\n'
+
+
+def _scoped_paper(pathway: str, organism: str, paper_id: str = "PMC1") -> _Paper:
+    paper = _Paper(paper_id=paper_id, topic=pathway, organism=organism)
+    paper.requested_pathway = pathway
+    paper.requested_organism = organism
+    return paper
+
+
+def test_a_contradictory_stage0_pathway_persists_a_scope_conflict(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path,
+        "stage0_pathway_conflict",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza(
+                {
+                    "pathway_name": "cholesterol biosynthesis",
+                    "likely_organism": "Homo sapiens",
+                }
+            ),
+        ),
+    )
+    paper = _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+
+    outcome = _run(app, RESEARCH, paper)
+
+    # An explicit, persisted outcome: not a failure, and not a silent pass.
+    assert outcome.status == "scope_conflict"
+    assert outcome.scope_conflicted is True
+    assert outcome.failure_kind == ""
+    assert "scope_conflict" in outcome.issue_codes
+    assert outcome.counts["scope_conflicts"] == 2
+    assert any("cholesterol biosynthesis" in c for c in outcome.scope_conflicts)
+    assert any("Homo sapiens" in c for c in outcome.scope_conflicts)
+
+    # The REQUEST is unchanged, and is written down next to the observation.
+    artifact = json.loads(outcome.artifacts["scope_conflict.json"])
+    assert artifact["requested"]["requested_pathway"] == "lipid A biosynthesis"
+    assert artifact["requested"]["requested_organism"] == "Escherichia coli"
+    assert artifact["observed"]["observed_pathways"] == ["cholesterol biosynthesis"]
+    assert artifact["observed"]["observed_organisms"] == ["Homo sapiens"]
+
+    # And it reaches the manifest row.
+    row = outcome.to_dict()
+    assert row["status"] == "scope_conflict"
+    assert row["scope_conflicts"] == outcome.scope_conflicts
+    assert row["observed_context"]["observed_pathways"] == ["cholesterol biosynthesis"]
+
+
+def test_a_contradictory_stage0_organism_alone_is_a_scope_conflict(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path,
+        "stage0_organism_conflict",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza(
+                {
+                    "pathway_name": "lipid A biosynthesis",
+                    "likely_organism": "Homo sapiens",
+                }
+            ),
+        ),
+    )
+    paper = _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+
+    outcome = _run(app, RESEARCH, paper)
+
+    assert outcome.status == "scope_conflict"
+    assert len(outcome.scope_conflicts) == 1
+    assert "Homo sapiens" in outcome.scope_conflicts[0]
+
+
+def test_a_scope_conflict_is_not_counted_as_a_failure(tmp_path: Path) -> None:
+    """The paper is not the requested paper. Nothing is broken, so nothing failed."""
+    from t2pw.batch import report as batch_report
+
+    app = _write_app(
+        tmp_path,
+        "stage0_conflict_not_failure",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza({"pathway_name": "cholesterol biosynthesis"}),
+        ),
+    )
+    outcome = _run(
+        app, RESEARCH, _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+    )
+
+    status = batch_report._norm_status(outcome.status)
+    assert status == batch_report.STATUS_INELIGIBLE
+    assert batch_report._is_failure(status) is False
+    run = batch_report._to_run(outcome.to_dict())
+    assert run.ineligible is True
+    assert run.failed is False
+
+
+def test_an_agreeing_stage0_reading_records_observations_and_runs_on(
+    tmp_path: Path,
+) -> None:
+    app = _write_app(
+        tmp_path,
+        "stage0_agrees",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza(
+                {
+                    "pathway_name": "lipid A biosynthesis",
+                    "likely_organism": "Escherichia coli",
+                    "aliases": ["Raetz pathway"],
+                    "candidate_examples": [{"name": "E. coli K-12"}],
+                }
+            ),
+        ),
+    )
+    outcome = _run(
+        app, RESEARCH, _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+    )
+
+    assert outcome.status != "scope_conflict"
+    assert outcome.scope_conflicts == []
+    # Stage 0's reading is recorded as an OBSERVATION regardless.
+    assert outcome.observed_context["observed_pathways"] == ["lipid A biosynthesis"]
+    assert outcome.observed_context["observed_organisms"] == ["Escherichia coli"]
+    assert outcome.observed_context["aliases"] == ["Raetz pathway"]
+    assert outcome.observed_context["ambiguities"] == ["E. coli K-12"]
+    assert outcome.counts["stage0_observed_pathways"] == 1
+    assert "scope_conflict.json" not in outcome.artifacts
+
+
+def test_a_related_species_from_stage0_is_not_a_scope_conflict(tmp_path: Path) -> None:
+    """Genus-level is permitted evidence, so it must not stop a run."""
+    app = _write_app(
+        tmp_path,
+        "stage0_genus_level",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza(
+                {
+                    "pathway_name": "lipid A biosynthesis",
+                    "likely_organism": "Escherichia fergusonii",
+                }
+            ),
+        ),
+    )
+    outcome = _run(
+        app, RESEARCH, _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+    )
+
+    assert outcome.status != "scope_conflict"
+    assert outcome.scope_conflicts == []
+    assert outcome.observed_context["observed_organisms"] == ["Escherichia fergusonii"]
+
+
+def test_a_pinned_paper_has_no_request_to_contradict(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path,
+        "stage0_pinned",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza({"pathway_name": "cholesterol biosynthesis"}),
+        ),
+    )
+    # A pinned paper has topic == "": a human chose it, so nothing to conflict with.
+    outcome = _run(app, RESEARCH, _Paper(topic="", organism=""))
+
+    assert outcome.status != "scope_conflict"
+    assert outcome.scope_conflicts == []
+
+
+def test_an_app_that_stores_no_stage0_context_changes_nothing(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path, "stage0_absent", _post_pipeline_body(_artifacts("research"))
+    )
+
+    outcome = _run(
+        app, RESEARCH, _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+    )
+
+    assert outcome.status != "scope_conflict"
+    assert outcome.observed_context == {}
+    assert "scope_conflicts" not in outcome.to_dict()
+
+
+def test_the_conflict_can_be_downgraded_to_a_warning(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """``RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS=false`` annotates and carries on."""
+    monkeypatch.setenv("RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS", "false")
+    app = _write_app(
+        tmp_path,
+        "stage0_conflict_warn",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza({"pathway_name": "cholesterol biosynthesis"}),
+        ),
+    )
+    outcome = _run(
+        app, RESEARCH, _scoped_paper("lipid A biosynthesis", "Escherichia coli")
+    )
+
+    assert outcome.status != "scope_conflict"
+    assert outcome.scope_conflicts  # still recorded
+    assert any("stage-0 scope conflict" in w for w in outcome.warnings)
+    assert "scope_conflict.json" in outcome.artifacts
+
+
+def test_a_legacy_plan_record_still_supplies_the_requested_scope(tmp_path: Path) -> None:
+    """Pre-2026-07-29 plans spell it ``topic`` / ``organism``; both are read."""
+    app = _write_app(
+        tmp_path,
+        "stage0_legacy_record",
+        _post_pipeline_body(
+            _artifacts("research"),
+            extra=_stage0_stanza(
+                {
+                    "pathway_name": "cholesterol biosynthesis",
+                    "likely_organism": "Homo sapiens",
+                }
+            ),
+        ),
+    )
+    # A dict shaped exactly like an old plan record: no requested_* keys at all.
+    legacy = {
+        "paper_id": "PMC1",
+        "full_text": "Some pathway prose.",
+        "topic": "lipid A biosynthesis",
+        "organism": "Escherichia coli",
+    }
+    outcome = _run(app, RESEARCH, legacy)
+
+    assert outcome.status == "scope_conflict"
+    artifact = json.loads(outcome.artifacts["scope_conflict.json"])
+    assert artifact["requested"]["requested_pathway"] == "lipid A biosynthesis"
+    assert artifact["requested"]["requested_organism"] == "Escherichia coli"

@@ -13,6 +13,7 @@ See ``docs/setup.md`` -> "Configuring the resolution DB for generation".
 
 from __future__ import annotations
 
+import math
 import os
 from typing import Any, Dict, Optional
 
@@ -110,6 +111,20 @@ RAG_ENV = {
     "select_max_papers": "RAG_SELECT_MAX_PAPERS",
     "retrieve_top_k": "RAG_RETRIEVE_TOP_K",
     "extract_reactions": "RAG_EXTRACT_REACTIONS",
+    # Title/abstract eligibility screening (t2pw.rag.eligibility). Thresholds
+    # live here so a run's screening behavior is reproducible from its config
+    # and identical across the batch fetcher, the app and the dry-run tool.
+    "eligibility_enabled": "RAG_ELIGIBILITY_ENABLED",
+    "eligibility_min_score": "RAG_ELIGIBILITY_MIN_SCORE",
+    "eligibility_title_only_min_score": "RAG_ELIGIBILITY_TITLE_ONLY_MIN_SCORE",
+    "eligibility_min_title_chars": "RAG_ELIGIBILITY_MIN_TITLE_CHARS",
+    "eligibility_require_pathway_anchor": "RAG_ELIGIBILITY_REQUIRE_ANCHOR",
+    "eligibility_organism_veto": "RAG_ELIGIBILITY_ORGANISM_VETO",
+    "eligibility_negative_veto": "RAG_ELIGIBILITY_NEGATIVE_VETO",
+    "eligibility_review_margin": "RAG_ELIGIBILITY_REVIEW_MARGIN",
+    "eligibility_local_window_tokens": "RAG_ELIGIBILITY_LOCAL_WINDOW_TOKENS",
+    "eligibility_candidate_ceiling": "RAG_ELIGIBILITY_CANDIDATE_CEILING",
+    "eligibility_stage0_conflict_aborts": "RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS",
 }
 
 # Default-safe values used when an env var is unset or blank.
@@ -133,6 +148,42 @@ RAG_DEFAULTS: Dict[str, Any] = {
     # On by default when RAG runs; the app only wires it when this is true, and
     # every call fails closed, so it can add reactions but never break synthesis.
     "extract_reactions": True,
+    # --- eligibility screening --------------------------------------------
+    # ON by default: the gate exists because letting every topic hit into the
+    # pipeline is what produced case reports and poultry surveys in the
+    # 2026-07-28_2122 plan. Set RAG_ELIGIBILITY_ENABLED=false to restore the
+    # unfiltered behavior.
+    "eligibility_enabled": True,
+    # Score a paper needs when a full title AND abstract were available.
+    "eligibility_min_score": 2.0,
+    # Lower bar for a title-only screen (no abstract): a title carries a
+    # fraction of the evidence, so scoring it against the full bar would reject
+    # nearly everything. Title-only verdicts are marked ``provisional``.
+    "eligibility_title_only_min_score": 1.5,
+    # Below this, a title with no abstract is "insufficient_metadata" rather
+    # than a rejection -- there was nothing to judge.
+    "eligibility_min_title_chars": 20,
+    # Require at least one requested-pathway term (pathway alias or an expected
+    # enzyme/metabolite). Off => generic mechanism language alone can qualify.
+    "eligibility_require_pathway_anchor": True,
+    # A confirmed organism mismatch rejects on its own.
+    "eligibility_organism_veto": True,
+    # Case report / epidemiology survey / animal-virulence survey / software-only
+    # reject on their own, whatever the positive score.
+    "eligibility_negative_veto": True,
+    # A provisional accept this close to the threshold is flagged for a human.
+    "eligibility_review_margin": 0.5,
+    # Tokens either side of a pathway-alias mention that count as "local" when
+    # looking for the reaction/enzyme evidence that makes the mention mechanistic.
+    # A pathway name here and a generic "mechanism" 200 words away is not evidence.
+    "eligibility_local_window_tokens": 12,
+    # Hard ceiling on candidates examined per topic. A selective gate rejects most
+    # of what a topic query returns, so acquisition keeps asking for more until the
+    # requested count is filled or this many candidates have been examined.
+    "eligibility_candidate_ceiling": 60,
+    # A Stage-0 reading that contradicts the batch request stops that run (with an
+    # explicit scope_conflict outcome) instead of only annotating it.
+    "eligibility_stage0_conflict_aborts": True,
 }
 
 _TRUE_TOKENS = {"1", "true", "yes", "on", "y", "t"}
@@ -155,6 +206,17 @@ def _as_int(value: Any, default: int) -> int:
         return int(float(text))
     except (TypeError, ValueError):
         return default
+
+
+def _as_float(value: Any, default: float) -> float:
+    text = str(value if value is not None else "").strip()
+    if not text:
+        return default
+    try:
+        parsed = float(text)
+    except (TypeError, ValueError):
+        return default
+    return parsed if math.isfinite(parsed) else default
 
 
 def rag_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -197,6 +259,48 @@ def rag_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         "retrieve_top_k": _as_int(_raw("retrieve_top_k"), int(RAG_DEFAULTS["retrieve_top_k"])),
         "extract_reactions": _as_bool(
             _raw("extract_reactions"), bool(RAG_DEFAULTS["extract_reactions"])
+        ),
+        "eligibility_enabled": _as_bool(
+            _raw("eligibility_enabled"), bool(RAG_DEFAULTS["eligibility_enabled"])
+        ),
+        "eligibility_min_score": max(0.0, _as_float(
+            _raw("eligibility_min_score"), float(RAG_DEFAULTS["eligibility_min_score"])
+        )),
+        "eligibility_title_only_min_score": max(0.0, _as_float(
+            _raw("eligibility_title_only_min_score"),
+            float(RAG_DEFAULTS["eligibility_title_only_min_score"]),
+        )),
+        "eligibility_min_title_chars": max(0, _as_int(
+            _raw("eligibility_min_title_chars"),
+            int(RAG_DEFAULTS["eligibility_min_title_chars"]),
+        )),
+        "eligibility_require_pathway_anchor": _as_bool(
+            _raw("eligibility_require_pathway_anchor"),
+            bool(RAG_DEFAULTS["eligibility_require_pathway_anchor"]),
+        ),
+        "eligibility_organism_veto": _as_bool(
+            _raw("eligibility_organism_veto"),
+            bool(RAG_DEFAULTS["eligibility_organism_veto"]),
+        ),
+        "eligibility_negative_veto": _as_bool(
+            _raw("eligibility_negative_veto"),
+            bool(RAG_DEFAULTS["eligibility_negative_veto"]),
+        ),
+        "eligibility_review_margin": max(0.0, _as_float(
+            _raw("eligibility_review_margin"),
+            float(RAG_DEFAULTS["eligibility_review_margin"]),
+        )),
+        "eligibility_local_window_tokens": max(1, _as_int(
+            _raw("eligibility_local_window_tokens"),
+            int(RAG_DEFAULTS["eligibility_local_window_tokens"]),
+        )),
+        "eligibility_candidate_ceiling": max(1, _as_int(
+            _raw("eligibility_candidate_ceiling"),
+            int(RAG_DEFAULTS["eligibility_candidate_ceiling"]),
+        )),
+        "eligibility_stage0_conflict_aborts": _as_bool(
+            _raw("eligibility_stage0_conflict_aborts"),
+            bool(RAG_DEFAULTS["eligibility_stage0_conflict_aborts"]),
         ),
     }
 

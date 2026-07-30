@@ -201,7 +201,14 @@ def test_search_europepmc_returns_candidate_papers(
     first = next(p for p in papers if p.id == "PMC111")
     assert first.source == "europepmc"
     assert first.title == "Caffeine degradation by Ndm demethylases"
-    assert first.organism == "Pseudomonas putida"
+    # The SEARCH organism is recorded as the request, never as something the paper
+    # reported: ``organism`` stays empty until the paper's own metadata says
+    # otherwise. Stamping it here used to make every candidate claim the requested
+    # organism and pinned ``select._organism_score`` at 1.0.
+    assert first.requested_organism == "Pseudomonas putida"
+    assert first.organism == ""
+    assert first.observed_organisms == []
+    assert first.organism_match == "unknown"
     assert first.year == "2019"
     assert first.full_text == ""  # search does not fetch full text
 
@@ -328,7 +335,8 @@ def test_search_ncbi_parses_pubmed_xml(clean_env: None, tmp_path: Path) -> None:
     assert paper.title == "Xanthine methyltransferase in caffeine biosynthesis"
     assert paper.abstract == "Methyl transfer steps."
     assert paper.year == "2020"
-    assert paper.organism == "Pseudomonas putida"
+    assert paper.requested_organism == "Pseudomonas putida"
+    assert paper.organism == ""  # this parser reads no MeSH organism heading
 
 
 # ---------------------------------------------------------------------------

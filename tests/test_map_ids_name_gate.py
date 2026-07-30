@@ -260,10 +260,25 @@ def test_bare_generic_words_are_not_usable_query_names() -> None:
 
 def test_query_ladder_never_issues_a_bare_operon_query() -> None:
     """Run 2026-07-28_0919 issued '(protein_name:"operon" OR gene:"operon")' for
-    pmrHFIJKLM and took the lactose operon repressor from the answer."""
+    pmrHFIJKLM and took the lactose operon repressor from the answer.
+
+    ``_ai_protein_synonym_lookup`` is stubbed because it is the ladder's third
+    tier and it calls the LLM over the network: with the stub client returning no
+    hits, nothing aggregates and that tier fires for real. Its answer varies
+    between runs, and for this query it has returned 'operon'-bearing synonyms --
+    which made this test flaky on the very assertion it exists to make. The
+    generic-alias guard being tested here is the *caller's*, so the tier is
+    pinned to empty rather than left to the network.
+    """
     client = _RecordingUniProtClient()
 
-    map_protein_uniprot(client, "pmrHFIJKLM", "Escherichia coli", aliases=[{"alias": "operon", "source": "literature_alias"}])
+    with patch("t2pw.mapping.map_ids._ai_protein_synonym_lookup", return_value=[]):
+        map_protein_uniprot(
+            client,
+            "pmrHFIJKLM",
+            "Escherichia coli",
+            aliases=[{"alias": "operon", "source": "literature_alias"}],
+        )
 
     assert client.queries, "the ladder must still issue the entity's own name"
     assert any("pmrHFIJKLM" in query for query in client.queries)
@@ -330,38 +345,96 @@ def test_protein_name_routed_to_the_compound_mapper_does_not_ship_nad() -> None:
     assert result["name_gate"]["resolved_name"] == "NAD"
 
 
-def test_pathbank_protein_row_is_exempt_from_the_name_gate() -> None:
-    """PathBank names a protein by function and stores the legacy gene symbol:
-    'LpxL' -> P0ACV0 "Lipid A biosynthesis lauroyl acyltransferase" (gene htrB) is
-    correct and must not be rejected for sharing no word."""
-    db_result = {
+def _pathbank_lpxl_result(gene_name: str, *, score: float = 1.08) -> Dict[str, Any]:
+    return {
         "status": "mapped",
         "provider": "PathBankDB",
         "source": "db",
         "mapped_ids": {"uniprot": "P0ACV0", "pathbank_protein_id": "6214"},
         "pathbank_protein_id": 6214,
-        "confidence": 1.08,
+        "confidence": score,
         "chosen_rule": "direct_id_match:uniprot_id",
         "candidates": [
             {
                 "pathbank_protein_id": 6214,
                 "name": "Lipid A biosynthesis lauroyl acyltransferase",
                 "uniprot": "P0ACV0",
-                "gene_name": "htrB",
+                "gene_name": gene_name,
+                "organism": "Escherichia coli",
                 "species_id": 3,
                 "matched_on": "uniprot_id",
-                "score": 1.08,
+                "score": score,
             }
         ],
         "resolution": {"status": "matched", "order_step": "uniprot"},
     }
 
+
+def test_pathbank_row_passes_on_an_exact_gene_symbol(tmp_path: Path) -> None:
+    """The positive PathBank case, now earned rather than exempted.
+
+    PathBank names a protein by function -- 'LpxL' shares no word with "Lipid A
+    biosynthesis lauroyl acyltransferase" -- so the *gene symbol* is what proves
+    the identity. That is affirmative name evidence and the ladder accepts it.
+    """
     result = _apply_name_plausibility_gate(
-        db_result, "LpxL", kind="protein", organism="Escherichia coli"
+        _pathbank_lpxl_result("lpxL"), "LpxL", kind="protein", organism="Escherichia coli"
     )
 
     assert result["status"] == "mapped"
     assert result["mapped_ids"]["uniprot"] == "P0ACV0"
+    assert result["identity_verdict"]["verified"] is True
+    assert result["identity_verdict"]["name_gate"]["reason"] == "exact_symbol_identity"
+
+
+def test_pathbank_row_with_only_a_legacy_gene_symbol_is_no_longer_exempt() -> None:
+    """The blanket exemption is gone: provenance is not identity evidence.
+
+    P0ACV0 really is LpxL and PathBank really does store its older symbol
+    'htrB', so this row was correct -- but nothing in it says so, and the rule
+    that let it through ("it came from PathBank") let every other curated row
+    through on the same non-evidence. It now routes to the placeholder, where
+    the enzyme keeps its name and stops claiming a confirmed accession.
+    """
+    result = _apply_name_plausibility_gate(
+        _pathbank_lpxl_result("htrB"), "LpxL", kind="protein", organism="Escherichia coli"
+    )
+
+    assert result["status"] == "unmapped"
+    assert result["resolution"]["issue"] == "implausible_name_match"
+    assert result.get("mapped_ids") is None
+
+
+def test_pathbank_row_with_a_wrong_name_in_the_right_species_is_not_verified() -> None:
+    """Correct organism, curated provenance, and an unrelated protein."""
+    db_result = {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "mapped_ids": {"uniprot": "P03023", "pathbank_protein_id": "123"},
+        "pathbank_protein_id": 123,
+        "confidence": 0.01,
+        "chosen_rule": "name_match",
+        "candidates": [
+            {
+                "pathbank_protein_id": 123,
+                "protein_name": "Lactose operon repressor",
+                "uniprot": "P03023",
+                "organism": "Escherichia coli",
+                "score": 0.01,
+            }
+        ],
+        "resolution": {"status": "matched", "order_step": "name"},
+    }
+
+    result = _apply_name_plausibility_gate(
+        db_result, "MenD", kind="protein", organism="Escherichia coli"
+    )
+
+    assert result["status"] == "unmapped"
+    assert result["identity_verdict"]["verified"] is False
+    assert result["identity_verdict"]["reason"] == "implausible_name_match"
+    assert result.get("mapped_ids") is None
 
 
 def test_renamed_protein_survives_through_exact_gene_symbol_identity() -> None:
@@ -542,37 +615,18 @@ def test_strategy_level_rejection_still_strips_a_stale_identifier(tmp_path: Path
 
 
 def test_db_protein_strategy_result_keeps_its_identifier(tmp_path: Path) -> None:
-    """A PathBank protein row is exempt, so LpxL keeps P0ACV0 end to end."""
+    """An exact gene-symbol match keeps P0ACV0 end to end, through map_payload."""
     payload = _mcr_genes_payload()
     payload["entities"]["proteins"] = [
         {"name": "LpxL", "species": "Escherichia coli", "organism": "Escherichia coli"}
     ]
-    db_result = {
-        "status": "mapped",
-        "provider": "PathBankDB",
-        "source": "db",
-        "mapped_ids": {"uniprot": "P0ACV0", "pathbank_protein_id": "6214"},
-        "pathbank_protein_id": 6214,
-        "confidence": 1.08,
-        "chosen_rule": "direct_id_match:uniprot_id",
-        "candidates": [
-            {
-                "pathbank_protein_id": 6214,
-                "name": "Lipid A biosynthesis lauroyl acyltransferase",
-                "uniprot": "P0ACV0",
-                "gene_name": "htrB",
-                "species_id": 3,
-                "score": 1.08,
-            }
-        ],
-        "resolution": {"status": "matched", "order_step": "uniprot"},
-    }
 
-    result = _run_map_payload(payload, tmp_path, db_result)
+    result = _run_map_payload(payload, tmp_path, _pathbank_lpxl_result("lpxL"))
     protein = result["payload"]["entities"]["proteins"][0]
 
     assert protein["mapped_ids"]["uniprot"] == "P0ACV0"
     assert protein["mapping_meta"]["resolution"]["status"] == "matched"
+    assert protein["mapping_meta"]["identity_status"] == "verified"
     assert result["report"]["summary"]["name_gate_rejections"] == 0
 
 
