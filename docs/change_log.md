@@ -5,6 +5,251 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Three residual repair-integrity gaps: the guards were half-guards (2026-07-30, branch `research-mode`)
+
+Follow-up to the entry below. Each of these guards checked one direction of a two-directional
+property, and the unchecked direction was in every case the *easier* failure mode to produce.
+
+**Error 1 — the JSON content guard only prevented invention, not deletion.** It tested that
+the repaired literal stream was an ordered SUBSEQUENCE of the malformed input's. A
+subsequence cannot contain an invented token, cannot reorder and cannot duplicate — but it
+can be *shorter*. So a repair could answer a trailing comma by returning one of two complete
+reactions, or drop a middle entity row, and pass. Silently, from an extraction that was
+correct about them.
+
+*Fix.* Equality, not containment. The repaired stream must be exactly the input's complete
+literals, in order, optionally minus the final one — and only when the document was cut off
+mid-value AND that literal is the key the value belonged to (`_Scan.droppable_tail`). That is
+the one case `_JSON_REPAIR_SYSTEM` asks the model to handle by deleting. A trailing comma, a
+missing comma, a code fence and a missing closing delimiter all leave every literal intact, so
+none of them authorizes deleting anything; the scanner sets `truncated` only for an
+unterminated string or a bare literal running to EOF. Refusals now report `divergence`
+(`added_or_reordered` vs `removed`) and a sample of what went missing, computed with
+`difflib.SequenceMatcher` rather than a greedy forward scan — payload literals repeat
+constantly (`name` is a key on every row), and a greedy scan matched a dropped compound's
+`name` against the next reaction's and reported the wrong region.
+
+**Error 2 — the row-repair guard walked the ORIGINAL's non-empty fields.** That is the wrong
+place to stand to see an addition. Four things passed: adding an immutable field the row never
+had, populating one that was present but empty, deleting one whose value was empty, and
+introducing any brand-new top-level key. A fabricated `provenance` or `source_refs` is worse
+than a missing one, because it is citable.
+
+*Fix.* Exact shape over the union of both sides' keys. Outside the fields the contract named,
+every key must be present if it was present, absent if it was absent, and equal if it was
+equal — empty values included. Distinct reasons for `_added` / `_removed` / `_altered` and for
+`immutable_` / `unrelated_`. "Named by the contract" is now read from the contract itself:
+`_errors_by_row` carries `required_any` through (`_validate_reaction_structure` emits
+`["inputs", "outputs"]`), so a participants error no longer licenses writing an `organism`.
+Errors carrying no hint still fall back to every scientific field, because the alternative is a
+repair that cannot repair. The `products` → `outputs` migration is preserved: atom loss is
+still checked over the *union* of the named fields.
+
+**Error 3 — numeric normalization went through `float`.** It bought `1e3 == 1000.0` and gave
+away exactness. Every integer above 2**53 collapses, so `9007199254740993` and
+`9007199254740992` were the same value to the guard — a taxonomy id, a PathBank row id or a
+PubChem CID altered in its 16th digit compared equal and passed. Long decimals rounded the
+same way.
+
+*Fix.* `Decimal` in a 200-digit context, normalized and rendered fixed-point, which keeps
+`1e3 == 1000.0` while distinguishing both cases. Floats are routed through `str` first
+(`Decimal(0.1)` is the binary expansion and would never match the `0.1` in the source text),
+and `-0` is canonicalized to `0` since JSON does not distinguish them. The guard's side of the
+comparison parses with `parse_exact` (`parse_float=Decimal`) so a high-precision decimal is
+not flattened before it is compared — without that, an *honest* repair of one would have been
+refused. The payload the pipeline receives is still parsed normally: `Decimal` is not JSON
+round-trippable and must not leak downstream.
+
+**Verification.** Three new probes, run separately: JSON-repair deletion (24), row field
+exactness (31), Decimal normalization (30). Adversarial Prompt 3 suites: 20 / 30 / 29 / 17.
+Prompt 2 regressions: 554. Full suite: 1613 passed, up from 1528, with all four
+previously-recovering early-failure fixtures still recovering.
+
+---
+
+## Five integrity gaps in the recovery path: instructions were standing in for enforcement (2026-07-30, branch `research-mode`)
+
+Follow-up to the entry below. The recovery machinery landed and worked; these are the
+places where it *asked* for a property rather than *enforcing* one.
+
+**Error 1 — a model instruction is not enforcement.** `_JSON_REPAIR_SYSTEM` told the repair
+model, in absolute terms, not to add, remove, rename, reorder or reword anything. Nothing
+checked. A model that ignored it returned perfectly well-formed JSON containing a reaction
+nobody extracted, and from that point on the invention was indistinguishable from extracted
+biology — it had a name, participants, and flowed through cleaning, mapping and export like
+any other. The repair pass was the only stage in the pipeline that could manufacture a
+pathway out of a syntax error.
+
+*Fix.* `json_repair_preserves_content` requires every complete key and scalar of the
+repaired document to appear in the malformed input **in the same relative order**. One
+ordered-subsequence test rejects all four attacks: invention and substitution contribute a
+token the input cannot supply, reordering supplies the right tokens in the wrong order, and
+duplication needs more occurrences than exist. Deletion stays legal because the input is
+malformed *because* something was cut off, and the prompt asks for the incomplete pair to be
+dropped — so the scanner ignores unterminated strings and any bare literal running to EOF.
+Refusal is its own outcome, `semantic_guard_failed`, not a flavour of `invalid_json`: the
+model produced valid JSON, so nothing about the syntax explains the rejection and the two
+have opposite fixes. It is not retried, and the deterministic prefix salvage still runs. The
+stored `stage1_invalid_json_localized_repair` fixture had to change: its repaired reply also
+added an `evidence` field, which reads as harmless and is exactly what the guard now refuses
+— a repairer that can add a field can add a reaction.
+
+**Error 2 — grounding was one-sided, so repair could delete facts.** `evidence_supports`
+asked whether *added* values were carried by the row's evidence and said nothing about
+*removed* ones. So the cheapest way to satisfy a structural contract was to delete until the
+row stopped failing, and every such repair passed the grounding check trivially because
+nothing was added. Deleting an extracted input is worse than refusing the repair: the
+compound was in the paper, the extractor found it, and no error anywhere said it went
+missing.
+
+*Fix.* `preserves_original_values` runs **before** grounding (deletion is the more damaging
+failure, so it should be the reported one when a row fails both). Fields the contract did not
+name must be byte-identical — including `name`, `evidence`, `provenance`, `source_refs`,
+`source_papers`, `rag_provenance`, `scope_membership`, `locked_reaction_id`,
+`preservation_status`, `confidence`, `inference`. Across the fields it *did* name, every
+non-empty atom the original carried must still be present. Checked over the union of those
+fields rather than field by field, because moving a participant from `products` to `outputs`
+is the normalization a structural repair is *for*.
+
+**Error 3 — reconstruction guessed what kind of actor it saw.** Actor roles mapped statically
+to `entities.proteins`. But "enzyme" spans two buckets that are not interchangeable:
+`proteins` is one gene product with a UniProt identity, `protein_complexes` is an assembly
+with components and stoichiometry, and they hit different identity gates and different
+PathBank tables. Filing a complex as a protein asserts it is a single gene product — a
+biological claim, made by the one function whose whole premise is that it makes none.
+
+*Fix.* Actor roles read the type the payload states (`protein_complex` / `protein` keys, or
+`entity` plus a `protein`/`protein_complex` `entity_type`). An actor that states no usable
+type is **skipped** with reason `actor_entity_type_unknown` and its name, so the gap is
+reported rather than resolved by guesswork. Static compound reconstruction for reaction
+inputs/outputs and transport cargo is untouched: there the role *is* the type.
+
+**Error 4 — one recorder for the whole process.** Streamlit serves every browser session from
+one process on its own ScriptRunner thread. A module-level recorder was shared across all of
+them: session B's `activate` would discard session A's boundaries mid-run and both would
+write the same filenames, so the artifacts became a blend of two papers with nothing saying
+so — worse than no artifact, because it looks authoritative.
+
+*Fix.* The recorder is a `ContextVar`, read and written per execution context; a new thread
+starts from the default rather than inheriting, so nothing a worker records can land in
+another run's artifacts. `activate(unique=True)` — which production passes — gives each
+invocation its own subdirectory, and the resolved path is surfaced in the failure message.
+The batch session-state hand-off is unchanged.
+
+**Error 5 — bounding was per-entry-point.** `record_boundary`'s `**extra` keys were stored
+verbatim, and `record_cleaning` / `record_mapped_failure` / `record_iteration` each stored
+`dict(report)` untouched. The bound held for the shapes somebody had thought of, which is not
+a bound.
+
+*Fix.* One recursive sanitizer, `bound()`, at every entry point: `BULK_KEYS` become a
+`{chars, hash, preview}` descriptor at any depth, mappings and sequences are capped in width,
+strings are *clipped* rather than described (an `incomplete_reason` must stay readable), and
+anything past `MAX_BOUND_DEPTH` collapses to a descriptor. The depth cap is 6, not
+`failure_detail`'s 4, because a cleaning report's `discarded_sample` entries sit at depth 4
+and censoring them would make the artifact useless to defend against a case that never occurs
+in it.
+
+**Verification.** Four adversarial groups, run separately: JSON-repair content invention (20),
+row-repair deletion and provenance removal (30), actor entity type (29), and
+isolation + recursive bounding (17), the last including a two-thread barrier regression and a
+150 KB value nested three levels deep through every entry point at once. Prompt 3 targeted:
+181. Prompt 2 regression (eligibility, identity, protein export, batch, contracts): 496. Full
+suite: 1528 passed, up from 1432, with all four previously-recovering early-failure fixtures
+still recovering.
+
+---
+
+## Early-failure diagnosability and bounded localized recovery (2026-07-29, branch `research-mode`)
+
+**Error.** A Stage-0/Stage-1 death produced one sentence and nothing on disk. Both legs lost
+in `runs/2026-07-28_0919` carry `files: []` in the manifest and have only `RESULT.txt` under
+their run directories, which is why the postmortem in `llm/client.py` had to *infer* the
+cause from the shape of the failure rather than read it. Five different faults all surfaced
+downstream as the same message, "Payload must include a processes object":
+
+1. the provider returned an empty completion;
+2. it returned text that is not JSON;
+3. it returned valid JSON declaring no processes;
+4. it returned processes that *cleaning* then discarded row by row;
+5. cleaning kept rows and the stage contract rejected the result.
+
+Each of those has a different fix, and none of them was distinguishable from the others.
+Recovery had the mirror problem: the only response to any of them was to re-issue the entire
+extraction prompt — the largest prompt in the run — which returns a fresh sample rather than
+the same content with the fault corrected.
+
+**Why it appeared.** The facts that separate the five are produced deep in the call stack
+(inside `chat()`'s retry loop, inside `_clean_processes`'s per-row `continue`) and consumed
+at the top, by the app and the batch driver. Nothing carried them across, and every artifact
+hand-off in the app sat *downstream* of the `st.stop()` that a failure takes — so the runs
+that most needed evidence were exactly the runs that wrote none.
+
+**Fix.**
+
+*Diagnostics* (`pipeline/extraction_diagnostics.py`). One recorder per run, reached through
+a module-level `current()` so recording is never conditional on a parameter nobody threaded
+through. Every `record_*` call flushes to disk as it is made, so a stage that raises has
+already written its evidence by the time the exception unwinds; no `finally` block has to be
+correct. Each boundary record carries model, `finish_reason`, attempts, raw response status,
+raw entity/process counts when parseable, cleaned counts, discarded-row counts by reason, a
+capped sample of discarded names and pointers, the payload hash, and the stage and boundary
+names. Everything is bounded at capture: counts, hashes and clipped previews only — never a
+repeated evidence blob, because payload `evidence` fields reach six figures of characters and
+these files are rewritten on every attempt. Artifacts: `stage0_attempts.json`,
+`extraction_boundary_report.json`, `cleaning_report.json`, `mapped_failure_snapshot.json`
+(only once mapping has run, so its absence stays meaningful), `audit_iteration_summary.json`
+and `gap_iteration_summary.json`. `batch/driver.py` carries them into the leg from
+`_add_common_artifacts`, which the Stage-1 failure branch already invoked.
+
+*content_filter is durable* (`llm/client.py`). Moderation is a deterministic function of the
+prompt, so re-sending an identical prompt gets an identical verdict. Both retry loops now
+stop on the first empty `content_filter` reply and report `terminal_reason="content_filter"`
+instead of spending `LLM_MAX_RETRIES` draws to arrive at the same empty string. A
+`content_filter` reply that carries *text* is unaffected — a partial answer is an answer.
+
+*Localized repair* (`pipeline/localized_repair.py`). Invalid JSON is shown to the model as
+its own broken text plus the parser's error, with no source text in the prompt and therefore
+nothing to re-extract. Contract-invalid rows are sent one row at a time with their exact
+errors and their own evidence passage; valid rows are neither sent nor touched, returned
+pointers that were not requested are discarded, and a repaired row whose scientific fields
+are not present in the supplied evidence is refused and the original kept. Attempts are
+capped and `content_filter` ends the sequence.
+
+*Salvage no longer hides a lost payload.* `_extract_json_from_text` is a prefix scan: on a
+reply whose syntax error lands inside `processes` it returns the entities that came before it
+and drops every reaction — measured on the shape stored in
+`tests/fixtures/early_failures/cases.json`. A salvage that lost the processes is now offered
+to localized repair first, and the salvaged object is still used if repair fails.
+
+*Deterministic registry reconstruction.* A participant named by a *valid* process row but
+absent from the entity registry gets an unresolved shell carrying `name`, `provenance`,
+`resolution_status` and its source pointer — no identifier, no EC number, no organism, no
+function. This closes the silent loss where `filter_unresolvable_reactions` deletes correct,
+evidenced reactions for a bookkeeping gap. Every identity gate downstream still refuses the
+shell; the incompleteness is made explicit rather than laundered away.
+
+*Incomplete is a reportable outcome* (`pipeline/stage_one_boundary.py`). When reconstruction
+and repair are both spent and the contract still refuses the payload, `settle_stage_one`
+returns the payload as far as it got with `ok=False` and a reason naming what blocked it,
+what was already tried, and — when cleaning is the real cause — that the rows existed before
+cleaning removed them. Nothing invents a reaction to satisfy `entities_required` or
+`processes_required`.
+
+**Consistency with the design.** `chat()` keeps its historical signature and returns exactly
+the text it always did; `chat_detailed()` is the same call with the diagnostics attached.
+`clean_stage_one()` is unchanged and delegates to `clean_stage_one_with_report()`, so its
+dozens of call sites see no behavioural difference. Recording is additive everywhere and can
+never raise: a diagnostics writer that can kill the run it is diagnosing is worse than none.
+
+**Verification.** `tests/test_extraction_diagnostics.py`, `tests/test_localized_repair.py`,
+`tests/test_stage_one_boundary.py`, `tests/test_early_failure_replay.py` (six stored
+early-failure shapes replayed offline through the real Stage-0 → Stage-1 → boundary path),
+plus new cases in `tests/test_llm_client_empty_completion_retry.py` and
+`tests/test_batch_driver.py`. Full suite: 1432 passed, up from a 1322-passing baseline, with
+no pre-existing test changed except where the seam it patched moved.
+
+---
+
 ## Six corrections to the paper-eligibility gate: the false claim could still get back in (2026-07-29, branch `research-mode`)
 
 Follow-up to the entry below; full rules in `docs/paper_eligibility.md`.

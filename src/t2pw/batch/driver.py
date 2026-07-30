@@ -1137,6 +1137,7 @@ def _xml_bytes(result: Dict[str, Any]) -> bytes:
 def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any]) -> None:
     """Stage-1 and merged payloads, whenever the app got far enough to store them."""
 
+    _add_diagnostic_artifacts(at, out)
     stage_one = _ss(at, "stage_one")
     if isinstance(stage_one, dict) and stage_one:
         out["stage1_payload.json"] = _json_text(stage_one)
@@ -1154,6 +1155,49 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
     contracts = _collect_reports(artifacts)
     if contracts:
         out["contract_reports.json"] = _json_text(contracts)
+
+
+#: Session-state key the app publishes its Stage-0/Stage-1 diagnostics under, as
+#: a ``{filename: object}`` map. Spelled out rather than imported from
+#: ``t2pw.app.streamlit_app`` for the same reason ``_safe_dict`` is duplicated
+#: here: importing the app module is exactly what this file must not do.
+_DIAGNOSTICS_KEY = "extraction_diagnostics"
+
+#: Filenames the app may publish. An allowlist, because these become filenames in
+#: the run directory and a session-state key is not a trusted source; ``Path().
+#: name`` in ``runner.write_artifacts`` is the second guard, not the first.
+_DIAGNOSTIC_ARTIFACT_NAMES: Tuple[str, ...] = (
+    "stage0_attempts.json",
+    "extraction_boundary_report.json",
+    "cleaning_report.json",
+    "mapped_failure_snapshot.json",
+    "audit_iteration_summary.json",
+    "gap_iteration_summary.json",
+)
+
+
+def _add_diagnostic_artifacts(at: Any, out: Dict[str, Any]) -> None:
+    """Carry the app's extraction diagnostics into the leg's artifact set.
+
+    THE FAILURE THIS CLOSES. Every leg lost in ``runs/2026-07-28_0919`` carries
+    ``files: []`` in the manifest and has nothing but ``RESULT.txt`` on disk,
+    because every artifact hand-off in the app sat downstream of the ``st.stop()``
+    the failure took. The diagnostics are published on the failure paths too, and
+    this is called from ``_add_common_artifacts`` -- which the Stage-1 failure
+    branch, the scope-conflict branch, the empty-pathway branch and the timeout
+    branch all already invoke -- so a leg that dies at Stage 0 or Stage 1 now
+    lands with the evidence for why.
+
+    Only artifacts the app actually produced are copied; a missing
+    ``mapped_failure_snapshot.json`` still means "mapping never ran", which is
+    itself a diagnosis.
+    """
+
+    published = _safe_dict(_ss(at, _DIAGNOSTICS_KEY))
+    for name in _DIAGNOSTIC_ARTIFACT_NAMES:
+        blob = published.get(name)
+        if isinstance(blob, (dict, list)) and blob:
+            out[name] = _json_text(blob)
 
 
 def _add_strict_artifacts(

@@ -34,6 +34,7 @@ sleep happens.
 
 from __future__ import annotations
 
+import json
 import logging
 import sys
 import types
@@ -73,6 +74,7 @@ from t2pw.llm.client import (  # noqa: E402
     _completion_is_empty,
     _finish_reason,
     chat,
+    chat_detailed,
     chat_with_tools,
 )
 
@@ -221,6 +223,11 @@ def test_chat_logs_finish_reason_so_a_content_filter_is_distinguishable(
     The 2026-07-28 postmortem could not tell them apart because nothing logged
     ``finish_reason``. Retrying a content_filter stop cannot help, so the
     operator has to be able to see which one they got.
+
+    As of 2026-07-29 the loop also STOPS on it rather than merely logging it --
+    see the durable-exit section below -- so only the first canned reply is
+    consumed here. The log-line requirement is unchanged and is what this test
+    still pins.
     """
     llm.install([_resp("", finish_reason="content_filter"), _resp("", finish_reason="content_filter"),
                  _resp("", finish_reason="content_filter")])
@@ -230,6 +237,182 @@ def test_chat_logs_finish_reason_so_a_content_filter_is_distinguishable(
 
     assert "content_filter" in caplog.text
     assert "preprocessor" in caplog.text
+
+
+# ---------------------------------------------------------------------------
+# content_filter: a DURABLE stop, not a transient (added 2026-07-29)
+#
+# The 2026-07-28 fix folded every empty 200 into one retry loop. That is right
+# for a provider hiccup and wrong for a moderation stop: moderation is a
+# deterministic function of the prompt, so re-sending the IDENTICAL prompt gets
+# the identical verdict. LLM_MAX_RETRIES draws then buy nothing but latency, and
+# the caller ends up with the same empty string it could have had immediately --
+# with no recorded reason, so nobody could tell that editing the prompt rather
+# than re-running the leg was the fix.
+#
+# Retrying a DIFFERENT prompt is still allowed, and is what localized repair
+# does. What is forbidden is the blind identical retry.
+# ---------------------------------------------------------------------------
+def test_content_filter_exits_immediately_instead_of_retrying(llm) -> None:
+    """One call, not LLM_MAX_RETRIES calls, on a moderation stop."""
+
+    fake = llm.install(
+        [
+            _resp("", finish_reason="content_filter"),
+            _resp("this must never be reached"),
+            _resp("nor this"),
+        ]
+    )
+
+    out = chat(MESSAGES, model_override="test-model", stage_name="preprocessor")
+
+    assert out == ""
+    assert len(fake.completions.calls) == 1
+    # No backoff was spent either: the only pause is the LLM_CALL_SPACING one
+    # every call makes, not the exponential retry sleep.
+    assert llm.sleeps == [0.01]
+
+
+def test_content_filter_carries_a_durable_reason_the_caller_can_act_on(llm) -> None:
+    """The reason has to survive the call, not just the log line.
+
+    ``terminal_reason`` is what lets Stage 0, ``_run_json_stage`` and the repair
+    passes each decline to retry without re-deriving "was that moderation?" from
+    a finish_reason string of their own.
+    """
+
+    llm.install([_resp("", finish_reason="content_filter")])
+
+    result = chat_detailed(MESSAGES, model_override="test-model", stage_name="preprocessor")
+
+    assert result.text == ""
+    assert result.diagnostics.terminal_reason == "content_filter"
+    assert result.diagnostics.response_status == "content_filter"
+    assert result.diagnostics.finish_reason == "content_filter"
+    assert result.diagnostics.attempts == 1
+    assert result.diagnostics.model == "test-model"
+
+
+def test_a_content_filter_stop_that_carries_text_is_still_a_result(llm) -> None:
+    """A partial answer is an answer.
+
+    Only an EMPTY content_filter reply is a dead end. One with text is a
+    truncated result and must be returned like any other, or this change would
+    start discarding real content.
+    """
+
+    fake = llm.install([_resp('{"pathway_name": "partial"}', finish_reason="content_filter")])
+
+    result = chat_detailed(MESSAGES, model_override="test-model")
+
+    assert result.text == '{"pathway_name": "partial"}'
+    assert result.diagnostics.terminal_reason == ""
+    assert len(fake.completions.calls) == 1
+
+
+@pytest.mark.parametrize("reason", ["content_filter", "content-filter", "SAFETY"])
+def test_moderation_spellings_are_all_recognised(llm, reason: str) -> None:
+    """OpenAI-compatible gateways are not consistent about this string, and a
+    spelling we fail to recognise silently restores the burn-the-budget
+    behaviour this section exists to end."""
+
+    fake = llm.install([_resp("", finish_reason=reason), _resp("unreachable")])
+
+    assert chat(MESSAGES, model_override="test-model") == ""
+    assert len(fake.completions.calls) == 1
+
+
+def test_an_ordinary_empty_completion_still_retries(llm) -> None:
+    """The regression guard for the tests above: only moderation is durable.
+
+    A ``stop`` or ``length`` finish_reason with no text is still the transient
+    the 2026-07-28 fix was written for and must still be retried.
+    """
+
+    fake = llm.install([_resp("", finish_reason="stop"), _resp("recovered")])
+
+    assert chat(MESSAGES, model_override="test-model") == "recovered"
+    assert len(fake.completions.calls) == 2
+
+
+def test_chat_with_tools_also_stops_on_a_moderation_refusal(llm) -> None:
+    """The same rule at the other call site, which has its own retry loop."""
+
+    fake = llm.install(
+        [_resp("", finish_reason="content_filter"), _resp("unreachable")]
+    )
+
+    out = chat_with_tools(MESSAGES, TOOLS, _noop_executor, model_override="test-model")
+
+    assert out == ""
+    assert len(fake.completions.calls) == 1
+
+
+# ---------------------------------------------------------------------------
+# Diagnostics on the ordinary paths
+#
+# The text ``chat`` returns is unchanged; what is new is that the run can say
+# which model answered, on what finish_reason, and what each attempt cost.
+# ---------------------------------------------------------------------------
+def test_empty_completion_then_successful_retry_is_fully_described(llm) -> None:
+    """The PMC13231680 shape, now with the record the postmortem needed."""
+
+    fake = llm.install([_resp(""), _resp("   \n\t "), _resp('{"pathway_name": "lipid A"}')])
+
+    result = chat_detailed(MESSAGES, model_override="test-model", stage_name="preprocessor")
+
+    assert result.text == '{"pathway_name": "lipid A"}'
+    assert len(fake.completions.calls) == 3
+    diagnostics = result.diagnostics
+    assert diagnostics.attempts == 3
+    assert diagnostics.model == "test-model"
+    assert diagnostics.stage == "preprocessor"
+    assert diagnostics.response_status == "ok"
+    assert diagnostics.terminal_reason == ""
+    assert [row["status"] for row in diagnostics.attempt_log] == ["empty", "empty", "ok"]
+    assert diagnostics.raw_chars == len('{"pathway_name": "lipid A"}')
+    assert diagnostics.request_hash.startswith("sha256:")
+    assert diagnostics.response_hash.startswith("sha256:")
+
+
+def test_the_exhausted_empty_budget_is_reported_as_such(llm) -> None:
+    llm.install([_resp(""), _resp(""), _resp("")])
+
+    result = chat_detailed(MESSAGES, model_override="test-model")
+
+    assert result.text == ""
+    assert result.diagnostics.terminal_reason == "empty_after_retries"
+    assert result.diagnostics.attempts == 3
+
+
+def test_transient_provider_errors_appear_in_the_attempt_log(llm) -> None:
+    """A transient that was retried away is still a fact about the run.
+
+    A truncated HTTP body -- what the SDK raises ``json.JSONDecodeError`` for --
+    is used rather than ``RateLimitError`` because it is constructible whether
+    the real ``openai`` package or this file's stub is installed, and the client
+    treats both the same way.
+    """
+
+    llm.install([json.JSONDecodeError("Expecting value", "", 0), _resp("recovered")])
+
+    result = chat_detailed(MESSAGES, model_override="test-model")
+
+    assert result.text == "recovered"
+    assert [row["status"] for row in result.diagnostics.attempt_log] == ["error", "ok"]
+    assert "Expecting value" in result.diagnostics.attempt_log[0]["error"]
+
+
+def test_chat_is_still_exactly_the_text(llm) -> None:
+    """``chat`` keeps its historical contract: a string, nothing wrapped.
+
+    Dozens of call sites depend on it, and a diagnostics envelope leaking into
+    them would be a far bigger change than the one being made.
+    """
+
+    llm.install([_resp("plain text")])
+
+    assert chat(MESSAGES, model_override="test-model") == "plain text"
 
 
 # ---------------------------------------------------------------------------

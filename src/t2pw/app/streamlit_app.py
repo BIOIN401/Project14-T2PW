@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import hashlib
 import re
@@ -80,6 +81,15 @@ from t2pw.pipeline.pipeline import (
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
+from t2pw.pipeline.extraction_diagnostics import (
+    CLEANING_REPORT_NAME,
+    activate as activate_extraction_diagnostics,
+    count_entities as diagnostic_entity_counts,
+    count_processes as diagnostic_process_counts,
+    current as current_extraction_diagnostics,
+    payload_hash as diagnostic_payload_hash,
+)
+from t2pw.pipeline.stage_one_boundary import settle_stage_one
 from t2pw.pipeline.failure_detail import headline as detail_headline
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
@@ -966,6 +976,176 @@ def resolve_path(path_text: str) -> Path:
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
+
+
+#: Session-state key holding this run's diagnostic artifacts as a
+#: ``{filename: object}`` map. The batch driver reads it to write those files into
+#: the per-leg directory, and it is populated on the FAILURE paths too -- which is
+#: the whole point. The 2026-07-28 legs died with ``files: []`` because every
+#: artifact hand-off in the app sat downstream of an ``st.stop()``.
+logger = logging.getLogger(__name__)
+
+EXTRACTION_DIAGNOSTICS_KEY = "extraction_diagnostics"
+
+#: Session-state key holding the directory this invocation's artifacts were
+#: written to. Each run gets its own, so the path has to be reported rather than
+#: assumed -- "look in tmp/extraction_diagnostics" is no longer an instruction
+#: anyone can follow.
+EXTRACTION_DIAGNOSTICS_DIR_KEY = "extraction_diagnostics_dir"
+
+#: Where a run's diagnostics land on disk, under the project ``tmp`` tree the app
+#: already uses for Stage-1 lock artifacts. Writing to disk is independent of the
+#: session-state hand-off on purpose: an interactive user who never runs the batch
+#: driver still gets the files, and a leg that dies before the driver reads
+#: session state still leaves them behind.
+DIAGNOSTICS_DIRNAME = "extraction_diagnostics"
+
+
+def _start_extraction_diagnostics(source_text: str) -> Path:
+    """Begin a fresh diagnostics record for one pipeline run. Returns its directory.
+
+    Called once, before Stage 0. Replacing the recorder rather than clearing it
+    means diagnostics from a previous paper can never leak into this run's
+    artifacts -- a real hazard in the batch, where one process drives the app
+    repeatedly.
+
+    ``unique=True`` is not optional here. Streamlit serves every browser session
+    from the same process, so two people (or two batch legs sharing an
+    interpreter) extracting different papers at the same moment would write
+    ``extraction_boundary_report.json`` over each other. The loser would then be
+    diagnosed with the winner's evidence, which is worse than having none: it
+    looks authoritative. Each invocation gets its own subdirectory, and the path
+    is surfaced in the failure message so an operator knows where to look.
+    """
+
+    run_id = diagnostic_payload_hash(source_text)
+    recorder = activate_extraction_diagnostics(
+        run_id=run_id,
+        artifact_dir=PROJECT_ROOT / "tmp" / DIAGNOSTICS_DIRNAME,
+        unique=True,
+    )
+    st.session_state[EXTRACTION_DIAGNOSTICS_KEY] = {}
+    st.session_state[EXTRACTION_DIAGNOSTICS_DIR_KEY] = str(recorder.artifact_dir or "")
+    return Path(recorder.artifact_dir) if recorder.artifact_dir else PROJECT_ROOT / "tmp"
+
+
+def _sync_extraction_diagnostics() -> Dict[str, Any]:
+    """Publish the diagnostics collected so far into session state.
+
+    Called at every point the run can end -- after Stage 0, after Stage 1 on both
+    the pass and the fail path, and after the post-pipeline step -- because
+    ``st.stop()`` means "this script run is over" and anything not in session
+    state by then is lost. Never raises: a diagnostics hand-off that can abort the
+    run defeats its own purpose.
+    """
+
+    try:
+        artifacts = current_extraction_diagnostics().artifacts()
+    except Exception:  # noqa: BLE001 - diagnostics must never break the run
+        logger.debug("extraction diagnostics could not be published", exc_info=True)
+        return {}
+    st.session_state[EXTRACTION_DIAGNOSTICS_KEY] = artifacts
+    return artifacts
+
+
+def _last_cleaning_report() -> Dict[str, Any]:
+    """The most recent Stage-1 cleaning pass, or ``{}``.
+
+    The boundary needs exactly one fact from it -- whether cleaning discarded
+    every process row the model returned -- to tell "the model produced nothing"
+    apart from "cleaning removed what it produced". The last recorded pass is the
+    right one: Stage 1 records per chunk and then once for the merge, and the
+    merge is what the boundary is judging.
+    """
+
+    try:
+        artifacts = current_extraction_diagnostics().artifacts()
+    except Exception:  # noqa: BLE001
+        return {}
+    passes = _safe_list(_safe_dict(artifacts.get(CLEANING_REPORT_NAME)).get("passes"))
+    return _safe_dict(passes[-1]) if passes else {}
+
+
+#: Audit-round keys that are whole reports or candidate lists. Kept out of the
+#: iteration summary and replaced by counts: a round carries up to five
+#: candidates, each with its own paths and scores, plus two full gate reports, and
+#: this artifact is rewritten once per round.
+_BULKY_ROUND_KEYS = ("candidates", "post_patch_gate", "post_settlement_gate")
+
+
+def _round_summary(round_row: Any) -> Dict[str, Any]:
+    """One audit/gap round reduced to a bounded summary."""
+
+    data = _safe_dict(round_row)
+    summary = {key: value for key, value in data.items() if key not in _BULKY_ROUND_KEYS}
+    for key in _BULKY_ROUND_KEYS:
+        value = data.get(key)
+        if isinstance(value, list):
+            summary[f"{key}_count"] = len(value)
+        elif isinstance(value, dict):
+            summary[f"{key}_ok"] = bool(value.get("ok", False))
+            summary[f"{key}_error_count"] = len(_safe_list(value.get("errors")))
+    return summary
+
+
+def _record_audit_round(round_row: Any) -> None:
+    """File one completed audit round with the diagnostics recorder."""
+
+    try:
+        current_extraction_diagnostics().record_iteration("audit", _round_summary(round_row))
+    except Exception:  # noqa: BLE001
+        logger.debug("audit round could not be recorded", exc_info=True)
+
+
+def _record_gap_round(round_row: Any) -> None:
+    """File one completed gap-resolution round with the diagnostics recorder."""
+
+    try:
+        current_extraction_diagnostics().record_iteration("gap", _round_summary(round_row))
+    except Exception:  # noqa: BLE001
+        logger.debug("gap round could not be recorded", exc_info=True)
+
+
+def _record_mapped_failure_snapshot(
+    payload: Any,
+    *,
+    stage: str,
+    reason: str,
+    report: Any = None,
+) -> None:
+    """Record what the payload looked like when a post-mapping step failed.
+
+    Counts, hashes and the failing issue codes -- never the payload. A mapped
+    payload from a real run is 306 KB to 4.7 MB and is already written elsewhere;
+    what is missing after a failure is the small summary that says which stage
+    refused it and how much had survived to that point.
+
+    Written only when mapping has actually run, so the *absence* of
+    ``mapped_failure_snapshot.json`` remains meaningful: it says the run died
+    before the mapper was called.
+    """
+
+    try:
+        report_dict = _safe_dict(report)
+        current_extraction_diagnostics().record_mapped_failure(
+            {
+                "stage": stage,
+                "reason": str(reason)[:2000],
+                "payload_hash": diagnostic_payload_hash(payload),
+                "entity_counts": diagnostic_entity_counts(payload),
+                "process_counts": diagnostic_process_counts(payload),
+                "contract_summary": _safe_dict(report_dict.get("summary")),
+                "failing_codes": sorted(
+                    {
+                        str(issue.get("code") or "")
+                        for issue in _safe_list(report_dict.get("errors"))
+                        if isinstance(issue, dict) and issue.get("code")
+                    }
+                ),
+            }
+        )
+    except Exception:  # noqa: BLE001
+        logger.debug("mapped failure snapshot could not be recorded", exc_info=True)
 
 
 def _save_pipeline_outputs(
@@ -2038,8 +2218,29 @@ def run_post_pipeline_sbml_artifacts(
     research_skipped: List[Dict[str, Any]] = []
 
     def _contract(validator: Any, *args: Any, **kwargs: Any) -> Dict[str, Any]:
-        """Run a stage contract under the active export mode and collect flags."""
-        report = run_stage_contract(validator, *args, mode=export_mode, **kwargs)
+        """Run a stage contract under the active export mode and collect flags.
+
+        A failure here aborts the whole post-pipeline step, so this is the last
+        place the *mapped* payload still exists in a frame that knows which stage
+        refused it. The snapshot is taken on the way past and the error re-raised
+        unchanged, which keeps every existing handler's behaviour identical while
+        making sure the run does not die with nothing on disk about the payload
+        that died. Post-extraction is excluded: that boundary is diagnosed by
+        stage_one_boundary before this function is ever reached, and recording it
+        here would overwrite a mapping snapshot with a pre-mapping one.
+        """
+
+        try:
+            report = run_stage_contract(validator, *args, mode=export_mode, **kwargs)
+        except StageContractError as exc:
+            if str(exc.stage or "") != "post_extraction":
+                _record_mapped_failure_snapshot(
+                    args[0] if args else None,
+                    stage=str(exc.stage or getattr(validator, "__name__", "unknown")),
+                    reason=str(exc),
+                    report=exc.report,
+                )
+            raise
         if research_mode and isinstance(report, dict):
             research_flags.extend(review_flags(report))
             research_skipped.extend(format_gaps(report))
@@ -2695,6 +2896,14 @@ def run_post_pipeline_sbml_artifacts(
                     "candidates": round_candidates,
                 }
             )
+            # Filed with the diagnostics recorder as well as the artifacts dict.
+            # The artifacts dict only reaches disk if this whole function RETURNS;
+            # a run that dies in round 4 of 5 -- on a timeout, a gate, a contract --
+            # loses every round it completed. The recorder writes each round as it
+            # ends, so the audit history survives the failure it was diagnosing.
+            # Bounded on purpose: ``candidates`` and the full gate reports are the
+            # bulky keys and are reduced to counts here.
+            _record_audit_round(audit_iterations[-1])
             if use_gap_resolver:
                 gap_iterations.append(
                     {
@@ -2706,6 +2915,7 @@ def run_post_pipeline_sbml_artifacts(
                         "actionable_issue_count": actionable_gap_issue_count,
                     }
                 )
+                _record_gap_round(gap_iterations[-1])
 
             # Rebuild reaction summary from this round's settled output so the
             # next gap_resolver call receives an up-to-date picture of the
@@ -3529,6 +3739,12 @@ if submit:
 
     reset_refinement_state()
 
+    # Opened BEFORE Stage 0, because Stage 0 is one of the boundaries being
+    # diagnosed. Everything recorded from here on is flushed to disk as it is
+    # recorded, so a run that dies inside Stage 0 has already written
+    # stage0_attempts.json by the time the error is rendered.
+    _diagnostics_dir = _start_extraction_diagnostics(text)
+
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
         # Stage 0 plus its at-most-one bounded-head retry. The retry's guards
@@ -3584,6 +3800,8 @@ if submit:
                 "if the context below looks incomplete."
             )
 
+    _sync_extraction_diagnostics()
+
     if is_ambiguous_multi_example_review_context(pathway_context):
         candidate_examples = pathway_context.get("candidate_examples", [])
         st.session_state["pipeline_ready"] = False
@@ -3625,15 +3843,57 @@ if submit:
                 temperature=temperature,
                 max_tokens=int(extract_tokens),
             )
-            validate_post_extraction(stage_one)
+            # The boundary is settled rather than merely checked: a registry row
+            # the extraction referenced but never declared is reconstructed
+            # deterministically, and rows the contract rejects get a bounded,
+            # localized repair -- neither of which regenerates the pathway. See
+            # t2pw.pipeline.stage_one_boundary. When it cannot be settled the
+            # payload still comes back and the run reports an INCOMPLETE outcome
+            # instead of a pass; nothing is invented to satisfy the contract.
+            _boundary = settle_stage_one(
+                stage_one,
+                mode=coerce_mode(st.session_state.get("export_mode")),
+                cleaning_report=_last_cleaning_report(),
+            )
+            stage_one = _boundary.payload
+            st.session_state["stage_one_boundary"] = _boundary.to_summary()
     except PipelineFailure as failure:
+        _sync_extraction_diagnostics()
         st.error(f"Extraction failed: {failure}")
         render_attempts("Stage 1 attempts", failure.attempts)
         st.stop()
     except StageContractError as failure:
+        _sync_extraction_diagnostics()
         st.error(f"Extraction boundary failed: {failure}")
         st.json(failure.report)
         st.stop()
+
+    _sync_extraction_diagnostics()
+    if not _boundary.ok:
+        # Explicitly incomplete, not a silent pass and not a fabricated pathway.
+        # The artifacts written above are the deliverable for this run.
+        st.error(
+            "Extraction boundary failed and could not be recovered: "
+            f"{_boundary.incomplete_reason}"
+        )
+        st.info(
+            "Localized repair and deterministic registry reconstruction were both "
+            "applied; the payload below is as far as the run got. No reaction was "
+            "invented to satisfy the contract. The diagnostics for this run "
+            f"(stage0_attempts.json, extraction_boundary_report.json, "
+            f"cleaning_report.json) are in {_diagnostics_dir}."
+        )
+        st.json(_boundary.to_summary())
+        if _boundary.failure is not None:
+            st.json(_boundary.failure.report)
+        st.stop()
+    if _boundary.reconstruction:
+        st.info(
+            f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "
+            "entity shell(s) for participants named by reactions but missing from the "
+            "registry. They carry no identifier and no function; every identity gate "
+            "downstream still applies to them."
+        )
 
     # Stage 1 wrote its raw output (incl. out-of-scope reactions) to disk and the
     # locked-reaction manifest above, before this filter runs; the manifest never
@@ -4895,8 +5155,18 @@ if st.session_state.get("pipeline_ready"):
                     download_key="dl_audit_mapping_stage_contract_error",
                 )
             except Exception as exc:
+                _record_mapped_failure_snapshot(
+                    final_payload,
+                    stage="post_pipeline",
+                    reason=f"{type(exc).__name__}: {exc}",
+                )
                 st.error(f"Post-pipeline conversion failed: {exc}")
                 st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
+            finally:
+                # Both the pass and the two failure paths above. The audit and gap
+                # rounds completed before an abort are already on disk; this is
+                # what carries them, and the mapping snapshot, to the batch driver.
+                _sync_extraction_diagnostics()
 
     # Rendered from session_state on EVERY pass, not inside the Run button's
     # branch: st.download_button triggers a rerun, so a panel rendered only in

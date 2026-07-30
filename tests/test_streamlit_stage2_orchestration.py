@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
+import logging
 import shutil
 import sys
 import time
@@ -32,8 +33,17 @@ from t2pw.pipeline.export_mode import (  # noqa: E402
     is_research,
     review_flags,
 )
-from t2pw.pipeline.stage_contracts import run_stage_contract  # noqa: E402
+from t2pw.pipeline.stage_contracts import (  # noqa: E402
+    StageContractError,
+    run_stage_contract,
+)
 from t2pw.pipeline.failure_detail import headline as detail_headline  # noqa: E402
+from t2pw.pipeline.extraction_diagnostics import (  # noqa: E402
+    count_entities as diagnostic_entity_counts,
+    count_processes as diagnostic_process_counts,
+    current as current_extraction_diagnostics,
+    payload_hash as diagnostic_payload_hash,
+)
 
 
 def _source_tree() -> ast.Module:
@@ -394,7 +404,26 @@ def _orchestration_harness(
         "is_research": is_research,
         "review_flags": review_flags,
         "format_gaps": format_gaps,
+        # The orchestrator now files each completed audit/gap round and each
+        # post-mapping contract failure with the run's diagnostics recorder, so
+        # a run that dies mid-loop still leaves its history on disk. The REAL
+        # helpers are loaded below rather than stubbed, so this suite keeps
+        # proving that the recording cannot change the orchestration.
+        "StageContractError": StageContractError,
+        "current_extraction_diagnostics": current_extraction_diagnostics,
+        "diagnostic_payload_hash": diagnostic_payload_hash,
+        "diagnostic_entity_counts": diagnostic_entity_counts,
+        "diagnostic_process_counts": diagnostic_process_counts,
+        "logger": logging.getLogger("orchestration-test"),
+        "_BULKY_ROUND_KEYS": ("candidates", "post_patch_gate", "post_settlement_gate"),
     }
+    for helper in (
+        "_round_summary",
+        "_record_audit_round",
+        "_record_gap_round",
+        "_record_mapped_failure_snapshot",
+    ):
+        _load_function(helper, namespace)
     function = _load_function("run_post_pipeline_sbml_artifacts", namespace)
     observations = {
         "calls": calls,

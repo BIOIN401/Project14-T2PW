@@ -14,6 +14,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from t2pw.llm.client import CompletionDiagnostics, CompletionResult  # noqa: E402
 from t2pw.pipeline import preprocessor as preprocessor_module  # noqa: E402
 from t2pw.pipeline.preprocessor import (  # noqa: E402
     _EMPTY_CONTEXT,
@@ -35,6 +36,30 @@ from t2pw.pipeline.pipeline import (  # noqa: E402
 
 DOC_TEXT = "  Some document body about a pathway.  "
 
+
+def _completion(text: Any) -> CompletionResult:
+    """Wrap a canned reply the way the real client now returns one.
+
+    Stage 0 moved from ``chat`` to ``chat_detailed`` when it started recording
+    which model answered, on what ``finish_reason``, after how many attempts --
+    facts a bare string cannot carry. The fakes below still hand back the same
+    canned text; only the envelope changed, so every assertion in this file is
+    about the same behaviour it was before.
+    """
+
+    body = text if isinstance(text, str) else ("" if text is None else str(text))
+    return CompletionResult(
+        body,
+        CompletionDiagnostics(
+            model="test-model",
+            stage="preprocessor",
+            attempts=1,
+            finish_reason="stop",
+            response_status="ok" if body.strip() else "empty",
+            raw_chars=len(body),
+        ),
+    )
+
 # The exact user message produced before Stage 0 learned about user_task_context.
 # Any drift here is a behavior change for existing runs.
 LEGACY_USER_PROMPT = (
@@ -49,11 +74,11 @@ def _capture_messages(monkeypatch) -> list[list[dict[str, str]]]:
     """Patch the LLM call and record the messages it was handed."""
     seen: list[list[dict[str, str]]] = []
 
-    def fake_chat(messages: list[dict[str, str]], **kwargs: Any) -> str:
+    def fake_chat(messages: list[dict[str, str]], **kwargs: Any) -> CompletionResult:
         seen.append(messages)
-        return json.dumps({"pathway_name": "P"})
+        return _completion(json.dumps({"pathway_name": "P"}))
 
-    monkeypatch.setattr(preprocessor_module, "chat", fake_chat)
+    monkeypatch.setattr(preprocessor_module, "chat_detailed", fake_chat)
     return seen
 
 
@@ -178,14 +203,14 @@ def test_streamlit_suppresses_transient_warning_for_ambiguous_reviews() -> None:
 # ---------------------------------------------------------------------------
 
 def _patch_chat(monkeypatch, reply: Any = None, exc: Exception | None = None) -> None:
-    """Patch preprocessor.chat to raise ``exc`` or return ``reply``."""
+    """Patch the Stage-0 provider call to raise ``exc`` or return ``reply``."""
 
     def fake_chat(messages: list[dict[str, str]], **kwargs: Any):
         if exc is not None:
             raise exc
-        return reply
+        return _completion(reply)
 
-    monkeypatch.setattr(preprocessor_module, "chat", fake_chat)
+    monkeypatch.setattr(preprocessor_module, "chat_detailed", fake_chat)
 
 
 def _assert_empty_context_invariant(ctx: dict[str, Any]) -> None:
@@ -359,9 +384,9 @@ def _capture_chat_kwargs(monkeypatch, reply: Any) -> list[dict[str, Any]]:
 
     def fake_chat(messages: list[dict[str, str]], **kwargs: Any):
         seen.append(kwargs)
-        return reply
+        return _completion(reply)
 
-    monkeypatch.setattr(preprocessor_module, "chat", fake_chat)
+    monkeypatch.setattr(preprocessor_module, "chat_detailed", fake_chat)
     return seen
 
 

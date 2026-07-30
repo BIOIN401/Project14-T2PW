@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "comment": [
+    "Stored EARLY-FAILURE SHAPES for the offline replay harness in",
+    "tests/test_early_failure_replay.py. Each case is a canned provider script:",
+    "an ordered list of replies the fake OpenAI client hands back, in the order",
+    "Stage 0, Stage 1 and any repair draw ask for them.",
+    "",
+    "These are SHAPES, not transcripts. The two legs lost in runs/2026-07-28_0919",
+    "wrote no artifacts at all -- both manifest rows carry files: [] and only",
+    "RESULT.txt exists on disk -- so there is no recorded reply to copy, which is",
+    "precisely the hole this whole change closes. What is reproduced is the",
+    "structure of each failure and the source text is a three-sentence paragraph",
+    "rather than the 50,377- and 61,997-character bodies those legs carried,",
+    "because a fixture that embeds a real paper costs megabytes and still would",
+    "not say which field mattered.",
+    "",
+    "'recovers' is the deliverable question: does the pipeline get a usable",
+    "pathway out of this shape, or does it report a clear incomplete outcome? Both",
+    "answers are correct results. What is never correct is a fabricated reaction,",
+    "which is why every case also asserts the reaction count."
+  ],
+  "source_runs": ["runs/2026-07-28_0919"],
+
+  "cases": [
+    {
+      "id": "stage0_empty_completion_then_retry",
+      "title": "An empty 200 from Stage 0, then the reply that was always there",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "paper_id": "PMC13231680",
+        "note": "the same paper extracted 3 reactions the previous day and its research leg passed in the same run, so the emptiness was transient rather than a property of the paper"
+      },
+      "why_it_matters": "The shape the 2026-07-28 client fix was written for. It must still recover, and the run must now be able to say it cost two draws.",
+      "source_text": "Glutathione is synthesized from glutamate, cysteine and glycine. Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine using ATP. Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.",
+      "replies": [
+        {"content": "", "finish_reason": "stop"},
+        {"content": "{\"pathway_name\": \"Glutathione biosynthesis\", \"likely_organism\": \"Homo sapiens\", \"key_compounds\": [\"L-glutamate\", \"L-cysteine\", \"glycine\"], \"key_proteins\": [\"glutamate-cysteine ligase\"]}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"L-glutamate\"}, {\"name\": \"L-cysteine\"}, {\"name\": \"gamma-glutamylcysteine\"}], \"proteins\": [{\"name\": \"glutamate-cysteine ligase\"}]}, \"processes\": {\"reactions\": [{\"name\": \"gamma-glutamylcysteine synthesis\", \"inputs\": [\"L-glutamate\", \"L-cysteine\"], \"outputs\": [\"gamma-glutamylcysteine\"], \"enzymes\": [{\"name\": \"glutamate-cysteine ligase\"}], \"evidence\": \"Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine using ATP.\"}]}}"}
+      ],
+      "expect": {
+        "recovers": true,
+        "reactions": 1,
+        "provider_calls": 3,
+        "stage0_status": "ok",
+        "stage0_attempts": 2,
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "boundary_outcomes": ["ok"]
+      }
+    },
+
+    {
+      "id": "stage0_content_filter_is_durable",
+      "title": "A moderation stop at Stage 0 spends exactly one draw",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "note": "not attributable to a specific leg: finish_reason was recorded nowhere in that run, which is why the postmortem could not tell a moderation stop from a provider hiccup"
+      },
+      "why_it_matters": "Moderation is deterministic in the prompt, so the pre-2026-07-29 loop burned LLM_MAX_RETRIES draws to arrive at the identical empty string. The budget must not be spent, and the reason must be durable enough to reach stage0_attempts.json.",
+      "source_text": "Glutathione is synthesized from glutamate, cysteine and glycine. Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine using ATP. Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.",
+      "replies": [
+        {"content": "", "finish_reason": "content_filter"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"gamma-glutamylcysteine\"}, {\"name\": \"glycine\"}, {\"name\": \"glutathione\"}], \"proteins\": [{\"name\": \"glutathione synthetase\"}]}, \"processes\": {\"reactions\": [{\"name\": \"glutathione synthesis\", \"inputs\": [\"gamma-glutamylcysteine\", \"glycine\"], \"outputs\": [\"glutathione\"], \"enzymes\": [{\"name\": \"glutathione synthetase\"}], \"evidence\": \"Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.\"}]}}"}
+      ],
+      "expect": {
+        "recovers": true,
+        "reactions": 1,
+        "provider_calls": 2,
+        "stage0_status": "empty_reply",
+        "stage0_attempts": 1,
+        "stage0_terminal_reason": "content_filter",
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "boundary_outcomes": ["ok"]
+      }
+    },
+
+    {
+      "id": "stage1_invalid_json_localized_repair",
+      "title": "One missing comma inside processes, repaired without re-extraction",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "note": "shape reconstructed from _extract_json_from_text's prefix-scan behaviour, which is measurable today: this exact body salvages to entities ONLY"
+      },
+      "why_it_matters": "The free prefix salvage returns the entities that precede the syntax error and silently drops every reaction after it, so a one-character fault becomes 'Payload must include a processes object' three stages later. Localized repair must recover the reaction, and must not re-run the extraction to do it.",
+      "repair_note": [
+        "The third reply is the second reply with ONE comma added and nothing else.",
+        "That is not cosmetic fidelity in the fixture -- it is what the content guard",
+        "in json_repair_preserves_content requires. An earlier version of this case",
+        "had the repair also add an 'evidence' field, which reads as harmless and is",
+        "exactly the behaviour the guard now refuses: a syntax repairer that can add",
+        "a field can add a reaction. A repair that invents anything falls back to",
+        "deterministic salvage instead, which is the adversarial case in",
+        "tests/test_localized_repair.py."
+      ],
+      "source_text": "Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine using ATP.",
+      "replies": [
+        {"content": "{\"pathway_name\": \"Glutathione biosynthesis\", \"likely_organism\": \"Homo sapiens\", \"key_compounds\": [\"L-glutamate\"], \"key_proteins\": [\"glutamate-cysteine ligase\"]}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"L-glutamate\"}, {\"name\": \"L-cysteine\"}, {\"name\": \"gamma-glutamylcysteine\"}]}, \"processes\": {\"reactions\": [{\"name\": \"gamma-glutamylcysteine synthesis\" \"inputs\": [\"L-glutamate\", \"L-cysteine\"], \"outputs\": [\"gamma-glutamylcysteine\"]}]}}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"L-glutamate\"}, {\"name\": \"L-cysteine\"}, {\"name\": \"gamma-glutamylcysteine\"}]}, \"processes\": {\"reactions\": [{\"name\": \"gamma-glutamylcysteine synthesis\", \"inputs\": [\"L-glutamate\", \"L-cysteine\"], \"outputs\": [\"gamma-glutamylcysteine\"]}]}}"}
+      ],
+      "expect": {
+        "recovers": true,
+        "reactions": 1,
+        "provider_calls": 3,
+        "stage0_status": "ok",
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "boundary_outcomes": ["invalid_json", "ok"],
+        "repair_boundary": "stage1_json_repair"
+      }
+    },
+
+    {
+      "id": "stage1_valid_json_zero_processes",
+      "title": "A well-formed reply that declares no processes at all",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "note": "the terminal message of both lost legs -- 'Payload must include a processes object' -- with one of its five possible causes"
+      },
+      "why_it_matters": "This is a prompt/scope failure, not a cleaning failure and not a parse failure. It must be reported as its own category and must NOT be padded with an invented reaction to satisfy processes_required.",
+      "source_text": "Glutathione is an abundant low-molecular-weight thiol antioxidant found in plants, mammals and microbes.",
+      "replies": [
+        {"content": "{\"pathway_name\": \"Glutathione\", \"likely_organism\": \"\", \"key_compounds\": [\"glutathione\"], \"key_proteins\": []}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"glutathione\"}]}, \"processes\": {}}"}
+      ],
+      "expect": {
+        "recovers": false,
+        "reactions": 0,
+        "provider_calls": 2,
+        "stage0_status": "ok",
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "boundary_outcomes": ["valid_json_zero_processes", "contract_failed_after_cleaning"],
+        "incomplete_contains": "processes_required",
+        "cleaning_all_discarded": false
+      }
+    },
+
+    {
+      "id": "stage1_reactions_all_discarded_by_cleaning",
+      "title": "Three reactions returned, three reactions discarded, none survive",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "note": "the SAME terminal message as the case above, from the opposite cause -- which is exactly why they were indistinguishable"
+      },
+      "why_it_matters": "The model did its job. Every row was removed by a cleaning rule, and before cleaning_report.json existed nothing downstream could tell this apart from the zero-processes case above. The reasons must name the rules.",
+      "source_text": "Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine. Glutathione synthetase then forms glutathione. Glutathione is oxidized to GSSG.",
+      "replies": [
+        {"content": "{\"pathway_name\": \"Glutathione biosynthesis\", \"likely_organism\": \"Homo sapiens\", \"key_compounds\": [\"glutathione\"], \"key_proteins\": []}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"L-glutamate\"}, {\"name\": \"glutathione\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\", \"inputs\": [\"L-glutamate\"], \"outputs\": [\"   \"]}, {\"name\": \"r2\", \"inputs\": [{\"name\": \"L-cysteine\"}], \"outputs\": [{\"name\": \"gamma-glutamylcysteine\"}]}, {\"name\": \"r3\", \"outputs\": [\"GSSG\"]}]}}"}
+      ],
+      "expect": {
+        "recovers": false,
+        "reactions": 0,
+        "provider_calls": 2,
+        "stage0_status": "ok",
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "incomplete_contains": "cleaning discarded every one of the 3 process row(s)",
+        "cleaning_all_discarded": true,
+        "discard_reasons": [
+          "reaction_no_usable_outputs",
+          "reaction_no_usable_participants",
+          "reaction_no_usable_inputs"
+        ]
+      }
+    },
+
+    {
+      "id": "stage1_participants_missing_from_the_registry",
+      "title": "Correct reactions whose participants were never declared as entities",
+      "observed_in": {
+        "run": "2026-07-28_0919",
+        "note": "the silent loss: this payload passes the post-extraction contract and loses its reactions later, in filter_unresolvable_reactions, where a removal surfaces only as a log line"
+      },
+      "why_it_matters": "The biology is right and the bookkeeping is short. Deterministic reconstruction must recover the registry rows as UNRESOLVED shells -- carrying no identifier and no function -- rather than the pipeline deleting evidenced reactions for a missing row.",
+      "source_text": "Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine. Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.",
+      "replies": [
+        {"content": "{\"pathway_name\": \"Glutathione biosynthesis\", \"likely_organism\": \"Homo sapiens\", \"key_compounds\": [\"glutathione\"], \"key_proteins\": [\"glutathione synthetase\"]}"},
+        {"content": "{\"entities\": {\"compounds\": [{\"name\": \"L-glutamate\"}]}, \"processes\": {\"reactions\": [{\"name\": \"gamma-glutamylcysteine synthesis\", \"inputs\": [\"L-glutamate\", \"L-cysteine\"], \"outputs\": [\"gamma-glutamylcysteine\"], \"evidence\": \"Glutamate-cysteine ligase joins L-glutamate and L-cysteine to form gamma-glutamylcysteine.\"}, {\"name\": \"glutathione synthesis\", \"inputs\": [\"gamma-glutamylcysteine\", \"glycine\"], \"outputs\": [\"glutathione\"], \"enzymes\": [{\"protein\": \"glutathione synthetase\", \"evidence\": \"Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.\"}], \"evidence\": \"Glutathione synthetase then joins gamma-glutamylcysteine and glycine to form glutathione.\"}]}}"}
+      ],
+      "expect": {
+        "recovers": true,
+        "reactions": 2,
+        "provider_calls": 2,
+        "stage0_status": "ok",
+        "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
+        "boundary_outcomes": ["ok"],
+        "reconstructed_shells": ["L-cysteine", "gamma-glutamylcysteine", "glycine", "glutathione", "glutathione synthetase"]
+      }
+    }
+  ]
+}

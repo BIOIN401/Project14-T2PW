@@ -6,13 +6,27 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from t2pw.llm.client import chat
+from t2pw.llm.client import chat, chat_detailed
 from t2pw.paths import PROMPTS_DIR, TMP_DIR
 from t2pw.pipeline.enzyme_cues import (
     MAX_INJECTOR_EVIDENCE_CHARS,
     collapse_whitespace,
     cue_near_name,
 )
+from t2pw.pipeline.extraction_diagnostics import (
+    BOUNDARY_STAGE1_EXTRACTION,
+    BOUNDARY_STAGE2_INFERENCE,
+    OUTCOME_EMPTY_COMPLETION,
+    OUTCOME_INVALID_JSON,
+    OUTCOME_OK,
+    OUTCOME_ZERO_PROCESSES,
+    DiscardLedger,
+    count_entities,
+    count_processes,
+    current as current_diagnostics,
+    payload_hash,
+)
+from t2pw.pipeline.localized_repair import repair_json_text
 from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi_example_review_context
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
@@ -1564,7 +1578,19 @@ def _split_composite_token(value: str) -> List[str]:
     return [part.strip() for part in parts if part and part.strip()]
 
 
-def _clean_entities(entities: Dict[str, Any]) -> Dict[str, Any]:
+def _clean_entities(
+    entities: Dict[str, Any],
+    ledger: Optional[DiscardLedger] = None,
+) -> Dict[str, Any]:
+    """Normalize the entity registry, optionally recording every row dropped.
+
+    ``ledger`` is how a dropped row stops being invisible. Cleaning drops rows
+    with a bare ``continue``, so before this parameter existed the difference
+    between "the model never produced a protein" and "it produced four and all
+    four were nameless" was unobservable from the outside -- and both arrive
+    downstream as the same empty bucket.
+    """
+
     if not isinstance(entities, dict):
         return {}
 
@@ -1581,18 +1607,48 @@ def _clean_entities(entities: Dict[str, Any]) -> Dict[str, Any]:
         "protein_complexes",
     ]
 
+    if ledger is not None:
+        # A bucket outside the whitelist is dropped WHOLE and always has been.
+        # That is the largest silent loss in this function and the one nobody
+        # can see downstream, so it is counted row by row rather than as one
+        # "unknown bucket" note.
+        for bucket, rows in entities.items():
+            if str(bucket) in entity_keys or not isinstance(rows, list):
+                continue
+            for index, row in enumerate(rows):
+                ledger.record(
+                    reason="entity_bucket_not_recognized",
+                    pointer=f"/entities/{bucket}/{index}",
+                    name=row.get("name") if isinstance(row, dict) else row,
+                )
+
     for key in entity_keys:
         items = _safe_list(entities.get(key, []))
         cleaned_items: List[Dict[str, Any]] = []
         seen_names: set = set()
-        for item in items:
+        for index, item in enumerate(items):
+            pointer = f"/entities/{key}/{index}"
             if not isinstance(item, dict):
+                if ledger is not None:
+                    ledger.record(reason="entity_not_an_object", pointer=pointer, name=item)
                 continue
             name = (item.get("name") or "").strip()
             if not name:
+                if ledger is not None:
+                    ledger.record(reason="entity_missing_name", pointer=pointer)
                 continue
             norm_name = _normalize_name(name)
-            if not norm_name or norm_name in seen_names:
+            if not norm_name:
+                if ledger is not None:
+                    ledger.record(
+                        reason="entity_name_normalizes_to_empty", pointer=pointer, name=name
+                    )
+                continue
+            if norm_name in seen_names:
+                if ledger is not None:
+                    ledger.record(
+                        reason="entity_duplicate_name", pointer=pointer, name=name
+                    )
                 continue
             seen_names.add(norm_name)
             cleaned_item = {k: v for k, v in item.items() if not _is_empty_value(v)}
@@ -1683,8 +1739,20 @@ def _evidence_text(value: Any) -> str:
     return ""
 
 
-def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
+def _clean_enzymes(
+    enzymes: Any,
+    ledger: Optional[DiscardLedger] = None,
+    *,
+    pointer: str = "",
+) -> List[Dict[str, Any]]:
     """Rebuild reaction enzyme / transport transporter rows from a key whitelist.
+
+    ``ledger``/``pointer`` (added 2026-07-29) record the actor rows this drops.
+    The whitelist accepts ``protein``, ``protein_complex``, or a typed ``entity``;
+    a model that writes the obvious ``{"name": "glutathione synthetase"}`` instead
+    has its enzyme deleted here, silently, and the reaction ships without a
+    catalyst. That is a *cleaning* problem with a one-line fix, and it was
+    indistinguishable from the model never naming an enzyme at all.
 
     ``provenance`` and ``confidence`` are part of that whitelist because dropping
     them made every shipped actor untraceable. In run 2026-07-28_0919 the enzyme
@@ -1706,12 +1774,27 @@ def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
     seen_names: set = set()
     allowed_entity_types = {"protein", "protein_complex"}
     dropped_entity_types = {"compound", "cofactor", "ion", "small_molecule", "metabolite"}
-    for item in _safe_list(enzymes):
+    def _drop_actor(reason: str, index: int, row: Any) -> None:
+        if ledger is None:
+            return
+        ledger.record(
+            reason=reason,
+            pointer=f"{pointer}/{index}" if pointer else "",
+            name=(
+                row.get("name") or row.get("protein") or row.get("protein_complex") or row.get("entity")
+                if isinstance(row, dict)
+                else row
+            ),
+        )
+
+    for _index, item in enumerate(_safe_list(enzymes)):
         if not isinstance(item, dict):
+            _drop_actor("actor_not_an_object", _index, item)
             continue
         entry: Dict[str, Any] = {}
         entity_type = str(item.get("entity_type") or item.get("type") or "").strip().casefold()
         if entity_type in dropped_entity_types:
+            _drop_actor("actor_entity_type_is_not_an_actor", _index, item)
             continue
         # Accept legacy protein/protein_complex keys, or typed modifier entity refs.
         protein_complex = (item.get("protein_complex") or "").strip()
@@ -1719,6 +1802,9 @@ def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
         if not protein_complex and not plain_protein:
             entity = (item.get("entity") or "").strip()
             if not entity or entity_type not in allowed_entity_types:
+                # The common shape here is a row carrying only ``name``: the
+                # actor was extracted, and the whitelist has no key to put it in.
+                _drop_actor("actor_missing_protein_reference", _index, item)
                 continue
             if entity_type == "protein":
                 plain_protein = entity
@@ -1926,14 +2012,42 @@ def _carry_scope_membership(entry: Dict[str, Any], item: Dict[str, Any]) -> None
         entry["scope_membership"] = scope.strip()
 
 
-def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
+def _clean_processes(
+    processes: Dict[str, Any],
+    ledger: Optional[DiscardLedger] = None,
+) -> Dict[str, Any]:
+    """Rebuild each process bucket, optionally recording every row dropped.
+
+    THE FAILURE THIS LEDGER EXISTS FOR. A model can return six perfectly good
+    reactions and have all six removed here -- a reaction whose ``inputs`` are
+    all blank strings, or whose participants arrived as objects instead of
+    strings, hits the ``continue`` below and vanishes. Downstream, that payload is
+    indistinguishable from one where the model returned nothing at all: both
+    reach the stage contract as "Payload must include a processes object". The
+    ledger is what separates "the model produced nothing" from "the model produced
+    six and a cleaning rule ate them", and the reason string names the rule.
+
+    ``ledger`` is optional and defaults to ``None``, so the historical call --
+    ``_clean_processes(payload)`` -- is byte-for-byte unchanged.
+    """
+
     if not isinstance(processes, dict):
         return {}
     cleaned: Dict[str, Any] = {}
 
+    def _drop(reason: str, bucket: str, index: int, row: Any) -> None:
+        if ledger is None:
+            return
+        ledger.record(
+            reason=reason,
+            pointer=f"/processes/{bucket}/{index}",
+            name=row.get("name") if isinstance(row, dict) else row,
+        )
+
     reactions_out: List[Dict[str, Any]] = []
-    for item in _safe_list(processes.get("reactions", [])):
+    for _index, item in enumerate(_safe_list(processes.get("reactions", []))):
         if not isinstance(item, dict):
+            _drop("reaction_not_an_object", "reactions", _index, item)
             continue
         inputs: List[str] = []
         for value in _safe_list(item.get("inputs")):
@@ -1950,6 +2064,20 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         inputs = _dedupe_preserve_order(inputs)
         outputs = _dedupe_preserve_order(outputs)
         if not inputs or not outputs:
+            # Which side is empty decides the fix, so the two are not one reason:
+            # a missing output list is usually a truncated reply, while
+            # participants that survived neither side is usually a shape problem
+            # (objects where the schema wants strings).
+            _drop(
+                "reaction_no_usable_inputs"
+                if not inputs and outputs
+                else "reaction_no_usable_outputs"
+                if inputs and not outputs
+                else "reaction_no_usable_participants",
+                "reactions",
+                _index,
+                item,
+            )
             continue
         entry: Dict[str, Any] = {"inputs": inputs, "outputs": outputs}
         locked_reaction_id = item.get("locked_reaction_id")
@@ -1962,7 +2090,9 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
             entry["name"] = name
         # Merge old "enzymes" list and new "modifiers" list into a single enzymes list.
         raw_enzymes = _safe_list(item.get("enzymes")) + _safe_list(item.get("modifiers"))
-        enzymes = _clean_enzymes(raw_enzymes)
+        enzymes = _clean_enzymes(
+            raw_enzymes, ledger, pointer=f"/processes/reactions/{_index}/enzymes"
+        )
         if enzymes:
             entry["enzymes"] = enzymes
         biological_state = (item.get("biological_state") or "").strip()
@@ -1991,8 +2121,9 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         cleaned["reactions"] = reactions_out
 
     transports_out: List[Dict[str, Any]] = []
-    for item in _safe_list(processes.get("transports", [])):
+    for _index, item in enumerate(_safe_list(processes.get("transports", []))):
         if not isinstance(item, dict):
+            _drop("transport_not_an_object", "transports", _index, item)
             continue
         entry: Dict[str, Any] = {}
         name = (item.get("name") or "").strip()
@@ -2007,7 +2138,11 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         to_state = (item.get("to_biological_state") or "").strip()
         if to_state:
             entry["to_biological_state"] = to_state
-        transporters = _clean_enzymes(item.get("transporters"))
+        transporters = _clean_enzymes(
+            item.get("transporters"),
+            ledger,
+            pointer=f"/processes/transports/{_index}/transporters",
+        )
         if transporters:
             entry["transporters"] = transporters
         elements = _clean_elements_with_states(item.get("elements_with_states"))
@@ -2030,13 +2165,23 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         _carry_rag_provenance(entry, item)
         if any(k in entry for k in ["cargo", "transporters", "elements_with_states"]):
             transports_out.append(entry)
+        else:
+            _drop(
+                "transport_no_cargo_transporter_or_elements", "transports", _index, item
+            )
 
     if transports_out:
         cleaned["transports"] = transports_out
 
     rct_out: List[Dict[str, Any]] = []
-    for item in _safe_list(processes.get("reaction_coupled_transports", [])):
+    for _index, item in enumerate(_safe_list(processes.get("reaction_coupled_transports", []))):
         if not isinstance(item, dict):
+            _drop(
+                "reaction_coupled_transport_not_an_object",
+                "reaction_coupled_transports",
+                _index,
+                item,
+            )
             continue
         entry: Dict[str, Any] = {}
         name = (item.get("name") or "").strip()
@@ -2048,7 +2193,11 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         transport = (item.get("transport") or "").strip()
         if transport:
             entry["transport"] = transport
-        enzymes = _clean_enzymes(item.get("enzymes"))
+        enzymes = _clean_enzymes(
+            item.get("enzymes"),
+            ledger,
+            pointer=f"/processes/reaction_coupled_transports/{_index}/enzymes",
+        )
         if enzymes:
             entry["enzymes"] = enzymes
         elements = _clean_elements_with_states(item.get("elements_with_states"))
@@ -2063,17 +2212,26 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         _carry_rag_provenance(entry, item)
         if any(k in entry for k in ["reaction", "transport", "elements_with_states"]):
             rct_out.append(entry)
+        else:
+            _drop(
+                "reaction_coupled_transport_no_reaction_transport_or_elements",
+                "reaction_coupled_transports",
+                _index,
+                item,
+            )
 
     if rct_out:
         cleaned["reaction_coupled_transports"] = rct_out
 
     interactions_out: List[Dict[str, Any]] = []
-    for item in _safe_list(processes.get("interactions", [])):
+    for _index, item in enumerate(_safe_list(processes.get("interactions", []))):
         if not isinstance(item, dict):
+            _drop("interaction_not_an_object", "interactions", _index, item)
             continue
         e1 = (item.get("entity_1") or "").strip()
         e2 = (item.get("entity_2") or "").strip()
         if not e1 or not e2:
+            _drop("interaction_missing_endpoint", "interactions", _index, item)
             continue
         entry: Dict[str, Any] = {"entity_1": e1, "entity_2": e2}
         name = (item.get("name") or "").strip()
@@ -2143,11 +2301,54 @@ def propagate_context_organism(
 
 
 def clean_stage_one(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize a Stage-1 payload. Historical signature and behaviour, unchanged.
+
+    Use :func:`clean_stage_one_with_report` when the caller needs to know what
+    cleaning removed; this wrapper exists so the dozens of call sites that only
+    want the payload keep working exactly as they did.
+    """
+
+    cleaned, _report = clean_stage_one_with_report(payload, label="")
+    return cleaned
+
+
+def clean_stage_one_with_report(
+    payload: Dict[str, Any],
+    *,
+    label: str = "stage_one",
+    record: bool = False,
+) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """:func:`clean_stage_one` plus a report of everything it discarded.
+
+    The report answers the one question the payload cannot: *did the model
+    produce nothing, or did cleaning remove what it produced?* It carries the
+    before/after counts on both sides of the pass and, per discard reason, a
+    count plus a bounded sample of names and pointers -- never the rows, which
+    hold evidence passages.
+
+    ``record=True`` also files the report with the run's diagnostics recorder, so
+    it lands in ``cleaning_report.json`` immediately. It is off by default because
+    ``clean_stage_one`` runs many times per run (per chunk, per merge, and again
+    after Stage 2); recording every one of those would bury the pass that matters
+    under a dozen identical no-op passes.
+    """
+
     if not isinstance(payload, dict):
-        return {}
+        empty_report = {
+            "label": label,
+            "input_type": type(payload).__name__,
+            "raw_entity_counts": {"total": 0},
+            "raw_process_counts": {"total": 0},
+            "cleaned_entity_counts": {"total": 0},
+            "cleaned_process_counts": {"total": 0},
+            **DiscardLedger().to_dict(),
+        }
+        return {}, empty_report
+
+    ledger = DiscardLedger()
     cleaned: Dict[str, Any] = {}
 
-    entities = _clean_entities(payload.get("entities", {}))
+    entities = _clean_entities(payload.get("entities", {}), ledger)
     if entities:
         cleaned["entities"] = entities
 
@@ -2159,11 +2360,38 @@ def clean_stage_one(payload: Dict[str, Any]) -> Dict[str, Any]:
     if element_locations:
         cleaned["element_locations"] = element_locations
 
-    processes = _clean_processes(payload.get("processes", {}))
+    processes = _clean_processes(payload.get("processes", {}), ledger)
     if processes:
         cleaned["processes"] = processes
 
-    return cleaned
+    raw_processes = count_processes(payload)
+    cleaned_processes = count_processes(cleaned)
+    report = {
+        "label": label,
+        "payload_hash": payload_hash(payload),
+        "raw_entity_counts": count_entities(payload),
+        "raw_process_counts": raw_processes,
+        "cleaned_entity_counts": count_entities(cleaned),
+        "cleaned_process_counts": cleaned_processes,
+        # The single most consequential fact in the file: rows went in and none
+        # came out. Precomputed rather than left for a reader to derive, because
+        # this is what turns "Payload must include a processes object" from a
+        # mystery into a named cause.
+        "all_processes_discarded": bool(
+            raw_processes.get("total", 0) > 0 and cleaned_processes.get("total", 0) <= 0
+        ),
+        **ledger.to_dict(),
+    }
+    if record:
+        current_diagnostics().record_cleaning(report)
+    if ledger.total:
+        logger.info(
+            "clean_stage_one(%s) discarded %d row(s): %s",
+            label or "unlabelled",
+            ledger.total,
+            ledger.counts_by_reason(),
+        )
+    return cleaned, report
 
 
 def clean_inference_output(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -2270,7 +2498,12 @@ def run_stage_one_with_chunking(
         )
         if artifact_dir is not None:
             write_stage1_lock_artifacts(output, artifact_dir)
-        output = clean_stage_one(output)
+        # The reporting variant on the single-chunk path and on the merge below:
+        # these are the two passes whose discards decide whether the run has a
+        # pathway, so they are the two that reach cleaning_report.json.
+        output, _clean_report = clean_stage_one_with_report(
+            output, label="stage_one_single_chunk", record=True
+        )
         chunk_meta = {
             "chunk_id": 1,
             "start_word": 0,
@@ -2309,7 +2542,9 @@ def run_stage_one_with_chunking(
                 "source_chunk": f"chunk_{int(chunk['chunk_id']):03d}",
             }
         )
-        parsed = clean_stage_one(parsed)
+        parsed, _chunk_clean_report = clean_stage_one_with_report(
+            parsed, label=f"stage_one_chunk_{int(chunk['chunk_id']):03d}", record=True
+        )
         chunk_entry = {**chunk, "output": parsed, "attempts": attempts}
         chunk_results.append(chunk_entry)
         outputs.append(parsed)
@@ -2318,13 +2553,19 @@ def run_stage_one_with_chunking(
         write_stage1_lock_artifacts(raw_stage_one_chunks, artifact_dir)
         outputs = []
         for index, raw_entry in enumerate(raw_stage_one_chunks):
-            cleaned_output = clean_stage_one(_safe_dict(raw_entry.get("payload")))
+            cleaned_output, _relean_report = clean_stage_one_with_report(
+                _safe_dict(raw_entry.get("payload")),
+                label=f"stage_one_chunk_{index + 1:03d}_relean",
+                record=True,
+            )
             if index < len(chunk_results):
                 chunk_results[index]["output"] = cleaned_output
             outputs.append(cleaned_output)
 
     merged = merge_stage_one_outputs(outputs)
-    merged = clean_stage_one(merged)
+    merged, _merged_clean_report = clean_stage_one_with_report(
+        merged, label="stage_one_merged", record=True
+    )
     return merged, chunk_results
 
 
@@ -2851,6 +3092,14 @@ def _merge_dict_in_place(target: Dict[str, Any], source: Dict[str, Any]) -> None
                 target[key] = value
 
 
+#: Stage name -> the diagnostics boundary it crosses. A stage with no entry
+#: records under its own name rather than being silently uncategorised.
+_STAGE_BOUNDARIES: Dict[str, str] = {
+    "extraction": BOUNDARY_STAGE1_EXTRACTION,
+    "inference": BOUNDARY_STAGE2_INFERENCE,
+}
+
+
 def _run_json_stage(
     *,
     stage_name: str,
@@ -2860,7 +3109,35 @@ def _run_json_stage(
     temperature: float,
     max_tokens: int,
     model_env_var: Optional[str] = None,
+    repair_json: bool = True,
+    repair_chat_fn: Optional[Callable[..., Any]] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
+    """Draw JSON from the model, recording why each attempt looked as it did.
+
+    Two things changed here on 2026-07-29, and both are about not throwing away
+    work:
+
+    LOCALIZED JSON REPAIR BEFORE A FULL RE-DRAW. An unparseable reply used to
+    consume one of ``max_attempts`` and re-issue the ENTIRE extraction prompt --
+    the largest prompt in the run -- returning a fresh sample rather than the same
+    content with the brace closed. Now ``localized_repair.repair_json_text`` is
+    offered the broken text and the parser's own error first; only if that cannot
+    produce an object does the loop fall back to the historical full re-draw. The
+    fallback is unchanged, so a run where repair is unavailable behaves exactly as
+    before.
+
+    A BOUNDARY RECORD PER ATTEMPT. ``model``, ``finish_reason``, attempt count,
+    raw response status, the raw entity/process counts when the reply parsed, the
+    payload hash, and the stage/boundary names are all recorded through
+    :mod:`t2pw.pipeline.extraction_diagnostics`, which writes them to disk
+    immediately. A stage that raises has therefore already persisted the evidence
+    by the time :class:`PipelineFailure` reaches its caller -- the property that
+    the 2026-07-28 legs, which wrote nothing at all, did not have.
+
+    ``repair_json``/``repair_chat_fn`` exist so a caller can disable or redirect
+    the repair draw; the defaults are what production uses.
+    """
+
     attempts: AttemptLogs = []
     prev_output: Optional[str] = None
     last_error: Optional[str] = None
@@ -2868,6 +3145,41 @@ def _run_json_stage(
         "extraction": "Stage 1 extraction",
         "inference": "Stage 2 inference",
     }.get(stage_name, stage_name)
+    boundary = _STAGE_BOUNDARIES.get(stage_name, stage_name)
+    diagnostics = current_diagnostics()
+
+    def _record(
+        *,
+        attempt: int,
+        raw: str,
+        call_diag: Dict[str, Any],
+        parsed: Optional[Dict[str, Any]],
+        outcome: str,
+        error: str = "",
+        note: str = "",
+    ) -> Dict[str, Any]:
+        return diagnostics.record_boundary(
+            stage=stage_name,
+            boundary=boundary,
+            model=str(call_diag.get("model") or ""),
+            finish_reason=str(call_diag.get("finish_reason") or ""),
+            attempts=attempt,
+            response_status=str(call_diag.get("response_status") or ""),
+            terminal_reason=str(call_diag.get("terminal_reason") or ""),
+            outcome=outcome,
+            raw_entity_counts=count_entities(parsed) if parsed is not None else None,
+            raw_process_counts=count_processes(parsed) if parsed is not None else None,
+            request_hash=str(call_diag.get("request_hash") or ""),
+            response_hash=str(call_diag.get("response_hash") or "") or payload_hash(raw),
+            raw_chars=len(raw),
+            # A preview only when the reply could not be used. A parseable reply's
+            # first 200 characters are the payload, which the payload artifact
+            # already holds; repeating them here is the duplicated-blob problem.
+            raw_preview=raw if parsed is None else "",
+            error=error,
+            note=note or None,
+            attempt_log=call_diag.get("attempt_log") or None,
+        )
 
     for attempt in range(1, max_attempts + 1):
         user_prompt = build_user_prompt(prev_output, last_error)
@@ -2876,7 +3188,7 @@ def _run_json_stage(
             {"role": "user", "content": user_prompt},
         ]
 
-        raw = chat(
+        completion = chat_detailed(
             messages,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -2884,7 +3196,10 @@ def _run_json_stage(
             model_env_var=model_env_var,
             stage_name=stage_label,
         )
+        raw = completion.text
+        call_diag = completion.diagnostics.to_dict()
         log_entry: AttemptLog = {"attempt": attempt, "raw": raw, "error": None}
+        log_entry["boundary_diagnostics"] = call_diag
 
         try:
             parsed = json.loads(raw)
@@ -2892,17 +3207,112 @@ def _run_json_stage(
                 raise json.JSONDecodeError(
                     f"Expected JSON object, got {type(parsed).__name__}", raw, 0
                 )
+            _record(
+                attempt=attempt,
+                raw=raw,
+                call_diag=call_diag,
+                parsed=parsed,
+                outcome=_process_outcome(parsed),
+            )
             attempts.append(log_entry)
             return parsed, attempts
         except json.JSONDecodeError as exc:
+            # Salvage first, because it is free. But salvage is a PREFIX scan: on
+            # a reply whose syntax error lands inside processes it happily returns
+            # the entities that came before it and silently drops every reaction.
+            # Measured on the exact shape in
+            # tests/fixtures/early_failures/cases.json:
+            # `{"entities": {...}, "processes": {"reactions": [{"name": "r1"
+            # "inputs": ...}]}}` (one missing comma) salvages to entities ONLY.
+            # Accepting that is how a one-character syntax error turns into
+            # "Payload must include a processes object" three stages later. So a
+            # salvage that lost the processes is not accepted until a localized
+            # repair has been offered the chance to recover them -- and if repair
+            # fails, the salvaged object is still used, exactly as before.
             extracted = _extract_json_from_text(raw)
-            if extracted is not None:
+            if extracted is not None and count_processes(extracted).get("total", 0) > 0:
                 log_entry["note"] = "salvaged_json"
+                _record(
+                    attempt=attempt,
+                    raw=raw,
+                    call_diag=call_diag,
+                    parsed=extracted,
+                    outcome=_process_outcome(extracted),
+                    note="salvaged_json",
+                )
                 attempts.append(log_entry)
                 return extracted, attempts
+
             error_msg = f"{exc.__class__.__name__}: {exc}"
+            # An empty reply and a non-JSON reply are two different faults with
+            # two different fixes; the client has already told us which by
+            # returning "" with a terminal_reason, so do not relabel it as a
+            # parse error here.
+            empty = not raw.strip()
+            _record(
+                attempt=attempt,
+                raw=raw,
+                call_diag=call_diag,
+                parsed=None,
+                outcome=OUTCOME_EMPTY_COMPLETION if empty else OUTCOME_INVALID_JSON,
+                error=error_msg,
+            )
             log_entry["error"] = error_msg
             attempts.append(log_entry)
+
+            # Localized repair, not re-extraction. Skipped for an empty reply
+            # (there is nothing to repair) and for a content_filter stop (the
+            # repair prompt would contain the refused text).
+            if (
+                repair_json
+                and not empty
+                and str(call_diag.get("terminal_reason") or "") != "content_filter"
+            ):
+                repair = repair_json_text(
+                    raw,
+                    error_msg,
+                    stage=stage_name,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    model_env_var=model_env_var,
+                    chat_fn=repair_chat_fn,
+                )
+                attempts.append(
+                    {
+                        "attempt": attempt,
+                        "phase": "json_repair",
+                        "raw": "",
+                        "error": repair.reason or None,
+                        "note": f"localized_json_repair:{repair.outcome}",
+                        "repair_attempts": repair.attempts,
+                    }
+                )
+                if repair.ok and repair.payload is not None:
+                    logger.info(
+                        "%s attempt %d produced unparseable JSON; a localized syntax "
+                        "repair recovered it without re-running the extraction.",
+                        stage_label,
+                        attempt,
+                    )
+                    return repair.payload, attempts
+
+            # Repair was unavailable or could not recover the reply. Fall back to
+            # whatever the free prefix scan managed to salvage, which is what this
+            # function did unconditionally before repair existed. A partial
+            # payload is worse than a repaired one and better than another full
+            # re-draw of the largest prompt in the run.
+            if extracted is not None:
+                log_entry["note"] = "salvaged_json_after_failed_repair"
+                _record(
+                    attempt=attempt,
+                    raw=raw,
+                    call_diag=call_diag,
+                    parsed=extracted,
+                    outcome=_process_outcome(extracted),
+                    note="salvaged_json_after_failed_repair",
+                )
+                return extracted, attempts
+
             prev_output = raw
             last_error = error_msg
 
@@ -2910,6 +3320,23 @@ def _run_json_stage(
         stage_name,
         f"{stage_name.title()} stage failed to produce valid JSON after {max_attempts} attempts.",
         attempts,
+    )
+
+
+def _process_outcome(parsed: Dict[str, Any]) -> str:
+    """``ok`` or ``valid_json_zero_processes`` for a reply that did parse.
+
+    Kept separate from cleaning: at this point nothing has been discarded yet, so
+    "zero processes" here means the model declared none -- a prompt or scope
+    problem -- as opposed to declaring some that cleaning then dropped, which is
+    a cleaning-rule problem. Conflating the two is the ambiguity the diagnostics
+    contract exists to remove.
+    """
+
+    return (
+        OUTCOME_ZERO_PROCESSES
+        if count_processes(parsed).get("total", 0) <= 0
+        else OUTCOME_OK
     )
 
 

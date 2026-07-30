@@ -27,6 +27,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from t2pw.batch import runner  # noqa: E402
 from t2pw.batch.driver import (  # noqa: E402
     DETAIL_LIMIT,
     KIND_TIMEOUT,
@@ -512,6 +513,161 @@ st.write("never reached on submit")
     assert "invalid JSON" in outcome.message
     assert "invalid JSON" in outcome.detail
     assert outcome.artifacts == {}
+
+
+# ---------------------------------------------------------------------------
+# Diagnostics survive the failure they diagnose.
+#
+# Every leg lost in runs/2026-07-28_0919 carries `files: []` in the manifest and
+# has nothing but RESULT.txt on disk, because every artifact hand-off in the app
+# sat downstream of the st.stop() the failure took. The app now publishes its
+# Stage-0/Stage-1 diagnostics to session state BEFORE stopping, and
+# _add_common_artifacts -- which the Stage-1 failure branch already invoked --
+# carries them into the leg. These tests pin that hand-off at the driver seam.
+# ---------------------------------------------------------------------------
+_DIAGNOSTICS = {
+    "stage0_attempts.json": {
+        "run_id": "sha256:deadbeef",
+        "attempt_count": 1,
+        "attempts": [
+            {
+                "boundary": "stage0_preprocess",
+                "status": "empty_reply",
+                "model": "test-model",
+                "finish_reason": "content_filter",
+                "attempts": 1,
+                "terminal_reason": "content_filter",
+            }
+        ],
+    },
+    "extraction_boundary_report.json": {
+        "boundary_count": 1,
+        "outcomes": ["invalid_json"],
+        "boundaries": [
+            {
+                "stage": "extraction",
+                "boundary": "stage1_extraction",
+                "outcome": "invalid_json",
+                "model": "test-model",
+                "finish_reason": "length",
+                "attempts": 2,
+            }
+        ],
+    },
+    "cleaning_report.json": {
+        "pass_count": 1,
+        "passes": [{"label": "stage_one_merged", "all_processes_discarded": True}],
+    },
+}
+
+
+def test_stage1_failure_still_lands_its_diagnostics_in_the_leg(tmp_path: Path) -> None:
+    """The 2026-07-28 property, inverted: a dead leg is no longer an empty one."""
+
+    app = _write_app(
+        tmp_path,
+        "stage1_error_with_diagnostics",
+        f'''
+if submitted:
+    st.session_state["extraction_diagnostics"] = {_lit(_DIAGNOSTICS)}
+    st.error("Extraction boundary failed: Payload must include a processes object.")
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "fail"
+    assert outcome.stage == "stage1"
+    assert set(outcome.artifacts) >= {
+        "stage0_attempts.json",
+        "extraction_boundary_report.json",
+        "cleaning_report.json",
+    }
+    stage0 = json.loads(outcome.artifacts["stage0_attempts.json"])
+    assert stage0["attempts"][0]["terminal_reason"] == "content_filter"
+    # A leg that produced no payload still says which of the five faults it hit.
+    boundary = json.loads(outcome.artifacts["extraction_boundary_report.json"])
+    assert boundary["outcomes"] == ["invalid_json"]
+
+
+def test_diagnostic_artifacts_reach_disk_through_the_runner(tmp_path: Path) -> None:
+    """End of the chain: the driver's dict becomes files a person can open."""
+
+    app = _write_app(
+        tmp_path,
+        "stage1_error_disk",
+        f'''
+if submitted:
+    st.session_state["extraction_diagnostics"] = {_lit(_DIAGNOSTICS)}
+    st.error("Extraction boundary failed: Payload must include a processes object.")
+    st.stop()
+''',
+    )
+    outcome = _run(app, STRICT)
+
+    target = tmp_path / "leg"
+    written = runner.write_artifacts(target, outcome.artifacts)
+
+    assert not runner.failed_writes(written)
+    on_disk = sorted(p.name for p in target.iterdir())
+    assert "cleaning_report.json" in on_disk
+    stored = json.loads((target / "cleaning_report.json").read_text(encoding="utf-8"))
+    assert stored["passes"][0]["all_processes_discarded"] is True
+
+
+def test_a_leg_that_publishes_nothing_gains_no_empty_diagnostic_files(
+    tmp_path: Path,
+) -> None:
+    """Absence has to stay meaningful.
+
+    An empty ``mapped_failure_snapshot.json`` would say "mapping ran and produced
+    nothing" when the truth is "mapping never ran". Nothing is written for an
+    artifact the app did not publish.
+    """
+
+    app = _write_app(
+        tmp_path,
+        "stage1_error_no_diagnostics",
+        '''
+if submitted:
+    st.session_state["extraction_diagnostics"] = {"cleaning_report.json": {}}
+    st.error("Extraction boundary failed: Payload must include a processes object.")
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.artifacts == {}
+
+
+def test_a_hostile_diagnostics_key_cannot_write_outside_the_leg(tmp_path: Path) -> None:
+    """Session state is not a trusted source of filenames.
+
+    The allowlist in the driver is the first guard and ``Path().name`` in the
+    runner is the second; a key that is neither expected nor a bare filename must
+    get past neither.
+    """
+
+    app = _write_app(
+        tmp_path,
+        "stage1_error_hostile",
+        '''
+if submitted:
+    st.session_state["extraction_diagnostics"] = {
+        "../../escaped.json": {"a": 1},
+        "cleaning_report.json": {"pass_count": 1, "passes": [{"label": "x"}]},
+    }
+    st.error("Extraction boundary failed: Payload must include a processes object.")
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert "../../escaped.json" not in outcome.artifacts
+    assert "cleaning_report.json" in outcome.artifacts
 
 
 def test_network_wording_outranks_llm_wording(tmp_path: Path) -> None:

@@ -1,7 +1,9 @@
+import hashlib
 import json
 import logging
 import os
 import time
+from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
 from dotenv import load_dotenv
@@ -190,6 +192,149 @@ def _finish_reason(resp: Any) -> str:
     return str(getattr(choice, "finish_reason", None) or "unknown")
 
 
+#: ``finish_reason`` spellings that mean "a moderation layer stopped this", not
+#: "the provider hiccuped". Matched as substrings after case-folding because
+#: OpenAI-compatible gateways are not consistent: OpenAI says ``content_filter``,
+#: some proxies pass through ``content-filter``, and a few report ``safety``.
+_CONTENT_FILTER_MARKERS = ("content_filter", "content-filter", "safety")
+
+
+def _is_content_filter(reason: Any) -> bool:
+    """Whether ``reason`` names a moderation stop.
+
+    This is the one finish_reason for which retrying is *provably* useless:
+    moderation is a deterministic function of the prompt, so re-sending the
+    identical prompt gets the identical verdict. Every other empty completion is
+    a transient worth another draw. See :func:`chat_detailed` for what is done
+    with the answer.
+    """
+
+    token = str(reason or "").strip().casefold()
+    return any(marker in token for marker in _CONTENT_FILTER_MARKERS)
+
+
+#: Terminal reasons a completion call can carry back. ``""`` means it succeeded.
+TERMINAL_CONTENT_FILTER = "content_filter"
+TERMINAL_EMPTY_AFTER_RETRIES = "empty_after_retries"
+
+#: Raw response statuses, one per observable provider behaviour.
+STATUS_OK = "ok"
+STATUS_EMPTY = "empty"
+STATUS_CONTENT_FILTER = "content_filter"
+STATUS_ERROR = "error"
+
+#: Longest error/preview string kept on a diagnostics row. Diagnostics are
+#: written on every attempt, so nothing unbounded may enter them.
+_DIAG_CHARS = 240
+
+
+def _diag_clip(value: Any, limit: int = _DIAG_CHARS) -> str:
+    text = value if isinstance(value, str) else ("" if value is None else str(value))
+    if len(text) <= limit:
+        return text
+    return f"{text[:limit]}… (+{len(text) - limit} chars elided)"
+
+
+def _hash(value: Any) -> str:
+    """Content fingerprint used to prove two attempts sent/received the same body.
+
+    Deliberately duplicated from ``pipeline.extraction_diagnostics.payload_hash``
+    rather than imported: ``t2pw.llm.client`` is imported *by* the pipeline and
+    by standalone tools, and giving it a pipeline dependency for a four-line
+    helper would invert that direction.
+    """
+
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        raw = value.encode("utf-8", "replace")
+    else:
+        try:
+            raw = json.dumps(value, sort_keys=True, ensure_ascii=False, default=str).encode(
+                "utf-8", "replace"
+            )
+        except (TypeError, ValueError):  # pragma: no cover - default=str makes this rare
+            raw = str(value).encode("utf-8", "replace")
+    return "sha256:" + hashlib.sha256(raw).hexdigest()[:16]
+
+
+@dataclass
+class CompletionDiagnostics:
+    """What happened at one crossing of the provider boundary.
+
+    Every field here is something the 2026-07-28 postmortem needed and could not
+    get: which model actually answered (stage overrides make this non-obvious),
+    what ``finish_reason`` it stopped on, how many attempts were spent, and
+    whether the reply was empty because of a hiccup or a moderation stop.
+
+    Bounded by construction -- counts, hashes and clipped previews only. The
+    request and reply bodies are represented by :func:`_hash` so two attempts can
+    be compared without either body being stored.
+    """
+
+    model: str = ""
+    stage: str = ""
+    attempts: int = 0
+    finish_reason: str = ""
+    response_status: str = ""
+    terminal_reason: str = ""
+    request_hash: str = ""
+    response_hash: str = ""
+    raw_chars: int = 0
+    attempt_log: List[Dict[str, Any]] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "model": self.model,
+            "stage": self.stage,
+            "attempts": self.attempts,
+            "finish_reason": self.finish_reason,
+            "response_status": self.response_status,
+            "terminal_reason": self.terminal_reason,
+            "request_hash": self.request_hash,
+            "response_hash": self.response_hash,
+            "raw_chars": self.raw_chars,
+            "attempt_log": list(self.attempt_log),
+        }
+
+    def note(
+        self,
+        *,
+        attempt: int,
+        status: str,
+        finish_reason: str = "",
+        content_chars: int = 0,
+        error: str = "",
+    ) -> None:
+        row: Dict[str, Any] = {
+            "attempt": int(attempt),
+            "status": str(status),
+            "content_chars": int(content_chars),
+        }
+        if finish_reason:
+            row["finish_reason"] = str(finish_reason)
+        if error:
+            row["error"] = _diag_clip(error)
+        self.attempt_log.append(row)
+        self.attempts = int(attempt)
+        if finish_reason:
+            self.finish_reason = str(finish_reason)
+        self.response_status = str(status)
+
+
+@dataclass
+class CompletionResult:
+    """A completion plus why it looks the way it does.
+
+    ``text`` is byte-for-byte what :func:`chat` has always returned, so a caller
+    that only wants the string keeps today's contract; ``diagnostics`` is the
+    addition.
+    """
+
+    text: str
+    diagnostics: CompletionDiagnostics
+
+
 def _completion_is_empty(resp: Any, *, tools_were_sent: bool) -> bool:
     """
     True when a 200 response carries no payload the caller can actually use.
@@ -278,12 +423,66 @@ def chat(
     response_json=True:
       - If json_schema is provided, requests structured JSON using the schema.
       - Otherwise requests a JSON object output.
+
+    Returns the completion text. This is the historical signature and every
+    existing call site keeps it; :func:`chat_detailed` is the same call with the
+    diagnostics attached, for the boundaries that have to record why a reply
+    looks the way it does.
+    """
+    return chat_detailed(
+        messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        response_json=response_json,
+        json_schema=json_schema,
+        model_override=model_override,
+        model_env_var=model_env_var,
+        stage_name=stage_name,
+    ).text
+
+
+def chat_detailed(
+    messages: List[Dict[str, Any]],
+    temperature: float = 0.0,
+    max_tokens: int = 800,
+    response_json: bool = False,
+    json_schema: Optional[Dict[str, Any]] = None,
+    model_override: Optional[str] = None,
+    model_env_var: Optional[str] = None,
+    stage_name: Optional[str] = None,
+) -> CompletionResult:
+    """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+
+    The text returned is identical to what ``chat`` returns for the same inputs;
+    the only behavioural difference anywhere in this function relative to the
+    pre-2026-07-29 code is the content-filter exit described below.
+
+    CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+    -------------------------------------------------
+    An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+    Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+    re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+    times the latency, and then the same empty string. The loop therefore stops
+    on the first one and reports ``terminal_reason="content_filter"``, which is
+    the fact an operator needs -- editing the prompt is the fix, re-running the
+    leg is not. Retrying a *different* prompt is still allowed and is what the
+    localized-repair path does; what is forbidden is the blind identical retry.
+
+    A ``content_filter`` reply that carries text is NOT affected: it is a partial
+    answer, it is returned like any other non-empty completion, and the reason is
+    recorded on the diagnostics.
     """
     resolved_model = _resolve_model(
         model_override=model_override,
         model_env_var=model_env_var,
     )
     logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+
+    diagnostics = CompletionDiagnostics(
+        model=resolved_model,
+        stage=str(stage_name or "chat"),
+        request_hash=_hash(messages),
+    )
 
     kwargs: Dict[str, Any] = {
         "model": resolved_model,
@@ -332,6 +531,34 @@ def chat(
                 last_err = RuntimeError(
                     f"empty completion from {resolved_model} (finish_reason={reason})"
                 )
+                if _is_content_filter(reason):
+                    # Durable, not transient. Stop here rather than spending the
+                    # rest of the budget re-asking a question already refused.
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_CONTENT_FILTER,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                    logger.error(
+                        "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                        "attempt %d/%d. This is a moderation stop, not a transient: the "
+                        "identical prompt will be refused again, so no retry is spent. "
+                        "Edit the prompt or the source passage rather than re-running.",
+                        stage_name or "chat",
+                        reason,
+                        resolved_model,
+                        attempt + 1,
+                        max_retries,
+                    )
+                    return CompletionResult("", diagnostics)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_EMPTY,
+                    finish_reason=reason,
+                    error=str(last_err),
+                )
                 if attempt < max_retries - 1:
                     logger.warning(
                         "LLM returned an empty completion for %s (model %s, "
@@ -359,9 +586,20 @@ def chat(
                     empty_attempts,
                     max_retries,
                 )
-                return ""
+                diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                return CompletionResult("", diagnostics)
 
-            return (resp.choices[0].message.content or "").strip()
+            text = (resp.choices[0].message.content or "").strip()
+            reason = _finish_reason(resp)
+            diagnostics.note(
+                attempt=attempt + 1,
+                status=STATUS_OK,
+                finish_reason=reason,
+                content_chars=len(text),
+            )
+            diagnostics.response_hash = _hash(text)
+            diagnostics.raw_chars = len(text)
+            return CompletionResult(text, diagnostics)
 
         except AuthenticationError as e:
             raise RuntimeError(
@@ -384,6 +622,7 @@ def chat(
                 )
                 kwargs.pop("response_format")
                 last_err = e
+                diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
                 continue
             raise RuntimeError(
                 "Bad request (400). This model/provider may not support response_format JSON. "
@@ -393,16 +632,19 @@ def chat(
 
         except RateLimitError as e:
             last_err = e
+            diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
         except (APITimeoutError, APIError) as e:
             last_err = e
+            diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
         except json.JSONDecodeError as e:
             # OpenAI SDK fails to parse a malformed HTTP response (e.g. local server
             # returned truncated or non-JSON body). Treat as transient and retry.
             last_err = e
+            diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
     raise RuntimeError(f"LLM failed after {max_retries} retries. Last error: {last_err}")
@@ -481,6 +723,25 @@ def chat_with_tools(
                     last_err = RuntimeError(
                         f"empty completion from {resolved_model} (finish_reason={reason})"
                     )
+                    if _is_content_filter(reason):
+                        # Same durable-exit rule as chat(): a moderation stop is
+                        # a property of the prompt, and this loop would otherwise
+                        # re-send that prompt LLM_MAX_RETRIES times for nothing.
+                        # The response is handed back unchanged so the caller
+                        # still reduces it to "" exactly as it always has.
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s, tools_sent=%s) "
+                            "with no content on attempt %d/%d. Moderation stop: the "
+                            "identical prompt will be refused again, so no retry is "
+                            "spent. Edit the prompt rather than re-running.",
+                            stage_name or "chat_with_tools",
+                            reason,
+                            resolved_model,
+                            tools_were_sent,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return resp
                     if attempt < max_retries - 1:
                         logger.warning(
                             "LLM returned an empty completion for %s (model %s, "

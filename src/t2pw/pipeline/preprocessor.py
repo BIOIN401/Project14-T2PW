@@ -3,8 +3,16 @@ import logging
 import re
 from typing import Any, Dict, Optional
 
-from t2pw.llm.client import chat
+from t2pw.llm.client import chat_detailed
 from t2pw.paths import PROMPTS_DIR
+from t2pw.pipeline.extraction_diagnostics import (
+    BOUNDARY_STAGE0_PREPROCESS,
+    OUTCOME_EMPTY_COMPLETION,
+    OUTCOME_INVALID_JSON,
+    OUTCOME_OK,
+    current as current_diagnostics,
+    payload_hash,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -124,8 +132,19 @@ def preprocess(
 
     context: Dict[str, Any]
     status: Dict[str, Any]
+    # Populated on every path, including the exception one, and folded into the
+    # status dict below. Stage 0 is the only stage that calls the provider once
+    # with no parse-retry wrapper, so if these facts are not captured here they
+    # are not captured anywhere.
+    call_diagnostics: Dict[str, Any] = {
+        "model": "",
+        "finish_reason": "",
+        "attempts": 0,
+        "response_status": "",
+        "terminal_reason": "",
+    }
     try:
-        raw = chat(
+        completion = chat_detailed(
             messages,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -133,6 +152,8 @@ def preprocess(
             model_env_var="OPENROUTER_PREPROCESSOR_MODEL",
             stage_name="preprocessor",
         )
+        raw = completion.text
+        call_diagnostics = completion.diagnostics.to_dict()
         result, recovered = _parse_json_reply(raw)
         raw_text = raw if isinstance(raw, str) else ("" if raw is None else str(raw))
         if isinstance(result, dict):
@@ -193,8 +214,98 @@ def preprocess(
     # Set last, so a model-supplied key of the same name cannot shadow the
     # real status.  Every path above starts from _EMPTY_CONTEXT, so the
     # "all _EMPTY_CONTEXT keys are present" invariant holds unconditionally.
+    #
+    # The provider-boundary facts ride *inside* the status dict rather than at
+    # the top level of the context, because the context is passed to prompt
+    # builders and merged into payloads; a diagnostic key loose at that level
+    # would eventually be read as pathway data.  ``describe_preprocess_status``
+    # and the batch driver both already reach through ``preprocess_status``.
+    status.update(call_diagnostics)
     context[PREPROCESS_STATUS_KEY] = status
+    _record_stage_zero_boundary(status, context)
     return context
+
+
+def _record_stage_zero_boundary(status: Dict[str, Any], context: Dict[str, Any]) -> None:
+    """File this Stage-0 draw with the run's diagnostics recorder.
+
+    Every draw is recorded, including the successful ones: ``stage0_attempts
+    .json`` exists to answer "what did Stage 0 actually do", and an artifact that
+    only appears on failures cannot answer that for the run where Stage 0
+    succeeded but returned a context too thin to guide extraction.
+
+    Never raises. Stage 0 already fails closed to an empty context; a diagnostics
+    bug must not be able to turn that into an exception the callers do not expect.
+    """
+
+    try:
+        diagnostics = current_diagnostics()
+        name = str(status.get("status") or "unknown")
+        if name == "empty_reply":
+            outcome = OUTCOME_EMPTY_COMPLETION
+        elif name == "unparseable":
+            outcome = OUTCOME_INVALID_JSON
+        elif name == "llm_error":
+            outcome = "provider_error"
+        else:
+            outcome = OUTCOME_OK
+
+        attempt = {
+            "boundary": BOUNDARY_STAGE0_PREPROCESS,
+            "stage": "stage_0",
+            "status": name,
+            "outcome": outcome,
+            "recovered": bool(status.get("recovered", False)),
+            "detail": status.get("detail", ""),
+            "model": status.get("model", ""),
+            "finish_reason": status.get("finish_reason", ""),
+            "attempts": status.get("attempts", 0),
+            "response_status": status.get("response_status", ""),
+            "terminal_reason": status.get("terminal_reason", ""),
+            "raw_chars": status.get("raw_len", 0),
+            "raw_preview": status.get("raw_preview", ""),
+            # Hashing the *context* rather than the reply is deliberate: the two
+            # Stage-0 draws (full text, then bounded head) send different prompts
+            # and get different replies, so reply hashes cannot be compared, but
+            # identical context hashes prove the retry bought nothing.
+            "context_hash": payload_hash(
+                {key: value for key, value in context.items() if key != PREPROCESS_STATUS_KEY}
+            ),
+            # Stage 0 emits a context, not a payload, so the counts that matter
+            # here are its search anchors -- the fields _has_usable_context reads
+            # to decide whether extraction is guided and whether RAG can build a
+            # query. A Stage-0 reply that parsed but named nothing is a distinct
+            # failure from one that never parsed, and only these say which.
+            "context_counts": _context_counts(context),
+        }
+        diagnostics.record_stage0_attempt(attempt)
+    except Exception:  # noqa: BLE001 - diagnostics must never break Stage 0
+        logger.debug("Stage 0 diagnostics could not be recorded", exc_info=True)
+
+
+def _context_counts(context: Dict[str, Any]) -> Dict[str, int]:
+    """How many anchors this Stage-0 context actually carries.
+
+    Counts only -- never the names themselves. A context legitimately holds ten
+    fully-described ``candidate_examples`` (Case B of ``preprocess_system.txt``),
+    and copying those into an artifact rewritten on every attempt is exactly the
+    repeated-blob problem the diagnostics contract forbids.
+    """
+
+    counts: Dict[str, int] = {}
+    for key in (
+        "key_compounds",
+        "key_proteins",
+        "likely_compartments",
+        "main_subprocesses",
+        "relevant_sections",
+        "candidate_examples",
+    ):
+        value = context.get(key)
+        counts[key] = len(value) if isinstance(value, (list, tuple)) else 0
+    for key in ("pathway_name", "likely_organism"):
+        counts[f"{key}_chars"] = len(str(context.get(key) or "").strip())
+    return counts
 
 
 def describe_preprocess_status(ctx: Optional[Dict[str, Any]]) -> str:
