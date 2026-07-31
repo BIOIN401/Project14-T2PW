@@ -47,13 +47,47 @@ of its inputs.
 
 from __future__ import annotations
 
+import copy
 import re
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
+from t2pw.curation.gap_resolver import _ensure_biological_state
+from t2pw.pipeline.entity_identity import (
+    PATHBANK_UNKNOWN_PROTEIN_ID,
+    has_protein_external_identity,
+    is_pathbank_unknown_protein,
+)
 from t2pw.pipeline.process_normalizer import BIOCHEMICAL_ALIAS_MAP
 from t2pw.pipeline.stage_contracts import validate_post_extraction
+from t2pw.rag.admission import (
+    GAP_DANGLING_REACTION,
+    GAP_MISSING_COMPARTMENT,
+    GAP_MISSING_PRECURSOR,
+    GAP_ORPHAN_METABOLITE,
+    GAP_UNMAPPED_ENZYME,
+    REASON_CONFLICTING_RESOLUTION,
+    REASON_MULTI_PARTICIPANT_REPAIR,
+    REASON_SIDE_NO_LONGER_MISSING,
+    REASON_UNSUPPORTED_TARGET_TYPE,
+    RESOLUTION_COMPARTMENT,
+    RESOLUTION_IDENTIFIER,
+    RESOLUTION_PRECURSOR,
+    ROUTE_IDENTITY_RESOLVER,
+    STATUS_APPLIED,
+    STATUS_PROPOSED,
+    STATUS_REJECTED_PROPOSAL,
+    AdmissionPolicy,
+    AdmissionReport,
+    RagReactionCandidate,
+    admit_candidates,
+    compare_organism,
+    compare_requested_pathway,
+    locate_span,
+    missing_reaction_side,
+    organisms_in_span,
+)
 from t2pw.rag.provenance import RAG_ADDITIVE_KEYS
 
 if TYPE_CHECKING:  # pragma: no cover - typing only, keeps imports offline-light
@@ -175,6 +209,10 @@ class SynthesisResult:
     conflicts: List[Dict[str, Any]] = field(default_factory=list)
     stitched: List[Dict[str, Any]] = field(default_factory=list)
     contract_report: Dict[str, Any] = field(default_factory=dict)
+    #: The bounded :class:`~t2pw.rag.admission.AdmissionReport` for this run,
+    #: holding every retrieved candidate that was accepted AND every one that was
+    #: rejected, with the reasons. Empty when there were no evidence bundles.
+    admission: Dict[str, Any] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -198,6 +236,35 @@ class _Reaction:
     evidence: List[Dict[str, Any]] = field(default_factory=list)
     source_papers: List[Dict[str, Any]] = field(default_factory=list)
     scores: List[float] = field(default_factory=list)
+    #: ``"seed"`` for a reaction the uploaded paper's own extraction produced,
+    #: ``"rag"`` for one transcribed from a retrieved passage. Kept because the
+    #: two are governed by different rules — a seed reaction is the pathway being
+    #: extended and is never subject to gap admission, a RAG one only enters by
+    #: passing it — and because a reader of the merged payload has to be able to
+    #: tell a seed claim from a cross-paper one.
+    origin: str = "rag"
+    #: The gap this reaction was retrieved to fill ("" for a seed reaction).
+    gap_id: str = ""
+    #: Every gap this same claim was retrieved for. One passage is routinely
+    #: top-k for several gaps, and when those duplicates merge into one row the
+    #: row genuinely fills all of them — dropping the extra attributions would
+    #: leave gaps looking unfilled that a delivered reaction actually closed.
+    gap_ids: List[str] = field(default_factory=list)
+    #: Stage-1 scope taxonomy label (core | anaplerotic | cataplerotic |
+    #: auxiliary | out_of_scope). Carried from the seed row, or written by the
+    #: admission gate for a RAG row.
+    scope_membership: str = ""
+    #: The organism the evidence itself reports ("" when it does not say).
+    organism: str = ""
+    #: The EXACT span of the parent chunk that states this reaction — the parsed
+    #: source line for an arrow equation, the validated quote/sentence for a
+    #: prose extraction. The parent chunk pointer lives in ``provenance`` /
+    #: ``evidence`` and is never replaced by this.
+    evidence_span: str = ""
+    #: What the source PAPER was observed to be about (eligibility screen),
+    #: carried down from the chunk. Never the requested values.
+    observed_organisms: List[str] = field(default_factory=list)
+    observed_pathways: List[str] = field(default_factory=list)
 
     # --- derived helpers -------------------------------------------------
     def input_names(self) -> List[str]:
@@ -501,14 +568,26 @@ def _reaction_from_extracted(
     evidence: Dict[str, Any],
     paper: Dict[str, Any],
     score: float,
+    gap_id: str = "",
+    chunk: Any = None,
 ) -> Optional[_Reaction]:
     """Build a provenance-bound :class:`_Reaction` from one extracted reaction dict.
 
     ``parsed`` is a clean dict from :func:`t2pw.rag.extract.extract_reactions_from_text`
-    (``{"name", "inputs", "outputs", "enzymes", "reversible"}``). Names are
-    canonicalized and junk tokens rejected exactly as the arrow-parser path does,
-    and the chunk's provenance is attached so the reaction stays evidence-bound.
-    Returns ``None`` when nothing usable survives.
+    (``{"name", "inputs", "outputs", "enzymes", "reversible", "quote"}``). Names
+    are canonicalized and junk tokens rejected exactly as the arrow-parser path
+    does, and the chunk's provenance is attached so the reaction stays
+    evidence-bound. Returns ``None`` when nothing usable survives.
+
+    The model's ``quote`` is **validated, never trusted**: it is resolved through
+    :func:`t2pw.rag.admission.locate_span`, which accepts it only if it appears
+    verbatim in this chunk and is a single statement, and otherwise falls back to
+    locating the one sentence of the chunk that names every participant and
+    catalyst. A claim with no such span keeps ``evidence_span=""`` and the
+    admission gate refuses it — an extraction that stitched two sentences
+    together has no single sentence backing it, which is precisely how
+    "Enz1 catalyzes A to B. Enz2 catalyzes X to Y." is prevented from yielding
+    ``A -> Y``.
     """
     if not isinstance(parsed, dict):
         return None
@@ -540,6 +619,11 @@ def _reaction_from_extracted(
         left = inputs[0].name if inputs else "?"
         right = outputs[0].name if outputs else "?"
         name = f"{left} -> {right}"
+    span = locate_span(
+        _text(getattr(chunk, "text", "")),
+        parsed.get("quote"),
+        [p.name for p in inputs] + [p.name for p in outputs] + enzymes,
+    )
     return _Reaction(
         name=name,
         inputs=inputs,
@@ -550,6 +634,13 @@ def _reaction_from_extracted(
         evidence=[dict(evidence)],
         source_papers=[dict(paper)],
         scores=[float(score)],
+        origin="rag",
+        gap_id=gap_id,
+        gap_ids=[gap_id] if gap_id else [],
+        organism=_text(prov.get("organism")),
+        evidence_span=span,
+        observed_organisms=_safe_list(getattr(chunk, "observed_organisms", [])),
+        observed_pathways=_safe_list(getattr(chunk, "observed_pathways", [])),
     )
 
 
@@ -630,7 +721,14 @@ def _reactions_from_bundle(
     ``extractor`` is the memoized per-chunk callable built by
     :func:`_make_memoized_extractor`; ``None`` (the default) means arrow-only,
     exactly today's behavior.
+
+    Every reaction built here inherits the bundle's ``gap_id``. That stamp is
+    what makes the admission gate possible at all: a reaction transcribed from a
+    passage retrieved for gap G is a *claim about G*, and if it turns out not to
+    fill G it is unrelated chemistry that happened to share a passage, not a
+    contribution to the pathway.
     """
+    gap_id = _text(getattr(_gap_of(bundle), "gap_id", ""))
     reactions: List[_Reaction] = []
     for hit in _safe_list(getattr(bundle, "hits", [])):
         chunk = _chunk_of(hit)
@@ -670,11 +768,29 @@ def _reactions_from_bundle(
                     evidence=[dict(evidence)],
                     source_papers=[dict(paper)],
                     scores=[score],
+                    origin="rag",
+                    gap_id=gap_id,
+                    gap_ids=[gap_id] if gap_id else [],
+                    organism=_text(getattr(chunk, "organism", "")),
+                    # The parsed SOURCE LINE is the evidence span, kept exactly
+                    # as it appeared. The parent chunk pointer stays in
+                    # ``provenance`` / ``evidence``, so the row still says which
+                    # passage of which paper this came from — the span narrows
+                    # the claim, it does not replace the provenance.
+                    evidence_span=line.strip(),
+                    observed_organisms=_safe_list(
+                        getattr(chunk, "observed_organisms", [])
+                    ),
+                    observed_pathways=_safe_list(
+                        getattr(chunk, "observed_pathways", [])
+                    ),
                 )
             )
         if extractor is not None:
             for pr in extractor(chunk):
-                rxn = _reaction_from_extracted(pr, prov, evidence, paper, score)
+                rxn = _reaction_from_extracted(
+                    pr, prov, evidence, paper, score, gap_id, chunk
+                )
                 if rxn is not None:
                     reactions.append(rxn)
     return reactions
@@ -755,6 +871,7 @@ def _seed_reactions(
                 }
             )
             continue
+        scope = row.get("scope_membership")
         reactions.append(
             _Reaction(
                 name=name,
@@ -767,6 +884,15 @@ def _seed_reactions(
                 evidence=_seed_row_evidence(row),
                 source_papers=[_paper_from_provenance(p) for p in prov],
                 scores=[],
+                origin="seed",
+                # Carried verbatim (stripped, never case-folded) for the same
+                # reason ``pipeline._carry_scope_membership`` carries it: the lock
+                # manifest records the model's own spelling and the two artifacts
+                # must not disagree about what the model actually said. A
+                # non-string label is dropped rather than coerced, which lands it
+                # in the "absent" case the core filter treats as KEEP.
+                scope_membership=scope.strip() if isinstance(scope, str) else "",
+                organism=_text(prov[0].get("organism")) if prov else "",
             )
         )
     return reactions, omitted
@@ -870,6 +996,29 @@ def _merge_into(target: _Reaction, other: _Reaction) -> None:
     for enzyme in other.enzymes:
         if enzyme not in target.enzymes:
             target.enzymes.append(enzyme)
+    # Attribution fields fill in but never overwrite: the surviving row keeps its
+    # OWN origin / scope label / gap, so corroboration from a second paper cannot
+    # relabel a seed reaction as a RAG import, and a RAG row that was admitted for
+    # gap A does not silently become "the fill for gap B" because a duplicate of it
+    # was also retrieved for B. (The unioned provenance already records both.)
+    if not target.scope_membership and other.scope_membership:
+        target.scope_membership = other.scope_membership
+    if not target.gap_id and other.gap_id:
+        target.gap_id = other.gap_id
+    if not target.organism and other.organism:
+        target.organism = other.organism
+    if not target.evidence_span and other.evidence_span:
+        target.evidence_span = other.evidence_span
+    # ``gap_ids`` is the one attribution field that UNIONS rather than filling in.
+    # A passage is routinely top-k for several gaps, so the same canonical claim
+    # arrives once per gap and merges here; keeping only the first ``gap_id``
+    # would leave the other gaps reading as unfilled even though the delivered
+    # reaction closes them. ``gap_id`` stays the primary (the gap the admission
+    # decision was made against) for backward compatibility.
+    target.gap_ids = _dedupe_strs(
+        list(target.gap_ids or ([target.gap_id] if target.gap_id else []))
+        + list(other.gap_ids or ([other.gap_id] if other.gap_id else []))
+    )
 
 
 def _resolve_reactions(
@@ -1000,9 +1149,23 @@ def _detect_stitches(reactions: List[_Reaction]) -> List[Dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Entity registry construction (with mandatory provenance / omission).
 # ---------------------------------------------------------------------------
+#: What makes a ``protein_complexes`` row a complex rather than a name. Carried
+#: forward from the seed verbatim so a complex the seed declared keeps its
+#: members and its identity story through synthesis; nothing else is copied.
+_COMPLEX_IDENTITY_KEYS = (
+    "components",
+    "mapped_ids",
+    "mapping_meta",
+    "identity_status",
+    "pathbank_complex_id",
+    "pathbank_protein_complex_id",
+    "pw_complex_id",
+    "pathwhiz_id",
+)
 def _build_entities(
     reactions: List[_Reaction],
     resolver: Optional[Any] = None,
+    seed_payload: Any = None,
 ) -> Tuple[Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
     """Collect compounds & proteins referenced by evidence-backed reactions.
 
@@ -1031,7 +1194,22 @@ def _build_entities(
     listed). The duplicate is created at the MERGE boundary, where the base is
     known, and is removed there — see
     :func:`t2pw.rag.conform.conform_rag_additions_for_merge`.
+
+    ``seed_payload`` supplies the ENTITY TYPING the reaction rows do not carry. A
+    reaction knows only "this name catalyses me", so a name in that role was
+    emitted as a ``proteins`` row — including when the seed declared it in
+    ``entities.protein_complexes``. That silently re-typed a complex as a protein
+    in the payload every downstream check then reads: the complex's components
+    (and with them its PathBank Unknown-protein fallback) disappeared, and a
+    UniProt accession became writable onto a row that should never take one.
+    Complexes are therefore emitted into their own bucket, carrying the seed row's
+    identity fields forward.
     """
+    seed_entities = _safe_dict(_safe_dict(seed_payload).get("entities"))
+    seed_complexes: Dict[str, Dict[str, Any]] = {}
+    for row in _safe_list(seed_entities.get("protein_complexes")):
+        if isinstance(row, dict) and _text(row.get("name")):
+            seed_complexes[canonical_name(row["name"]).casefold()] = row
 
     def _entity_key(name: str) -> str:
         return name.casefold() if resolver is None else resolver(name)
@@ -1061,11 +1239,13 @@ def _build_entities(
 
     compounds: List[Dict[str, Any]] = []
     proteins: List[Dict[str, Any]] = []
+    complexes: List[Dict[str, Any]] = []
     omitted: List[Dict[str, Any]] = []
     for key in sorted(display_by_name):
         display = display_by_name[key]
         prov = prov_by_name.get(key, [])
         is_protein = key in enzyme_names
+        seed_complex = seed_complexes.get(canonical_name(display).casefold())
         if not prov and not _is_cofactor(display):
             omitted.append(
                 {
@@ -1075,8 +1255,19 @@ def _build_entities(
                 }
             )
             continue
-        row: Dict[str, Any] = {"name": display}
+        row = {"name": display}
         _attach_provenance(row, prov, [], scores_by_name.get(key, []))
+        if is_protein and seed_complex is not None:
+            # Keep the complex a complex, with the identity fields that make it
+            # one. ``components`` is what carries the Unknown-protein fallback;
+            # dropping it turns a functional complex into a nameless protein.
+            # Copied AFTER ``_attach_provenance``, whose whitelist deliberately
+            # covers only the additive provenance keys.
+            for field_name in _COMPLEX_IDENTITY_KEYS:
+                if field_name in seed_complex:
+                    row[field_name] = copy.deepcopy(seed_complex[field_name])
+            complexes.append(row)
+            continue
         if is_protein:
             proteins.append(row)
         else:
@@ -1086,6 +1277,8 @@ def _build_entities(
         entities["compounds"] = compounds
     if proteins:
         entities["proteins"] = proteins
+    if complexes:
+        entities["protein_complexes"] = complexes
     return entities, omitted
 
 
@@ -1097,6 +1290,9 @@ def _attach_provenance(
     provenance: List[Dict[str, Any]],
     evidence: List[Dict[str, Any]],
     scores: List[float],
+    *,
+    gap_id: str = "",
+    gap_ids: Optional[List[str]] = None,
 ) -> None:
     """Attach the additive provenance keys defined in ``t2pw.rag.provenance``.
 
@@ -1110,8 +1306,24 @@ def _attach_provenance(
     """
     if not provenance:
         return
-    primary = provenance[0]
-    row["rag_provenance"] = dict(primary)
+    primary = dict(provenance[0])
+    if gap_id:
+        # The gap this row was admitted for travels INSIDE the existing
+        # ``rag_provenance`` pointer (an optional key of the ``RagProvenance``
+        # TypedDict) rather than as a sixth top-level additive key: the additive
+        # set is a fixed, asserted contract (``RAG_ADDITIVE_KEYS``), and a
+        # per-row string costs ~30 bytes against a payload whose size history is
+        # the reason ``_dedupe_evidence`` exists.
+        primary["gap_id"] = gap_id
+        # ...and the COMPLETE set beside it. ``gap_id`` alone is lossy: one
+        # canonical claim retrieved for two gaps merges into one row, and if only
+        # the first attribution survived, the second gap would be reported
+        # unfilled while the reaction that fills it sits in the payload. Written
+        # only when it adds something, so a single-gap row keeps its old shape.
+        complete = _dedupe_strs(list(gap_ids or []) + [gap_id])
+        if len(complete) > 1:
+            primary["gap_ids"] = complete
+    row["rag_provenance"] = primary
     if evidence:
         # Deduped for the same reason ``source_papers`` and ``source_refs`` are on
         # the next four lines. This assignment was the one member of the group with
@@ -1133,8 +1345,29 @@ def _attach_provenance(
     assert set(row) <= _ALLOWED_ROW_KEYS
 
 
+#: Keys a synthesized row may carry. ``scope_membership`` is a CORE reaction
+#: field (``schema.PayloadReaction``, ``payload_models.ReactionModel``) that RAG
+#: rows were structurally unable to carry: this whitelist did not name it, so
+#: ``_attach_provenance``'s assertion below would have fired on any row that had
+#: one. That is why ``pipeline._carry_scope_membership`` documents its own scope
+#: limit as "cross-paper RAG imports ... cannot carry a scope label even in
+#: principle". They can now: the admission gate writes the label
+#: (:data:`~t2pw.rag.admission.SCOPE_ADMITTED`) and it survives synthesis ->
+#: conform -> ``clean_inference_output`` -> normalization, so the core
+#: out-of-scope filter and the lock manifest see the same label on a RAG row as
+#: on a seed one.
 _ALLOWED_ROW_KEYS = frozenset(
-    {"name", "inputs", "outputs", "enzymes", "entity", "entity_type", "role", "source_refs"}
+    {
+        "name",
+        "inputs",
+        "outputs",
+        "enzymes",
+        "entity",
+        "entity_type",
+        "role",
+        "source_refs",
+        "scope_membership",
+    }
     | set(RAG_ADDITIVE_KEYS)
 )
 
@@ -1230,7 +1463,20 @@ def _reaction_row(reaction: _Reaction) -> Dict[str, Any]:
     }
     if reaction.enzymes:
         row["enzymes"] = [_enzyme_actor(e, reaction) for e in reaction.enzymes]
-    _attach_provenance(row, reaction.provenance, reaction.evidence, reaction.scores)
+    # Only a real label is written. A reaction with no label gains no key at all,
+    # which is the "absent" case every downstream reader treats as KEEP — the same
+    # rule ``pipeline._carry_scope_membership`` follows, so a plain row's key set
+    # is unchanged.
+    if reaction.scope_membership:
+        row["scope_membership"] = reaction.scope_membership
+    _attach_provenance(
+        row,
+        reaction.provenance,
+        reaction.evidence,
+        reaction.scores,
+        gap_id=reaction.gap_id,
+        gap_ids=reaction.gap_ids,
+    )
     # Reaction rows legitimately carry inputs/outputs/enzymes on top of the
     # allowed additive/core keys.
     return row
@@ -1300,6 +1546,100 @@ def _carry_forward_scaffolding(payload: Dict[str, Any], seed_payload: Any) -> No
 # ---------------------------------------------------------------------------
 # synthesize — the public entry points.
 # ---------------------------------------------------------------------------
+def _candidate_from_reaction(
+    reaction: _Reaction,
+    *,
+    requested_pathway: str,
+    requested_organism: str,
+) -> RagReactionCandidate:
+    """Turn a transcribed RAG reaction into an admission candidate.
+
+    Every field the admission contract requires is filled here from what the
+    transcription already carries — nothing is invented, and nothing is copied
+    from the REQUEST into an OBSERVED field (the stamping bug
+    ``t2pw.rag.acquire`` documents at length). ``organism`` is what the retrieved
+    chunk itself reports; ``requested_organism`` is what the run asked for; the
+    comparison between them is a third, separate field.
+    """
+    prov = reaction.provenance[0] if reaction.provenance else {}
+    evidence = reaction.evidence[0] if reaction.evidence else {}
+    paper = reaction.source_papers[0] if reaction.source_papers else {}
+
+    # The LOCAL observation wins. A review is "about" E. coli and human cells at
+    # paper level; the sentence backing one reaction is about one of them, and
+    # that is the claim being admitted. Paper-level observed metadata (from the
+    # eligibility screen, carried down the chunk) is the fallback for a span that
+    # names no organism -- never the requested value, which is not evidence.
+    span_organisms = organisms_in_span(reaction.evidence_span)
+    observed_organisms = span_organisms or _dedupe_strs(
+        list(reaction.observed_organisms)
+        + ([reaction.organism] if reaction.organism else [])
+    )
+    paper_haystack = " ".join(
+        [_text(paper.get("title")), _text(prov.get("source_title"))]
+    )
+    return RagReactionCandidate(
+        gap_id=reaction.gap_id,
+        gap_ids=list(reaction.gap_ids or ([reaction.gap_id] if reaction.gap_id else [])),
+        name=reaction.name,
+        inputs=[p.name for p in reaction.inputs],
+        outputs=[p.name for p in reaction.outputs],
+        enzymes=list(reaction.enzymes),
+        reversible=bool(reaction.reversible),
+        source_paper=dict(paper),
+        evidence=dict(evidence),
+        evidence_span=reaction.evidence_span,
+        organism=reaction.organism,
+        observed_organisms=list(observed_organisms),
+        observed_pathways=list(reaction.observed_pathways),
+        requested_pathway=_text(requested_pathway),
+        requested_organism=_text(requested_organism),
+        requested_pathway_match=compare_requested_pathway(
+            requested_pathway,
+            reaction.evidence_span,
+            reaction.observed_pathways,
+            paper_haystack,
+        ),
+        organism_match=compare_organism(requested_organism, observed_organisms),
+        confidence=_confidence(reaction.scores, len(reaction.provenance)),
+    )
+
+
+def _dedupe_candidates(
+    pairs: List[Tuple[RagReactionCandidate, _Reaction]]
+) -> List[Tuple[RagReactionCandidate, _Reaction]]:
+    """Collapse candidates that are the same claim from the same passage.
+
+    The key is ``(gap_id, claim_identity, provenance_identity)`` — the canonical
+    substrates/products/catalysts/direction PLUS which paper and which passage
+    said it — never the reaction name. Two consequences, both intended:
+
+    * the SAME claim from the SAME passage, transcribed twice (a chunk whose text
+      repeats an equation, or an arrow parse and a prose extraction of one
+      sentence), collapses to one candidate, so a duplicated passage cannot
+      inflate anything downstream. This is the candidate-level sibling of
+      :func:`_dedupe_evidence`, which protects the merged row, and both are kept:
+      this one stops the duplicate becoming a second candidate at all, that one
+      stops repeated passages accumulating on a row that legitimately merges.
+    * the same claim from a DIFFERENT passage survives as its own candidate.
+      That is corroboration, and it must reach :func:`_resolve_reactions` so the
+      row ends up carrying both source pointers.
+    """
+    out: List[Tuple[RagReactionCandidate, _Reaction]] = []
+    seen: set = set()
+    for candidate, reaction in pairs:
+        key = (
+            candidate.gap_id,
+            candidate.claim_identity(),
+            candidate.provenance_identity(),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((candidate, reaction))
+    return out
+
+
 def synthesize_with_report(
     seed_payload: Any,
     evidence_bundles: Optional[List[Any]] = None,
@@ -1307,6 +1647,11 @@ def synthesize_with_report(
     *,
     prose_extractor: Optional[Any] = None,
     synonym_resolver: Optional[Any] = None,
+    gaps: Optional[List[Any]] = None,
+    requested_pathway: str = "",
+    requested_organism: str = "",
+    admission_policy: Optional[AdmissionPolicy] = None,
+    identity_verifier: Optional[Any] = None,
 ) -> SynthesisResult:
     """Full synthesis: returns the payload *plus* the reports that ride with it.
 
@@ -1319,23 +1664,92 @@ def synthesize_with_report(
     supplied it drives GROUPING/merge KEYS ONLY, so reactions that are duplicates
     except for a compound/enzyme SYNONYM collapse to one row; the emitted names are
     never rewritten. ``None`` (default) reproduces today's behavior byte-for-byte.
+
+    Gap admission
+    -------------
+    Every reaction transcribed from evidence is a *candidate* and enters the
+    payload only by passing :func:`t2pw.rag.admission.admit_candidates`. Rejected
+    candidates are dropped **before** conflict resolution, stitch detection and
+    entity building, so there is no path by which a rejected claim can re-enter:
+    stitching operates on the accepted set only, and a rejected candidate cannot
+    donate its provenance to an accepted row through :func:`_merge_into` because
+    it is not in the list being resolved.
+
+    ``gaps`` are the detected gaps the bundles were retrieved for; when omitted
+    they are taken from the bundles themselves, so a caller that already holds the
+    gap list and one that only holds the bundles both get the same admission.
+    ``requested_pathway`` / ``requested_organism`` are the RUN's request, used for
+    the pathway/organism comparisons; ``admission_policy`` defaults to
+    :func:`t2pw.rag.admission.policy_from_config`.
     """
     bundles = list(evidence_bundles or [])
     seed_source = _seed_source_descriptor(seed_context)
     extractor = _make_memoized_extractor(prose_extractor)
 
     seed_rxns, seed_omitted = _seed_reactions(seed_payload, seed_source)
-    evidence_rxns: List[_Reaction] = []
+
+    known_gaps = list(gaps) if gaps else _gaps_from_bundles(bundles)
+    policy = admission_policy
+    if policy is None:
+        from t2pw.rag.admission import policy_from_config
+
+        policy = policy_from_config()
+
+    pairs: List[Tuple[RagReactionCandidate, _Reaction]] = []
     for bundle in bundles:
-        evidence_rxns.extend(_reactions_from_bundle(bundle, extractor))
+        for reaction in _reactions_from_bundle(bundle, extractor):
+            pairs.append(
+                (
+                    _candidate_from_reaction(
+                        reaction,
+                        requested_pathway=requested_pathway,
+                        requested_organism=requested_organism,
+                    ),
+                    reaction,
+                )
+            )
+    pairs = _dedupe_candidates(pairs)
+
+    accepted_candidates, admission_report = admit_candidates(
+        [candidate for candidate, _ in pairs],
+        gaps=known_gaps,
+        seed_payload=seed_payload,
+        policy=policy,
+        # The same GROUPING-only resolver the merge uses, so the gate's
+        # graph-connection rules see the same two spellings of one compound as
+        # one node that ``_resolve_reactions`` will later merge.
+        name_resolver=synonym_resolver,
+    )
+    # Typed-gap proposals come from the BUNDLES, not from rejected reactions: the
+    # sentence that answers "which protein is EnzX?" usually states no reaction at
+    # all, so a candidate-derived scan would miss exactly the evidence the gap
+    # asked for. Whatever the gate also lifted out of a rejected reaction's span is
+    # unioned in, deduplicated by (gap, kind, value).
+    typed_resolutions = _collect_typed_resolutions(
+        bundles,
+        known_gaps,
+        list(getattr(admission_report, "proposals", []) or []),
+        seed_payload=seed_payload,
+        policy=policy,
+    )
+    accepted_ids = {id(candidate) for candidate in accepted_candidates}
+    evidence_rxns: List[_Reaction] = []
+    for candidate, reaction in pairs:
+        if id(candidate) not in accepted_ids:
+            continue
+        # The gate's verdict travels with the reaction: the label is what the
+        # core out-of-scope filter and the lock manifest read downstream, and a
+        # reversibility the gate normalized to the evidence has to reach the
+        # payload or the row would ship one-way chemistry the paper called
+        # reversible.
+        reaction.scope_membership = candidate.scope_membership
+        reaction.reversible = bool(candidate.reversible)
+        evidence_rxns.append(reaction)
 
     all_rxns = seed_rxns + evidence_rxns
     resolved, conflicts = _resolve_reactions(all_rxns, synonym_resolver)
     stitched = _detect_stitches(resolved)
-    entities, entity_omitted = _build_entities(resolved, synonym_resolver)
-
-    unresolved = list(seed_omitted) + list(entity_omitted)
-    unresolved.extend(_unfilled_gap_reports(bundles, resolved, extractor))
+    entities, entity_omitted = _build_entities(resolved, synonym_resolver, seed_payload)
 
     payload = to_payload(entities, resolved)
     # Carry the seed's contextual scaffolding (species / compartments / cell
@@ -1343,6 +1757,24 @@ def synthesize_with_report(
     # stage still has the species row its contract requires (Defect 1). These are
     # not evidence-bound chemistry, so they are copied as-is.
     _carry_forward_scaffolding(payload, seed_payload)
+
+    # Typed-gap resolutions are applied to the PAYLOAD -- or not. Only what
+    # actually lands in it can close a typed gap, which is why this runs before
+    # the unresolved-gap report is derived.
+    resolution_records = _apply_typed_resolutions(
+        payload, typed_resolutions, identity_verifier=identity_verifier
+    )
+    admission_dict = admission_report.to_dict()
+    admission_dict["resolutions"] = resolution_records
+
+    unresolved = list(seed_omitted) + list(entity_omitted)
+    unresolved.extend(
+        _unfilled_gap_reports(bundles, known_gaps, accepted_candidates, payload)
+    )
+    admission_dict["identity_outcomes"] = _identity_outcomes(
+        resolution_records, payload, unresolved
+    )
+
     contract_report = validate_post_extraction(payload)  # raises on structural fail
 
     return SynthesisResult(
@@ -1351,6 +1783,7 @@ def synthesize_with_report(
         conflicts=conflicts,
         stitched=stitched,
         contract_report=contract_report,
+        admission=admission_dict,
     )
 
 
@@ -1361,6 +1794,10 @@ def synthesize(
     *,
     prose_extractor: Optional[Any] = None,
     synonym_resolver: Optional[Any] = None,
+    gaps: Optional[List[Any]] = None,
+    requested_pathway: str = "",
+    requested_organism: str = "",
+    admission_policy: Optional[AdmissionPolicy] = None,
 ) -> "Payload":
     """Merge seed + evidence into one connected, validated standard ``Payload``.
 
@@ -1378,49 +1815,1251 @@ def synthesize(
         seed_context,
         prose_extractor=prose_extractor,
         synonym_resolver=synonym_resolver,
+        gaps=gaps,
+        requested_pathway=requested_pathway,
+        requested_organism=requested_organism,
+        admission_policy=admission_policy,
     ).payload
+
+
+# ---------------------------------------------------------------------------
+# Typed-gap resolution: applying it to the payload, and reading closure back off.
+# ---------------------------------------------------------------------------
+def _find_entity_row(payload: Dict[str, Any], name: str) -> Tuple[str, Optional[Dict[str, Any]]]:
+    """Return ``(bucket, row)`` for the entity named ``name``, or ``("", None)``."""
+    target = canonical_name(name).casefold()
+    entities = _safe_dict(payload.get("entities"))
+    for bucket in (
+        "proteins",
+        "protein_complexes",
+        "compounds",
+        "element_collections",
+        "nucleic_acids",
+    ):
+        for row in _safe_list(entities.get(bucket)):
+            if isinstance(row, dict) and canonical_name(row.get("name")).casefold() == target:
+                return bucket, row
+    return "", None
+
+
+#: Entity bucket -> the ``element_locations`` bucket and field that addresses it.
+#: Mirrors ``t2pw.pwml.ir._entity_type_from_location_bucket``, which is the
+#: authority: it maps ``protein_locations`` to the entity type ``protein``, so
+#: the IR resolves that field against ``entities.proteins`` and nothing else.
+#:
+#: ``protein_complexes`` is DELIBERATELY absent. It used to map here to
+#: ``("protein_locations", "protein")``, which put a complex name in a field the
+#: IR resolves against the protein bucket — an unresolvable reference dressed as
+#: a located entity. A complex whose compartment is known has no representation
+#: in this schema, so the proposal is refused with
+#: :data:`~t2pw.rag.admission.REASON_UNSUPPORTED_TARGET_TYPE` and the gap stays
+#: open, which is the honest report.
+_LOCATION_BUCKETS = {
+    "compounds": ("compound_locations", "compound"),
+    "element_collections": ("element_collection_locations", "element_collection"),
+    "nucleic_acids": ("nucleic_acid_locations", "nucleic_acid"),
+    "proteins": ("protein_locations", "protein"),
+}
+
+#: The bucket a UniProt/DrugBank identity may be written to. One entry, stated as
+#: a constant so the rule is greppable rather than implied by an ``if``.
+_IDENTITY_BUCKET = "proteins"
+
+# --- machine-readable identity outcome codes --------------------------------
+# Stamped on the record by :func:`_apply_identity_decision`, which is the only
+# place that KNOWS which branch was taken, and consumed verbatim by
+# :func:`_identity_outcomes`. Deriving these by matching the human-readable
+# reason text would tie a diagnostic count to prose that exists to be read, and
+# would silently miscount the moment a sentence is reworded — the two branches
+# below both used to say "identity not verified: ...".
+IDENTITY_OUTCOME_APPLIED = "applied"
+#: No verifier / candidate provider was available at all. The claim was never
+#: judged; production is deliberately here (the RAG chain yields passages, not
+#: resolver candidates).
+IDENTITY_OUTCOME_NO_RESOLVER = "unverified_no_resolver"
+#: A wired resolver RAN and refused: missing candidate evidence, name, species,
+#: score, margin, ambiguity, or any other rung of the ladder. A judged rejection
+#: is a different fact from an unasked question, and only this one says anything
+#: about the claim.
+IDENTITY_OUTCOME_RESOLVER_REJECTED = "rejected_by_identity_resolver"
+#: Refused before any resolver was consulted: the target is not in the payload,
+#: or is the wrong shape of row for an identity.
+IDENTITY_OUTCOME_SCOPE_OR_TYPE = "rejected_scope_or_type"
+#: Incompatible values for the same singular field, with no single winner.
+IDENTITY_OUTCOME_CONFLICTING = "conflicting"
+#: The REFUSAL codes a verifier may hand back. A verified result needs no code —
+#: the boolean says it — so only these two are read off the verifier, and an
+#: unrecognized one falls through to the safe default rather than silently
+#: becoming a new bucket.
+_IDENTITY_REFUSAL_CODES = frozenset(
+    {IDENTITY_OUTCOME_NO_RESOLVER, IDENTITY_OUTCOME_RESOLVER_REJECTED}
+)
+
+
+def _has_complex_external_identity(row: Any) -> bool:
+    """Whether a ``protein_complexes`` row carries a real complex-level identity.
+
+    The predicate ``t2pw.pwml.ir`` itself applies when deciding whether a complex
+    may stand without listed components: a PathBank/PathWhiz complex id. A UniProt
+    accession is not one of these, which is the whole point — no sentence in a
+    paper can supply a complex identity, so a complex identity gap is never closed
+    by retrieval and keeps the functional-complex / Unknown-protein-component
+    fallback that carries it honestly.
+    """
+    if not isinstance(row, dict):
+        return False
+    mapped = row.get("mapped_ids")
+    mapped = mapped if isinstance(mapped, dict) else {}
+    for key in (
+        "pathbank_complex_id",
+        "pathbank_protein_complex_id",
+        "pw_complex_id",
+        "pathwhiz_id",
+    ):
+        for source in (row, mapped):
+            try:
+                if int(source.get(key) or 0) > 0:
+                    return True
+            except (TypeError, ValueError):
+                continue
+    return False
+
+
+# ---------------------------------------------------------------------------
+# Reconciliation: ONE decision per (gap_id, kind, target), before any mutation.
+# ---------------------------------------------------------------------------
+#: Identity fields that hold exactly one value. Two distinct values for one of
+#: these is a contradiction, not extra information — a protein has one UniProt
+#: accession. ``uniprot`` and ``drugbank`` are export identity; ``ec`` is
+#: annotation, and coexists with either because it says a different thing.
+_SINGULAR_IDENTITY_FIELDS = ("uniprot", "drugbank", "ec")
+
+
+def _member_sources(members: List[Any]) -> List[str]:
+    """Every source id behind a group of proposals, deduplicated and ordered."""
+    return _dedupe_strs(
+        _text(_safe_dict(getattr(m, "evidence", {})).get("source_id")) for m in members
+    )
+
+
+def _member_span(members: List[Any]) -> str:
+    """The span the merged mutation records. Members arrive sorted, so this is
+    the same span under any retrieval order."""
+    for member in members:
+        span = _text(getattr(member, "evidence_span", ""))
+        if span:
+            return span
+    return ""
+
+
+def _identity_value(proposal: Any) -> Dict[str, str]:
+    """A proposal's identifier value, normalized to the singular fields."""
+    value = _safe_dict(getattr(proposal, "value", {}))
+    out: Dict[str, str] = {}
+    for field_name in _SINGULAR_IDENTITY_FIELDS:
+        text = _text(value.get(field_name))
+        if text:
+            out[field_name] = text
+    return out
+
+
+def _participant_set(proposal: Any) -> Tuple[str, Tuple[str, ...]]:
+    """A precursor proposal's ``(side, canonical participant set)``."""
+    value = _safe_dict(getattr(proposal, "value", {}))
+    names = [
+        _text(p) for p in _safe_list(value.get("participants")) if _text(p)
+    ] or ([_text(value.get("participant"))] if _text(value.get("participant")) else [])
+    return (
+        _text(value.get("side")) or "inputs",
+        tuple(sorted({canonical_name(n).casefold() for n in names})),
+    )
+
+
+def _describe_values(variants: List[Dict[str, Any]], label: str) -> str:
+    """"'P12345' (PMC_A), 'Q99999' (PMC_B)" — both values AND both sources."""
+    parts = []
+    for variant in variants:
+        sources = ", ".join(_member_sources(variant["members"])) or "unknown source"
+        parts.append(f"{variant[label]!r} ({sources})")
+    return "; ".join(parts)
+
+
+def _reconcile_typed_resolutions(proposals: List[Any]) -> List[Dict[str, Any]]:
+    """Group admissible proposals and decide, per group, what the payload gets.
+
+    Sorting the proposals made the ORDER deterministic; it did not make the
+    OUTCOME evidence-based. Applying a group one member at a time still let the
+    first member write and a contradicting second member overwrite it or be
+    reported applied on top of it — a deterministic arbitrary write, where the
+    winner is whichever value sorts first. So the group is classified first:
+
+    * **corroborating** — the same scientific value from several papers. One
+      mutation, provenance merged, every evidence record kept in the report.
+    * **complementary** — values that say different things and can coexist
+      (a verified UniProt accession and an EC annotation). Merged into one value.
+    * **incompatible** — distinct values for the same singular field. Nothing is
+      applied unless a resolver picks exactly one winner, and both values are
+      reported with their sources.
+
+    Returns one decision per thing-to-write, in a deterministic order. Members
+    arrive already sorted by :func:`_proposal_identity`, so grouping preserves
+    that order and two permutations of the same retrieval reconcile identically.
+    """
+    groups: Dict[Tuple[str, str, str], List[Any]] = {}
+    for proposal in proposals:
+        key = (
+            _text(getattr(proposal, "gap_id", "")),
+            _text(getattr(proposal, "kind", "")),
+            canonical_name(getattr(proposal, "target", "")).casefold(),
+        )
+        groups.setdefault(key, []).append(proposal)
+
+    decisions: List[Dict[str, Any]] = []
+    for (gap_id, kind, _folded), members in groups.items():
+        target = _text(getattr(members[0], "target", ""))
+        base = {"gap_id": gap_id, "kind": kind, "target": target, "members": members}
+        if kind == RESOLUTION_IDENTIFIER:
+            decisions.append(_reconcile_identity(base, members))
+        elif kind == RESOLUTION_PRECURSOR:
+            decisions.append(_reconcile_precursor(base, members))
+        elif kind == RESOLUTION_COMPARTMENT:
+            decisions.extend(_reconcile_compartment(base, members))
+        else:  # pragma: no cover - defensive
+            decisions.append(dict(base, action="apply", value={}))
+    return decisions
+
+
+def _reconcile_identity(base: Dict[str, Any], members: List[Any]) -> Dict[str, Any]:
+    """Corroborating / complementary identifiers merge; distinct ones conflict."""
+    values = [(m, _identity_value(m)) for m in members]
+    distinct: Dict[str, List[str]] = {}
+    for field_name in _SINGULAR_IDENTITY_FIELDS:
+        seen = _dedupe_strs(value.get(field_name, "") for _m, value in values)
+        if seen:
+            distinct[field_name] = seen
+
+    contested = [f for f, seen in distinct.items() if len(seen) > 1]
+    if not contested:
+        # Every field agrees (or only one member states it): one mutation.
+        merged = {f: seen[0] for f, seen in distinct.items()}
+        return dict(base, action="apply", value=merged)
+
+    variants: Dict[Tuple[str, ...], List[Any]] = {}
+    for member, value in values:
+        variants.setdefault(tuple(value.get(f, "") for f in contested), []).append(member)
+    rendered = [
+        {
+            "value": {
+                f: seen[0]
+                for f, seen in (
+                    (f, _dedupe_strs(_identity_value(m).get(f, "") for m in ms))
+                    for f in _SINGULAR_IDENTITY_FIELDS
+                )
+                if seen
+            },
+            "label": ", ".join(v for v in key if v),
+            "members": ms,
+        }
+        for key, ms in variants.items()
+    ]
+    return dict(
+        base,
+        action="adjudicate",
+        variants=rendered,
+        reasons=[
+            f"{REASON_CONFLICTING_RESOLUTION}: {base['target']!r} has "
+            f"{len(rendered)} incompatible proposed identities for "
+            f"{contested} — {_describe_values(rendered, 'label')}"
+        ],
+    )
+
+
+def _reconcile_precursor(base: Dict[str, Any], members: List[Any]) -> Dict[str, Any]:
+    """Identical participant sets merge; different chemistry conflicts."""
+    clusters: Dict[Tuple[str, Tuple[str, ...]], List[Any]] = {}
+    for member in members:
+        clusters.setdefault(_participant_set(member), []).append(member)
+    if len(clusters) == 1:
+        return dict(base, action="apply", value=dict(_safe_dict(members[0].value)))
+
+    rendered = [
+        {
+            # Labelled with the names as the papers wrote them; the casefolded
+            # canonical set is the grouping key, not something to report back.
+            "label": "{}={}".format(
+                side,
+                sorted(
+                    _dedupe_strs(
+                        _text(p)
+                        for m in ms
+                        for p in _safe_list(_safe_dict(m.value).get("participants"))
+                    )
+                ),
+            ),
+            "members": ms,
+        }
+        for (side, _names), ms in clusters.items()
+    ]
+    return dict(
+        base,
+        action="conflict",
+        reasons=[
+            f"{REASON_CONFLICTING_RESOLUTION}: {base['target']!r} has "
+            f"{len(rendered)} incompatible proposed participant sets for its "
+            f"missing side — {_describe_values(rendered, 'label')}. Applying the "
+            "one that sorts first would be an arbitrary write, not a repair"
+        ],
+    )
+
+
+def _reconcile_compartment(
+    base: Dict[str, Any], members: List[Any]
+) -> List[Dict[str, Any]]:
+    """One decision per DISTINCT location; identical ones merge.
+
+    Two locations for one element is not a contradiction in this schema. The
+    PWML IR keys a location by ``(entity_type, entity_key, biological_state_key)``
+    (``t2pw.pwml.ir``: ``explicit_locations_to_register``), so an element in the
+    periplasm and in the cytosol resolves to two distinct locations with
+    ``unresolved["biological_state_references"] == []`` and a passing required
+    contract. Each therefore gets its OWN ``element_locations`` row and keeps its
+    own sources, rather than one being written and both reported applied.
+    """
+    clusters: Dict[str, List[Any]] = {}
+    for member in members:
+        location = _text(_safe_dict(getattr(member, "value", {})).get("location"))
+        clusters.setdefault(location, []).append(member)
+    return [
+        dict(base, action="apply", members=ms, value={"location": location})
+        for location, ms in clusters.items()
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Application.
+# ---------------------------------------------------------------------------
+def _apply_typed_resolutions(
+    payload: Dict[str, Any],
+    resolutions: List[Any],
+    *,
+    identity_verifier: Optional[Any] = None,
+) -> List[Dict[str, Any]]:
+    """Apply the RECONCILED typed resolutions, and report what stuck.
+
+    A proposal is only a reading of a sentence. This is where a *group* of
+    proposals either becomes a real change to the payload — in the schema's own
+    representation — or does not, and the difference is what decides whether the
+    gap is closed:
+
+    * **identifier** — the accession is handed to ``identity_verifier`` (the
+      caller's protein identity policy / resolver). Only a VERIFIED identity is
+      written to the protein's ``mapped_ids``. With no verifier wired the identity
+      is unverified, nothing is written, and the gap stays open so the existing
+      Unknown-protein fallback keeps working. An accession appearing in a sentence
+      is not an identity resolution, and two accessions are not an identity at all
+      unless the resolver names exactly one winner.
+    * **compartment** — written as a ``subcellular_locations`` entry, a biological
+      state, *and* an ``element_locations`` row against the referenced entity,
+      which is how the schema expresses a location. Marked applied only once that
+      exact target + state pair is really in ``element_locations``.
+    * **precursor** — the named INCOMPLETE reaction is patched with the evidenced
+      participants, keeping its provenance. Adding a separate reaction would leave
+      the incomplete one exactly as incomplete as it was.
+
+    Returns one record per PROPOSAL — corroborating proposals share an outcome but
+    keep their individual evidence rows — in the order they were given. ``payload``
+    is mutated in place; it is this module's own freshly built payload.
+    """
+    records: Dict[int, Dict[str, Any]] = {}
+    active: List[Any] = []
+    for proposal in resolutions:
+        record = proposal.to_dict()
+        record["applied"] = False
+        records[id(proposal)] = record
+        if getattr(proposal, "status", "") == STATUS_REJECTED_PROPOSAL:
+            # Refused by scope/type admission before it could touch anything. Kept
+            # in the report — a refusal nobody can see is indistinguishable from a
+            # proposal that was never made.
+            continue
+        active.append(proposal)
+
+    def _mark(members, applied, reasons, *, conflicting=False, outcome="") -> None:
+        for member in members:
+            record = records[id(member)]
+            record["applied"] = bool(applied)
+            record["reasons"] = list(reasons)
+            if conflicting:
+                record["conflicting"] = True
+            if outcome:
+                record["identity_outcome"] = outcome
+
+    for decision in _reconcile_typed_resolutions(active):
+        if decision["action"] == "conflict":
+            _mark(
+                decision["members"],
+                False,
+                decision["reasons"],
+                conflicting=True,
+                outcome=IDENTITY_OUTCOME_CONFLICTING,
+            )
+            continue
+        kind = decision["kind"]
+        if kind == RESOLUTION_IDENTIFIER:
+            _apply_identity_decision(payload, decision, identity_verifier, _mark)
+        elif kind == RESOLUTION_COMPARTMENT:
+            _apply_compartment_decision(payload, decision, _mark)
+        elif kind == RESOLUTION_PRECURSOR:
+            _apply_precursor_decision(payload, decision, _mark)
+        else:  # pragma: no cover - defensive
+            _mark(decision["members"], False, [f"unknown resolution kind {kind!r}"])
+
+    out: List[Dict[str, Any]] = []
+    for proposal in resolutions:
+        record = records[id(proposal)]
+        if getattr(proposal, "status", "") != STATUS_REJECTED_PROPOSAL:
+            proposal.applied = bool(record["applied"])
+            if proposal.applied:
+                proposal.status = STATUS_APPLIED
+            elif record.get("conflicting"):
+                proposal.status = STATUS_REJECTED_PROPOSAL
+            else:
+                proposal.status = STATUS_PROPOSED
+        record["status"] = proposal.status
+        out.append(record)
+    return out
+
+
+def _apply_identity_decision(payload, decision, identity_verifier, mark) -> None:
+    """Write at most ONE identity for the target, or write none and say why.
+
+    Every branch stamps a machine-readable :data:`IDENTITY_OUTCOME_APPLIED`-style
+    code alongside its prose reason. This is the only place that knows which
+    branch was taken — in particular, whether a resolver was ASKED — so it is the
+    only place that can record it without guessing.
+    """
+    target = decision["target"]
+    members = decision["members"]
+    bucket, row = _find_entity_row(payload, target)
+    if row is None:
+        mark(
+            members,
+            False,
+            [f"identity not applied: {target!r} is not an entity of this payload"],
+            outcome=IDENTITY_OUTCOME_SCOPE_OR_TYPE,
+        )
+        return
+    if bucket != _IDENTITY_BUCKET:
+        # Enforced at the WRITE, independently of the gap contract that already
+        # screened for it. A UniProt accession names a protein; putting one on a
+        # ``protein_complexes`` row makes ``identity_status`` report ``verified``
+        # for a complex whose real identity is still unknown.
+        mark(
+            members,
+            False,
+            [
+                f"{REASON_UNSUPPORTED_TARGET_TYPE}: {target!r} is in "
+                f"entities.{bucket}, and a UniProt/EC identity may only be written "
+                f"to entities.{_IDENTITY_BUCKET}"
+            ],
+            outcome=IDENTITY_OUTCOME_SCOPE_OR_TYPE,
+        )
+        return
+
+    def _verify(value: Dict[str, Any]) -> Tuple[bool, str]:
+        """``(verified, outcome code)`` — never "guess from the reason text".
+
+        The code comes from the verifier itself when it supplies one
+        (:class:`t2pw.rag.identity.IdentityCheck`), because only the verifier knows
+        whether it had candidate evidence to judge. A bare ``bool``-returning
+        callable — a test stub — has no code to give, and a wired stub that says no
+        HAS judged, so its refusal is a resolver rejection.
+        """
+        if identity_verifier is None:
+            return False, IDENTITY_OUTCOME_NO_RESOLVER
+        try:
+            result = identity_verifier(target, dict(value))
+        except Exception:  # noqa: BLE001 - a resolver that crashed judged nothing
+            return False, IDENTITY_OUTCOME_NO_RESOLVER
+        if result:
+            return True, IDENTITY_OUTCOME_APPLIED
+        code = _text(getattr(result, "identity_outcome", ""))
+        return False, (
+            code if code in _IDENTITY_REFUSAL_CODES else IDENTITY_OUTCOME_RESOLVER_REJECTED
+        )
+
+    if decision["action"] == "adjudicate":
+        # FAIL CLOSED. Two accessions are only resolvable by a resolver that
+        # names exactly one winner; a verifier that confirms both has confirmed
+        # nothing, and neither is written.
+        winners = [v for v in decision["variants"] if _verify(v["value"])[0]]
+        if len(winners) != 1:
+            detail = (
+                "no identity resolver is wired to adjudicate"
+                if identity_verifier is None
+                else f"the identity policy confirmed {len(winners)} of them"
+            )
+            mark(
+                members,
+                False,
+                [f"{decision['reasons'][0]}; {detail}, so neither is applied"],
+                conflicting=True,
+                outcome=IDENTITY_OUTCOME_CONFLICTING,
+            )
+            return
+        winner = winners[0]
+        losers = [m for m in members if m not in winner["members"]]
+        _write_identity(payload, row, winner["value"], winner["members"])
+        mark(
+            winner["members"],
+            True,
+            [
+                f"identity verified against {len(decision['variants'])} competing "
+                f"proposals and written to {bucket}"
+            ],
+            outcome=IDENTITY_OUTCOME_APPLIED,
+        )
+        mark(
+            losers,
+            False,
+            [decision["reasons"][0]],
+            conflicting=True,
+            outcome=IDENTITY_OUTCOME_CONFLICTING,
+        )
+        return
+
+    value = _safe_dict(decision["value"])
+    ok, code = _verify(value)
+    if not ok:
+        if code == IDENTITY_OUTCOME_NO_RESOLVER:
+            # NOT the same fact as a rejection. Nothing judged this claim — no
+            # verifier, or a verifier with no candidate evidence to weigh.
+            # Production sits here on purpose: the RAG chain yields passages, not
+            # resolver candidates.
+            reason = (
+                "identity not verified: no identity resolver evidence was "
+                "available, so the accession stays a claim and the gap keeps the "
+                "Unknown-protein fallback"
+            )
+        else:
+            # A wired resolver ran the full ladder and refused — missing candidate
+            # evidence for THIS accession, wrong species, an implausible name, too
+            # low a score, too thin a margin. That is a judgement about the claim.
+            reason = (
+                "identity rejected by the identity resolver: the ladder did not "
+                f"confirm {value!r} for {target!r}"
+            )
+        mark(members, False, [reason], outcome=code)
+        return
+    _write_identity(payload, row, value, members)
+    mark(
+        members,
+        True,
+        [
+            f"identity verified and written to {bucket} "
+            f"(corroborated by {len(_member_sources(members))} source(s))"
+        ],
+        outcome=IDENTITY_OUTCOME_APPLIED,
+    )
+
+
+def _write_identity(payload, row, value, members) -> None:
+    """One mutation, provenance merged across every proposal behind it."""
+    mapped = row.get("mapped_ids")
+    if not isinstance(mapped, dict):
+        mapped = {}
+    for key in _SINGULAR_IDENTITY_FIELDS:
+        if value.get(key):
+            mapped[key] = value[key]
+    row["mapped_ids"] = mapped
+    refs = _dedupe_strs(list(row.get("source_refs") or []) + _member_sources(members))
+    if refs:
+        row["source_refs"] = refs
+
+
+def _apply_compartment_decision(payload, decision, mark) -> None:
+    """Write ONE location, and only claim it once the reference really exists."""
+    target = decision["target"]
+    members = decision["members"]
+    location = _text(_safe_dict(decision["value"]).get("location"))
+    sources = _member_sources(members)
+    span = _member_span(members)
+    bucket, row = _find_entity_row(payload, target)
+    species = _payload_species(payload)
+
+    if row is None or not location:
+        mark(members, False, [
+            f"compartment not applied: {target!r} is not an entity of this "
+            "payload, so there is nothing to locate"
+        ])
+        return
+    if bucket not in _LOCATION_BUCKETS:
+        mark(members, False, [
+            f"{REASON_UNSUPPORTED_TARGET_TYPE}: {target!r} is in entities.{bucket}, "
+            "which element_locations has no bucket for; writing it into "
+            "protein_locations.protein would be a reference the PWML IR resolves "
+            "against entities.proteins and cannot find"
+        ])
+        return
+    if not species:
+        # ``_ensure_biological_state`` needs a species to build a state, and a
+        # location row pointing at a state that does not exist is a dangling
+        # reference the PWML IR would refuse. Better to leave the gap open than to
+        # write half a structure.
+        mark(members, False, [
+            "compartment not applied: the payload declares no species, so no "
+            "biological state can be constructed for the location"
+        ])
+        return
+
+    # Everything that could refuse has refused. Only now is anything created, so
+    # no unused state or subcellular-location row is left behind by a refusal.
+    entities = payload.setdefault("entities", {})
+    locations = entities.setdefault("subcellular_locations", [])
+    loc_row = next(
+        (
+            r
+            for r in locations
+            if isinstance(r, dict)
+            and _text(r.get("name")).casefold() == location.casefold()
+        ),
+        None,
+    )
+    if loc_row is None:
+        loc_row = {"name": location}
+        if span:
+            loc_row["evidence"] = span
+        locations.append(loc_row)
+    if sources:
+        loc_row["source_refs"] = _dedupe_strs(
+            list(loc_row.get("source_refs") or []) + sources
+        )
+
+    # The biological state is built by the repository's own helper, so its NAME,
+    # its ``compartment_canonical`` and its reuse semantics are the ones every
+    # other producer of states uses.
+    state_name = _ensure_biological_state(payload, location, species)
+    if not state_name:
+        mark(members, False, [
+            "compartment not applied: no biological state could be constructed "
+            f"for {location!r} in {species!r}"
+        ])
+        return
+    state_row = next(
+        (
+            st
+            for st in _safe_list(payload.get("biological_states"))
+            if isinstance(st, dict) and _text(st.get("name")) == state_name
+        ),
+        None,
+    )
+    if isinstance(state_row, dict):
+        if sources:
+            state_row["source_refs"] = _dedupe_strs(
+                list(state_row.get("source_refs") or []) + sources
+            )
+        if span and not _text(state_row.get("evidence")):
+            state_row["evidence"] = span
+
+    loc_bucket, key = _LOCATION_BUCKETS[bucket]
+    element_locations = payload.setdefault("element_locations", {})
+    rows = element_locations.setdefault(loc_bucket, [])
+    # Keyed by target AND state: a second location for the same element is a
+    # second row, not a silent no-op reported as success.
+    entry = next(
+        (
+            r
+            for r in rows
+            if isinstance(r, dict)
+            and _text(r.get(key)).casefold() == target.casefold()
+            and _text(r.get("biological_state")) == state_name
+        ),
+        None,
+    )
+    if entry is None:
+        entry = {
+            key: row.get("name") or target,
+            # References the state BY NAME, which is what the PWML IR resolves
+            # against ``biological_states``.
+            "biological_state": state_name,
+        }
+        if span:
+            entry["evidence"] = span
+        rows.append(entry)
+    if sources:
+        entry["source_refs"] = _dedupe_strs(
+            list(entry.get("source_refs") or []) + sources
+        )
+
+    # "Applied" means the reference EXISTS, re-read off the payload. Anything
+    # weaker reports a location that no exporter can follow.
+    written = any(
+        isinstance(r, dict)
+        and _text(r.get(key)).casefold() == target.casefold()
+        and _text(r.get("biological_state")) == state_name
+        for r in _safe_list(_safe_dict(payload.get("element_locations")).get(loc_bucket))
+    )
+    if not written:  # pragma: no cover - defensive
+        mark(members, False, [
+            f"compartment not applied: no element_locations.{loc_bucket} row "
+            f"references {target!r} in state {state_name!r}"
+        ])
+        return
+    mark(members, True, [
+        f"location {location!r} written as biological state {state_name!r} plus "
+        f"entities.subcellular_locations and element_locations.{loc_bucket}"
+    ])
+
+
+def _apply_precursor_decision(payload, decision, mark) -> None:
+    """Patch the incomplete reaction once, with the complete participant set."""
+    members = decision["members"]
+    value = _safe_dict(decision["value"])
+    participants = [
+        _text(p) for p in _safe_list(value.get("participants")) if _text(p)
+    ] or ([_text(value.get("participant"))] if _text(value.get("participant")) else [])
+    side = _text(value.get("side")) or "inputs"
+    reaction_name = _text(value.get("reaction")) or decision["target"]
+    sources = _member_sources(members)
+
+    # RE-FETCHED from the payload being delivered, not from whatever the proposal
+    # saw when it was made. Synthesis rebuilds reactions and other resolutions run
+    # before this one, so the row's shape at proposal time is not evidence about
+    # its shape now.
+    rows = _safe_list(_safe_dict(payload.get("processes")).get("reactions"))
+    row = next(
+        (
+            r
+            for r in rows
+            if isinstance(r, dict)
+            and _text(r.get("name")).casefold() == reaction_name.casefold()
+        ),
+        None,
+    )
+    if row is None or not participants:
+        mark(members, False, [
+            f"precursor not applied: reaction {reaction_name!r} is not in this "
+            "payload, so there is nothing to repair"
+        ])
+        return
+    current_side = missing_reaction_side(row)
+    if current_side != side:
+        # Covers all three: both sides populated (``""``), both sides empty
+        # (``""``), and the OTHER side being the empty one. Appending to a
+        # reaction that is no longer missing this side invents chemistry.
+        mark(members, False, [
+            f"{REASON_SIDE_NO_LONGER_MISSING}: the proposal repairs {side!r} of "
+            f"{reaction_name!r}, but the reaction in the delivered payload is "
+            f"missing {current_side or 'neither side'}"
+        ])
+        return
+
+    names = {
+        canonical_name(p if isinstance(p, str) else _safe_dict(p).get("name")).casefold()
+        for p in _safe_list(row.get(side))
+        + _safe_list(row.get("outputs" if side == "inputs" else "inputs"))
+    }
+    clashes = [p for p in participants if canonical_name(p).casefold() in names]
+    if clashes:
+        # ATOMIC: the evidence-stated set goes in whole or not at all.
+        mark(members, False, [
+            f"{REASON_MULTI_PARTICIPANT_REPAIR}: {reaction_name!r} already lists "
+            f"{sorted(clashes)}, so the evidence-stated set {sorted(participants)} "
+            "cannot be added in full"
+        ])
+        return
+
+    added = [canonical_name(p) for p in participants]
+    row.setdefault(side, [])
+    row[side].extend(added)
+    refs = _dedupe_strs(list(row.get("source_refs") or []) + sources)
+    if refs:
+        row["source_refs"] = refs
+    # A participant a reaction references but no bucket registers is a dangling
+    # reference -- the repair has to keep the payload referentially intact, so the
+    # compound is registered too, with the same provenance the patch rests on.
+    for name in added:
+        _bucket, existing = _find_entity_row(payload, name)
+        if existing is not None:
+            continue
+        compounds = payload.setdefault("entities", {}).setdefault("compounds", [])
+        entity_row: Dict[str, Any] = {"name": name}
+        if sources:
+            entity_row["source_refs"] = list(sources)
+        compounds.append(entity_row)
+    mark(members, True, [
+        f"{sorted(added)} added to {reaction_name!r}.{side} and registered as "
+        f"compounds (corroborated by {len(sources)} source(s))"
+    ])
+
+
+def _has_unknown_component(row: Any) -> bool:
+    """Whether a complex row already carries a PathBank Unknown-protein member."""
+    if not isinstance(row, dict):
+        return False
+    for component in _safe_list(row.get("components")):
+        if not isinstance(component, dict):
+            continue
+        try:
+            if int(component.get("pathbank_protein_id") or 0) == PATHBANK_UNKNOWN_PROTEIN_ID:
+                return True
+        except (TypeError, ValueError):
+            continue
+        if is_pathbank_unknown_protein(component):
+            return True
+    return False
+
+
+def _identity_outcomes(
+    records: List[Dict[str, Any]],
+    payload: Dict[str, Any],
+    unresolved: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """Identity outcomes, in the units they are actually measured in.
+
+    The previous version mixed two different populations in one dict: four of its
+    keys counted PROPOSALS and one counted GAPS. Ten corroborating proposals for
+    one protein read as ten verified identities, and an unmapped-enzyme gap that
+    nothing had yet fallen back on was reported as an ``unknown_fallback`` that
+    did not exist in the payload. So there are now three blocks, and none of them
+    is comparable to another by accident:
+
+    * ``proposals`` — one entry per proposal record. ``verified`` /
+      ``annotation_only`` / ``rejected_scope_or_type`` / ``unverified_no_resolver``
+      / ``rejected_by_identity_resolver`` / ``conflicting``.
+    * ``targets`` — one entry per DISTINCT ``(gap_id, target)``, which is what a
+      "resolution outcome" is actually about. Corroboration raises confidence, not
+      the count.
+    * the gap-level numbers, named for what they are. ``unresolved_identity_gaps``
+      is every unmapped-enzyme gap the payload leaves open;
+      ``unresolved_for_unknown_fallback`` is the subset whose row does NOT yet
+      carry an Unknown sentinel or component — this stage does not insert one, so
+      calling those "unknown_fallback" would report a payload state that is not
+      there. ``unknown_fallback_present`` is the subset that already has it.
+
+    The classification READS the ``identity_outcome`` code that
+    :func:`_apply_identity_decision` stamped on each record. It does not inspect
+    the reason prose: "no resolver was wired" and "the resolver ran and refused"
+    are different facts about the claim, they were both phrased "identity not
+    verified: ...", and a diagnostic that tells them apart by string prefix would
+    be one reworded sentence away from silently merging them again.
+    """
+    proposals = {
+        "verified": 0,
+        "annotation_only": 0,
+        "rejected_scope_or_type": 0,
+        "unverified_no_resolver": 0,
+        "rejected_by_identity_resolver": 0,
+        "conflicting": 0,
+    }
+    per_target: Dict[Tuple[str, str], str] = {}
+
+    def _rank(current: str, incoming: str) -> str:
+        # The outcome a TARGET got is the strongest thing that happened to it: a
+        # verified write is the outcome even when a second paper's contradicting
+        # proposal was refused alongside it.
+        order = [
+            "verified",
+            "annotation_only",
+            "conflicting",
+            "rejected_by_identity_resolver",
+            "rejected_scope_or_type",
+            "unverified_no_resolver",
+        ]
+        if not current:
+            return incoming
+        return order[min(order.index(current), order.index(incoming))]
+
+    for record in records:
+        if _text(record.get("kind")) != RESOLUTION_IDENTIFIER:
+            continue
+        code = _text(record.get("identity_outcome"))
+        if code == IDENTITY_OUTCOME_APPLIED or record.get("applied"):
+            # The only split not decided at the write: whether what landed is
+            # EXPORT identity or annotation. Read off the delivered payload rather
+            # than off the write, because a second gap resolving the same protein
+            # can turn an EC-only row into a verified one after the fact.
+            bucket, row = _find_entity_row(payload, _text(record.get("target")))
+            outcome = (
+                "verified"
+                if bucket == _IDENTITY_BUCKET and has_protein_external_identity(row)
+                else "annotation_only"
+            )
+        elif code in proposals:
+            outcome = code
+        else:  # pragma: no cover - defensive; every branch stamps a code
+            outcome = "rejected_scope_or_type"
+        proposals[outcome] += 1
+        key = (_text(record.get("gap_id")), _text(record.get("target")).casefold())
+        per_target[key] = _rank(per_target.get(key, ""), outcome)
+
+    targets: Dict[str, int] = {name: 0 for name in proposals}
+    for outcome in per_target.values():
+        targets[outcome] += 1
+
+    open_gaps = [
+        row for row in unresolved if _text(row.get("kind")) == GAP_UNMAPPED_ENZYME
+    ]
+    with_sentinel = 0
+    for gap_row in open_gaps:
+        _bucket, row = _find_entity_row(payload, _text(gap_row.get("label")))
+        if is_pathbank_unknown_protein(row) or _has_unknown_component(row):
+            with_sentinel += 1
+    return {
+        "proposals": proposals,
+        "targets": targets,
+        "unresolved_identity_gaps": len(open_gaps),
+        "unresolved_for_unknown_fallback": len(open_gaps) - with_sentinel,
+        "unknown_fallback_present": with_sentinel,
+    }
+
+
+def _open_metabolites(payload: Dict[str, Any]) -> set:
+    """Canonical non-cofactor metabolites the payload still leaves as dead ends.
+
+    Produced-but-never-consumed, or consumed-but-never-produced. This is the same
+    predicate ``retrieve._connectivity_gaps`` uses to CREATE a connectivity gap,
+    so "the gap is closed" means exactly "re-detecting on this payload would no
+    longer raise it" — read off the delivered payload rather than inferred from a
+    candidate having been accepted.
+    """
+    produced: set = set()
+    consumed: set = set()
+    for row in _safe_list(_safe_dict(payload.get("processes")).get("reactions")):
+        if not isinstance(row, dict):
+            continue
+        for side, bucket in (("inputs", consumed), ("outputs", produced)):
+            for token in _safe_list(row.get(side)):
+                name = token if isinstance(token, str) else _safe_dict(token).get("name")
+                canonical = canonical_name(name).casefold()
+                if canonical and canonical not in COFACTOR_NAMES:
+                    bucket.add(canonical)
+    return (produced - consumed) | (consumed - produced)
+
+
+def _payload_species(payload: Dict[str, Any]) -> str:
+    """The payload's declared species, or ``""`` (read-only)."""
+    for row in _safe_list(_safe_dict(payload.get("entities")).get("species")):
+        if isinstance(row, dict) and _text(row.get("name")):
+            return _text(row["name"])
+        if isinstance(row, str) and row.strip():
+            return row.strip()
+    return ""
+
+
+def _payload_participants(payload: Dict[str, Any]) -> set:
+    """Every canonical participant name the payload's reactions mention."""
+    out: set = set()
+    for row in _safe_list(_safe_dict(payload.get("processes")).get("reactions")):
+        if not isinstance(row, dict):
+            continue
+        for side in ("inputs", "outputs"):
+            for token in _safe_list(row.get(side)):
+                name = token if isinstance(token, str) else _safe_dict(token).get("name")
+                canonical = canonical_name(name).casefold()
+                if canonical:
+                    out.add(canonical)
+    return out
+
+
+def _payload_closes_gap(
+    payload: Dict[str, Any],
+    gap: Any,
+    open_metabolites: set,
+    participants: set,
+) -> bool:
+    """Is this gap actually closed BY THE PAYLOAD? (never "a candidate passed")."""
+    kind = _text(getattr(gap, "kind", ""))
+    label = _text(getattr(gap, "label", ""))
+    if not label:
+        return False
+
+    if kind == GAP_ORPHAN_METABOLITE:
+        folded = canonical_name(label).casefold()
+        # ABSENT is not closed. A metabolite nothing in the payload mentions has
+        # no dead end only because it has no end at all -- reporting that as
+        # resolved is how "we invented nothing for this gap" would read as
+        # "we solved this gap".
+        return folded in participants and folded not in open_metabolites
+    if kind == GAP_DANGLING_REACTION:
+        targets = {
+            canonical_name(n).casefold()
+            for n in (getattr(gap, "target_names", list)() or [])
+        }
+        targets -= set(COFACTOR_NAMES)
+        if not targets or not (targets & participants):
+            return False
+        return not (targets & open_metabolites)
+    if kind == GAP_UNMAPPED_ENZYME:
+        # The STRICT export definition, reused rather than re-implemented:
+        # ``has_protein_external_identity`` is the same predicate the Stage-3
+        # gate and the PathWhiz export apply, i.e. a real UniProt/DrugBank id.
+        # An EC number is useful annotation and is NOT identity — a gap "closed"
+        # on an EC number ships a protein the exporter still cannot resolve, and
+        # silently removes it from the Unknown-fallback path that would have
+        # carried it honestly.
+        bucket, row = _find_entity_row(payload, label)
+        if not isinstance(row, dict):
+            return False
+        if bucket == "protein_complexes":
+            # A COMPLEX is not closed by a protein identity, and
+            # ``has_protein_external_identity`` applied to a complex row would say
+            # it was: the predicate reads ``mapped_ids.uniprot``, which nothing may
+            # write here. A complex needs its own PathBank/PathWhiz id, and until
+            # it has one the gap stays open on the functional-complex /
+            # Unknown-protein-component fallback.
+            return _has_complex_external_identity(row)
+        if bucket != _IDENTITY_BUCKET:
+            return False
+        if is_pathbank_unknown_protein(row):
+            return False
+        return has_protein_external_identity(row)
+    if kind == GAP_MISSING_COMPARTMENT:
+        locations = _safe_dict(payload.get("element_locations"))
+        folded = canonical_name(label).casefold()
+        # A non-empty string is not closure: the state has to EXIST. A location
+        # row naming a state the payload does not declare is a dangling reference,
+        # which ``build_pwml_ir`` reports in
+        # ``unresolved["biological_state_references"]`` and which no exporter can
+        # follow -- reporting that as a resolved compartment would be a lie the
+        # rest of the pipeline then trusts.
+        declared = {
+            _text(st.get("name"))
+            for st in _safe_list(payload.get("biological_states"))
+            if isinstance(st, dict) and _text(st.get("name"))
+        }
+        for bucket, key in _LOCATION_BUCKETS.values():
+            for row in _safe_list(locations.get(bucket)):
+                if not isinstance(row, dict):
+                    continue
+                if canonical_name(row.get(key)).casefold() != folded:
+                    continue
+                state = _text(row.get("biological_state"))
+                if state and state in declared:
+                    return True
+        return False
+    if kind == GAP_MISSING_PRECURSOR:
+        # "Some novel participant is somewhere on this reaction" is not closure.
+        # A participant appended to the side that was already populated leaves the
+        # empty side exactly as empty as it was, and reads as a repair.
+        missing_side = _text(getattr(gap, "missing_side", ""))
+        if missing_side not in ("inputs", "outputs"):
+            return False
+        known_side = "outputs" if missing_side == "inputs" else "inputs"
+        anchors = {
+            canonical_name(n).casefold()
+            for n in (getattr(gap, "target_names", list)() or [])
+        } - set(COFACTOR_NAMES)
+
+        def _names(row: Dict[str, Any], side: str) -> set:
+            return {
+                canonical_name(
+                    p if isinstance(p, str) else _safe_dict(p).get("name")
+                ).casefold()
+                for p in _safe_list(row.get(side))
+            }
+
+        for row in _safe_list(_safe_dict(payload.get("processes")).get("reactions")):
+            if not isinstance(row, dict):
+                continue
+            if _text(row.get("name")).casefold() != label.casefold():
+                continue
+            filled = _names(row, missing_side) - set(COFACTOR_NAMES)
+            kept = _names(row, known_side)
+            # 1. the side that was empty carries a real participant now;
+            # 2. it is one the gap did not already know about;
+            # 3. and the anchors the gap was detected around are STILL on the
+            #    side they were on — a repair that moved them has not filled the
+            #    gap, it has rewritten the reaction.
+            return bool(filled) and bool(filled - anchors) and anchors <= kept
+        return False
+    return False
+
+
+def _collect_typed_resolutions(
+    bundles: List[Any],
+    gaps: List[Any],
+    extra: List[Any],
+    *,
+    seed_payload: Any = None,
+    policy: Optional[AdmissionPolicy] = None,
+) -> List[Any]:
+    """Typed-gap proposals from every bundle, plus ``extra``, in a stable order.
+
+    Bundles are scanned per gap so a passage retrieved for gap G is only ever read
+    as evidence about G — the same attribution discipline the reaction path
+    follows.
+
+    Collapsing on ``(gap_id, kind, value)`` — which this did — makes the result
+    depend on which passage was retrieved FIRST. Two papers can assert the same
+    accession for the same protein while disagreeing about the organism: one is
+    rejected on scope, the other is not, and whichever arrived first silently
+    decided the outcome. Both failure directions are real. A foreign paper's
+    rejected proposal suppressed the local paper's valid one, so a resolvable gap
+    stayed open; and an unknown-scope proposal suppressed a later explicit
+    mismatch, so contradicting evidence vanished from the report.
+
+    So the key retains the scope verdict AND the provenance, and the result is
+    SORTED by that key rather than by arrival. Identical evidence from the same
+    chunk still collapses; genuinely different evidence is kept and reported, and
+    the order two permutations of the same retrieval produce is the same order.
+    """
+    from t2pw.rag.admission import propose_typed_resolutions
+
+    by_id = {_text(getattr(g, "gap_id", "")): g for g in gaps if getattr(g, "gap_id", "")}
+    out: List[Any] = []
+    seen: set = set()
+
+    def _add(proposal: Any) -> None:
+        key = _proposal_identity(proposal)
+        if key in seen:
+            return
+        seen.add(key)
+        out.append(proposal)
+
+    for bundle in bundles:
+        gap = _gap_of(bundle)
+        gap_id = _text(getattr(gap, "gap_id", ""))
+        gap = by_id.get(gap_id, gap)
+        if gap is None or not gap_id:
+            continue
+        for hit in _safe_list(getattr(bundle, "hits", [])):
+            chunk = _chunk_of(hit)
+            if chunk is None:
+                continue
+            for proposal in propose_typed_resolutions(
+                gap,
+                _text(getattr(chunk, "text", "")),
+                evidence=_evidence_from_hit(hit),
+                source_paper=_source_paper_from_chunk(chunk),
+                payload=seed_payload,
+                observed_organisms=(
+                    list(getattr(chunk, "observed_organisms", []) or [])
+                    + ([_text(getattr(chunk, "organism", ""))] if _text(getattr(chunk, "organism", "")) else [])
+                ),
+                observed_pathways=list(getattr(chunk, "observed_pathways", []) or []),
+                policy=policy,
+            ):
+                _add(proposal)
+    for proposal in extra:
+        _add(proposal)
+    out.sort(key=_proposal_identity)
+    return out
+
+
+def _proposal_identity(proposal: Any) -> tuple:
+    """The full identity of a typed proposal: what, under what scope, from where.
+
+    Also the sort key. The scope verdict comes before provenance so an applicable
+    proposal is always considered before a rejected one for the same value —
+    which is what makes "a valid local proposal survives a rejected foreign one"
+    an ordering guarantee rather than an accident.
+    """
+    value = _safe_dict(getattr(proposal, "value", {}))
+    evidence = _safe_dict(getattr(proposal, "evidence", {}))
+    return (
+        _text(getattr(proposal, "gap_id", "")),
+        _text(getattr(proposal, "kind", "")),
+        tuple(sorted((str(k), str(v)) for k, v in value.items())),
+        1 if _text(getattr(proposal, "status", "")) == STATUS_REJECTED_PROPOSAL else 0,
+        _text(getattr(proposal, "organism_match", "")),
+        _text(getattr(proposal, "requested_pathway_match", "")),
+        _text(_safe_dict(getattr(proposal, "source_paper", {})).get("source_id")),
+        _text(evidence.get("source_id")),
+        _text(evidence.get("chunk_id")),
+        _text(getattr(proposal, "evidence_span", "")),
+    )
 
 
 def _gap_of(bundle: Any) -> Any:
     return getattr(bundle, "gap", None)
 
 
-def _unfilled_gap_reports(
-    bundles: List[Any], reactions: List[_Reaction], extractor: Optional[Any] = None
-) -> List[Dict[str, Any]]:
-    """Report every gap that no evidence could fill (nothing invented for it).
-
-    A gap is *filled* only if at least one of its evidence hits stated a reaction
-    that references the gap's target (so it now connects into the graph). A
-    bundle with no hits — or hits that stated nothing about the target — leaves
-    its gap unfilled and it is surfaced here. ``extractor`` is the same memoized
-    prose extractor the main pass used, so a gap filled only by a prose-extracted
-    reaction is correctly counted as filled (and the model is not re-called — the
-    per-chunk results are memoized).
-    """
-    reports: List[Dict[str, Any]] = []
+def _gaps_from_bundles(bundles: List[Any]) -> List[Any]:
+    """The distinct gaps the bundles were retrieved for, in first-seen order."""
+    out: List[Any] = []
+    seen: set = set()
     for bundle in bundles:
         gap = _gap_of(bundle)
-        if gap is None:
+        gap_id = _text(getattr(gap, "gap_id", ""))
+        if gap is None or not gap_id or gap_id in seen:
             continue
-        label = _text(getattr(gap, "label", ""))
-        target = canonical_name(label)
-        bundle_rxns = _reactions_from_bundle(bundle, extractor)
-        referenced = any(
-            target.casefold() in {n.casefold() for n in rxn.participant_names()}
-            or target.casefold() in {e.casefold() for e in rxn.enzymes}
-            for rxn in bundle_rxns
-        )
-        if referenced and target:
+        seen.add(gap_id)
+        out.append(gap)
+    return out
+
+
+def _unfilled_gap_reports(
+    bundles: List[Any],
+    gaps: List[Any],
+    accepted: List[RagReactionCandidate],
+    payload: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """Report every gap the DELIVERED PAYLOAD does not close.
+
+    Closure is read off ``payload``, never inferred from a candidate having been
+    accepted. That distinction is load-bearing for typed gaps, where the two come
+    apart completely: a reaction can be admitted from a passage that also quotes
+    "UniProt P12345" without the payload gaining a single ``mapped_ids`` entry, so
+    "a candidate passed" would report an unmapped-enzyme gap as resolved while the
+    protein is still unmapped and the Unknown-protein fallback is still the only
+    thing standing behind it. :func:`_payload_closes_gap` asks the concrete
+    question per kind — is the dead end gone, does the protein carry an
+    identifier, does the entity carry a location, does the incomplete reaction
+    carry the missing participant.
+
+    The remaining failure modes are named apart because they lead to different
+    fixes: nothing retrieved (widen acquisition), something retrieved but nothing
+    admissible (read the admission report), or something admitted that did not
+    change the payload in the way this gap needed (read the resolutions).
+    """
+    admitted_for = {
+        gid
+        for candidate in accepted
+        for gid in (candidate.gap_ids or [candidate.gap_id])
+        if gid
+    }
+    hits_by_gap: Dict[str, int] = {}
+    for bundle in bundles:
+        gap_id = _text(getattr(_gap_of(bundle), "gap_id", ""))
+        if gap_id:
+            hits_by_gap[gap_id] = hits_by_gap.get(gap_id, 0) + len(
+                _safe_list(getattr(bundle, "hits", []))
+            )
+
+    open_metabolites = _open_metabolites(payload)
+    participants = _payload_participants(payload)
+    reports: List[Dict[str, Any]] = []
+    for gap in gaps:
+        gap_id = _text(getattr(gap, "gap_id", ""))
+        if _payload_closes_gap(payload, gap, open_metabolites, participants):
             continue
-        reports.append(
-            {
-                "kind": _text(getattr(gap, "kind", "")) or "gap",
-                "label": label,
-                "detail": _text(getattr(gap, "detail", "")),
-                "reason": "no supporting evidence retrieved (gap left unfilled)",
-            }
-        )
+        retrieved = hits_by_gap.get(gap_id, 0)
+        if not retrieved:
+            reason = "no supporting evidence retrieved (gap left unresolved)"
+        elif gap_id in admitted_for:
+            reason = (
+                "a reaction was admitted for this gap but the resulting payload "
+                "still does not express the resolution (gap left unresolved)"
+            )
+        else:
+            reason = (
+                f"{retrieved} passage(s) retrieved but nothing admissible resolved "
+                "this gap (gap left unresolved)"
+            )
+        row: Dict[str, Any] = {
+            "gap_id": gap_id,
+            "kind": _text(getattr(gap, "kind", "")) or "gap",
+            "label": _text(getattr(gap, "label", "")),
+            "detail": _text(getattr(gap, "detail", "")),
+            "reason": reason,
+        }
+        # An unmapped-enzyme gap asks "which protein IS this?", which no reaction
+        # can answer. The RECOMMENDATION is recorded; nothing here hands the gap
+        # anywhere, and the Unknown-protein fallback downstream stays available
+        # precisely because the gap is still open.
+        if row["kind"] == "unmapped_enzyme":
+            row["recommended_route"] = ROUTE_IDENTITY_RESOLVER
+        reports.append(row)
     return reports
 
 

@@ -27,6 +27,12 @@ envelope from a synthesized payload, coercing each row to the CORE shape:
 * The carried-forward scaffolding buckets (``species`` / ``subcellular_locations``
   / ``cell_types`` / ``tissues``) are EXCLUDED — they already live on the seed, so
   re-adding them would double-list context entities.
+* ``scope_membership`` — the admission gate's verdict on a RAG reaction — is
+  carried through verbatim (see :func:`_conform_scope_membership_in_place`). It
+  is a CORE reaction field, not a RAG additive one, so it must reach
+  ``clean_inference_output`` intact or the label the gate wrote is erased at this
+  boundary and the reaction arrives downstream indistinguishable from an
+  unclassified one.
 
 Deliberately absent: ``element_locations`` and per-reaction ``compartment``. Those
 are left for the existing ``default_compartment="cell"`` / compartment-backfill
@@ -149,6 +155,33 @@ def _conform_participant(participant: Any) -> str:
     return ""
 
 
+def _conform_scope_membership_in_place(row: Dict[str, Any]) -> None:
+    """Normalize ``row['scope_membership']`` the way the core cleaner does.
+
+    ``scope_membership`` is the one label that has to survive the whole boundary
+    chain — synthesis -> here -> ``clean_inference_output`` -> normalization — or
+    a RAG-imported reaction arrives downstream unlabelled and the core
+    out-of-scope filter and the lock manifest disagree about it (the split
+    ``pipeline._carry_scope_membership`` was written to close for seed rows, and
+    whose docstring records that RAG rows "cannot carry a scope label even in
+    principle"). ``dict(row)`` already copies it; this makes the survival
+    EXPLICIT and applies the same two rules ``_carry_scope_membership`` applies,
+    so both sides of the boundary agree:
+
+    * stripped, never case-folded — the lock manifest records the model's own
+      spelling and the two artifacts must not disagree about what was said;
+    * a non-string label is DROPPED rather than coerced, which lands it in the
+      "absent" case that every downstream reader treats as KEEP.
+    """
+    if "scope_membership" not in row:
+        return
+    scope = row.get("scope_membership")
+    if isinstance(scope, str) and scope.strip():
+        row["scope_membership"] = scope.strip()
+    else:
+        row.pop("scope_membership", None)
+
+
 def _conform_reaction(row: Dict[str, Any]) -> Dict[str, Any]:
     """Coerce one RAG reaction row to the core additive shape."""
     conformed = dict(row)
@@ -161,6 +194,7 @@ def _conform_reaction(row: Dict[str, Any]) -> Dict[str, Any]:
     ]
 
     _coerce_evidence_in_place(conformed)
+    _conform_scope_membership_in_place(conformed)
 
     enzymes = row.get("enzymes")
     if isinstance(enzymes, list):

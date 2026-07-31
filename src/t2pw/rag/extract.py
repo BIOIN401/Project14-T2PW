@@ -68,11 +68,18 @@ _SYSTEM_PROMPT = (
     "6. Give a short descriptive \"name\" when the passage implies one "
     "(e.g. \"caffeine N1-demethylation\"); otherwise use \"\".\n"
     "7. If the passage states NO explicit reaction, return {\"reactions\": []}. "
-    "Never fabricate a reaction to fill the gap.\n\n"
+    "Never fabricate a reaction to fill the gap.\n"
+    "8. For each reaction give \"quote\": the SHORTEST VERBATIM span of the "
+    "passage that states this whole reaction - its substrates, its products and "
+    "its catalyst. Copy it character-for-character from the passage; do not "
+    "paraphrase, do not join text from two different sentences, and do not "
+    "summarise. If no single span states the whole reaction, omit the reaction "
+    "entirely.\n\n"
     "Return ONLY a JSON object of the form:\n"
     "{\"reactions\": [{\"name\": \"\", \"inputs\": [{\"name\": \"\", "
     "\"stoichiometry\": null}], \"outputs\": [{\"name\": \"\", "
-    "\"stoichiometry\": null}], \"enzymes\": [\"\"], \"reversible\": false}]}"
+    "\"stoichiometry\": null}], \"enzymes\": [\"\"], \"reversible\": false, "
+    "\"quote\": \"\"}]}"
 )
 
 # OpenAI-compatible ``response_format`` json_schema. The shared client degrades
@@ -113,6 +120,7 @@ _RESPONSE_JSON_SCHEMA: Dict[str, Any] = {
                         },
                         "enzymes": {"type": "array", "items": {"type": "string"}},
                         "reversible": {"type": "boolean"},
+                        "quote": {"type": "string"},
                     },
                     "required": ["inputs", "outputs"],
                 },
@@ -243,6 +251,16 @@ def _parse_reactions_json(raw: Any) -> List[Dict[str, Any]]:
                 "outputs": outputs,
                 "enzymes": enzymes,
                 "reversible": bool(item.get("reversible")),
+                # The model's claimed supporting span. Passed through UNVERIFIED
+                # here on purpose: this module only parses the reply, and a quote
+                # is only worth anything once it has been checked against the
+                # passage it claims to come from. That check is
+                # ``t2pw.rag.synthesize._locate_evidence_span``, which requires
+                # the quote to be a VERBATIM substring of the chunk and falls back
+                # to locating a single sentence when the model omitted or
+                # paraphrased it. A candidate that ends up with no span is
+                # refused by the admission gate.
+                "quote": str(item.get("quote") or "").strip(),
             }
         )
     return out

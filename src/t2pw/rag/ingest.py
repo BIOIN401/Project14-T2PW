@@ -291,6 +291,13 @@ def seed_candidate(
     )
 
 
+def _observed_list(value: Any) -> List[str]:
+    """Clean a candidate's observed-metadata list (read-only, order-preserving)."""
+    if not isinstance(value, list):
+        return []
+    return [str(item or "").strip() for item in value if str(item or "").strip()]
+
+
 def chunk_paper(
     candidate: CandidatePaper,
     *,
@@ -305,6 +312,16 @@ def chunk_paper(
     candidate's ``source_id`` / ``source_uri`` / ``organism`` so provenance
     survives retrieval, and its ``id`` is a stable hash of
     ``(source_id, section, offset)`` for idempotent re-ingest.
+
+    The candidate's eligibility-derived ``observed_pathways`` /
+    ``observed_organisms`` ride along too. Without them the admission gate
+    downstream has only the chunk's free text to judge scope by, so a paper the
+    eligibility screen already read as being about a *different* pathway or a
+    *different* species arrives at the gate looking merely "unknown" — the
+    permissive verdict. These are the PAPER's own reading; the request travels
+    separately and is never copied into them (see ``acquire.CandidatePaper``,
+    where stamping the requested organism onto every row is the documented bug
+    this split exists to prevent).
     """
     source_id = str(candidate.id or "").strip()
     if not source_id:
@@ -312,6 +329,8 @@ def chunk_paper(
     title = str(candidate.title or "").strip()
     uri = str(candidate.source_uri or "").strip()
     organism = str(candidate.organism or "").strip()
+    observed_pathways = _observed_list(getattr(candidate, "observed_pathways", None))
+    observed_organisms = _observed_list(getattr(candidate, "observed_organisms", None))
 
     def _emit(section: str, text: str, out: List[Chunk]) -> None:
         for ordinal, window in enumerate(
@@ -327,6 +346,8 @@ def chunk_paper(
                     source_uri=uri,
                     organism=organism,
                     section=section,
+                    observed_pathways=list(observed_pathways),
+                    observed_organisms=list(observed_organisms),
                 )
             )
 

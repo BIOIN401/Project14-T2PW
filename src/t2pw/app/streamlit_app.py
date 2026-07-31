@@ -433,6 +433,7 @@ def maybe_run_rag(
         from t2pw.rag import (
             acquire,
             extract,
+            identity,
             ingest,
             provenance,
             retrieve,
@@ -442,6 +443,15 @@ def maybe_run_rag(
         )
 
         # R1 acquire -> R2 select -> (full text for kept) -> R3 ingest.
+        # The REQUEST -- what this run asked for. Derived once, before anything
+        # reads it: the eligibility screen, gap detection and the admission gate
+        # all compare against it, and none of them may re-derive it differently.
+        _requested_pathway = str(_safe_dict(pathway_context).get("pathway_name") or "")
+        _requested_organism = str(
+            _safe_dict(pathway_context).get("likely_organism")
+            or _safe_dict(pathway_context).get("organism")
+            or ""
+        )
         acquire_status: Dict[str, Any] = {}
         candidates = acquire.search_candidates(pathway_context, status=acquire_status)
         # Display-only: a zero-candidate acquisition used to be a silent no-op, and
@@ -477,8 +487,65 @@ def maybe_run_rag(
                 )
             st.warning(f"RAG acquisition fetched 0 candidate papers: {_why}")
         status.write(f"Fetched {len(candidates)} candidate paper(s).")
+
+        # R1b eligibility — the deterministic title/abstract screen, run on the
+        # RAW acquired candidates BEFORE selection or any full-text fetch. It is
+        # what fills each paper's observed_pathways / observed_organisms /
+        # organism_match (via ``apply_decision``), which the admission gate later
+        # compares against the request; without this call every paper reaches the
+        # gate with empty observations, i.e. "unknown", i.e. the permissive
+        # verdict. Screening also drops the papers the batch fetcher would have
+        # dropped, so a case report or a wrong-species paper never gets its full
+        # text downloaded, chunked or indexed.
+        eligibility_report: Dict[str, Any] = {
+            "enabled": bool(rag_config()["eligibility_enabled"]),
+            "screened": 0,
+            "kept": 0,
+            "dropped": 0,
+            "by_outcome": {},
+        }
+        eligible = list(candidates)
+        if eligibility_report["enabled"] and candidates:
+            status.update(label="Multi-paper RAG: screening candidate papers…")
+            from t2pw.rag import eligibility as _eligibility
+
+            scope = _eligibility.RequestedScope(
+                requested_pathway=_requested_pathway,
+                requested_organism=_requested_organism,
+            )
+            limits = _eligibility.thresholds_from_config(rag_config())
+            eligible = []
+            for _paper in candidates:
+                try:
+                    # apply=True writes the REQUESTED fields and the OBSERVED
+                    # fields onto the candidate, in their separate slots. The
+                    # requested organism is never written into an observed one --
+                    # that stamping bug is why the split exists.
+                    decision = _eligibility.screen_candidate(
+                        _paper, scope, thresholds=limits
+                    )
+                except Exception:  # noqa: BLE001 - one bad row must not sink the run
+                    eligible.append(_paper)
+                    continue
+                outcome = str(getattr(decision, "outcome", "") or "")
+                eligibility_report["screened"] += 1
+                eligibility_report["by_outcome"][outcome] = (
+                    eligibility_report["by_outcome"].get(outcome, 0) + 1
+                )
+                if _eligibility.outcome_is_ineligible(outcome):
+                    eligibility_report["dropped"] += 1
+                    continue
+                eligibility_report["kept"] += 1
+                eligible.append(_paper)
+            status.write(
+                f"Screened {eligibility_report['screened']} paper(s): "
+                f"{eligibility_report['kept']} eligible, "
+                f"{eligibility_report['dropped']} dropped "
+                f"({eligibility_report['by_outcome']})."
+            )
+
         status.update(label="Multi-paper RAG: selecting relevant papers…")
-        selection = select.select(candidates, pathway_context)
+        selection = select.select(eligible, pathway_context)
         full_text_papers = 0
         for paper in getattr(selection, "selected", []) or []:
             paper.full_text = acquire.fetch_full_text(paper)
@@ -510,9 +577,16 @@ def maybe_run_rag(
         )
 
         # R4 gap-retrieve: detect gaps from read-only reports, retrieve per gap.
+        # The request stamped onto every gap so a retrieved reaction can later be
+        # compared against it — never against whatever the paper is about.
         seed_context_text = format_context_header(pathway_context)
         status.update(label="Multi-paper RAG: detecting connectivity gaps…")
-        gaps = retrieve.detect_gaps(seed_payload, reports)
+        gaps = retrieve.detect_gaps(
+            seed_payload,
+            reports,
+            requested_pathway=_requested_pathway,
+            requested_organism=_requested_organism,
+        )
         status.write(f"Detected {len(gaps)} connectivity gap(s) to fill.")
         bundles = []
         for _gi, gap in enumerate(gaps, start=1):
@@ -584,6 +658,7 @@ def maybe_run_rag(
         # break synthesis. Enabled unconditionally for real runs (mirrors the
         # opt-in ``prose_extractor`` seam; no config.py flag is added).
         synonym_resolver = synonyms.build_offline_synonym_resolver()
+        _identity_attempts: list = []
         status.update(label="Multi-paper RAG: synthesizing one connected pathway…")
         synthesis = synthesize.synthesize_with_report(
             seed_payload,
@@ -591,6 +666,23 @@ def maybe_run_rag(
             seed_source_context,
             prose_extractor=prose_extractor,
             synonym_resolver=synonym_resolver,
+            # Gap admission: a retrieved reaction enters the pathway only by
+            # filling one of THESE gaps and passing pathway / organism / evidence
+            # admission. The gap list and the request are passed explicitly so the
+            # gate compares against what the run asked for.
+            gaps=gaps,
+            requested_pathway=_requested_pathway,
+            requested_organism=_requested_organism,
+            # Protein identity is FAIL-CLOSED in production. The ladder
+            # (``verify_real_protein_identity``) judges a shipped accession
+            # against local resolver candidates, and the RAG chain produces
+            # passages, not resolver candidates -- so nothing here can verify an
+            # identity, and nothing here pretends to. Every unmapped-enzyme gap
+            # therefore stays open and keeps the PathBank Unknown-protein
+            # fallback; ``identity_attempts`` records that the ladder was asked
+            # and why it declined, so "no identities were resolved" is a reported
+            # outcome rather than a silence.
+            identity_verifier=identity.fail_closed_verifier(_identity_attempts),
         )
         prov_report = provenance.validate_provenance(synthesis.payload)
 
@@ -614,6 +706,8 @@ def maybe_run_rag(
             "acquire_rate_limited": acquire_status.get("rate_limited"),
             "acquire_from_cache": acquire_status.get("from_cache"),
             "candidates_fetched": len(candidates),
+            "eligibility": eligibility_report,
+            "papers_eligible": len(eligible),
             "papers_selected": len(getattr(selection, "selected", []) or []),
             "papers_with_full_text": full_text_papers,
             "chunks_indexed": int(getattr(ingest_report, "chunks", 0) or 0),
@@ -625,6 +719,53 @@ def maybe_run_rag(
             "synthesized_reactions": _count_reactions(synthesis.payload),
             "cross_paper_stitches": len(getattr(synthesis, "stitched", []) or []),
             "unresolved_gaps": len(getattr(synthesis, "unresolved_gaps", []) or []),
+            # Gap admission — "RAG added nothing" now separates "nothing was
+            # retrieved" from "everything retrieved was refused, for these reasons".
+            "candidates_considered": int(
+                _safe_dict(_safe_dict(synthesis.admission).get("counts")).get(
+                    "considered", 0
+                )
+            ),
+            "candidates_accepted": int(
+                _safe_dict(_safe_dict(synthesis.admission).get("counts")).get(
+                    "accepted", 0
+                )
+            ),
+            "candidates_rejected": int(
+                _safe_dict(_safe_dict(synthesis.admission).get("counts")).get(
+                    "rejected", 0
+                )
+            ),
+            "admission_reason_counts": _safe_dict(
+                _safe_dict(synthesis.admission).get("reason_counts")
+            ),
+            # Typed-gap resolutions, and what the identity ladder actually did.
+            "typed_resolutions_proposed": len(
+                _safe_list(_safe_dict(synthesis.admission).get("resolutions"))
+            ),
+            "typed_resolutions_applied": sum(
+                1
+                for r in _safe_list(_safe_dict(synthesis.admission).get("resolutions"))
+                if isinstance(r, dict) and r.get("applied")
+            ),
+            "typed_resolutions_rejected": sum(
+                1
+                for r in _safe_list(_safe_dict(synthesis.admission).get("resolutions"))
+                if isinstance(r, dict) and r.get("status") == "rejected"
+            ),
+            # Verified identities, EC-only annotations, refusals and gaps awaiting
+            # the Unknown fallback, counted APART and in their own units
+            # (``proposals`` / ``targets`` / gap counts). Only ``verified`` means a
+            # protein gained an exportable identity.
+            #
+            # Note ``unverified_no_resolver`` vs ``rejected_by_identity_resolver``:
+            # this path wires ``fail_closed_verifier``, which has no candidate
+            # provider, so every attempt lands in the FORMER. A count in the latter
+            # would mean a real resolver had been wired and had judged a claim.
+            "identity_outcomes": _safe_dict(
+                _safe_dict(synthesis.admission).get("identity_outcomes")
+            ),
+            "identity_attempts": list(_identity_attempts),
         }
         status.update(
             label=(
@@ -712,6 +853,17 @@ def _rag_funnel_verdict(diag: Dict[str, Any]) -> str:
             "Gaps were detected but retrieval returned no evidence — the indexed passages "
             "did not match the gap queries."
         )
+    if diag.get("candidates_considered", 0) > 0 and diag.get(
+        "candidates_accepted", 0
+    ) == 0:
+        return (
+            f"Evidence was retrieved and {diag.get('candidates_considered', 0)} candidate "
+            "reaction(s) were transcribed, but none passed gap admission: "
+            f"{diag.get('admission_reason_counts')}. A retrieved reaction enters the "
+            "pathway only when it fills a specific detected gap and passes pathway, "
+            "organism and evidence admission — see the admission report for the "
+            "per-candidate reasons."
+        )
     if diag.get("synthesized_reactions", 0) <= diag.get("seed_reactions", 0):
         return (
             "Evidence was retrieved but produced no NEW reactions: the passages did not "
@@ -761,7 +913,25 @@ def render_rag_panels(rag_result: "RagOrchestrationResult") -> None:
             row2[1].metric("Evidence hits", diag.get("evidence_hits", 0))
             row2[2].metric("Seed reactions", diag.get("seed_reactions", 0))
             row2[3].metric("Synthesized", diag.get("synthesized_reactions", 0))
+            row3 = st.columns(3)
+            row3[0].metric("Candidates", diag.get("candidates_considered", 0))
+            row3[1].metric("Admitted", diag.get("candidates_accepted", 0))
+            row3[2].metric("Refused", diag.get("candidates_rejected", 0))
             st.json(diag)
+
+    # Panel 0b — gap admission. Both halves are shown: an accepted-only view
+    # cannot answer "why is the reaction I expected missing?", which is the
+    # question a gap-filling run actually raises.
+    synthesis = getattr(rag_result, "synthesis", None)
+    admission = getattr(synthesis, "admission", None) if synthesis is not None else None
+    if admission:
+        with st.expander("Gap admission — accepted / refused candidates", expanded=False):
+            st.caption(
+                "A retrieved reaction enters the pathway only when it fills a "
+                "specific detected gap and passes pathway, organism and evidence "
+                "admission."
+            )
+            st.json(admission)
 
     ingest_report = getattr(rag_result, "ingest_report", None)
     if ingest_report is not None and hasattr(ingest_report, "to_dict"):

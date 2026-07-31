@@ -125,6 +125,14 @@ RAG_ENV = {
     "eligibility_local_window_tokens": "RAG_ELIGIBILITY_LOCAL_WINDOW_TOKENS",
     "eligibility_candidate_ceiling": "RAG_ELIGIBILITY_CANDIDATE_CEILING",
     "eligibility_stage0_conflict_aborts": "RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS",
+    # Gap admission (t2pw.rag.admission). A retrieved reaction enters the pathway
+    # only by passing these; the policy lives here so a run's admission behavior
+    # is reproducible from its config and identical in the app and the batch.
+    "admission_organism_policy": "RAG_ADMISSION_ORGANISM_POLICY",
+    "admission_require_pathway_match": "RAG_ADMISSION_REQUIRE_PATHWAY_MATCH",
+    "admission_max_report_entries": "RAG_ADMISSION_MAX_REPORT_ENTRIES",
+    "admission_max_chain_hops": "RAG_ADMISSION_MAX_CHAIN_HOPS",
+    "admission_max_span_chars": "RAG_ADMISSION_MAX_SPAN_CHARS",
 }
 
 # Default-safe values used when an env var is unset or blank.
@@ -184,6 +192,30 @@ RAG_DEFAULTS: Dict[str, Any] = {
     # A Stage-0 reading that contradicts the batch request stops that run (with an
     # explicit scope_conflict outcome) instead of only annotating it.
     "eligibility_stage0_conflict_aborts": True,
+    # --- gap admission -----------------------------------------------------
+    # How the organism a retrieved passage reports is compared with the organism
+    # the run asked for. "allow_unknown" (the default) refuses an explicit
+    # mismatch but admits a passage that names no organism -- a mechanism
+    # paragraph routinely does not restate the species, and refusing those would
+    # reject most genuinely useful evidence. "strict" additionally refuses the
+    # unknown case; "off" removes the organism rule.
+    "admission_organism_policy": "allow_unknown",
+    # Require a POSITIVE match to the requested pathway (rather than merely "not
+    # contradicted"). Off by default for the same reason: a passage stating one
+    # reaction usually names neither the pathway nor a synonym of it.
+    "admission_require_pathway_match": False,
+    # Entries kept per bucket (accepted / rejected) in the admission report.
+    # Overflow is counted, never silently dropped.
+    "admission_max_report_entries": 200,
+    # How far a chained admission may travel from the gap target. 0 = only
+    # reactions touching the target itself. Conservative: each hop is a reaction
+    # admitted on the strength of the previous one, so error compounds with
+    # distance, and chaining only ever travels through non-currency metabolites.
+    "admission_max_chain_hops": 2,
+    # Longest span accepted as ONE piece of local relational evidence. Beyond
+    # this it is a paragraph, and a paragraph lets two unrelated reactions' names
+    # co-occur and be combined into a third that nobody stated.
+    "admission_max_span_chars": 600,
 }
 
 _TRUE_TOKENS = {"1", "true", "yes", "on", "y", "t"}
@@ -302,6 +334,26 @@ def rag_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             _raw("eligibility_stage0_conflict_aborts"),
             bool(RAG_DEFAULTS["eligibility_stage0_conflict_aborts"]),
         ),
+        "admission_organism_policy": (
+            str(_raw("admission_organism_policy") or "").strip().lower()
+            or str(RAG_DEFAULTS["admission_organism_policy"])
+        ),
+        "admission_require_pathway_match": _as_bool(
+            _raw("admission_require_pathway_match"),
+            bool(RAG_DEFAULTS["admission_require_pathway_match"]),
+        ),
+        "admission_max_report_entries": max(0, _as_int(
+            _raw("admission_max_report_entries"),
+            int(RAG_DEFAULTS["admission_max_report_entries"]),
+        )),
+        "admission_max_chain_hops": max(0, _as_int(
+            _raw("admission_max_chain_hops"),
+            int(RAG_DEFAULTS["admission_max_chain_hops"]),
+        )),
+        "admission_max_span_chars": max(0, _as_int(
+            _raw("admission_max_span_chars"),
+            int(RAG_DEFAULTS["admission_max_span_chars"]),
+        )),
     }
 
     if not config["embedding_provider"]:

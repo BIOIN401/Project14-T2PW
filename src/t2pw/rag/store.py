@@ -79,6 +79,15 @@ class Chunk:
     organism: str = ""
     section: str = ""  # "abstract" | "results" | "methods" | "figure" | ...
     pathway_tags: List[str] = field(default_factory=list)
+    #: What the SOURCE PAPER itself was observed to be about, carried down from
+    #: ``t2pw.rag.eligibility``'s screen of its title/abstract. Strictly the
+    #: paper's own reading -- a requested pathway/organism is NEVER copied in
+    #: here (see ``acquire.CandidatePaper``: that stamping bug is the reason the
+    #: requested and observed halves are separate fields at all). The admission
+    #: gate compares these against the request; an empty list means "the paper
+    #: does not say", which is not the same as a match.
+    observed_pathways: List[str] = field(default_factory=list)
+    observed_organisms: List[str] = field(default_factory=list)
     embedding: Optional[List[float]] = None
 
     def metadata(self) -> Dict[str, Any]:
@@ -91,6 +100,8 @@ class Chunk:
             "organism": self.organism,
             "section": self.section,
             "pathway_tags": list(self.pathway_tags),
+            "observed_pathways": list(self.observed_pathways),
+            "observed_organisms": list(self.observed_organisms),
         }
 
 
@@ -368,6 +379,12 @@ class ChromaVectorStore:
                         organism=str(meta.get("organism", "")),
                         section=str(meta.get("section", "")),
                         pathway_tags=_split_tags(meta.get("pathway_tags", "")),
+                        observed_pathways=_split_tags(
+                            meta.get("observed_pathways", "")
+                        ),
+                        observed_organisms=_split_tags(
+                            meta.get("observed_organisms", "")
+                        ),
                     ),
                     score=round(1.0 - float(dist), 6),
                 )
@@ -390,6 +407,8 @@ def _chroma_metadata(chunk: Chunk) -> Dict[str, Any]:
     # Chroma metadata values must be scalars; join list tags into a string.
     meta = chunk.metadata()
     meta["pathway_tags"] = "|".join(str(t) for t in chunk.pathway_tags)
+    meta["observed_pathways"] = "|".join(str(t) for t in chunk.observed_pathways)
+    meta["observed_organisms"] = "|".join(str(t) for t in chunk.observed_organisms)
     return meta
 
 

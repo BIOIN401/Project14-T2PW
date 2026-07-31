@@ -38,6 +38,18 @@ class RagProvenance(TypedDict, total=False):
     section: str
     organism: str
     chunk_id: str
+    #: The detected gap this element was admitted to fill
+    #: (``t2pw.rag.retrieve.Gap.gap_id``). Present only on RAG-derived elements —
+    #: a seed reaction fills no gap. It lives here, inside an already-permitted
+    #: additive key, rather than becoming a sixth member of
+    #: :data:`RAG_ADDITIVE_KEYS`: that tuple is an asserted contract every stage
+    #: strips as a unit, and widening it would change what "additive RAG metadata"
+    #: means for every existing consumer.
+    gap_id: str
+    #: The COMPLETE set of gaps this element fills, present only when it fills
+    #: more than one. One canonical claim retrieved for two gaps merges into one
+    #: row, and ``gap_id`` alone would report the second gap as unfilled.
+    gap_ids: List[str]
 
 
 class RagEvidence(TypedDict, total=False):
