@@ -25,6 +25,7 @@ from t2pw.curation.apply_audit_patch import (
     APPLIED_PATCH_LOG_FILENAME,
     REJECTED_PATCH_LOG_FILENAME,
     apply_patch_with_policy,
+    committed_change_count,
 )
 from t2pw.llm.client import chat_with_tools
 from t2pw.paths import PROMPTS_DIR
@@ -278,7 +279,9 @@ def run_pathway_curator(
             rejected_log_path=(report_path.parent / REJECTED_PATCH_LOG_FILENAME) if locked_manifest is not None else None,
         )
         apply_summary = _safe_dict(apply_report.get("summary", {}))
-        report["summary"]["patches_accepted"] = int(apply_summary.get("accepted_count", 0))
+        # Committed, not accepted: a rolled-back batch left the payload untouched
+        # and must not be reported here as curation progress.
+        report["summary"]["patches_accepted"] = committed_change_count(apply_report)
         report["summary"]["patches_rejected"] = int(apply_summary.get("rejected_count", 0))
         report["apply_summary"] = apply_summary
         if "lock_policy" in apply_report:

@@ -21,7 +21,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from t2pw.curation.apply_audit_patch import apply_patch_with_policy
+from t2pw.curation.apply_audit_patch import apply_patch_with_policy, committed_change_count
 
 logger = logging.getLogger(__name__)
 
@@ -221,7 +221,9 @@ def _apply_pass_patches(
         rejected_log_path=rejected_log_path,
     )
     summary = report.get("summary", {})
-    return updated, summary.get("accepted_count", 0), summary.get("rejected_count", 0)
+    # The first element is "how many repairs landed". After a batch rollback
+    # `updated` is the unchanged input, so accepted_count would overstate it.
+    return updated, committed_change_count(report), summary.get("rejected_count", 0)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

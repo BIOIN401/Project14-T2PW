@@ -1,0 +1,1908 @@
+{
+  "schema_version": 1,
+  "comment": [
+    "Compact STRICT-FAILURE shapes for the replay harness in",
+    "tests/test_strict_failure_replay.py. Each case is a complete, minimal payload",
+    "that reproduces one class of pre-export strict failure observed in the runs",
+    "and issue log, not a transcript of any single run: a real merged payload from",
+    "2026-07-28 is 306 KB in one leg and 4.7 MB in another, carries verbatim source",
+    "passages, and still would not say which field mattered.",
+    "",
+    "The base pathway -- two-step glutathione biosynthesis with wrapped enzymes --",
+    "passes validate_required_pwml_contract(strict_db=True) on its own, so every",
+    "assertion below is attributable to the one defect the case adds.",
+    "",
+    "'recovers' is the deliverable question: does pre-export quarantine turn this",
+    "strict failure into a SMALLER VALID strict graph, or does it correctly refuse?",
+    "Both answers are correct results. What is never correct is a graph that passes",
+    "because the pathway was emptied out, which is what cases 5 and 6 pin."
+  ],
+  "cases": [
+    {
+      "id": "reaction_inflation_unresolvable_participant",
+      "title": "An over-generated reaction whose participants were never declared",
+      "observed_as": "AGENT_INSTRUCTIONS.md issue 5a -- jasmonate biosynthesis, 21 errors / 48 warnings",
+      "why_it_matters": "The LLM produced ~22 reactions for a ~9-step pathway. The surplus rows name participants no entity bucket carries, and the required-field gate fails the whole file over them. The nine good reactions were never written.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione peroxidation",
+              "inputs": [
+                "glutathione",
+                "hydrogen peroxide"
+              ],
+              "outputs": [
+                "glutathione disulfide"
+              ],
+              "enzymes": [],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": false,
+        "recovers": true,
+        "smaller": true,
+        "quarantined": {
+          "glutathione peroxidation": "quarantined_unmapped_entity"
+        },
+        "surviving_reactions": 2
+      }
+    },
+    {
+      "id": "colon_split_metabolite_as_protein_complex",
+      "title": "A metabolite name split at its colon and filed as a protein complex",
+      "observed_as": "AGENT_INSTRUCTIONS.md issue 5b -- component_protein_unresolved per fragment",
+      "why_it_matters": "'OPC-8:0-CoA' is a compound. Split at the colon it becomes a complex whose two components resolve to no declared protein, and it collides with the compound of the same name -- an entity-type overlap the closure must report rather than guess its way out of.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            },
+            {
+              "name": "OPC-8:0-CoA"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "OPC-8:0-CoA",
+              "class": "protein_complex",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "OPC-8",
+                  "stoichiometry": 1
+                },
+                {
+                  "name": "0-CoA",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "OPC-8:0-CoA",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "OPC-8:0-CoA beta-oxidation",
+              "inputs": [
+                "OPC-8:0-CoA"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "OPC-8:0-CoA",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": true,
+        "strict_before_note": "The current gate stack passes this: it forbids a proteins/protein_complexes overlap and nothing else, so a compound and a complex sharing a name goes unremarked and the IR resolves the reference to whichever was registered first.",
+        "recovers": true,
+        "smaller": true,
+        "quarantined": {
+          "OPC-8:0-CoA beta-oxidation": "quarantined_broken_reference"
+        },
+        "surviving_reactions": 2,
+        "removed_entities": [
+          "OPC-8:0-CoA",
+          "OPC-8:0-CoA"
+        ]
+      }
+    },
+    {
+      "id": "enzyme_without_external_identity",
+      "title": "An enzyme no database resolves, wrapped and exported anyway",
+      "observed_as": "AGENT_INSTRUCTIONS.md issue 6 -- protein_missing_external_identity",
+      "why_it_matters": "Plant enzymes with abbreviated gene symbols routinely resolve to nothing. Under strict export the wrapper component has no UniProt accession and the whole file fails; the two reactions that ARE fully mapped should still ship.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            },
+            {
+              "name": "OPDA"
+            },
+            {
+              "name": "OPC-8:0"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            },
+            {
+              "name": "OPR3",
+              "species": "Homo sapiens"
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "OPR3 complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "OPR3",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "OPDA",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "OPC-8:0",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "OPDA reduction",
+              "inputs": [
+                "OPDA"
+              ],
+              "outputs": [
+                "OPC-8:0"
+              ],
+              "enzymes": [
+                {
+                  "entity": "OPR3 complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": false,
+        "recovers": true,
+        "smaller": true,
+        "quarantined": {
+          "OPDA reduction": "quarantined_unmapped_entity"
+        },
+        "surviving_reactions": 2,
+        "removed_entities": [
+          "OPDA",
+          "OPC-8:0",
+          "OPR3",
+          "OPR3 complex"
+        ]
+      }
+    },
+    {
+      "id": "unknown_backed_functional_complex",
+      "title": "A correctly formed Unknown-backed functional complex",
+      "observed_as": "Stage 6 structural fallback (PathBank protein 9659)",
+      "why_it_matters": "This is the sanctioned representation of an enzyme the databases do not carry. Quarantining it for 'no real UniProt ID' would delete the exact biology the fallback exists to preserve, and would do it to every genuinely novel enzyme.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            },
+            {
+              "name": "cysteinylglycine"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            },
+            {
+              "name": "Unknown",
+              "species": "Homo sapiens",
+              "organism": "Homo sapiens",
+              "pathbank_protein_id": 9659,
+              "mapped_ids": {
+                "uniprot": "Unknown",
+                "pathbank_protein_id": 9659
+              },
+              "mapping_meta": {
+                "chosen_rule": "pathbank_unknown_protein_fallback",
+                "fallback_used": true,
+                "pathbank_protein_id": 9659,
+                "resolution": {
+                  "status": "fallback",
+                  "issue": "pathbank_unknown_sentinel"
+                }
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione hydrolase",
+              "class": "protein_complex",
+              "generated": true,
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "Unknown",
+                  "stoichiometry": 1
+                }
+              ],
+              "mapping_meta": {
+                "chosen_rule": "pathbank_unknown_protein_fallback"
+              }
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "cysteinylglycine",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione hydrolysis",
+              "inputs": [
+                "glutathione"
+              ],
+              "outputs": [
+                "cysteinylglycine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione hydrolase",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": true,
+        "recovers": true,
+        "smaller": false,
+        "quarantined": {},
+        "surviving_reactions": 3
+      }
+    },
+    {
+      "id": "every_reaction_unresolvable",
+      "title": "Nothing survives quarantine",
+      "observed_as": "the degenerate end of the reaction-inflation class",
+      "why_it_matters": "An empty graph violates no gate, because there is nothing left to violate one. Strict success has to mean the pathway exported, not that nothing invalid remained.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "undeclared substrate"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "undeclared substrate"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": false,
+        "recovers": false,
+        "smaller": false,
+        "coverage_reason": "no_surviving_process",
+        "surviving_reactions": 0
+      }
+    },
+    {
+      "id": "only_unrelated_reactions_survive",
+      "title": "Every requested-core reaction is quarantined and an off-topic one is not",
+      "observed_as": "the failure mode a pure 'is anything left?' check cannot see",
+      "why_it_matters": "The survivor is complete, gate-clean and has nothing to do with the request. Coverage is measured against core-accepted processes only, so it scores zero and cannot carry the run.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            },
+            {
+              "name": "citrate"
+            },
+            {
+              "name": "isocitrate"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "citrate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "isocitrate",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "undeclared substrate"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "undeclared substrate"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "citrate isomerisation",
+              "inputs": [
+                "citrate"
+              ],
+              "outputs": [
+                "isocitrate"
+              ],
+              "enzymes": [],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": false,
+        "recovers": false,
+        "smaller": false,
+        "coverage_reason": "core_process_count_below_minimum",
+        "surviving_reactions": 1
+      }
+    },
+    {
+      "id": "degree_zero_mapped_protein",
+      "title": "A fully mapped protein with no edge in the graph",
+      "observed_as": "runs/2026-07-28_2122 PMC12444477 -- 'Protein has degree 0 after normalization: FabA'",
+      "why_it_matters": "Identity and connectivity are independent. FabA carried species and an accession and still failed, because the reactions named its partner instead. Closure drops it from the strict output; no process is touched.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            },
+            {
+              "name": "FabA",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P0A6Q3"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "strict_before": false,
+        "recovers": true,
+        "smaller": true,
+        "quarantined": {},
+        "surviving_reactions": 2,
+        "removed_entities": [
+          "FabA"
+        ]
+      }
+    },
+    {
+      "id": "reaction_coupled_transport_is_not_exportable",
+      "title": "A production-valid coupled transport that the IR cannot emit",
+      "observed_as": "pwml/ir.py:1934-1946 builds every RCT with empty left/right/enzymes",
+      "why_it_matters": "This row is well formed by every schema in the repo and still cannot ship: build_pwml_ir hard-codes an RCT's left, right and enzymes to [] and never fills them, and validate_pwml_ir then raises rct_missing_left / _right / _enzyme for it. Admitting it would hand a reviewer a payload guaranteed to fail IR validation two stages later, so the refusal is explicit and named.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [
+            {
+              "name": "glutathione efflux",
+              "cargo": "glutathione",
+              "from_biological_state": "cytosol",
+              "to_biological_state": "cytosol",
+              "transporters": []
+            }
+          ],
+          "interactions": [],
+          "reaction_coupled_transports": [
+            {
+              "name": "efflux coupling",
+              "reaction": "glutathione synthesis",
+              "transport": "glutathione efflux",
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "strict_before": true,
+        "strict_before_note": "Neither the Stage 3 gate nor the required-field contract inspects reaction_coupled_transports; the failure is in the IR, further down.",
+        "recovers": true,
+        "smaller": true,
+        "quarantined": {
+          "efflux coupling": "quarantined_broken_reference"
+        },
+        "surviving_reactions": 2
+      }
+    },
+    {
+      "id": "primary_transport_and_interaction_shapes_survive",
+      "title": "A transport keyed transport_elements and an interaction keyed left/right",
+      "observed_as": "the shapes pwml/ir.py:1780 and process_normalizer.py:4188 read first",
+      "why_it_matters": "The positive control. An admission rule that reads only `cargo` and only `entity_1`/`entity_2` records both of these as having no participants at all and quarantines them -- a false negative on the primary spelling of each. Nothing here may be touched.",
+      "payload": {
+        "metadata": {
+          "pw_id": "PW000000",
+          "pathway_name": "Glutathione biosynthesis",
+          "name": "Glutathione biosynthesis",
+          "pathway_subject": "Metabolic",
+          "subject": "Metabolic",
+          "organism": "Homo sapiens",
+          "width": 3200,
+          "height": 1400,
+          "key_compounds": [
+            "L-glutamate",
+            "glutathione"
+          ],
+          "key_proteins": [
+            "glutamate-cysteine ligase"
+          ]
+        },
+        "entities": {
+          "species": [
+            {
+              "name": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "classification": "Eukaryote"
+            }
+          ],
+          "subcellular_locations": [
+            {
+              "name": "cytosol"
+            }
+          ],
+          "compounds": [
+            {
+              "name": "L-glutamate"
+            },
+            {
+              "name": "L-cysteine"
+            },
+            {
+              "name": "gamma-glutamylcysteine"
+            },
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "glutathione"
+            }
+          ],
+          "proteins": [
+            {
+              "name": "glutamate-cysteine ligase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48506"
+              }
+            },
+            {
+              "name": "glutathione synthetase",
+              "species": "Homo sapiens",
+              "mapped_ids": {
+                "uniprot": "P48637"
+              }
+            }
+          ],
+          "protein_complexes": [
+            {
+              "name": "glutamate-cysteine ligase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutamate-cysteine ligase",
+                  "stoichiometry": 1
+                }
+              ]
+            },
+            {
+              "name": "glutathione synthetase complex",
+              "class": "protein_complex",
+              "generated": true,
+              "generation_reason": "single_protein_pathwhiz_wrapper",
+              "species": "Homo sapiens",
+              "components": [
+                {
+                  "name": "glutathione synthetase",
+                  "stoichiometry": 1
+                }
+              ]
+            }
+          ],
+          "nucleic_acids": []
+        },
+        "biological_states": [
+          {
+            "name": "cytosol",
+            "species": "Homo sapiens",
+            "subcellular_location": "cytosol"
+          }
+        ],
+        "element_locations": {
+          "compound_locations": [
+            {
+              "compound": "L-glutamate",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "L-cysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "gamma-glutamylcysteine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glycine",
+              "biological_state": "cytosol"
+            },
+            {
+              "compound": "glutathione",
+              "biological_state": "cytosol"
+            }
+          ],
+          "protein_locations": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "gamma-glutamylcysteine synthesis",
+              "inputs": [
+                "L-glutamate",
+                "L-cysteine"
+              ],
+              "outputs": [
+                "gamma-glutamylcysteine"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutamate-cysteine ligase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            },
+            {
+              "name": "glutathione synthesis",
+              "inputs": [
+                "gamma-glutamylcysteine",
+                "glycine"
+              ],
+              "outputs": [
+                "glutathione"
+              ],
+              "enzymes": [
+                {
+                  "entity": "glutathione synthetase complex",
+                  "entity_type": "protein_complex",
+                  "role": "catalyst"
+                }
+              ],
+              "biological_state": "cytosol"
+            }
+          ],
+          "transports": [
+            {
+              "name": "glutathione efflux",
+              "transport_elements": [
+                {
+                  "element": "glutathione",
+                  "stoichiometry": 1
+                }
+              ],
+              "from_biological_state": "cytosol",
+              "to_biological_state": "cytosol",
+              "transporters": []
+            }
+          ],
+          "interactions": [
+            {
+              "name": "product inhibition",
+              "left": "glutathione",
+              "right": "glutathione synthetase",
+              "relationship": "inhibits"
+            }
+          ]
+        }
+      },
+      "expect": {
+        "strict_before": true,
+        "recovers": true,
+        "smaller": false,
+        "quarantined": {},
+        "surviving_reactions": 2
+      }
+    }
+  ]
+}

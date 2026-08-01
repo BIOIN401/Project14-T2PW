@@ -24,7 +24,7 @@ from lxml import etree
 
 import t2pw.llm.client as llm_client_module
 from t2pw.paths import PROJECT_ROOT
-from t2pw.curation.apply_audit_patch import run_apply
+from t2pw.curation.apply_audit_patch import committed_change_count, run_apply
 from t2pw.curation.audit_json_llm import run_audit
 from t2pw.curation.interactive_curator import (
     apply_patch_and_rerender,
@@ -48,6 +48,14 @@ from t2pw.pipeline.process_normalizer import (
     compute_normalization_stats,
     normalize_process_payload,
     run_strict_post_normalization_gates,
+)
+from t2pw.pipeline.strict_quarantine import (
+    clear_quarantine_artifacts,
+    decision_inputs_match,
+    decision_matches,
+    quarantine_and_close,
+    quarantine_review_flags,
+    write_quarantine_artifacts,
 )
 from t2pw.pipeline.stage_contracts import (
     StageContractError,
@@ -1040,6 +1048,118 @@ def reset_refinement_state() -> None:
         st.session_state[key] = deepcopy(default)
 
 
+#: Session keys holding the single quarantine decision for this payload.
+QUARANTINE_STATE_KEYS = (
+    "quarantine_report",
+    "quarantine_artifacts",
+    "quarantine_coverage",
+    "quarantine_ok",
+    "quarantine_decision_controls",
+)
+
+
+def reset_quarantine_state(outputs_dir: Optional[Path] = None) -> None:
+    """Drop every stored quarantine decision. Called when a new run begins.
+
+    Session keys AND the artifacts they point at. A decision outlives the payload
+    it was made about in two directions: ``st.session_state`` survives a rerun,
+    and ``outputs/quarantine_report.json`` survives the whole session. Without
+    this, a second pipeline run that dies before reaching the boundary would show
+    the first run's coverage summary, and a caller reading the session would find
+    a report authorizing a pathway that is no longer loaded.
+
+    History under ``quarantine_history/`` is deliberately left in place.
+    """
+
+    for key in QUARANTINE_STATE_KEYS:
+        st.session_state.pop(key, None)
+    if outputs_dir is not None:
+        try:
+            clear_quarantine_artifacts(outputs_dir)
+        except OSError as exc:  # pragma: no cover - a locked file must not kill the run
+            logger.warning("reset_quarantine_state: could not clear artifacts: %s", exc)
+
+
+def run_quarantine_boundary(
+    payload: Dict[str, Any],
+    *,
+    strict_db: bool,
+    outputs_dir: Path,
+    pathway_context: Optional[Dict[str, Any]] = None,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
+) -> Dict[str, Any]:
+    """The one place a payload is quarantined. Runs once per PAYLOAD VERSION.
+
+    It sits immediately before the post-mapping Stage 3 revalidation because that
+    is the FIRST blocking pre-export decision, not the last: a payload that fails
+    there never initializes refinement review, so
+    ``_generate_pwml_from_refinement_working_json`` returns on
+    ``refinement_gate_errors`` and ``run_pwml_export`` -- where quarantine first
+    lived -- is never reached at all. Quarantine placed inside the exporter was
+    unreachable in exactly the case it exists for.
+
+    "Once per payload version, under one set of rules" and not "once per session"
+    is the invariant, and the difference is load-bearing. Refinement can delete the
+    requested core between here and the export, and grounding rewrites entity
+    identifiers on the way in; a decision made before either is a statement about a
+    graph that no longer exists. Every decision therefore carries the hash of the
+    payload it judged *and* the hash of the controls it judged under, and the
+    exporter re-runs the boundary when the payload has moved. See
+    :func:`strict_quarantine.decision_matches`.
+
+    The controls are also **locked** into the session here. They cannot be
+    re-evaluated later from the payload in hand: after a strict pass that payload
+    is an already reduced graph, and re-judging it under research rules would
+    produce a "research decision" that quarantined things, which is the one thing
+    research mode promises never to do. So a control change voids the run rather
+    than being absorbed -- see :func:`run_pwml_export`.
+
+    ``pathway_context`` is the Stage-0 context and is passed explicitly: the final
+    mapped payload carries no copy of it, so leaving quarantine to find one would
+    put every production run in the undeclared-core regime.
+
+    ``mode="research"`` runs the same decisions and applies none of them; the
+    candidate comes back unchanged and the findings are review flags.
+    """
+
+    result = quarantine_and_close(
+        payload,
+        strict_db=bool(strict_db),
+        pathway_context=pathway_context,
+        mode=mode,
+    )
+    artifacts = write_quarantine_artifacts(result, outputs_dir)
+    st.session_state["quarantine_report"] = result.quarantine_report
+    st.session_state["quarantine_artifacts"] = artifacts
+    st.session_state["quarantine_coverage"] = result.coverage
+    st.session_state["quarantine_ok"] = bool(result.ok)
+    st.session_state["quarantine_decision_controls"] = {
+        "strict_db": bool(strict_db),
+        "export_mode": coerce_mode(mode),
+        "pathway_context": deepcopy(_safe_dict(pathway_context)),
+        "decision_input_hash": result.quarantine_report.get("decision_input_hash"),
+        "decision_id": result.quarantine_report.get("decision_id"),
+    }
+    return {
+        "ok": bool(result.ok),
+        "payload": result.payload,
+        "quarantine_report": result.quarantine_report,
+        "quarantine_artifacts": artifacts,
+        "coverage": result.coverage,
+        "refusal_reasons": list(result.refusal_reasons),
+        "review_flags": quarantine_review_flags(result.quarantine_report),
+    }
+
+
+def quarantine_session_state() -> Dict[str, Any]:
+    """The stored boundary decision, for callers downstream of it."""
+
+    return {
+        "quarantine_report": _safe_dict(st.session_state.get("quarantine_report")),
+        "quarantine_artifacts": _safe_dict(st.session_state.get("quarantine_artifacts")),
+    }
+
+
 def initialize_refinement_review_state(
     final_mapped_payload: Dict[str, Any],
     mapping_report: Dict[str, Any],
@@ -1791,6 +1911,10 @@ def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[st
             "qa": {},
             "grounding_report": {},
             "stage3_gate_errors": refinement_gate_errors,
+            # Carried even here. This return is reached when the boundary refused
+            # OR when Stage 3 failed after it, and the artifacts are the only
+            # record of which -- dropping them makes the two indistinguishable.
+            **quarantine_session_state(),
         }
 
     _write_reviewed_payload_snapshot(working_json, work_dir)
@@ -1813,6 +1937,11 @@ def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[st
         background_color=str(st.session_state.get("pwml_bg") or "#FFFFFF"),
         grounding_dict=grounding_dict,
         strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+        # The boundary already ran, upstream of the Stage 3 check that gated this
+        # payload into review. Hand its decisions over rather than making new ones.
+        pathway_context=_safe_dict(st.session_state.get("pathway_context")),
+        export_mode=coerce_mode(st.session_state.get("export_mode")),
+        **quarantine_session_state(),
     )
 
 
@@ -2855,7 +2984,7 @@ def run_post_pipeline_sbml_artifacts(
                     eval_warning_count=int(cand_eval_summary.get("warning_count", 0)),
                     source_error_count=int(cand_audit_summary.get("error_count", 0)),
                     rejected_count=int(cand_apply_summary.get("rejected_count", 0)),
-                    accepted_count=int(cand_apply_summary.get("accepted_count", 0)),
+                    accepted_count=committed_change_count(cand_apply),
                     source_patch_count=int(cand_audit_summary.get("patch_count", 0)),
                 )
 
@@ -2868,7 +2997,7 @@ def run_post_pipeline_sbml_artifacts(
                         "audit_error_count": int(cand_audit_summary.get("error_count", 0)),
                         "audit_warning_count": int(cand_audit_summary.get("warning_count", 0)),
                         "audit_patch_count": int(cand_audit_summary.get("patch_count", 0)),
-                        "accepted_patch_count": int(cand_apply_summary.get("accepted_count", 0)),
+                        "accepted_patch_count": committed_change_count(cand_apply),
                         "rejected_patch_count": int(cand_apply_summary.get("rejected_count", 0)),
                         "eval_error_count": int(cand_eval_summary.get("error_count", 0)),
                         "eval_warning_count": int(cand_eval_summary.get("warning_count", 0)),
@@ -2925,7 +3054,7 @@ def run_post_pipeline_sbml_artifacts(
                     eval_warning_count=int(cand_eval_summary.get("warning_count", 0)),
                     source_error_count=int(cand_audit_summary.get("error_count", 0)),
                     rejected_count=int(cand_apply_summary.get("rejected_count", 0)),
-                    accepted_count=int(cand_apply_summary.get("accepted_count", 0)),
+                    accepted_count=committed_change_count(cand_apply),
                     source_patch_count=int(cand_audit_summary.get("patch_count", 0)),
                 )
                 round_candidates.append(
@@ -2937,7 +3066,7 @@ def run_post_pipeline_sbml_artifacts(
                         "audit_error_count": int(cand_audit_summary.get("error_count", 0)),
                         "audit_warning_count": int(cand_audit_summary.get("warning_count", 0)),
                         "audit_patch_count": int(cand_audit_summary.get("patch_count", 0)),
-                        "accepted_patch_count": int(cand_apply_summary.get("accepted_count", 0)),
+                        "accepted_patch_count": committed_change_count(cand_apply),
                         "rejected_patch_count": int(cand_apply_summary.get("rejected_count", 0)),
                         "eval_error_count": int(cand_eval_summary.get("error_count", 0)),
                         "eval_warning_count": int(cand_eval_summary.get("warning_count", 0)),
@@ -2990,7 +3119,10 @@ def run_post_pipeline_sbml_artifacts(
             error_count = int(summary.get("error_count", 0))
             warning_count = int(summary.get("warning_count", 0))
             patch_count = int(summary.get("patch_count", 0))
-            accepted_count = int(apply_summary.get("accepted_count", 0))
+            # What actually changed the payload. A candidate whose batch rolled
+            # back edited nothing, and scoring it as if it had would rank an
+            # inert round above one that made a real repair.
+            accepted_count = committed_change_count(round_apply)
             rejected_count = int(apply_summary.get("rejected_count", 0))
             audit_payload_hash = _payload_file_hash(round_audited)
             settled_payload_hash = _payload_file_hash(current_after_round)
@@ -3432,8 +3564,33 @@ def run_pwml_export(
     background_color: str = "#FFFFFF",
     grounding_dict: Optional[Dict[str, Any]] = None,
     strict_db: bool = True,
+    quarantine_report: Optional[Dict[str, Any]] = None,
+    quarantine_artifacts: Optional[Dict[str, str]] = None,
+    pathway_context: Optional[Dict[str, Any]] = None,
+    export_mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Dict[str, Any]:
+    """Export a payload that has ALREADY passed the quarantine boundary.
+
+    ``quarantine_report`` / ``quarantine_artifacts`` are the decisions that
+    boundary made, carried in so they ride on every result this function returns.
+    This function does not quarantine: :func:`run_quarantine_boundary` runs once,
+    upstream of the post-mapping Stage 3 check, and re-running it here would judge
+    a *different* payload and overwrite the artifacts describing the graph the
+    reviewer approved.
+
+    A caller that reaches the exporter without a boundary decision -- a direct
+    call, a script -- runs the boundary itself rather than exporting unquarantined
+    material.
+    """
+
     before_export_report: Optional[Dict[str, Any]] = None
+    # Bound before the try so the catch-all handler at the bottom can carry them
+    # too. An exception raised before the boundary block would otherwise produce
+    # the one result that drops the decision, and a caller cannot tell "no
+    # quarantine ran" from "quarantine ran and the report was lost".
+    quarantine_report = _safe_dict(quarantine_report)
+    quarantine_artifacts = dict(quarantine_artifacts or {})
+    quarantine_reused = False
     try:
         before_export_report = _write_reaction_preservation_report("before_final_export", final_payload)
         payload = deepcopy(final_payload)
@@ -3443,6 +3600,86 @@ def run_pwml_export(
 
         outputs_dir = project_root / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        # Is the stored decision about THIS payload, under THESE rules? Refinement
+        # can have deleted the requested core since the boundary ran, and
+        # `apply_grounding` above rewrites identifiers -- either way the report
+        # describes a graph that no longer exists, and reusing it would export
+        # material nothing admitted. Reuse is therefore gated on the payload hash
+        # AND the decision-input hash, not on the report merely existing.
+        decision_controls = {
+            "mode": export_mode,
+            "strict_db": bool(strict_db),
+            "pathway_context": pathway_context,
+        }
+        quarantine_reused = decision_matches(quarantine_report, payload, **decision_controls)
+        if not quarantine_reused and quarantine_report and not decision_inputs_match(
+            quarantine_report, **decision_controls
+        ):
+            # Controls moved, not the payload. This is the one mismatch that must
+            # NOT be absorbed by re-running: `payload` here is whatever the boundary
+            # left behind, and under a strict boundary that is an already reduced
+            # graph. Re-judging it in research mode would report a research decision
+            # over material a strict pass had already removed -- annotating a graph
+            # the reviewer never saw and calling nothing quarantined. The controls
+            # are locked for the run; changing one requires a new run.
+            changed = sorted(
+                key
+                for key, value in {
+                    "export_mode": coerce_mode(export_mode),
+                    "strict_db": bool(strict_db),
+                }.items()
+                if _safe_dict(quarantine_report.get("decision_inputs")).get(key) != value
+            ) or ["requested_pathway_context"]
+            return {
+                "ok": False,
+                "error": (
+                    "PWML export stopped: quarantine decision controls changed since "
+                    "the boundary ran (" + ", ".join(changed) + "). The stored decision "
+                    "was taken under different rules and cannot authorize this export. "
+                    "Re-run the pipeline to take a fresh decision."
+                ),
+                "counts": {},
+                "issues": len(changed),
+                "refusal_reasons": [f"quarantine_decision_controls_changed:{name}" for name in changed],
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": False,
+                "reaction_preservation_before_final_export": before_export_report,
+            }
+        if not quarantine_reused:
+            quarantine_result = quarantine_and_close(
+                payload,
+                strict_db=bool(strict_db),
+                pathway_context=pathway_context,
+                mode=export_mode,
+            )
+            quarantine_artifacts = write_quarantine_artifacts(quarantine_result, outputs_dir)
+            quarantine_report = quarantine_result.quarantine_report
+            if not quarantine_result.ok:
+                return {
+                    "ok": False,
+                    "error": (
+                        "PWML export stopped by the quarantine boundary: "
+                        + "; ".join(quarantine_result.refusal_reasons)
+                    ),
+                    "counts": {},
+                    "issues": len(quarantine_result.refusal_reasons),
+                    "refusal_reasons": list(quarantine_result.refusal_reasons),
+                    "output_path": "",
+                    "qa": {},
+                    "grounding_report": grounding_report,
+                    "quarantine_report": quarantine_report,
+                    "quarantine_artifacts": quarantine_artifacts,
+                    "quarantine_reused": False,
+                    "coverage_summary": quarantine_result.coverage,
+                    "reaction_preservation_before_final_export": before_export_report,
+                }
+            payload = quarantine_result.payload
+
         stage3_gate_report, stage3_contract_report = _validate_stage8_export_payload(payload)
         if not bool(stage3_contract_report.get("ok", False)):
             stage3_gate_path = outputs_dir / "pwml_stage3_gate_report.json"
@@ -3475,6 +3712,9 @@ def run_pwml_export(
                 "stage3_gate_report": stage3_gate_report,
                 "stage3_contract_report": stage3_contract_report,
                 "stage3_gate_report_path": str(stage3_gate_path),
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": quarantine_reused,
                 "reaction_preservation_before_final_export": before_export_report,
             }
 
@@ -3530,6 +3770,9 @@ def run_pwml_export(
                 "stage3_contract_report": stage3_contract_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": quarantine_reused,
                 "reaction_preservation_before_final_export": before_export_report,
             }
 
@@ -3560,6 +3803,9 @@ def run_pwml_export(
                 "pwml_ir": pwml_ir,
                 "pwml_ir_report": ir_report,
                 "pwml_ir_validation": ir_validation,
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": quarantine_reused,
                 "reaction_preservation_before_final_export": before_export_report,
             }
         signature = discover_structure_signature(ref_path)
@@ -3602,12 +3848,18 @@ def run_pwml_export(
             "pwml_ir": pwml_ir,
             "pwml_ir_report": ir_report,
             "pwml_ir_validation": ir_validation,
+            "quarantine_report": quarantine_report,
+            "quarantine_artifacts": quarantine_artifacts,
+            "quarantine_reused": quarantine_reused,
             "reaction_preservation_before_final_export": before_export_report,
             "reaction_preservation_after_final_export": after_export_report,
         }
     except Exception as exc:
         return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,
                 "output_path": "", "qa": {}, "grounding_report": {},
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": quarantine_reused,
                 "reaction_preservation_before_final_export": before_export_report}
 
 
@@ -4284,6 +4536,12 @@ if submit:
     st.session_state["pipeline_source_text"] = text
     st.session_state["reaction_preservation_after_stage2"] = stage2_preservation_report
     st.session_state.pop("post_pipeline_artifacts", None)
+    # A new pipeline run voids every quarantine decision from the previous one,
+    # in session state AND on disk. Otherwise a second run that dies before the
+    # boundary would render the first run's coverage summary for a completely
+    # different pathway, and a caller reading the session would find a report
+    # authorizing a payload that is no longer loaded.
+    reset_quarantine_state(PROJECT_ROOT / "outputs")
     st.session_state["token_stats"] = llm_client_module.get_token_stats()
 
 if st.session_state.get("pipeline_ready"):
@@ -5233,6 +5491,15 @@ if st.session_state.get("pipeline_ready"):
             st.error("No pipeline output in session state. Run the pipeline first.")
         else:
             st.session_state.pop("post_pipeline_artifacts", None)
+            # A second audit/mapping run produces a new payload version, so the
+            # previous run's decision is void before this one starts -- not merely
+            # replaced when the boundary happens to be reached. It often is not:
+            # mapping can raise, and the handler below catches it. Without the
+            # clear, that dead run would leave the earlier decision in session
+            # state and its artifacts on disk, authorizing a payload nobody
+            # admitted. Cleared HERE, ahead of everything, so the boundary is
+            # never the thing that has to remember to invalidate.
+            reset_quarantine_state(PROJECT_ROOT / "outputs")
             post_artifacts = {}
             try:
                 with st.spinner("Running audit and DB mapping..."):
@@ -5285,39 +5552,125 @@ if st.session_state.get("pipeline_ready"):
                     final_mapped_payload = _pa.get("final_mapped_db") or _pa.get("final_mapped")
                     mapping_report = _safe_dict(_pa.get("mapping_report"))
                     if isinstance(final_mapped_payload, dict) and final_mapped_payload:
-                        try:
-                            _gate_details = run_strict_post_normalization_gates(deepcopy(final_mapped_payload))
-                            final_gate: Dict[str, Any] = {"ok": True, **_gate_details}
-                        except GateValidationError as _gate_exc:
-                            final_gate = {"ok": False, **_safe_dict(_gate_exc.details)}
-                        if final_gate and not bool(final_gate.get("ok", False)):
-                            st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
-                            _pa["final_stage3_gate_report"] = final_gate
-                            st.error(
-                                "Mapped pathway still fails the pre-export Stage 3 revalidation. "
-                                "Refinement review was not opened."
+                        # THE quarantine boundary. Before the Stage 3 revalidation,
+                        # because that check is what stops the run and prevents
+                        # refinement review from ever opening.
+                        _quarantine = run_quarantine_boundary(
+                            final_mapped_payload,
+                            strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+                            outputs_dir=PROJECT_ROOT / "outputs",
+                            pathway_context=_safe_dict(st.session_state.get("pathway_context")),
+                            mode=coerce_mode(st.session_state.get("export_mode")),
+                        )
+                        _pa["quarantine_report"] = _quarantine["quarantine_report"]
+                        _pa["quarantine_artifacts"] = _quarantine["quarantine_artifacts"]
+                        _quarantine_flags = _safe_list(_quarantine.get("review_flags"))
+                        if _quarantine_flags:
+                            # Research mode: the candidate is untouched and the run
+                            # continues. These are the findings a strict run would
+                            # have acted on, shown so the skip is never invisible.
+                            st.warning(
+                                f"Quarantine review flags ({len(_quarantine_flags)}): "
+                                "research mode kept every process. A strict export "
+                                "would have removed the ones listed below."
                             )
-                            _gate_errors_for_display = _safe_list(final_gate.get("errors"))
-                            with st.expander(
-                                f"Why Stage 3 failed ({len(_gate_errors_for_display)} error(s))",
-                                expanded=True,
-                            ):
-                                if _gate_errors_for_display:
-                                    for _gate_err in _gate_errors_for_display:
-                                        if isinstance(_gate_err, dict):
-                                            st.markdown(
-                                                f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
-                                            )
-                                            _render_issue_detail(_gate_err.get("detail"))
-                                        else:
-                                            st.markdown(f"- {_gate_err}")
-                                else:
-                                    st.write("No itemized errors were returned; showing full gate report below.")
-                                st.json(final_gate)
+                            st.json(_quarantine_flags)
+                        if not _quarantine["ok"]:
+                            st.session_state.refinement_gate_errors = [
+                                {"path": "/processes", "reason": f"quarantine refusal: {reason}"}
+                                for reason in _quarantine["refusal_reasons"]
+                            ]
+                            st.error(
+                                "Quarantine could not produce a viable requested-pathway core: "
+                                + "; ".join(_quarantine["refusal_reasons"])
+                            )
+                            # Rendered flat rather than inside an expander. A
+                            # refusal is the reason the run stopped, so it should
+                            # not need a click to read, and st.expander here trips
+                            # FragmentThreadState under AppTest once an earlier
+                            # app run has executed in the same process.
+                            st.caption("Requested-core coverage")
+                            st.json(_quarantine["coverage"])
+                            st.caption("Strict invariants")
+                            st.json(_safe_dict(_quarantine["quarantine_report"]).get("strict_invariants"))
                         else:
-                            st.session_state.refinement_gate_errors = []
-                            initialize_refinement_review_state(final_mapped_payload, mapping_report)
-                            st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
+                            # Everything downstream -- the reviewer's graph, the
+                            # Stage 3 revalidation, the exporter -- reads the same
+                            # reduced payload this boundary produced.
+                            final_mapped_payload = _quarantine["payload"]
+                            _pa["final_mapped_quarantined"] = final_mapped_payload
+                            try:
+                                _gate_details = run_strict_post_normalization_gates(deepcopy(final_mapped_payload))
+                                final_gate: Dict[str, Any] = {"ok": True, **_gate_details}
+                            except GateValidationError as _gate_exc:
+                                final_gate = {"ok": False, **_safe_dict(_gate_exc.details)}
+                            _stage3_failed = bool(final_gate) and not bool(final_gate.get("ok", False))
+                            if _stage3_failed and is_research(coerce_mode(st.session_state.get("export_mode"))):
+                                # Research mode fails open through the WHOLE
+                                # boundary, not just through quarantine. An
+                                # annotate-only quarantine in front of a mode-blind
+                                # gate is still a blocked run: a novel enzyme with
+                                # no accession fails Stage 3 for the same reason
+                                # quarantine flagged it, refinement review never
+                                # opens, and the mode that exists for exactly that
+                                # pathway delivers nothing. The gate still RAN and
+                                # its findings are kept in full below -- what
+                                # changes is that they annotate instead of block.
+                                _pa["final_stage3_gate_report"] = final_gate
+                                _pa["research_stage3_review_flags"] = _safe_list(final_gate.get("errors"))
+                                _pa["research_stage3_failed_open"] = True
+                                st.session_state.refinement_gate_errors = []
+                                st.warning(
+                                    "Research mode: the pre-export Stage 3 revalidation FAILED "
+                                    f"({len(_safe_list(final_gate.get('errors')))} error(s)) and was not "
+                                    "enforced. The strict gates did NOT pass — this candidate is not "
+                                    "PathWhiz-exportable as it stands. Refinement review is open so the "
+                                    "findings below can be reviewed against the pathway itself."
+                                )
+                                # Flat, not in an expander: st.expander here trips
+                                # FragmentThreadState under AppTest once an earlier
+                                # app run has executed in the same process.
+                                st.caption("Stage 3 findings retained as review flags")
+                                for _gate_err in _safe_list(final_gate.get("errors")):
+                                    if isinstance(_gate_err, dict):
+                                        st.markdown(
+                                            f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
+                                        )
+                                    else:
+                                        st.markdown(f"- {_gate_err}")
+                                st.json(final_gate)
+                                # The candidate, byte for byte. Research quarantine
+                                # returned the payload unchanged, so this is what
+                                # came out of mapping and not a reduced graph.
+                                initialize_refinement_review_state(final_mapped_payload, mapping_report)
+                            elif _stage3_failed:
+                                st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
+                                _pa["final_stage3_gate_report"] = final_gate
+                                st.error(
+                                    "Mapped pathway still fails the pre-export Stage 3 revalidation. "
+                                    "Refinement review was not opened."
+                                )
+                                _gate_errors_for_display = _safe_list(final_gate.get("errors"))
+                                with st.expander(
+                                    f"Why Stage 3 failed ({len(_gate_errors_for_display)} error(s))",
+                                    expanded=True,
+                                ):
+                                    if _gate_errors_for_display:
+                                        for _gate_err in _gate_errors_for_display:
+                                            if isinstance(_gate_err, dict):
+                                                st.markdown(
+                                                    f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
+                                                )
+                                                _render_issue_detail(_gate_err.get("detail"))
+                                            else:
+                                                st.markdown(f"- {_gate_err}")
+                                    else:
+                                        st.write("No itemized errors were returned; showing full gate report below.")
+                                    st.json(final_gate)
+                            else:
+                                st.session_state.refinement_gate_errors = []
+                                initialize_refinement_review_state(final_mapped_payload, mapping_report)
+                                st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except StageContractError as failure:
                 _render_stage_contract_failure(
                     failure,

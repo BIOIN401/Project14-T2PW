@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import re
 from copy import deepcopy
 from pathlib import Path
@@ -26,6 +27,8 @@ from t2pw.pipeline.process_normalizer import (  # noqa: PLC2701 - deliberate reu
     _normalize as _registry_normalize,
 )
 
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD = 0.98
 DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD = 0.98
@@ -843,14 +846,26 @@ def _apply_single_op(working: Dict[str, Any], op: Dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 
 # Exactly the buckets process_normalizer.validate_registry_references unions into
-# its registry (compounds | proteins | protein_complexes). Widening this set would
-# make the guard disagree with the gate in the permissive direction; narrowing it
-# would make it over-block.
-_REGISTRY_ENTITY_BUCKETS = ("compounds", "proteins", "protein_complexes")
+# its registry. Widening this set would make the guard disagree with the gate in
+# the permissive direction; narrowing it would make it over-block.
+#
+# ``nucleic_acids`` was missing here after the gate grew it (process_normalizer.py
+# :4143). The two sides disagreeing is not a cosmetic drift: coverage that does not
+# count a bucket cannot register a loss in it, so `lost` came back empty for every
+# nucleic-acid removal and the guard waved through deletions of rows that reactions
+# name as inputs -- the exact orphaned reference the gate then aborts the export
+# over. 'pmrHFIJKLM operon' is a reaction input of PMC13278307 and lives in this
+# bucket.
+_REGISTRY_ENTITY_BUCKETS = ("compounds", "proteins", "protein_complexes", "nucleic_acids")
 
 # Stable, greppable prefix for the rejection reason, so batch tooling can count
 # these the way it already counts the "attempted_to_*" lock reasons.
 REFERENTIAL_INTEGRITY_REASON_PREFIX = "referential_integrity"
+
+# Prefix stamped on applied-log entries that a batch rollback undid, so a reader
+# grepping the rejected log can tell "this op was refused" from "this op was
+# applied and then unwound with the rest of its set".
+ROLLED_BACK_REASON_PREFIX = "rolled_back"
 
 # How many orphaned references to name in the rejection reason before summarising.
 # PMC12444477/research produced 24 of them from two entities; a reason string
@@ -1047,6 +1062,76 @@ def _referential_integrity_rejection(
     )
 
 
+def committed_change_count(report: Any) -> int:
+    """How many patch ops actually changed the payload the caller received.
+
+    ``summary["accepted_count"]`` counts per-op verdicts and is the wrong number
+    to report as "changes made": after a batch rollback it is non-zero while the
+    payload is byte-identical to the input. Every consumer that reports progress,
+    scores a candidate, or decides whether to re-run should ask this instead.
+
+    Falls back to ``accepted_count`` only for reports written before
+    ``transaction`` existed, so an archived report still reads sensibly.
+    """
+
+    if not isinstance(report, dict):
+        return 0
+    legacy = int(_safe_dict(report.get("summary")).get("accepted_count") or 0)
+    transaction = report.get("transaction")
+    if not isinstance(transaction, dict):
+        return legacy
+    value = transaction.get("applied_count")
+    if isinstance(value, int) and not isinstance(value, bool):
+        return int(value)
+    return 0 if transaction.get("committed") is False else legacy
+
+
+def _batch_rollback_reason(
+    source_payload: Dict[str, Any],
+    working: Dict[str, Any],
+) -> Tuple[Optional[str], List[str]]:
+    """Whether the accepted set, taken as a whole, left the payload inconsistent.
+
+    The per-op guard cannot answer this. ``_referential_integrity_rejection``
+    clears a removal on the strength of a *later* add that has not run yet, and
+    until this check existed nothing ever confirmed the promise was kept: if that
+    add is malformed, addresses an index that does not exist, or is rejected by
+    its own confidence bar, the removal is already committed and the reference it
+    stranded is a dangling name the Stage 3 gate aborts the export over. A patch
+    is an operation *set*, so the set is what has to be valid -- an op that is
+    individually safe and collectively destructive must not commit.
+
+    Scoped, deliberately, to references orphaned by LOST COVERAGE -- a declaration
+    the batch removed and did not restore. That is the same question the per-op
+    guard asks, now asked once about the finished payload instead of once per op,
+    and it is the whole of what a look-ahead can get wrong. A reference that
+    dangles because a process op *introduced* it is a different defect with a
+    different owner (the Stage 3 registry gate), and rolling back over it here
+    would refuse the reactions-array replacements this module has always applied.
+
+    Pre-existing dangling references are excluded for free: a name that was never
+    in coverage cannot appear in the coverage that was lost.
+    """
+
+    lost_coverage = _registry_coverage(source_payload) - _registry_coverage(working)
+    if not lost_coverage:
+        return None, []
+    new_orphans = sorted(
+        where
+        for norm, where in _referenced_entity_norms(working).items()
+        if norm in lost_coverage
+    )
+    if not new_orphans:
+        return None, []
+    shown = "; ".join(new_orphans[:_MAX_ORPHANED_REFERENCES_IN_REASON])
+    if len(new_orphans) > _MAX_ORPHANED_REFERENCES_IN_REASON:
+        shown += f"; and {len(new_orphans) - _MAX_ORPHANED_REFERENCES_IN_REASON} more"
+    return (
+        f"{REFERENTIAL_INTEGRITY_REASON_PREFIX}: operation set rolled back; applying it "
+        f"would orphan {len(new_orphans)} process reference(s): {shown}."
+    ), new_orphans
+
+
 def _should_accept(
     op: Dict[str, Any],
     source_payload: Dict[str, Any],
@@ -1177,7 +1262,35 @@ def apply_patch_with_policy(
             rejected.append(record)
             rejected_log_records.append(_patch_log_record(stage, op, record["reason"]))
 
+    # Commit point. Everything above ran against `working`, a copy; nothing has
+    # been handed back yet, so a failure here can still undo the entire batch.
+    rollback_reason, orphaned_references = _batch_rollback_reason(source_payload, working)
+    committed = rollback_reason is None
+    if not committed:
+        logger.warning("apply_patch_with_policy: %s", rollback_reason)
+        working = deepcopy(source_payload)
+        # The applied log is the record of what CHANGED the payload. After a
+        # rollback nothing did, so leaving these entries in it -- each stamped
+        # "accepted" -- would have the run's own audit trail assert edits that
+        # were undone before anyone saw them. They move to the rejected log,
+        # relabelled, and the applied log for this batch is emptied.
+        for record in accepted:
+            record["rolled_back"] = True
+            record["rollback_reason"] = rollback_reason
+        for entry in applied_log_records:
+            rolled = dict(entry)
+            rolled["reason"] = f"{ROLLED_BACK_REASON_PREFIX}: {rollback_reason}"
+            rolled["rolled_back"] = True
+            rejected_log_records.append(rolled)
+        applied_log_records = []
+        rejected_log_records.append(
+            _patch_log_record(stage, {"op": "batch", "path": "/"}, rollback_reason or "")
+        )
+
     report = {
+        # summary keeps its exact three-key shape: several callers and tests
+        # compare it as a whole, and the commit verdict belongs to the operation
+        # SET rather than to the per-op tallies. It lives in "transaction".
         "summary": {
             "accepted_count": len(accepted),
             "rejected_count": len(rejected),
@@ -1185,6 +1298,17 @@ def apply_patch_with_policy(
         },
         "accepted": accepted,
         "rejected": rejected,
+        # accepted_count records the per-op verdicts; committed records whether
+        # the caller actually received them. They differ exactly when the set was
+        # individually safe and collectively destructive.
+        "transaction": {
+            "committed": committed,
+            "rolled_back": not committed,
+            "reason": rollback_reason or "",
+            "orphaned_references": orphaned_references,
+            "accepted_before_rollback": len(accepted),
+            "applied_count": len(accepted) if committed else 0,
+        },
     }
     if lock_context is not None or applied_log_path is not None or rejected_log_path is not None:
         report["lock_policy"] = {
@@ -1338,7 +1462,13 @@ def main() -> None:
         rejected_patch_log_path=Path(args.rejected_patch_log_path) if args.rejected_patch_log_path else None,
     )
     print(f"Wrote audited JSON: {args.output_path}")
-    print(f"Patch accepted: {report['summary']['accepted_count']}, rejected: {report['summary']['rejected_count']}")
+    # Applied, not merely accepted: after a rollback the two differ and the
+    # number a human acts on is the one that changed the file.
+    print(
+        f"Patch applied: {committed_change_count(report)}, "
+        f"accepted: {report['summary']['accepted_count']}, "
+        f"rejected: {report['summary']['rejected_count']}"
+    )
 
 
 if __name__ == "__main__":

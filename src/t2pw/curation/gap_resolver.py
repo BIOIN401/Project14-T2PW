@@ -11,6 +11,7 @@ from t2pw.curation.apply_audit_patch import (
     APPLIED_PATCH_LOG_FILENAME,
     REJECTED_PATCH_LOG_FILENAME,
     apply_patch_with_policy,
+    committed_change_count,
 )
 from t2pw.pipeline.reaction_preservation_validator import load_locked_reaction_manifest
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
@@ -3093,7 +3094,9 @@ def resolve_gaps(
                 else None,
             )
             report["enrichment"]["patch_application"] = patch_apply_report
-            report["summary"]["enrichment_patches_accepted"] = patch_apply_report.get("summary", {}).get("accepted_count", 0)
+            # Committed, not accepted: a rolled-back enrichment batch changed
+            # nothing and must not be counted as patches applied.
+            report["summary"]["enrichment_patches_accepted"] = committed_change_count(patch_apply_report)
             report["summary"]["enrichment_patches_rejected"] = patch_apply_report.get("summary", {}).get("rejected_count", 0)
         else:
             report["summary"]["enrichment_patches_accepted"] = 0

@@ -5,6 +5,365 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## A decision is bound to its inputs, not only its payload; research fails open through the whole boundary (2026-07-31, branch `research-mode`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,
+`src/t2pw/app/streamlit_app.py`,
+`tests/test_strict_quarantine_versioning.py`,
+`tests/test_streamlit_quarantine_boundary.py`,
+`tests/test_strict_quarantine_real_artifact_replay.py`,
+`tests/test_strict_quarantine.py`
+
+Correction of the entry below, which closed two thirds of each of its own gaps.
+
+**1 — Reuse compared the payload and ignored the rules.** The previous entry bound
+a decision to `resulting_payload_hash` and stopped there. `export_mode`,
+`strict_db` and the thresholds were *recorded* on the report and never compared,
+and a field nobody consults is not a check. The consequence is not subtle: a
+research decision quarantines nothing and hands back the candidate unchanged, so
+its resulting hash is the candidate's hash — feed that candidate to a strict
+export and the payload half matches perfectly, and every unmapped process the
+strict run exists to stop ships under a report that never judged it strictly.
+
+`canonical_decision_inputs` now names every control that can change a verdict —
+policy version, export mode, `strict_db`, the canonical requested core (explicit
+argument and the context-derived terms, normalized), confidence floor, both core
+thresholds, the iteration cap — and `decision_input_hash` fingerprints it.
+`decision_matches` requires **both** halves; `decision_matches_payload` is gone
+rather than left as a footgun that looks sufficient. The context contributes its
+derived core terms rather than its raw bytes: a moved paper title cannot change a
+verdict, and voiding a good decision over one is a re-run the reviewer waits
+through for nothing.
+
+`QUARANTINE_POLICY_VERSION` is in the hash, so changing this module's rules
+invalidates every stored decision instead of letting an old report authorize an
+export judged by new logic.
+
+**2 — Mode and policy changes void the run; they are not re-evaluated.** After a
+strict boundary the payload in the exporter's hand is an *already reduced* graph.
+Re-judging that under research rules would report a research decision over
+material a strict pass had already removed — annotating a graph the reviewer never
+saw, and truthfully claiming nothing was quarantined. So the controls are locked
+for the pipeline run: a payload that moved is re-quarantined as before, but
+controls that moved return `quarantine_decision_controls_changed:<field>` and
+require a new run. History is keyed on the full decision identifier
+(`<admitted payload hash>.<decision input hash>`), so the strict and research
+decisions over one payload cannot overwrite each other — they share the payload
+hash exactly and reach opposite conclusions.
+
+**3 — Research mode failed open at quarantine and closed one line later.** The
+previous entry recorded this as a pre-existing limit and left it. It was still a
+blocked run: annotate-only quarantine in front of a mode-blind Stage 3 gate
+delivers nothing for the exact pathway the mode exists for, because a novel enzyme
+with no accession fails that gate for the same reason quarantine flagged it, and
+`refinement_working_json` was never initialized. Stage 3 still **runs** in research
+mode and its findings are kept in full — `final_stage3_gate_report` unchanged,
+`research_stage3_review_flags`, `research_stage3_failed_open` — but they annotate
+instead of blocking, and refinement review opens on the byte-for-byte candidate.
+The UI says the gates did *not* pass and never says "ready for review". PathWhiz
+mode is untouched and still fail-closed.
+
+**4 — The lifecycle test tested itself.** It called `clear_quarantine_artifacts`
+by hand and asserted the call worked. The reset is now also wired into the start
+of the audit/mapping run, and the test drives two runs in one session through the
+button: the second dies in mapping, *before* the boundary, so the first run's
+session keys and artifacts being gone can only mean they were cleared ahead of it.
+`quarantine_history/` survives, and the first decision is checked against
+`decision_matches` for the second payload directly.
+
+**5 — The full-stack baseline is pinned, not narrated.** Same measurement as
+below (23 legs; 18 admitted / 5 refused; 18/18 Stage 3; 1/18 required contract;
+1/1 IR; 1/18 exportable; by leg 17/17/4, by row 19/19/4) now asserted as an exact
+equality in `test_the_full_stack_baseline_is_exactly_what_was_reported`, with leg
+counts and row counts kept as separate assertions. A new batch in `runs/` fails it
+by construction — re-measure and update both the test and this log, and the two
+cannot disagree.
+
+**Also removed:** `assert ... == candidate or True`, which was tautologically
+true. The intended assertion — the research candidate equals the mapped payload it
+came from, byte for byte — is now made.
+
+**Tests:** decision-versioning 25 · quarantine unit suites 150 passed / 8 skipped ·
+boundary AppTests 21 · real-artifact replay 97.
+
+---
+
+## One decision per payload version; research mode fails open; Stage-3 recovery is not exportability (2026-07-31, branch `research-mode`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,
+`src/t2pw/app/streamlit_app.py`,
+`tests/test_strict_quarantine_versioning.py` (new),
+`tests/test_streamlit_quarantine_boundary.py`,
+`tests/test_strict_quarantine_real_artifact_replay.py`
+
+Correction of the entry below.
+
+**1 — A decision outlived the payload it was made about.** The boundary runs
+before refinement review; the reviewer can then delete the requested core in one
+click, and `apply_grounding` rewrites entity identifiers inside the exporter. The
+stored report was reused on the strength of *existing*, so either edit shipped a
+graph nothing had admitted. Every report now carries `admitted_payload_hash` (what
+it judged) and `resulting_payload_hash` (what it produced), and reuse is gated on
+the latter — the exporter holds the reduced graph, so comparing against the
+admitted hash would miss on every run where anything was actually quarantined.
+Mismatch re-runs the boundary and writes a new decision; the superseded set is
+archived under `quarantine_history/<hash>/` rather than overwritten, because each
+is the only record of why that version was admitted. A report with no hash never
+matches: it cannot prove what it judged.
+
+**2 — Research mode was being handed a smaller strict graph.** Research mode
+exists for a novel pathway whose enzymes have no accessions yet, so every one of
+them is `quarantined_unmapped_entity` by construction — a destructive quarantine
+there deletes exactly what the mode was built to keep. It now runs every decision
+and applies none: the candidate comes back byte for byte, `ok` is True regardless
+of coverage, and the findings surface as review flags with the strict verdict
+recorded under `research_mode.would_have_refused`. Fail-open, never fail-silent.
+
+**3 — Lifecycle.** `reset_quarantine_state` clears the session keys *and* the
+on-disk artifacts when a new pipeline run begins. `st.session_state` survives a
+rerun and `outputs/quarantine_report.json` survives the whole session, so without
+it a second run that died before the boundary would render the first run's
+coverage summary for a different pathway.
+
+**4 — The export is now exercised, not assumed.** A test that stops at refinement
+review proves the run was not blocked; it does not prove a file comes out. The
+AppTest suite now clicks **Generate PWML** and asserts Stage 3, the required-field
+gate, `build_pwml_ir`, `validate_pwml_ir`, `ok is True`, and non-empty XML on
+disk — with the quarantined process absent from the bytes.
+
+**5 — Stage-3 recovery is not strict exportability, and the previous entry
+conflated them.** That entry reported "remaining downstream gate failures: none"
+on the strength of Stage 3 alone. Measured full-stack across the 23 cached legs:
+
+| stage | result |
+|---|---|
+| quarantine | 18 admitted, 5 refused |
+| Stage 3 after quarantine | **18 / 18 pass** |
+| required-field contract | 1 / 18 pass |
+| IR build + validation | 1 / 1 of those reaching it |
+| **fully exportable** | **1 / 18** |
+
+The 17 failures are one class, and quarantine is the wrong place to fix it:
+`species_missing_classification` (17 legs, 19 rows), `species_missing_taxonomy`
+(17 legs, 19 rows), `no_biological_states` (4 legs). The gate wants a numeric
+taxonomy id and a Prokaryote/Eukaryote classification on every species row because
+a species with no reference-DB identity is created fresh in Rails; the archived
+payloads carry species rows with neither. Inventing them inside quarantine would
+be fabricating database identity, so this is recorded as **the next pipeline
+defect** — species-metadata resolution — rather than repaired here.
+`test_stage_three_recovery_is_not_strict_exportability` pins both halves and will
+fail if the gap closes upstream, so the claim cannot drift from the measurement.
+
+**Also recorded, not fixed.** The app's post-mapping Stage 3 revalidation is
+mode-blind and always has been (unchanged at HEAD). A research run whose enzyme
+has no accession is still stopped there, before refinement review opens — the
+quarantine boundary passes it, the gate two lines later does not. That is a
+pre-existing gap in the app's gate cadence with its own blast radius;
+`test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` asserts what
+quarantine controls and states the limit explicitly rather than hiding it.
+
+---
+
+## The quarantine boundary was unreachable in production, and four rules disagreed with the schemas (2026-07-31, branch `research-mode`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,
+`src/t2pw/app/streamlit_app.py`, `src/t2pw/curation/apply_audit_patch.py`,
+`src/t2pw/curation/gap_resolver.py`, `src/t2pw/curation/pathway_curator.py`,
+`src/t2pw/pipeline/focused_repair.py`,
+`tests/test_streamlit_quarantine_boundary.py` (new),
+`tests/test_strict_quarantine_contract_alignment.py` (new),
+`tests/test_strict_quarantine_locks_and_scope.py` (new),
+`tests/test_strict_quarantine_real_artifact_replay.py` (new),
+`tests/fixtures/strict_failures/cases.json`
+
+Correction of the entry below. Every defect here is one the unit tests could not
+see, and each was found by driving the real app or replaying real run artifacts.
+
+**1 — Quarantine ran where production never reaches.** It lived inside
+`run_pwml_export`. The app stops one step earlier: the post-mapping Stage 3
+revalidation (`streamlit_app.py:5422`) sets `refinement_gate_errors` and never
+initializes refinement review, so `_generate_pwml_from_refinement_working_json`
+returns on those errors and the exporter is not called. A payload that failed
+Stage 3 — the exact case quarantine exists for — reached it never. There is now
+one boundary, `run_quarantine_boundary`, immediately before that check; the
+reduced payload becomes `refinement_working_json`, so the reviewer and the
+exporter see the same graph, and `run_pwml_export` carries the decision rather
+than making a second one against a different payload.
+
+**2 — The requested core came from the payload, which does not carry one.**
+Stage 6 rebuilds rows from field whitelists that include neither `metadata` nor
+`pathway_context`, so discovery found nothing, `requested_core_declared` came back
+False, and coverage degraded to the regime where an unrelated survivor passes — on
+every production run. `pathway_context` is now an explicit argument, threaded from
+session state, and `coverage_summary.json` records it verbatim alongside a
+`requested_core_source` saying which input produced the terms. No archived leg in
+`runs/` carries `key_compounds` anywhere, which is the evidence that payload-only
+discovery was never going to work; `test_no_archived_leg_carries_stage_zero_context`
+pins that.
+
+**3 — Three schema readers were narrower than production.** Transport cargo was
+read from `cargo` alone, so every transport written with `transport_elements` —
+the shape `ir.py:1780` reads *first* — was quarantined as having no participants.
+Interaction endpoints were read from `entity_1`/`entity_2` alone, so `left`/`right`
+and `source`/`target` rows, both of which `validate_registry_references:4188`
+resolves, were quarantined the same way. Both are now read exactly as production
+reads them, with positive controls per spelling. Separately,
+`reaction_coupled_transports` were being *accepted*: `build_pwml_ir:1934-1946`
+builds every RCT with `left`, `right` and `enzymes` hard-coded to `[]` and never
+fills them, and `validate_pwml_ir:3018-3022` then raises three errors for exactly
+that. There is no exportable representation of one today, so they are now refused
+explicitly, and a test asserts the IR limitation so the refusal cannot outlive it.
+
+**4 — Representability disagreed with the contract in both directions.** Missing
+protein name and species, missing complex name and species, and generated-wrapper
+component species were not checked, so a row could be admitted and fail
+`validate_required_pwml_contract` afterwards. In the other direction, component
+resolution was treated as blocking for *every* complex, while the contract makes it
+an error only for a generated wrapper — which would have quarantined every reaction
+catalysed by a hand-declared multi-subunit complex. Nameless rows now leave in
+closure (the contract walks every declared row, so an unreferenced one still fails
+`compound_missing_name`), and a surviving row the contract will reject is reported
+as `unexportable_entities` and refused rather than silently deleted. All of these
+assert through the *real* gates, not internal state.
+
+**5 — A quarantined locked reaction vanished while the report said it exported.**
+`locked_reaction_filter_report` is what the Stage 3 gate reads to decide whether
+every lock is accounted for. It is now recomputed from active plus quarantined lock
+ids, in the same shape and by the same rule `dedupe_processes:4061-4085` uses, and
+the quarantined ones are appended to `quarantined_locked_reactions` with the
+original row. An unaccounted lock refuses the export with its own reason.
+
+**6 — The applied-patch log asserted edits that were undone.** On a batch rollback
+the accepted ops stayed in `applied_patch_log`, each stamped `accepted`, while the
+payload was byte-identical to the input. They now move to the rejected log stamped
+`rolled_back` and the applied log for that batch is empty. Every consumer that
+reports "how many patches landed" — streamlit candidate scoring (two sites plus the
+round summary), `pathway_curator`, `gap_resolver`, `focused_repair`, and the CLI —
+now reads `committed_change_count()`, which prefers `transaction.applied_count` and
+falls back to `summary.accepted_count` only for reports written before
+`transaction` existed. `summary` keeps its three-key shape.
+
+**7 — Refusals were indistinguishable.** `minimum_core`, `entity_type_overlap`,
+`degree_zero_export`, `unexportable_entity`, `unaccounted_locked_reactions` and
+`closure_not_converged` are now separate named reasons on `refusal_reasons`;
+`ok` is derived from that list, so an invariant cannot fail silently. The
+quarantine report and artifact paths ride on every later Stage 3, required-contract
+and IR failure return.
+
+**Found by replaying real legs.** A clean pathway of four interactions and no
+reactions (`runs/2026-07-28_2122` PMC12624714/strict) was refused: with no declared
+core every accepted process falls to AUXILIARY unless it is a reaction, so
+`core_accepted` was zero. Undeclared means relevance is unjudgeable and the only
+rule left is "not empty", so the minimum now counts all accepted processes in that
+regime and `core_accepted` only when a core was actually declared. Across 23 cached
+legs: 15 recover, 5 are refused (all genuinely empty after quarantine), 3 were
+already clean, 0 still fail, 0 clean legs refused.
+
+**Also corrected.** `quarantined_disconnected` is documented as what it is — a
+backstop that stays at zero while every removal is reference-driven, kept so a
+future non-reference-driven removal leaves with a reason instead of putting a
+dangling reference in front of the gate. It is tested by simulating exactly that
+removal. The synthetic coupled-transport chain that previously demonstrated the
+state is gone.
+
+---
+
+## Pre-export quarantine and graph closure; curation patches commit as a set (2026-07-31, branch `research-mode`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py` (new),
+`src/t2pw/curation/apply_audit_patch.py`, `src/t2pw/app/streamlit_app.py`,
+`tests/test_strict_quarantine.py` (new), `tests/test_curation_patch_transaction.py` (new),
+`tests/test_strict_failure_replay.py` (new),
+`tests/fixtures/strict_failures/cases.json` (new)
+
+**Error / symptom.** Strict export was all-or-nothing. One over-generated peripheral
+reaction naming a participant no entity bucket declared failed the Stage 3 registry
+gate for the whole pathway, and the nine good reactions beside it were never written
+(AGENT_INSTRUCTIONS issue 5a, jasmonate biosynthesis: 21 errors, 48 warnings). The
+recovery repeatedly reached for — delete the offending *participant* and re-run — is
+worse than the failure: it exports a reaction the paper does not contain, silently.
+
+**Root cause.** There was no stage between "the payload is final" and "the gates
+judge it" at which a single unexportable row could be set aside as a unit. Every
+existing removal path (`filter_unresolvable_reactions`, `prune_disconnected_proteins`)
+handles one shape and leaves the graph in whatever state that shape's removal
+produced; nothing closed the graph afterwards, and nothing checked that what
+survived was still the pathway that was requested.
+
+**Fix — `strict_quarantine.py`.** Seven explicit admission states
+(`core_accepted`, `auxiliary_accepted`, and five `quarantined_*` reasons), then
+closure to a fixpoint. Four rules make it safe in front of the gates:
+
+1. *The unit is the process, never the participant.* An essential participant that
+   cannot be represented takes the whole process, and the original row is retained
+   verbatim in `quarantine_report.json`.
+2. *Closure only removes what nothing references,* so it can never strand a
+   reference it did not already have. It iterates because a coupled transport's
+   `reaction` name resolves at admission against the payload as it arrived, and
+   only closure can see that its target has since left — a chain that unwinds one
+   link per round.
+3. *A smaller graph still has to be the requested pathway.* Coverage is measured
+   against `core_accepted` processes only, so an empty graph and a graph of
+   unrelated survivors both fail rather than passing because the invalid material
+   is gone. Removing everything is not a way to succeed.
+4. *Nothing is deleted without a record:* `quarantine_report.json`,
+   `removed_entity_report.json`, `graph_closure_iterations.json`,
+   `coverage_summary.json`, all four always written.
+
+Correctly formed Unknown-backed functional complexes are explicitly valid and need
+no special case: the component IS the PathBank `Unknown` sentinel, which
+`is_pathbank_unknown_protein` accepts, so the generic component walk admits the
+complex. A placeholder that *forges* an accession is still quarantined.
+
+**Fix — transactional curation patches.** Two holes the per-op guard could not see:
+
+* `_REGISTRY_ENTITY_BUCKETS` was three buckets while `validate_registry_references`
+  had grown to four. Coverage that does not count `nucleic_acids` cannot register a
+  loss in it, so every nucleic-acid removal came back with an empty `lost` set and
+  was waved through — including rows that reactions name as inputs
+  (`pmrHFIJKLM operon`, PMC13278307).
+* The removal look-ahead is a promise, and nothing confirmed it was kept. The
+  guard credits any list of strings an `/entities` op would introduce without
+  checking which leaf it lands on, so an add to `aliases` — or one that fails to
+  apply at all — authorised a removal it could not compensate for. There is now a
+  commit point: if the finished payload has a reference orphaned by coverage the
+  batch removed and did not restore, the whole operation set rolls back and
+  `report["transaction"]` says why.
+
+The rollback is scoped to *lost coverage*, not to every dangling name. A reference
+that dangles because a process op introduced it belongs to the Stage 3 registry
+gate; rolling back over it here would refuse the reactions-array replacements this
+module has always applied. `report["summary"]` keeps its exact three-key shape.
+
+**Pipeline consistency.** No gate was relaxed. Quarantine runs *before* both gate
+stacks — see the 2026-07-31 entry above for where that is in production — and both
+stacks then run unchanged on less input.
+
+A payload with nothing quarantined is **not** necessarily unchanged, and an earlier
+draft of this entry claimed it was. Closure removes what nothing references, and it
+does so whether or not any process was quarantined: an unreferenced compound, a
+degree-zero protein, a nameless row, an `element_locations` entry whose entity is
+gone. Those removals are the point — a degree-zero protein is a strict-gate failure
+on its own — and they are all recorded in `removed_entity_report.json`. What holds
+is narrower and still worth having: **quarantine never removes a process that both
+gate stacks would have accepted, and never edits a surviving one.**
+
+`out_of_scope` mirrors `filter_out_of_scope_reactions` exactly (only an explicit
+verdict removes anything); weak-evidence quarantine is off unless the caller passes
+a confidence floor, and never fires on an absent `confidence`.
+
+**Replay.** `tests/fixtures/strict_failures/cases.json` stores eight compact
+strict-failure shapes over one base pathway that passes strict export on its own.
+Five now produce a smaller valid strict graph; two are correctly refused (empty
+graph, unrelated survivors); one — the Unknown-backed complex — is untouched and
+already passed. The eighth, a metabolite split at its colon and filed as a protein
+complex, exposed a gap the current gates do not cover: they forbid a
+proteins/protein_complexes overlap and nothing else, so a compound and a complex
+sharing a name goes unremarked and the IR resolves the reference to whichever was
+registered first. Quarantine treats an ambiguous name as a broken reference.
+
+---
+
 ## Three residual repair-integrity gaps: the guards were half-guards (2026-07-30, branch `research-mode`)
 
 Follow-up to the entry below. Each of these guards checked one direction of a two-directional

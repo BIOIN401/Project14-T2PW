@@ -36,6 +36,7 @@ pre-normalization mapping result is not confused with the post-audit remap.
 |------|---------|
 | `src/t2pw/app/streamlit_app.py` | Streamlit UI + pipeline orchestration |
 | `src/t2pw/pipeline/process_normalizer.py` | Normalises the mapped JSON; contains strict Stage 3 gates |
+| `src/t2pw/pipeline/strict_quarantine.py` | Pre-export process admission + graph closure. Runs **once per payload version per rule set**, from `run_quarantine_boundary` in the app, immediately before the post-mapping Stage 3 revalidation — the first blocking pre-export decision. `run_pwml_export` carries that decision and reuses it only when `decision_matches` agrees on both the resulting payload hash and the `decision_input_hash` (mode, `strict_db`, requested core, thresholds, `QUARANTINE_POLICY_VERSION`). A changed *payload* is re-quarantined; changed *controls* void the run |
 | `src/t2pw/pipeline/stage_contracts.py` | Structural/semantic boundary adapters and centralized runtime-schema rollout mode |
 | `src/t2pw/pipeline/payload_models.py` | Non-mutating recursive runtime payload-shape validation |
 | `src/t2pw/sbml/json_to_sbml.py` | Builds the legacy SBML file from mapped JSON |

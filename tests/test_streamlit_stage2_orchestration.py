@@ -37,6 +37,12 @@ from t2pw.pipeline.stage_contracts import (  # noqa: E402
     StageContractError,
     run_stage_contract,
 )
+
+# Injected for real, like the export-mode helpers above. The orchestrator reads
+# it to report how many curation patches actually committed -- a rolled-back
+# batch changes nothing and must not be counted -- and a stub would let a wrong
+# answer here pass unnoticed.
+from t2pw.curation.apply_audit_patch import committed_change_count  # noqa: E402
 from t2pw.pipeline.failure_detail import headline as detail_headline  # noqa: E402
 from t2pw.pipeline.extraction_diagnostics import (  # noqa: E402
     count_entities as diagnostic_entity_counts,
@@ -381,6 +387,7 @@ def _orchestration_harness(
         "run_strict_post_normalization_gates": run_strict_post_normalization_gates,
         "run_audit": run_audit,
         "run_apply": run_apply,
+        "committed_change_count": committed_change_count,
         "run_gap_resolution": run_gap_resolution,
         "run_pathway_curator": lambda *_args, **_kwargs: {"summary": {}},
         "run_enrichment": run_enrichment,
