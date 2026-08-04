@@ -1,0 +1,55 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 1101.4s (18m21s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 22936 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 6
+  entities = 14
+  gate_errors = 0
+  proteins = 1
+  pwml = {'compounds': 4, 'proteins': 1, 'reactions': 1, 'edges': 6}
+  pwml_bytes = 22936
+  reactions = 1
+  runtime_schema_findings = 6
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2303 B)
+  - contract_reports.json  (9259 B)
+  - final_mapped.json  (72294 B)
+  - final_stage3_gate_report.json  (2526 B)
+  - gap_iteration_summary.json  (21172 B)
+  - gate_fail_report.json  (6561 B)
+  - initial_stage3_gate_report.json  (6561 B)
+  - merged_payload.json  (7860 B)
+  - pathway.pwml  (22936 B)
+  - pwml_ir.json  (24892 B)
+  - pwml_ir_report.json  (1802 B)
+  - pwml_ir_validation.json  (230 B)
+  - pwml_qa.json  (462 B)
+  - pwml_required_field_gate_report.json  (1809 B)
+  - pwml_validation_report.json  (19586 B)
+  - rag_admission_report.json  (171639 B)
+  - stage1_payload.json  (6181 B)

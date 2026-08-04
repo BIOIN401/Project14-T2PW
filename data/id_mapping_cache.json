@@ -73640,6 +73640,283 @@
         "status": "matched",
         "order_step": "api_uniprot"
       }
+    },
+    "db::clpxp::homo sapiens::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::clpxp::homo sapiens::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"CLPXP\" OR gene:\"CLPXP\") AND organism_name:\"Homo sapiens\" | (protein_name:\"CLPXP\" OR gene:\"CLPXP\")",
+      "mapped_ids": {
+        "uniprot": "O31606"
+      },
+      "confidence": 0.0975,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O31606",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH",
+            "yjbH"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q2G203",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH",
+            "yjbH"
+          ],
+          "organism": "Staphylococcus aureus (strain NCTC 8325 / PS 47)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5L1S1",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH",
+            "yjbH"
+          ],
+          "organism": "Geobacillus kaustophilus (strain HTA426)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A7X0M6",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH"
+          ],
+          "organism": "Staphylococcus aureus (strain Mu3 / ATCC 700698)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q2FI75",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH"
+          ],
+          "organism": "Staphylococcus aureus (strain USA300)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5HQG8",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH"
+          ],
+          "organism": "Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6GAS5",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH"
+          ],
+          "organism": "Staphylococcus aureus (strain MSSA476)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6GI84",
+          "protein_name": "ClpXP adapter protein SpxH",
+          "gene_names": [
+            "spxH"
+          ],
+          "organism": "Staphylococcus aureus (strain MRSA252)",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "CLPXP",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CLPXP\" OR gene:\"CLPXP\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"CLPXP\" OR gene:\"CLPXP\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "ClpXP adapter protein SpxH",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lonp1::homo sapiens::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lonp1::homo sapiens::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"LONP1\" OR gene:\"LONP1\") AND organism_name:\"Homo sapiens\" | (protein_name:\"LONP1\" OR gene:\"LONP1\")",
+      "mapped_ids": {
+        "uniprot": "P36776"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "P36776",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1",
+            "Lon",
+            "PRSS15"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B3KU28",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B4DPX0",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "K7EJE8",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "K7EKE6",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B3KXS5",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "E5KMI6",
+          "protein_name": "Lon protease homolog, mitochondrial",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q2VPA0",
+          "protein_name": "Lon protease homolog",
+          "gene_names": [
+            "LONP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "LONP1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"LONP1\" OR gene:\"LONP1\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"LONP1\" OR gene:\"LONP1\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Lon protease homolog, mitochondrial",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -129184,6 +129461,44 @@
         "status": "ambiguous",
         "issue": "ambiguous_component_complex_species",
         "order_step": "resolved_component_species"
+      }
+    },
+    "db::alas2 homodimer::homo sapiens::::[{\"ids\": {}, \"name\": \"ALAS2\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"ALAS2\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "ALAS2",
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 17,
+          "mapped_ids": {
+            "uniprot": "P22557",
+            "pathbank_protein_id": "17"
+          }
+        },
+        {
+          "name": "ALAS2",
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 17,
+          "mapped_ids": {
+            "uniprot": "P22557",
+            "pathbank_protein_id": "17"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
       }
     }
   },

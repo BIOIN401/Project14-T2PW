@@ -2,316 +2,256 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 28,
-    "edge_count": 9
+    "node_count": 18,
+    "edge_count": 14
   },
   "nodes": [
     {
-      "id": "compound:2,3-oxidosqualene",
-      "label": "2,3-oxidosqualene",
+      "id": "compound:heme",
+      "label": "heme",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:lanosterol",
-      "label": "lanosterol",
+      "id": "compound:hemin",
+      "label": "hemin",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
-      "label": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "id": "compound:aminolevulinic acid",
+      "label": "aminolevulinic acid",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:desmosterol",
-      "label": "desmosterol",
+      "id": "compound:glycine",
+      "label": "glycine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:cholesterol",
-      "label": "cholesterol",
+      "id": "compound:succinyl-coa",
+      "label": "succinyl-CoA",
       "kind": "compound",
       "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:pyridoxal 5-phosphate",
+      "label": "pyridoxal 5-phosphate",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:alas2",
+      "label": "ALAS2",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:alas1",
+      "label": "ALAS1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:clpxp",
+      "label": "CLPXP",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:lonp1",
+      "label": "LONP1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein_complex:alas2 homodimer",
+      "label": "ALAS2 homodimer",
+      "kind": "protein_complex",
+      "cls": "",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:lss",
-      "label": "LSS",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "Homo sapiens endoplasmic reticulum state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:cyp51a1",
-      "label": "CYP51A1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:msmo1",
-      "label": "MSMO1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:dhcr24",
-      "label": "DHCR24",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:sqle",
-      "label": "SQLE",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:fdft1",
-      "label": "FDFT1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:fdps",
-      "label": "FDPS",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:mvd",
-      "label": "MVD",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:hmgcr",
-      "label": "HMGCR",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:hmgcs1",
-      "label": "HMGCS1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:mvk",
-      "label": "MVK",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:idi1",
-      "label": "IDI1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:acat2",
-      "label": "ACAT2",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:nsdhl",
-      "label": "NSDHL",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:ebp",
-      "label": "EBP",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:lbr",
-      "label": "LBR",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:hsd17b7",
-      "label": "HSD17B7",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:lipa",
-      "label": "LIPA",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:srebf1",
-      "label": "SREBF1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:srebf2",
-      "label": "SREBF2",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:lss reaction",
-      "label": "LSS reaction",
+      "id": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
+      "label": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "Homo sapiens endoplasmic reticulum state",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:cyp51a1 reaction",
-      "label": "CYP51A1 reaction",
-      "kind": "reaction",
+      "id": "transport:alas2 import into mitochondrial matrix",
+      "label": "ALAS2 import into mitochondrial matrix",
+      "kind": "transport",
       "cls": "",
-      "compartment": "Homo sapiens endoplasmic reticulum state",
+      "compartment": "cytosolic state → mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:dhcr24 reaction",
-      "label": "DHCR24 reaction",
-      "kind": "reaction",
+      "id": "interaction:heme inhibits alas2",
+      "label": "heme inhibits ALAS2",
+      "kind": "interaction",
+      "cls": "inhibits",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:heme binds alas2",
+      "label": "heme binds ALAS2",
+      "kind": "interaction",
+      "cls": "binds",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:heme binds alas mitochondrial targeting sequence",
+      "label": "heme binds ALAS mitochondrial targeting sequence",
+      "kind": "interaction",
+      "cls": "binds",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:alas mitochondrial targeting sequence",
+      "label": "ALAS mitochondrial targeting sequence",
+      "kind": "compound",
       "cls": "",
-      "compartment": "Homo sapiens endoplasmic reticulum state",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:heme is reversible mixed inhibitor of alas2",
+      "label": "heme is reversible mixed inhibitor of ALAS2",
+      "kind": "interaction",
+      "cls": "inhibits",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:2,3-oxidosqualene",
-      "target": "reaction:lss reaction",
+      "source": "compound:glycine",
+      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lss reaction",
-      "target": "compound:lanosterol",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:lss",
-      "target": "reaction:lss reaction",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:lanosterol",
-      "target": "reaction:cyp51a1 reaction",
+      "source": "compound:succinyl-coa",
+      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:cyp51a1 reaction",
-      "target": "compound:4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "source": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
+      "target": "compound:aminolevulinic acid",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cyp51a1",
-      "target": "reaction:cyp51a1 reaction",
+      "source": "protein:alas2",
+      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:desmosterol",
-      "target": "reaction:dhcr24 reaction",
-      "role": "reactant",
+      "source": "protein:alas2",
+      "target": "transport:alas2 import into mitochondrial matrix",
+      "role": "cargo",
       "confidence": 1.0
     },
     {
-      "source": "reaction:dhcr24 reaction",
-      "target": "compound:cholesterol",
-      "role": "product",
+      "source": "protein:alas2",
+      "target": "transport:alas2 import into mitochondrial matrix",
+      "role": "transporter",
       "confidence": 1.0
     },
     {
-      "source": "protein:dhcr24",
-      "target": "reaction:dhcr24 reaction",
-      "role": "catalyst",
+      "source": "compound:heme",
+      "target": "interaction:heme inhibits alas2",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:heme inhibits alas2",
+      "target": "protein:alas2",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:heme",
+      "target": "interaction:heme binds alas2",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:heme binds alas2",
+      "target": "protein:alas2",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:heme",
+      "target": "interaction:heme binds alas mitochondrial targeting sequence",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:heme binds alas mitochondrial targeting sequence",
+      "target": "compound:alas mitochondrial targeting sequence",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:heme",
+      "target": "interaction:heme is reversible mixed inhibitor of alas2",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:heme is reversible mixed inhibitor of alas2",
+      "target": "protein:alas2",
+      "role": "participant",
       "confidence": 1.0
     }
   ]

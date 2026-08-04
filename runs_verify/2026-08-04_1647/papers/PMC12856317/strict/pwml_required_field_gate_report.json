@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "pathway_missing_pw_id",
+      "message": "Pathway has no pw_id / pathbank_pathway_id.",
+      "pointer": "/metadata/pw_id"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/0",
+      "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/1",
+      "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/outputs/0",
+      "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA"
+    }
+  ],
+  "summary": {
+    "error_count": 0,
+    "warning_count": 4,
+    "error_codes": [],
+    "warning_codes": [
+      "pathway_missing_pw_id",
+      "reaction_participant_missing_stoichiometry"
+    ],
+    "checked_as": "payload",
+    "strict_db": true
+  },
+  "stage": "required_field_gate",
+  "pipeline_order": [
+    "audit_normalize",
+    "db_hydration",
+    "api_enrichment",
+    "llm_gap_resolver_with_tools",
+    "required_field_gate",
+    "pwml_ir_build",
+    "pwml_writer",
+    "pwml_qa"
+  ]
+}

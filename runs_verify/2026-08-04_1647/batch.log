@@ -1,0 +1,21 @@
+[16:47:34] STARTING a fresh run 2026-08-04_1647 (--fresh was given)
+[16:47:34]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[16:47:34] fetching papers (topics=topics_verify_gatelifecycle.txt, limit=none) ...
+[16:47:34]   + PMC12856317  (54436 chars)  (untitled)
+[16:47:34] planned 1 paper(s) x 1 mode(s) = 1 run(s); 0 candidate(s) skipped (see skipped.json)
+[16:47:34] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[16:47:34] running 1 paper+mode pair(s) sequentially
+[16:47:34] whole-night deadline : 10.0h from now
+[16:47:34] [1/1] PMC12856317 / strict -> starting (timeout 1800s)
+[17:05:56] [1/1] PMC12856317 / strict -> PASS WITH WARNINGS in 1101.4s (18m21s)
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:05:56]     1/1 done | strict 1 pass | research 0 pass | 1 NO DELIVERABLE
+[17:05:56] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1647
+[17:05:56] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1647\SUMMARY.txt
+[17:05:56] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1647\failures_by_code.txt
+[17:05:56] PASSED WITH WARNINGS: 1 paper+mode run(s) passed but 1 produced no deliverable or lost an artifact on write -- see SUMMARY.txt

@@ -1,25 +1,20 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: LSS reaction
-  Reactants: 2,3-oxidosqualene [unknown]
-  Products:  lanosterol [unknown]
-  Modifier:  LSS [Homo sapiens endoplasmic reticulum state] (role=catalyst, confidence=1.0)
+REACTION 1: ALAS2-catalyzed condensation of glycine and succinyl-CoA
+  Reactants: glycine [mitochondrial matrix state], succinyl-CoA [mitochondrial matrix state]
+  Products:  aminolevulinic acid [mitochondrial matrix state]
+  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: CYP51A1 reaction
-  Reactants: lanosterol [unknown]
-  Products:  4,4-dimethylcholesta-8(9),14,24-trien-3β-ol [unknown]
-  Modifier:  CYP51A1 [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 3: DHCR24 reaction
-  Reactants: desmosterol [unknown]
-  Products:  cholesterol [unknown]
-  Modifier:  DHCR24 [unknown] (role=catalyst, confidence=1.0)
+TRANSPORT 1: ALAS2 import into mitochondrial matrix
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: ALAS2 [mitochondrial matrix state]
+  Transporter: ALAS2 [mitochondrial matrix state] (role=transporter, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-3 locked reactions found
-3 exported
+1 locked reaction found
+1 exported
 0 quarantined reactions due to unresolved compound reference
