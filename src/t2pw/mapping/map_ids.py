@@ -4885,6 +4885,28 @@ def verify_real_protein_identity(
         return verdict
 
     candidate = _candidate_for_shipped_ids(candidates, _safe_dict(mapped_ids), "protein")
+    # INSTRUMENTATION ONLY -- decides nothing, and every rung below reads the
+    # same values it did before.
+    #
+    # The audit trail could not explain its own rejections. Of the 24
+    # ``identity_evidence_missing`` protein rows in run 2026-08-02_2130, 21 carry
+    # an empty ``rejected_candidates``: ``map_payload`` maps more than once, and
+    # the second pass finds ``meta["candidates"]`` already emptied by the first
+    # (``:5350``), so the row the ladder actually judged is not retained
+    # anywhere. Recording it on the VERDICT rather than at each enforcement site
+    # is what makes it survive -- the verdict is already copied to both, by
+    # ``_novel_result_from_identity_verdict`` and by the row-level sweep, so the
+    # two cannot drift apart.
+    #
+    # Both the judged row and the list are kept. One row is enough to replay
+    # rungs 3 and 5, but rung 4 takes the whole ``candidates`` list and rung 6
+    # scans it for rivals -- replaying either from a single row would find no
+    # competitor, pass the margin check for free, and overstate how many rows a
+    # species fix would actually rescue.
+    verdict["judged_candidate"] = _safe_dict(candidate) if candidate is not None else {}
+    verdict["judged_candidates"] = [
+        row for row in _safe_list(candidates) if isinstance(row, dict)
+    ][:8]
     # Fail closed. Nothing describes the accession we are about to ship as this
     # entity's identity, so there is no evidence to verify -- and "no evidence"
     # is not a pass. The caller routes this to the Unknown-backed placeholder,

@@ -1,0 +1,16 @@
+# Phase B2 -- the two legs that feed the B3 rung-4/5/6 replay.
+#
+# Pinned WITH SCOPE (a bare id stages a scopeless, invalid run).
+#
+# These two cover the two candidate shapes the species rung rejects:
+#   PMC12856317  human gene symbol   (ALAS2 -> "5-aminolevulinate synthase,
+#                                     erythroid-specific, mitochondrial", P22557)
+#   PMC12096016  bacterial Ent* shape (EntA, EntB, ...)
+#
+# Both are re-run only to regenerate final_mapped.json with B1's
+# identity_verdict.judged_candidate / .judged_candidates recorded, so the
+# rejected rows can be replayed offline. B1 changes no gate behaviour, so the
+# pass/fail outcome of these legs is expected to match runs/2026-08-02_2130
+# (both fail at post_pipeline).
+PMC12856317 | heme biosynthesis | Homo sapiens
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
