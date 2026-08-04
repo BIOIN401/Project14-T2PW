@@ -1,0 +1,18 @@
+[11:48:42] STARTING a fresh run 2026-08-04_1148 (--fresh was given)
+[11:48:42]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[11:48:42] fetching papers (topics=topics_verify_A_research.txt, limit=none) ...
+[11:48:42]   + PMC13231680  (61997 chars)  (untitled)
+[11:48:42] planned 1 paper(s) x 1 mode(s) = 1 run(s); 0 candidate(s) skipped (see skipped.json)
+[11:48:42] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[11:48:42] running 1 paper+mode pair(s) sequentially
+[11:48:42] whole-night deadline : 10.0h from now
+[11:48:42] [1/1] PMC13231680 / research -> starting (timeout 1800s)
+[12:07:39] [1/1] PMC13231680 / research -> PASS WITH WARNINGS in 1136.2s (18m56s)
+[12:07:39]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:07:39]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:07:39]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'LpxC' is missing a UniProt or DrugBank identifier.
+[12:07:39]     1/1 done | strict 0 pass | research 1 pass | 1 NO DELIVERABLE
+[12:07:39] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1148
+[12:07:39] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1148\SUMMARY.txt
+[12:07:39] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1148\failures_by_code.txt
+[12:07:39] PASSED WITH WARNINGS: 1 paper+mode run(s) passed but 1 produced no deliverable or lost an artifact on write -- see SUMMARY.txt

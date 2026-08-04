@@ -1,0 +1,57 @@
+[13:06:31] STARTING a fresh run 2026-08-04_1306 (--fresh was given)
+[13:06:31]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[13:06:31] fetching papers (topics=topics_verify_B2b.txt, limit=none) ...
+[13:06:31]   + PMC12096016  (43667 chars)  (untitled)
+[13:06:31]   + PMC12452463  (68085 chars)  (untitled)
+[13:06:31]   + PMC12180156  (67304 chars)  (untitled)
+[13:06:31] planned 3 paper(s) x 1 mode(s) = 3 run(s); 0 candidate(s) skipped (see skipped.json)
+[13:06:31] acquisition funnel: requested 3, examined 3, eligible 3, ineligible 0, no_full_text 0, accepted 3
+[13:06:31] running 3 paper+mode pair(s) sequentially
+[13:06:31] whole-night deadline : 10.0h from now
+[13:06:31] [1/3] PMC12096016 / research -> starting (timeout 1800s)
+[13:26:25] [1/3] PMC12096016 / research -> PASS WITH WARNINGS in 1193.9s (19m53s)
+[13:26:25]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:26:25]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'EntB' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EntC' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_enta_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'EntA' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EntE' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'EntF' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'EntD' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_tolc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'TolC' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_tonb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'TonB' is missing a UniProt or DrugBank identifier.
+[13:26:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_isochorismatase_entb_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/9: Protein 'Isochorismatase (EntB)' is missing a UniProt or DrugBank identifier.
+[13:26:25]     1/3 done | strict 0 pass | research 1 pass | 1 NO DELIVERABLE
+[13:26:25] [2/3] PMC12452463 / research -> starting (timeout 1800s)
+[13:44:45] [2/3] PMC12452463 / research -> PASS WITH WARNINGS in 1099.5s (18m19s)
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/10/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:44:45]     ! runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are in contract_reports.json
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'EntC' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EntB' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'EntE' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EntD' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'EntF' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'RyhB' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fnr_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'Fnr' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fepa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'FepA' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): gate.protein_isochorismatase_entb_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/9: Protein 'Isochorismatase (EntB)' is missing a UniProt or DrugBank identifier.
+[13:44:45]     ! strict gate error (research mode: review flag, not blocking): and 9 more gate error(s); all of them are in review_flags.json and the gate report files
+[13:44:45]     2/3 done | strict 0 pass | research 2 pass | 2 NO DELIVERABLE
+[13:44:45] [3/3] PMC12180156 / research -> starting (timeout 1800s)
+[13:53:44] [3/3] PMC12180156 / research -> FAIL (no_reactions) in 538.1s (8m58s)
+[13:53:44]     3/3 done | strict 0 pass | research 2 pass 1 fail | 2 NO DELIVERABLE | 1 RESEARCH DEFECT
+[13:53:44] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1306
+[13:53:44] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1306\SUMMARY.txt
+[13:53:44] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1306\failures_by_code.txt
+[13:53:44] FAILURES: 1 of 3 paper+mode run(s) did not pass

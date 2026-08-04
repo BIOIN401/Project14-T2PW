@@ -1,0 +1,3020 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.91825,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91825,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.91825,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91825,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.91825,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.91825,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.849486,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.849486,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.849486,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.849486,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-coenzyme A (succinyl-CoA)",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "ALAS"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.752571,
+        "span": "ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.752571,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-5826399d",
+      "gap_ids": [
+        "gap-orphan_metabolite-5826399d"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "glutamate-1-semi-aldehyde (GSA, or better G1SA)"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "HemL"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.752571,
+        "span": "In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase)."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.752571,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-dd509135",
+      "gap_ids": [
+        "gap-missing_compartment-dd509135"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.731015,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.731015,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-dd509135 asks for a compartment/location for 'pyridoxal 5-phosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-dd509135",
+      "gap_ids": [
+        "gap-missing_compartment-dd509135"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.731015,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.731015,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-dd509135 asks for a compartment/location for 'pyridoxal 5-phosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-dd509135",
+      "gap_ids": [
+        "gap-missing_compartment-dd509135"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.731015,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.731015,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-dd509135 asks for a compartment/location for 'pyridoxal 5-phosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-dd509135",
+      "gap_ids": [
+        "gap-missing_compartment-dd509135"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.711149,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.711149,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-dd509135 asks for a compartment/location for 'pyridoxal 5-phosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-dd509135",
+      "gap_ids": [
+        "gap-missing_compartment-dd509135"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.711149,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.711149,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-dd509135 asks for a compartment/location for 'pyridoxal 5-phosphate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "heme production",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ALAS2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.933333,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.933333,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.861774,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.861774,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.861774,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.861774,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.853912,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.853912,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.853912,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.853912,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.853912,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.853912,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "heme binding to mature ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.762172,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.762172,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "WT ALAS2 -> ALAS2-heme",
+      "inputs": [
+        "WT ALAS2",
+        "hemin"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.762172,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.762172,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 1.0,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 1.0,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 1.0,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 1.0,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 1.0,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 1.0,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.973914,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.973914,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.973914,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.973914,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "heme production",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ALAS2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.795112,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.795112,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-coenzyme A (succinyl-CoA)",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "ALAS"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.69723,
+        "span": "ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.69723,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-2bd480d1",
+      "gap_ids": [
+        "gap-orphan_metabolite-2bd480d1"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "glutamate-1-semi-aldehyde (GSA, or better G1SA)"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "HemL"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.69723,
+        "span": "In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase)."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.69723,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.948491,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948491,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.948491,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948491,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.948491,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948491,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.926383,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.926383,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.926383,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.926383,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f59557ce",
+      "gap_ids": [
+        "gap-dangling_reaction-f59557ce"
+      ],
+      "name": "heme production",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ALAS2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.879922,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.879922,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.866945,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866945,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.866945,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866945,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.866945,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866945,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "heme production",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ALAS2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.78468,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78468,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.777643,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.777643,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.777643,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.777643,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-coenzyme A (succinyl-CoA)",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "ALAS"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.721954,
+        "span": "ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.721954,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "glutamate-1-semi-aldehyde (GSA, or better G1SA)"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "HemL"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.721954,
+        "span": "In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase)."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.721954,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "succinyl-CoA -> δALA",
+      "inputs": [
+        "succinyl-CoA",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "78252d2b6c6cbbe7902ad58d771e9c1a",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "methods",
+        "score": 0.698933,
+        "span": "decreased fumarate and Gly levels are due to increased sequestration of succinyl-CoA and glycine for δALA biosynthesis"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.698933,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "Thr -> succinyl-CoA",
+      "inputs": [
+        "Thr",
+        "Hse"
+      ],
+      "outputs": [
+        "succinyl-CoA"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "78252d2b6c6cbbe7902ad58d771e9c1a",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "methods",
+        "score": 0.698933,
+        "span": "Cellular efforts to replenish succinyl-CoA would catabolize Thr and Hse"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.698933,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "Arg -> α-ketoglutarate",
+      "inputs": [
+        "Arg",
+        "His",
+        "Pro"
+      ],
+      "outputs": [
+        "α-ketoglutarate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "78252d2b6c6cbbe7902ad58d771e9c1a",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "methods",
+        "score": 0.698933,
+        "span": "would generate alpha-ketoglutarate by way of the breakdown of Arg/His/Pro"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.698933,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "Asn -> oxaloacetate",
+      "inputs": [
+        "Asn"
+      ],
+      "outputs": [
+        "oxaloacetate"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "78252d2b6c6cbbe7902ad58d771e9c1a",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "methods",
+        "score": 0.698933,
+        "span": "Asn catabolism to oxaloacetate"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.698933,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.798508,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.798508,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "65d29048b8893df39537df5785d1c7d4",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "body",
+        "score": 0.798508,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.798508,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.798508,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.798508,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "glycine -> 5-aminolevulinate (ALA)",
+      "inputs": [
+        "glycine",
+        "succinyl-Coenzyme A (SCoA)"
+      ],
+      "outputs": [
+        "5-aminolevulinate (ALA)",
+        "carbon dioxide",
+        "CoA-SH"
+      ],
+      "enzymes": [
+        "5-Aminolevulinate synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.755857,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.755857,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "ferrous iron -> heme",
+      "inputs": [
+        "ferrous iron",
+        "protoporphyrin IX"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ferrochelatase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9329541",
+        "title": "An Extended C-Terminus, the Possible Culprit for Differential Regulation of 5-Aminolevulinate Synthase Isoforms.",
+        "uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5630e360b3b5f316441e59f1daf98220",
+        "source_id": "PMC9329541",
+        "source_uri": "https://doi.org/10.3389/fmolb.2022.920668",
+        "section": "introduction",
+        "score": 0.755857,
+        "span": "the enzyme ferrochelatase inserts ferrous iron into protoporphyrin IX to yield heme"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "porphyrin biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.755857,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "heme production",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [
+        "ALAS2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.69554,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.69554,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-coenzyme A (succinyl-CoA)",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "ALAS"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.610326,
+        "span": "ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.610326,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "glutamate-1-semi-aldehyde (GSA, or better G1SA)"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [
+        "HemL"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "40aba4e59961d15e1f5b99939c8716de",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "introduction",
+        "score": 0.610326,
+        "span": "In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase)."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.610326,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "production of itaconyl-CoA using succinyl-CoA",
+      "inputs": [
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "itaconyl-CoA"
+      ],
+      "enzymes": [
+        "SUGCT"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9153040",
+        "title": "The immunometabolite itaconate inhibits heme synthesis and remodels cellular metabolism in erythroid precursors.",
+        "uri": "https://doi.org/10.1182/bloodadvances.2021004750",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7a12c0bc890f25ba8da045604431e439",
+        "source_id": "PMC9153040",
+        "source_uri": "https://doi.org/10.1182/bloodadvances.2021004750",
+        "section": "methods",
+        "score": 0.58361,
+        "span": "52 We cloned, expressed, and purified SUGCT and determined that it effectively catalyzes the production of itaconyl-CoA using succinyl-CoA ( Figure 5B )."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.58361,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-1d8d04eb",
+      "gap_ids": [
+        "gap-orphan_metabolite-1d8d04eb"
+      ],
+      "name": "succinyl-CoA -> itaconyl-CoA",
+      "inputs": [
+        "succinyl-CoA",
+        "itaconate"
+      ],
+      "outputs": [
+        "itaconyl-CoA"
+      ],
+      "enzymes": [
+        "SUGCT"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC9153040",
+        "title": "The immunometabolite itaconate inhibits heme synthesis and remodels cellular metabolism in erythroid precursors.",
+        "uri": "https://doi.org/10.1182/bloodadvances.2021004750",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7a12c0bc890f25ba8da045604431e439",
+        "source_id": "PMC9153040",
+        "source_uri": "https://doi.org/10.1182/bloodadvances.2021004750",
+        "section": "methods",
+        "score": 0.58361,
+        "span": "SUGCT generates itaconyl-CoA from succinyl-CoA and itaconate in vitro."
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.58361,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 56,
+    "considered": 56
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 13,
+    "evidence_relation_disagrees_with_claim": 21,
+    "evidence_relation_roles_unassignable": 23,
+    "evidence_states_no_reaction_relation": 3,
+    "no_local_evidence_span": 9,
+    "unsupported_catalyst_injection": 14
+  },
+  "by_gap": {
+    "gap-dangling_reaction-f59557ce": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-dd509135": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-1d8d04eb": {
+      "accepted": 0,
+      "rejected": 10
+    },
+    "gap-orphan_metabolite-2bd480d1": {
+      "accepted": 0,
+      "rejected": 8
+    },
+    "gap-orphan_metabolite-5826399d": {
+      "accepted": 0,
+      "rejected": 7
+    },
+    "gap-orphan_metabolite-e3984916": {
+      "accepted": 0,
+      "rejected": 12
+    },
+    "gap-unmapped_enzyme-65f444d8": {
+      "accepted": 0,
+      "rejected": 8
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "label": "ALAS2",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 1,
+    "unresolved_for_unknown_fallback": 1,
+    "unknown_fallback_present": 0
+  }
+}

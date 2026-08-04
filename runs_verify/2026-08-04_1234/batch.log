@@ -1,0 +1,23 @@
+[12:34:40] STARTING a fresh run 2026-08-04_1234 (--fresh was given)
+[12:34:41]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[12:34:41] fetching papers (topics=topics_verify_B.txt, limit=none) ...
+[12:34:41]   + PMC12856317  (54436 chars)  (untitled)
+[12:34:41]   + PMC12096016  (43667 chars)  (untitled)
+[12:34:41] planned 2 paper(s) x 1 mode(s) = 2 run(s); 0 candidate(s) skipped (see skipped.json)
+[12:34:41] acquisition funnel: requested 2, examined 2, eligible 2, ineligible 0, no_full_text 0, accepted 2
+[12:34:41] running 2 paper+mode pair(s) sequentially
+[12:34:41] whole-night deadline : 10.0h from now
+[12:34:41] [1/2] PMC12856317 / strict -> starting (timeout 1800s)
+[12:46:34] [1/2] PMC12856317 / strict -> FAIL (contract) in 712.6s (11m52s)
+[12:46:34]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:46:34]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:46:34]     1/2 done | strict 0 pass 1 fail | research 0 pass
+[12:46:34] [2/2] PMC12096016 / strict -> starting (timeout 1800s)
+[13:04:45] [2/2] PMC12096016 / strict -> FAIL (contract) in 1091.1s (18m11s)
+[13:04:45]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:04:45]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:04:45]     2/2 done | strict 0 pass 2 fail | research 0 pass
+[13:04:45] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1234
+[13:04:45] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1234\SUMMARY.txt
+[13:04:45] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1234\failures_by_code.txt
+[13:04:45] FAILURES: 2 of 2 paper+mode run(s) did not pass

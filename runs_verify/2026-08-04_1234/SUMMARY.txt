@@ -1,0 +1,119 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-08-04T12:34:41
+finished : 2026-08-04T13:04:45
+papers attempted : 2
+strict PWML      : 0 pass / 2 fail
+research relaxed : 0 pass / 0 fail
+timeouts         : 0
+skipped          : 0
+ineligible       : 0  (screened out, not failures)
+pass, no deliv.  : 0  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 2 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+research-mode defects: NONE -- research mode held fail-open on all 2 paper(s).
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            0  (strict FAIL + research FAIL -- real bug, also a research defect)
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        2  (a mode is missing, skipped or unrecognised)
+    PMC12856317, PMC12096016
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> incomplete
+    id     : PMC12856317
+    slug   : PMC12856317
+    uri    : (none)
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=712.6s (11m52s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 2 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=1 entities=9 proteins=1 compounds=5 contract_errors=1 gate_errors=1
+                       runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 8
+            - papers/PMC12856317/strict/audit_iteration_summary.json (2.4 kB)
+            - papers/PMC12856317/strict/contract_reports.json (12.3 kB)
+            - papers/PMC12856317/strict/final_mapped.json (16.6 kB)
+            - papers/PMC12856317/strict/gap_iteration_summary.json (13.0 kB)
+            - papers/PMC12856317/strict/gate_fail_report.json (4.1 kB)
+            - papers/PMC12856317/strict/merged_payload.json (4.2 kB)
+            - papers/PMC12856317/strict/rag_admission_report.json (103.1 kB)
+            - papers/PMC12856317/strict/stage1_payload.json (3.5 kB)
+
+----------------------------------------------------------------------------------------------------
+[2] (untitled) -> incomplete
+    id     : PMC12096016
+    slug   : PMC12096016
+    uri    : (none)
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1091.1s (18m11s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 14 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_enta_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_tolc_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_tonb_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=5 entities=29 proteins=5 compounds=16 contract_errors=7
+                       gate_errors=7 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=2
+        files        : 8
+            - papers/PMC12096016/strict/audit_iteration_summary.json (939 B)
+            - papers/PMC12096016/strict/contract_reports.json (32.9 kB)
+            - papers/PMC12096016/strict/final_mapped.json (61.4 kB)
+            - papers/PMC12096016/strict/gap_iteration_summary.json (210 B)
+            - papers/PMC12096016/strict/gate_fail_report.json (13.5 kB)
+            - papers/PMC12096016/strict/merged_payload.json (14.8 kB)
+            - papers/PMC12096016/strict/rag_admission_report.json (362.0 kB)
+            - papers/PMC12096016/strict/stage1_payload.json (12.4 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     (none)
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     (none)
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

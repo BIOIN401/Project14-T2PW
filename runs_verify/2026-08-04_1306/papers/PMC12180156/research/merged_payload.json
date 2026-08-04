@@ -1,0 +1,174 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "mitochondrial matrix"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "mitochondrial matrix"
+    },
+    {
+      "name": "mitochondrial inner membrane state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial inner membrane",
+      "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+      },
+      {
+        "protein": "ferrochelatase",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "modulating ferrochelatase levels"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial inner membrane state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+      }
+    ],
+    "compound_locations": [
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "facilitating the redistribution of iron from the cytosol to the mitochondrial matrix"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase levels",
+        "relationship": "modulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "heme",
+        "name": "SFXN4 regulates heme",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "glycine",
+        "entity_2": "heme",
+        "name": "glycine precursor of heme",
+        "relationship": "precursor_of",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "Glycine is the direct precursor for heme"
+      },
+      {
+        "entity_1": "ALAS2",
+        "entity_2": "heme",
+        "name": "ALAS2 involvement in heme",
+        "relationship": "involved_in",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "ALAS2), a key enzyme in the heme synthesis pathway"
+      },
+      {
+        "entity_1": "ferrochelatase",
+        "entity_2": "heme",
+        "name": "ferrochelatase involvement in heme",
+        "relationship": "involved_in",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "iron",
+        "entity_2": "heme",
+        "name": "iron involvement in heme",
+        "relationship": "involved_in",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+      },
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibits ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+      }
+    ],
+    "reactions": []
+  }
+}

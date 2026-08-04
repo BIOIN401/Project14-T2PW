@@ -1,0 +1,72 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1099.5s (18m19s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/10/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are in contract_reports.json
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'EntC' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EntB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'EntE' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EntD' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'EntF' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'RyhB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fnr_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'Fnr' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fepa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'FepA' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_isochorismatase_entb_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/9: Protein 'Isochorismatase (EntB)' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): and 9 more gate error(s); all of them are in review_flags.json and the gate report files
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 2
+  compounds = 8
+  entities = 24
+  gate_errors = 29
+  gate_errors_not_blocking = 29
+  gate_review_flags = 29
+  normalization_actions = 2
+  proteins = 11
+  reactions = 6
+  review_flags = 15
+  runtime_schema_findings = 14
+  skipped_format_rules = 1
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 3, 'b': 0, 'c': 19, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1117 B)
+  - contract_reports.json  (70135 B)
+  - final_mapped.json  (94862 B)
+  - final_stage3_gate_report.json  (42440 B)
+  - gap_iteration_summary.json  (113448 B)
+  - gate_fail_report.json  (24521 B)
+  - merged_payload.json  (28152 B)
+  - rag_admission_report.json  (367974 B)
+  - research_pathway_citations.json  (142039 B)
+  - research_pathway_elements.csv  (35761 B)
+  - research_pathway_report.txt  (31540 B)
+  - review_flags.json  (37123 B)
+  - stage1_payload.json  (8883 B)

@@ -1,0 +1,1064 @@
+{
+  "post_extraction_contract_report": {
+    "ok": true,
+    "stage": "post_extraction",
+    "contract_type": "structural",
+    "effect_on_failure": "abort",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_extraction",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    }
+  },
+  "post_extraction_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report": {
+    "ok": true,
+    "stage": "post_mapping",
+    "contract_type": "structural",
+    "effect_on_failure": "abort",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_mapping",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    }
+  },
+  "stage2_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_normalization_contract_report": {
+    "ok": false,
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "feed_audit",
+    "errors": [
+      {
+        "path": "/entities/proteins/0",
+        "reason": "Protein 'EntB' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "EntB",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "EntB",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/1",
+        "reason": "Protein 'EntC' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "EntC",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "EntC",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/2",
+        "reason": "Protein 'EntA' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "EntA",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "EntA",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/3",
+        "reason": "Protein 'EntE' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "EntE",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "EntE",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/4",
+        "reason": "Protein 'EntF' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "EntF",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "EntF",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/5",
+        "reason": "Protein 'TolC' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "TolC",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "TolC",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      },
+      {
+        "path": "/entities/proteins/6",
+        "reason": "Protein 'TonB' is missing a UniProt or DrugBank identifier.",
+        "detail": {
+          "name": "TonB",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "organism": "Escherichia coli",
+          "species": "Escherichia coli",
+          "species_name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "species_ref": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "mapping_meta": {
+            "species_resolution": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "query": {
+              "name": "TonB",
+              "organism": "Escherichia coli"
+            },
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "chosen_rule": "novel_protein",
+            "confidence": 0.0,
+            "reviewed": false,
+            "resolution": {
+              "status": "novel",
+              "issue": "implausible_name_match",
+              "order_step": "name_plausibility_gate",
+              "failed_check": "identity_evidence_missing"
+            }
+          }
+        }
+      }
+    ],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "summary": {
+      "error_count": 7,
+      "warning_count": 1
+    },
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/2/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 1,
+        "warning_count": 0
+      }
+    },
+    "gate_report": {
+      "ok": false,
+      "normalization_stats": {
+        "complexes_created": 0,
+        "composites_rewritten": 0,
+        "reactions_rewritten": 0,
+        "scaffold_split_reactions": 0,
+        "entities_moved_out_of_compounds": 0,
+        "entities_added_as_compounds": 0,
+        "entities_added_as_proteins": 0,
+        "catalysts_promoted_to_enzymes": 0,
+        "interaction_enzymes_promoted": 0,
+        "scaffold_inputs_added": 0,
+        "scaffold_in_modifiers_count": 0,
+        "n_plus_tokens_remaining": 0,
+        "complexes_list": [],
+        "n_autostate_created": 1,
+        "n_entities_assigned_to_autostate": 0,
+        "transporters_attached": 0,
+        "enzymes_attached_from_reaction_evidence": 0,
+        "modifier_refs_canonicalized": 16,
+        "modifier_refs_dropped": 0,
+        "forbidden_complexes_removed": 0,
+        "dedupe_removed_reactions": 0,
+        "dedupe_removed_transports": 0,
+        "dedupe_removed": 0,
+        "dedupe_removed_total": 0,
+        "no_op_removed_count": 0,
+        "no_op_quarantined_count": 0,
+        "locked_no_op_quarantined_count": 0,
+        "evidenced_no_op_quarantined_count": 0,
+        "unsupported_no_op_dropped_count": 0,
+        "duplicate_locked_reactions_quarantined_count": 0,
+        "n_same_as_groups": 0,
+        "n_aliases_rewritten": 0,
+        "n_entities_deduped": 0,
+        "n_single_protein_complexes_removed": 0,
+        "complex_named_proteins_relocated": 0,
+        "nucleic_acid_named_entities_relocated": 0,
+        "entity_type_mismatches_flagged": 0,
+        "unresolved_complex_components_dropped": 0,
+        "component_only_proteins_removed": 0,
+        "pruned_disconnected_proteins": [],
+        "pruned_disconnected_proteins_count": 0,
+        "alias_example_mappings": [],
+        "false_protein_promotions_blocked": 0,
+        "unused_proteins_quarantined": 3,
+        "unused_proteins_flagged_for_review": 0,
+        "n_reactions_compartment_backfilled": 0,
+        "non_protein_catalysts_dropped": 0,
+        "orphan_proteins_dropped": 3,
+        "alias_canonicalization": {
+          "n_same_as_groups": 0,
+          "n_aliases_rewritten": 0,
+          "n_entities_deduped": 0,
+          "n_single_protein_complexes_removed": 0,
+          "example_mappings": []
+        },
+        "gate_error_count": 7
+      },
+      "connectivity": {
+        "n_reactions": 5,
+        "n_transports": 2,
+        "n_interactions": 1,
+        "n_reaction_coupled_transports": 0,
+        "n_nodes": 33,
+        "n_edges": 53,
+        "n_components": 1,
+        "main_component_size": 33,
+        "largest_component_pct": 100.0,
+        "n_isolated_nodes": 0,
+        "proteins_degree0": 0,
+        "proteins_attached_pct": 100.0
+      },
+      "errors": [
+        {
+          "path": "/entities/proteins/0",
+          "reason": "Protein 'EntB' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "EntB",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "EntB",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/1",
+          "reason": "Protein 'EntC' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "EntC",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "EntC",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/2",
+          "reason": "Protein 'EntA' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "EntA",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "EntA",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/3",
+          "reason": "Protein 'EntE' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "EntE",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "EntE",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/4",
+          "reason": "Protein 'EntF' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "EntF",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "EntF",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/5",
+          "reason": "Protein 'TolC' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "TolC",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "TolC",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        },
+        {
+          "path": "/entities/proteins/6",
+          "reason": "Protein 'TonB' is missing a UniProt or DrugBank identifier.",
+          "detail": {
+            "name": "TonB",
+            "class": "protein",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "species_ref": {
+              "name": "Escherichia coli",
+              "pathbank_species_id": 3,
+              "species_id": 3,
+              "taxonomy_id": "562",
+              "source": "explicit_entity_species",
+              "status": "matched",
+              "confidence": 1.0
+            },
+            "mapping_meta": {
+              "species_resolution": {
+                "name": "Escherichia coli",
+                "pathbank_species_id": 3,
+                "species_id": 3,
+                "taxonomy_id": "562",
+                "source": "explicit_entity_species",
+                "status": "matched",
+                "confidence": 1.0
+              },
+              "query": {
+                "name": "TonB",
+                "organism": "Escherichia coli"
+              },
+              "provider": "PathBankDB",
+              "source": "db",
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "reviewed": false,
+              "resolution": {
+                "status": "novel",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "failed_check": "identity_evidence_missing"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "post_normalization_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_normalization",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 1,
+      "warning_count": 0
+    }
+  },
+  "post_audit_contract_report": {
+    "ok": true,
+    "stage": "post_audit",
+    "contract_type": "structural",
+    "effect_on_failure": "abort",
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 1
+    },
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_audit",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/2/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 1,
+        "warning_count": 0
+      }
+    }
+  },
+  "post_audit_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_audit",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 1,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report": {
+    "ok": true,
+    "stage": "post_remap",
+    "contract_type": "semantic",
+    "effect_on_failure": "abort",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_remap",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    }
+  },
+  "post_remap_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_remap",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_enrichment_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_enrichment",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "pre_export_runtime_schema_report": {
+    "ok": true,
+    "boundary": "pre_export",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  }
+}

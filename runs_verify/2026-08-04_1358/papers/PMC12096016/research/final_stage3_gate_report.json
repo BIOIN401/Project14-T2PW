@@ -1,0 +1,1087 @@
+{
+  "ok": false,
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "EntCB complex"
+    ],
+    "n_autostate_created": 0,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 0,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "no_op_quarantined_count": 0,
+    "locked_no_op_quarantined_count": 0,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 0,
+    "nucleic_acid_named_entities_relocated": 0,
+    "entity_type_mismatches_flagged": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [],
+    "false_protein_promotions_blocked": 0,
+    "unused_proteins_quarantined": 0,
+    "unused_proteins_flagged_for_review": 0,
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    }
+  },
+  "connectivity": {
+    "n_reactions": 7,
+    "n_transports": 2,
+    "n_interactions": 13,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 60,
+    "n_edges": 81,
+    "n_components": 1,
+    "main_component_size": 60,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "errors": [
+    {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'EntB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4",
+            "judged_candidate": {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 129 chars elided"
+            ]
+          },
+          "resolved_name": "Isochorismatase",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0ADI4",
+            "pathbank_protein_id": "6224"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/1",
+      "reason": "Protein 'EntC' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6238, uniprot:P0AEJ2",
+            "judged_candidate": {
+              "pathbank_protein_id": 6238,
+              "name": "Isochorismate synthase entC",
+              "uniprot": "P0AEJ2",
+              "gene_name": "entC",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 141 chars elided"
+            ]
+          },
+          "resolved_name": "Isochorismate synthase entC",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0AEJ2",
+            "pathbank_protein_id": "6238"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/2",
+      "reason": "Protein 'EntA' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6341, uniprot:P15047",
+            "judged_candidate": {
+              "pathbank_protein_id": 6341,
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "uniprot": "P15047",
+              "gene_name": "entA",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 161 chars elided"
+            ]
+          },
+          "resolved_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P15047",
+            "pathbank_protein_id": "6341"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/3",
+      "reason": "Protein 'EntE' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntE",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntE",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6301, uniprot:P10378",
+            "judged_candidate": {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "uniprot": "P10378",
+              "gene_name": "entE",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 147 chars elided"
+            ]
+          },
+          "resolved_name": "Enterobactin synthase component E",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P10378",
+            "pathbank_protein_id": "6301"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/4",
+      "reason": "Protein 'EntF' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntF",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntF",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6312, uniprot:P11454",
+            "judged_candidate": {
+              "pathbank_protein_id": 6312,
+              "name": "Enterobactin synthase component F",
+              "uniprot": "P11454",
+              "gene_name": "entF",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 147 chars elided"
+            ]
+          },
+          "resolved_name": "Enterobactin synthase component F",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P11454",
+            "pathbank_protein_id": "6312"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'EntD' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6383, uniprot:P19925",
+            "judged_candidate": {
+              "pathbank_protein_id": 6383,
+              "name": "4'-phosphopantetheinyl transferase entD",
+              "uniprot": "P19925",
+              "gene_name": "entD",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 153 chars elided"
+            ]
+          },
+          "resolved_name": "4'-phosphopantetheinyl transferase entD",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P19925",
+            "pathbank_protein_id": "6383"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Fur",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "no_real_identifier"
+          },
+          "ambiguity": {
+            "candidate_count": 10,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided",
+              "2 key(s), 62 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 5917,
+              "name": "Succinate dehydrogenase iron-sulfur subunit",
+              "gene_name": "sdhB",
+              "uniprot": "P07014",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 5979,
+              "name": "Cysteine desulfurase",
+              "gene_name": "iscS",
+              "uniprot": "P0A6B7",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6015,
+              "name": "Thiosulfate sulfurtransferase glpE",
+              "gene_name": "glpE",
+              "uniprot": "P0A6V5",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6079,
+              "name": "Sulfurtransferase tusA",
+              "gene_name": "tusA",
+              "uniprot": "P0A890",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6151,
+              "name": "Formate dehydrogenase, nitrate-inducible, iron-sulfur subunit",
+              "gene_name": "fdnH",
+              "uniprot": "P0AAJ3",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6152,
+              "name": "Formate dehydrogenase-O iron-sulfur subunit",
+              "gene_name": "fdoH",
+              "uniprot": "P0AAJ5",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6154,
+              "name": "Sulfurtransferase tusE",
+              "gene_name": "tusE",
+              "uniprot": "P0AB18",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6201,
+              "name": "Fumarate reductase iron-sulfur subunit",
+              "gene_name": "frdB",
+              "uniprot": "P0AC47",
+              "species_id": 3,
+              "score": 0.65
+            }
+          ],
+          "identity_status": "unresolved",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "no_real_identifier",
+            "entity_name": "Fur",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "no_real_identifier"
+            },
+            "score": -1.0,
+            "margin": -1.0
+          },
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "pathbank_protein_id": "unknown"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/7",
+      "reason": "Protein 'TolC' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "TolC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "TolC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "TolC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:7446, uniprot:P02930",
+            "judged_candidate": {
+              "pathbank_protein_id": 7446,
+              "name": "Outer membrane protein tolC",
+              "uniprot": "P02930",
+              "gene_name": "tolC",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 141 chars elided"
+            ]
+          },
+          "resolved_name": "Outer membrane protein tolC",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P02930",
+            "pathbank_protein_id": "7446"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'TonB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "TonB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "TonB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "TonB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:7427, uniprot:P02929",
+            "judged_candidate": {
+              "pathbank_protein_id": 7427,
+              "name": "Protein tonB",
+              "uniprot": "P02929",
+              "gene_name": "tonB",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 126 chars elided"
+            ]
+          },
+          "resolved_name": "Protein tonB",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P02929",
+            "pathbank_protein_id": "7427"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/9",
+      "reason": "Protein 'MenD' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MenD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "MenD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6360, uniprot:P17109",
+            "judged_candidate": {
+              "pathbank_protein_id": 6360,
+              "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "uniprot": "P17109",
+              "gene_name": "menD",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 185 chars elided"
+            ]
+          },
+          "resolved_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P17109",
+            "pathbank_protein_id": "6360"
+          }
+        },
+        "mapped_ids": {}
+      }
+    },
+    {
+      "path": "/entities/proteins/10",
+      "reason": "Protein 'Isochorismatase (EntB)' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Isochorismatase (EntB)",
+        "rag_provenance": "7 key(s), 371 chars elided",
+        "source_papers": "1 item(s), 284 chars elided",
+        "source_refs": "1 item(s), 15 chars elided",
+        "rag_confidence": 0.914286,
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Isochorismatase (EntB)",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "Isochorismatase (EntB)",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4",
+            "judged_candidate": {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0
+            },
+            "judged_candidates": [
+              "6 key(s), 129 chars elided"
+            ]
+          },
+          "resolved_name": "Isochorismatase",
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0ADI4",
+            "pathbank_protein_id": "6224"
+          }
+        },
+        "mapped_ids": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+[12:07:40] STARTING a fresh run 2026-08-04_1207 (--fresh was given)
+[12:07:40]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[12:07:40] fetching papers (topics=topics_verify_A_strict.txt, limit=none) ...
+[12:07:40]   + PMC12452463  (68085 chars)  (untitled)
+[12:07:40] planned 1 paper(s) x 1 mode(s) = 1 run(s); 0 candidate(s) skipped (see skipped.json)
+[12:07:40] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[12:07:40] running 1 paper+mode pair(s) sequentially
+[12:07:40] whole-night deadline : 10.0h from now
+[12:07:40] [1/1] PMC12452463 / strict -> starting (timeout 1800s)
+[12:23:26] [1/1] PMC12452463 / strict -> FAIL (contract) in 945.4s (15m45s)
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/5/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/6/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:23:26]     1/1 done | strict 0 pass 1 fail | research 0 pass
+[12:23:26] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1207
+[12:23:26] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1207\SUMMARY.txt
+[12:23:26] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1207\failures_by_code.txt
+[12:23:26] FAILURES: 1 of 1 paper+mode run(s) did not pass
