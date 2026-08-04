@@ -507,6 +507,85 @@ def test_the_reviewer_sees_exactly_the_payload_that_will_be_exported() -> None:
 
 
 @pytest.mark.usefixtures("offline_mapping")
+def test_one_canonical_payload_is_gated_serialized_and_exported() -> None:
+    """There used to be THREE candidate "final" payloads, and no two consumers
+    agreed on which one they meant:
+
+    ``final_mapped_db``          post-remap, PRE-enrichment  -> serialized by the
+                                                                batch driver as
+                                                                final_mapped.json
+    ``final_export_payload``     post-enrichment             -> what SBML was
+                                                                built from
+    ``final_mapped_quarantined`` post-quarantine, derived    -> what the
+                                 from final_mapped_db           pre-export Stage 3
+                                                                gate validated
+
+    So the gate ran on an object that was neither serialized nor exported, and no
+    passing report could honestly be made authoritative -- it would have asserted
+    a pass on something that did not ship. One object now: enriched, then
+    quarantined, then gated, then serialized and handed to the exporter. This is
+    the assertion that says so at the production seam.
+    """
+
+    at = _run_post_pipeline(_payload_with_one_bad_peripheral())
+    artifacts = at.session_state["post_pipeline_artifacts"]
+
+    from t2pw.pipeline.gate_reports import (
+        ARTIFACT_SET_VERSION_KEY,
+        CANONICAL_PAYLOAD_KEY,
+        FINAL_GATE_REPORT_KEY,
+        PAYLOAD_SHA256_KEY,
+        PHASE_FINAL_PRE_EXPORT,
+        PHASE_KEY,
+        payload_sha256,
+    )
+
+    canonical = artifacts[CANONICAL_PAYLOAD_KEY]
+    assert canonical, "the run produced no canonical payload"
+
+    # 1. The gate report is BOUND to it, by hash, not by proximity.
+    final_gate = artifacts[FINAL_GATE_REPORT_KEY]
+    assert final_gate[PHASE_KEY] == PHASE_FINAL_PRE_EXPORT
+    assert final_gate[PAYLOAD_SHA256_KEY] == payload_sha256(canonical)
+    assert artifacts[ARTIFACT_SET_VERSION_KEY] >= 1
+
+    # 2. The SBML build reads it -- recorded rather than inferred, because "the
+    #    exporter consumed the payload the gate validated" is exactly the claim
+    #    that used to be false.
+    assert artifacts["sbml_input_source"] == CANONICAL_PAYLOAD_KEY
+
+    # 3. The key every downstream reader reaches for names the same object, and
+    #    it is NOT the pre-enrichment one the driver used to serialize.
+    assert artifacts["final_mapped"] == canonical
+    assert artifacts["final_mapped_quarantined"] == canonical
+
+    # 4. And the reviewer -- whose working JSON is what run_pwml_export builds
+    #    from -- was handed that same object.
+    assert at.session_state["refinement_working_json"] == canonical
+
+
+@pytest.mark.usefixtures("offline_mapping")
+def test_a_passing_final_gate_is_recorded_and_not_only_a_failing_one() -> None:
+    """A gate that only ever records failure cannot report success.
+
+    This payload clears Stage 3 after quarantine. Before the report lifecycle the
+    passing branch wrote nothing at all, so the only gate artifact a consumer
+    could find was the stale pre-audit failure -- which is how a repaired leg
+    stayed FAIL with no artifact able to countermand it.
+    """
+
+    at = _run_post_pipeline(_payload_with_one_bad_peripheral())
+    artifacts = at.session_state["post_pipeline_artifacts"]
+
+    from t2pw.pipeline.gate_reports import FINAL_GATE_REPORT_KEY
+
+    final_gate = artifacts[FINAL_GATE_REPORT_KEY]
+    assert final_gate.get("ok") is True
+    assert final_gate.get("errors", []) == []
+    assert at.session_state["refinement_gate_errors"] == []
+
+
+@pytest.mark.usefixtures("offline_mapping")
 def test_all_four_artifacts_are_written_and_retained() -> None:
     """(d) The four artifacts, on disk, and referenced from session state."""
 

@@ -84,6 +84,15 @@ from typing import Any, Dict, List, Optional, Tuple
 from t2pw.paths import PACKAGE_ROOT
 from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
 from t2pw.pipeline.failure_detail import headline as _detail_headline
+from t2pw.pipeline.gate_reports import (
+    CANONICAL_PAYLOAD_KEY,
+    FINAL_GATE_REPORT_KEY,
+    INITIAL_GATE_REPORT_KEY,
+    SOURCE_FAIL_CLOSED,
+    blocking_findings,
+    dedupe_findings,
+    gate_verdict,
+)
 from t2pw.rag.eligibility import (
     OUTCOME_SCOPE_CONFLICT,
     RequestedScope,
@@ -982,6 +991,23 @@ def _collect_issue_codes(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str],
     return codes, lines, total
 
 
+def _report_issues(reports: Dict[str, Dict[str, Any]]) -> List[Any]:
+    """The failing issues themselves, not their codes.
+
+    :func:`_collect_issue_codes` reduces each finding to a code and a display
+    line, which is everything the manifest needs and not enough to *deduplicate*:
+    two channels reporting one defect produce two lines whose codes differ only
+    because the code is derived from the message, and the message embeds the
+    entity name. The raw issues keep their ``pointer``/``path``, which is what
+    :func:`t2pw.pipeline.gate_reports.finding_key` identifies them by.
+    """
+
+    issues: List[Any] = []
+    for _, report in sorted(reports.items()):
+        issues.extend(_report_errors(report))
+    return issues
+
+
 def _structural_guard_codes(text: str) -> List[str]:
     """The ``STRUCTURAL_GUARD_CODES`` named by free-text app output, if any.
 
@@ -1144,10 +1170,18 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
     merged = _ss(at, "final_payload")
     if isinstance(merged, dict) and merged:
         out["merged_payload.json"] = _json_text(merged)
+    # The audit trail, unchanged: the pre-audit gate run is still written under
+    # its original filename. What changed is that it is EVIDENCE -- the audit's
+    # own input -- and no longer arithmetic. ``initial_stage3_gate_report.json``
+    # is the same content under a name that says so, so a reader who opens the
+    # run directory does not have to know the history to read it correctly.
     gate_fail = _safe_dict(artifacts.get("gate_fail_report"))
     if gate_fail:
         out["gate_fail_report.json"] = _json_text(gate_fail)
-    stage3 = _safe_dict(artifacts.get("final_stage3_gate_report"))
+    initial_gate = _safe_dict(artifacts.get(INITIAL_GATE_REPORT_KEY))
+    if initial_gate:
+        out["initial_stage3_gate_report.json"] = _json_text(initial_gate)
+    stage3 = _safe_dict(artifacts.get(FINAL_GATE_REPORT_KEY))
     if stage3:
         out["final_stage3_gate_report.json"] = _json_text(stage3)
     # One combined file rather than a dozen near-empty ones: the aggregator wants
@@ -1185,7 +1219,17 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
     mapped payload, and RAG is optional. Absence stays a diagnosis, not a crash.
     """
 
-    mapped = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
+    # THE canonical payload first: enriched, quarantined, and the object the
+    # final Stage-3 gate report is bound to by ``payload_sha256``. It used to be
+    # ``final_mapped_db`` -- post-remap and PRE-enrichment -- so re-running the
+    # gates on this file answered a question about a payload that was neither
+    # gated nor exported. ``final_mapped_db`` remains the fallback for legacy
+    # artifact sets and for a run that never reached the boundary.
+    mapped = (
+        artifacts.get(CANONICAL_PAYLOAD_KEY)
+        or artifacts.get("final_mapped_db")
+        or artifacts.get("final_mapped")
+    )
     if isinstance(mapped, dict) and mapped:
         out["final_mapped.json"] = _json_text(mapped)
 
@@ -1657,7 +1701,9 @@ def _drive(
     # from the top-level *_contract_report objects only, while runtime-schema
     # findings -- which RUNTIME_SCHEMA_MODE="report" records as parent warnings --
     # stay visible as warnings and can never fail the run.
-    codes, code_lines, error_count = _collect_issue_codes(_blocking_reports(artifacts))
+    blocking_reports = _blocking_reports(artifacts)
+    codes, code_lines, error_count = _collect_issue_codes(blocking_reports)
+    blocking_contract_issues = _report_issues(blocking_reports)
     schema_warnings, schema_findings = _runtime_schema_warnings(_collect_reports(artifacts))
     for warning in schema_warnings:
         if warning not in outcome.warnings:
@@ -1700,14 +1746,24 @@ def _drive(
     outcome.counts.update({key: value for key, value in mapped_counts.items() if value})
 
     gate_fail = _safe_dict(artifacts.get("gate_fail_report"))
-    stage3_gate = _safe_dict(artifacts.get("final_stage3_gate_report"))
-    gate_failed = bool(
-        artifacts.get("gate_failed")
-        or artifacts.get("normalization_gate_failed")
-        or gate_fail
-        or (stage3_gate and stage3_gate.get("ok") is False)
-    )
-    gate_errors = [*_safe_list(gate_fail.get("errors")), *_safe_list(stage3_gate.get("errors"))]
+    stage3_gate = _safe_dict(artifacts.get(FINAL_GATE_REPORT_KEY))
+    # ONE derivation, from the report that describes what shipped. The old
+    # expression here was ``bool(gate_failed or normalization_gate_failed or
+    # gate_fail or stage3_gate.ok is False)`` -- an OR over dictionaries, two of
+    # which are *historical*: ``gate_fail_report`` records the pre-audit gate run
+    # whose failures the audit is then handed as its repair list. A truthy stale
+    # dict with no artifact able to countermand it meant no repair could ever
+    # produce a PASS. Across runs/2026-08-02_2130 every strict leg carrying a
+    # gate_fail_report.json was filed FAIL (6 of 6), and PMC12782028's final
+    # payload passed the strict suite outright.
+    #
+    # :func:`t2pw.pipeline.gate_reports.gate_verdict` reads the final report and
+    # nothing else, fails closed on every uncertainty, and falls back to the old
+    # arithmetic only for artifact sets stamped as pre-change -- which genuinely
+    # cannot produce a final report and must keep their recorded history.
+    verdict = gate_verdict(artifacts)
+    gate_failed = verdict.failed
+    gate_errors = list(verdict.errors)
     for issue in gate_errors:
         code = _issue_code(issue)
         if code and code not in codes:
@@ -1742,14 +1798,30 @@ def _drive(
             # visible, or the only trace of it would be a file nobody opens.
             warning = (
                 f"{WARN_RESEARCH_GATE_PREFIX}the Stage-3 gate reported failure at "
-                f"{_text(gate_fail.get('stage')) or _text(stage3_gate.get('stage')) or 'a stage boundary'} "
+                f"{_text(verdict.stage) or 'a stage boundary'} "
                 "with no itemised errors"
             )
             if warning not in outcome.warnings:
                 outcome.warnings.append(warning)
 
+    # Research mode may CONTINUE past a failing gate. It may not restate the
+    # failure as a pass: `verdict.failed` above is the factual outcome and is
+    # already recorded in the counts, the warnings and review_flags.json. Only
+    # the blocking decision is mode-dependent, and only here.
     blocking_gate = gate_failed and not research_mode
-    blocking_gate_errors = 0 if research_mode else len(gate_errors)
+    # Counted once. The gate channel and the contract channel overlap -- the same
+    # ALAS2 registry error arrives as a gate error AND as the contract error
+    # derived from it -- and PMC12856317 was reported as "2 blocking issue(s)"
+    # for one row on one path for one reason. Keyed on (code, JSON pointer) and
+    # never on message text: gate messages embed entity names, which is what
+    # fragments one defect into dozens of codes in failures_by_code.txt. Both
+    # channels still block independently; what changes is the number.
+    blocking_issues = (
+        blocking_findings(verdict, blocking_contract_issues)
+        if blocking_gate
+        else dedupe_findings(blocking_contract_issues)
+    )
+    outcome.counts["blocking_issues"] = len(blocking_issues)
     if blocking_gate or error_count:
         _fail(
             outcome,
@@ -1764,11 +1836,28 @@ def _drive(
             ),
             message=(
                 "post-pipeline validation failed: "
-                f"{blocking_gate_errors + error_count} blocking issue(s) at "
-                f"{_text(gate_fail.get('stage')) or _text(stage3_gate.get('stage')) or 'a stage boundary'}"
+                f"{len(blocking_issues)} blocking issue(s) at "
+                f"{_text(verdict.stage) or 'a stage boundary'}"
+                + (
+                    f" [{verdict.reason}]"
+                    if verdict.source == SOURCE_FAIL_CLOSED
+                    else ""
+                )
             ),
             detail="\n".join(part for part in (joined, *code_lines) if part)
-            or _json_text({"gate_fail_report": gate_fail, "final_stage3_gate_report": stage3_gate}),
+            or _json_text(
+                {
+                    "gate_verdict": {
+                        "failed": verdict.failed,
+                        "source": verdict.source,
+                        "reason": verdict.reason,
+                        "stage": verdict.stage,
+                    },
+                    FINAL_GATE_REPORT_KEY: stage3_gate,
+                    # Retained as evidence, never as arithmetic.
+                    "superseded_gate_fail_report": gate_fail,
+                }
+            ),
             codes=codes,
         )
         return

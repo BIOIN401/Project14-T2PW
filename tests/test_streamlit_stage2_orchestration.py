@@ -44,6 +44,21 @@ from t2pw.pipeline.stage_contracts import (  # noqa: E402
 # answer here pass unnoticed.
 from t2pw.curation.apply_audit_patch import committed_change_count  # noqa: E402
 from t2pw.pipeline.failure_detail import headline as detail_headline  # noqa: E402
+
+# Injected for real, like the export-mode helpers above: these are pure functions
+# and stamping a report is exactly the behaviour under test in the lifecycle
+# suite, so a stub here would let a wrong phase or a missing version pass.
+from t2pw.pipeline.gate_reports import (  # noqa: E402
+    CANONICAL_PAYLOAD_KEY,
+    FINAL_GATE_REPORT_KEY,
+    INITIAL_GATE_REPORT_KEY,
+    PHASE_AUDIT_ROUND,
+    PHASE_FINAL_PRE_EXPORT,
+    PHASE_INITIAL_POST_NORMALIZATION,
+    payload_sha256,
+    stamp_artifact_set,
+    stamp_report,
+)
 from t2pw.pipeline.extraction_diagnostics import (  # noqa: E402
     count_entities as diagnostic_entity_counts,
     count_processes as diagnostic_process_counts,
@@ -423,6 +438,35 @@ def _orchestration_harness(
         "diagnostic_process_counts": diagnostic_process_counts,
         "logger": logging.getLogger("orchestration-test"),
         "_BULKY_ROUND_KEYS": ("candidates", "post_patch_gate", "post_settlement_gate"),
+        # The report lifecycle. Real, not stubbed: a phase stamp or a payload
+        # hash that a stub invented would defeat the point of stamping.
+        "stamp_report": stamp_report,
+        "stamp_artifact_set": stamp_artifact_set,
+        "payload_sha256": payload_sha256,
+        "PHASE_INITIAL_POST_NORMALIZATION": PHASE_INITIAL_POST_NORMALIZATION,
+        "PHASE_AUDIT_ROUND": PHASE_AUDIT_ROUND,
+        "PHASE_FINAL_PRE_EXPORT": PHASE_FINAL_PRE_EXPORT,
+        "INITIAL_GATE_REPORT_KEY": INITIAL_GATE_REPORT_KEY,
+        "FINAL_GATE_REPORT_KEY": FINAL_GATE_REPORT_KEY,
+        "CANONICAL_PAYLOAD_KEY": CANONICAL_PAYLOAD_KEY,
+        # The quarantine boundary moved INTO the orchestrator, because the
+        # canonical payload -- the one object that is gated, serialized and
+        # exported -- is the enriched payload after quarantine, and quarantine
+        # used to run in the UI after this function had already returned. This
+        # suite measures the mapping/normalization/audit cadence and not the
+        # boundary's decisions (``tests/test_streamlit_quarantine_boundary.py``
+        # drives those through the real app), so a pass-through keeps the
+        # payload identical and leaves the cadence assertions measuring what
+        # they were written to measure.
+        "run_quarantine_boundary": lambda payload, **_kwargs: {
+            "ok": True,
+            "payload": payload,
+            "quarantine_report": {},
+            "quarantine_artifacts": {},
+            "coverage": {},
+            "refusal_reasons": [],
+            "review_flags": [],
+        },
     }
     for helper in (
         "_round_summary",
@@ -541,6 +585,31 @@ def test_stage2_failure_prevents_stage3_and_second_mapping(
     ]
 
 
+def _audit_loop_gate_calls(calls: list[tuple[str, Any]]) -> int:
+    """Strict-gate runs inside the AUDIT LOOP, which is what these tests measure.
+
+    The orchestrator now runs the suite a second time after the Stage-6 remap, on
+    the canonical payload -- enriched, quarantined, and the object that is
+    serialized and exported. That run is the pipeline's verdict and is asserted
+    separately by :func:`_final_pre_export_gate_calls`; folding it into the
+    cadence count would say "the audit loop gained a round", which it did not.
+
+    The last ``map`` call is the remap, so gates before it belong to the loop.
+    """
+
+    names = [name for name, _ in calls]
+    remap_index = max(index for index, name in enumerate(names) if name == "map")
+    return sum(1 for name in names[:remap_index] if name == "strict_gate")
+
+
+def _final_pre_export_gate_calls(calls: list[tuple[str, Any]]) -> int:
+    """Strict-gate runs after the remap: the one authoritative verdict."""
+
+    names = [name for name, _ in calls]
+    remap_index = max(index for index, name in enumerate(names) if name == "map")
+    return sum(1 for name in names[remap_index:] if name == "strict_gate")
+
+
 def test_unmapped_stage2_payload_reaches_audit_and_strict_gate_cadence_is_unchanged(
     tmp_path: Path,
 ) -> None:
@@ -550,7 +619,8 @@ def test_unmapped_stage2_payload_reaches_audit_and_strict_gate_cadence_is_unchan
 
     assert result["stage2_mapping_report"]["entities"][0]["status"] == "unmapped"
     assert [name for name, _ in observed["calls"]].count("normalize") == 1
-    assert [name for name, _ in observed["calls"]].count("strict_gate") == 1
+    assert _audit_loop_gate_calls(observed["calls"]) == 1
+    assert _final_pre_export_gate_calls(observed["calls"]) == 1
     assert len([name for name, _ in observed["calls"] if name == "map"]) == 2
 
 
@@ -580,7 +650,8 @@ def test_gap_only_progress_gets_fresh_gate_and_another_audit_round(
     result = function(_paper_payload(), **invoke_kwargs)
 
     assert [name for name, _ in observed["calls"]].count("gap_resolution") == 2
-    assert [name for name, _ in observed["calls"]].count("strict_gate") == 1
+    assert _audit_loop_gate_calls(observed["calls"]) == 1
+    assert _final_pre_export_gate_calls(observed["calls"]) == 1
     assert len(result["audit_iterations"]) == 2
     first_round, second_round = result["audit_iterations"]
     assert first_round["accepted_patch_count"] == 0
@@ -617,7 +688,8 @@ def test_gap_only_progress_stops_when_fresh_stage3_gate_is_clean(
     result = function(_paper_payload(), **invoke_kwargs)
 
     assert [name for name, _ in observed["calls"]].count("gap_resolution") == 1
-    assert [name for name, _ in observed["calls"]].count("strict_gate") == 1
+    assert _audit_loop_gate_calls(observed["calls"]) == 1
+    assert _final_pre_export_gate_calls(observed["calls"]) == 1
     assert len(result["audit_iterations"]) == 1
     assert result["audit_iterations"][0]["post_settlement_gate"]["ok"] is True
     assert result["audit_loop_summary"]["stop_reason"] == "clean_post_settlement_gate"
@@ -654,7 +726,8 @@ def test_unresolved_gap_complex_continues_past_clean_audit_and_gate(
     result = function(_paper_payload(), **invoke_kwargs)
 
     assert [name for name, _ in observed["calls"]].count("gap_resolution") == 2
-    assert [name for name, _ in observed["calls"]].count("strict_gate") == 1
+    assert _audit_loop_gate_calls(observed["calls"]) == 1
+    assert _final_pre_export_gate_calls(observed["calls"]) == 1
     assert len(result["audit_iterations"]) == 2
     first_round, second_round = result["audit_iterations"]
     assert first_round["error_count"] == 0

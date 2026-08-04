@@ -98,6 +98,17 @@ from t2pw.pipeline.extraction_diagnostics import (
     payload_hash as diagnostic_payload_hash,
 )
 from t2pw.pipeline.stage_one_boundary import settle_stage_one
+from t2pw.pipeline.gate_reports import (
+    CANONICAL_PAYLOAD_KEY,
+    FINAL_GATE_REPORT_KEY,
+    INITIAL_GATE_REPORT_KEY,
+    PHASE_AUDIT_ROUND,
+    PHASE_FINAL_PRE_EXPORT,
+    PHASE_INITIAL_POST_NORMALIZATION,
+    payload_sha256,
+    stamp_artifact_set,
+    stamp_report,
+)
 from t2pw.pipeline.failure_detail import headline as detail_headline
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
@@ -2507,6 +2518,13 @@ def run_post_pipeline_sbml_artifacts(
     use_stoich_agent: bool = False,
     rag_evidence_context: str = "",
     export_mode: ExportMode = DEFAULT_EXPORT_MODE,
+    # The quarantine boundary runs inside this function now (see "THE canonical
+    # payload" below), so the three inputs it needs come in with it. They used to
+    # be read from session state at the UI call site; defaulted here so a direct
+    # caller -- a test, a script -- gets today's behaviour without restating them.
+    strict_db: bool = True,
+    pathway_context: Optional[Dict[str, Any]] = None,
+    outputs_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     # ``export_mode`` selects the gate policy for this whole run. "pathwhiz" is
     # the default and behaves exactly as before. "research" runs every check but
@@ -2516,7 +2534,12 @@ def run_post_pipeline_sbml_artifacts(
     research_flags: List[Dict[str, Any]] = []
     research_skipped: List[Dict[str, Any]] = []
 
-    def _contract(validator: Any, *args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _contract(
+        validator: Any,
+        *args: Any,
+        phase: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
         """Run a stage contract under the active export mode and collect flags.
 
         A failure here aborts the whole post-pipeline step, so this is the last
@@ -2527,6 +2550,14 @@ def run_post_pipeline_sbml_artifacts(
         that died. Post-extraction is excluded: that boundary is diagnosed by
         stage_one_boundary before this function is ever reached, and recording it
         here would overwrite a mapping snapshot with a pre-mapping one.
+
+        ``phase`` names the pipeline boundary the returned report describes, and
+        every report leaves here carrying it alongside a schema version. The two
+        post-normalization contracts are the reason: one runs before the audit
+        rounds and one after, on two different payloads, and until they said so a
+        consumer could not tell a superseded verdict from a live one. Defaulted
+        from the report's own ``stage`` so the boundaries with only one contract
+        each keep a truthful phase without every call site restating it.
         """
 
         try:
@@ -2543,6 +2574,12 @@ def run_post_pipeline_sbml_artifacts(
         if research_mode and isinstance(report, dict):
             research_flags.extend(review_flags(report))
             research_skipped.extend(format_gaps(report))
+        if isinstance(report, dict):
+            report = stamp_report(
+                report,
+                phase=phase
+                or str(report.get("stage") or getattr(validator, "__name__", "") or "unknown"),
+            )
         return report
 
     project_root = PROJECT_ROOT
@@ -2731,27 +2768,40 @@ def run_post_pipeline_sbml_artifacts(
                 validate_post_normalization,
                 normalized_input,
                 gate_details,
+                phase=PHASE_INITIAL_POST_NORMALIZATION,
             )
             gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
             if gate_details and gate_details.get("ok") is False:
-                gate_fail_report = {
-                    "status": "failed",
-                    "stage": "post_normalization_hard_gates",
-                    "error": "Hard-gate validation failed after normalization.",
-                    "errors": _safe_list(gate_details.get("errors")),
-                    "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
-                    "connectivity": gate_connectivity_summary,
-                }
+                # HISTORY, not a verdict. These errors are handed to the audit at
+                # :func:`run_audit` below as the repair list -- the pipeline asks
+                # for them to be fixed and then, before this change, filed the run
+                # as failed on the very report it had just used as an input. The
+                # phase stamp is what lets a consumer tell this apart from the
+                # final report; nothing else may read it as an outcome.
+                gate_fail_report = stamp_report(
+                    {
+                        "status": "failed",
+                        "stage": "post_normalization_hard_gates",
+                        "error": "Hard-gate validation failed after normalization.",
+                        "errors": _safe_list(gate_details.get("errors")),
+                        "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
+                        "connectivity": gate_connectivity_summary,
+                    },
+                    phase=PHASE_INITIAL_POST_NORMALIZATION,
+                )
                 gate_fail_report_path.write_text(
                     json.dumps(gate_fail_report, indent=2, ensure_ascii=False),
                     encoding="utf-8",
                 )
         except Exception as exc:
-            gate_fail_report = {
-                "status": "failed",
-                "stage": "post_normalization_hard_gates",
-                "error": str(exc),
-            }
+            gate_fail_report = stamp_report(
+                {
+                    "status": "failed",
+                    "stage": "post_normalization_hard_gates",
+                    "error": str(exc),
+                },
+                phase=PHASE_INITIAL_POST_NORMALIZATION,
+            )
             if not post_normalization_probe:
                 post_normalization_probe = {
                     "normalization_stats": _safe_dict(normalization_report.get("summary")),
@@ -3140,7 +3190,21 @@ def run_post_pipeline_sbml_artifacts(
                     fresh_gate_report = {"ok": True, **fresh_gate_details}
                 except GateValidationError as exc:
                     fresh_gate_report = {"ok": False, **_safe_dict(exc.details)}
-                _contract(validate_post_normalization, settled_payload, fresh_gate_report)
+                fresh_gate_report = stamp_report(fresh_gate_report, phase=PHASE_AUDIT_ROUND)
+                # ASSIGNED, not discarded. This contract describes the payload the
+                # round settled on; throwing it away left
+                # ``post_normalization_contract_report`` describing the pre-audit
+                # payload for the rest of the run, so the audit's repairs were
+                # invisible to every consumer downstream and the run was reported
+                # against a payload that no longer existed. This report is still
+                # not a verdict about what shipped -- the remap below moves the
+                # payload again -- which is what the phase stamp says.
+                post_normalization_contract_report = _contract(
+                    validate_post_normalization,
+                    settled_payload,
+                    fresh_gate_report,
+                    phase=PHASE_AUDIT_ROUND,
+                )
                 current_stage3_gate_errors = _safe_list(fresh_gate_report.get("errors"))
             top_errors = [
                 str(_safe_dict(item).get("reason", "")).strip()
@@ -3392,6 +3456,96 @@ def run_post_pipeline_sbml_artifacts(
         )
         if preservation_before_final_export is not None:
             reaction_preservation_reports["before_final_export"] = preservation_before_final_export
+
+        # ── THE canonical payload ───────────────────────────────────────────
+        #
+        # Until this block existed there were three candidate "final" payloads
+        # and no two consumers agreed on which one they meant:
+        #
+        #   final_mapped_db          post-remap, PRE-enrichment  -> what the batch
+        #                            driver serialized as final_mapped.json
+        #   final_export_payload     post-enrichment             -> what SBML was
+        #                            built from
+        #   final_mapped_quarantined post-quarantine, derived    -> what the
+        #                            from final_mapped_db           pre-export
+        #                                                           Stage-3 gate
+        #                                                           validated
+        #
+        # So the gate ran on an object that was neither serialized nor exported,
+        # and a passing report could not be made authoritative without asserting
+        # a pass on something that did not ship. ONE object now: enriched, then
+        # quarantined. It is gated here, serialized to final_mapped.json, and
+        # handed to the SBML build below -- which is why quarantine moved up
+        # from the UI block that used to run it after this function returned.
+        canonical_export_payload: Dict[str, Any] = {}
+        canonical_payload_hash = ""
+        #: Which object the SBML build and ``final_mapped.json`` were made from.
+        #: Recorded rather than inferred, because "the exporter consumed the same
+        #: payload the gate validated" is exactly the claim that used to be false
+        #: and exactly the one a test has to be able to check.
+        sbml_input_source = "enriched_pre_quarantine"
+        final_stage3_gate_report: Dict[str, Any] = {}
+        quarantine_result: Dict[str, Any] = {}
+        quarantine_ok = False
+        if final_export_payload:
+            quarantine_result = run_quarantine_boundary(
+                final_export_payload,
+                strict_db=bool(strict_db),
+                outputs_dir=Path(outputs_dir) if outputs_dir else (project_root / "outputs"),
+                pathway_context=pathway_context,
+                mode=export_mode,
+            )
+            quarantine_ok = bool(quarantine_result.get("ok"))
+        if quarantine_ok:
+            # deepcopy, and the hash taken from the copy that is stored: the
+            # report's payload binding is only worth anything if the object the
+            # consumer re-hashes is the object the gate saw. Refinement review
+            # and the draft-graph builder both take the payload afterwards, and a
+            # single in-place mutation would otherwise turn every leg into a hash
+            # mismatch -- which, under a "hash differs -> FAIL" rule, fails the
+            # whole suite for a bookkeeping reason.
+            canonical_export_payload = deepcopy(_safe_dict(quarantine_result.get("payload")))
+            canonical_payload_hash = payload_sha256(canonical_export_payload)
+            try:
+                _final_gate_details = run_strict_post_normalization_gates(
+                    deepcopy(canonical_export_payload),
+                    # The SAME suite the initial gate ran, on the same terms. This
+                    # call used to take the default (False) while the gate whose
+                    # failure it is entitled to supersede ran with
+                    # ``not is_research(mode)``, so a "pass" here was a pass of a
+                    # weaker suite and could not honestly countermand anything.
+                    enforce_all_proteins_connected=not research_mode,
+                )
+                final_stage3_gate_report = {"ok": True, **_final_gate_details}
+            except GateValidationError as _final_gate_exc:
+                final_stage3_gate_report = {"ok": False, **_safe_dict(_final_gate_exc.details)}
+            # Written on the PASSING branch as well as the failing ones. A gate
+            # that only ever records failure cannot report success, and the
+            # consumer is then left reading a stale failure as the live verdict.
+            final_stage3_gate_report = stamp_report(
+                {
+                    "stage": "final_pre_export_stage3_gates",
+                    **final_stage3_gate_report,
+                },
+                phase=PHASE_FINAL_PRE_EXPORT,
+                payload_hash=canonical_payload_hash,
+            )
+            canonical_json = tmp / "final.canonical.json"
+            canonical_json.write_text(
+                json.dumps(canonical_export_payload, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            # The SBML build below reads this path. Before the reordering it read
+            # the enriched, pre-quarantine file -- so the model that was built and
+            # the payload that was gated were different objects.
+            sbml_input_path = canonical_json
+            sbml_input_source = CANONICAL_PAYLOAD_KEY
+        # A quarantine refusal leaves no canonical payload, so the final gate does
+        # not run and no report is written. That is deliberate: the alternative is
+        # to synthesise a verdict for a payload that was never assembled. The
+        # artifact set is still stamped, so the consumer fails closed on the
+        # missing report rather than reading the refusal as a pass.
+
         sbml_overwatch_report: Dict[str, Any] = {}
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
@@ -3432,10 +3586,31 @@ def run_post_pipeline_sbml_artifacts(
                 except Exception:  # noqa: BLE001
                     pass
 
-        return {
+        return stamp_artifact_set({
             "gate_failed": False,
+            # Both of these are HISTORY as of the report lifecycle: they describe
+            # the gate run whose failures the audit was then asked to repair, and
+            # a consumer that ORs them into the blocking verdict can never let a
+            # repair succeed. Retained in full -- ``gate_fail_report.json`` is the
+            # audit trail -- and republished under an explicitly historical key so
+            # that intent is in the name and not only in a comment.
             "normalization_gate_failed": bool(gate_fail_report),
             "gate_fail_report": gate_fail_report,
+            INITIAL_GATE_REPORT_KEY: gate_fail_report,
+            # THE verdict: the strict suite re-run on the object below, which is
+            # the object serialized to final_mapped.json and built into SBML.
+            FINAL_GATE_REPORT_KEY: final_stage3_gate_report,
+            CANONICAL_PAYLOAD_KEY: canonical_export_payload,
+            "canonical_payload_sha256": canonical_payload_hash,
+            "sbml_input_source": sbml_input_source,
+            "quarantine_report": _safe_dict(quarantine_result.get("quarantine_report")),
+            "quarantine_artifacts": _safe_dict(quarantine_result.get("quarantine_artifacts")),
+            "quarantine_coverage": _safe_dict(quarantine_result.get("coverage")),
+            "quarantine_ok": quarantine_ok,
+            "quarantine_refused": bool(quarantine_result) and not quarantine_ok,
+            "quarantine_refusal_reasons": _safe_list(quarantine_result.get("refusal_reasons")),
+            "quarantine_review_flags": _safe_list(quarantine_result.get("review_flags")),
+            "final_mapped_quarantined": canonical_export_payload,
             "export_mode": coerce_mode(export_mode),
             # Everything research mode downgraded, so the UI can show it loudly.
             # Empty in strict mode, where these findings aborted the run instead.
@@ -3471,9 +3646,16 @@ def run_post_pipeline_sbml_artifacts(
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
             "post_audit_contract_report": post_audit_contract_report,
-            "final_mapped": final_export_payload,
+            # ``final_mapped`` IS the canonical payload when there is one, so the
+            # key every downstream reader already reaches for names the object
+            # that was gated and exported rather than an intermediate. It falls
+            # back to the enriched pre-quarantine payload only when quarantine
+            # refused, where the diagnostic value of the last complete payload
+            # outweighs a key that would otherwise be empty.
+            "final_mapped": canonical_export_payload or final_export_payload,
             "final_mapped_db": json.loads(mapped_json.read_text(encoding="utf-8")),
-            "final_export_input": final_export_payload,
+            "final_mapped_enriched": final_export_payload,
+            "final_export_input": canonical_export_payload or final_export_payload,
             "mapping_report": mapping_report,
             "post_remap_contract_report": post_remap_contract_report,
             "enrichment_report": enrichment_report,
@@ -3531,7 +3713,7 @@ def run_post_pipeline_sbml_artifacts(
                 "stop_reason": stop_reason,
                 "duration_seconds": loop_duration,
             },
-        }
+        })
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -4939,8 +5121,16 @@ if st.session_state.get("pipeline_ready"):
                 "connectivity": _safe_dict(post_artifacts.get("connectivity_summary"))
                 or _safe_dict(post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")).get("graph_summary", {}),
                 "gate_failed": gate_failed,
+                # History. The verdict is ``final_stage3_gate_ok`` below: this
+                # flag says the first gate run found issues for the audit to
+                # repair, which is a different question from whether the payload
+                # that shipped passed.
                 "normalization_gate_failed": normalization_gate_failed,
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
+                "final_stage3_gate_ok": _safe_dict(
+                    post_artifacts.get(FINAL_GATE_REPORT_KEY)
+                ).get("ok"),
+                "canonical_payload_sha256": post_artifacts.get("canonical_payload_sha256", ""),
                 "audit": audit_summary,
                 "stage2_mapping": stage2_mapping_summary,
                 "stage6_mapping": mapping_summary,
@@ -5538,6 +5728,12 @@ if st.session_state.get("pipeline_ready"):
                             else ""
                         ),  # S2 — "" when RAG off, keeping today's path
                         export_mode=coerce_mode(st.session_state.get("export_mode")),
+                        # The quarantine boundary runs inside the pipeline now, so
+                        # its three inputs travel with the call instead of being
+                        # read from session state after the fact.
+                        strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+                        pathway_context=_safe_dict(st.session_state.get("pathway_context")),
+                        outputs_dir=PROJECT_ROOT / "outputs",
                     )
                 st.session_state["post_pipeline_artifacts"] = artifacts
                 _pa = _safe_dict(artifacts)
@@ -5549,22 +5745,20 @@ if st.session_state.get("pipeline_ready"):
                 if bool(_pa.get("gate_failed", False)):
                     st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
                 else:
-                    final_mapped_payload = _pa.get("final_mapped_db") or _pa.get("final_mapped")
+                    # The quarantine boundary and the pre-export Stage 3 gate both
+                    # ran INSIDE the pipeline call above, on the canonical payload
+                    # -- enriched, then quarantined, then serialized and exported.
+                    # They used to run here, after the function returned, which is
+                    # why the gate judged an object (quarantine of the PRE-
+                    # enrichment payload) that was neither serialized as
+                    # final_mapped.json nor handed to the exporter. This block is
+                    # now presentation over decisions already made and recorded;
+                    # it decides nothing, so a reader never has to ask whether the
+                    # UI and the batch driver saw the same verdict.
+                    final_mapped_payload = _pa.get(CANONICAL_PAYLOAD_KEY) or _pa.get("final_mapped")
                     mapping_report = _safe_dict(_pa.get("mapping_report"))
                     if isinstance(final_mapped_payload, dict) and final_mapped_payload:
-                        # THE quarantine boundary. Before the Stage 3 revalidation,
-                        # because that check is what stops the run and prevents
-                        # refinement review from ever opening.
-                        _quarantine = run_quarantine_boundary(
-                            final_mapped_payload,
-                            strict_db=bool(st.session_state.get("pwml_strict_db", True)),
-                            outputs_dir=PROJECT_ROOT / "outputs",
-                            pathway_context=_safe_dict(st.session_state.get("pathway_context")),
-                            mode=coerce_mode(st.session_state.get("export_mode")),
-                        )
-                        _pa["quarantine_report"] = _quarantine["quarantine_report"]
-                        _pa["quarantine_artifacts"] = _quarantine["quarantine_artifacts"]
-                        _quarantine_flags = _safe_list(_quarantine.get("review_flags"))
+                        _quarantine_flags = _safe_list(_pa.get("quarantine_review_flags"))
                         if _quarantine_flags:
                             # Research mode: the candidate is untouched and the run
                             # continues. These are the findings a strict run would
@@ -5575,14 +5769,17 @@ if st.session_state.get("pipeline_ready"):
                                 "would have removed the ones listed below."
                             )
                             st.json(_quarantine_flags)
-                        if not _quarantine["ok"]:
+                        if not bool(_pa.get("quarantine_ok")):
+                            _refusal_reasons = [
+                                str(reason) for reason in _safe_list(_pa.get("quarantine_refusal_reasons"))
+                            ]
                             st.session_state.refinement_gate_errors = [
                                 {"path": "/processes", "reason": f"quarantine refusal: {reason}"}
-                                for reason in _quarantine["refusal_reasons"]
+                                for reason in _refusal_reasons
                             ]
                             st.error(
                                 "Quarantine could not produce a viable requested-pathway core: "
-                                + "; ".join(_quarantine["refusal_reasons"])
+                                + "; ".join(_refusal_reasons)
                             )
                             # Rendered flat rather than inside an expander. A
                             # refusal is the reason the run stopped, so it should
@@ -5590,20 +5787,11 @@ if st.session_state.get("pipeline_ready"):
                             # FragmentThreadState under AppTest once an earlier
                             # app run has executed in the same process.
                             st.caption("Requested-core coverage")
-                            st.json(_quarantine["coverage"])
+                            st.json(_safe_dict(_pa.get("quarantine_coverage")))
                             st.caption("Strict invariants")
-                            st.json(_safe_dict(_quarantine["quarantine_report"]).get("strict_invariants"))
+                            st.json(_safe_dict(_pa.get("quarantine_report")).get("strict_invariants"))
                         else:
-                            # Everything downstream -- the reviewer's graph, the
-                            # Stage 3 revalidation, the exporter -- reads the same
-                            # reduced payload this boundary produced.
-                            final_mapped_payload = _quarantine["payload"]
-                            _pa["final_mapped_quarantined"] = final_mapped_payload
-                            try:
-                                _gate_details = run_strict_post_normalization_gates(deepcopy(final_mapped_payload))
-                                final_gate: Dict[str, Any] = {"ok": True, **_gate_details}
-                            except GateValidationError as _gate_exc:
-                                final_gate = {"ok": False, **_safe_dict(_gate_exc.details)}
+                            final_gate: Dict[str, Any] = _safe_dict(_pa.get(FINAL_GATE_REPORT_KEY))
                             _stage3_failed = bool(final_gate) and not bool(final_gate.get("ok", False))
                             if _stage3_failed and is_research(coerce_mode(st.session_state.get("export_mode"))):
                                 # Research mode fails open through the WHOLE
@@ -5616,7 +5804,10 @@ if st.session_state.get("pipeline_ready"):
                                 # pathway delivers nothing. The gate still RAN and
                                 # its findings are kept in full below -- what
                                 # changes is that they annotate instead of block.
-                                _pa["final_stage3_gate_report"] = final_gate
+                                # The report itself is already recorded by the
+                                # pipeline, on this branch and on the passing one
+                                # alike; what research mode adds is the flag
+                                # channel, never an edit to the gate's finding.
                                 _pa["research_stage3_review_flags"] = _safe_list(final_gate.get("errors"))
                                 _pa["research_stage3_failed_open"] = True
                                 st.session_state.refinement_gate_errors = []
@@ -5645,7 +5836,6 @@ if st.session_state.get("pipeline_ready"):
                                 initialize_refinement_review_state(final_mapped_payload, mapping_report)
                             elif _stage3_failed:
                                 st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
-                                _pa["final_stage3_gate_report"] = final_gate
                                 st.error(
                                     "Mapped pathway still fails the pre-export Stage 3 revalidation. "
                                     "Refinement review was not opened."

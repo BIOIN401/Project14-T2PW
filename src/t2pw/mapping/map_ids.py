@@ -31,6 +31,10 @@ from t2pw.pipeline.entity_identity import (
     route_entity_for_mapping,
 )
 from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, ExportMode, is_research
+from t2pw.pipeline.reference_repair import (
+    ReplacementRecord,
+    repair_entity_references,
+)
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -6029,6 +6033,14 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     }
     cache_key_to_name: Dict[str, str] = {}
     dropped_protein_norms: set = set()
+    #: Display name of each dropped protein, for the repair's audit trail. A
+    #: normalized key ("alas2") is not something a reviewer can paste back.
+    dropped_protein_names: Dict[str, str] = {}
+    #: ``{dropped protein norm: wrapper display name}``. ``""`` means "no single
+    #: wrapper" -- either none was found or two actor lists disagreed -- and the
+    #: repair then leaves the references alone rather than guessing which complex
+    #: inherited the function.
+    dropped_protein_wrappers: Dict[str, str] = {}
     summary = {
         "reaction_protein_enzymes_rewritten_to_complexes": 0,
         "reaction_enzyme_complexes_db_matched": 0,
@@ -6169,6 +6181,44 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                     proteins.remove(protein_row)
                 proteins_by_norm.pop(name_norm, None)
                 dropped_protein_norms.add(name_norm)
+                dropped_protein_names.setdefault(name_norm, name)
+                # WHERE THIS PROTEIN'S FUNCTION WENT. This is the drop that
+                # orphaned PMC12856317's four ``entity_2: ALAS2`` interactions:
+                # the reaction listed both ``ALAS2`` (no accession) and the
+                # complex ``ALAS2 homodimer``, so the protein was removed here as
+                # redundant -- and nothing outside this actor list was told.
+                #
+                # The replacement is decided STRUCTURALLY, never by name
+                # similarity: the wrapper is the complex in this same actor list
+                # that carries the dropped protein as a component. Exactly one
+                # such complex is a replacement; zero or several is a question
+                # this frame cannot answer, and it records "" so the repair
+                # leaves those references for strict validation to reject
+                # clearly rather than reattributing the claim to a guess.
+                wrappers = {
+                    _canonical_name(str(complexes_by_norm[actor_norm].get("name") or ""))
+                    for actor_norm in (
+                        _normalize_name(_reaction_actor_name_and_type(
+                            other if isinstance(other, dict) else {"entity": other}
+                        )[0])
+                        for other in rows
+                    )
+                    if actor_norm in complexes_by_norm
+                    and any(
+                        _normalize_name(_component_name(component)) == name_norm
+                        for component in _safe_list(
+                            complexes_by_norm[actor_norm].get("components")
+                        )
+                    )
+                }
+                wrapper = wrappers.pop() if len(wrappers) == 1 else ""
+                if name_norm in dropped_protein_wrappers:
+                    if dropped_protein_wrappers[name_norm] != wrapper:
+                        # Two actor lists put the same protein into different
+                        # wrappers. Ambiguous -- do not guess.
+                        dropped_protein_wrappers[name_norm] = ""
+                else:
+                    dropped_protein_wrappers[name_norm] = wrapper
                 summary["reaction_enzyme_proteins_dropped_no_external_id"] += 1
                 actions.append(
                     {
@@ -6307,6 +6357,38 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 continue
             pointer = f"/processes/reactions/{ridx}/{key}"
             reaction[key] = _dedupe_actor_rows(_rewrite_rows(rows, pointer, reaction), pointer)
+
+    # ── The references the drops above orphaned ──────────────────────────────
+    #
+    # Run once, after every actor list has been rewritten, so the wrapper each
+    # dropped protein was folded into is final. Interactions, reaction
+    # inputs/outputs and transport cargo all name entities by string and none of
+    # them are touched by the loop above -- which is why PMC12856317 shipped four
+    # interactions pointing at a protein no bucket declared, and failed the
+    # strict gate on all four.
+    if dropped_protein_norms:
+        repair = repair_entity_references(
+            mapped,
+            [
+                ReplacementRecord(
+                    old_name=dropped_protein_names.get(norm, norm),
+                    sentinel_name=_PATHBANK_UNKNOWN_PROTEIN_NAME,
+                    functional_replacement=dropped_protein_wrappers.get(norm, ""),
+                    reason="reaction_enzyme_protein_dropped_no_external_id",
+                )
+                for norm in sorted(dropped_protein_norms)
+            ],
+        )
+        for rewrite in _safe_list(repair.get("rewrites")):
+            actions.append(
+                {
+                    "type": "dropped_protein_process_reference_repaired",
+                    **_safe_dict(rewrite),
+                }
+            )
+        summary["dropped_protein_process_references_repaired"] = int(
+            _safe_dict(repair.get("summary")).get("references_rewritten", 0)
+        )
 
     return {"summary": summary, "actions": actions}
 
@@ -6717,6 +6799,20 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     # Orphaned old complex components (never given an entry here) fall back to
     # the strictest "no exemption" check via ``.get(norm, "")``.
     proteins_to_remove_roles: Dict[str, str] = {}
+    # WHICH WRAPPER each removed protein's function moved into, keyed by the same
+    # normalized name. This is what a process reference to the removed protein
+    # must be repointed at -- never at the sentinel, which is one shared row and
+    # therefore names no particular actor.
+    #
+    # The direct-wrap case records a wrapper with the protein's OWN name, so a
+    # reference to it still resolves and the repair correctly finds nothing to
+    # do. Only the reuse case renames, and only it can orphan a reference.
+    #
+    # NOT the seam that produced PMC12856317: that protein was already gone by
+    # the time this pass ran, dropped by
+    # _rewrite_reaction_protein_enzymes_to_complexes. This is the same class of
+    # defect at a second site, closed the same way.
+    proteins_to_remove_wrappers: Dict[str, str] = {}
 
     for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
@@ -6845,6 +6941,10 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     old_row = proteins_by_norm.get(old_norm)
                     if old_row is not None and not _has_real_protein_identity(old_row):
                         proteins_to_remove.add(old_norm)
+                        # The superseded component's function now lives in this
+                        # wrapper, under a DIFFERENT name. Recorded here because
+                        # this is the only frame that knows both halves.
+                        proteins_to_remove_wrappers[old_norm] = name
             complex_row.update(
                 {
                     "name": name,
@@ -6932,6 +7032,10 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
             if source_protein is not None:
                 proteins_to_remove.add(name_norm)
                 proteins_to_remove_roles[name_norm] = "enzyme"
+                # Same display name as the protein it replaces, so nothing
+                # referencing it dangles. Recorded anyway: the repair decides
+                # that for itself rather than trusting this invariant to hold.
+                proteins_to_remove_wrappers.setdefault(name_norm, name)
             summary["reaction_enzyme_unknown_fallbacks"] += 1
             actions.append(
                 {
@@ -7070,6 +7174,10 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                     old_row = proteins_by_norm.get(old_norm)
                     if old_row is not None and not _has_real_protein_identity(old_row):
                         proteins_to_remove.add(old_norm)
+                        # The superseded component's function now lives in this
+                        # wrapper, under a DIFFERENT name. Recorded here because
+                        # this is the only frame that knows both halves.
+                        proteins_to_remove_wrappers[old_norm] = name
             complex_row.update(
                 {
                     "name": name,
@@ -7129,6 +7237,7 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
             if source_protein is not None:
                 proteins_to_remove.add(name_norm)
                 proteins_to_remove_roles[name_norm] = "transporter"
+                proteins_to_remove_wrappers.setdefault(name_norm, name)
             summary["transporter_unknown_fallbacks"] += 1
             actions.append(
                 {
@@ -7146,10 +7255,15 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     if proteins_to_remove:
         retained: List[Dict[str, Any]] = []
         removed_norms: Set[str] = set()
+        # The removed rows' DISPLAY names, captured on the way out. The repair
+        # below reports what it rewrote, and a normalized key ("alas2") is not
+        # something a reviewer can paste back into the payload.
+        norm_to_display: Dict[str, str] = {}
         for protein in proteins:
             if not isinstance(protein, dict):
                 retained.append(protein)
                 continue
+            display_name = _canonical_name(str(protein.get("name") or ""))
             norm = _normalize_name(str(protein.get("name") or ""))
             if (
                 norm in proteins_to_remove
@@ -7157,6 +7271,7 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                 and not _has_disqualifying_reference(norm, allowed_role=proteins_to_remove_roles.get(norm, ""))
             ):
                 removed_norms.add(norm)
+                norm_to_display[norm] = display_name
                 continue
             retained.append(protein)
         entities["proteins"] = retained
@@ -7211,6 +7326,41 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
                         if _normalize_name(_component_name(component)) in removed_norms
                     ),
                 }
+            )
+
+        # ── FUNCTIONAL references, the half that was never repaired ─────────
+        #
+        # Complex components have had a repair pass since the block above;
+        # interactions, reaction actors and transport cargo were only ever
+        # *read* -- ``_has_non_enzyme_reference`` consults them to decide whether
+        # the fallback is allowed and then nothing rewrites them.
+        #
+        # Each removed protein's references go to its WRAPPER, never to the
+        # sentinel: ``heme inhibits ALAS2`` must become ``heme inhibits ALAS2
+        # homodimer``, because several unresolved actors can share one
+        # ``Unknown`` row and repointing there would merge distinct claims.
+        # A removed protein with no wrapper is left alone on purpose -- see
+        # :mod:`t2pw.pipeline.reference_repair`.
+        replacement_records = [
+            ReplacementRecord(
+                old_name=norm_to_display.get(norm, norm),
+                sentinel_name=_PATHBANK_UNKNOWN_PROTEIN_NAME,
+                functional_replacement=proteins_to_remove_wrappers.get(norm, ""),
+                reason=_PATHBANK_UNKNOWN_FALLBACK_RULE,
+            )
+            for norm in sorted(removed_norms)
+        ]
+        if replacement_records:
+            repair = repair_entity_references(mapped, replacement_records)
+            for rewrite in _safe_list(repair.get("rewrites")):
+                actions.append(
+                    {
+                        "type": "superseded_protein_process_reference_repaired",
+                        **_safe_dict(rewrite),
+                    }
+                )
+            summary["superseded_protein_process_references_repaired"] = int(
+                _safe_dict(repair.get("summary")).get("references_rewritten", 0)
             )
 
     return {"summary": summary, "actions": actions}
