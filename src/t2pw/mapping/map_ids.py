@@ -7555,6 +7555,22 @@ def map_payload(
             "literature_aliases",
             "method",
             "best_effort",
+            # The resolver-return path's half of the B1 audit trail. Without it
+            # a row rejected by _apply_name_plausibility_gate ->
+            # _novel_result_from_identity_verdict reaches the payload carrying
+            # resolution.failed_check but NO identity_verdict, so the rung that
+            # rejected it and the candidate it judged are both unrecorded --
+            # 13 of the 22 rejected protein rows in runs_verify/2026-08-04_1306
+            # and _1234 were invisible for exactly this reason. The row-level
+            # re-verification sweep already writes meta["identity_verdict"]
+            # directly (:5336); this is the other site.
+            #
+            # Instrumentation only. The sole reader, _placeholder_failure_reason
+            # (:6483), prefers verdict["reason"] over resolution["failed_check"]
+            # and those two carry the same string by construction -- failed_check
+            # is omitted precisely when it would equal resolution["issue"] -- so
+            # the reason it produces is unchanged.
+            "identity_verdict",
         ]:
             if result.get(meta_key):
                 protein["mapping_meta"][meta_key] = result.get(meta_key)

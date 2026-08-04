@@ -1,0 +1,24 @@
+# Phase B2 (corrected) -- RESEARCH legs.
+#
+# The brief specified PMC12856317/strict and PMC12096016/strict. Those two legs
+# contain ZERO identity_evidence_missing rows. The population the species fix
+# targets lives almost entirely in the RESEARCH legs of runs/2026-08-02_2130:
+#
+#   PMC12096016/research   9 rows (8 species-unknown)
+#   PMC12452463/research   8 rows (7 species-unknown)
+#   PMC12180156/research   5 rows (5 species-unknown)
+#   PMC12856317/research   1 row  (1 species-unknown)  <- human gene symbol
+#   PMC13231680/strict     1 row  (1 species-unknown)
+#                         --
+#                         24 rows, 22 species-unknown
+#
+# These three legs yield 22 of the 24. The human-gene-symbol shape (ALAS2 ->
+# P22557) was already captured by the strict B2 run, so the brief's stated
+# coverage -- human gene symbol plus bacterial Ent* -- is preserved.
+#
+# All three are also currently-PASSING legs, so this doubles as production
+# evidence that Phase A did not break them (previously established only by
+# analysis: A2 is byte-identical when both containers are non-empty).
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
+PMC12452463 | enterobactin biosynthesis | Escherichia coli
+PMC12180156 | heme biosynthesis | Homo sapiens
