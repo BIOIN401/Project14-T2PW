@@ -68685,7 +68685,9 @@
           "gene_name": "ALAS2",
           "uniprot": "P22557",
           "species_id": 1,
-          "score": 1.0
+          "score": 1.0,
+          "organism": "Homo sapiens",
+          "taxonomy_id": "9606"
         },
         {
           "pathbank_protein_id": 4203,
@@ -68693,7 +68695,9 @@
           "gene_name": "ALAS2",
           "uniprot": "Q5JZF5",
           "species_id": 1,
-          "score": 1.0
+          "score": 1.0,
+          "organism": "Homo sapiens",
+          "taxonomy_id": "9606"
         },
         {
           "pathbank_protein_id": 4211,
@@ -68701,7 +68705,9 @@
           "gene_name": "ALAS2",
           "uniprot": "Q8N6H3",
           "species_id": 1,
-          "score": 1.0
+          "score": 1.0,
+          "organism": "Homo sapiens",
+          "taxonomy_id": "9606"
         }
       ],
       "resolution": {
@@ -69848,7 +69854,9 @@
           "gene_name": "ALAS1",
           "uniprot": "P13196",
           "species_id": 1,
-          "score": 1.0
+          "score": 1.0,
+          "organism": "Homo sapiens",
+          "taxonomy_id": "9606"
         },
         {
           "pathbank_protein_id": 4202,
@@ -69856,7 +69864,9 @@
           "gene_name": "ALAS1",
           "uniprot": "Q5JAM2",
           "species_id": 1,
-          "score": 1.0
+          "score": 1.0,
+          "organism": "Homo sapiens",
+          "taxonomy_id": "9606"
         }
       ],
       "resolution": {
@@ -73348,6 +73358,287 @@
       "resolution": {
         "status": "matched",
         "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::ldh::escherichia coli::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 6649,
+          "name": "D-lactate dehydrogenase_",
+          "gene_name": "ldhA",
+          "uniprot": "P52643",
+          "species_id": 3,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::ryhb::escherichia coli::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::ryhb::escherichia coli::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"RyhB\" OR gene:\"RyhB\") AND organism_name:\"Escherichia coli\" | (protein_name:\"RyhB\" OR gene:\"RyhB\")",
+      "mapped_ids": {
+        "uniprot": "B7UKW5"
+      },
+      "confidence": 0.25,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "B7UKW5",
+          "protein_name": "RyhB-regulted fur leader peptide",
+          "gene_names": [
+            "uof"
+          ],
+          "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD6M4D1",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Citrobacter gillenii",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABY0AXS1",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Enterobacter quasimori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2S4QHV4",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Citrobacter freundii",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABX5A4N0",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Lelliottia aquatilis",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6L6IE79",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Intestinirhabdus alba",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABT1B6N8",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Citrobacter meridianamericanus",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABY3P3Z4",
+          "protein_name": "RyhB-regulated fur leader peptide",
+          "gene_names": [],
+          "organism": "Lelliottia nimipressuralis",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "RyhB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"RyhB\" OR gene:\"RyhB\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"RyhB\" OR gene:\"RyhB\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "RyhB-regulted fur leader peptide",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::fnr::escherichia coli::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::fnr::escherichia coli::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"Fnr\" OR gene:\"Fnr\") AND organism_name:\"Escherichia coli\" | (protein_name:\"Fnr\" OR gene:\"Fnr\")",
+      "mapped_ids": {
+        "uniprot": "P0A9E5"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P0A9E5",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr",
+            "nirR"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0A9E7",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O157:H7",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0A9E6",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC)",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H2YZ71",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O1:K1 / APEC",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B7L599",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli (strain 55989 / EAEC)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A7ZLG3",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O139:H28 (strain E24377A / ETEC)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B7MM10",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O45:K1 (strain S88 / ExPEC)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B7URE2",
+          "protein_name": "Fumarate and nitrate reduction regulatory protein",
+          "gene_names": [
+            "fnr"
+          ],
+          "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "Fnr",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"Fnr\" OR gene:\"Fnr\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"Fnr\" OR gene:\"Fnr\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Fumarate and nitrate reduction regulatory protein",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
       }
     }
   },
@@ -89908,6 +90199,19 @@
       "resolution": {
         "status": "matched",
         "order_step": "synonym"
+      },
+      "name_gate": {
+        "verdict": "keep",
+        "reason": "shared_meaningful_token",
+        "entity_name": "pyridoxal phosphate",
+        "kind": "compound",
+        "resolved_name": "Pyridoxal 5'-phosphate",
+        "identity": "biocyc:PYRIDOXAL_PHOSPHATE, cas:54-47-7, chebi:CHEBI:18405, chemspider:1022, drugbank:DB00114, hmdb:HMDB0001491, kegg:C00018, pathbank_compound_id:1148, pubchem:1051",
+        "compared_names": [
+          "Pyridoxal 5'-phosphate",
+          "Pyr-5'P",
+          "PYRIDOXAL_PHOSPHATE"
+        ]
       }
     },
     "db::pyridoxal phosphate::1148::{\"cas\": \"54-47-7\", \"chebi\": \"CHEBI:18405\", \"hmdb\": \"HMDB0001491\", \"kegg\": \"C00018\", \"pubchem\": \"1051\"}": {
@@ -97889,6 +98193,19 @@
       "resolution": {
         "status": "matched",
         "order_step": "synonym"
+      },
+      "name_gate": {
+        "verdict": "keep",
+        "reason": "shared_meaningful_token",
+        "entity_name": "NAD+",
+        "kind": "compound",
+        "resolved_name": "NAD",
+        "identity": "biocyc:NAD, cas:53-84-9, chebi:CHEBI:15846, chemspider:5682, hmdb:HMDB0000902, kegg:C00003, pathbank_compound_id:721, pubchem:5893",
+        "compared_names": [
+          "NAD",
+          "NAD",
+          "NAD"
+        ]
       }
     },
     "db::o2::::{}": {
@@ -121314,6 +121631,261 @@
           "CHOLESTEROL"
         ]
       }
+    },
+    "db::phosphorylated udp3or3hydroxymyristoylglucosamine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::thiamine pyrophosphate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001372",
+        "kegg": "C00068",
+        "chebi": "CHEBI:9532",
+        "pubchem": "1132",
+        "cas": "154-87-0",
+        "biocyc": "2-(alpha-lactyl)-thpp",
+        "chemspider": "1100",
+        "pathbank_compound_id": "1060"
+      },
+      "pathbank_compound_id": 1060,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1060,
+          "name": "Thiamine pyrophosphate",
+          "short_name": "ThiamPP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001372",
+            "kegg": "C00068",
+            "chebi": "CHEBI:9532",
+            "pubchem": "1132",
+            "cas": "154-87-0",
+            "biocyc": "2-(alpha-lactyl)-thpp",
+            "chemspider": "1100",
+            "pathbank_compound_id": "1060"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      },
+      "name_gate": {
+        "verdict": "keep",
+        "reason": "shared_meaningful_token",
+        "entity_name": "thiamine pyrophosphate",
+        "kind": "compound",
+        "resolved_name": "Thiamine pyrophosphate",
+        "identity": "biocyc:2-(alpha-lactyl)-thpp, cas:154-87-0, chebi:CHEBI:9532, chemspider:1100, hmdb:HMDB0001372, kegg:C00068, pathbank_compound_id:1060, pubchem:1132",
+        "compared_names": [
+          "Thiamine pyrophosphate",
+          "ThiamPP",
+          "2-(alpha-lactyl)-thpp"
+        ]
+      }
+    },
+    "db::ferricenterobactin::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "pubchem": "440956",
+        "pathbank_compound_id": "41655"
+      },
+      "pathbank_compound_id": 41655,
+      "confidence": 0.87,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 41655,
+          "name": "Ferric enterobactin",
+          "short_name": "Ferric",
+          "score": 0.87,
+          "mapped_ids": {
+            "pubchem": "440956"
+          }
+        },
+        {
+          "pathbank_compound_id": 41635,
+          "name": "ferric 2,3-dihydroxybenzoylserine",
+          "short_name": "DI",
+          "score": 0.43,
+          "mapped_ids": {
+            "pubchem": "46926236"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "high_confidence_fuzzy"
+      },
+      "name_gate": {
+        "verdict": "keep",
+        "reason": "shared_meaningful_token",
+        "entity_name": "ferric-enterobactin",
+        "kind": "compound",
+        "resolved_name": "Ferric enterobactin",
+        "identity": "pathbank_compound_id:41655, pubchem:440956",
+        "compared_names": [
+          "Ferric enterobactin",
+          "Ferric"
+        ]
+      }
+    },
+    "db::23dihydroxybenzoate::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 296,
+          "name": "2-Pyrocatechuic acid",
+          "short_name": "DHBA",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000397",
+            "kegg": "C00196",
+            "chebi": "CHEBI:18026",
+            "pubchem": "19",
+            "cas": "303-38-8",
+            "chemspider": "18",
+            "drugbank": "DB01672",
+            "pathbank_compound_id": "296"
+          }
+        },
+        {
+          "pathbank_compound_id": 40792,
+          "name": "2,3-Dihydroxybenzoic acid",
+          "short_name": "23DBA",
+          "score": 0.95,
+          "mapped_ids": {
+            "chebi": "CHEBI:18026",
+            "pathbank_compound_id": "40792"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_synonym",
+        "order_step": "synonym"
+      }
+    },
+    "db::ferrienterobactin::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::fe3::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0012943",
+        "kegg": "C14819",
+        "chebi": "CHEBI:29034",
+        "pubchem": "29936",
+        "cas": "20074-52-6",
+        "biocyc": "CPD-10134",
+        "chemspider": "27815",
+        "pathbank_compound_id": "8133"
+      },
+      "pathbank_compound_id": 8133,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 8133,
+          "name": "Fe3+",
+          "short_name": "Fe3+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0012943",
+            "kegg": "C14819",
+            "chebi": "CHEBI:29034",
+            "pubchem": "29936",
+            "cas": "20074-52-6",
+            "biocyc": "CPD-10134",
+            "chemspider": "27815",
+            "pathbank_compound_id": "8133"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      },
+      "name_gate": {
+        "verdict": "keep",
+        "reason": "shared_meaningful_token",
+        "entity_name": "Fe3+",
+        "kind": "compound",
+        "resolved_name": "Fe3+",
+        "identity": "biocyc:CPD-10134, cas:20074-52-6, chebi:CHEBI:29034, chemspider:27815, hmdb:HMDB0012943, kegg:C14819, pathbank_compound_id:8133, pubchem:29936",
+        "compared_names": [
+          "Fe3+",
+          "Fe3+",
+          "CPD-10134"
+        ]
+      }
+    },
+    "db::ferricenterobactin complex::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.6867,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41655,
+          "name": "Ferric enterobactin",
+          "short_name": "Ferric",
+          "score": 0.6867,
+          "mapped_ids": {
+            "pubchem": "440956"
+          }
+        },
+        {
+          "pathbank_compound_id": 41635,
+          "name": "ferric 2,3-dihydroxybenzoylserine",
+          "short_name": "DI",
+          "score": 0.43,
+          "mapped_ids": {
+            "pubchem": "46926236"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
     }
   },
   "complexes": {
@@ -128542,6 +129114,76 @@
         "status": "novel",
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::entcb complex::escherichia coli::::[{\"ids\": {}, \"name\": \"EntC\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"EntB\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.55,
+      "chosen_rule": "resolved_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 1143,
+          "pathbank_protein_complex_id": 1143,
+          "name": "Isochorismate synthase",
+          "species_id": 3,
+          "component_protein_id": 6238,
+          "score": 0.55
+        },
+        {
+          "pathbank_complex_id": 1189,
+          "pathbank_protein_complex_id": 1189,
+          "name": "isochorismatase",
+          "species_id": 3,
+          "component_protein_id": 6224,
+          "score": 0.55
+        },
+        {
+          "pathbank_complex_id": 3623,
+          "pathbank_protein_complex_id": 3623,
+          "name": "enterobactin synthase",
+          "species_id": 3,
+          "component_protein_id": 6224,
+          "score": 0.55
+        },
+        {
+          "pathbank_complex_id": 3929,
+          "pathbank_protein_complex_id": 3929,
+          "name": "enterobactin B",
+          "species_id": 3,
+          "component_protein_id": 6224,
+          "score": 0.55
+        }
+      ],
+      "components": [
+        {
+          "name": "EntC",
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 6238,
+          "mapped_ids": {
+            "uniprot": "P0AEJ2",
+            "pathbank_protein_id": "6238"
+          }
+        },
+        {
+          "name": "EntB",
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 6224,
+          "mapped_ids": {
+            "uniprot": "P0ADI4",
+            "pathbank_protein_id": "6224"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_component_complex_species",
+        "order_step": "resolved_component_species"
       }
     }
   },
