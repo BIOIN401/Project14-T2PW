@@ -795,6 +795,16 @@ class PathBankDbResolver:
         self._driver = None
         self._conn = None
         self.last_error = ""
+        # Species rows this resolver has scored, keyed by PathBank ``species.id``.
+        # The protein tables carry only that integer FK, so a candidate row built
+        # from them says nothing a species/taxon check can read. This side map is
+        # what lets the builders stamp the real ``name`` / ``taxonomy_id`` back
+        # onto those rows -- see :meth:`stamp_candidate_species`.
+        self._species_meta: Dict[int, Dict[str, str]] = {}
+        # Organisms already pushed through :meth:`_find_species_ids` for the sake
+        # of populating the side map, so read-time hydration of a cached result
+        # costs one species query per organism rather than one per protein.
+        self._species_meta_lookups: Set[str] = set()
         try:
             import pymysql  # type: ignore[import-not-found]
 
@@ -907,10 +917,31 @@ class PathBankDbResolver:
             self.last_error = f"db_query_failed:{exc}"
             return []
 
+    def _ensure_species_side_map(self) -> None:
+        """Make the species side map safe to touch on any instance.
+
+        ``__init__`` builds both containers; this covers instances constructed
+        through ``__new__``, which several test helpers do to avoid a live DB.
+        """
+        if not isinstance(getattr(self, "_species_meta", None), dict):
+            self._species_meta = {}
+        if not isinstance(getattr(self, "_species_meta_lookups", None), set):
+            self._species_meta_lookups = set()
+
     def _find_species_ids(self, organism: str) -> List[int]:
+        """PathBank ``species.id`` values plausibly naming ``organism``.
+
+        Fuzzy, and deliberately so: it returns up to six ids scored within 0.08
+        of the best match, so ``species_id IN (...)`` narrows a protein query --
+        it does not prove taxonomic equality. Scoring every row also fills
+        :attr:`_species_meta` with that row's ``name`` / ``taxonomy_id``, which
+        is the evidence a species check can actually judge.
+        """
         text = _canonical_name(organism)
         if not text:
             return []
+        self._ensure_species_side_map()
+        self._species_meta_lookups.add(text)
         rows = self._query(
             (
                 "SELECT id, name, common_name, taxonomy_id "
@@ -943,6 +974,13 @@ class PathBankDbResolver:
             if text and text == taxonomy_id:
                 score = max(score, 0.98)
             score = max(score, 0.45 + 0.5 * _jaccard(text, name), 0.42 + 0.5 * _jaccard(text, common_name))
+            # The return type stays ``List[int]`` -- eight call sites depend on it.
+            # The other three columns go to the side map instead of being dropped.
+            self._species_meta[sid] = {
+                "name": name,
+                "common_name": common_name,
+                "taxonomy_id": taxonomy_id,
+            }
             scored.append((score, sid))
         scored.sort(key=lambda pair: pair[0], reverse=True)
         if not scored:
@@ -950,6 +988,40 @@ class PathBankDbResolver:
         top = scored[0][0]
         chosen = [sid for score, sid in scored if score >= max(0.7, top - 0.08)]
         return chosen[:6]
+
+    def stamp_candidate_species(self, candidates: Any, organism: str) -> None:
+        """Copy this resolver's species evidence onto candidate rows, in place.
+
+        A protein row out of the DB carries ``species_id`` -- a PathBank foreign
+        key -- and nothing else about the organism, so the identity ladder's
+        species rung reads it as silent and the ladder fails closed with
+        ``identity_evidence_missing`` before the later rungs run. This restores
+        the ``name`` / ``taxonomy_id`` of the species row the resolver already
+        looked up, which is what the rung needs to make a taxonomic judgement.
+
+        A row whose ``species_id`` has no entry in the side map is left exactly
+        as it was. Missing evidence stays missing: ``unknown`` is the correct
+        verdict there, and inventing a species would defeat the gate.
+        """
+        rows = [row for row in list(candidates or []) if isinstance(row, dict)]
+        if not rows:
+            return
+        self._ensure_species_side_map()
+        text = _canonical_name(organism)
+        if text and text not in self._species_meta_lookups:
+            # Fills the side map. Required for candidates read back from the
+            # mapping cache, where no species lookup ran in this process.
+            self._find_species_ids(organism)
+        for row in rows:
+            meta = self._species_meta.get(_to_positive_int(row.get("species_id")) or 0)
+            if not meta:
+                continue
+            species_name = str(meta.get("name") or "")
+            taxonomy_id = str(meta.get("taxonomy_id") or "")
+            if species_name and not str(row.get("organism") or "").strip():
+                row["organism"] = species_name
+            if taxonomy_id and not str(row.get("taxonomy_id") or "").strip():
+                row["taxonomy_id"] = taxonomy_id
 
     # ------------------------------------------------------------------
     # Public DB lookup primitives
@@ -1810,6 +1882,9 @@ class PathBankDbResolver:
                 }
         if not by_id:
             return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        # These rows would otherwise reach the identity ladder with a bare
+        # ``species_id`` and no organism the species rung can read.
+        self.stamp_candidate_species(list(by_id.values()), species)
         candidates = sorted(by_id.values(), key=lambda c: c["score"], reverse=True)
         best = candidates[0]
         uid = best["uniprot"]
@@ -2801,6 +2876,9 @@ class PathBankDbResolver:
                         if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
                             by_id[pid] = candidate
 
+        # Same reason as in ``map_protein_by_ids``: a bare ``species_id`` is not
+        # evidence the identity ladder's species rung can read.
+        self.stamp_candidate_species(list(by_id.values()), organism)
         candidates = sorted(by_id.values(), key=lambda item: float(item.get("score", 0.0)), reverse=True)
         if not candidates:
             return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
@@ -5497,6 +5575,16 @@ def _map_protein_with_strategy(
             cache.set("proteins", db_key, db_result)
         db_resolution = _safe_dict(db_result.get("resolution")).get("status")
         if db_result.get("status") == "mapped" or id_source == "db" or db_resolution == "ambiguous":
+            # Read-time hydration, and it has to happen here rather than only in
+            # the builders. ``db_key`` carries no builder version, so a stored
+            # result is replayed exactly as it was written -- 314 of the cached
+            # protein candidates carry ``species_id`` and no organism, and a
+            # builder-only change would reach none of them. Bumping the key
+            # instead would force live re-resolution of every db:: entry. Doing
+            # it at this seam also covers the row-shaped builders
+            # (``_protein_result_from_row``) that were not stamped individually.
+            if db is not None:
+                db.stamp_candidate_species(_safe_list(db_result.get("candidates")), organism)
             # The gate is applied to the cache's *return value*, never to what is
             # stored, so the raw resolver answer stays inspectable in the cache
             # file and the verdict is recomputed on every read.
