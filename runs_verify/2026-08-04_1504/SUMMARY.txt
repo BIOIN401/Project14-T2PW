@@ -1,0 +1,80 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-08-04T15:04:16
+finished : 2026-08-04T15:20:09
+papers attempted : 1
+strict PWML      : 0 pass / 1 fail
+research relaxed : 0 pass / 0 fail
+timeouts         : 0
+skipped          : 0
+ineligible       : 0  (screened out, not failures)
+pass, no deliv.  : 0  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 1 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+research-mode defects: NONE -- research mode held fail-open on all 1 paper(s).
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            0  (strict FAIL + research FAIL -- real bug, also a research defect)
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        1  (a mode is missing, skipped or unrecognised)
+    PMC12856317
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> incomplete
+    id     : PMC12856317
+    slug   : PMC12856317
+    uri    : (none)
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=952.8s (15m52s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 2 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=1 entities=11 proteins=1 compounds=5 contract_errors=1
+                       gate_errors=1 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 8
+            - papers/PMC12856317/strict/audit_iteration_summary.json (2.1 kB)
+            - papers/PMC12856317/strict/contract_reports.json (16.0 kB)
+            - papers/PMC12856317/strict/final_mapped.json (23.3 kB)
+            - papers/PMC12856317/strict/gap_iteration_summary.json (17.2 kB)
+            - papers/PMC12856317/strict/gate_fail_report.json (5.9 kB)
+            - papers/PMC12856317/strict/merged_payload.json (4.7 kB)
+            - papers/PMC12856317/strict/rag_admission_report.json (100.1 kB)
+            - papers/PMC12856317/strict/stage1_payload.json (3.8 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     (none)
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     (none)
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

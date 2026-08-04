@@ -1,0 +1,17 @@
+[15:04:16] STARTING a fresh run 2026-08-04_1504 (--fresh was given)
+[15:04:16]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[15:04:16] fetching papers (topics=C:\Users\Angad\AppData\Local\Temp\claude\c--Users-Angad-Desktop-SummerBIOIN\33ce5829-e459-4ed7-ae47-5ed5e42ea86d\scratchpad\topics_alas2.txt, limit=none) ...
+[15:04:16]   + PMC12856317  (54436 chars)  (untitled)
+[15:04:16] planned 1 paper(s) x 1 mode(s) = 1 run(s); 0 candidate(s) skipped (see skipped.json)
+[15:04:16] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[15:04:16] running 1 paper+mode pair(s) sequentially
+[15:04:16] whole-night deadline : 10.0h from now
+[15:04:16] [1/1] PMC12856317 / strict -> starting (timeout 1800s)
+[15:20:09] [1/1] PMC12856317 / strict -> FAIL (contract) in 952.8s (15m52s)
+[15:20:09]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[15:20:09]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[15:20:09]     1/1 done | strict 0 pass 1 fail | research 0 pass
+[15:20:09] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1504
+[15:20:09] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1504\SUMMARY.txt
+[15:20:09] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-04_1504\failures_by_code.txt
+[15:20:09] FAILURES: 1 of 1 paper+mode run(s) did not pass

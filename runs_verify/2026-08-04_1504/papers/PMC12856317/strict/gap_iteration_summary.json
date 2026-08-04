@@ -1,0 +1,448 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 2,
+        "organisms_added": 0,
+        "locations_added": 0,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 2,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:10e173ca710704d1",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:alas2\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": false, … (+190 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:alas2",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Entity is a protein (ALAS2). Need to map IDs using protein databases (UniProt/NCBI) before attempting API enrichment."
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 5
+            },
+            "rationale": "Entity is a compound (glycine). Requires mapping via compound databases (PubChem/ChEBI) and HMDB lookup to resolve unmapped status."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ALAS2",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:8455119a0d7d4e40",
+                  "preview": "[\"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 752,
+                  "hash": "sha256:7d6bf63834b92dd7",
+                  "preview": "[{\"accession\": \"P22557\", \"protein_name\": \"5-aminolevulinate synthase, erythroid-specific, mitochondrial\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A2R8Y6N3\", \"prot… (+552 chars elided)",
+                  "items": 5
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 866,
+                  "hash": "sha256:405eee22dca54aed",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}, \"pathbank_protein_id\": 17, \"confidence\": 1.0, \"chosen_rule\": \"db_top_ca… (+666 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2479,
+                  "hash": "sha256:f03b84eea86466f9",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\", \"mapped_ids\": {\"uniprot\": \"P22557\"}, \"confid… (+2279 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 50,
+                  "hash": "sha256:89916c5139c77e55",
+                  "preview": "{\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7367ba1093db17ce",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6N3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:813381505f4763eb",
+                  "preview": "{\"uniprot\": \"A0A2R8Y836\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:fbc1396814874879",
+                  "preview": "{\"uniprot\": \"A0ACI8Q6V7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2743677a6adf1f3d",
+                  "preview": "{\"uniprot\": \"Q6QNT2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:df9d9a75b06c506e",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6R4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:d644e5cd57431acf",
+                  "preview": "{\"uniprot\": \"A0A2R8Y782\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a database-backed match (PathBankDB) providing both UniProt (P22557) and PathBank IDs. The UniProt ID P22557 is a reviewed entry for ALAS2 in Homo sapiens, matching the entity name and type perfectly.",
+              "source": "llm",
+              "raw": {
+                "chars": 277,
+                "hash": "sha256:9d3e6ab24de2eef5",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a database-backed match (PathBankDB) providing both UniProt (P22557) and PathBank IDs. The UniProt ID P22557 is a reviewed en… (+77 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 385,
+                  "hash": "sha256:f7488a42c2fa43b6",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+185 chars elided)",
+                  "items": 5
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2725,
+                  "hash": "sha256:fc0d3e6c51cfc22b",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", … (+2525 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 196,
+                  "hash": "sha256:53cfb976af6e43fd",
+                  "preview": "{\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", \"chemspider\": \"730\", \"drugbank\": \"DB00145\", \"pathbank_compound_id\": \"78\"}",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a high-confidence database match (PathBankDB) that provides a comprehensive set of cross-referenced IDs (HMDB, KEGG, ChEBI, PubChem, etc.) for glycine, matching the entity type and name perfectly.",
+              "source": "llm",
+              "raw": {
+                "chars": 273,
+                "hash": "sha256:e778d4bcab101a62",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a high-confidence database match (PathBankDB) that provides a comprehensive set of cross-referenced IDs (HMDB, KEGG, ChEBI, P… (+73 chars elided)"
+              }
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    },
+    {
+      "round": 2,
+      "summary": {},
+      "db": {},
+      "stage3": {},
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

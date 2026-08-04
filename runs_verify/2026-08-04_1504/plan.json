@@ -1,0 +1,118 @@
+{
+  "created_at": "2026-08-04T15:04:16",
+  "topics_path": "C:\\Users\\Angad\\AppData\\Local\\Temp\\claude\\c--Users-Angad-Desktop-SummerBIOIN\\33ce5829-e459-4ed7-ae47-5ed5e42ea86d\\scratchpad\\topics_alas2.txt",
+  "modes": [
+    "strict"
+  ],
+  "limit": null,
+  "papers": [
+    {
+      "paper_id": "PMC12856317",
+      "title": "",
+      "source_uri": "",
+      "year": "",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "observed_pathways": [],
+      "observed_organisms": [],
+      "organism_match": "unknown",
+      "topic": "heme biosynthesis",
+      "query": "",
+      "slug": "PMC12856317",
+      "eligibility": {
+        "paper_id": "PMC12856317",
+        "outcome": "pinned_override",
+        "score": -1.5,
+        "threshold": 1.5,
+        "classification": "off_topic",
+        "matched_positive": [],
+        "matched_negative": [
+          "no_mechanistic_pathway_terms:no requested-pathway term matched"
+        ],
+        "requested_pathway": "heme biosynthesis",
+        "requested_organism": "Homo sapiens",
+        "observed_pathways": [],
+        "observed_organisms": [],
+        "organism_match": "unknown",
+        "reason": "pinned paper: score bypassed (no requested-pathway term found for 'heme biosynthesis')",
+        "provisional": true,
+        "needs_manual_review": false,
+        "warnings": [
+          "no requested-pathway term found for 'heme biosynthesis'"
+        ],
+        "screening_input": {
+          "title": "",
+          "abstract": "",
+          "abstract_chars": 0,
+          "abstract_sha256": "",
+          "abstract_truncated": false,
+          "abstract_source": "candidate_metadata",
+          "abstract_authoritative": true
+        }
+      },
+      "chars": 54436
+    }
+  ],
+  "skipped": 0,
+  "eligibility": {
+    "thresholds": {
+      "enabled": true,
+      "min_score": 2.0,
+      "title_only_min_score": 1.5,
+      "min_title_chars": 20,
+      "require_pathway_anchor": true,
+      "organism_veto": true,
+      "negative_veto": true,
+      "review_margin": 0.5,
+      "local_window_tokens": 12,
+      "candidate_ceiling": 60,
+      "stage0_conflict_aborts": true
+    },
+    "outcomes": {
+      "pinned_override": 1
+    },
+    "classifications": {
+      "off_topic": 1
+    },
+    "organism_match": {
+      "unknown": 1
+    },
+    "accepted": 1,
+    "needs_manual_review": [],
+    "scope_disagreements": [],
+    "acquisition": {
+      "requested": 1,
+      "examined": 1,
+      "eligible": 1,
+      "ineligible": 0,
+      "duplicate": 0,
+      "no_full_text": 0,
+      "fetch_failed": 0,
+      "accepted": 1,
+      "skipped_records": 0,
+      "topics": [
+        {
+          "topic": "(pinned PMC12856317)",
+          "requested_organism": "Homo sapiens",
+          "query": "",
+          "requested": 1,
+          "returned": 1,
+          "examined": 1,
+          "eligible": 1,
+          "ineligible": 0,
+          "duplicate": 0,
+          "no_full_text": 0,
+          "fetch_failed": 0,
+          "accepted": 1,
+          "filled": true,
+          "search_calls": 0,
+          "max_requested_candidates": 0,
+          "stop_reason": "filled",
+          "ineligible_by_outcome": {}
+        }
+      ],
+      "topics_filled": 1,
+      "topics_short": []
+    }
+  }
+}

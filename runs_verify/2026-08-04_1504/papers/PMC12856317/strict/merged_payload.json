@@ -1,0 +1,175 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "mature mitochondrial ALAS2"
+      },
+      {
+        "name": "mitochondrion",
+        "evidence": "in the mitochondrion"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "pyridoxal phosphate",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "mature mitochondrial ALAS2"
+    },
+    {
+      "name": "mitochondrion state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrion",
+      "evidence": "in the mitochondrion"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "condensation of glycine and succinyl-CoA"
+      },
+      {
+        "compound": "succinyl-CoA",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "condensation of glycine and succinyl-CoA"
+      },
+      {
+        "compound": "aminolevulinic acid",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "produce aminolevulinic acid"
+      },
+      {
+        "compound": "pyridoxal phosphate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "covalently bound to the PLP cofactor"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mature mitochondrial ALAS2"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAS2-catalyzed ALA formation",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "scope_membership": "core"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibition of ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+      },
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibition of ALAS2 - negative feedback",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+      },
+      {
+        "entity_1": "ALAS2",
+        "entity_2": "pyridoxal phosphate",
+        "name": "ALAS2-PLP cofactor interaction",
+        "relationship": "cofactor",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "a PLP-dependent homodimer enzyme"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}
