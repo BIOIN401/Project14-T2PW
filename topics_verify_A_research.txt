@@ -1,0 +1,23 @@
+# Phase A verification -- ONE leg, research mode.
+#
+# Pinned WITH SCOPE. A bare id stages a scopeless, invalid run: TopicSpec would
+# carry empty topic/organism, extraction would be told no scope, and the plan
+# would score the paper off_topic (runs/2026-08-01_1724).
+#
+# PMC13231680 is the gold set's NEGATIVE CONTROL. Its research leg produced 4
+# entities, 0 reactions and 0 discards -- close to the ideal answer -- and was
+# killed as a contract violation (processes_required).
+#
+# It is the leg chosen for verification because it is the only one of the four
+# affected legs with a hard pass/fail criterion, and because it exercises A2,
+# which LOOSENS a contract and therefore cannot be proven by unit tests alone.
+#
+# EXPECTED:
+#   - no processes_required in contract_reports.json
+#   - an empty-pathway result carrying a rejection reason, i.e. the leg stops at
+#     driver.py:1608 with failure_kind=no_reactions rather than at stage1
+#
+# NOT COVERED HERE: A1's retry. This paper's reply had content, so no re-draw
+# fires. Add "PMC12452463 | enterobactin biosynthesis | Escherichia coli" in
+# strict mode to get production evidence for that half.
+PMC13231680 | lipid A biosynthesis | Escherichia coli

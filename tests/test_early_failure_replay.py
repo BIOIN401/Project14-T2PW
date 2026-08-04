@@ -381,8 +381,18 @@ def test_zero_processes_and_all_discarded_are_told_apart(
     """The two shapes behind the identical terminal message, now separated.
 
     ``Payload must include a processes object`` was the last word on both of the
-    2026-07-28 legs. These two cases produce that same contract failure from
-    opposite causes, and every distinguishing fact now lives in the artifacts.
+    2026-07-28 legs. These two cases reach zero reactions from opposite causes,
+    and every distinguishing fact now lives in the artifacts.
+
+    Both now CLEAR the structural contract, and that is the point rather than a
+    regression. ``processes: {}`` is structurally valid -- the payload has the
+    key, of the right type -- so a structural gate is the wrong place to reject
+    it, and rejecting there is what made one message stand for five different
+    causes. Emptiness is judged downstream, where the cause is known: the batch
+    driver fails the leg as ``no_reactions``, and strict quarantine refuses it as
+    ``no_surviving_process``. What must survive here is that the two causes stay
+    distinguishable, which they now are at the level of the boundary OUTCOME --
+    previously both collapsed to ``contract_failed_after_cleaning``.
     """
 
     empty = _run_case(CASES_BY_ID["stage1_valid_json_zero_processes"], tmp_path / "a", monkeypatch)
@@ -390,13 +400,24 @@ def test_zero_processes_and_all_discarded_are_told_apart(
         CASES_BY_ID["stage1_reactions_all_discarded_by_cleaning"], tmp_path / "b", monkeypatch
     )
 
-    assert empty.boundary.ok is False
-    assert discarded.boundary.ok is False
+    # Structurally valid either way, and empty either way. Neither invents a row
+    # to satisfy a gate -- that is the property requirement 6 actually protects.
+    assert empty.boundary.ok is True
+    assert discarded.boundary.ok is True
+    assert empty.reactions == []
+    assert discarded.reactions == []
+
+    # ...and the causes are told apart, which is what this test is for.
+    assert empty.boundary.outcome == "valid_json_zero_processes"
+    assert discarded.boundary.outcome == "processes_discarded_by_cleaning"
 
     # The model declared nothing: raw count zero, nothing discarded.
     empty_clean = _last_cleaning_pass(empty.artifact_dir)
     assert empty_clean["raw_process_counts"]["total"] == 0
     assert empty_clean["all_processes_discarded"] is False
+    # The flag that CAN fire for zero-in-zero-out; all_processes_discarded
+    # cannot, because it requires raw > 0.
+    assert empty_clean["no_processes_declared"] is True
     assert any(
         record["outcome"] == "valid_json_zero_processes"
         for record in empty.artifact(BOUNDARY_REPORT_NAME)["boundaries"]
@@ -411,25 +432,44 @@ def test_zero_processes_and_all_discarded_are_told_apart(
         "discard_reasons"
     ]:
         assert discarded_clean["discarded_by_reason"][reason] == 1
-    assert "cleaning discarded every one of the 3 process row(s)" in (
-        discarded.boundary.incomplete_reason
-    )
-    assert "cleaning" not in empty.boundary.incomplete_reason
+    assert discarded_clean["no_processes_declared"] is False
+
+    # The rules that removed the rows are named for the discarded case and there
+    # are none to name for the empty one. This used to be read off
+    # ``incomplete_reason``, which only existed because the boundary failed; the
+    # cleaning report carries the same facts whether or not anything failed, so
+    # the distinction no longer depends on something going wrong.
+    assert empty_clean["discarded_by_reason"] == {}
+    assert sum(discarded_clean["discarded_by_reason"].values()) == 3
 
 
-def test_an_unrecoverable_shape_reports_incomplete_and_keeps_its_artifacts(
+def test_an_empty_result_is_delivered_empty_rather_than_padded(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Requirement 6, end to end: no payload, no fabrication, artifacts intact."""
+    """Requirement 6, end to end: no fabrication, artifacts intact.
+
+    Renamed from ``..._unrecoverable_shape_reports_incomplete_...``. The shape is
+    no longer unrecoverable at the stage contract: a reply that reads the source
+    and finds no chemistry is a legitimate answer, and the source here is one
+    sentence about glutathione that describes no reaction at all. The payload is
+    now delivered as an empty pathway instead of being rejected as malformed.
+
+    What requirement 6 actually forbids is UNCHANGED and is what this asserts:
+    the run must not pad the payload with an invented reaction to satisfy
+    ``processes_required``. Zero reactions in, zero reactions out.
+    """
 
     case = CASES_BY_ID["stage1_valid_json_zero_processes"]
     replay = _run_case(case, tmp_path, monkeypatch)
 
-    assert replay.boundary.ok is False
-    assert replay.boundary.outcome == "contract_failed_after_cleaning"
-    assert case["expect"]["incomplete_contains"] in replay.boundary.incomplete_reason
+    assert replay.boundary.ok is True
+    assert replay.boundary.outcome == case["expect"]["boundary_outcome"]
+    # The container is present and empty -- the shape that used to be
+    # unrepresentable, and the reason the negative control could not pass.
+    assert replay.boundary.payload["processes"] == {}
+    assert replay.boundary.payload["entities"]
+    # Nothing was invented to fill it.
     assert replay.reactions == []
-    assert replay.boundary.failure is not None
     for name in (STAGE0_ATTEMPTS_NAME, BOUNDARY_REPORT_NAME, CLEANING_REPORT_NAME):
         assert name in replay.written
 

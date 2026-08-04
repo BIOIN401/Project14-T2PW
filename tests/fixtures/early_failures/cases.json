@@ -116,7 +116,7 @@
         "run": "2026-07-28_0919",
         "note": "the terminal message of both lost legs -- 'Payload must include a processes object' -- with one of its five possible causes"
       },
-      "why_it_matters": "This is a prompt/scope failure, not a cleaning failure and not a parse failure. It must be reported as its own category and must NOT be padded with an invented reaction to satisfy processes_required.",
+      "why_it_matters": "This is a prompt/scope outcome, not a cleaning failure and not a parse failure. It must be reported as its own category and must NOT be padded with an invented reaction to satisfy processes_required. As of 2026-08-04 it CLEARS the structural contract: the source text is one sentence that describes no reaction, so entities-with-no-processes is the correct reading of it, and 'processes': {} is structurally valid. Emptiness is judged downstream where the cause is known -- the batch driver fails the leg as no_reactions, strict quarantine refuses it as no_surviving_process. Rejecting it at a STRUCTURAL gate is what made one message stand for five causes.",
       "source_text": "Glutathione is an abundant low-molecular-weight thiol antioxidant found in plants, mammals and microbes.",
       "replies": [
         {"content": "{\"pathway_name\": \"Glutathione\", \"likely_organism\": \"\", \"key_compounds\": [\"glutathione\"], \"key_proteins\": []}"},
@@ -128,9 +128,10 @@
         "provider_calls": 2,
         "stage0_status": "ok",
         "artifacts": ["stage0_attempts.json", "extraction_boundary_report.json", "cleaning_report.json"],
-        "boundary_outcomes": ["valid_json_zero_processes", "contract_failed_after_cleaning"],
-        "incomplete_contains": "processes_required",
-        "cleaning_all_discarded": false
+        "boundary_outcomes": ["valid_json_zero_processes", "valid_json_zero_processes"],
+        "boundary_outcome": "valid_json_zero_processes",
+        "cleaning_all_discarded": false,
+        "cleaning_no_processes_declared": true
       }
     },
 

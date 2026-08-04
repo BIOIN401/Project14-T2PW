@@ -1,0 +1,25 @@
+# Phase A verification -- ONE leg, strict mode.
+#
+# Pinned WITH SCOPE (a bare id stages a scopeless, invalid run).
+#
+# PMC12452463/strict returned a bare "{}" in runs/2026-08-02_2130: raw_chars 2,
+# finish_reason stop, attempts 1 -- attempt 1 was terminal because "{}" parses to
+# a dict and json.JSONDecodeError was the only retry trigger. The same paper
+# PASSED in research mode (1393 s), so the paper is fine and the draw was
+# degenerate.
+#
+# This is the leg that exercises PWML GENERATION. The other verification leg
+# (PMC13231680/research) stops at driver.py:1608 with no reactions and never
+# reaches audit, DB mapping or export, so it proves nothing about the export
+# path. This one runs the full pipeline when the re-draw returns content.
+#
+# EXPECTED:
+#   - the re-draw fires and is logged in extraction_boundary_report.json with
+#     note structurally_empty_payload_retry
+#   - attempt 1 is no longer terminal
+#
+# PASSING IS NOT REQUIRED. The re-draw may also come back as junk; if it does,
+# the leg fails with a structurally-empty-payload PipelineFailure naming the
+# cause, which is still the intended behaviour. The bar is the retry, not the
+# pass.
+PMC12452463 | enterobactin biosynthesis | Escherichia coli

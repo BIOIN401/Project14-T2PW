@@ -255,6 +255,9 @@ def run_extraction_pipeline(
         max_attempts=max_attempts,
         temperature=temperature,
         max_tokens=max_tokens,
+        # Stage 1 only. Stage 2 nests its output under ``additions``, so an empty
+        # top level there is normal rather than degenerate.
+        retry_on_empty_payload=True,
     )
 
 
@@ -2348,9 +2351,19 @@ def clean_stage_one_with_report(
     ledger = DiscardLedger()
     cleaned: Dict[str, Any] = {}
 
+    # Always emit the container, empty or not. Dropping a falsy one made a
+    # correct empty result unrepresentable: validate_runtime_payload_contract
+    # requires both keys, so a payload that legitimately has no reactions died as
+    # "Payload must include a processes object" -- indistinguishable from a
+    # payload that lost its reactions to a bug. That killed the gold set's
+    # negative control (PMC13231680), whose own rationale says "the correct
+    # pipeline outcome is an empty pathway plus a rejection reason": its research
+    # leg produced 4 entities, 0 reactions and 0 discards, and was thrown away as
+    # a contract violation. The guard against a genuinely empty draw reaching
+    # here belongs at the extraction boundary, not in the shape of the payload --
+    # see ``retry_on_empty_payload`` in :func:`_run_json_stage`.
     entities = _clean_entities(payload.get("entities", {}), ledger)
-    if entities:
-        cleaned["entities"] = entities
+    cleaned["entities"] = entities
 
     biological_states = _clean_biological_states(_safe_list(payload.get("biological_states", [])))
     if biological_states:
@@ -2361,8 +2374,7 @@ def clean_stage_one_with_report(
         cleaned["element_locations"] = element_locations
 
     processes = _clean_processes(payload.get("processes", {}), ledger)
-    if processes:
-        cleaned["processes"] = processes
+    cleaned["processes"] = processes
 
     raw_processes = count_processes(payload)
     cleaned_processes = count_processes(cleaned)
@@ -2380,6 +2392,13 @@ def clean_stage_one_with_report(
         "all_processes_discarded": bool(
             raw_processes.get("total", 0) > 0 and cleaned_processes.get("total", 0) <= 0
         ),
+        # The other way to arrive at zero reactions, and the one the flag above
+        # cannot express: none went in either. Kept separate rather than folded
+        # into ``all_processes_discarded``, because "cleaning removed them" and
+        # "the model never declared any" have different causes and different
+        # fixes -- collapsing them re-creates the ambiguity this report exists to
+        # remove. True for the negative control, whose empty result is correct.
+        "no_processes_declared": bool(raw_processes.get("total", 0) <= 0),
         **ledger.to_dict(),
     }
     if record:
@@ -3111,6 +3130,7 @@ def _run_json_stage(
     model_env_var: Optional[str] = None,
     repair_json: bool = True,
     repair_chat_fn: Optional[Callable[..., Any]] = None,
+    retry_on_empty_payload: bool = False,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """Draw JSON from the model, recording why each attempt looked as it did.
 
@@ -3136,17 +3156,38 @@ def _run_json_stage(
 
     ``repair_json``/``repair_chat_fn`` exist so a caller can disable or redirect
     the repair draw; the defaults are what production uses.
+
+    ``retry_on_empty_payload`` adds a THIRD retry trigger, and only Stage 1 sets
+    it. Before it, ``json.JSONDecodeError`` was the sole trigger, so a ``{}``
+    reply -- which parses to a dict -- returned on attempt 1 and was carried all
+    the way to the stage contract, where it died as "Payload must include an
+    entities object". Three legs of run ``2026-08-02_2130`` ended that way with
+    ``raw_chars: 2`` and ``finish_reason: stop``; one of those papers passed in
+    the other mode, so the paper was fine and the draw was degenerate. See
+    :func:`_payload_is_structurally_empty` for why this must not be applied to
+    Stage 2.
+
+    A structurally empty reply that survives every attempt raises rather than
+    returning. That is deliberate and is what lets ``clean_stage_one`` stop
+    dropping empty containers safely: once the contract accepts an empty
+    ``processes`` object, returning ``{}`` from here would no longer fail
+    anywhere -- it would ship a silently empty pathway. The leg still fails, as
+    it does today, but now it fails naming the actual cause.
     """
 
     attempts: AttemptLogs = []
     prev_output: Optional[str] = None
     last_error: Optional[str] = None
+    saw_empty_payload = False
     stage_label = {
         "extraction": "Stage 1 extraction",
         "inference": "Stage 2 inference",
     }.get(stage_name, stage_name)
     boundary = _STAGE_BOUNDARIES.get(stage_name, stage_name)
     diagnostics = current_diagnostics()
+
+    def _is_degenerate(payload: Any) -> bool:
+        return retry_on_empty_payload and _payload_is_structurally_empty(payload)
 
     def _record(
         *,
@@ -3207,6 +3248,29 @@ def _run_json_stage(
                 raise json.JSONDecodeError(
                     f"Expected JSON object, got {type(parsed).__name__}", raw, 0
                 )
+            if _is_degenerate(parsed):
+                # Valid JSON, zero content. Re-draw rather than hand the stage a
+                # payload with nothing in it; the note is what makes the re-draw
+                # visible in extraction_boundary_report.json instead of looking
+                # like a single attempt that happened to succeed.
+                exhausted = attempt >= max_attempts
+                note = (
+                    NOTE_EMPTY_PAYLOAD_EXHAUSTED if exhausted else NOTE_EMPTY_PAYLOAD_RETRY
+                )
+                log_entry["note"] = note
+                _record(
+                    attempt=attempt,
+                    raw=raw,
+                    call_diag=call_diag,
+                    parsed=parsed,
+                    outcome=_process_outcome(parsed),
+                    note=note,
+                )
+                attempts.append(log_entry)
+                saw_empty_payload = True
+                prev_output = raw
+                last_error = EMPTY_PAYLOAD_RETRY_REASON
+                continue
             _record(
                 attempt=attempt,
                 raw=raw,
@@ -3288,20 +3352,26 @@ def _run_json_stage(
                     }
                 )
                 if repair.ok and repair.payload is not None:
-                    logger.info(
-                        "%s attempt %d produced unparseable JSON; a localized syntax "
-                        "repair recovered it without re-running the extraction.",
-                        stage_label,
-                        attempt,
-                    )
-                    return repair.payload, attempts
+                    if _is_degenerate(repair.payload):
+                        # A repair that closes the braces around nothing is not a
+                        # recovery. Fall through to the re-draw rather than
+                        # returning an empty payload the contract now accepts.
+                        saw_empty_payload = True
+                    else:
+                        logger.info(
+                            "%s attempt %d produced unparseable JSON; a localized syntax "
+                            "repair recovered it without re-running the extraction.",
+                            stage_label,
+                            attempt,
+                        )
+                        return repair.payload, attempts
 
             # Repair was unavailable or could not recover the reply. Fall back to
             # whatever the free prefix scan managed to salvage, which is what this
             # function did unconditionally before repair existed. A partial
             # payload is worse than a repaired one and better than another full
             # re-draw of the largest prompt in the run.
-            if extracted is not None:
+            if extracted is not None and not _is_degenerate(extracted):
                 log_entry["note"] = "salvaged_json_after_failed_repair"
                 _record(
                     attempt=attempt,
@@ -3312,14 +3382,68 @@ def _run_json_stage(
                     note="salvaged_json_after_failed_repair",
                 )
                 return extracted, attempts
+            if extracted is not None:
+                # Salvage is a prefix scan, so a syntax error early in the reply
+                # salvages to an object with nothing in it. Same rule as above:
+                # empty is not a recovery.
+                saw_empty_payload = True
 
             prev_output = raw
             last_error = error_msg
 
+    if saw_empty_payload:
+        raise PipelineFailure(
+            stage_name,
+            f"{stage_name.title()} stage returned a structurally empty payload "
+            f"(no entities and no processes) on all {max_attempts} attempts.",
+            attempts,
+        )
     raise PipelineFailure(
         stage_name,
         f"{stage_name.title()} stage failed to produce valid JSON after {max_attempts} attempts.",
         attempts,
+    )
+
+
+#: Attempt-log note for a draw that parsed but declared nothing at all, and was
+#: therefore re-drawn. Distinct from the exhausted note so a reader of
+#: ``extraction_boundary_report.json`` can tell a retry that happened from a
+#: retry budget that ran out.
+NOTE_EMPTY_PAYLOAD_RETRY = "structurally_empty_payload_retry"
+NOTE_EMPTY_PAYLOAD_EXHAUSTED = "structurally_empty_payload_exhausted"
+
+#: Handed to the retry prompt as ``last_error``. It is NOT a parse error, and the
+#: prompt builder branches on it precisely so the model is not told to fix the
+#: syntax of a reply whose syntax was already valid.
+EMPTY_PAYLOAD_RETRY_REASON = (
+    "The previous attempt returned a syntactically valid JSON object that "
+    "declared no entities and no processes at all."
+)
+
+
+def _payload_is_structurally_empty(parsed: Any) -> bool:
+    """The model returned *nothing* -- no entity rows and no process rows.
+
+    This is the ``{}`` reply (``raw_chars: 2``) that ended three legs of run
+    ``2026-08-02_2130`` on attempt 1, and it is deliberately NOT the same test as
+    "zero processes". A reply carrying entities and no reactions has read the
+    paper and found no chemistry, which is a legitimate answer -- it is what the
+    gold set's negative control is supposed to produce. Counting rows rather than
+    testing for the keys also catches the ``{"entities": {"proteins": []}}``
+    shape, which is degenerate in exactly the same way as ``{}``.
+
+    Only Stage 1 may use this. A Stage-2 payload nests everything under
+    ``additions``, so its top-level entity/process counts are zero even for a
+    13,000-character reply full of content -- every ``stage2_inference`` boundary
+    in the evidence run records ``ents 0 | procs 0``. Applying this there would
+    re-draw every successful inference in the pipeline and push a model that
+    correctly proposed nothing into inventing additions. Hence the opt-in
+    ``retry_on_empty_payload`` flag rather than a test on the payload alone.
+    """
+
+    return (
+        count_entities(parsed).get("total", 0) <= 0
+        and count_processes(parsed).get("total", 0) <= 0
     )
 
 
@@ -3392,7 +3516,24 @@ def _build_extraction_prompt(
         ]
     )
 
-    if prev_output and last_error:
+    if prev_output and last_error == EMPTY_PAYLOAD_RETRY_REASON:
+        # A re-draw, not a repair. Telling a model that returned "{}" to "fix the
+        # invalid JSON" points it at a syntax error that does not exist, and the
+        # most likely fix it lands on is returning "{}" again. The instruction to
+        # keep an empty result empty is load-bearing: this prompt must not become
+        # pressure to invent chemistry the paper does not contain, which is
+        # exactly what the gold set's hallucination controls test for.
+        prompt.extend(
+            [
+                "",
+                "Your previous attempt returned an empty JSON object: no entities and no processes.",
+                "Extract again from the pathway description above, following the schema.",
+                "If the text genuinely describes no reactions, return the entities it does"
+                " support with an empty processes object. Do not invent entities or"
+                " reactions that the text does not state.",
+            ]
+        )
+    elif prev_output and last_error:
         prompt.extend(
             [
                 "",
