@@ -1,0 +1,60 @@
+{
+  "run_id": "sha256:e3a58f715419ac6c",
+  "boundary_count": 2,
+  "outcomes": [
+    "valid_json_zero_processes",
+    "contract_failed_after_cleaning"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:26404a2a5a730ccf",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "contract_failed_after_cleaning",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 0,
+      "response_status": "",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "response_hash": "sha256:44136fa355b3678a",
+      "error": "2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+      "contract_ok": false,
+      "note": "stage_one_boundary_incomplete",
+      "failing_codes": [
+        "entities_required",
+        "processes_required"
+      ],
+      "repair_outcome": "not_attempted"
+    }
+  ]
+}

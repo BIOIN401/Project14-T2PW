@@ -1,0 +1,60 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12180156
+title      : (unknown)
+slug       : PMC12180156
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 872.3s (14m32s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/4/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_sfxn4_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'SFXN4' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'ALAS2' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi @ /entities/proteins/2: Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_sfxn1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'SFXN1' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_serine_hydroxymethyltransferase_is_missing_species_organ @ /entities/proteins/4: Protein 'serine hydroxymethyltransferase' is missing species/organism.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_serine_hydroxymethyltransferase_is_missing_a_uniprot_or_ @ /entities/proteins/4: Protein 'serine hydroxymethyltransferase' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 1
+  compounds = 7
+  entities = 17
+  gate_errors = 11
+  gate_errors_not_blocking = 11
+  gate_review_flags = 11
+  normalization_actions = 2
+  proteins = 5
+  reactions = 4
+  review_flags = 5
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 3, 'b': 0, 'c': 6, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (938 B)
+  - contract_reports.json  (30507 B)
+  - final_mapped.json  (35070 B)
+  - final_stage3_gate_report.json  (15968 B)
+  - gap_iteration_summary.json  (82763 B)
+  - gate_fail_report.json  (11067 B)
+  - merged_payload.json  (7196 B)
+  - rag_admission_report.json  (204453 B)
+  - research_pathway_citations.json  (30550 B)
+  - research_pathway_elements.csv  (2408 B)
+  - research_pathway_report.txt  (11516 B)
+  - review_flags.json  (13255 B)
+  - stage1_payload.json  (4458 B)

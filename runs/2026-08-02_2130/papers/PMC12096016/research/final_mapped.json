@@ -1,0 +1,1885 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "562",
+            "classification": "Prokaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "explicit_entity_species"
+          }
+        },
+        "classification": "Prokaryote"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "chorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 7748,
+              "name": "Chorismate",
+              "short_name": "Chorism",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0012199",
+                "kegg": "C00251",
+                "chebi": "CHEBI:17333",
+                "pubchem": "12039",
+                "cas": "617-12-9",
+                "biocyc": "CPD-9517",
+                "chemspider": "11542",
+                "pathbank_compound_id": "7748"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 7748,
+          "resolved_name": "Chorismate"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0012199",
+          "kegg": "C00251",
+          "chebi": "CHEBI:17333",
+          "pubchem": "12039",
+          "cas": "617-12-9",
+          "biocyc": "CPD-9517",
+          "chemspider": "11542",
+          "pathbank_compound_id": "7748"
+        },
+        "pathbank_compound_id": 7748
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "isochorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40741,
+              "name": "isochorismate",
+              "short_name": "isochor",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:29780",
+                "pathbank_compound_id": "40741"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 40741,
+          "resolved_name": "isochorismate"
+        },
+        "mapped_ids": {
+          "kegg": "C00885",
+          "chebi": "CHEBI:29780",
+          "pubchem": "4141",
+          "pathbank_compound_id": "40741"
+        },
+        "pathbank_compound_id": 40741
+      },
+      {
+        "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate"
+          },
+          "provider": "PathBankDB",
+          "resolved_name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+          "name_gate": {
+            "verdict": "reject",
+            "reason": "no_shared_meaningful_token",
+            "entity_name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "kind": "compound",
+            "resolved_name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+            "identity": "chebi:CHEBI:15941, kegg:C04171, pathbank_compound_id:40770, pubchem:23615184",
+            "compared_names": [
+              "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+              "223D3D"
+            ]
+          },
+          "rejected_mapped_ids": {
+            "kegg": "C04171",
+            "chebi": "CHEBI:15941",
+            "pubchem": "23615184",
+            "pathbank_compound_id": "40770"
+          }
+        },
+        "source_refs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"
+        ],
+        "mapped_ids": {}
+      },
+      {
+        "name": "pyruvate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "pyruvate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 108870,
+              "name": "Pyruvate",
+              "short_name": "",
+              "score": 1.0,
+              "mapped_ids": {
+                "pathbank_compound_id": "108870"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 108870,
+          "resolved_name": "Pyruvate"
+        },
+        "mapped_ids": {
+          "pathbank_compound_id": "108870"
+        },
+        "pathbank_compound_id": 108870
+      },
+      {
+        "name": "2,3-dihydroxybenzoic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydroxybenzoic acid"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40792,
+              "name": "2,3-Dihydroxybenzoic acid",
+              "short_name": "23DBA",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:18026",
+                "pathbank_compound_id": "40792"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40792,
+          "resolved_name": "2,3-Dihydroxybenzoic acid"
+        },
+        "mapped_ids": {
+          "chebi": "CHEBI:18026",
+          "pathbank_compound_id": "40792"
+        },
+        "pathbank_compound_id": 40792,
+        "source_refs": [
+          "2,3-dihydroxybenzoic acid (2,3-DHB)"
+        ]
+      },
+      {
+        "name": "enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "enterobactin"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40793,
+              "name": "enterobactin",
+              "short_name": "Entrobn",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:28855",
+                "pathbank_compound_id": "40793"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40793,
+          "resolved_name": "enterobactin"
+        },
+        "mapped_ids": {
+          "chebi": "CHEBI:28855",
+          "pathbank_compound_id": "40793"
+        },
+        "pathbank_compound_id": 40793
+      },
+      {
+        "name": "2,3-dihydroxybenzoyl-AMP",
+        "class": "compound",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydroxybenzoyl-AMP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "L-serine",
+        "class": "compound",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "condensation with L-serine"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "L-serine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 120,
+              "name": "L-Serine",
+              "short_name": "Ser",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000187",
+                "kegg": "C00065",
+                "chebi": "CHEBI:17115",
+                "pubchem": "5951",
+                "cas": "56-45-1",
+                "biocyc": "SER",
+                "chemspider": "5736",
+                "drugbank": "DB00133",
+                "pathbank_compound_id": "120"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 120,
+          "resolved_name": "L-Serine"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000187",
+          "kegg": "C00065",
+          "chebi": "CHEBI:17115",
+          "pubchem": "5951",
+          "cas": "56-45-1",
+          "biocyc": "SER",
+          "chemspider": "5736",
+          "drugbank": "DB00133",
+          "pathbank_compound_id": "120"
+        },
+        "pathbank_compound_id": 120,
+        "synonyms": [
+          "L-serine"
+        ]
+      },
+      {
+        "name": "ATP",
+        "class": "compound",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "in an ATP-dependent reaction"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "ATP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 414,
+              "name": "Adenosine triphosphate",
+              "short_name": "ATP",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000538",
+                "kegg": "C00002",
+                "chebi": "CHEBI:15422",
+                "pubchem": "5957",
+                "cas": "56-65-5",
+                "biocyc": "ATP",
+                "chemspider": "5742",
+                "drugbank": "DB00171",
+                "pathbank_compound_id": "414"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 414,
+          "resolved_name": "Adenosine triphosphate"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000538",
+          "kegg": "C00002",
+          "chebi": "CHEBI:15422",
+          "pubchem": "5957",
+          "cas": "56-65-5",
+          "biocyc": "ATP",
+          "chemspider": "5742",
+          "drugbank": "DB00171",
+          "pathbank_compound_id": "414"
+        },
+        "pathbank_compound_id": 414,
+        "synonyms": [
+          "ATP"
+        ]
+      },
+      {
+        "name": "AMP",
+        "class": "compound",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "EntF-catalyzed cycles of condensation"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "AMP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 32,
+              "name": "Adenosine monophosphate",
+              "short_name": "AMP",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000045",
+                "kegg": "C00020",
+                "chebi": "CHEBI:16027",
+                "pubchem": "6083",
+                "cas": "61-19-8",
+                "biocyc": "AMP",
+                "chemspider": "5858",
+                "drugbank": "DB00131",
+                "pathbank_compound_id": "32"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 32,
+          "resolved_name": "Adenosine monophosphate"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000045",
+          "kegg": "C00020",
+          "chebi": "CHEBI:16027",
+          "pubchem": "6083",
+          "cas": "61-19-8",
+          "biocyc": "AMP",
+          "chemspider": "5858",
+          "drugbank": "DB00131",
+          "pathbank_compound_id": "32"
+        },
+        "synonyms": [
+          "AMP"
+        ],
+        "pathbank_compound_id": 32
+      },
+      {
+        "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "rag_provenance": {
+          "source_id": "PMC12452463",
+          "source_title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+          "section": "introduction",
+          "organism": "",
+          "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12452463",
+            "title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+            "uri": "https://doi.org/10.1080/21505594.2025.2563018",
+            "source_type": "paper",
+            "organism": ""
+          }
+        ],
+        "source_refs": [
+          "PMC12452463"
+        ],
+        "rag_confidence": 0.918182,
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40770,
+              "name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+              "short_name": "223D3D",
+              "score": 0.565,
+              "mapped_ids": {
+                "kegg": "C04171",
+                "chebi": "CHEBI:15941"
+              }
+            },
+            {
+              "pathbank_compound_id": 41128,
+              "name": "2,3-Dihydro-2,3-dihydroxybenzoic acid",
+              "short_name": "DDB",
+              "score": 0.565,
+              "mapped_ids": {
+                "chebi": "CHEBI:15941",
+                "pubchem": "23615184"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.565,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          }
+        }
+      }
+    ],
+    "proteins": [
+      {
+        "name": "EntC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Isochorismate synthase entC",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6238, uniprot:P0AEJ2"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0AEJ2",
+            "pathbank_protein_id": "6238"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "EntB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Isochorismatase",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0ADI4",
+            "pathbank_protein_id": "6224"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "EntA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6341, uniprot:P15047"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P15047",
+            "pathbank_protein_id": "6341"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "EntE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntE",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Enterobactin synthase component E",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntE",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6301, uniprot:P10378"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P10378",
+            "pathbank_protein_id": "6301"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "EntF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntF",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Enterobactin synthase component F",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntF",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6312, uniprot:P11454"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P11454",
+            "pathbank_protein_id": "6312"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "EntD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "4'-phosphopantetheinyl transferase entD",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "EntD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6383, uniprot:P19925"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P19925",
+            "pathbank_protein_id": "6383"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Fur",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "ambiguity": {
+            "candidate_count": 10,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              {
+                "accession": "P07014",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0A6B7",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0A6V5",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0A890",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0AAJ3",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0AAJ5",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0AB18",
+                "reason": "identity_evidence_missing"
+              },
+              {
+                "accession": "P0AC47",
+                "reason": "identity_evidence_missing"
+              }
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 5917,
+              "name": "Succinate dehydrogenase iron-sulfur subunit",
+              "gene_name": "sdhB",
+              "uniprot": "P07014",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 5979,
+              "name": "Cysteine desulfurase",
+              "gene_name": "iscS",
+              "uniprot": "P0A6B7",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6015,
+              "name": "Thiosulfate sulfurtransferase glpE",
+              "gene_name": "glpE",
+              "uniprot": "P0A6V5",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6079,
+              "name": "Sulfurtransferase tusA",
+              "gene_name": "tusA",
+              "uniprot": "P0A890",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6151,
+              "name": "Formate dehydrogenase, nitrate-inducible, iron-sulfur subunit",
+              "gene_name": "fdnH",
+              "uniprot": "P0AAJ3",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6152,
+              "name": "Formate dehydrogenase-O iron-sulfur subunit",
+              "gene_name": "fdoH",
+              "uniprot": "P0AAJ5",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6154,
+              "name": "Sulfurtransferase tusE",
+              "gene_name": "tusE",
+              "uniprot": "P0AB18",
+              "species_id": 3,
+              "score": 0.65
+            },
+            {
+              "pathbank_protein_id": 6201,
+              "name": "Fumarate reductase iron-sulfur subunit",
+              "gene_name": "frdB",
+              "uniprot": "P0AC47",
+              "species_id": 3,
+              "score": 0.65
+            }
+          ],
+          "identity_status": "unresolved",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "Fur",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "no_candidate_describes_the_shipped_identifier"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "uniprot:P0A9A9"
+          },
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0A9A9"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "TolC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "TolC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Outer membrane protein tolC",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "TolC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:7446, uniprot:P02930"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P02930",
+            "pathbank_protein_id": "7446"
+          }
+        },
+        "mapped_ids": {}
+      },
+      {
+        "name": "Isochorismatase (EntB)",
+        "rag_provenance": {
+          "source_id": "PMC12452463",
+          "source_title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+          "section": "introduction",
+          "organism": "",
+          "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12452463",
+            "title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+            "uri": "https://doi.org/10.1080/21505594.2025.2563018",
+            "source_type": "paper",
+            "organism": ""
+          }
+        ],
+        "source_refs": [
+          "PMC12452463"
+        ],
+        "rag_confidence": 0.918182,
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Isochorismatase (EntB)",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "Isochorismatase",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "Isochorismatase (EntB)",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0ADI4",
+            "pathbank_protein_id": "6224"
+          }
+        },
+        "mapped_ids": {}
+      }
+    ],
+    "protein_complexes": [],
+    "subcellular_locations": [
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cytoplasmic state",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "enterobactin is produced in the cytoplasm"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Escherichia coli",
+      "subcellular_location": "extracellular",
+      "evidence": "secreted to the extracellular environment"
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Escherichia coli"
+    },
+    {
+      "name": "AutoState_escherichia_colicytosol",
+      "subcellular_location": "Cytosol",
+      "compartment_canonical": "cytosol",
+      "species": "Escherichia coli"
+    },
+    {
+      "name": "AutoState_escherichia_colimembrane",
+      "subcellular_location": "Membrane",
+      "species": "Escherichia coli"
+    },
+    {
+      "name": "AutoState_escherichia_coliouter_membrane",
+      "subcellular_location": "Outer Membrane",
+      "species": "Escherichia coli"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is produced from chorismate"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-diDHB"
+      },
+      {
+        "compound": "2,3-dihydro-2,3-dihydroxybenzoate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate"
+      },
+      {
+        "compound": "pyruvate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "pyruvate by EntB isochorismatase activity"
+      },
+      {
+        "compound": "2,3-dihydroxybenzoic acid",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is produced from chorismate"
+      },
+      {
+        "compound": "enterobactin",
+        "biological_state": "cytoplasmic state",
+        "evidence": "Enterobactin is produced in the cytoplasm"
+      },
+      {
+        "compound": "enterobactin",
+        "biological_state": "extracellular state",
+        "evidence": "secreted to the extracellular environment"
+      },
+      {
+        "compound": "2,3-dihydroxybenzoyl-AMP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "synthesized in the cytoplasm"
+      },
+      {
+        "compound": "L-serine",
+        "biological_state": "cytoplasmic state",
+        "evidence": "synthesized in the cytoplasm"
+      },
+      {
+        "compound": "ATP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "synthesized in the cytoplasm"
+      },
+      {
+        "compound": "AMP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "synthesized in the cytoplasm"
+      },
+      {
+        "compound": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "biological_state": "__auto_state__"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "Fur",
+        "biological_state": "cytoplasmic state",
+        "evidence": "Expression of the genes encoding enterobactin biosynthetic enzymes is controlled by the protein Ferric Uptake Regulator (Fur)."
+      },
+      {
+        "protein": "EntC",
+        "biological_state": "cytoplasmic state"
+      },
+      {
+        "protein": "EntB",
+        "biological_state": "cytoplasmic state"
+      },
+      {
+        "protein": "EntA",
+        "biological_state": "AutoState_escherichia_colicytosol"
+      },
+      {
+        "protein": "EntE",
+        "biological_state": "AutoState_escherichia_colimembrane"
+      },
+      {
+        "protein": "EntF",
+        "biological_state": "AutoState_escherichia_colicytosol"
+      },
+      {
+        "protein": "EntD",
+        "biological_state": "AutoState_escherichia_colimembrane"
+      },
+      {
+        "protein": "TolC",
+        "biological_state": "AutoState_escherichia_coliouter_membrane"
+      },
+      {
+        "protein": "Isochorismatase (EntB)",
+        "biological_state": "__auto_state__"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "EntC isochorismate synthase reaction",
+        "enzymes": [
+          {
+            "entity": "EntC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "EntC-catalyzed isomerization of chorismate to isochorismate",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate",
+          "pyruvate"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "EntB isochorismatase reaction",
+        "enzymes": [
+          {
+            "entity": "EntB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "outputs": [
+          "2,3-dihydroxybenzoic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "EntA dehydrogenase reaction",
+        "enzymes": [
+          {
+            "entity": "EntA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by EntA",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-dihydroxybenzoic acid",
+          "ATP"
+        ],
+        "outputs": [
+          "2,3-dihydroxybenzoyl-AMP"
+        ],
+        "name": "EntE 2,3-DHB adenylation",
+        "enzymes": [
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-dihydroxybenzoyl-AMP",
+          "L-serine"
+        ],
+        "outputs": [
+          "enterobactin",
+          "AMP"
+        ],
+        "name": "EntF enterobactin assembly",
+        "enzymes": [
+          {
+            "entity": "EntF",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "evidence": "EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin"
+          },
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntF",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+        ],
+        "name": "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)",
+        "enzymes": [
+          {
+            "entity": "Isochorismatase (EntB)",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex. Numbers in parentheses correspond to referenced studies. Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis. Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway. EntB also functions as a carrier protein, binding DHB for subsequent steps. Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin. Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF. EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins. EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin ( Figure 1 ). Regulation of enterobactin production The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce [ 30 ]. This regulation is primarily mediated by the Ferric Uptake Regulator (Fur) protein and responsive to environmental signals, particularly iron availability ( Figure 2 ). Figure 2. Transcriptional regulation of the enterobactin ( ent operon) by the Ferric uptake regulator (Fur) in response to iron availability. (A) Schematic representation of the regulatory mechanism. Under high-iron conditions (left), iron-loaded Fur (Fe-Fur) dimerizes and binds to the Fur binding site in the promoter region of the ent operon, acting as a repressor and inhibiting transcription. Under low-iron conditions (right), the apo-form of Fur cannot bind to the DNA (Deoxyribonucleic acid), resulting in derepression and active transcription of the ent operon for the biosynthesis of the siderophore enterobactin. (B) Post-transcriptional repression of enterobactin synthesis by the RyhB sRNA (small RNA) under high-iron conditions. The model depicts the dual regulatory circuit controlling enterobactin production. Under high iron, the Fe-Fur complex represses transcription of the ent operon (not shown) and activates transcription of the RyhB small RNA (sRNA). The synthesized RyhB sRNA binds with complementarity to the mRNA (messenger RNA) of key biosynthetic genes entC and entF via their target sequences. This binding leads to the inhibition of their translation and/or degradation of the mRNA transcripts, providing a crucial post-transcriptional layer of repression to prevent unnecessary siderophore production when iron is abundant. (C) Integration of oxygen sensing into the regulation of enterobactin synthesis via the Fnr (Fumarate and nitrate reduction regulator) and Fur regulators. The model illustrates how enterobactin production is coupled to oxidative stress and iron availability. The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA. This relief of RyhB-mediated repression allows for enterobactin synthesis when needed. Under high oxygen conditions, Fnr is inactivated, de-repressing RyhB transcription. Concurrently, high iron levels activate Fur, which further promotes RyhB expression and directly represses the ent operon. This creates a concerted repressive signal under high-oxygen/high-iron conditions to prevent siderophore production. Thus, the ent operon is only fully expressed under low-iron and microaerobic/anaerobic conditions. Fur protein plays a central role in regulating enterobactin production. Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions. However, under iron-limiting conditions, the Fur-Fe 2 + complex dissociates, relieving repression and allowing the expression of the ent operon [ 31 , 32 ]. Iron availability is the primary environmental signal regulating enterobactin production, with low-iron environments, such as host tissues or fluids, triggering the upregulation of ent genes to enhance iron acquisition [ 33 ]. Other environmental factors, such as oxidative stress and pH, can also influence enterobactin production indirectly by modulating iron availability or Fur activity [ 34 ]. Beyond transcriptional regulation, post-transcriptional mechanisms involving small regulatory RNAs (sRNAs) and RNA-binding proteins fine-tune enterobactin production. For example, the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA [ 35–37 ]. Evolutionary and functional insights The enterobactin biosynthesis pathway is highly conserved among enteric bacteria, reflecting its critical role in iron acquisition and survival. However, some pathogens have evolved additional siderophores (e.g. salmochelin) to evade host defenses, such as the siderophore-binding protein lipocalin-2 [ 6 , 38 ]. This evolutionary adaptation highlights the importance of siderophore diversity in bacterial pathogenesis. Role of enterobactin in bacterial virulence Enterobactin plays a pivotal role in bacterial virulence by enabling pathogens to"
+          }
+        ],
+        "evidence": "to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex. Numbers in parentheses correspond to referenced studies. Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis. Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway. EntB also functions as a carrier protein, binding DHB for subsequent steps. Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin. Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF. EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins. EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin ( Figure 1 ). Regulation of enterobactin production The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce [ 30 ]. This regulation is primarily mediated by the Ferric Uptake Regulator (Fur) protein and responsive to environmental signals, particularly iron availability ( Figure 2 ). Figure 2. Transcriptional regulation of the enterobactin ( ent operon) by the Ferric uptake regulator (Fur) in response to iron availability. (A) Schematic representation of the regulatory mechanism. Under high-iron conditions (left), iron-loaded Fur (Fe-Fur) dimerizes and binds to the Fur binding site in the promoter region of the ent operon, acting as a repressor and inhibiting transcription. Under low-iron conditions (right), the apo-form of Fur cannot bind to the DNA (Deoxyribonucleic acid), resulting in derepression and active transcription of the ent operon for the biosynthesis of the siderophore enterobactin. (B) Post-transcriptional repression of enterobactin synthesis by the RyhB sRNA (small RNA) under high-iron conditions. The model depicts the dual regulatory circuit controlling enterobactin production. Under high iron, the Fe-Fur complex represses transcription of the ent operon (not shown) and activates transcription of the RyhB small RNA (sRNA). The synthesized RyhB sRNA binds with complementarity to the mRNA (messenger RNA) of key biosynthetic genes entC and entF via their target sequences. This binding leads to the inhibition of their translation and/or degradation of the mRNA transcripts, providing a crucial post-transcriptional layer of repression to prevent unnecessary siderophore production when iron is abundant. (C) Integration of oxygen sensing into the regulation of enterobactin synthesis via the Fnr (Fumarate and nitrate reduction regulator) and Fur regulators. The model illustrates how enterobactin production is coupled to oxidative stress and iron availability. The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA. This relief of RyhB-mediated repression allows for enterobactin synthesis when needed. Under high oxygen conditions, Fnr is inactivated, de-repressing RyhB transcription. Concurrently, high iron levels activate Fur, which further promotes RyhB expression and directly represses the ent operon. This creates a concerted repressive signal under high-oxygen/high-iron conditions to prevent siderophore production. Thus, the ent operon is only fully expressed under low-iron and microaerobic/anaerobic conditions. Fur protein plays a central role in regulating enterobactin production. Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions. However, under iron-limiting conditions, the Fur-Fe 2 + complex dissociates, relieving repression and allowing the expression of the ent operon [ 31 , 32 ]. Iron availability is the primary environmental signal regulating enterobactin production, with low-iron environments, such as host tissues or fluids, triggering the upregulation of ent genes to enhance iron acquisition [ 33 ]. Other environmental factors, such as oxidative stress and pH, can also influence enterobactin production indirectly by modulating iron availability or Fur activity [ 34 ]. Beyond transcriptional regulation, post-transcriptional mechanisms involving small regulatory RNAs (sRNAs) and RNA-binding proteins fine-tune enterobactin production. For example, the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA [ 35–37 ]. Evolutionary and functional insights The enterobactin biosynthesis pathway is highly conserved among enteric bacteria, reflecting its critical role in iron acquisition and survival. However, some pathogens have evolved additional siderophores (e.g. salmochelin) to evade host defenses, such as the siderophore-binding protein lipocalin-2 [ 6 , 38 ]. This evolutionary adaptation highlights the importance of siderophore diversity in bacterial pathogenesis. Role of enterobactin in bacterial virulence Enterobactin plays a pivotal role in bacterial virulence by enabling pathogens to",
+        "scope_membership": "core",
+        "rag_provenance": {
+          "source_id": "PMC12452463",
+          "source_title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+          "section": "introduction",
+          "organism": "",
+          "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35",
+          "gap_id": "gap-dangling_reaction-c6b24394",
+          "gap_ids": [
+            "gap-dangling_reaction-c6b24394",
+            "gap-dangling_reaction-7e0b4a06"
+          ]
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12452463",
+            "title": "Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for vaccine development and antimicrobial strategies.",
+            "uri": "https://doi.org/10.1080/21505594.2025.2563018",
+            "source_type": "paper",
+            "organism": ""
+          }
+        ],
+        "rag_confidence": 0.918182,
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "Isochorismatase (EntB)",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "to isochorismate (catalyzed by EntC), formation of 2,3-dihydroxybenzoate (DHB) by EntB, activation of DHB to DHB-AMP by EntE, and final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex. Numbers in parentheses correspond to referenced studies. Chorismate to Isochorismate : The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC) . This step is the first committed step in enterobactin biosynthesis. Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB) : Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway. EntB also functions as a carrier protein, binding DHB for subsequent steps. Activation of DHB : 2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP. This activated intermediate is essential for the assembly of enterobactin. Assembly of Enterobactin : The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin. This process is catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF. EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins. EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules to form enterobactin ( Figure 1 ). Regulation of enterobactin production The production of enterobactin is tightly regulated to ensure that bacteria synthesize siderophores only when iron is scarce [ 30 ]. This regulation is primarily mediated by the Ferric Uptake Regulator (Fur) protein and responsive to environmental signals, particularly iron availability ( Figure 2 ). Figure 2. Transcriptional regulation of the enterobactin ( ent operon) by the Ferric uptake regulator (Fur) in response to iron availability. (A) Schematic representation of the regulatory mechanism. Under high-iron conditions (left), iron-loaded Fur (Fe-Fur) dimerizes and binds to the Fur binding site in the promoter region of the ent operon, acting as a repressor and inhibiting transcription. Under low-iron conditions (right), the apo-form of Fur cannot bind to the DNA (Deoxyribonucleic acid), resulting in derepression and active transcription of the ent operon for the biosynthesis of the siderophore enterobactin. (B) Post-transcriptional repression of enterobactin synthesis by the RyhB sRNA (small RNA) under high-iron conditions. The model depicts the dual regulatory circuit controlling enterobactin production. Under high iron, the Fe-Fur complex represses transcription of the ent operon (not shown) and activates transcription of the RyhB small RNA (sRNA). The synthesized RyhB sRNA binds with complementarity to the mRNA (messenger RNA) of key biosynthetic genes entC and entF via their target sequences. This binding leads to the inhibition of their translation and/or degradation of the mRNA transcripts, providing a crucial post-transcriptional layer of repression to prevent unnecessary siderophore production when iron is abundant. (C) Integration of oxygen sensing into the regulation of enterobactin synthesis via the Fnr (Fumarate and nitrate reduction regulator) and Fur regulators. The model illustrates how enterobactin production is coupled to oxidative stress and iron availability. The anaerobic regulator Fnr, activated under low oxygen conditions, directly represses transcription of the RyhB sRNA. This relief of RyhB-mediated repression allows for enterobactin synthesis when needed. Under high oxygen conditions, Fnr is inactivated, de-repressing RyhB transcription. Concurrently, high iron levels activate Fur, which further promotes RyhB expression and directly represses the ent operon. This creates a concerted repressive signal under high-oxygen/high-iron conditions to prevent siderophore production. Thus, the ent operon is only fully expressed under low-iron and microaerobic/anaerobic conditions. Fur protein plays a central role in regulating enterobactin production. Under iron-replete conditions, Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes ( entA-entF ) by binding to their promoter regions. However, under iron-limiting conditions, the Fur-Fe 2 + complex dissociates, relieving repression and allowing the expression of the ent operon [ 31 , 32 ]. Iron availability is the primary environmental signal regulating enterobactin production, with low-iron environments, such as host tissues or fluids, triggering the upregulation of ent genes to enhance iron acquisition [ 33 ]. Other environmental factors, such as oxidative stress and pH, can also influence enterobactin production indirectly by modulating iron availability or Fur activity [ 34 ]. Beyond transcriptional regulation, post-transcriptional mechanisms involving small regulatory RNAs (sRNAs) and RNA-binding proteins fine-tune enterobactin production. For example, the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA [ 35–37 ]. Evolutionary and functional insights The enterobactin biosynthesis pathway is highly conserved among enteric bacteria, reflecting its critical role in iron acquisition and survival. However, some pathogens have evolved additional siderophores (e.g. salmochelin) to evade host defenses, such as the siderophore-binding protein lipocalin-2 [ 6 , 38 ]. This evolutionary adaptation highlights the importance of siderophore diversity in bacterial pathogenesis. Role of enterobactin in bacterial virulence Enterobactin plays a pivotal role in bacterial virulence by enabling pathogens to",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    ],
+    "transports": [
+      {
+        "name": "Enterobactin secretion via TolC",
+        "cargo": "enterobactin",
+        "from_biological_state": "cytoplasmic state",
+        "to_biological_state": "extracellular state",
+        "transporters": [
+          {
+            "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+            "entity": "TolC",
+            "entity_type": "protein",
+            "protein": "TolC"
+          },
+          {
+            "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "source_refs": [
+              "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+            ],
+            "entity": "EntE",
+            "entity_type": "protein",
+            "protein": "EntE"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "enterobactin",
+            "side": "left",
+            "biological_state": "cytoplasmic state",
+            "evidence": "Enterobactin is produced in the cytoplasm"
+          },
+          {
+            "element": "enterobactin",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "secreted to the extracellular environment"
+          }
+        ],
+        "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "2,3-dihydroxybenzoic acid",
+        "entity_2": "EntE",
+        "name": "2,3-DHB binding to EntE",
+        "relationship": "binds",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB bound to EntE as a natural substrate with high affinity"
+      },
+      {
+        "entity_1": "2,3-dihydroxybenzoic acid",
+        "entity_2": "EntB",
+        "name": "2,3-DHB inhibition of EntB",
+        "relationship": "inhibits",
+        "biological_state": "cytoplasmic state",
+        "evidence": "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity"
+      },
+      {
+        "entity_1": "EntC",
+        "entity_2": "EntB",
+        "name": "EntC-EntB interaction",
+        "relationship": "binds",
+        "biological_state": "cytoplasmic state",
+        "evidence": "promiscuity of EntB in forming pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+      },
+      {
+        "entity_1": "EntB",
+        "entity_2": "EntA",
+        "name": "EntB-EntA interaction",
+        "relationship": "binds",
+        "biological_state": "cytoplasmic state",
+        "evidence": "promiscuity of EntB in forming pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+      },
+      {
+        "entity_1": "EntB",
+        "entity_2": "EntE",
+        "name": "EntB-EntE interaction",
+        "relationship": "binds",
+        "biological_state": "cytoplasmic state",
+        "evidence": "promiscuity of EntB in forming pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+      },
+      {
+        "entity_1": "EntB",
+        "entity_2": "EntF",
+        "name": "EntB-EntF interaction",
+        "relationship": "binds",
+        "biological_state": "cytoplasmic state",
+        "evidence": "promiscuity of EntB in forming pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+      },
+      {
+        "entity_1": "EntD",
+        "entity_2": "EntB",
+        "name": "EntD modifies EntB",
+        "relationship": "modifies",
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins"
+      },
+      {
+        "entity_1": "EntD",
+        "entity_2": "EntF",
+        "name": "EntD modifies EntF",
+        "relationship": "modifies",
+        "biological_state": "cytoplasmic state",
+        "evidence": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 3,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 0,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 1,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 9,
+      "unused_proteins_flagged_for_review": 1
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "reaction_order": [
+    "EntC isochorismate synthase reaction",
+    "EntB isochorismatase reaction",
+    "EntA dehydrogenase reaction",
+    "EntE 2,3-DHB adenylation",
+    "EntF enterobactin assembly"
+  ]
+}

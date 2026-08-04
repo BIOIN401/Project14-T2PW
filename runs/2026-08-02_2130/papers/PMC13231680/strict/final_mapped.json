@@ -1,0 +1,523 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "562",
+            "classification": "Prokaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "explicit_entity_species"
+          }
+        },
+        "classification": "Prokaryote"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "phthalylsulfacetamide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "meropenem"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9229,
+              "name": "Meropenem",
+              "short_name": "Meropen",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014898",
+                "chebi": "CHEBI:43968",
+                "pubchem": "40466974",
+                "cas": "96036-03-2",
+                "chemspider": "389924",
+                "drugbank": "DB00760",
+                "pathbank_compound_id": "9229"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9229,
+          "resolved_name": "Meropenem"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0014898",
+          "chebi": "CHEBI:43968",
+          "pubchem": "40466974",
+          "cas": "96036-03-2",
+          "chemspider": "389924",
+          "drugbank": "DB00760",
+          "pathbank_compound_id": "9229"
+        },
+        "pathbank_compound_id": 9229
+      },
+      {
+        "name": "Zn²⁺",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "Zn²⁺"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate"
+          }
+        }
+      },
+      {
+        "name": "hydrolyzed meropenem",
+        "class": "compound",
+        "evidence": "NDM-1... hydrolyze all β-lactam antibiotics",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "NDM-1... hydrolyze all β-lactam antibiotics"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "hydrolyzed meropenem"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "NDM-1",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "H6UKU8",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "NDM-1",
+                "bla-ndm"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "E5KIY2",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "bla NDM-1",
+                "blaNDM-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.425,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.97,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "alias_source": "primary_name",
+          "resolved_name": "beta-lactamase",
+          "queries_tried": [
+            "(protein_name:\"NDM-1\" OR gene:\"NDM-1\") AND organism_name:\"Escherichia coli\""
+          ],
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "NDM-1",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 0.97,
+            "margin": -1.0,
+            "identity": "uniprot:H6UKU8",
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "NDM-1",
+              "kind": "protein",
+              "resolved_name": "beta-lactamase",
+              "identity": "uniprot:H6UKU8",
+              "compared_names": [
+                "beta-lactamase"
+              ],
+              "matched_symbol": "NDM-1"
+            }
+          },
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "H6UKU8"
+        }
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          },
+          "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+          "identity_verdict": {
+            "verified": false,
+            "reason": "identity_evidence_missing",
+            "entity_name": "LpxC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "unknown"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:6026, uniprot:P0A725"
+          },
+          "identity_status": "unresolved",
+          "name_gate": {},
+          "rejected_mapped_ids": {
+            "uniprot": "P0A725",
+            "pathbank_protein_id": "6026"
+          }
+        },
+        "mapped_ids": {}
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "NDM-1 complex",
+        "species": "Escherichia coli",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "NDM-1 complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "NDM-1",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species_id": 3,
+        "components": [
+          {
+            "name": "NDM-1",
+            "stoichiometry": 1,
+            "mapped_ids": {
+              "uniprot": "H6UKU8"
+            }
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "phthalylsulfacetamide inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "phthalylsulfacetamide interacts with LpxC",
+        "relationship": "interacts with",
+        "evidence": "PSA may potentially interact with LpxC"
+      },
+      {
+        "entity_1": "Zn²⁺",
+        "entity_2": "NDM-1",
+        "name": "Zn²⁺ interacts with NDM-1",
+        "relationship": "interacts with",
+        "evidence": "PSA stably binds to the active hydrolysis center of NDM-1, interacts with Zn²⁺"
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "meropenem"
+        ],
+        "outputs": [
+          "hydrolyzed meropenem"
+        ],
+        "name": "NDM-1-catalyzed meropenem hydrolysis",
+        "enzymes": [
+          {
+            "entity": "NDM-1 complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "NDM-1... hydrolyze all β-lactam antibiotics",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ],
+        "evidence": "NDM-1... hydrolyze all β-lactam antibiotics; PSA dose-dependently inhibited NDM-1",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "NDM-1 complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "NDM-1... hydrolyze all β-lactam antibiotics",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ]
+      }
+    ],
+    "transports": []
+  },
+  "biological_states": [
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Escherichia coli"
+    },
+    {
+      "name": "AutoState_escherichia_colicytoplasm",
+      "subcellular_location": "Cytoplasm",
+      "compartment_canonical": "cytosol",
+      "species": "Escherichia coli"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "phthalylsulfacetamide",
+        "biological_state": "__auto_state__"
+      },
+      {
+        "compound": "meropenem",
+        "biological_state": "__auto_state__"
+      },
+      {
+        "compound": "Zn²⁺",
+        "biological_state": "__auto_state__"
+      },
+      {
+        "compound": "hydrolyzed meropenem",
+        "biological_state": "__auto_state__"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "NDM-1",
+        "biological_state": "__auto_state__"
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "AutoState_escherichia_colicytoplasm"
+      }
+    ]
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 1,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 1,
+      "unused_proteins_flagged_for_review": 0
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  }
+}

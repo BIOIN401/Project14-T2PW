@@ -1,0 +1,56 @@
+RESULT: FAIL
+========================================
+paper      : PMC12180156
+title      : (unknown)
+slug       : PMC12180156
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1345.6s (22m25s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 16 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_sfxn1_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_sfxn3_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_sfxn4_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_serine_hydroxymethyltransferase_is_missing_a_uniprot_or_, gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi, gate.protein_pcbp2_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_slc25a1_cic_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+7 QA issues need review.
+[post_normalization_contract_report] gate.protein_sfxn1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'SFXN1' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_sfxn3_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'SFXN3' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_sfxn4_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'SFXN4' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_serine_hydroxymethyltransferase_is_missing_a_uniprot_or_ @ /entities/proteins/3: Protein 'serine hydroxymethyltransferase' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'ALAS2' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ferrochelatase_is_missing_a_uniprot_or_drugbank_identifi @ /entities/proteins/5: Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_pcbp2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'PCBP2' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_slc25a1_cic_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'SLC25A1/CIC' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 10
+  contract_errors = 8
+  entities = 25
+  gate_errors = 8
+  proteins = 7
+  reactions = 2
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (941 B)
+  - contract_reports.json  (48391 B)
+  - final_mapped.json  (59781 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (20624 B)
+  - merged_payload.json  (12942 B)
+  - rag_admission_report.json  (382999 B)
+  - stage1_payload.json  (9626 B)

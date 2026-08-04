@@ -1,0 +1,1996 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "562",
+            "classification": "Prokaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "biological_state_species"
+          }
+        },
+        "classification": "Prokaryote"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "evidence": "synthesized in the bacterial cytoplasm",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "inner membrane",
+        "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "periplasm",
+        "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "outer membrane",
+        "evidence": "transport to the OM by the Lpt system",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "UDP-GlcNAc",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-GlcNAc"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 196,
+              "name": "Uridine diphosphate-N-acetylglucosamine",
+              "short_name": "UDP-GN",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000290",
+                "kegg": "C00043",
+                "chebi": "CHEBI:16264",
+                "pubchem": "445675",
+                "cas": "528-04-1",
+                "biocyc": "UDP-N-ACETYL-D-GLUCOSAMINE",
+                "chemspider": "393240",
+                "pathbank_compound_id": "196"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 196,
+          "resolved_name": "Uridine diphosphate-N-acetylglucosamine"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0000290",
+          "kegg": "C00043",
+          "chebi": "CHEBI:16264",
+          "pubchem": "445675",
+          "cas": "528-04-1",
+          "biocyc": "UDP-N-ACETYL-D-GLUCOSAMINE",
+          "chemspider": "393240",
+          "pathbank_compound_id": "196"
+        },
+        "pathbank_compound_id": 196,
+        "synonyms": [
+          "UDP-GlcNAc"
+        ]
+      },
+      {
+        "name": "β-hydroxyacyl-ACP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "β-hydroxyacyl-ACP"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "UDP-2,3-diacylglucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-2,3-diacylglucosamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "2,3-diacylglucosamine-1-phosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-diacylglucosamine-1-phosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "tetra-acylated disaccharide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "tetra-acylated disaccharide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "lipid IV_A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "lipid IV_A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40982,
+              "name": "lipid IVA",
+              "short_name": "LLIVA",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:58603",
+                "pathbank_compound_id": "40982"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40982,
+          "resolved_name": "lipid IVA"
+        },
+        "mapped_ids": {
+          "chebi": "CHEBI:58603",
+          "pathbank_compound_id": "40982"
+        },
+        "pathbank_compound_id": 40982,
+        "synonyms": [
+          "lipid IV_A"
+        ]
+      },
+      {
+        "name": "Kdo",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "Kdo"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 57926,
+              "name": "3-deoxy-D-manno-2-octulosonate",
+              "short_name": "3dDmanO",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C01187",
+                "chebi": "CHEBI:85986",
+                "pubchem": "21681234",
+                "biocyc": "KDO",
+                "chemspider": "4573934",
+                "pathbank_compound_id": "57926"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 57926,
+          "resolved_name": "3-deoxy-D-manno-2-octulosonate"
+        },
+        "mapped_ids": {
+          "kegg": "C01187",
+          "chebi": "CHEBI:85986",
+          "pubchem": "21681234",
+          "biocyc": "KDO",
+          "chemspider": "4573934",
+          "pathbank_compound_id": "57926"
+        },
+        "pathbank_compound_id": 57926,
+        "synonyms": [
+          "Kdo"
+        ]
+      },
+      {
+        "name": "Kdo-lipid IV_A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "Kdo-lipid IV_A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "Kdo-lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "Kdo-lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "acyl-ACP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "acyl-ACP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 96973,
+              "name": "Acyl-ACP",
+              "short_name": "ACYLACP",
+              "score": 1.0,
+              "mapped_ids": {
+                "pathbank_compound_id": "96973"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 96973,
+          "resolved_name": "Acyl-ACP"
+        },
+        "mapped_ids": {
+          "pathbank_compound_id": "96973"
+        },
+        "pathbank_compound_id": 96973
+      },
+      {
+        "name": "LPS",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "LPS"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 8387,
+              "name": "LPS with O-antigen",
+              "short_name": "Lps",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0013470",
+                "kegg": "C00338",
+                "chebi": "CHEBI:16412",
+                "pubchem": "53481793",
+                "biocyc": "CPD0-2294",
+                "pathbank_compound_id": "8387"
+              }
+            },
+            {
+              "pathbank_compound_id": 44609,
+              "name": "LPS",
+              "short_name": "LPS",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "11970143",
+                "pathbank_compound_id": "44609"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_exact_name",
+            "order_step": "exact_normalized_name"
+          }
+        }
+      },
+      {
+        "name": "core-lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "core-lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        }
+      },
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "mapping_meta": {
+          "query": {
+            "name": "lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 8270,
+              "name": "Lipid A",
+              "short_name": "Lipid A",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0013244",
+                "kegg": "C13908",
+                "chebi": "CHEBI:47040",
+                "pubchem": "9877306",
+                "biocyc": "CPD0-1283",
+                "chemspider": "8052983",
+                "pathbank_compound_id": "8270"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 8270,
+          "resolved_name": "Lipid A"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0013244",
+          "kegg": "C13908",
+          "chebi": "CHEBI:47040",
+          "pubchem": "9877306",
+          "biocyc": "CPD0-1283",
+          "chemspider": "8052983",
+          "pathbank_compound_id": "8270"
+        },
+        "pathbank_compound_id": 8270
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LpxA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxK",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "WaaA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "WaaA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      },
+      {
+        "name": "LpxL",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxL",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxL\" OR gene:\"LpxL\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxL\" OR gene:\"LpxL\")"
+          ]
+        }
+      },
+      {
+        "name": "LpxM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxM",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxM\" OR gene:\"LpxM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxM\" OR gene:\"LpxM\")"
+          ]
+        }
+      },
+      {
+        "name": "FtsH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "FtsH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"FtsH\" OR gene:\"FtsH\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"FtsH\" OR gene:\"FtsH\")"
+          ]
+        }
+      },
+      {
+        "name": "LapB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LapB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LapB\" OR gene:\"LapB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LapB\" OR gene:\"LapB\")"
+          ]
+        }
+      },
+      {
+        "name": "YejM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "YejM",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"YejM\" OR gene:\"YejM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"YejM\" OR gene:\"YejM\")"
+          ]
+        }
+      },
+      {
+        "name": "MsbA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MsbA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "identity_evidence_missing"
+          }
+        }
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "FtsH/YciM complex",
+        "components": [
+          "FtsH",
+          "YciM"
+        ],
+        "evidence": "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex",
+        "confidence": 0.8,
+        "provenance": "inferred",
+        "source_refs": [
+          "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex"
+        ],
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "organism": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "route": "complex",
+          "query": {
+            "name": "FtsH/YciM complex",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "FtsH",
+              "component_index": 0,
+              "reason": "novel_protein"
+            },
+            {
+              "issue": "component_protein_unresolved",
+              "component": "YciM",
+              "component_index": 1,
+              "reason": "novel_protein"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "E. coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "synthesized in the bacterial cytoplasm"
+    },
+    {
+      "name": "E. coli inner membrane (cytoplasmic leaflet)",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM"
+    },
+    {
+      "name": "E. coli inner membrane (periplasmic leaflet)",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet"
+    },
+    {
+      "name": "E. coli periplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "periplasm",
+      "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet"
+    },
+    {
+      "name": "E. coli outer membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "transport to the OM by the Lpt system"
+    },
+    {
+      "name": "Escherichia coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+    },
+    {
+      "name": "Escherichia coli inner membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
+    },
+    {
+      "name": "Escherichia coli periplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "periplasm",
+      "evidence": "core-lipid A is flipped ... to the periplasmic leaflet of the IM"
+    },
+    {
+      "name": "Escherichia coli outer membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "core-lipid A must ultimately be transported to the OM"
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Escherichia coli"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "UDP-GlcNAc",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "UDP-GlcNAc is a precursor"
+      },
+      {
+        "compound": "β-hydroxyacyl-ACP",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "FAS II-derived β-hydroxyacyl-ACP molecules"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxA product"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxC product"
+      },
+      {
+        "compound": "UDP-2,3-diacylglucosamine",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxD product"
+      },
+      {
+        "compound": "2,3-diacylglucosamine-1-phosphate",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxH product"
+      },
+      {
+        "compound": "tetra-acylated disaccharide",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LpxB product"
+      },
+      {
+        "compound": "lipid IV_A",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LpxK product"
+      },
+      {
+        "compound": "Kdo",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "Kdo residues added by WaaA"
+      },
+      {
+        "compound": "Kdo-lipid IV_A",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "WaaA product"
+      },
+      {
+        "compound": "Kdo-lipid A",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "final product of Raetz pathway"
+      },
+      {
+        "compound": "acyl-ACP",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "used by LpxL and LpxM"
+      },
+      {
+        "compound": "LPS",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "LPS in the OM"
+      },
+      {
+        "compound": "core-lipid A",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "core-lipid A is flipped"
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "Escherichia coli outer membrane",
+        "evidence": "lipid A is an acylated glucosamine-based disaccharide that anchors LPS in the lipid bilayer"
+      },
+      {
+        "compound": "LPS",
+        "biological_state": "Escherichia coli outer membrane",
+        "evidence": "core-lipid A must ultimately be transported to the OM"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "LpxA",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "first enzyme in the lipid A biosynthesis pathway"
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "committed enzyme"
+      },
+      {
+        "protein": "LpxD",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "adds the next acyl group"
+      },
+      {
+        "protein": "LpxH",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "removal of UMP"
+      },
+      {
+        "protein": "LpxB",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "catalyzes formation of tetra-acylated disaccharide"
+      },
+      {
+        "protein": "LpxK",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "phosphorylated by LpxK"
+      },
+      {
+        "protein": "WaaA",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "adds Kdo residues"
+      },
+      {
+        "protein": "LpxL",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "sequentially acylated by LpxL"
+      },
+      {
+        "protein": "LpxM",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LpxM to finally form Kdo-lipid A"
+      },
+      {
+        "protein": "FtsH",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "FtsH is a membrane-embedded protease"
+      },
+      {
+        "protein": "LapB",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "IM-protein LapB"
+      },
+      {
+        "protein": "YejM",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "membrane protein YejM"
+      },
+      {
+        "protein": "MsbA",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "flippase MsbA"
+      }
+    ],
+    "element_collection_locations": [
+      {
+        "element_collection": "FtsH/YciM complex",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "UDP-GlcNAc",
+          "β-hydroxyacyl-ACP"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "LpxA reaction",
+        "enzymes": [
+          {
+            "entity": "LpxA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc"
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc using β-hydroxyacyl-ACP",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "LpxC reaction",
+        "enzymes": [
+          {
+            "entity": "LpxC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "LpxC is a deacetylase that removes the acetyl group"
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxC removes the acetyl group from the GlcNAc moiety",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "LpxC is a deacetylase that removes the acetyl group",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+          "β-hydroxyacyl-ACP"
+        ],
+        "outputs": [
+          "UDP-2,3-diacylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "LpxD reaction",
+        "enzymes": [
+          {
+            "entity": "LpxD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "addition of the next acyl group by LpxD"
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "addition of the next acyl group by LpxD",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "addition of the next acyl group by LpxD",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "UDP-2,3-diacylglucosamine"
+        ],
+        "outputs": [
+          "2,3-diacylglucosamine-1-phosphate"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "LpxH reaction",
+        "enzymes": [
+          {
+            "entity": "LpxH",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "removal of UMP by LpxH"
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "removal of UMP by LpxH",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxH",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "removal of UMP by LpxH",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-diacylglucosamine-1-phosphate"
+        ],
+        "outputs": [
+          "tetra-acylated disaccharide"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "LpxB reaction",
+        "enzymes": [
+          {
+            "entity": "LpxB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "LpxB catalyzes the formation of a tetra-acylated disaccharide"
+          }
+        ],
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LpxB catalyzes the formation of a tetra-acylated disaccharide intermediate",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "LpxB catalyzes the formation of a tetra-acylated disaccharide",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "tetra-acylated disaccharide"
+        ],
+        "outputs": [
+          "lipid IV_A"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "LpxK reaction",
+        "enzymes": [
+          {
+            "entity": "LpxK",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "phosphorylated by LpxK to produce lipid IV_A"
+          }
+        ],
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxK",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "lipid IV_A",
+          "Kdo"
+        ],
+        "outputs": [
+          "Kdo-lipid IV_A"
+        ],
+        "locked_reaction_id": "rxn_lock_009",
+        "name": "WaaA reaction",
+        "enzymes": [
+          {
+            "entity": "WaaA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "WaaA adds a number of Kdo residues"
+          }
+        ],
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "WaaA adds a number of Kdo residues",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "WaaA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "WaaA adds a number of Kdo residues",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "Kdo-lipid IV_A",
+          "acyl-ACP"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "LpxL reaction",
+        "enzymes": [
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "sequentially acylated by LpxL"
+          }
+        ],
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "sequentially acylated by LpxL",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "sequentially acylated by LpxL",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    ],
+    "transports": [
+      {
+        "name": "MsbA-mediated core-lipid A flip",
+        "cargo": "core-lipid A",
+        "from_biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "to_biological_state": "E. coli inner membrane (periplasmic leaflet)",
+        "transporters": [
+          {
+            "evidence": "flippase MsbA",
+            "entity": "MsbA",
+            "entity_type": "protein",
+            "protein": "MsbA"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "core-lipid A",
+            "side": "left",
+            "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+            "evidence": "core-lipid A is flipped from the cytoplasmic leaflet"
+          },
+          {
+            "element": "core-lipid A",
+            "side": "right",
+            "biological_state": "E. coli inner membrane (periplasmic leaflet)",
+            "evidence": "to the periplasmic leaflet"
+          }
+        ],
+        "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet by the flippase MsbA"
+      },
+      {
+        "name": "Lpt-mediated core-lipid A transport to OM",
+        "cargo": "core-lipid A",
+        "from_biological_state": "E. coli periplasm",
+        "to_biological_state": "E. coli outer membrane",
+        "elements_with_states": [
+          {
+            "element": "core-lipid A",
+            "side": "left",
+            "biological_state": "E. coli periplasm",
+            "evidence": "transport to the OM by the Lpt system"
+          },
+          {
+            "element": "core-lipid A",
+            "side": "right",
+            "biological_state": "E. coli outer membrane",
+            "evidence": "transport to the OM by the Lpt system"
+          }
+        ],
+        "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+        "transporters": []
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "FtsH",
+        "entity_2": "LpxC",
+        "name": "FtsH degrades LpxC",
+        "relationship": "degrades",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "FtsH was able to directly degrade LpxC"
+      },
+      {
+        "entity_1": "LapB",
+        "entity_2": "LpxC",
+        "name": "LapB binds LpxC",
+        "relationship": "binds",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LapB makes extensive contacts with the N terminal and central regions of the Ec LpxC degron"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "LapB",
+        "name": "YejM binds LapB",
+        "relationship": "binds",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "YejM directly interacted with LapB"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "LPS",
+        "name": "YejM binds LPS",
+        "relationship": "binds",
+        "biological_state": "E. coli inner membrane (periplasmic leaflet)",
+        "evidence": "YejM contains an LPS binding pocket"
+      },
+      {
+        "entity_1": "FtsH/YciM complex",
+        "entity_2": "LpxC",
+        "name": "FtsH/YciM complex degrades LpxC",
+        "relationship": "degrades",
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [
+    {
+      "reaction_name": "LpxM reaction",
+      "reason": "output_subset_of_input_without_distinct_product",
+      "action": "quarantined_from_active_reactions",
+      "json_pointer": "/processes/reactions/8",
+      "original_reaction": {
+        "inputs": [
+          "Kdo-lipid A",
+          "acyl-ACP"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "LpxM reaction",
+        "enzymes": [
+          {
+            "entity": "LpxM",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "LpxM to finally form Kdo-lipid A"
+          }
+        ],
+        "biological_state": "E. coli inner membrane (cytoplasmic leaflet)",
+        "evidence": "LpxM to finally form Kdo-lipid A",
+        "scope_membership": "core",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxM",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "LpxM to finally form Kdo-lipid A",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      "locked_reaction_id": "rxn_lock_008"
+    }
+  ],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 9,
+    "exported_locked_reactions": 8,
+    "quarantined_locked_reactions": 1,
+    "unaccounted_locked_reactions": 0
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 0,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 13,
+      "unused_proteins_flagged_for_review": 1
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "reaction_order": [
+    "LpxA reaction",
+    "LpxC reaction",
+    "LpxD reaction",
+    "LpxH reaction",
+    "LpxB reaction",
+    "LpxK reaction",
+    "WaaA reaction",
+    "LpxL reaction"
+  ]
+}

@@ -1,0 +1,61 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1080.3s (18m00s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'EntC' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EntB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_enta_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'EntA' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EntE' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'EntF' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'EntD' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_tolc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'TolC' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_isochorismatase_entb_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/8: Protein 'Isochorismatase (EntB)' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 2
+  compounds = 11
+  entities = 22
+  gate_errors = 18
+  gate_errors_not_blocking = 18
+  gate_review_flags = 18
+  normalization_actions = 3
+  proteins = 9
+  reactions = 6
+  review_flags = 9
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 4, 'b': 0, 'c': 14, 'd': 0}
+  transports = 1
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (939 B)
+  - contract_reports.json  (50141 B)
+  - final_mapped.json  (77743 B)
+  - final_stage3_gate_report.json  (26813 B)
+  - gap_iteration_summary.json  (108245 B)
+  - gate_fail_report.json  (20467 B)
+  - merged_payload.json  (30627 B)
+  - rag_admission_report.json  (378924 B)
+  - research_pathway_citations.json  (129027 B)
+  - research_pathway_elements.csv  (34688 B)
+  - research_pathway_report.txt  (27733 B)
+  - review_flags.json  (25261 B)
+  - stage1_payload.json  (7572 B)

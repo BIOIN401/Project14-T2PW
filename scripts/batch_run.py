@@ -118,6 +118,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="start a new run directory instead of continuing an incomplete one",
     )
+    parser.add_argument(
+        "--stage-only",
+        action="store_true",
+        help=(
+            "acquire the papers and write plan.json / skipped.json / SUMMARY.txt, then stop "
+            "BEFORE any paper+mode leg. Executes zero Streamlit/LLM legs by construction: it "
+            "returns before the run loop, so no manifest row and no leg directory can be "
+            "created regardless of how fast the paper cache is. Use this to stage a run for "
+            "inspection -- never a small --deadline, which only decides INSIDE the loop and "
+            "will start a leg when acquisition comes back from cache"
+        ),
+    )
 
     internal = parser.add_argument_group("internal (used by the parent, not by humans)")
     internal.add_argument(
@@ -184,6 +196,7 @@ def main(argv: list[str] | None = None) -> int:
         timeout=args.timeout,
         deadline_hours=args.deadline,
         fresh=args.fresh,
+        stage_only=args.stage_only,
         script_path=Path(__file__).resolve(),
     )
 

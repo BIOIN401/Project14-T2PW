@@ -1,0 +1,23 @@
+# GENERATED from the pinned gold set -- do not hand-edit.
+# gold set: 2026-08-01.1
+#
+# Format: PAPERID | requested pathway | requested organism
+#
+# fetch.parse_topics reads a first field that looks like a paper id as a
+# PINNED spec and takes the remaining fields as the requested scope:
+# fetched by id, zero search calls, score bypassed, request preserved.
+# A bare id would fetch the same paper with an EMPTY scope, which is not
+# a valid acceptance run -- see GoldSet.topics_lines.
+#
+# Regenerate with: python scripts/bench_acceptance.py --write-topics <path>
+
+PMC12444477 | lipid A biosynthesis      | Escherichia coli
+PMC13231680 | lipid A biosynthesis      | Escherichia coli
+PMC12657337 | menaquinone biosynthesis  | Bacillus subtilis
+PMC12421875 | menaquinone biosynthesis  | Bacillus subtilis
+PMC12312563 | menaquinone biosynthesis  | Bacillus subtilis
+PMC12856317 | heme biosynthesis         | Homo sapiens
+PMC12180156 | heme biosynthesis         | Homo sapiens
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
+PMC12452463 | enterobactin biosynthesis | Escherichia coli
+PMC12782028 | cholesterol biosynthesis  | Homo sapiens

@@ -1,0 +1,279 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "endoplasmic reticulum",
+        "evidence": "mainly located in the endoplasmic reticulum"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "2,3-oxidosqualene",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lanosterol",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "desmosterol",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "cholesterol",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LSS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "CYP51A1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "MSMO1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "DHCR24",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SQLE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "FDFT1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "FDPS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "MVD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "HMGCR",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "HMGCS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "MVK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "IDI1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ACAT2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "NSDHL",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "EBP",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "LBR",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "HSD17B7",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "LIPA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SREBF1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SREBF2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Homo sapiens endoplasmic reticulum state",
+      "species": "Homo sapiens",
+      "subcellular_location": "endoplasmic reticulum",
+      "evidence": "mainly located in the endoplasmic reticulum"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "LSS",
+        "biological_state": "Homo sapiens endoplasmic reticulum state",
+        "evidence": "mainly located in the endoplasmic reticulum"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "2,3-oxidosqualene"
+        ],
+        "outputs": [
+          "lanosterol"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "LSS reaction",
+        "enzymes": [
+          {
+            "protein": "LSS",
+            "evidence": "LSS catalyzes the conversion of 2,3-oxidosqualene to lanosterol",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Homo sapiens endoplasmic reticulum state",
+        "evidence": "catalyzes one of the earliest steps in sterol biosynthesis by converting 2,3-oxidosqualene to lanosterol",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "lanosterol"
+        ],
+        "outputs": [
+          "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "CYP51A1 reaction",
+        "enzymes": [
+          {
+            "protein": "CYP51A1",
+            "evidence": "CYP51A1 catalyzes the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "catalyzes the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+        "scope_membership": "core",
+        "biological_state": "Homo sapiens endoplasmic reticulum state"
+      },
+      {
+        "inputs": [
+          "desmosterol"
+        ],
+        "outputs": [
+          "cholesterol"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "DHCR24 reaction",
+        "enzymes": [
+          {
+            "protein": "DHCR24",
+            "evidence": "DHCR24 catalyzes the conversion of desmosterol to cholesterol",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "catalyzes the final step in the cholesterol biosynthesis pathway... converting desmosterol to cholesterol",
+        "scope_membership": "core",
+        "biological_state": "Homo sapiens endoplasmic reticulum state"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 3,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 0
+  }
+}

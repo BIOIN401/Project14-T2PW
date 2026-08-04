@@ -1,0 +1,2661 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 12,
+        "organisms_added": 0,
+        "locations_added": 9,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 14,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(2013, 'Lost connection to MySQL server during query (timed out)')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:entc",
+            "entity_type": "protein",
+            "name": "EntC",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:entb",
+            "entity_type": "protein",
+            "name": "EntB",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:enta",
+            "entity_type": "protein",
+            "name": "EntA",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:ente",
+            "entity_type": "protein",
+            "name": "EntE",
+            "path": "/entities/proteins/3",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:entf",
+            "entity_type": "protein",
+            "name": "EntF",
+            "path": "/entities/proteins/4",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:entd",
+            "entity_type": "protein",
+            "name": "EntD",
+            "path": "/entities/proteins/5",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:fur",
+            "entity_type": "protein",
+            "name": "Fur",
+            "path": "/entities/proteins/6",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:tolc",
+            "entity_type": "protein",
+            "name": "TolC",
+            "path": "/entities/proteins/7",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "entity_type": "protein",
+            "name": "Isochorismatase (EntB)",
+            "path": "/entities/proteins/8",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "path": "/entities/compounds/6",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          "…+2 more item(s) elided"
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:bfeadcec5273e1fc",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:entc\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup… (+186 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:entc",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:entb",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:enta",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:ente",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:entf",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:entd",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:fur",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:tolc",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          "…+2 more item(s) elided"
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:entc",
+            "entity_type": "protein",
+            "name": "EntC",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntC",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3f9b9859d19f9b3d",
+                  "preview": "{\"uniprot\": \"P0AEJ2\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:a4dabb1b1ddef5d7",
+                  "preview": "[\"(protein_name:\\\"EntC\\\" OR gene:\\\"EntC\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntC\\\" OR gene:\\\"EntC\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 929,
+                  "hash": "sha256:1712cf0da432bb79",
+                  "preview": "[{\"accession\": \"P0AEJ2\", \"protein_name\": \"Isochorismate synthase EntC\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0AEJ3\", \"protein_name\": \"Isochori… (+729 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 380,
+                  "hash": "sha256:a74dd5eb95d484bf",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P0AEJ2\", \"pathbank_protein_id\": \"6238\"}, \"pathbank_protein_id\": 6238, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+180 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2512,
+                  "hash": "sha256:c788e82ad377cee9",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntC\\\" OR gene:\\\"EntC\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntC\\\" OR gene:\\\"EntC\\\")\", \"mapped_id… (+2312 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:0593641472c9a9e3",
+                  "preview": "{\"uniprot\": \"P0AEJ2\", \"pathbank_protein_id\": \"6238\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3f9b9859d19f9b3d",
+                  "preview": "{\"uniprot\": \"P0AEJ2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:47c9ceaf3fe9e5f4",
+                  "preview": "{\"uniprot\": \"P0AEJ3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:270c7d6aff75f3cd",
+                  "preview": "{\"uniprot\": \"D3K2Z6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:1ff1ca7f54b8e2e9",
+                  "preview": "{\"uniprot\": \"A0A0H2YWM2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1ff9dcbf18b77511",
+                  "preview": "{\"uniprot\": \"B7L8H6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:cec8459d965b8e47",
+                  "preview": "{\"uniprot\": \"A0A0H2V5R9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d66a29a55a8f2a72",
+                  "preview": "{\"uniprot\": \"A7ZIX7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is from a database (PathBankDB) with the highest confidence (1.0) and provides both UniProt and PathBank IDs. It matches the protein type and name 'EntC' perfectly.",
+              "source": "llm",
+              "raw": {
+                "chars": 238,
+                "hash": "sha256:b70f657faa3e3d6d",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is from a database (PathBankDB) with the highest confidence (1.0) and provides both UniProt and PathBank IDs. It matches the pro… (+38 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytoplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 1.0,
+              "reason": "Both Cytosol and Cytoplasm are provided with identical scores and evidence for Escherichia coli; Cytoplasm is a standard term for the prokaryotic intracellular compartment.",
+              "source": "llm",
+              "raw": {
+                "chars": 228,
+                "hash": "sha256:4cede67f0221d6ce",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 1.0, \"reason\": \"Both Cytosol and Cytoplasm are provided with identical scores and evidence for Escherichia coli; Cytoplasm is a standard term for the prokaryotic … (+28 chars elided)"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "cytoplasmic state"
+          },
+          {
+            "issue_key": "protein:entb",
+            "entity_type": "protein",
+            "name": "EntB",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntB",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:43bd262835baf77d",
+                  "preview": "{\"uniprot\": \"P0ADI4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:8ca0b62e0d681710",
+                  "preview": "[\"(protein_name:\\\"EntB\\\" OR gene:\\\"EntB\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntB\\\" OR gene:\\\"EntB\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 993,
+                  "hash": "sha256:8122b11e6bb9ac7d",
+                  "preview": "[{\"accession\": \"P0ADI4\", \"protein_name\": \"Enterobactin synthase component B\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0ADI5\", \"protein_name\": \"En… (+793 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 368,
+                  "hash": "sha256:9f8f4852f68465e6",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P0ADI4\", \"pathbank_protein_id\": \"6224\"}, \"pathbank_protein_id\": 6224, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+168 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2607,
+                  "hash": "sha256:230e0c309c42a793",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntB\\\" OR gene:\\\"EntB\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntB\\\" OR gene:\\\"EntB\\\")\", \"mapped_id… (+2407 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:ae186bf28f899551",
+                  "preview": "{\"uniprot\": \"P0ADI4\", \"pathbank_protein_id\": \"6224\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:43bd262835baf77d",
+                  "preview": "{\"uniprot\": \"P0ADI4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:9412e2de925375db",
+                  "preview": "{\"uniprot\": \"P0ADI5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:943b2b0bf41fc1cb",
+                  "preview": "{\"uniprot\": \"B7L8H8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:20cabd8bec8b7394",
+                  "preview": "{\"uniprot\": \"A0A0H2YWZ9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:88b03db39230e84e",
+                  "preview": "{\"uniprot\": \"B7MF07\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:f5635cc3b8990ff3",
+                  "preview": "{\"uniprot\": \"A0A0H2V551\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:6b3b5272f34ad13d",
+                  "preview": "{\"uniprot\": \"A7ZIX9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a database-backed match (PathBankDB) with a confidence of 1.0, providing both UniProt (P0ADI4) and PathBank IDs. This matches the protein 'EntB' and aligns with the background context provided by the UniProt API.",
+              "source": "llm",
+              "raw": {
+                "chars": 289,
+                "hash": "sha256:e0f5d7e97f0ee679",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a database-backed match (PathBankDB) with a confidence of 1.0, providing both UniProt (P0ADI4) and PathBank IDs. This matches… (+89 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 88.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:219125e2eb82c12c",
+                  "preview": "location_frequency=88"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.95,
+              "reason": "EntB is a component of the enterobactin biosynthesis pathway in Escherichia coli, and the high score (88.0) from pathbank_db indicates it is localized to the cytoplasm.",
+              "source": "llm",
+              "raw": {
+                "chars": 225,
+                "hash": "sha256:9c8c2910fabcfe9c",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.95, \"reason\": \"EntB is a component of the enterobactin biosynthesis pathway in Escherichia coli, and the high score (88.0) from pathbank_db indicates it is loca… (+25 chars elided)"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "cytoplasmic state"
+          },
+          {
+            "issue_key": "protein:enta",
+            "entity_type": "protein",
+            "name": "EntA",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntA",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04f0bcbc7fb84200",
+                  "preview": "{\"uniprot\": \"P15047\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:60bc7fe21c4d5ab8",
+                  "preview": "[\"(protein_name:\\\"EntA\\\" OR gene:\\\"EntA\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntA\\\" OR gene:\\\"EntA\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1035,
+                  "hash": "sha256:4f3efae7f17d59f4",
+                  "preview": "[{\"accession\": \"P15047\", \"protein_name\": \"2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"D3K2Z9\", \"prot… (+835 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1542,
+                  "hash": "sha256:24a2b7ceb2bae99e",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P15047\", \"pathbank_protein_id\": \"6341\"}, \"pathbank_protein_id\": 6341, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+1342 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2692,
+                  "hash": "sha256:20d2e4ef06d2de5d",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntA\\\" OR gene:\\\"EntA\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntA\\\" OR gene:\\\"EntA\\\")\", \"mapped_id… (+2492 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:8ab812dc63c4f396",
+                  "preview": "{\"uniprot\": \"P15047\", \"pathbank_protein_id\": \"6341\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04f0bcbc7fb84200",
+                  "preview": "{\"uniprot\": \"P15047\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:df8acf26fe140e7c",
+                  "preview": "{\"uniprot\": \"D3K2Z9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:65b116bab4f4cc05",
+                  "preview": "{\"uniprot\": \"Q8X528\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:3851f1098855ae99",
+                  "preview": "{\"uniprot\": \"A0A0H2YWI0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:61fc2c6ae8e2e8cb",
+                  "preview": "{\"uniprot\": \"B7L8H9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:73f7b70ea851c86a",
+                  "preview": "{\"uniprot\": \"A7ZIY0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7d9fcf318c301129",
+                  "preview": "{\"uniprot\": \"A0A0H2V770\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB provides a high-confidence mapping (1.0) that includes both a UniProt ID (P15047) and a specific PathBank protein ID. The UniProt ID P15047 corresponds to the reviewed protein '2,3-dihydro-2,3-dihydroxybenzoate… (+102 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 396,
+                "hash": "sha256:79cba67b3aecf0c7",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB provides a high-confidence mapping (1.0) that includes both a UniProt ID (P15047) and a specific PathBank protein ID. … (+196 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytosol",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "Cytosol",
+            "chosen_state": "AutoState_escherichia_colicytosol"
+          },
+          {
+            "issue_key": "protein:ente",
+            "entity_type": "protein",
+            "name": "EntE",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntE",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:819876a14e4d8192",
+                  "preview": "{\"uniprot\": \"P10378\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:3cf7f609cda4c69c",
+                  "preview": "[\"(protein_name:\\\"EntE\\\" OR gene:\\\"EntE\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntE\\\" OR gene:\\\"EntE\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 993,
+                  "hash": "sha256:c988ad5482e8c6d0",
+                  "preview": "[{\"accession\": \"P10378\", \"protein_name\": \"Enterobactin synthase component E\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"Q8XBV3\", \"protein_name\": \"En… (+793 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1800,
+                  "hash": "sha256:18b7b9d2aaef40cc",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P10378\", \"pathbank_protein_id\": \"6301\"}, \"pathbank_protein_id\": 6301, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+1600 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2599,
+                  "hash": "sha256:acfe18c3f85ef9ee",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntE\\\" OR gene:\\\"EntE\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntE\\\" OR gene:\\\"EntE\\\")\", \"mapped_id… (+2399 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:b5d5f16a5781cf63",
+                  "preview": "{\"uniprot\": \"P10378\", \"pathbank_protein_id\": \"6301\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:819876a14e4d8192",
+                  "preview": "{\"uniprot\": \"P10378\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:dcf1fafcd70f1ec4",
+                  "preview": "{\"uniprot\": \"Q8XBV3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:0dace42f631ec6a1",
+                  "preview": "{\"uniprot\": \"A0A0H2YWR1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:421fa04f3509e90c",
+                  "preview": "{\"uniprot\": \"B7L8H7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3fe2472ddac0a3c4",
+                  "preview": "{\"uniprot\": \"B7MF06\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:e486959de7e9269e",
+                  "preview": "{\"uniprot\": \"A0A0H2V534\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:fd2d21eea059ee11",
+                  "preview": "{\"uniprot\": \"A7ZIX8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB is the top-ranked choice as it is database-backed (source: db) and provides both UniProt and PathBank IDs, matching the protein entity type and the expected organism (Escherichia coli) context.",
+              "source": "llm",
+              "raw": {
+                "chars": 277,
+                "hash": "sha256:d1b7a5247f340319",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB is the top-ranked choice as it is database-backed (source: db) and provides both UniProt and PathBank IDs, matching th… (+77 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 21.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a13a10c778346a3",
+                  "preview": "location_frequency=21"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Inner Membrane",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Membrane",
+                "score": 32.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:caaee4f125748e7a",
+                  "preview": "location_frequency=32"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Membrane",
+              "confidence": 0.9,
+              "reason": "The candidate 'Membrane' has the highest evidence score (32.0) among the provided options in the pathbank_db source.",
+              "source": "llm",
+              "raw": {
+                "chars": 171,
+                "hash": "sha256:ee9450ba095b9110",
+                "preview": "{\"choice\": \"Membrane\", \"confidence\": 0.9, \"reason\": \"The candidate 'Membrane' has the highest evidence score (32.0) among the provided options in the pathbank_db source.\"}"
+              }
+            },
+            "chosen_location": "Membrane",
+            "chosen_state": "AutoState_escherichia_colimembrane"
+          },
+          {
+            "issue_key": "protein:entf",
+            "entity_type": "protein",
+            "name": "EntF",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntF",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a4f90a80251d15f9",
+                  "preview": "{\"uniprot\": \"P11454\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:5b49dd37f93a2a74",
+                  "preview": "[\"(protein_name:\\\"EntF\\\" OR gene:\\\"EntF\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntF\\\" OR gene:\\\"EntF\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 951,
+                  "hash": "sha256:28ee8be469bc850a",
+                  "preview": "[{\"accession\": \"P11454\", \"protein_name\": \"Enterobactin synthase component F\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"Q8XBV9\", \"protein_name\": \"En… (+751 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 386,
+                  "hash": "sha256:ce3ccc7e5e5abc96",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P11454\", \"pathbank_protein_id\": \"6312\"}, \"pathbank_protein_id\": 6312, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+186 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2574,
+                  "hash": "sha256:6b2678f7b4f84d18",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntF\\\" OR gene:\\\"EntF\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntF\\\" OR gene:\\\"EntF\\\")\", \"mapped_id… (+2374 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:d1e7e9c6f50283c8",
+                  "preview": "{\"uniprot\": \"P11454\", \"pathbank_protein_id\": \"6312\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a4f90a80251d15f9",
+                  "preview": "{\"uniprot\": \"P11454\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b7f6b839f7aa898f",
+                  "preview": "{\"uniprot\": \"Q8XBV9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b7db468451725620",
+                  "preview": "{\"uniprot\": \"D3K2Y9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:24c01576330177f8",
+                  "preview": "{\"uniprot\": \"A0A0H2YXG5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f3e4df9513be17c5",
+                  "preview": "{\"uniprot\": \"B7L8G9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:8e228266c7e4e42e",
+                  "preview": "{\"uniprot\": \"A7ZIX0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:44514926258e7e2f",
+                  "preview": "{\"uniprot\": \"A0A0H2V5R2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a database-backed match (PathBankDB) with the highest confidence (1.0) and provides both UniProt and PathBank IDs. It matches the protein entity type and is the top-ranked candidate from the primary database.",
+              "source": "llm",
+              "raw": {
+                "chars": 285,
+                "hash": "sha256:91e69840adae25fa",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a database-backed match (PathBankDB) with the highest confidence (1.0) and provides both UniProt and PathBank IDs. It matches… (+85 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Membrane",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytosol",
+              "confidence": 0.9,
+              "reason": "EntF is a siderophore biosynthesis enzyme (enterobactin biosynthesis) in Escherichia coli, which typically functions in the cytosol. The candidate 'Cytosol' has a higher score and frequency in the provided database context compared to 'Memb… (+6 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 300,
+                "hash": "sha256:8b8a994247100656",
+                "preview": "{\"choice\": \"Cytosol\", \"confidence\": 0.9, \"reason\": \"EntF is a siderophore biosynthesis enzyme (enterobactin biosynthesis) in Escherichia coli, which typically functions in the cytosol. The candidate '… (+100 chars elided)"
+              }
+            },
+            "chosen_location": "Cytosol",
+            "chosen_state": "AutoState_escherichia_colicytosol"
+          },
+          {
+            "issue_key": "protein:entd",
+            "entity_type": "protein",
+            "name": "EntD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntD",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:82339f9b55e4cd6f",
+                  "preview": "{\"uniprot\": \"P19925\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:0de92d64ef4dd765",
+                  "preview": "[\"(protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 965,
+                  "hash": "sha256:14b533dff878da14",
+                  "preview": "[{\"accession\": \"P19925\", \"protein_name\": \"Enterobactin synthase component D\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0A3B9\", \"protein_name\": \"En… (+765 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 392,
+                  "hash": "sha256:10bf49f51e56d1d8",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P19925\", \"pathbank_protein_id\": \"6383\"}, \"pathbank_protein_id\": 6383, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+192 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2566,
+                  "hash": "sha256:7405fd50ca82f39d",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\")\", \"mapped_id… (+2366 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:5f8174a22ce0b2ca",
+                  "preview": "{\"uniprot\": \"P19925\", \"pathbank_protein_id\": \"6383\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:82339f9b55e4cd6f",
+                  "preview": "{\"uniprot\": \"P19925\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e57d9ef85696ee66",
+                  "preview": "{\"uniprot\": \"P0A3B9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e6dc86807ca53cf4",
+                  "preview": "{\"uniprot\": \"D3K2Y6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a2ef0f169d2471c2",
+                  "preview": "{\"uniprot\": \"B7L8G5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:a2f0a98405f15d12",
+                  "preview": "{\"uniprot\": \"A0A0H2YWQ2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b86c52fec9e85503",
+                  "preview": "{\"uniprot\": \"A0A0H2V5Q4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:34c20378a9b5dd88",
+                  "preview": "{\"uniprot\": \"B7MEZ4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB is the top-ranked match with the highest confidence (1.0). It provides both a UniProt ID (P19925) and a specific PathBank protein ID, which aligns with the requirement for database-backed identifier quality. Th… (+139 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:d215c8b7cd3f27c7",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB is the top-ranked match with the highest confidence (1.0). It provides both a UniProt ID (P19925) and a specific PathB… (+200 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Membrane",
+                "score": 27.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:3a65e59671728d36",
+                  "preview": "location_frequency=27"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Membrane",
+              "confidence": 0.9,
+              "reason": "The candidate 'Membrane' has a significantly higher evidence score (27.0) compared to 'Cytosol' (1.0) in the provided database context.",
+              "source": "llm",
+              "raw": {
+                "chars": 190,
+                "hash": "sha256:b5ea2917d6ce4094",
+                "preview": "{\"choice\": \"Membrane\", \"confidence\": 0.9, \"reason\": \"The candidate 'Membrane' has a significantly higher evidence score (27.0) compared to 'Cytosol' (1.0) in the provided database context.\"}"
+              }
+            },
+            "chosen_location": "Membrane",
+            "chosen_state": "AutoState_escherichia_colimembrane"
+          },
+          {
+            "issue_key": "protein:fur",
+            "entity_type": "protein",
+            "name": "Fur",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "Fur",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c479714babff0218",
+                  "preview": "{\"uniprot\": \"P0A9A9\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:41c9099dc6e0757e",
+                  "preview": "[\"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 983,
+                  "hash": "sha256:163b1622ed2746bb",
+                  "preview": "[{\"accession\": \"P0A9A9\", \"protein_name\": \"Ferric uptake regulation protein\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0A9B1\", \"protein_name\": \"Fer… (+783 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1657,
+                  "hash": "sha256:5d1542d1990af7f3",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"confidence\": 0.65, \"candidates\": [{\"pathbank_protein_id\": 5917, \"name\": \"Succinate dehydrogenase iron-sulfur su… (+1457 chars elided)",
+                  "keys": 6
+                },
+                {
+                  "chars": 2565,
+                  "hash": "sha256:e8d8e01b68a3a7e8",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\")\", \"mapped_ids\": … (+2365 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c479714babff0218",
+                  "preview": "{\"uniprot\": \"P0A9A9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1908d90e8e9eb695",
+                  "preview": "{\"uniprot\": \"P0A9B1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cce8d96b896f1e25",
+                  "preview": "{\"uniprot\": \"P0A9B0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:25882d08198f4a45",
+                  "preview": "{\"uniprot\": \"B7L9M0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:0a7b65259ba380be",
+                  "preview": "{\"uniprot\": \"A0A0H2YX47\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:464759cfe4d4cceb",
+                  "preview": "{\"uniprot\": \"B7MFV0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ebb16c925b460198",
+                  "preview": "{\"uniprot\": \"A7ZJ68\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:cedca6553a76f4ea",
+                  "preview": "{\"uniprot\": \"A0A0H3EH26\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "The candidate P0A9A9 is a reviewed UniProt entry for 'Ferric uptake regulation protein' (Fur) in Escherichia coli (strain K12), which is the most standard reference strain and matches the protein entity type and name perfectly.",
+              "source": "llm",
+              "raw": {
+                "chars": 282,
+                "hash": "sha256:31cd7e4c4ab8f87a",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"The candidate P0A9A9 is a reviewed UniProt entry for 'Ferric uptake regulation protein' (Fur) in Escherichia coli (strain K12), which is the most s… (+82 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:tolc",
+            "entity_type": "protein",
+            "name": "TolC",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "TolC",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0c28de1dc6d65a6d",
+                  "preview": "{\"uniprot\": \"P02930\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:dea3e8de52770f73",
+                  "preview": "[\"(protein_name:\\\"TolC\\\" OR gene:\\\"TolC\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"TolC\\\" OR gene:\\\"TolC\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 941,
+                  "hash": "sha256:d2872f583e28615c",
+                  "preview": "[{\"accession\": \"P02930\", \"protein_name\": \"Outer membrane protein TolC\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"Q8XBP7\", \"protein_name\": \"Outer me… (+741 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 572,
+                  "hash": "sha256:026740da4e629f53",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P02930\", \"pathbank_protein_id\": \"7446\"}, \"pathbank_protein_id\": 7446, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+372 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2593,
+                  "hash": "sha256:d7b3ad2f3c68441a",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"TolC\\\" OR gene:\\\"TolC\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"TolC\\\" OR gene:\\\"TolC\\\")\", \"mapped_id… (+2393 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:3aeaeeb54c29fd20",
+                  "preview": "{\"uniprot\": \"P02930\", \"pathbank_protein_id\": \"7446\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0c28de1dc6d65a6d",
+                  "preview": "{\"uniprot\": \"P02930\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:6bfd3ae5fa5114b4",
+                  "preview": "{\"uniprot\": \"Q8XBP7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cd52fb0d675cbdef",
+                  "preview": "{\"uniprot\": \"B7LGH5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:525fd2d6aa648d4b",
+                  "preview": "{\"uniprot\": \"A0A0H2Z2Y1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2645f05e3da47a66",
+                  "preview": "{\"uniprot\": \"Q54001\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f64eab34357a1728",
+                  "preview": "{\"uniprot\": \"Q9K2Y1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.4845,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0fa5a9022ffe71bb",
+                  "preview": "{\"uniprot\": \"Q8ZLZ4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB is the top-ranked database-backed match with the highest confidence (1.0) and provides both UniProt and PathBank IDs, which directly addresses the missing mapping requirement.",
+              "source": "llm",
+              "raw": {
+                "chars": 259,
+                "hash": "sha256:f118cfaed84454c7",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB is the top-ranked database-backed match with the highest confidence (1.0) and provides both UniProt and PathBank IDs, … (+59 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Outer Membrane",
+                "score": 28.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:feb84b196414c40f",
+                  "preview": "location_frequency=28"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Outer Membrane",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "Outer Membrane",
+            "chosen_state": "AutoState_escherichia_coliouter_membrane"
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "entity_type": "protein",
+            "name": "Isochorismatase (EntB)",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "Isochorismatase (EntB)",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ede20b0e42c0ebff",
+                  "preview": "{\"uniprot\": \"P0DPC1\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 626,
+                  "hash": "sha256:6ca0f375aea2c4e7",
+                  "preview": "[\"(protein_name:\\\"Isochorismatase (EntB)\\\" OR gene:\\\"Isochorismatase (EntB)\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"Isochorismatase\\\" OR gene:\\\"Isochorismatase\\\") AND organism_nam… (+426 chars elided)",
+                  "items": 8
+                },
+                "candidates": {
+                  "chars": 1131,
+                  "hash": "sha256:2e0fbb5e286dea9c",
+                  "preview": "[{\"accession\": \"P0DPC1\", \"protein_name\": \"Phenazine biosynthesis protein PhzD2\", \"organism\": \"Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 … (+931 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 533,
+                  "hash": "sha256:22558310aa63f783",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P0ADI4\", \"pathbank_protein_id\": \"6224\"}, \"pathbank_protein_id\": 6224, \"confidence\": 0.77, \"chosen_rule\": \"db_t… (+333 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 3853,
+                  "hash": "sha256:15f2b4c73e73ee0b",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"Isochorismatase (EntB)\\\" OR gene:\\\"Isochorismatase (EntB)\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"I… (+3653 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 0.77,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:ae186bf28f899551",
+                  "preview": "{\"uniprot\": \"P0ADI4\", \"pathbank_protein_id\": \"6224\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ede20b0e42c0ebff",
+                  "preview": "{\"uniprot\": \"P0DPC1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:8d30b11ebc5d74af",
+                  "preview": "{\"uniprot\": \"P0DPB9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:539d3d194f722053",
+                  "preview": "{\"uniprot\": \"P45743\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:4faadc7f51c9b742",
+                  "preview": "{\"uniprot\": \"A0A381J4G1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cbe0453a2ad4557d",
+                  "preview": "{\"uniprot\": \"K0B2T5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ee4716cdca639fce",
+                  "preview": "{\"uniprot\": \"A0ABP1WQ64\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.4845,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d3503f7674e9caca",
+                  "preview": "{\"uniprot\": \"O28131\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.77,
+              "reason": "The PathBankDB candidate (index 0) provides a direct mapping for 'Isochorismatase (EntB)' with a high confidence score. While the UniProt API candidates show various organisms (Pseudomonas, Bacillus, Clostridium, etc.), the PathBankDB entry… (+89 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 384,
+                "hash": "sha256:79676234b22c0621",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.77, \"reason\": \"The PathBankDB candidate (index 0) provides a direct mapping for 'Isochorismatase (EntB)' with a high confidence score. While the UniProt API candi… (+184 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "isochorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 171,
+                  "hash": "sha256:b9855c4a3d39d029",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C18054\", \"name\": \"2-Amino-2-deoxyisochorismate\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "isochorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 781,
+                  "hash": "sha256:856c0c5f9e32c155",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}, \"pathbank_compound_id\": 407… (+581 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 348,
+                  "hash": "sha256:9bd7de4d44cf80d2",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00885\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": … (+148 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 94,
+                  "hash": "sha256:d53d7ac5b017f98f",
+                  "preview": "{\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc48c64e22695323",
+                  "preview": "{\"kegg\": \"C18054\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate provides the most comprehensive mapping (KEGG, ChEBI, PubChem) and is sourced from the internal database with maximum confidence. The background context confirms that C00885 is the correct KEGG ID for Isochorismate, wher… (+93 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 387,
+                "hash": "sha256:05240e75dcc95e9a",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate provides the most comprehensive mapping (KEGG, ChEBI, PubChem) and is sourced from the internal database with maximum confidence… (+187 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 583,
+                  "hash": "sha256:7f0136d67bda9ebf",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00230\", \"name\": \"3,4-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\"… (+383 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 647,
+                  "hash": "sha256:a16697c9b9ab744e",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}, \"pathbank_compound_id\":… (+447 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 808,
+                  "hash": "sha256:71e87596ec2b78b7",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.322, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00… (+608 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 98,
+                  "hash": "sha256:14f9c8cfe7f435ce",
+                  "preview": "{\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3a2cb4d502bc3734",
+                  "preview": "{\"kegg\": \"C00196\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5e4c17c01923df66",
+                  "preview": "{\"kegg\": \"C00230\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:47f492d610d578ea",
+                  "preview": "{\"kegg\": \"C04171\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2966d747fb28a1c6",
+                  "preview": "{\"kegg\": \"C04524\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b3fa608cf2977dd3",
+                  "preview": "{\"kegg\": \"C05200\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:65888b5a46e7c2e6",
+                  "preview": "{\"kegg\": \"C21853\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The PathBankDB candidate provides a high-confidence, multi-database mapping (KEGG, ChEBI, PubChem) that matches the specific stereochemistry and name of the input entity (2,3-dihydro-2,3-dihydroxybenzoate) via KEGG C04171, whereas the API c… (+54 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 348,
+                "hash": "sha256:5daecdab138f81bc",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The PathBankDB candidate provides a high-confidence, multi-database mapping (KEGG, ChEBI, PubChem) that matches the specific stereochemistry and nam… (+148 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          "…+2 more item(s) elided"
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

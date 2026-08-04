@@ -1,0 +1,25 @@
+RESULT: FAIL
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 19.1s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (583 B)
+  - extraction_boundary_report.json  (1661 B)
+  - stage0_attempts.json  (826 B)

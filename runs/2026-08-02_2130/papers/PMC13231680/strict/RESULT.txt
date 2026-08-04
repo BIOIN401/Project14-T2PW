@@ -1,0 +1,49 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : (unknown)
+slug       : PMC13231680
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 460.4s (7m40s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 2 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+6 QA issues need review.
+[post_normalization_contract_report] gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'LpxC' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 4
+  contract_errors = 1
+  entities = 9
+  gate_errors = 1
+  proteins = 2
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 0
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (937 B)
+  - contract_reports.json  (12432 B)
+  - final_mapped.json  (15243 B)
+  - gap_iteration_summary.json  (33551 B)
+  - gate_fail_report.json  (4180 B)
+  - merged_payload.json  (2627 B)
+  - rag_admission_report.json  (20748 B)
+  - stage1_payload.json  (1365 B)

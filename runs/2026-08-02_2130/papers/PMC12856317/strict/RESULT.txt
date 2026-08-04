@@ -1,0 +1,49 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 701.0s (11m40s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 2 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+3 QA issues need review.
+[post_normalization_contract_report] gate.protein_alas2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'ALAS2' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 6
+  contract_errors = 1
+  entities = 13
+  gate_errors = 1
+  proteins = 1
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (905 B)
+  - contract_reports.json  (12586 B)
+  - final_mapped.json  (23063 B)
+  - gap_iteration_summary.json  (29448 B)
+  - gate_fail_report.json  (4262 B)
+  - merged_payload.json  (5822 B)
+  - rag_admission_report.json  (168880 B)
+  - stage1_payload.json  (3821 B)

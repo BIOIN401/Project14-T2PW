@@ -1948,6 +1948,7 @@ def run_batch(
     timeout: float = DEFAULT_PAPER_TIMEOUT,
     deadline_hours: float = DEFAULT_DEADLINE_HOURS,
     fresh: bool = False,
+    stage_only: bool = False,
     script_path: Any = None,
     fetch_fn: Optional[Callable[..., Tuple[List[BatchPaper], List[Dict[str, Any]]]]] = None,
     child_fn: Optional[Callable[[Sequence[str], float], ChildResult]] = None,
@@ -1973,6 +1974,7 @@ def run_batch(
             timeout=timeout,
             deadline_hours=deadline_hours,
             fresh=fresh,
+            stage_only=stage_only,
             script_path=script_path,
             fetch_fn=fetch_fn,
             child_fn=child_fn,
@@ -1997,6 +1999,7 @@ def _run_batch(
     timeout: float = DEFAULT_PAPER_TIMEOUT,
     deadline_hours: float = DEFAULT_DEADLINE_HOURS,
     fresh: bool = False,
+    stage_only: bool = False,
     script_path: Any = None,
     fetch_fn: Optional[Callable[..., Tuple[List[BatchPaper], List[Dict[str, Any]]]]] = None,
     child_fn: Optional[Callable[[Sequence[str], float], ChildResult]] = None,
@@ -2068,6 +2071,37 @@ def _run_batch(
     refresh_reports(run_dir, started_at=started_at)
 
     pending = pending_pairs(run_dir, plan)
+
+    # STAGE ONLY -- return before the loop exists, not before it decides.
+    #
+    # This replaces the "use a tiny --deadline" trick, which is not a staging
+    # mechanism at all: `_run_batch` compares `spent >= deadline_seconds` INSIDE
+    # the loop, after acquisition, so whether a leg starts depends on how long the
+    # fetch happened to take. With a warm paper cache the fetch is instant, the
+    # budget is not yet exhausted, and the first child is spawned -- which is
+    # exactly what happened on 2026-08-01 with `--deadline 0.0003`. A zero or
+    # negative deadline is worse: `deadline_seconds > 0` is then false and the
+    # whole batch runs.
+    #
+    # Returning here makes "zero legs" a property of control flow rather than of
+    # timing: no child command is built, no `launch` is bound, and no manifest row
+    # or leg directory can be created, no matter how fast the cache is.
+    if stage_only:
+        log(
+            f"STAGE ONLY: {len(pending)} paper+mode pair(s) planned and NOT started. "
+            "Acquisition, plan.json, skipped.json and the summary are written; no "
+            "Streamlit/LLM leg was executed."
+        )
+        log(f"run directory : {run_dir}")
+        log("verify it     : python scripts/bench_acceptance.py --verify-plan " + str(run_dir))
+        log("then run it   : rerun the same command WITHOUT --stage-only")
+        refresh_reports(
+            run_dir,
+            started_at=started_at,
+            finished_at=datetime.now().isoformat(timespec="seconds"),
+        )
+        return 0
+
     if not pending:
         log("nothing left to do in this run directory")
     else:

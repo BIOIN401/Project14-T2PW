@@ -1,0 +1,2119 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 6,
+        "organisms_added": 1,
+        "locations_added": 10,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 12,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:sfxn4",
+            "entity_type": "protein",
+            "name": "SFXN4",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:sfxn1",
+            "entity_type": "protein",
+            "name": "SFXN1",
+            "path": "/entities/proteins/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:serine hydroxymethyltransferase",
+            "entity_type": "protein",
+            "name": "serine hydroxymethyltransferase",
+            "path": "/entities/proteins/4",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:serine",
+            "entity_type": "compound",
+            "name": "serine",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:heme",
+            "entity_type": "compound",
+            "name": "heme",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:iron",
+            "entity_type": "compound",
+            "name": "iron",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:510methylenethf",
+            "entity_type": "compound",
+            "name": "5,10-methylene-THF",
+            "path": "/entities/compounds/4",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:formate",
+            "entity_type": "compound",
+            "name": "formate",
+            "path": "/entities/compounds/5",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:thf",
+            "entity_type": "compound",
+            "name": "THF",
+            "path": "/entities/compounds/6",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:bf1d542273cd36b0",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:sfxn4\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": false, … (+178 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:sfxn4",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:alas2",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:ferrochelatase",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:sfxn1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:serine hydroxymethyltransferase",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:serine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:heme",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:iron",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:510methylenethf",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:formate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:thf",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:sfxn4",
+            "entity_type": "protein",
+            "name": "SFXN4",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "SFXN4",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:17a8fa7c30d18dff",
+                  "preview": "{\"uniprot\": \"Q6P4A7\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:fb30c747350b513f",
+                  "preview": "[\"(protein_name:\\\"SFXN4\\\" OR gene:\\\"SFXN4\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"SFXN4\\\" OR gene:\\\"SFXN4\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 725,
+                  "hash": "sha256:f6df98268c962665",
+                  "preview": "[{\"accession\": \"Q6P4A7\", \"protein_name\": \"Sideroflexin-4\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"B1AMV7\", \"protein_name\": \"Sideroflexin 4\", \"organism\": \"Homo sapi… (+525 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 368,
+                  "hash": "sha256:1ba0e67965b1843a",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q6P4A7\", \"pathbank_protein_id\": \"3910\"}, \"pathbank_protein_id\": 3910, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+168 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2229,
+                  "hash": "sha256:fccc055208420ffd",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"SFXN4\\\" OR gene:\\\"SFXN4\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"SFXN4\\\" OR gene:\\\"SFXN4\\\")\", \"mapped_ids\": {\"uniprot\": \"Q6P4A7\"}, \"confid… (+2029 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:68b0bcc8bd3f4f47",
+                  "preview": "{\"uniprot\": \"Q6P4A7\", \"pathbank_protein_id\": \"3910\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:17a8fa7c30d18dff",
+                  "preview": "{\"uniprot\": \"Q6P4A7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ab3f59473331ee05",
+                  "preview": "{\"uniprot\": \"B1AMV7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b5f2e493b3c5f002",
+                  "preview": "{\"uniprot\": \"A0ACI8UX25\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3d4c8c96b8195dbf",
+                  "preview": "{\"uniprot\": \"B1AMV8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.73,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:58a5e2347cfef7f2",
+                  "preview": "{\"uniprot\": \"Q925N1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.73,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:82b7d62db71b695f",
+                  "preview": "{\"uniprot\": \"A8E7G5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.6935,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f36c4af404b3790c",
+                  "preview": "{\"uniprot\": \"Q3T0M2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB (index 0) and the top UniProt candidate (index 1) both map to the correct protein (SFXN4, UniProt Q6P4A7) for Homo sapiens. Index 0 is preferred as it is a database-backed candidate with high confidence and pro… (+37 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 331,
+                "hash": "sha256:dacb1e19c567a9a3",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB (index 0) and the top UniProt candidate (index 1) both map to the correct protein (SFXN4, UniProt Q6P4A7) for Homo sap… (+131 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ALAS2",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:8455119a0d7d4e40",
+                  "preview": "[\"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 892,
+                  "hash": "sha256:d8cb37da9ad97bf9",
+                  "preview": "[{\"accession\": \"P22557\", \"protein_name\": \"5-aminolevulinate synthase, erythroid-specific, mitochondrial\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A2R8Y6N3\", \"prot… (+692 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 713,
+                  "hash": "sha256:8658612b470d3681",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}, \"pathbank_protein_id\": 17, \"confidence\": 1.0, \"chosen_rule\": \"db_top_ca… (+513 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2479,
+                  "hash": "sha256:f03b84eea86466f9",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\", \"mapped_ids\": {\"uniprot\": \"P22557\"}, \"confid… (+2279 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 50,
+                  "hash": "sha256:89916c5139c77e55",
+                  "preview": "{\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7367ba1093db17ce",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6N3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:813381505f4763eb",
+                  "preview": "{\"uniprot\": \"A0A2R8Y836\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:fbc1396814874879",
+                  "preview": "{\"uniprot\": \"A0ACI8Q6V7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2743677a6adf1f3d",
+                  "preview": "{\"uniprot\": \"Q6QNT2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:df9d9a75b06c506e",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6R4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:d644e5cd57431acf",
+                  "preview": "{\"uniprot\": \"A0A2R8Y782\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate (PathBankDB) provides the highest quality mapping, including both UniProt (P22557) and a specific PathBank protein ID. P22557 is the reviewed UniProt entry for ALAS2 in Homo sapiens, matching the background context perfe… (+5 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 299,
+                "hash": "sha256:d17a3eea21bae5c4",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate (PathBankDB) provides the highest quality mapping, including both UniProt (P22557) and a specific PathBank protein ID. P22557 is… (+99 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Mitochondrial Matrix",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Mitochondrial Matrix",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "Mitochondrial Matrix",
+            "chosen_state": "mitochondrial matrix state"
+          },
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ferrochelatase",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:4f18135b1b0a0281",
+                  "preview": "[\"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 724,
+                  "hash": "sha256:22430301f881a033",
+                  "preview": "[{\"accession\": \"B4DSA4\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sapiens\", \"reviewed\": false, \"score\": 0.8}, {\"accession\": \"Q5TZY0\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sap… (+524 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 774,
+                  "hash": "sha256:3d29cec1f7786ff2",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}, \"pathbank_protein_id\": 4374, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+574 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2347,
+                  "hash": "sha256:8fea90df9901c291",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ferrochelatase\\\" OR g… (+2147 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:00053854ffd55f95",
+                  "preview": "{\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef106ac2c4cd6525",
+                  "preview": "{\"uniprot\": \"Q5TZY0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ba89236fd8f333b4",
+                  "preview": "{\"uniprot\": \"A0A499FJN5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f6cd4380e019bb52",
+                  "preview": "{\"uniprot\": \"K7EJX5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:31a8090eb30dbd07",
+                  "preview": "{\"uniprot\": \"Q53FU1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2391adfe7b2d5748",
+                  "preview": "{\"uniprot\": \"Q7KZA3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef2a6430a154da7a",
+                  "preview": "{\"uniprot\": \"K7EJM8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is from the internal database (PathBankDB) with the highest confidence (1.0) and provides both a UniProt ID (Q53FU1) and a specific PathBank protein ID, which is the most robust mapping available.",
+              "source": "llm",
+              "raw": {
+                "chars": 270,
+                "hash": "sha256:18a5602674297ec8",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is from the internal database (PathBankDB) with the highest confidence (1.0) and provides both a UniProt ID (Q53FU1) and a speci… (+70 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 69.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:2637d5ccd04f6316",
+                  "preview": "location_frequency=69"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Inner Membrane",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Periplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrion",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.69,
+              "reason": "The candidate 'Cytoplasm' has the highest frequency score (69) among the provided options, although biologically ferrochelatase is primarily known to be located in the mitochondria; however, based strictly on the provided candidate list and… (+62 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 359,
+                "hash": "sha256:4dff31e496df0d50",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.69, \"reason\": \"The candidate 'Cytoplasm' has the highest frequency score (69) among the provided options, although biologically ferrochelatase is primarily know… (+159 chars elided)"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:sfxn1",
+            "entity_type": "protein",
+            "name": "SFXN1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "SFXN1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:548f1210174f8589",
+                  "preview": "{\"uniprot\": \"Q9H9B4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:c5622b138efa3b11",
+                  "preview": "[\"(protein_name:\\\"SFXN1\\\" OR gene:\\\"SFXN1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"SFXN1\\\" OR gene:\\\"SFXN1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 728,
+                  "hash": "sha256:13da1cb37fdeb832",
+                  "preview": "[{\"accession\": \"Q9H9B4\", \"protein_name\": \"Sideroflexin-1\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"D6RAE9\", \"protein_name\": \"Sideroflexin-1\", \"organism\": \"Homo sapi… (+528 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 368,
+                  "hash": "sha256:a076fe30e367f0d9",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q9H9B4\", \"pathbank_protein_id\": \"3907\"}, \"pathbank_protein_id\": 3907, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+168 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2222,
+                  "hash": "sha256:b0d2e63092fd5506",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"SFXN1\\\" OR gene:\\\"SFXN1\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"SFXN1\\\" OR gene:\\\"SFXN1\\\")\", \"mapped_ids\": {\"uniprot\": \"Q9H9B4\"}, \"confid… (+2022 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:1dce42f0a3fc7689",
+                  "preview": "{\"uniprot\": \"Q9H9B4\", \"pathbank_protein_id\": \"3907\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:548f1210174f8589",
+                  "preview": "{\"uniprot\": \"Q9H9B4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cab853193dcd2610",
+                  "preview": "{\"uniprot\": \"D6RAE9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:aa388bfa98f6529e",
+                  "preview": "{\"uniprot\": \"D6RDG7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f8fe9c1761542f97",
+                  "preview": "{\"uniprot\": \"D6RFI0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e25822f4eca01c77",
+                  "preview": "{\"uniprot\": \"S4R2X2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:66d8e26aa3687815",
+                  "preview": "{\"uniprot\": \"A0ACI8UI70\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:8a6a78cfe2201ef0",
+                  "preview": "{\"uniprot\": \"A0ACI8RIN6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB provides a high-confidence mapping to UniProt Q9H9B4, which is the reviewed entry for Sideroflexin-1 in Homo sapiens, matching the entity name and type perfectly.",
+              "source": "llm",
+              "raw": {
+                "chars": 246,
+                "hash": "sha256:d72b86e40bc122dd",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB provides a high-confidence mapping to UniProt Q9H9B4, which is the reviewed entry for Sideroflexin-1 in Homo sapiens, … (+46 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:serine hydroxymethyltransferase",
+            "entity_type": "protein",
+            "name": "serine hydroxymethyltransferase",
+            "status": "ok",
+            "organism_added": "Homo sapiens",
+            "background": {
+              "protein_api": {
+                "query": "serine hydroxymethyltransferase",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:737dd56ff5c9d396",
+                  "preview": "{\"uniprot\": \"Q53ET7\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 231,
+                  "hash": "sha256:28554bd7f25bcbb2",
+                  "preview": "[\"(protein_name:\\\"serine hydroxymethyltransferase\\\" OR gene:\\\"serine hydroxymethyltransferase\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"serine hydroxymethyltransferase\\\" OR gene:\\\"serin… (+31 chars elided)",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 822,
+                  "hash": "sha256:8cde0a55c48c1008",
+                  "preview": "[{\"accession\": \"Q53ET7\", \"protein_name\": \"Serine hydroxymethyltransferase\", \"organism\": \"Homo sapiens\", \"reviewed\": false, \"score\": 0.8}, {\"accession\": \"V9HW06\", \"protein_name\": \"Serine hydroxymethylt… (+622 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1302,
+                  "hash": "sha256:18cd2a7a4f07031c",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"A8MYA6\", \"pathbank_protein_id\": \"4193\"}, \"pathbank_protein_id\": 4193, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+1102 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2751,
+                  "hash": "sha256:9dcfde2942c13db5",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"serine hydroxymethyltransferase\\\" OR gene:\\\"serine hydroxymethyltransferase\\\") AND organism_name:\\\"Homo sapiens\\\" | (pr… (+2551 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:25fcbdcff0fdc678",
+                  "preview": "{\"uniprot\": \"A8MYA6\", \"pathbank_protein_id\": \"4193\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:737dd56ff5c9d396",
+                  "preview": "{\"uniprot\": \"Q53ET7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:dd922966da916721",
+                  "preview": "{\"uniprot\": \"V9HW06\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:701db35bae04c6ee",
+                  "preview": "{\"uniprot\": \"B4DW25\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:25ab44bbc1ef9d98",
+                  "preview": "{\"uniprot\": \"B4E1G2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3a66ce0fc4d046b7",
+                  "preview": "{\"uniprot\": \"Q5BJF5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:977d393f87675479",
+                  "preview": "{\"uniprot\": \"B4DP88\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:89e83c61169fc9ab",
+                  "preview": "{\"uniprot\": \"B4DWA7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is from the internal database (PathBankDB) with the highest confidence (1.0) and provides both a UniProt ID and a specific PathBank protein ID, making it the most robust mapping for this entity.",
+              "source": "llm",
+              "raw": {
+                "chars": 268,
+                "hash": "sha256:b193bc9f3d2c0881",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is from the internal database (PathBankDB) with the highest confidence (1.0) and provides both a UniProt ID and a specific PathB… (+68 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 92.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:c4d61bf9785026fc",
+                  "preview": "location_frequency=92"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytoplasm",
+                "score": 89.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:899ffbb2398deaf4",
+                  "preview": "location_frequency=89"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Inner Membrane",
+                "score": 7.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:b0e28f8e61d82589",
+                  "preview": "location_frequency=7"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrial Matrix",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytosol",
+              "confidence": 0.95,
+              "reason": "Serine hydroxymethyltransferase is a well-known cytosolic enzyme involved in one-carbon metabolism, and 'Cytosol' has the highest score and frequency in the provided candidate list.",
+              "source": "llm",
+              "raw": {
+                "chars": 236,
+                "hash": "sha256:717bdeb297f41e01",
+                "preview": "{\"choice\": \"Cytosol\", \"confidence\": 0.95, \"reason\": \"Serine hydroxymethyltransferase is a well-known cytosolic enzyme involved in one-carbon metabolism, and 'Cytosol' has the highest score and frequen… (+36 chars elided)"
+              }
+            },
+            "chosen_location": "Cytosol",
+            "chosen_state": "cytosolic state"
+          },
+          {
+            "issue_key": "compound:serine",
+            "entity_type": "compound",
+            "name": "serine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "serine",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 486,
+                  "hash": "sha256:dd0157d4dcaf6d49",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00065\", \"name\": \"L-Serine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00716\", \"name\": \"Serine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00839\", \"name\": \"Tropomyos… (+286 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "serine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 469,
+                  "hash": "sha256:2dbbd71dcca53ffd",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+269 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:62f9746cfb8cfcbe",
+                  "preview": "{\"kegg\": \"C22159\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "The first candidate (index 0) provides an exact match for 'glycine' with KEGG ID C00037 and the highest confidence score (0.95). Other candidates represent different chemical entities (Betaine, 2,5-Dioxopiperazine, etc.).",
+              "source": "llm",
+              "raw": {
+                "chars": 276,
+                "hash": "sha256:fd162db24877ac8d",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.95, \"reason\": \"The first candidate (index 0) provides an exact match for 'glycine' with KEGG ID C00037 and the highest confidence score (0.95). Other candidates r… (+76 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:heme",
+            "entity_type": "compound",
+            "name": "heme",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "heme",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:f041ae0f0acbbad7",
+                  "preview": "{\"kegg\": \"C00032\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 425,
+                  "hash": "sha256:24d358dec6a99184",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00032\", \"name\": \"Heme\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C15670\", \"name\": \"Heme A\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C15672\", \"name\": \"Heme O\", \"sco… (+225 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "heme",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:iron",
+            "entity_type": "compound",
+            "name": "iron",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "iron",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7e9fdb8b70a3152d",
+                  "preview": "{\"kegg\": \"C00023\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 460,
+                  "hash": "sha256:6b40543a2b4def1e",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00023\", \"name\": \"Iron\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C06704\", \"name\": \"Iron chelate\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C13774\", \"name\": \"Iron de… (+260 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "iron",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:510methylenethf",
+            "entity_type": "compound",
+            "name": "5,10-methylene-THF",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "5,10-methylene-THF",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 1,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 96,
+                  "hash": "sha256:52c1396f0571c130",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00143\", \"name\": \"5,10-Methylenetetrahydrofolate\", \"score\": 0.322}]",
+                  "items": 1
+                }
+              },
+              "hmdb": {
+                "query": "5,10-methylene-THF",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:formate",
+            "entity_type": "compound",
+            "name": "formate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "formate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0cda6bd35c6a5de4",
+                  "preview": "{\"kegg\": \"C00058\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 474,
+                  "hash": "sha256:58b7fcbcadf1397d",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00058\", \"name\": \"Formate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C12293\", \"name\": \"Isoamyl formate\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C12294\", \"name\": \"G… (+274 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "formate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:thf",
+            "entity_type": "compound",
+            "name": "THF",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "THF",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9bf45a7c425b37ba",
+                  "preview": "{\"kegg\": \"C00101\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 557,
+                  "hash": "sha256:25efad2133018427",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00101\", \"name\": \"Tetrahydrofolate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00143\", \"name\": \"5,10-Methylenetetrahydrofolate\", \"score\": 0.35}, {\"database\": \"kegg\", \"i… (+357 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "THF",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

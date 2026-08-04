@@ -1,0 +1,220 @@
+{
+  "run_id": "sha256:cb9f9efd7a05e737",
+  "pass_count": 5,
+  "passes": [
+    {
+      "label": "stage_one_chunk_001",
+      "payload_hash": "sha256:0a32b38ba11424fd",
+      "raw_entity_counts": {
+        "cell_types": 0,
+        "species": 7,
+        "tissues": 0,
+        "subcellular_locations": 3,
+        "compounds": 11,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 10,
+        "protein_complexes": 0,
+        "total": 31
+      },
+      "raw_process_counts": {
+        "reactions": 9,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 1,
+        "total": 11
+      },
+      "cleaned_entity_counts": {
+        "species": 7,
+        "subcellular_locations": 3,
+        "compounds": 11,
+        "proteins": 10,
+        "total": 31
+      },
+      "cleaned_process_counts": {
+        "reactions": 9,
+        "transports": 1,
+        "interactions": 1,
+        "total": 11
+      },
+      "all_processes_discarded": false,
+      "discarded_total": 0,
+      "discarded_by_reason": {},
+      "discarded_sample": {},
+      "sample_cap_per_reason": 8
+    },
+    {
+      "label": "stage_one_chunk_002",
+      "payload_hash": "sha256:dbef58f967446de7",
+      "raw_entity_counts": {
+        "cell_types": 0,
+        "species": 1,
+        "tissues": 0,
+        "subcellular_locations": 3,
+        "compounds": 10,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 10,
+        "protein_complexes": 0,
+        "total": 24
+      },
+      "raw_process_counts": {
+        "reactions": 2,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 0,
+        "total": 3
+      },
+      "cleaned_entity_counts": {
+        "species": 1,
+        "subcellular_locations": 3,
+        "compounds": 10,
+        "proteins": 10,
+        "total": 24
+      },
+      "cleaned_process_counts": {
+        "reactions": 2,
+        "transports": 1,
+        "total": 3
+      },
+      "all_processes_discarded": false,
+      "discarded_total": 0,
+      "discarded_by_reason": {},
+      "discarded_sample": {},
+      "sample_cap_per_reason": 8
+    },
+    {
+      "label": "stage_one_chunk_001_relean",
+      "payload_hash": "sha256:cfa485bf4ef1f36d",
+      "raw_entity_counts": {
+        "cell_types": 0,
+        "species": 7,
+        "tissues": 0,
+        "subcellular_locations": 3,
+        "compounds": 11,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 10,
+        "protein_complexes": 0,
+        "total": 31
+      },
+      "raw_process_counts": {
+        "reactions": 9,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 1,
+        "total": 11
+      },
+      "cleaned_entity_counts": {
+        "species": 7,
+        "subcellular_locations": 3,
+        "compounds": 11,
+        "proteins": 10,
+        "total": 31
+      },
+      "cleaned_process_counts": {
+        "reactions": 9,
+        "transports": 1,
+        "interactions": 1,
+        "total": 11
+      },
+      "all_processes_discarded": false,
+      "discarded_total": 0,
+      "discarded_by_reason": {},
+      "discarded_sample": {},
+      "sample_cap_per_reason": 8
+    },
+    {
+      "label": "stage_one_chunk_002_relean",
+      "payload_hash": "sha256:135d5d44d4931b59",
+      "raw_entity_counts": {
+        "cell_types": 0,
+        "species": 1,
+        "tissues": 0,
+        "subcellular_locations": 3,
+        "compounds": 10,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 10,
+        "protein_complexes": 0,
+        "total": 24
+      },
+      "raw_process_counts": {
+        "reactions": 2,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 0,
+        "total": 3
+      },
+      "cleaned_entity_counts": {
+        "species": 1,
+        "subcellular_locations": 3,
+        "compounds": 10,
+        "proteins": 10,
+        "total": 24
+      },
+      "cleaned_process_counts": {
+        "reactions": 2,
+        "transports": 1,
+        "total": 3
+      },
+      "all_processes_discarded": false,
+      "discarded_total": 0,
+      "discarded_by_reason": {},
+      "discarded_sample": {},
+      "sample_cap_per_reason": 8
+    },
+    {
+      "label": "stage_one_merged",
+      "payload_hash": "sha256:f045ec4a2f32d7e2",
+      "raw_entity_counts": {
+        "species": 7,
+        "subcellular_locations": 6,
+        "compounds": 11,
+        "proteins": 10,
+        "total": 34
+      },
+      "raw_process_counts": {
+        "reactions": 11,
+        "transports": 2,
+        "interactions": 1,
+        "total": 14
+      },
+      "cleaned_entity_counts": {
+        "species": 7,
+        "subcellular_locations": 3,
+        "compounds": 11,
+        "proteins": 10,
+        "total": 31
+      },
+      "cleaned_process_counts": {
+        "reactions": 11,
+        "transports": 2,
+        "interactions": 1,
+        "total": 14
+      },
+      "all_processes_discarded": false,
+      "discarded_total": 3,
+      "discarded_by_reason": {
+        "entity_duplicate_name": 3
+      },
+      "discarded_sample": {
+        "entity_duplicate_name": [
+          {
+            "pointer": "/entities/subcellular_locations/3",
+            "name": "cytoplasm"
+          },
+          {
+            "pointer": "/entities/subcellular_locations/4",
+            "name": "cell membrane"
+          },
+          {
+            "pointer": "/entities/subcellular_locations/5",
+            "name": "extracellular space"
+          }
+        ]
+      },
+      "sample_cap_per_reason": 8
+    }
+  ]
+}

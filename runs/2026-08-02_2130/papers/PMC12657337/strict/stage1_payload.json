@@ -1,0 +1,312 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      },
+      {
+        "name": "Bacillus subtilis"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "canonical_id": "cytosol",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "name": "cell membrane",
+        "canonical_id": "plasma_membrane",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "menaquinone-7 (MK-7)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isopentenyl pyrophosphate (IPP)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "farnesyl pyrophosphate (FPP)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heptaprenyl pyrophosphate (HepPP)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoate (DHNA)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "demethylmenaquinone-7 (DMK-7)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acetyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "mevalonate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acetate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "EcMenA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "BsHepPPS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "BsUbiE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ECidi",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acs",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EfmvaE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EfmvaS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MmmvK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ScpmK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ScmvD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cytoplasm state",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Expected compartments: cytoplasm, cell membrane"
+    },
+    {
+      "name": "cell membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "cell membrane",
+      "evidence": "Expected compartments: cytoplasm, cell membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "menaquinone-7 (MK-7)",
+        "biological_state": "cell membrane state",
+        "evidence": "membrane-accumulating nature of MK-7"
+      },
+      {
+        "compound": "farnesyl pyrophosphate (FPP)",
+        "biological_state": "cytoplasm state",
+        "evidence": "the MVA pathway to provide isopentenyl pyrophosphate (IPP)"
+      },
+      {
+        "compound": "heptaprenyl pyrophosphate (HepPP)",
+        "biological_state": "cytoplasm state",
+        "evidence": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)"
+      },
+      {
+        "compound": "1,4-dihydroxy-2-naphthoate (DHNA)",
+        "biological_state": "cytoplasm state",
+        "evidence": "the DHNA pathway to provide DHNA"
+      },
+      {
+        "compound": "demethylmenaquinone-7 (DMK-7)",
+        "biological_state": "cell membrane state",
+        "evidence": "MenA converts HepPP to DMK-7"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "EcMenA",
+        "biological_state": "cell membrane state",
+        "evidence": "membrane-accumulating nature of MK-7"
+      },
+      {
+        "protein": "BsHepPPS",
+        "biological_state": "cytoplasm state",
+        "evidence": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)"
+      },
+      {
+        "protein": "BsUbiE",
+        "biological_state": "cell membrane state",
+        "evidence": "UbiE methylates DMK-7 to yield MK-7"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "farnesyl pyrophosphate (FPP)"
+        ],
+        "outputs": [
+          "heptaprenyl pyrophosphate (HepPP)"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "BsHepPPS reaction",
+        "enzymes": [
+          {
+            "protein": "BsHepPPS",
+            "evidence": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "heptaprenyl pyrophosphate (HepPP)",
+          "1,4-dihydroxy-2-naphthoate (DHNA)"
+        ],
+        "outputs": [
+          "demethylmenaquinone-7 (DMK-7)"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "EcMenA reaction",
+        "enzymes": [
+          {
+            "protein": "EcMenA",
+            "evidence": "EcMenA encodes a prenyltransferase that catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cell membrane state",
+        "evidence": "EcMenA encodes a prenyltransferase that catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "demethylmenaquinone-7 (DMK-7)"
+        ],
+        "outputs": [
+          "menaquinone-7 (MK-7)"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "BsUbiE reaction",
+        "enzymes": [
+          {
+            "protein": "BsUbiE",
+            "evidence": "BsUbiE encodes a methyltransferase that catalyzes the methylation of demethylmenaquinone to produce MK-7",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cell membrane state",
+        "evidence": "BsUbiE encodes a methyltransferase that catalyzes the methylation of demethylmenaquinone to produce MK-7",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isopentenyl pyrophosphate (IPP)"
+        ],
+        "outputs": [
+          "farnesyl pyrophosphate (FPP)"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "ECidi reaction",
+        "enzymes": [
+          {
+            "protein": "ECidi",
+            "evidence": "The enzyme Idi, which converts IPP to farnesyl pyrophosphate (FPP)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "The enzyme Idi, which converts IPP to farnesyl pyrophosphate (FPP)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "acetate"
+        ],
+        "outputs": [
+          "acetyl-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "acs reaction",
+        "enzymes": [
+          {
+            "protein": "acs",
+            "evidence": "overexpressed acetyl-CoA synthetase (acs), an enzyme that converts acetate into acetyl-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "overexpressed acetyl-CoA synthetase (acs), an enzyme that converts acetate into acetyl-CoA",
+        "scope_membership": "auxiliary"
+      }
+    ]
+  }
+}

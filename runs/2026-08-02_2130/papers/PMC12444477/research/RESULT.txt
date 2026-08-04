@@ -1,0 +1,63 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 2681.4s (44m41s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'LpxA' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'LpxC' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'LpxD' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'LpxH' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'LpxB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxk_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'LpxK' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_waaa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'WaaA' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'LpxL' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'LpxM' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'FtsH' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): and 6 more gate error(s); all of them are in review_flags.json and the gate report files
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 1
+  compounds = 15
+  entities = 35
+  gate_errors = 26
+  gate_errors_not_blocking = 26
+  gate_review_flags = 26
+  normalization_actions = 3
+  proteins = 13
+  reactions = 8
+  review_flags = 26
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 4, 'b': 0, 'c': 35, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1390 B)
+  - contract_reports.json  (60178 B)
+  - final_mapped.json  (60907 B)
+  - final_stage3_gate_report.json  (24269 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (24567 B)
+  - merged_payload.json  (22663 B)
+  - rag_admission_report.json  (366045 B)
+  - research_pathway_citations.json  (146385 B)
+  - research_pathway_elements.csv  (11641 B)
+  - research_pathway_report.txt  (44583 B)
+  - review_flags.json  (56615 B)
+  - stage1_payload.json  (18934 B)

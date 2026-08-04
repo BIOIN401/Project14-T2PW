@@ -256,8 +256,27 @@ def parse_topics(text: str) -> List[TopicSpec]:
 
         lipid A biosynthesis | Escherichia coli | 3   # topic|organism|count
         menaquinone biosynthesis | Lactococcus lactis  # topic|organism
-        PMC4412817                                     # pinned paper id
+        PMC4412817 | lipid A biosynthesis | Escherichia coli  # PINNED WITH SCOPE
+        PMC4412817                                     # pinned paper id, no scope
         caffeine degradation                           # bare topic
+
+    **Pinned-with-scope** is the shape an acceptance run must use. A bare pinned
+    id produces ``TopicSpec(pinned_id=..., topic="", organism="")``, and
+    :func:`_as_batch_paper` copies those two empty strings straight into
+    ``BatchPaper.requested_pathway`` / ``requested_organism``. Every downstream
+    reader of the request then sees nothing: ``driver._extraction_focus`` returns
+    ``""`` so extraction is told no scope at all, ``driver._reconcile_stage0_scope``
+    has no request to contradict, and the screening record is written against an
+    empty pathway (which is why ``runs/2026-08-01_1724`` scored every pinned paper
+    ``off_topic`` with ``no_mechanistic_pathway_terms``). The paper is still
+    *fetched* correctly -- the defect is invisible in the paper list and fatal in
+    the plan.
+
+    Disambiguation is by the FIRST field only: if it looks like a paper id the
+    line is pinned and the remaining fields are ``pathway | organism``; otherwise
+    the line is a search and they are ``organism | count``. A pathway name can
+    never collide with :func:`_looks_like_paper_id`, which requires ``PMC<digits>``,
+    6+ bare digits, or a leading ``10.`` DOI prefix.
 
     Malformed lines are skipped rather than raised on: the topics file is
     hand-edited input to an unattended job.
@@ -268,12 +287,18 @@ def parse_topics(text: str) -> List[TopicSpec]:
         if not line:
             continue
         fields = [part.strip() for part in line.split("|")]
+        if _looks_like_paper_id(fields[0]):
+            specs.append(
+                TopicSpec(
+                    pinned_id=fields[0],
+                    topic=fields[1] if len(fields) > 1 else "",
+                    organism=fields[2] if len(fields) > 2 else "",
+                    count=1,
+                )
+            )
+            continue
         if len(fields) == 1:
-            token = fields[0]
-            if _looks_like_paper_id(token):
-                specs.append(TopicSpec(pinned_id=token))
-            else:
-                specs.append(TopicSpec(topic=token))
+            specs.append(TopicSpec(topic=fields[0]))
             continue
         topic = fields[0]
         if not topic:

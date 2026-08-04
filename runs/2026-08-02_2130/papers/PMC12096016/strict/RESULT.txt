@@ -1,0 +1,71 @@
+RESULT: FAIL
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1208.6s (20m08s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): and 2 more finding(s); all of them are in contract_reports.json
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 28 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_enta_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_tolc_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_tonb_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_enterobactin_synthase_is_missing_species_organism, gate.generated_protein_complex_enterobactin_synthase_complex_is_missi, gate.generated_protein_complex_enterobactin_synthase_complex_componen, gate.registry_validation_failed, gate.protein_enterobactin_synthase_is_missing_a_uniprot_or_drugbank_i
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: minimum_core:requested_core_coverage_below_minimum:0.438<0.500; degree_zero_export:3
+[post_normalization_contract_report] gate.protein_entb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'EntB' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_entc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EntC' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_enta_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'EntA' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ente_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EntE' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_entf_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'EntF' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_entd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'EntD' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_tolc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'TolC' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_tonb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'TonB' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_enterobactin_synthase_is_missing_species_organism @ /entities/proteins/9: Protein 'enterobactin synthase' is missing species/organism.
+[post_normalization_contract_report] gate.generated_protein_complex_enterobactin_synthase_complex_is_missi @ /entities/protein_complexes/0: Generated protein complex 'enterobactin synthase complex' is missing species/organism.
+[post_normalization_contract_report] gate.generated_protein_complex_enterobactin_synthase_complex_componen @ /entities/protein_complexes/0/components/0: Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.
+[post_normalization_contract_report] gate.registry_validation_failed @ /processes: Registry validation failed: Registry validation failed:
+/processes/interactions/4/entity_2 unknown entity: ent operon
+
+COUNTS
+----------------------------------------
+  compounds = 14
+  contract_errors = 13
+  entities = 28
+  gate_errors = 15
+  proteins = 7
+  reactions = 6
+  runtime_schema_findings = 12
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1404 B)
+  - contract_reports.json  (57940 B)
+  - final_mapped.json  (60790 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (21958 B)
+  - merged_payload.json  (18061 B)
+  - rag_admission_report.json  (375618 B)
+  - stage1_payload.json  (13229 B)

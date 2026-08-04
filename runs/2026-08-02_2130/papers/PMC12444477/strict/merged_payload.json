@@ -1,0 +1,818 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+      },
+      {
+        "name": "cytoplasmic leaflet of the IM",
+        "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM"
+      },
+      {
+        "name": "periplasmic leaflet of the IM",
+        "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "UDP-GlcNAc",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "β-hydroxyacyl-ACP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UMP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid IV_A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Kdo-lipid IV_A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Kdo-lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LPS",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-N-acetylglucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-N2,O3-bis [(R)-3-hydroxymyristoyl]-α-D-glucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-2,3-diacylglucosamine",
+        "provenance": "reconstructed_from_process_participant",
+        "resolution_status": "unresolved",
+        "reconstructed_from": {
+          "pointer": "/processes/reactions/3/inputs",
+          "role": "inputs"
+        }
+      },
+      {
+        "name": "lipid X",
+        "provenance": "reconstructed_from_process_participant",
+        "resolution_status": "unresolved",
+        "reconstructed_from": {
+          "pointer": "/processes/reactions/4/inputs",
+          "role": "inputs"
+        }
+      },
+      {
+        "name": "tetra-acylated disaccharide intermediate",
+        "provenance": "reconstructed_from_process_participant",
+        "resolution_status": "unresolved",
+        "reconstructed_from": {
+          "pointer": "/processes/reactions/5/inputs",
+          "role": "inputs"
+        }
+      },
+      {
+        "name": "Kdo-lipid A (intermediate)",
+        "provenance": "reconstructed_from_process_participant",
+        "resolution_status": "unresolved",
+        "reconstructed_from": {
+          "pointer": "/processes/reactions/8/inputs",
+          "role": "inputs"
+        }
+      },
+      {
+        "name": "core-lipid A",
+        "provenance": "reconstructed_from_process_participant",
+        "resolution_status": "unresolved",
+        "reconstructed_from": {
+          "pointer": "/processes/transports/0/cargo",
+          "role": "cargo"
+        }
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LpxA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "WaaA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxL",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "FtsH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LapB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "YejM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "MsbA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "LapB-FtsH complex",
+        "components": [
+          "LapB",
+          "FtsH"
+        ],
+        "evidence": "LpxC levels are modulated by proteolysis through the LapB-FtsH complex",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "LpxC levels are modulated by proteolysis through the LapB-FtsH complex"
+        ]
+      },
+      {
+        "name": "YciM/FtsH protease complex",
+        "components": [
+          "LapB",
+          "FtsH"
+        ],
+        "evidence": "The YciM/FtsH protease complex is mentioned in the text as a regulator of LpxC.",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "LpxC levels are modulated by proteolysis through the LapB-FtsH complex"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "E. coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+    },
+    {
+      "name": "E. coli inner membrane cytoplasmic leaflet",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasmic leaflet of the IM",
+      "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM"
+    },
+    {
+      "name": "E. coli inner membrane periplasmic leaflet",
+      "species": "Escherichia coli",
+      "subcellular_location": "periplasmic leaflet of the IM",
+      "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
+    },
+    {
+      "name": "cytoplasmic state",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "a cytoplasmic acyltransferase"
+    },
+    {
+      "name": "E. coli periplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "periplasm",
+      "evidence": "Once facing the periplasm, O-antigen can be ligated onto core-lipid A"
+    },
+    {
+      "name": "E. coli outer membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "The resulting core-lipid A must ultimately be transported to the OM."
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "UDP-GlcNAc",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+      },
+      {
+        "compound": "β-hydroxyacyl-ACP",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxC catalyzes the first irreversible and committed step"
+      },
+      {
+        "compound": "UMP",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "removal of UMP by LpxH"
+      },
+      {
+        "compound": "lipid IV_A",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "phosphorylated by LpxK to produce lipid IV_A"
+      },
+      {
+        "compound": "Kdo-lipid IV_A",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "WaaA adds a number of Kdo residues"
+      },
+      {
+        "compound": "Kdo-lipid A",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+      },
+      {
+        "compound": "LPS",
+        "biological_state": "E. coli inner membrane periplasmic leaflet",
+        "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
+      },
+      {
+        "compound": "Kdo-lipid A",
+        "biological_state": "E. coli periplasm",
+        "evidence": "Once facing the periplasm, O-antigen can be ligated onto core-lipid A"
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "Lipid A is an acylated glucosamine-based disaccharide that anchors LPS in the lipid bilayer."
+      },
+      {
+        "compound": "LPS",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "LPS-rich outer membrane"
+      },
+      {
+        "compound": "core-lipid A",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "The resulting core-lipid A must ultimately be transported to the OM."
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "LpxA",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "first enzyme in the Raetz pathway"
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "second enzyme in the pathway"
+      },
+      {
+        "protein": "LpxD",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "addition of the next acyl group by LpxD"
+      },
+      {
+        "protein": "LpxH",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "removal of UMP by LpxH"
+      },
+      {
+        "protein": "LpxB",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate"
+      },
+      {
+        "protein": "LpxK",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "phosphorylated by LpxK to produce lipid IV_A"
+      },
+      {
+        "protein": "WaaA",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "WaaA adds a number of Kdo residues"
+      },
+      {
+        "protein": "LpxL",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "sequentially acylated by LpxL and LpxM"
+      },
+      {
+        "protein": "LpxM",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "sequentially acylated by LpxL and LpxM"
+      },
+      {
+        "protein": "FtsH",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "FtsH is a hexameric, ATP-dependent, and membrane-embedded protease"
+      },
+      {
+        "protein": "LapB",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "LapB (lipopolysaccharide assembly protein B)"
+      },
+      {
+        "protein": "YejM",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "membrane protein YejM"
+      },
+      {
+        "protein": "MsbA",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "flippase MsbA"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "UDP-GlcNAc",
+          "β-hydroxyacyl-ACP"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "LpxA reaction",
+        "enzymes": [
+          {
+            "protein": "LpxA",
+            "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived β-hydroxyacyl-ACP molecules",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "LpxC reaction",
+        "enzymes": [
+          {
+            "protein": "LpxC",
+            "evidence": "LpxC catalyzes the first irreversible and committed step",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+        ],
+        "outputs": [
+          "UDP-2,3-diacylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "LpxD reaction",
+        "enzymes": [
+          {
+            "protein": "LpxD",
+            "evidence": "addition of the next acyl group by LpxD",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "addition of the next acyl group by LpxD",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "UDP-2,3-diacylglucosamine"
+        ],
+        "outputs": [
+          "lipid X",
+          "UMP"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "LpxH reaction",
+        "enzymes": [
+          {
+            "protein": "LpxH",
+            "evidence": "removal of UMP by LpxH",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "removal of UMP by LpxH",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "lipid X",
+          "UDP-2,3-diacylglucosamine"
+        ],
+        "outputs": [
+          "tetra-acylated disaccharide intermediate"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "LpxB reaction",
+        "enzymes": [
+          {
+            "protein": "LpxB",
+            "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "tetra-acylated disaccharide intermediate"
+        ],
+        "outputs": [
+          "lipid IV_A"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "LpxK reaction",
+        "enzymes": [
+          {
+            "protein": "LpxK",
+            "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "lipid IV_A"
+        ],
+        "outputs": [
+          "Kdo-lipid IV_A"
+        ],
+        "locked_reaction_id": "rxn_lock_011",
+        "name": "WaaA reaction",
+        "enzymes": [
+          {
+            "protein": "WaaA",
+            "evidence": "WaaA adds a number of Kdo residues",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "WaaA adds a number of Kdo residues to form the first sugar(s) of the core",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "Kdo-lipid IV_A"
+        ],
+        "outputs": [
+          "Kdo-lipid A (intermediate)"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "LpxL reaction",
+        "enzymes": [
+          {
+            "protein": "LpxL",
+            "evidence": "sequentially acylated by LpxL and LpxM",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "Kdo-lipid A (intermediate)"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "LpxM reaction",
+        "enzymes": [
+          {
+            "protein": "LpxM",
+            "evidence": "sequentially acylated by LpxL and LpxM",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "UDP-N-acetylglucosamine"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_010",
+        "name": "UDP-N-acetylglucosamine acyltransferase reaction",
+        "biological_state": "cytoplasmic state",
+        "evidence": "a cytoplasmic acyltransferase that converts UDP-N-acetylglucosamine to UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "scope_membership": "core",
+        "enzymes": [
+          {
+            "protein": "LpxA",
+            "evidence": "The first enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+        ],
+        "outputs": [
+          "UDP-N2,O3-bis [(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_009",
+        "name": "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine N-acylation reaction",
+        "biological_state": "cytoplasmic state",
+        "evidence": "identification of UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine as a precursor of UDP-N2,O3-bis [(R)-3-hydroxymyristoyl]-α-D-glucosamine",
+        "scope_membership": "core",
+        "enzymes": [
+          {
+            "protein": "LpxD",
+            "evidence": "addition of the next acyl group by LpxD",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "outputs": [
+          "UDP-3-0-[(R)-3-hydroxymyristoyl]-α-D-glucosamine"
+        ],
+        "name": "LpxC deacetylase reaction",
+        "enzymes": [
+          {
+            "protein": "LpxC",
+            "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety to allow for the addition of the next acyl group by LpxD",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety to allow for the addition of the next acyl group by LpxD"
+      }
+    ],
+    "transports": [
+      {
+        "name": "MsbA-mediated core-lipid A flip",
+        "cargo": "core-lipid A",
+        "from_biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "to_biological_state": "E. coli inner membrane periplasmic leaflet",
+        "transporters": [
+          {
+            "protein": "MsbA",
+            "evidence": "flippase MsbA"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "core-lipid A",
+            "side": "left",
+            "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+            "evidence": "core-lipid A is flipped from the cytoplasmic leaflet"
+          },
+          {
+            "element": "core-lipid A",
+            "side": "right",
+            "biological_state": "E. coli inner membrane periplasmic leaflet",
+            "evidence": "to the periplasmic leaflet of the IM by the flippase MsbA"
+          }
+        ],
+        "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "FtsH",
+        "entity_2": "LpxC",
+        "name": "FtsH degrades LpxC",
+        "relationship": "degrades",
+        "evidence": "The C-terminal end of LpxC is required for degradation by the FtsH protease"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "YciM/FtsH protease complex",
+        "name": "YejM modulates YciM/FtsH complex",
+        "relationship": "modulates",
+        "evidence": "YejM modulates activity of the YciM/FtsH protease complex"
+      },
+      {
+        "entity_1": "LapB-FtsH complex",
+        "entity_2": "LpxC",
+        "name": "LapB-FtsH complex inhibits LpxC",
+        "relationship": "inhibits",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "LapB is freed to inhibit Ec LpxC and subsequently direct it to FtsH for proteolysis"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "LapB-FtsH complex",
+        "name": "YejM inhibits LapB-FtsH complex",
+        "relationship": "inhibits",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "YejM sequesters LapB, preventing FtsH-mediated proteolysis of Ec LpxC"
+      },
+      {
+        "entity_1": "LPS",
+        "entity_2": "YejM",
+        "name": "LPS inhibits YejM",
+        "relationship": "inhibits",
+        "biological_state": "E. coli inner membrane periplasmic leaflet",
+        "evidence": "LPS intermediates accumulate in the periplasmic leaflet of the IM and bind to YejM"
+      },
+      {
+        "entity_1": "LapB-FtsH complex",
+        "entity_2": "YciM/FtsH protease complex",
+        "name": "LapB-FtsH complex is same as YciM/FtsH protease complex",
+        "relationship": "SAME_AS",
+        "evidence": "LapB (YciM) is the same protein; the complex is referred to as both LapB-FtsH and YciM/FtsH."
+      },
+      {
+        "entity_1": "UDP-GlcNAc",
+        "entity_2": "UDP-N-acetylglucosamine",
+        "name": "UDP-GlcNAc is UDP-N-acetylglucosamine",
+        "relationship": "SAME_AS",
+        "evidence": "UDP-GlcNAc, uridine diphosphate-N-acetyl-glucosamine"
+      },
+      {
+        "entity_1": "LapB-FtsH complex",
+        "entity_2": "LpxC",
+        "name": "LapB-FtsH complex degrades LpxC",
+        "relationship": "degrades",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "LpxC levels are modulated by proteolysis through the LapB-FtsH complex"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "LapB",
+        "name": "YejM binds LapB",
+        "relationship": "binds",
+        "biological_state": "E. coli inner membrane cytoplasmic leaflet",
+        "evidence": "YejM binds to LapB (YciM) and inhibits the recruitment of LpxC"
+      },
+      {
+        "entity_1": "LPS",
+        "entity_2": "YejM",
+        "name": "LPS binds YejM",
+        "relationship": "binds",
+        "biological_state": "E. coli inner membrane periplasmic leaflet",
+        "evidence": "LPS accumulates in the outer leaflet of the IM and binds to YejM"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 11,
+    "exported_locked_reactions": 11,
+    "quarantined_locked_reactions": 0
+  }
+}

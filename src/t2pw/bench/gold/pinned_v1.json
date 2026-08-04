@@ -1,0 +1,2469 @@
+{
+  "version": "2026-08-01.1",
+  "description": "Pinned scientific gold set for T2PW. Ten papers already fetched by the 2026-07-27/28 batches, covering the five pathways in topics.txt. Every expectation was read out of the cached full text (runs/*/papers/<slug>/01_source_text.txt) and carries a verbatim quote. Expectations grade FIDELITY TO THE SOURCE, not agreement with a textbook: where a paper is incomplete, the gold case is incomplete in the same places, because scoring against the textbook would mark a faithful extraction as a failure and reward a pipeline that hallucinated the missing steps. Two cases are deliberately unproductive: PMC13231680 is a retrieval false positive that must yield nothing, and PMC12180156 names the requested pathway five times without describing one step of it.",
+  "cases": [
+    {
+      "paper_id": "PMC12444477",
+      "title": "The regulation of lipid A biosynthesis",
+      "source_uri": "https://doi.org/10.1016/j.jbc.2025.110556",
+      "requested_pathway": "lipid A biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "relevance_note": "A JBC review that names all nine Raetz-pathway enzymes in order, but delivers the chemistry in a single ~250-word paragraph; roughly 85% of the body is about LpxC regulation, and about half the body is non-E. coli.",
+      "expected_pathway_anchors": [
+        {
+          "name": "lipid A biosynthesis",
+          "aliases": [
+            "lipid A biosynthetic pathway",
+            "Raetz pathway"
+          ],
+          "quote": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway",
+          "role": "The paper uses 'Raetz pathway' and 'lipid A biosynthetic pathway' interchangeably, so they are one anchor with two spellings. Requiring both would penalise an extraction for a labelling choice rather than for biology."
+        },
+        {
+          "name": "LpxC",
+          "quote": "it is the second enzyme in the pathway, LpxC, that catalyzes the first irreversible and committed step in lipid A biosynthesis"
+        },
+        {
+          "name": "Kdo-lipid A",
+          "quote": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "LpxA",
+          "identifier": "lpxA",
+          "role": "acylates UDP-GlcNAc using a beta-hydroxyacyl-ACP donor",
+          "quote": "The first enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc)"
+        },
+        {
+          "name": "LpxC",
+          "identifier": "lpxC",
+          "role": "deacetylates the GlcNAc moiety; first irreversible committed step",
+          "quote": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"
+        },
+        {
+          "name": "LpxD",
+          "role": "adds the next acyl group",
+          "quote": "to allow for the addition of the next acyl group by LpxD"
+        },
+        {
+          "name": "LpxB",
+          "role": "forms a tetra-acylated disaccharide intermediate",
+          "quote": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate"
+        },
+        {
+          "name": "LpxK",
+          "role": "phosphorylates the disaccharide intermediate to lipid IVA",
+          "quote": "which is phosphorylated by LpxK to produce lipid IV A"
+        },
+        {
+          "name": "WaaA",
+          "aliases": [
+            "KdtA"
+          ],
+          "role": "adds Kdo residues to lipid IVA",
+          "quote": "Next, WaaA adds a number of Kdo residues that depends on the organism"
+        },
+        {
+          "name": "LpxL",
+          "role": "first of two sequential acylations of Kdo-lipid IVA",
+          "quote": "Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM"
+        },
+        {
+          "name": "LpxM",
+          "role": "second sequential acylation completing Kdo-lipid A",
+          "quote": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "LpxH",
+          "aliases": [
+            "LpxI",
+            "LpxG"
+          ],
+          "quote": "subsequent removal of UMP by LpxH, LpxI, or LpxG depending on the organism"
+        },
+        {
+          "name": "FtsH",
+          "quote": "FtsH was able to directly degrade LpxC, confirming FtsH as the first example of a direct regulator of lipid A biosynthesis"
+        },
+        {
+          "name": "LapB",
+          "aliases": [
+            "YciM"
+          ],
+          "quote": "LapB binds to Ec LpxC to immediately reduce its activity"
+        },
+        {
+          "name": "YejM",
+          "aliases": [
+            "PbgA"
+          ],
+          "quote": "the membrane protein YejM (called PbgA in Salmonella) is capable of both binding to periplasmic LPS"
+        },
+        {
+          "name": "FabZ",
+          "quote": "it catalyzes the dehydration of beta-hydroxyacyl-ACPs to continue acyl chain elongation"
+        },
+        {
+          "name": "MsbA",
+          "quote": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA"
+        },
+        {
+          "name": "ObgE",
+          "quote": "LpxA has also been shown to be inhibited by a dominant-negative variant of ObgE"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "UDP-GlcNAc",
+          "aliases": [
+            "uridine diphosphate-N-acetyl-glucosamine"
+          ],
+          "quote": "LpxA, acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc)"
+        },
+        {
+          "name": "R-3-hydroxymyristoyl-ACP",
+          "quote": "including the Ec LpxA substrate R- 3-hydroxymyristoyl-ACP"
+        },
+        {
+          "name": "beta-hydroxyacyl-ACP",
+          "aliases": [
+            "R-3-hydroxyacyl-ACP"
+          ],
+          "quote": "catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived beta-hydroxyacyl-ACP molecules"
+        },
+        {
+          "name": "Kdo",
+          "aliases": [
+            "3-deoxy-D-manno-oct-2-ulosonic acid"
+          ],
+          "quote": "the first sugar(s) of the core, 3-deoxy-D- manno -oct-2-ulosonic acid (Kdo)"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "lipid IVA",
+          "aliases": [
+            "lipid IV A"
+          ],
+          "quote": "which is phosphorylated by LpxK to produce lipid IV A"
+        },
+        {
+          "name": "Kdo-lipid IVA",
+          "aliases": [
+            "Kdo-lipid IV A"
+          ],
+          "quote": "resulting in Kdo-lipid IV A which is sequentially acylated by LpxL and LpxM"
+        },
+        {
+          "name": "Kdo-lipid A",
+          "quote": "to finally form Kdo-lipid A"
+        },
+        {
+          "name": "UMP",
+          "quote": "subsequent removal of UMP by LpxH, LpxI, or LpxG"
+        }
+      ],
+      "forbidden_organisms": [
+        "Pseudomonas aeruginosa",
+        "Neisseria meningitidis",
+        "Acinetobacter baumannii",
+        "Salmonella enterica",
+        "Shigella flexneri",
+        "Cronobacter sakazakii",
+        "Francisella tularensis",
+        "Agrobacterium tumefaciens",
+        "Rhodobacter capsulatus",
+        "Rhodobacter sphaeroides",
+        "Caulobacter crescentus"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "LpxA product",
+          "kind": "placeholder_product",
+          "reason": "The paper writes 'The LpxA product is deacetylated by...' and never names this compound. Emitting it as a metabolite means the extractor read no product, so the reaction is unsupported."
+        },
+        {
+          "name": "Pa LpxC product",
+          "aliases": [
+            "LpxC product"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Second literal placeholder; the chemical name that follows it belongs to P. aeruginosa, not E. coli."
+        },
+        {
+          "name": "tetra-acylated disaccharide intermediate",
+          "kind": "placeholder_product",
+          "reason": "A prose description of an unnamed intermediate, not a chemical identity."
+        },
+        {
+          "name": "coenzyme A",
+          "aliases": [
+            "CoA",
+            "coenzyme A (CoA)"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "A cofactor. Filing it under entities.proteins sends the mapper looking for a UniProt accession for a metabolite; this exact failure blocked the 2026-07-28 strict run."
+        },
+        {
+          "name": "acyl carrier protein",
+          "aliases": [
+            "ACP"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "ACP genuinely is a protein, but in this paper it appears almost only inside metabolite names (acyl-ACP, beta-hydroxyacyl-ACP). Bare ACP as a standalone pathway metabolite, or a metabolite name split to yield it, is wrong."
+        },
+        {
+          "name": "sigma 32",
+          "aliases": [
+            "σ32",
+            "sigma factor sigma32"
+          ],
+          "kind": "regulator_as_metabolite",
+          "reason": "A heat-shock sigma factor: a PROTEIN and an FtsH substrate unrelated to lipid A. The 2026-07-28 research run filed it under entities.compounds."
+        },
+        {
+          "name": "cII",
+          "aliases": [
+            "CII"
+          ],
+          "kind": "regulator_as_metabolite",
+          "reason": "Bacteriophage lambda regulator protein, an FtsH substrate. Not a compound, not E. coli, not this pathway."
+        },
+        {
+          "name": "Ec LpxC",
+          "aliases": [
+            "Pa LpxC",
+            "EcLpxC",
+            "PaLpxC"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Species prefixes are not part of the protein name; these must resolve to LpxC plus an organism, not to distinct proteins."
+        },
+        {
+          "name": "sfhC21",
+          "kind": "strain_or_construct",
+          "reason": "A suppressor allele designation, not a gene product."
+        },
+        {
+          "name": "LAXXXXXAVLA",
+          "kind": "heading_or_prose",
+          "reason": "A degron consensus motif containing wildcards. Not an identifier of anything."
+        },
+        {
+          "name": "NtrYX",
+          "aliases": [
+            "ChvGI"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Two-component systems: each token denotes TWO proteins and can never be one identity."
+        },
+        {
+          "name": "FAS II",
+          "aliases": [
+            "type II fatty acid synthesis",
+            "Lpt system"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Pathway and machinery names, not enzymes or compounds."
+        },
+        {
+          "name": "(p)ppGpp",
+          "kind": "heading_or_prose",
+          "reason": "Parenthesised shorthand denoting two compounds (ppGpp and pppGpp); the literal token resolves to neither."
+        },
+        {
+          "name": "CHIR-090",
+          "kind": "heading_or_prose",
+          "reason": "A real LpxC-inhibitor compound, but an inhibitor is never a pathway substrate or product."
+        }
+      ],
+      "min_connected_reactions": 3,
+      "unknown_backed_proteins_acceptable": true,
+      "unknown_backed_rationale": "The paper legitimately discusses proteins that will not cleanly resolve: LapA (formerly YciS), LapB (formerly YciM), Ght (N. meningitidis), LabP (C. sakazakii), LpxG, YhcB, and the generic 'lipoprotein'. Penalising those would penalise faithful extraction. The tolerance does NOT extend to the nine core Raetz enzymes, which are unambiguous.",
+      "expected_export": "partial_only",
+      "export_rationale": "The enzyme roster and reaction order are fully extractable, but a complete ID-resolvable pathway cannot be built from this paper: it contains zero UniProt, EC, b-number, ChEBI or KEGG identifiers; six of nine intermediates are never chemically named in the body; acyl chain lengths and the Kdo count are left unspecified. The chemistry lives in Figure 1B, which is not in the cached text.",
+      "notes": "The body ends near character offset 54734 ('Conflict of interest'); everything after is the reference list. The correct E. coli LpxA/LpxC intermediate names appear ONLY there, so an extraction containing them is mining the bibliography. Text rendering inserts spaces inside chemical tokens ('lipid IV A', 'R -3-hydroxymyristoyl-ACP', 'sigma 32'). The MurA-activates-LpxC mechanism is P. aeruginosa only.",
+      "supported_reactions": [
+        {
+          "label": "WaaA adds Kdo to lipid IVA",
+          "inputs": [
+            {
+              "name": "lipid IVA",
+              "aliases": [
+                "lipid IV A"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Kdo-lipid IVA",
+              "aliases": [
+                "Kdo-lipid IV A"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "WaaA",
+            "aliases": [
+              "KdtA"
+            ]
+          },
+          "quote": "Next, WaaA adds a number of Kdo residues that depends on the organism to form the first sugar(s) of the core, resulting in Kdo-lipid IV A"
+        },
+        {
+          "label": "LpxL/LpxM acylate Kdo-lipid IVA to Kdo-lipid A",
+          "inputs": [
+            {
+              "name": "Kdo-lipid IVA",
+              "aliases": [
+                "Kdo-lipid IV A"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Kdo-lipid A"
+            }
+          ],
+          "enzyme": {
+            "name": "LpxL",
+            "aliases": [
+              "LpxM"
+            ]
+          },
+          "quote": "which is sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC13231680",
+      "title": "Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity",
+      "requested_pathway": "lipid A biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli (NDM-1-positive clinical isolate) and Mus musculus",
+      "mechanistic_relevance": "context_only",
+      "relevance_note": "NEGATIVE CONTROL. An NDM-1 inhibitor discovery study retrieved because its discussion mentions LpxC once. Full-text counts: 'lipid A' 1, 'LpxC' 9, and UDP 0, GlcNAc 0, Kdo 0, acyl 0, deacetyl 0. Not one lipid A substrate, product, intermediate or reaction appears anywhere.",
+      "expected_pathway_anchors": [],
+      "expected_enzymes": [],
+      "acceptable_enzymes": [
+        {
+          "name": "NDM-1",
+          "quote": "Bacteria expressing NDM-1 can stably and efficiently hydrolyze all beta-lactam antibiotics except monocyclic antibiotics"
+        },
+        {
+          "name": "LpxC",
+          "quote": "Molecular docking analysis suggests that PSA may potentially interact with LpxC, a key enzyme involved in lipid A biosynthesis"
+        }
+      ],
+      "expected_substrates": [],
+      "expected_products": [],
+      "forbidden_organisms": [
+        "Mus musculus",
+        "Acinetobacter baumannii",
+        "Klebsiella pneumoniae"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "LPS synthase",
+          "kind": "heading_or_prose",
+          "reason": "The paper's own sentence calls LpxC 'the LPS synthase'. That is factually wrong: LpxC is a deacetylase. An extractor that emits it has propagated the source's error instead of catching it."
+        },
+        {
+          "name": "PSA",
+          "kind": "heading_or_prose",
+          "reason": "Here phthalylsulfacetamide; in most biomedical text PSA is prostate-specific antigen, a human protein. Resolving it to a protein identifier is a failure."
+        },
+        {
+          "name": "MEM",
+          "kind": "heading_or_prose",
+          "reason": "Here meropenem; elsewhere Minimum Essential Medium. The paper also writes 'MEM-resistant selective medium', compounding it."
+        },
+        {
+          "name": "MEM + PSA",
+          "aliases": [
+            "2 ug/mL MEM + 64 ug/mL PSA"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "A dosing string containing a plus sign. Must never become a compound."
+        },
+        {
+          "name": "UDP-GlcNAc",
+          "kind": "placeholder_product",
+          "reason": "DEFINITIVE HALLUCINATION TEST: this string occurs zero times in this paper. Its presence proves the extractor imported outside knowledge about LpxC and presented it as paper-supported."
+        },
+        {
+          "name": "lipid IVA",
+          "aliases": [
+            "Kdo-lipid A",
+            "lipid A"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Same test. No lipid A intermediate occurs anywhere in this paper."
+        },
+        {
+          "name": "Zn 2+",
+          "aliases": [
+            "Zn2+"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "A metal cofactor of NDM-1 and LpxC; neither a protein nor a lipid A metabolite."
+        },
+        {
+          "name": "bla NDM-1",
+          "kind": "strain_or_construct",
+          "reason": "A gene, rendered in the source with a Unicode minus sign rather than a hyphen. NDM-1 is the protein; the gene is not a second entity."
+        }
+      ],
+      "min_connected_reactions": 0,
+      "max_retained_reactions": 0,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "Both proteins the paper names (NDM-1, LpxC) are well characterised with unambiguous identities. Any unknown-backed protein emitted from this paper is fabricated outright.",
+      "expected_export": "partial_only",
+      "export_rationale": "Nothing lipid-A-related is exportable at any level of partiality. The correct pipeline outcome is an empty pathway plus a rejection reason.",
+      "notes": "The paper hedges the LpxC claim three separate times ('remains preliminary', 'remains hypothetical', 'remains speculative and requires further experimental validation'). The LpxC claim rests on one docking run with no binding constant, no assay and no phenotype, in contrast to the NDM-1 work which has IC50, MD simulation and site-directed mutagenesis. This case exists to test whether the pipeline declines to produce output rather than inventing it."
+    },
+    {
+      "paper_id": "PMC12657337",
+      "title": "High-level production of vitamin K2 in Escherichia coli via modular metabolic engineering",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "relevance_note": "States three terminal menaquinone steps with explicit substrate and product. ORGANISM TRAP: topics.txt asked for B. subtilis, but this is an E. coli engineering study; B. subtilis appears only as the gene donor for HepPPS and UbiE.",
+      "expected_pathway_anchors": [
+        {
+          "name": "menaquinone biosynthesis",
+          "aliases": [
+            "menaquinone",
+            "vitamin K2"
+          ],
+          "quote": "The key genes involved in menaquinone biosynthesis, including MenA and UbiE and their variants",
+          "role": "Satisfiable by the pathway name OR by its product appearing as an entity; an extraction that builds the MK-7 chain without using the phrase 'menaquinone biosynthesis' as a label is still about this pathway."
+        },
+        {
+          "name": "menaquinone-7",
+          "aliases": [
+            "MK-7",
+            "vitamin K2"
+          ],
+          "quote": "Menaquinone-7 (MK-7), a key form of vitamin K2 with wide-ranging nutritional and pharmaceutical applications"
+        },
+        {
+          "name": "demethylmenaquinone",
+          "aliases": [
+            "DMK-7"
+          ],
+          "quote": "MenA converts HepPP to DMK-7, and UbiE methylates DMK-7 to yield MK-7"
+        },
+        {
+          "name": "heptaprenyl pyrophosphate",
+          "aliases": [
+            "HepPP"
+          ],
+          "quote": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "HepPPS",
+          "aliases": [
+            "heptaprenyl pyrophosphate synthase",
+            "BsHepPPS"
+          ],
+          "role": "FPP -> HepPP",
+          "quote": "BsHepPPS encodes heptaprenyl pyrophosphate synthase, which catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate"
+        },
+        {
+          "name": "MenA",
+          "aliases": [
+            "EcMenA"
+          ],
+          "role": "HepPP + DHNA -> DMK-7",
+          "quote": "EcMenA encodes a prenyltransferase that catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone"
+        },
+        {
+          "name": "UbiE",
+          "aliases": [
+            "BsUbiE",
+            "MenG"
+          ],
+          "role": "DMK-7 -> MK-7",
+          "quote": "BsUbiE encodes a methyltransferase that catalyzes the methylation of demethylmenaquinone to produce MK-7"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "acetyl-CoA synthetase",
+          "aliases": [
+            "acs"
+          ],
+          "quote": "We also overexpressed acetyl-CoA synthetase ( acs ), an enzyme that converts acetate into acetyl-CoA"
+        },
+        {
+          "name": "Idi",
+          "quote": "The enzyme Idi , which converts IPP to farnesyl pyrophosphate (FPP)"
+        },
+        {
+          "name": "PoxB",
+          "quote": "knockout of the PoxB gene reduces acetate accumulation"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "farnesyl pyrophosphate",
+          "aliases": [
+            "FPP"
+          ],
+          "quote": "HepPPS catalyzes the conversion of FPP to heptaprenyl pyrophosphate (HepPP)"
+        },
+        {
+          "name": "DHNA",
+          "aliases": [
+            "1,4-dihydroxy-2-naphthoate"
+          ],
+          "quote": "the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone"
+        },
+        {
+          "name": "isopentenyl pyrophosphate",
+          "aliases": [
+            "IPP"
+          ],
+          "quote": "the MVA pathway to provide isopentenyl pyrophosphate (IPP)"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "heptaprenyl pyrophosphate",
+          "aliases": [
+            "HepPP"
+          ],
+          "quote": "catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate"
+        },
+        {
+          "name": "demethylmenaquinone-7",
+          "aliases": [
+            "DMK-7"
+          ],
+          "quote": "MenA converts HepPP to DMK-7"
+        },
+        {
+          "name": "menaquinone-7",
+          "aliases": [
+            "MK-7"
+          ],
+          "quote": "UbiE methylates DMK-7 to yield MK-7"
+        }
+      ],
+      "forbidden_organisms": [
+        "Bacillus subtilis",
+        "Listeria monocytogenes",
+        "Lactococcus lactis",
+        "Lactiplantibacillus plantarum",
+        "Mycobacterium tuberculosis",
+        "Staphylococcus aureus",
+        "Bacillus amyloliquefaciens",
+        "Gluconobacter oxydans",
+        "Streptomyces mobaraensis",
+        "Homo sapiens"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "BsHepPPS",
+          "aliases": [
+            "EcMenA",
+            "BsUbiE",
+            "ECidi",
+            "BsMenA"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Author-coined organism-prefix labels. They must normalise to base symbol plus organism, never become distinct novel proteins."
+        },
+        {
+          "name": "EfmvaE",
+          "aliases": [
+            "EfmvaS",
+            "MmmvK",
+            "ScpmK",
+            "ScmvD"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Same prefix convention applied to the MVA cassette genes."
+        },
+        {
+          "name": "pSB1a/mena/ubie",
+          "aliases": [
+            "pBAD-MVA",
+            "pTarget",
+            "pCas9"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Plasmid names, not genes or proteins."
+        },
+        {
+          "name": "BL21(DE3)",
+          "kind": "strain_or_construct",
+          "reason": "A strain designation."
+        },
+        {
+          "name": "G110W",
+          "aliases": [
+            "Q57T",
+            "G110W-Q57T",
+            "T290M"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Point-mutation labels; these collapse to the parent protein."
+        },
+        {
+          "name": "coenzyme A",
+          "aliases": [
+            "CoA",
+            "HMG-CoA"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "A cofactor, never a protein."
+        },
+        {
+          "name": "S-adenosyl-L-methionine",
+          "aliases": [
+            "SAM",
+            "SAH"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "Methyl-donor cofactors named only in the figure legend; never proteins."
+        },
+        {
+          "name": "NlpI",
+          "kind": "heading_or_prose",
+          "reason": "A real E. coli gene, but a lipoprotein knockout target, not a menaquinone-pathway catalyst."
+        },
+        {
+          "name": "MenD",
+          "kind": "heading_or_prose",
+          "reason": "Mentioned only as cited prior work in B. subtilis. This paper never states a MenD reaction and never expresses it; emitting one is importing the classical Men segment the paper does not describe."
+        },
+        {
+          "name": "chorismate",
+          "aliases": [
+            "isochorismate",
+            "SEPHCHC",
+            "SHCHC",
+            "OSB"
+          ],
+          "kind": "placeholder_product",
+          "reason": "HALLUCINATION TEST: this paper covers only the terminal steps and never describes MenF/MenD/MenH/MenC/MenE/MenB chemistry. A chorismate-to-DHNA chain attributed to this paper is imported from outside knowledge."
+        }
+      ],
+      "min_connected_reactions": 3,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "All three catalysts in the connected chain are named with canonical symbols (HepPPS, MenA, UbiE). No unnamed or hypothetical protein is needed, so one would indicate hallucination.",
+      "expected_export": "strict_exportable",
+      "export_rationale": "A three-reaction connected chain with named enzymes and explicit substrates and products is stated verbatim. Every exported reaction must carry organism Escherichia coli; labelling them Bacillus subtilis, the requested organism, is a failure even though two enzymes are B. subtilis-derived.",
+      "notes": "The paper contains two internal inconsistencies that a faithful extraction reproduces rather than silently corrects: the figure legend calls Idi an IPP isomerase while the results text says it converts IPP to FPP, and the legend's MvaE/MvaS synthase/reductase assignment appears transposed. No UniProt accession, EC number or locus tag appears anywhere.",
+      "supported_reactions": [
+        {
+          "label": "HepPPS: FPP to HepPP",
+          "inputs": [
+            {
+              "name": "farnesyl pyrophosphate",
+              "aliases": [
+                "FPP"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "heptaprenyl pyrophosphate",
+              "aliases": [
+                "HepPP"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "HepPPS",
+            "aliases": [
+              "BsHepPPS",
+              "heptaprenyl pyrophosphate synthase"
+            ]
+          },
+          "quote": "which catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate"
+        },
+        {
+          "label": "MenA: HepPP + DHNA to DMK-7",
+          "inputs": [
+            {
+              "name": "heptaprenyl pyrophosphate",
+              "aliases": [
+                "HepPP"
+              ]
+            },
+            {
+              "name": "DHNA"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "demethylmenaquinone",
+              "aliases": [
+                "DMK-7",
+                "demethylmenaquinone-7"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "MenA",
+            "aliases": [
+              "EcMenA"
+            ]
+          },
+          "quote": "catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone"
+        },
+        {
+          "label": "UbiE: DMK-7 to MK-7",
+          "inputs": [
+            {
+              "name": "demethylmenaquinone",
+              "aliases": [
+                "DMK-7",
+                "demethylmenaquinone-7"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "MK-7",
+              "aliases": [
+                "menaquinone-7"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "UbiE",
+            "aliases": [
+              "BsUbiE"
+            ]
+          },
+          "quote": "catalyzes the methylation of demethylmenaquinone to produce MK-7"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12421875",
+      "title": "The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Lactococcus lactis",
+      "mechanistic_relevance": "core",
+      "relevance_note": "Enumerates the complete classical menaquinone pathway and pins every Men enzyme to a substrate-product pair through the kinetic model. ORGANISM TRAP: this is a Lactococcus lactis study; B. subtilis occurs only in cited-literature framing.",
+      "expected_pathway_anchors": [
+        {
+          "name": "menaquinone biosynthesis",
+          "aliases": [
+            "MK biosynthesis"
+          ],
+          "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+        },
+        {
+          "name": "chorismate",
+          "quote": "The model also predicts limited availability of the substrate chorismate"
+        },
+        {
+          "name": "DHNA",
+          "aliases": [
+            "1,4-dihydroxy-2-naphthoic acid"
+          ],
+          "quote": "menaquinone (MK, vitamin K2) and its precursor 1,4-dihydroxy-2-naphthoic acid (DHNA)"
+        },
+        {
+          "name": "demethylmenaquinone",
+          "aliases": [
+            "DMK"
+          ],
+          "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "MenF",
+          "identifier": "menF",
+          "role": "chorismate <-> isochorismate (reversible)",
+          "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)"
+        },
+        {
+          "name": "MenD",
+          "identifier": "menD",
+          "role": "isochorismate -> SEPHCHC",
+          "quote": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)"
+        },
+        {
+          "name": "MenH",
+          "role": "SEPHCHC -> SHCHC",
+          "quote": "We simplified notation by assigning capital letters to intermediates in the pathway as follows: A for chorismate, B for isochorismate, C for SEPHCHC, D for SHCHC"
+        },
+        {
+          "name": "MenC",
+          "role": "SHCHC -> OSB",
+          "quote": "The o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions"
+        },
+        {
+          "name": "MenE",
+          "role": "OSB -> OSB-CoA",
+          "quote": "E for OSB, F for OSB-CoA, and G for DHNA-CoA"
+        },
+        {
+          "name": "MenB",
+          "role": "OSB-CoA -> DHNA-CoA",
+          "quote": "E for OSB, F for OSB-CoA, and G for DHNA-CoA"
+        },
+        {
+          "name": "MenI",
+          "role": "DHNA-CoA -> DHNA",
+          "quote": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA"
+        },
+        {
+          "name": "MenA",
+          "identifier": "menA",
+          "role": "DHNA + prenyl diphosphate -> DMK",
+          "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "MenG",
+          "quote": "and MenG demethylates DMK to generate MK"
+        },
+        {
+          "name": "NoxAB",
+          "quote": "we knocked out noxAB (encodes for NADH:quinone oxidoreductases)"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "chorismate",
+          "quote": "MK biosynthesis starts from chorismate"
+        },
+        {
+          "name": "isochorismate",
+          "quote": "converting chorismate (A) to isochorismate (B)"
+        },
+        {
+          "name": "SEPHCHC",
+          "aliases": [
+            "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+          ],
+          "quote": "the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)"
+        },
+        {
+          "name": "SHCHC",
+          "quote": "C for SEPHCHC, D for SHCHC, E for OSB"
+        },
+        {
+          "name": "OSB",
+          "quote": "D for SHCHC, E for OSB, F for OSB-CoA"
+        },
+        {
+          "name": "OSB-CoA",
+          "quote": "E for OSB, F for OSB-CoA, and G for DHNA-CoA"
+        },
+        {
+          "name": "DHNA-CoA",
+          "quote": "F for OSB-CoA, and G for DHNA-CoA"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "DHNA",
+          "quote": "Since DHNA is the common precursor for all MK derivatives"
+        },
+        {
+          "name": "demethylmenaquinone",
+          "aliases": [
+            "DMK"
+          ],
+          "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+        },
+        {
+          "name": "menaquinone",
+          "aliases": [
+            "MK",
+            "vitamin K2"
+          ],
+          "quote": "MenG demethylates DMK to generate MK"
+        }
+      ],
+      "forbidden_organisms": [
+        "Bacillus subtilis",
+        "Escherichia coli",
+        "Mycobacterium tuberculosis",
+        "Staphylococcus aureus",
+        "Lactiplantibacillus plantarum",
+        "Listeria monocytogenes",
+        "Flavobacterium meningosepticum",
+        "Homo sapiens"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "MenFD",
+          "aliases": [
+            "MenDF"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Co-expression cassette labels for the menF+menD operon construct, used dozens of times as if they were enzymes ('perturbations of MenFD'). The single most dangerous trap in this paper."
+        },
+        {
+          "name": "A",
+          "aliases": [
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Single-letter symbols the authors assign to metabolites for the kinetic model. Only the spelled-out names are real identities."
+        },
+        {
+          "name": "thiamine diphosphate",
+          "aliases": [
+            "ThDP",
+            "coenzyme A",
+            "CoA"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "Cofactors, never proteins. Note that OSB-CoA and DHNA-CoA ARE legitimate metabolites; the bare cofactor is not."
+        },
+        {
+          "name": "KF147",
+          "aliases": [
+            "NCIMB8826",
+            "5-alpha",
+            "10-beta"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Strain designations."
+        },
+        {
+          "name": "pECGMC3",
+          "aliases": [
+            "pRV300"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Plasmid designations."
+        },
+        {
+          "name": "mCherry",
+          "kind": "heading_or_prose",
+          "reason": "A fluorescent reporter tag fused to MenC/MenF/MenD, not a pathway protein."
+        },
+        {
+          "name": "1-hydroxy-2-naphthoate",
+          "aliases": [
+            "HNA"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "A DHNA analog used as a selection agent, not a pathway intermediate."
+        },
+        {
+          "name": "dmkA",
+          "aliases": [
+            "ndh1"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "L. plantarum biosensor genes, not L. lactis men-pathway genes."
+        }
+      ],
+      "min_connected_reactions": 7,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "All nine catalysts are named canonical Men proteins and the paper introduces no novel uncharacterised enzyme. The paper gives no locus tags, UniProt IDs or EC numbers, so a correct extraction resolves by name plus organism rather than inventing accessions.",
+      "expected_export": "strict_exportable",
+      "export_rationale": "A fully connected chorismate-to-DHNA chain is stated with named enzymes and named intermediates in one organism. Every exported reaction must carry organism Lactococcus lactis; the M. tuberculosis Ki, the E. coli kinetic constants and the B. subtilis discussion mentions must not leak in as reaction organisms.",
+      "notes": "PAPER-INTERNAL ERROR: 'MenG demethylates DMK to generate MK' has the direction wrong (MenG methylates). A faithful extraction reproduces the quote; assigning a demethylase EC compounds the error, which is why MenG is excluded from the connected floor of 7. The cached text has a discontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure.",
+      "supported_reactions": [
+        {
+          "label": "MenF: chorismate <-> isochorismate",
+          "inputs": [
+            {
+              "name": "chorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "enzyme": {
+            "name": "MenF"
+          },
+          "reversible": true,
+          "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate"
+        },
+        {
+          "label": "MenD: isochorismate to SEPHCHC",
+          "inputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SEPHCHC",
+              "aliases": [
+                "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "MenD"
+          },
+          "quote": "MenD facilitates the conversion of isochorismate"
+        },
+        {
+          "label": "MenA: DHNA + prenyl diphosphate to DMK",
+          "inputs": [
+            {
+              "name": "DHNA"
+            },
+            {
+              "name": "prenyl diphosphate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "demethylmenaquinone",
+              "aliases": [
+                "DMK"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "MenA"
+          },
+          "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12312563",
+      "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate states",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Listeria monocytogenes",
+      "mechanistic_relevance": "partial",
+      "relevance_note": "Deep mechanism for exactly ONE menaquinone reaction (MenD) and no other step. The cleanest organism-mismatch case in the set: 'Bacillus subtilis' occurs exactly once, in a comparative clause.",
+      "expected_pathway_anchors": [
+        {
+          "name": "SEPHCHC",
+          "aliases": [
+            "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+            "SEPHCHC synthase"
+          ],
+          "quote": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD)",
+          "role": "SEPHCHC occurs in no pathway other than menaquinone biosynthesis, so it anchors the pathway on its own -- which matters here, because the only extractable content is one reaction."
+        },
+        {
+          "name": "MenD",
+          "quote": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway"
+        },
+        {
+          "name": "isochorismate",
+          "quote": "Intermediate I then goes on to react via C2 alpha with the second substrate isochorismate"
+        },
+        {
+          "name": "2-oxoglutarate",
+          "quote": "decarboxylation of 2-oxoglutarate produces intermediate I"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "MenD",
+          "aliases": [
+            "LmoMenD",
+            "SEPHCHC synthase"
+          ],
+          "identifier": "menD",
+          "role": "2-oxoglutarate + isochorismate -> SEPHCHC (ThDP-dependent)",
+          "quote": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "MtbMenD",
+          "quote": "In Mycobacterium tuberculosis MenD ( Mtb MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA) ... can bind to the TH3 domain and inhibit activity"
+        },
+        {
+          "name": "BsuMenD",
+          "quote": "DHNA inhibition ... has been reported for Staphylococcus aureus and Bacillus subtilis MenD"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "2-oxoglutarate",
+          "quote": "the first (alpha-ketoacid) substrate (for MenD this is 2-oxoglutarate)"
+        },
+        {
+          "name": "isochorismate",
+          "quote": "the consumption of the second MenD substrate, isochorismate"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "SEPHCHC",
+          "quote": "with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC"
+        }
+      ],
+      "forbidden_organisms": [
+        "Bacillus subtilis",
+        "Escherichia coli",
+        "Mycobacterium tuberculosis",
+        "Staphylococcus aureus",
+        "Lactococcus lactis",
+        "Homo sapiens"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "thiamine diphosphate",
+          "aliases": [
+            "ThDP",
+            "ThDP ylide"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "The highest-frequency non-protein token in the paper (~30 occurrences) and grammatically adjacent to the enzyme name ('the ThDP-dependent enzyme ... MenD'). Emitting it as a protein is the prototypical failure this paper surfaces."
+        },
+        {
+          "name": "intermediate I",
+          "aliases": [
+            "intermediate II"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Transient covalent enzyme-bound adducts, not free metabolites with distinct identity."
+        },
+        {
+          "name": "LmoMenD",
+          "aliases": [
+            "MtbMenD",
+            "SauMenD",
+            "BsuMenD",
+            "EcoMenD"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Author organism-prefix labels; they must resolve to MenD plus an organism."
+        },
+        {
+          "name": "Ec oMenD",
+          "kind": "heading_or_prose",
+          "reason": "A literal typesetting split artifact in the source text ('For Ec oMenD this strained tetrahedral form...')."
+        },
+        {
+          "name": "TH3",
+          "aliases": [
+            "PYR",
+            "PP",
+            "transhydrogenase III domain",
+            "arginine cage"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Protein domains and a structural motif nickname, not proteins."
+        },
+        {
+          "name": "9e9b",
+          "aliases": [
+            "9mnn",
+            "3lq1"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "PDB structure depositions, not protein or gene identities."
+        },
+        {
+          "name": "pET-30a",
+          "aliases": [
+            "BL21 (DE3)",
+            "10403s"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Vector and strain designations."
+        },
+        {
+          "name": "DHNA",
+          "kind": "heading_or_prose",
+          "reason": "DHNA is a downstream metabolite and ALLOSTERIC INHIBITOR here, never a substrate or product of MenD. Emitting it on either side of the MenD reaction inverts the paper."
+        },
+        {
+          "name": "chorismate",
+          "aliases": [
+            "SHCHC",
+            "OSB",
+            "OSB-CoA"
+          ],
+          "kind": "placeholder_product",
+          "reason": "HALLUCINATION TEST: nothing upstream or downstream of MenD is given with an enzyme, a substrate and a product. A multi-step Men chain attributed to this paper is imported from the ortholog literature."
+        }
+      ],
+      "min_connected_reactions": 1,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "The one catalyst is a fully named, structurally characterised protein with a stated gene (menD), strain (10403s) and two PDB depositions. Any unnamed protein would be pure hallucination.",
+      "expected_export": "partial_only",
+      "export_rationale": "A single reaction cannot form a connected pathway, and no second reaction anywhere in the text shares a metabolite with it. Any strict-exportable pathway built from this paper necessarily imports the surrounding Men steps from outside knowledge.",
+      "notes": "Second organism trap: E. coli BL21(DE3) is the recombinant expression host, and 'Eco MenD' also appears as a genuine ortholog label, so 'overexpressed in Escherichia coli' invites a host/source confusion. Negative results that must not be inverted: no intermediate II structure and no DHNA complex were obtained. CO2 is implied by decarboxylation but never named as a product.",
+      "supported_reactions": [
+        {
+          "label": "MenD: 2-oxoglutarate + isochorismate to SEPHCHC",
+          "inputs": [
+            {
+              "name": "2-oxoglutarate"
+            },
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "SEPHCHC"
+            }
+          ],
+          "enzyme": {
+            "name": "MenD",
+            "aliases": [
+              "LmoMenD",
+              "SEPHCHC synthase"
+            ]
+          },
+          "quote": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12856317",
+      "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens",
+      "mechanistic_relevance": "partial",
+      "relevance_note": "Characterises exactly one step of heme biosynthesis (the ALAS2 condensation) and its feedback inhibition by heme. Names no other pathway enzyme, no intermediate between ALA and heme, and no downstream reaction anywhere in the body.",
+      "expected_pathway_anchors": [
+        {
+          "name": "heme biosynthesis",
+          "quote": "Proper heme biosynthesis is essential for numerous cellular functions across nearly all life forms."
+        },
+        {
+          "name": "aminolevulinic acid synthase",
+          "aliases": [
+            "ALAS"
+          ],
+          "quote": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS)"
+        },
+        {
+          "name": "ALAS2",
+          "quote": "The heme biosynthetic enzyme ALAS2 serves as a critical node, governing the first and rate-limiting step of this essential metabolic pathway."
+        },
+        {
+          "name": "mitochondrial matrix",
+          "quote": "the mitochondrial matrix, which is the cellular compartment where heme biosynthesis is initiated and terminated"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "ALAS2",
+          "aliases": [
+            "aminolevulinic acid synthase 2",
+            "5-aminolevulinate synthase 2"
+          ],
+          "identifier": "P22557",
+          "role": "glycine + succinyl-CoA -> aminolevulinic acid (PLP-dependent)",
+          "quote": "a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "ALAS1",
+          "identifier": "P13196",
+          "quote": "ALAS1 is a ubiquitously expressed housekeeping enzyme"
+        },
+        {
+          "name": "LONP1",
+          "quote": "the interaction between heme and mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation"
+        },
+        {
+          "name": "CLPXP",
+          "quote": "heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "glycine",
+          "quote": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+        },
+        {
+          "name": "succinyl-CoA",
+          "quote": "in response to variable heme and succinyl-CoA substrate concentrations"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "aminolevulinic acid",
+          "aliases": [
+            "ALA"
+          ],
+          "quote": "The in vitro enzyme activity of ALAS2 was measured by monitoring the rate of ALA product release."
+        }
+      ],
+      "forbidden_organisms": [
+        "Escherichia coli",
+        "Mus musculus",
+        "Bos taurus",
+        "Rattus norvegicus",
+        "Gallus gallus",
+        "Danio rerio",
+        "Rhodobacter capsulatus",
+        "Caulobacter crescentus",
+        "Kluyveromyces lactis",
+        "Rhodopseudomonas palustris"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "protoporphyrin IX",
+          "aliases": [
+            "porphobilinogen",
+            "hydroxymethylbilane",
+            "uroporphyrinogen III",
+            "coproporphyrinogen III",
+            "protoporphyrinogen IX"
+          ],
+          "kind": "placeholder_product",
+          "reason": "HALLUCINATION TEST: every one of these occurs zero times in the body. Emitting the canonical eight-step pathway from this paper is the single highest-risk failure here."
+        },
+        {
+          "name": "ferrochelatase",
+          "aliases": [
+            "FECH",
+            "ALAD",
+            "HMBS",
+            "UROS",
+            "CPOX",
+            "PPOX",
+            "SLC25A38"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Zero occurrences in the body. The only two heme-pathway enzyme names anywhere in the file, coproporphyrinogen III oxidase and protoporphyrinogen oxidase, appear exclusively inside reference titles past character offset 37280."
+        },
+        {
+          "name": "UROD",
+          "kind": "heading_or_prose",
+          "reason": "Occurs in the body ONLY as an internal substring of 'neurodegeneration'. UROD is a real heme-pathway enzyme, which makes this the most dangerous substring false positive in the paper."
+        },
+        {
+          "name": "pyridoxal 5-phosphate",
+          "aliases": [
+            "PLP"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "The ALAS2 cofactor. Never a substrate, never a product, never a protein."
+        },
+        {
+          "name": "hemin",
+          "aliases": [
+            "heme b",
+            "ferric chloride heme"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Reagent and cofactor forms of heme used in the binding assays. The same chemical identity as heme, not separate pathway metabolites."
+        },
+        {
+          "name": "HRM",
+          "aliases": [
+            "HRM1",
+            "HRM2",
+            "CXXCH",
+            "CP dipeptide",
+            "MTS",
+            "mitochondrial targeting sequence"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Sequence motifs and a targeting peptide, not proteins."
+        },
+        {
+          "name": "apoALAS2",
+          "aliases": [
+            "holoALAS2",
+            "Cys-mut",
+            "C70A/C555A/C558A"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Modification states and mutant constructs; all collapse to ALAS2."
+        },
+        {
+          "name": "ULP1",
+          "aliases": [
+            "His-SUMO",
+            "SUMO",
+            "pET28b"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Purification tag and protease reagents; ULP1 must never enter a pathway model."
+        },
+        {
+          "name": "ALA product",
+          "aliases": [
+            "porphyrin precursors"
+          ],
+          "kind": "placeholder_product",
+          "reason": "'product' and a generic compound class are not entities."
+        },
+        {
+          "name": "2BWO",
+          "kind": "strain_or_construct",
+          "reason": "A PDB accession for Rhodobacter capsulatus ALAS, not a protein identity and not human."
+        }
+      ],
+      "min_connected_reactions": 1,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "Every catalytic protein is a named human gene with an explicit UniProt accession printed in the text (ALAS2 P22557, ALAS1 P13196). No activity is attributed to an unidentified protein.",
+      "expected_export": "partial_only",
+      "export_rationale": "A single reaction cannot constitute an exportable multi-step pathway. Emitting a strict heme biosynthesis pathway from this paper requires importing seven steps the paper never mentions.",
+      "notes": "High multi-organism risk: one sentence in Experimental Procedures lists twelve UniProt accessions across six species, so a naive extractor can attach P08680, Q8VC19, P13195, Q63147, P07997, P18080, Q9YHT4, Q7T2F0, A6QLI6 or Q3ZC31 to a human pathway. High compartment risk: the paper deliberately separates cytosolic pre-import regulation via the targeting sequence from the new matrix finding, and confusing them inverts the thesis. The body ends at character offset 37280.",
+      "supported_reactions": [
+        {
+          "label": "ALAS2: glycine + succinyl-CoA to ALA",
+          "inputs": [
+            {
+              "name": "glycine"
+            },
+            {
+              "name": "succinyl-CoA"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "aminolevulinic acid",
+              "aliases": [
+                "ALA",
+                "5-aminolevulinic acid"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "ALAS2",
+            "aliases": [
+              "ALAS",
+              "aminolevulinic acid synthase"
+            ]
+          },
+          "quote": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12180156",
+      "title": "Update of the sideroflexin (SLC56) gene family",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens (comparative review across fourteen species)",
+      "mechanistic_relevance": "context_only",
+      "relevance_note": "Names the requested pathway five times without describing one step of it. Ferrochelatase and ALAS2 are named with NO reaction stated for either. Zero heme-biosynthesis reactions have both sides named anywhere in the file.",
+      "expected_pathway_anchors": [
+        {
+          "name": "heme biosynthesis",
+          "quote": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis, and iron-sulfur cluster assembly."
+        },
+        {
+          "name": "glycine",
+          "quote": "Glycine is the direct precursor for heme and, through its involvement in one-carbon metabolism, indirectly supports Fe-S-cluster biogenesis"
+        }
+      ],
+      "expected_enzymes": [],
+      "acceptable_enzymes": [
+        {
+          "name": "ferrochelatase",
+          "quote": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+          "role": "NAME ONLY: the paper never states what ferrochelatase does"
+        },
+        {
+          "name": "ALAS2",
+          "aliases": [
+            "erythroid delta-aminolevulinic acid synthase"
+          ],
+          "quote": "inhibiting the translation of erythroid delta-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway",
+          "role": "NAME ONLY: no substrate, no product, no reaction stated"
+        },
+        {
+          "name": "SHMT2",
+          "aliases": [
+            "serine hydroxymethyltransferase"
+          ],
+          "quote": "it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF",
+          "role": "one-carbon metabolism, NOT heme biosynthesis"
+        },
+        {
+          "name": "SFXN1",
+          "quote": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+        },
+        {
+          "name": "SFXN4",
+          "quote": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "glycine",
+          "quote": "Glycine is also required for the rate-limiting step in heme biosynthesis."
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "heme",
+          "quote": "heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes"
+        }
+      ],
+      "forbidden_organisms": [
+        "Mus musculus",
+        "Saccharomyces cerevisiae",
+        "Danio rerio",
+        "Xenopus tropicalis",
+        "Drosophila melanogaster",
+        "Caenorhabditis elegans",
+        "Arabidopsis thaliana",
+        "Magallana gigas",
+        "Amphimedon queenslandica"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "5-aminolevulinic acid",
+          "aliases": [
+            "ALA",
+            "porphobilinogen",
+            "protoporphyrin IX",
+            "succinyl-CoA",
+            "coproporphyrinogen III",
+            "uroporphyrinogen III"
+          ],
+          "kind": "placeholder_product",
+          "reason": "HALLUCINATION TEST: zero occurrences in the entire 67,304-character file, body and references alike. The paper names ALAS2 without ever naming its substrates or its product, so any of these is fabrication."
+        },
+        {
+          "name": "UROD",
+          "kind": "heading_or_prose",
+          "reason": "Occurs nine times, EVERY occurrence as an internal substring of 'neurodegeneration' or 'neurodegenerative'. Highest-risk false positive in the set because the requested pathway is heme biosynthesis."
+        },
+        {
+          "name": "FSF1",
+          "kind": "strain_or_construct",
+          "reason": "The yeast S288C family member. It carries no 'SFXN' string to flag it, so it can silently attach to a Homo sapiens model."
+        },
+        {
+          "name": "Fe 2+",
+          "aliases": [
+            "Fe 3+"
+          ],
+          "kind": "cofactor_as_protein",
+          "reason": "Fe2+ appears in the body exactly once, inside an explicit NEGATIVE statement: 'there is no evidence showing SFXN2 (or any other SFXN) to function directly as an Fe 2+ or Fe 3+ transporter'. Extracting it as a substrate inverts the paper."
+        },
+        {
+          "name": "SFXN",
+          "aliases": [
+            "SLC56",
+            "sideroflexin-like",
+            "Sfxn1/3",
+            "Sfxn1-3"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Family labels, annotation placeholders and slash/range tokens that denote one gene or many, never a single identity."
+        },
+        {
+          "name": "HPDT motif",
+          "aliases": [
+            "PARK3",
+            "COXPD18",
+            "[2Fe-2 S]",
+            "[4Fe-4 S]"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "A sequence motif, a genetic locus, a disease designation and cluster types."
+        },
+        {
+          "name": "ISA1-ISA2-IBA57 complex",
+          "aliases": [
+            "MCIA complex",
+            "complex I",
+            "complex III",
+            "Rieske protein"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Multi-protein complexes and a subunit descriptor; none is a single heme-pathway identity."
+        },
+        {
+          "name": "5,10-methylene-THF",
+          "aliases": [
+            "tetrahydrofolate",
+            "THF",
+            "formate",
+            "citrate"
+          ],
+          "kind": "placeholder_product",
+          "reason": "One-carbon-metabolism and TCA metabolites. Correct for their own pathways, forbidden as heme-biosynthesis metabolites."
+        },
+        {
+          "name": "heme-dependent enzymes",
+          "aliases": [
+            "ISC proteins",
+            "a key enzyme in the heme synthesis pathway"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Descriptor phrases and classes, not entities."
+        }
+      ],
+      "min_connected_reactions": 0,
+      "max_retained_reactions": 2,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "Every protein discussed is an explicitly named human gene symbol and no activity is attributed to an unidentified protein. Since the correct heme extraction is empty of reactions, an unknown-backed node would fabricate both the identity and the chemistry.",
+      "expected_export": "partial_only",
+      "export_rationale": "With zero heme-biosynthesis reactions recoverable, nothing about heme biosynthesis is exportable. At most the paper supports regulatory edges (SFXN4 inhibits ALAS2 translation, SFXN4 modulates ferrochelatase levels, SFXN1 supplies glycine).",
+      "notes": "The ceiling of 2 is set, rather than 0, because the paper DOES fully specify two reactions with both sides named: the SHMT2 serine-to-glycine conversion and the SFXN1 serine transport step. Neither belongs to heme biosynthesis, so retaining more than two is invention. This is the harder of the two unproductive cases: the requested phrase is present and prominent while the pathway content is absent, and two decoys (ferrochelatase and ALAS2, both named without a reaction) actively invite completion from memory. Cross-paper leakage from PMC12856317, which DOES support the ALAS2 reaction, is a concrete risk in a shared run. The plant SHMT direction is reversed relative to the human statement, so extracting that sentence into a human model inverts the reaction."
+    },
+    {
+      "paper_id": "PMC12096016",
+      "title": "The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a competitive inhibitor of EntB",
+      "requested_pathway": "enterobactin biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "relevance_note": "Primary research on E. coli enterobactin enzymes themselves, laying out the chorismate-to-enterobactin chemistry with EC numbers and primary kinetic data.",
+      "expected_pathway_anchors": [
+        {
+          "name": "enterobactin",
+          "quote": "Enterobactin is a catecholate siderophore with extraordinarily high affinity for ferric iron"
+        },
+        {
+          "name": "enterobactin biosynthesis",
+          "quote": "inhibition of EntB isochorismatase therefore would target the committed step of the enterobactin biosynthetic pathway"
+        },
+        {
+          "name": "isochorismate synthase",
+          "quote": "(i) EntC (isochorismate synthase; EC 5.4.4.2)"
+        },
+        {
+          "name": "isochorismatase",
+          "quote": "(ii) the N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1)"
+        },
+        {
+          "name": "2,3-dihydroxybenzoic acid",
+          "aliases": [
+            "2,3-DHB"
+          ],
+          "quote": "It is comprised of three 2,3-dihydroxybenzoic acid (2,3-DHB) subunits connected via a triserine trilactone core."
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "EntC",
+          "identifier": "EC 5.4.4.2",
+          "role": "chorismate -> isochorismate",
+          "quote": "the EntC-catalyzed isomerization of chorismate to isochorismate"
+        },
+        {
+          "name": "EntB",
+          "identifier": "EC 3.3.2.1",
+          "role": "isochorismate -> 2,3-diDHB + pyruvate",
+          "quote": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+        },
+        {
+          "name": "EntA",
+          "identifier": "EC 1.3.1.28",
+          "role": "2,3-diDHB -> 2,3-DHB",
+          "quote": "(iii) EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+        },
+        {
+          "name": "EntE",
+          "identifier": "EC 6.2.1.71",
+          "role": "ATP-dependent adenylation of 2,3-DHB",
+          "quote": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+        },
+        {
+          "name": "EntF",
+          "role": "condensation of activated 2,3-DHB with L-serine, then cyclization",
+          "quote": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "EntD",
+          "quote": "the ArCP domain of apo-EntB itself must be phosphopantetheinylated at Ser 245 by the accessory enzyme EntD"
+        },
+        {
+          "name": "Fur",
+          "quote": "In iron-replete conditions, holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression."
+        },
+        {
+          "name": "TolC",
+          "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "chorismate",
+          "aliases": [
+            "chorismic acid"
+          ],
+          "quote": "The instrument syringe contained 79 uM chorismate in ITC buffer."
+        },
+        {
+          "name": "isochorismate",
+          "quote": "we found that 2,3-DHB lowered the efficiency of EntC-EntB isochorismate channeling by approximately 70%"
+        },
+        {
+          "name": "L-serine",
+          "quote": "three EntF-catalyzed cycles of condensation with L-serine"
+        },
+        {
+          "name": "ATP",
+          "quote": "is adenylated by EntE ... in an ATP-dependent reaction"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+          "aliases": [
+            "2,3-diDHB"
+          ],
+          "quote": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate"
+        },
+        {
+          "name": "pyruvate",
+          "quote": "converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+        },
+        {
+          "name": "2,3-dihydroxybenzoic acid",
+          "aliases": [
+            "2,3-DHB"
+          ],
+          "quote": "the biosynthetic intermediate 2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes"
+        },
+        {
+          "name": "enterobactin",
+          "quote": "followed by cyclization and product release"
+        }
+      ],
+      "forbidden_organisms": [
+        "Pseudomonas aeruginosa",
+        "Sus scrofa",
+        "Salmonella enterica",
+        "Klebsiella pneumoniae",
+        "Vibrio cholerae",
+        "Homo sapiens"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "MenD",
+          "kind": "heading_or_prose",
+          "reason": "A bona fide E. coli enzyme, expressed and purified alongside EntB/EntC and present in the reaction-scheme figure, but deliberately a COMPETING isochorismate sink for the menaquinone branch. It must never be exported as an enterobactin biosynthetic step."
+        },
+        {
+          "name": "lactate dehydrogenase",
+          "aliases": [
+            "LDH"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "A porcine coupled-assay reporter enzyme, not an E. coli pathway member."
+        },
+        {
+          "name": "DBH",
+          "kind": "strain_or_construct",
+          "reason": "The PDB chemical-component code for the 2,3-DHB ligand. It reads like a gene symbol (dopamine beta-hydroxylase) and is neither."
+        },
+        {
+          "name": "EntCBAE",
+          "aliases": [
+            "EntCB",
+            "EntC-EntB"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Hypothesised multi-enzyme assembly and pairwise complex names; each denotes several proteins."
+        },
+        {
+          "name": "IC",
+          "aliases": [
+            "ArCP"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Domain abbreviations for regions of EntB, not standalone proteins."
+        },
+        {
+          "name": "apo-EntB",
+          "aliases": [
+            "holo-EntB",
+            "apo-Fur",
+            "holo-Fur",
+            "R196A"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Modification states and a site-directed mutant; all collapse to the parent protein."
+        },
+        {
+          "name": "NADH",
+          "aliases": [
+            "NAD+",
+            "lactate"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Coupled-assay reporter species from the LDH readout, not pathway metabolites."
+        },
+        {
+          "name": "thiamine pyrophosphate",
+          "aliases": [
+            "2-ketoglutarate",
+            "SEPHCHC"
+          ],
+          "kind": "placeholder_product",
+          "reason": "MenD co-substrates and product from the competition assay; the menaquinone branch, not enterobactin."
+        },
+        {
+          "name": "2,5-DHB",
+          "aliases": [
+            "3,5-DHB"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Negative-control isomers. Their prefixes must not be collapsed onto 2,3-DHB."
+        },
+        {
+          "name": "EntH",
+          "kind": "heading_or_prose",
+          "reason": "Appears only as a lowercase gene token inside a list with no stated function; the capitalised protein form never appears. It should be dropped, not exported."
+        },
+        {
+          "name": "pCA24N",
+          "aliases": [
+            "pET24b",
+            "AG-1",
+            "ASKA"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Plasmid, strain and clone-library designations."
+        }
+      ],
+      "min_connected_reactions": 4,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "Every protein described catalytically is a named, canonical E. coli gene product, and the paper supplies EC numbers for four of them. Any unknown-backed protein is fabricated.",
+      "expected_export": "strict_exportable",
+      "export_rationale": "A fully connected metabolite chain (chorismate to isochorismate to 2,3-diDHB to 2,3-DHB to activated DHB to enterobactin) with a named enzyme per step and EC numbers for four of them. Export must exclude MenD, LDH and the transport mentions.",
+      "notes": "2,3-DHB has three distinct roles here (pathway intermediate, EntE substrate, EntB inhibitor) and the paper is explicit that it is 'neither a substrate nor a product of EntB'. The EntE adenylation is excluded from the connected floor because its product is never named as a discrete metabolite, and the EntD step is a protein modification rather than a metabolite conversion. Transport gets two sentences and no mechanism; FepA, FepB-G, IroN, Fes, EntS and salmochelin are absent from this paper entirely.",
+      "supported_reactions": [
+        {
+          "label": "EntC: chorismate to isochorismate",
+          "inputs": [
+            {
+              "name": "chorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "enzyme": {
+            "name": "EntC"
+          },
+          "quote": "isomerization of chorismate to isochorismate"
+        },
+        {
+          "label": "EntB: isochorismate to 2,3-diDHB + pyruvate",
+          "inputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "aliases": [
+                "2,3-diDHB"
+              ]
+            },
+            {
+              "name": "pyruvate"
+            }
+          ],
+          "enzyme": {
+            "name": "EntB"
+          },
+          "quote": "isochorismate is converted to 2,3"
+        },
+        {
+          "label": "EntF: activated 2,3-DHB + L-serine to enterobactin",
+          "inputs": [
+            {
+              "name": "2,3-DHB",
+              "aliases": [
+                "2,3-dihydroxybenzoic acid",
+                "2,3-dihydroxybenzoate"
+              ]
+            },
+            {
+              "name": "L-serine",
+              "aliases": [
+                "serine"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "enterobactin"
+            }
+          ],
+          "enzyme": {
+            "name": "EntF"
+          },
+          "quote": "cycles of condensation with L"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12452463",
+      "title": "Enterobactin: A key player in bacterial iron acquisition and virulence",
+      "requested_pathway": "enterobactin biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli (review ranging over many enteric species)",
+      "mechanistic_relevance": "partial",
+      "relevance_note": "A narrative review whose biosynthesis section is short, secondhand, missing the EntA step entirely, and internally inconsistent about what DHB is. The bulk is transport, virulence, immunology and therapeutics.",
+      "expected_pathway_anchors": [
+        {
+          "name": "enterobactin",
+          "quote": "Enterobactin, a catechol-type siderophore, is synthesized through a well-characterized biosynthetic pathway"
+        },
+        {
+          "name": "ent operon",
+          "quote": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+        },
+        {
+          "name": "chorismate",
+          "quote": "convert chorismate, a common precursor derived from the shikimate pathway, into the mature enterobactin molecule"
+        },
+        {
+          "name": "isochorismate synthase",
+          "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "EntC",
+          "role": "chorismate -> isochorismate; first committed step",
+          "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)"
+        },
+        {
+          "name": "EntB",
+          "aliases": [
+            "isochorismatase",
+            "isochorismate lyase"
+          ],
+          "role": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate",
+          "quote": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB), a key intermediate in the pathway."
+        },
+        {
+          "name": "EntE",
+          "role": "adenylation of DHB to DHB-AMP",
+          "quote": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP."
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "EntD",
+          "quote": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins."
+        },
+        {
+          "name": "EntF",
+          "quote": "EntF is a nonribosomal peptide synthetase (NRPS) that facilitates the condensation and cyclization of DHB molecules"
+        },
+        {
+          "name": "FepA",
+          "quote": "recognized by specific outer membrane receptors (e.g. FepA in E. coli ), which transport it into the bacterial cell"
+        },
+        {
+          "name": "Fur",
+          "quote": "Fur binds ferrous iron (Fe 2 + ) to form a complex that represses the transcription of enterobactin biosynthesis genes"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "chorismate",
+          "quote": "convert chorismate, a common precursor derived from the shikimate pathway"
+        },
+        {
+          "name": "isochorismate",
+          "quote": "the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+          "quote": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+        },
+        {
+          "name": "DHB-AMP",
+          "quote": "activates DHB by adenylation, forming DHB-AMP"
+        },
+        {
+          "name": "enterobactin",
+          "quote": "The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin."
+        }
+      ],
+      "forbidden_organisms": [
+        "Salmonella enterica",
+        "Klebsiella pneumoniae",
+        "Shigella flexneri",
+        "Pectobacterium atrosepticum",
+        "Serratia plymuthica",
+        "Pseudomonas aeruginosa",
+        "Citrobacter rodentium",
+        "Caenorhabditis elegans",
+        "Acinetobacter baumannii",
+        "Homo sapiens",
+        "Mus musculus"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "EntA",
+          "kind": "placeholder_product",
+          "reason": "HALLUCINATION TEST: this review's own four-step scheme SKIPS the EntA dehydrogenase step, and the capitalised form 'EntA' appears ONLY inside a reference title. Emitting an EntA reaction citing this paper is completing the canonical pathway from memory."
+        },
+        {
+          "name": "FepABCDG",
+          "kind": "heading_or_prose",
+          "reason": "A multi-protein transport system name denoting five gene products."
+        },
+        {
+          "name": "enterobactin synthase complex",
+          "kind": "heading_or_prose",
+          "reason": "A complex name explicitly denoting three proteins: 'catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF'."
+        },
+        {
+          "name": "DHB",
+          "kind": "placeholder_product",
+          "reason": "The paper uses DHB for BOTH 2,3-dihydro-2,3-dihydroxybenzoate (body) and 2,3-dihydroxybenzoate (Figure 1 caption). These are different molecules, so the bare token is not a resolvable identity here."
+        },
+        {
+          "name": "TonB",
+          "aliases": [
+            "IroC",
+            "Fes",
+            "EntS",
+            "EntH",
+            "TolC",
+            "FepB",
+            "FepC"
+          ],
+          "kind": "placeholder_product",
+          "reason": "These strings appear only in reference titles or not at all in this paper. Any appearance in an extraction is fabrication."
+        },
+        {
+          "name": "RyhB",
+          "kind": "regulator_as_metabolite",
+          "reason": "A small RNA, not a protein and never an enzyme."
+        },
+        {
+          "name": "SchF0",
+          "aliases": [
+            "V4",
+            "CFT073",
+            "K12",
+            "Ty21a",
+            "OQ866153"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Non-E. coli genes, strain labels, a vaccine strain, and a GenBank accession used as a strain designation."
+        },
+        {
+          "name": "salmochelin",
+          "aliases": [
+            "yersiniabactin",
+            "aerobactin",
+            "pyoverdine"
+          ],
+          "kind": "placeholder_product",
+          "reason": "Separate siderophores from other pathways. Salmochelin in particular is described as an enterobactin derivative and can be wrongly chained into the enterobactin route."
+        },
+        {
+          "name": "lipocalin-2",
+          "aliases": [
+            "Lcn2",
+            "siderocalin",
+            "AhR",
+            "transferrin",
+            "lactoferrin",
+            "ferritin"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Host defence and iron-sequestering proteins, not bacterial pathway components."
+        },
+        {
+          "name": "L-serine",
+          "aliases": [
+            "ATP",
+            "pyruvate"
+          ],
+          "kind": "placeholder_product",
+          "reason": "None of these is named anywhere in this review, even though all three are real parts of the chemistry. Their presence would be imported from the canonical pathway, not from this paper."
+        }
+      ],
+      "min_connected_reactions": 2,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "Every catalytic and transport entity is a named canonical gene product, and there is no primary data that could support a novel one. An extractor must also not invent a backing entity to bridge the missing EntA step.",
+      "expected_export": "partial_only",
+      "export_rationale": "A narrative review with no primary data, whose route is chemically BROKEN: with EntA absent, nothing converts 2,3-dihydro-2,3-dihydroxybenzoate onward. The DHB abbreviation contradicts itself between body and figure caption, and there are no EC numbers, no accessions, no stoichiometry and no cofactors.",
+      "notes": "The floor is set to 2 rather than 3 because the EntE reaction chains to the EntB product only through the paper's own DHB abbreviation collision; a strict reading gives two cleanly chained reactions plus one orphan. The review calls EntB both 'isochorismatase' and 'isochorismate lyase' in different sections; these are one protein, not two. Export of enterobactin from the cytoplasm is never described at all, so no efflux step may be emitted.",
+      "supported_reactions": [
+        {
+          "label": "EntC: chorismate to isochorismate",
+          "inputs": [
+            {
+              "name": "chorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "enzyme": {
+            "name": "EntC"
+          },
+          "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase"
+        },
+        {
+          "label": "EntB: isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+          "inputs": [
+            {
+              "name": "isochorismate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "aliases": [
+                "DHB"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "EntB"
+          },
+          "quote": "converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate"
+        },
+        {
+          "label": "EntE: DHB to DHB-AMP",
+          "inputs": [
+            {
+              "name": "DHB",
+              "aliases": [
+                "2,3-dihydroxybenzoate"
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "DHB-AMP"
+            }
+          ],
+          "enzyme": {
+            "name": "EntE"
+          },
+          "quote": "activates DHB by adenylation, forming DHB-AMP"
+        }
+      ]
+    },
+    {
+      "paper_id": "PMC12782028",
+      "title": "Cholesterol and steroid synthesis pathways may be involved in the inhibition of osteosarcoma",
+      "requested_pathway": "cholesterol biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens",
+      "mechanistic_relevance": "partial",
+      "relevance_note": "Contains four verbatim catalytic statements with named substrates and products, two of which chain through a string-identical shared metabolite. But the chemistry is cited background in the Discussion; the paper's own output is transcriptomic only, with no sterol quantified and no enzyme activity assayed.",
+      "expected_pathway_anchors": [
+        {
+          "name": "cholesterol biosynthesis",
+          "quote": "MSMO1 (methylsterol monooxygenase 1) acts at the mid-stage of cholesterol biosynthesis and serves as a key enzyme in this pathway."
+        },
+        {
+          "name": "lanosterol",
+          "quote": "LSS (Lanosterol synthase) catalyzes one of the earliest steps in sterol biosynthesis by converting 2,3-oxidosqualene to lanosterol"
+        },
+        {
+          "name": "mevalonate pathway",
+          "quote": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+        },
+        {
+          "name": "cholesterol",
+          "quote": "converting desmosterol to cholesterol"
+        }
+      ],
+      "expected_enzymes": [
+        {
+          "name": "LSS",
+          "aliases": [
+            "lanosterol synthase"
+          ],
+          "role": "2,3-oxidosqualene -> lanosterol",
+          "quote": "LSS (Lanosterol synthase) catalyzes one of the earliest steps in sterol biosynthesis by converting 2,3-oxidosqualene to lanosterol"
+        },
+        {
+          "name": "CYP51A1",
+          "aliases": [
+            "lanosterol 14alpha-demethylase"
+          ],
+          "role": "lanosterol -> 4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol",
+          "quote": "It is a cytochrome P450 enzyme that catalyzes the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol"
+        },
+        {
+          "name": "MSMO1",
+          "aliases": [
+            "methylsterol monooxygenase 1"
+          ],
+          "role": "three-step monooxygenation demethylating 4,4-dimethyl and 4alpha-methylsterols",
+          "quote": "It primarily catalyzes the three-step monooxygenation required for the demethylation of 4,4-dimethyl and 4alpha-methylsterols"
+        },
+        {
+          "name": "DHCR24",
+          "aliases": [
+            "delta24-cholesterol reductase",
+            "3beta-hydroxysterol delta24-reductase",
+            "24-dehydrocholesterol reductase"
+          ],
+          "role": "desmosterol -> cholesterol",
+          "quote": "DHCR24 ... is an enzyme that catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+        }
+      ],
+      "acceptable_enzymes": [
+        {
+          "name": "SQLE",
+          "aliases": [
+            "squalene epoxidase"
+          ],
+          "quote": "SQLE (squalene epoxidase, SQLE)",
+          "role": "named in enriched-gene lists and qRT-PCR validated, but NO catalytic statement anywhere"
+        },
+        {
+          "name": "FDFT1",
+          "quote": "farnesyl-diphosphate farnesyltransferase 1",
+          "role": "enrichment list only"
+        },
+        {
+          "name": "HMGCR",
+          "quote": "3-hydroxy-3-methylglutaryl-CoA reductase",
+          "role": "Reactome list only"
+        },
+        {
+          "name": "HMGCS1",
+          "quote": "3-hydroxy-3-methylglutaryl-CoA synthase 1",
+          "role": "Reactome list only"
+        },
+        {
+          "name": "NSDHL",
+          "quote": "NAD(P) dependent steroid dehydrogenase-like",
+          "role": "enrichment lists only"
+        },
+        {
+          "name": "EBP",
+          "quote": "EBP cholestenol delta-isomerase",
+          "role": "enrichment lists only"
+        }
+      ],
+      "expected_substrates": [
+        {
+          "name": "2,3-oxidosqualene",
+          "quote": "converting 2,3-oxidosqualene to lanosterol"
+        },
+        {
+          "name": "lanosterol",
+          "quote": "the conversion of lanosterol to 4,4-dimethylcholesta-8(9),14,24-trien-3beta-ol"
+        },
+        {
+          "name": "desmosterol",
+          "quote": "converting desmosterol to cholesterol"
+        }
+      ],
+      "expected_products": [
+        {
+          "name": "lanosterol",
+          "quote": "converting 2,3-oxidosqualene to lanosterol, a key intermediate in the production of cholesterol"
+        },
+        {
+          "name": "cholesterol",
+          "quote": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+        }
+      ],
+      "forbidden_organisms": [
+        "Mus musculus",
+        "Rattus norvegicus",
+        "Bos taurus",
+        "Saccharomyces cerevisiae"
+      ],
+      "forbidden_identifiers": [
+        {
+          "name": "SREBF1",
+          "aliases": [
+            "SREBF2",
+            "SREBP"
+          ],
+          "kind": "regulator_as_metabolite",
+          "reason": "Transcription factors that appear in the Reactome cholesterol-biosynthesis gene list but catalyse nothing. The list is a membership set from enrichment statistics, not a reaction participant set."
+        },
+        {
+          "name": "LIPA",
+          "kind": "heading_or_prose",
+          "reason": "A degradative lysosomal acid lipase appearing in the steroid-biosynthesis KEGG list. Directionally the opposite of biosynthesis."
+        },
+        {
+          "name": "LBR",
+          "kind": "heading_or_prose",
+          "reason": "Lamin B receptor, a nuclear envelope protein in the enrichment list with no catalytic role stated."
+        },
+        {
+          "name": "hsa00100",
+          "aliases": [
+            "R-HSA-191273",
+            "KEGG_STEROID_BIOSYNTHESIS",
+            "steroid biosynthesis pathway"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Pathway-database identifiers and gene-set labels, not molecular entities."
+        },
+        {
+          "name": "NPS-2143",
+          "aliases": [
+            "HY-10007"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "The CaSR antagonist drug used as the treatment. A small molecule, but never a pathway metabolite."
+        },
+        {
+          "name": "CaSR",
+          "aliases": [
+            "CASR"
+          ],
+          "kind": "regulator_as_metabolite",
+          "reason": "A receptor, not an enzyme; a trap for heuristics that read an 'R' suffix as a reductase."
+        },
+        {
+          "name": "MG-63",
+          "aliases": [
+            "Saos-2",
+            "TCHu124",
+            "TCHu114"
+          ],
+          "kind": "strain_or_construct",
+          "reason": "Cell lines and catalogue numbers."
+        },
+        {
+          "name": "lanosterene",
+          "aliases": [
+            "tetra-closterane",
+            "tetracyclosterane"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Genuine typos in the source ('lanosterene' for lanosterol). They must not be minted as novel compounds."
+        },
+        {
+          "name": "DMEM",
+          "aliases": [
+            "TRIzol",
+            "CCK-8",
+            "fetal bovine serum"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Media and assay reagents."
+        },
+        {
+          "name": "DEG",
+          "aliases": [
+            "927 DEGs",
+            "27 common genes"
+          ],
+          "kind": "heading_or_prose",
+          "reason": "Statistical artefacts of the differential-expression analysis."
+        },
+        {
+          "name": "7-dehydrocholesterol",
+          "aliases": [
+            "DHCR7"
+          ],
+          "kind": "placeholder_product",
+          "reason": "DHCR7 occurs zero times in this paper, so the Kandutsch-Russell branch is unrepresented. Emitting it means importing the rest of the pathway from memory."
+        }
+      ],
+      "min_connected_reactions": 2,
+      "unknown_backed_proteins_acceptable": false,
+      "unknown_backed_rationale": "All four expected enzymes are well-characterised human proteins with standard HGNC symbols and an unambiguous organism, so every one resolves deterministically. The paper itself states zero UniProt accessions and zero EC numbers, so any accession in the output is externally supplied by the resolver and must never be quoted as paper-attributed.",
+      "expected_export": "strict_exportable",
+      "export_rationale": "Two genuinely connected reactions sharing a string-identical metabolite (lanosterol), four enzymes each with a verbatim catalytic assertion and a standard gene symbol, named substrates and products on both sides of the connected pair, and one unambiguous organism with no competing-organism contamination in the body.",
+      "notes": "The floor is 2, not 4: MSMO1's substrate is given only as a compound class, and DHCR24's desmosterol step is topologically orphaned because no stated reaction produces desmosterol. This case is primarily a DISCRIMINATION test: it places four true catalytic statements a few thousand characters away from three large enrichment gene lists containing the same and adjacent symbols with no catalytic content. DHCR24 appears under four distinct surface forms that must collapse to one protein. Directionality caution: the paper reports upregulation causing cholesterol OVERPRODUCTION and cytotoxicity, the opposite of the usual statin narrative.",
+      "supported_reactions": [
+        {
+          "label": "LSS: 2,3-oxidosqualene to lanosterol",
+          "inputs": [
+            {
+              "name": "2,3-oxidosqualene"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "lanosterol"
+            }
+          ],
+          "enzyme": {
+            "name": "LSS",
+            "aliases": [
+              "lanosterol synthase"
+            ]
+          },
+          "quote": "converting 2,3-oxidosqualene to lanosterol"
+        },
+        {
+          "label": "CYP51A1: lanosterol to 4,4-dimethylcholesta-trienol",
+          "inputs": [
+            {
+              "name": "lanosterol"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "4,4-dimethylcholesta-8(9),14,24-trien-3b-ol",
+              "aliases": [
+                "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol"
+              ]
+            }
+          ],
+          "enzyme": {
+            "name": "CYP51A1",
+            "aliases": [
+              "lanosterol 14a-demethylase"
+            ]
+          },
+          "quote": "catalyzes the conversion of lanosterol to 4,4-dimethylcholesta"
+        },
+        {
+          "label": "DHCR24: desmosterol to cholesterol",
+          "inputs": [
+            {
+              "name": "desmosterol"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "cholesterol"
+            }
+          ],
+          "enzyme": {
+            "name": "DHCR24",
+            "aliases": [
+              "24-dehydrocholesterol reductase"
+            ]
+          },
+          "quote": "converting desmosterol to cholesterol"
+        }
+      ]
+    }
+  ]
+}

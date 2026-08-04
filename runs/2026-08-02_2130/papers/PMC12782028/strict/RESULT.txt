@@ -1,0 +1,51 @@
+RESULT: FAIL
+========================================
+paper      : PMC12782028
+title      : (unknown)
+slug       : PMC12782028
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1212.2s (20m12s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 6 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_lss_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_cyp51a1_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_dhcr24_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: minimum_core:requested_core_coverage_below_minimum:0.276<0.500
+[post_normalization_contract_report] gate.protein_lss_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'LSS' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_cyp51a1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'CYP51A1' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_dhcr24_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'DHCR24' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 5
+  contract_errors = 3
+  entities = 13
+  gate_errors = 3
+  proteins = 1
+  reactions = 3
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (938 B)
+  - contract_reports.json  (19861 B)
+  - final_mapped.json  (55150 B)
+  - gap_iteration_summary.json  (50830 B)
+  - gate_fail_report.json  (7566 B)
+  - merged_payload.json  (7217 B)
+  - rag_admission_report.json  (395678 B)
+  - stage1_payload.json  (6166 B)

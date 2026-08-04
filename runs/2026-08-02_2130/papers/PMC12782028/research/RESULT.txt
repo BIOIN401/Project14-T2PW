@@ -1,0 +1,26 @@
+RESULT: FAIL
+========================================
+paper      : PMC12782028
+title      : (unknown)
+slug       : PMC12782028
+mode       : research
+status     : fail
+stage      : stage1
+wall time  : 15.1s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (583 B)
+  - extraction_boundary_report.json  (1661 B)
+  - stage0_attempts.json  (827 B)

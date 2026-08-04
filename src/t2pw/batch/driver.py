@@ -1155,6 +1155,71 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
     contracts = _collect_reports(artifacts)
     if contracts:
         out["contract_reports.json"] = _json_text(contracts)
+    _add_identity_artifacts(at, artifacts, out)
+
+
+def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any]) -> None:
+    """Persist the two artifacts an offline scientific audit cannot work without.
+
+    Both used to be reachable only on paths that a failing run never takes, which
+    made the two most consequential questions unanswerable after the fact:
+
+    ``final_mapped.json`` -- was written **only** by :func:`_add_strict_artifacts`,
+    i.e. only when a strict run got all the way to a PWML export. Every strict run
+    in ``runs/2026-07-28_2122`` died at the Stage-3 gate, so not one of them
+    stored a mapped payload, and ``merged_payload.json`` is *pre-mapping*: it
+    carries no accession of any kind. Auditing identity against it reports "zero
+    false identifiers" for every run, which reads as a clean bill of health and
+    is really "the file cannot answer the question". Writing it here -- from the
+    common path, which every failure branch already calls -- is what makes "real
+    IDs versus Unknown fallbacks" measurable on a run that failed.
+
+    ``rag_admission_report.json`` -- ``AdmissionReport.rejected`` never reached
+    disk at all. It is the only record of which claims the admission gate refused,
+    and without it "was a rejected reaction reintroduced downstream?" is not a
+    check that fails, it is a check that cannot run. Contrast
+    ``quarantined_locked_reactions``, which *is* persisted into the payload, and
+    which is why locked-reaction reintroduction has always been auditable.
+
+    Both are best-effort: a run that never reached mapping legitimately has no
+    mapped payload, and RAG is optional. Absence stays a diagnosis, not a crash.
+    """
+
+    mapped = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
+    if isinstance(mapped, dict) and mapped:
+        out["final_mapped.json"] = _json_text(mapped)
+
+    admission = _rag_admission(_ss(at, "rag_result"))
+    if admission:
+        out["rag_admission_report.json"] = _json_text(admission)
+
+
+def _rag_admission(rag_result: Any) -> Dict[str, Any]:
+    """The admission report as PRODUCTION shapes it: ``rag_result.synthesis.admission``.
+
+    The report hangs off ``SynthesisResult``, not off the orchestration result,
+    so ``getattr(rag_result, "admission")`` is always ``None`` against a real run
+    -- the artifact would simply never be written, and the reintroduction check
+    would report "not evaluated" forever while looking like it was wired up. The
+    access path here is copied from the app's own RAG panel
+    (``streamlit_app.render_rag_panels``), which is the authoritative reader:
+
+        synthesis = getattr(rag_result, "synthesis", None)
+        admission = getattr(synthesis, "admission", None)
+
+    ``rag_result.admission`` is still accepted as a fallback so a hand-built test
+    double or a future flattening does not silently stop producing the artifact.
+    Every step is ``getattr``-guarded: RAG is optional, and a run where it never
+    triggered has no orchestration result at all.
+    """
+
+    if rag_result is None:
+        return {}
+    synthesis = getattr(rag_result, "synthesis", None)
+    admission = getattr(synthesis, "admission", None) if synthesis is not None else None
+    if not isinstance(admission, dict) or not admission:
+        admission = getattr(rag_result, "admission", None)
+    return admission if isinstance(admission, dict) and admission else {}
 
 
 #: Session-state key the app publishes its Stage-0/Stage-1 diagnostics under, as
@@ -1221,9 +1286,9 @@ def _add_strict_artifacts(
         value = pwml_result.get(key)
         if isinstance(value, dict) and value:
             out[name] = _json_text(value)
-    mapped = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
-    if isinstance(mapped, dict) and mapped:
-        out["final_mapped.json"] = _json_text(mapped)
+    # ``final_mapped.json`` is written by _add_identity_artifacts on the common
+    # path, which runs on every branch including the failing ones. Re-emitting it
+    # here would be a second writer for one filename with no second source.
 
 
 def _add_research_artifacts(

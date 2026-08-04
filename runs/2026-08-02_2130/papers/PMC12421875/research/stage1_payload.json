@@ -1,0 +1,763 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Lactococcus lactis subsp. lactis KF147"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "canonical_id": "cytosol",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "name": "extracellular",
+        "canonical_id": "extracellular",
+        "evidence": "DHNA secreted by L. lactis"
+      },
+      {
+        "name": "cell membrane",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "demethylmenaquinone",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "menaquinone",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenG",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "NoxAB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cytoplasmic state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cytoplasm",
+      "evidence": "intracellular DHNA concentration"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "extracellular",
+      "evidence": "DHNA secreted by L. lactis"
+    },
+    {
+      "name": "cytoplasm state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Expected compartments: cytoplasm, cell membrane"
+    },
+    {
+      "name": "cell membrane state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cell membrane",
+      "evidence": "Expected compartments: cytoplasm, cell membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "SEPHCHC",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "SHCHC",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "OSB",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "OSB-CoA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "DHNA-CoA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "extracellular state",
+        "evidence": "DHNA secreted by L. lactis"
+      },
+      {
+        "compound": "chorismate",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "SEPHCHC",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "SHCHC",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "OSB",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "OSB-CoA",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "DHNA-CoA",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "demethylmenaquinone",
+        "biological_state": "cell membrane state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "compound": "menaquinone",
+        "biological_state": "cell membrane state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "MenF",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenD",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenH",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenC",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenE",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenB",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenI",
+        "biological_state": "cytoplasmic state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "protein": "MenF",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenD",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenC",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenH",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenE",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenB",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenI",
+        "biological_state": "cytoplasm state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenA",
+        "biological_state": "cell membrane state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "MenG",
+        "biological_state": "cell membrane state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      },
+      {
+        "protein": "NoxAB",
+        "biological_state": "cell membrane state",
+        "evidence": "Expected compartments: cytoplasm, cell membrane"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_010",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MenF is also known to be capable of catalyzing both forward and reverse conversion of chorismate to isochorismate",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_013",
+        "name": "MenH reaction",
+        "enzymes": [
+          {
+            "protein": "MenH",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "MenC reaction",
+        "enzymes": [
+          {
+            "protein": "MenC",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "MenE reaction",
+        "enzymes": [
+          {
+            "protein": "MenE",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "MenB reaction",
+        "enzymes": [
+          {
+            "protein": "MenB",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "DHNA"
+        ],
+        "locked_reaction_id": "rxn_lock_015",
+        "name": "MenI reaction",
+        "enzymes": [
+          {
+            "protein": "MenI",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_011",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MenF",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenF",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenD",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "MenC reaction",
+        "enzymes": [
+          {
+            "protein": "MenC",
+            "evidence": "MenC",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenC",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "locked_reaction_id": "rxn_lock_014",
+        "name": "MenH reaction",
+        "enzymes": [
+          {
+            "protein": "MenH",
+            "evidence": "MenH",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenH",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_009",
+        "name": "MenE reaction",
+        "enzymes": [
+          {
+            "protein": "MenE",
+            "evidence": "MenE",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenE",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "MenB reaction",
+        "enzymes": [
+          {
+            "protein": "MenB",
+            "evidence": "MenB",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenB",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "DHNA"
+        ],
+        "locked_reaction_id": "rxn_lock_016",
+        "name": "MenI reaction",
+        "enzymes": [
+          {
+            "protein": "MenI",
+            "evidence": "MenI",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasm state",
+        "evidence": "MenI",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA"
+        ],
+        "outputs": [
+          "demethylmenaquinone"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenA reaction",
+        "enzymes": [
+          {
+            "protein": "MenA",
+            "evidence": "MenA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cell membrane state",
+        "evidence": "MenA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "demethylmenaquinone"
+        ],
+        "outputs": [
+          "menaquinone"
+        ],
+        "locked_reaction_id": "rxn_lock_012",
+        "name": "MenG reaction",
+        "enzymes": [
+          {
+            "protein": "MenG",
+            "evidence": "MenG",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cell membrane state",
+        "evidence": "MenG",
+        "scope_membership": "core"
+      }
+    ],
+    "transports": [
+      {
+        "name": "DHNA export",
+        "cargo": "DHNA",
+        "from_biological_state": "cytoplasmic state",
+        "to_biological_state": "extracellular state",
+        "elements_with_states": [
+          {
+            "element": "DHNA",
+            "side": "left",
+            "biological_state": "cytoplasmic state",
+            "evidence": "DHNA diffusion through the membrane occurs at a rate k_DHNA"
+          },
+          {
+            "element": "DHNA",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "DHNA diffusion through the membrane occurs at a rate k_DHNA"
+          }
+        ],
+        "evidence": "DHNA diffusion through the membrane occurs at a rate k_DHNA"
+      },
+      {
+        "name": "DHNA export",
+        "cargo": "DHNA",
+        "from_biological_state": "cytoplasm state",
+        "to_biological_state": "cell membrane state",
+        "elements_with_states": [
+          {
+            "element": "DHNA",
+            "side": "left",
+            "biological_state": "cytoplasm state",
+            "evidence": "diffusion rate of DHNA"
+          },
+          {
+            "element": "DHNA",
+            "side": "right",
+            "biological_state": "cell membrane state",
+            "evidence": "diffusion rate of DHNA"
+          }
+        ],
+        "evidence": "diffusion rate of DHNA"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "DHNA",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "biological_state": "cytoplasmic state",
+        "evidence": "the allosteric inhibition of MenD by DHNA"
+      },
+      {
+        "entity_1": "DHNA",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "biological_state": "cytoplasm state",
+        "evidence": "DHNA"
+      }
+    ]
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Zn²⁺",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "hydrolyzed meropenem",
+        "class": "compound",
+        "evidence": "NDM-1... hydrolyze all β-lactam antibiotics",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "NDM-1... hydrolyze all β-lactam antibiotics"
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "phthalylsulfacetamide inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "phthalylsulfacetamide interacts with LpxC",
+        "relationship": "interacts with",
+        "evidence": "PSA may potentially interact with LpxC"
+      },
+      {
+        "entity_1": "Zn²⁺",
+        "entity_2": "NDM-1",
+        "name": "Zn²⁺ interacts with NDM-1",
+        "relationship": "interacts with",
+        "evidence": "PSA stably binds to the active hydrolysis center of NDM-1, interacts with Zn²⁺"
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "meropenem"
+        ],
+        "outputs": [
+          "hydrolyzed meropenem"
+        ],
+        "name": "NDM-1-catalyzed meropenem hydrolysis",
+        "enzymes": [
+          {
+            "protein": "NDM-1",
+            "evidence": "NDM-1... hydrolyze all β-lactam antibiotics",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "evidence": "NDM-1... hydrolyze all β-lactam antibiotics; PSA dose-dependently inhibited NDM-1"
+      }
+    ]
+  },
+  "biological_states": [],
+  "element_locations": {}
+}

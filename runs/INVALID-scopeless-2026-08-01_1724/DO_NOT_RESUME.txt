@@ -1,0 +1,24 @@
+THIS RUN IS NOT A VALID ACCEPTANCE RUN. DO NOT RESUME IT.
+
+Every row in plan.json carries requested_pathway: "" and requested_organism: "".
+The topics file used bare pinned ids, which fetch.parse_topics turned into
+TopicSpec(pinned_id=..., topic="", organism=""), and _as_batch_paper copied those
+empty strings into the plan. All ten papers were fetched correctly, nothing was
+skipped, and the acquisition funnel looked clean -- the defect is only visible in
+a field that is legitimately empty for an ordinary search topic.
+
+Consequences had it been executed:
+  * driver._extraction_focus returns "" for a pinned paper, so extraction would
+    have been handed no scope at all;
+  * driver._reconcile_stage0_scope would have had no request to contradict, so
+    no scope conflict could ever be detected;
+  * the screening record was computed against an empty pathway, which is why
+    every paper scored -1.5 / off_topic / no_mechanistic_pathway_terms while
+    still being admitted by pinned_override.
+
+The directory is renamed out of the RUN_STAMP_FMT pattern (^\d{4}-\d{2}-\d{2}_\d{4})
+so runner.find_resumable cannot pick it up.
+
+Fixed by the scoped pinned format: PAPERID | pathway | organism.
+Verify any replacement before running a leg:
+    python scripts/bench_acceptance.py --verify-plan runs/TIMESTAMP

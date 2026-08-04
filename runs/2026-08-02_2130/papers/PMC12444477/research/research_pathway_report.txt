@@ -1,0 +1,846 @@
+================================================================================
+LIPID A BIOSYNTHESIS IN ESCHERICHIA COLI
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            9
+  Entities             30
+  Distinct sources     1
+  Tiers                A=4   B=0   C=35   D=0
+  NEEDS REVIEW         35 element(s) are Tier C or D
+  Review flags         26
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxA reaction
+
+  IN    UDP-GlcNAc
+      + β-hydroxyacyl-ACP
+
+  OUT   UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine
+
+  ENZYME  LpxA
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxC reaction
+
+  IN    UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine
+
+  OUT   UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine
+
+  ENZYME  LpxC
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxD reaction
+
+  IN    UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine
+      + β-hydroxyacyl-ACP
+
+  OUT   UDP-2,3-diacylglucosamine
+
+  ENZYME  LpxD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxH reaction
+
+  IN    UDP-2,3-diacylglucosamine
+
+  OUT   2,3-diacylglucosamine-1-phosphate
+
+  ENZYME  LpxH
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 5 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxB reaction
+
+  IN    2,3-diacylglucosamine-1-phosphate
+
+  OUT   tetra-acylated disaccharide
+
+  ENZYME  LpxB
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 6 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxK reaction
+
+  IN    tetra-acylated disaccharide
+
+  OUT   lipid IV_A
+
+  ENZYME  LpxK
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 7 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  WaaA reaction
+
+  IN    lipid IV_A
+      + Kdo
+
+  OUT   Kdo-lipid IV_A
+
+  ENZYME  WaaA
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 8 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxL reaction
+
+  IN    Kdo-lipid IV_A
+      + acyl-ACP
+
+  OUT   Kdo-lipid A
+
+  ENZYME  LpxL
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 9 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxM reaction
+
+  IN    Kdo-lipid A
+      + acyl-ACP
+
+  OUT   Kdo-lipid A
+
+  ENZYME  LpxM
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis in Escherichia coli (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    2,3-diacylglucosamine-1-phosphate
+              stated in a single source
+  [Tier C] entity    Kdo-lipid A
+              stated in a single source
+  [Tier C] entity    Kdo-lipid IV_A
+              stated in a single source
+  [Tier C] entity    LpxA
+              stated in a single source
+  [Tier C] entity    LpxA
+              stated in a single source
+  [Tier C] reaction  LpxA reaction
+              stated in a single source
+  [Tier C] entity    LpxB
+              stated in a single source
+  [Tier C] entity    LpxB
+              stated in a single source
+  [Tier C] reaction  LpxB reaction
+              stated in a single source
+  [Tier C] entity    LpxC
+              stated in a single source
+  [Tier C] entity    LpxC
+              stated in a single source
+  [Tier C] reaction  LpxC reaction
+              stated in a single source
+  [Tier C] entity    LpxD
+              stated in a single source
+  [Tier C] entity    LpxD
+              stated in a single source
+  [Tier C] reaction  LpxD reaction
+              stated in a single source
+  [Tier C] entity    LpxH
+              stated in a single source
+  [Tier C] entity    LpxH
+              stated in a single source
+  [Tier C] reaction  LpxH reaction
+              stated in a single source
+  [Tier C] entity    LpxK
+              stated in a single source
+  [Tier C] entity    LpxK
+              stated in a single source
+  [Tier C] reaction  LpxK reaction
+              stated in a single source
+  [Tier C] entity    LpxL
+              stated in a single source
+  [Tier C] entity    LpxL
+              stated in a single source
+  [Tier C] reaction  LpxL reaction
+              stated in a single source
+  [Tier C] entity    LpxM
+              stated in a single source
+  [Tier C] entity    LpxM
+              stated in a single source
+  [Tier C] reaction  LpxM reaction
+              stated in a single source
+  [Tier C] entity    UDP-2,3-diacylglucosamine
+              stated in a single source
+  [Tier C] entity    UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine
+              stated in a single source
+  [Tier C] entity    UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine
+              stated in a single source
+  [Tier C] entity    WaaA
+              stated in a single source
+  [Tier C] entity    WaaA
+              stated in a single source
+  [Tier C] reaction  WaaA reaction
+              stated in a single source
+  [Tier C] entity    tetra-acylated disaccharide
+              stated in a single source
+  [Tier C] entity    β-hydroxyacyl-ACP
+              stated in a single source
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (4)
+  - UDP-GlcNAc   [pathbank_compound_id: 196]
+  - lipid IV_A   [pathbank_compound_id: 40982]
+  - Kdo   [pathbank_compound_id: 57926]
+  - acyl-ACP   [pathbank_compound_id: 96973]
+
+Tier B — corroborated by a second paper (no identifier)   (0)
+  (none)
+
+Tier C — single-source (review)   (17)
+  - 2,3-diacylglucosamine-1-phosphate
+  - β-hydroxyacyl-ACP
+  - Kdo-lipid A
+  - Kdo-lipid IV_A
+  - tetra-acylated disaccharide
+  - UDP-2,3-diacylglucosamine
+  - UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine
+  - UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine
+  - LpxA
+  - LpxB
+  - LpxC
+  - LpxD
+  - LpxH
+  - LpxK
+  - LpxL
+  - LpxM
+  - WaaA
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  seed paper (uploaded)
+    lipid A biosynthesis in Escherichia coli
+
+================================================================================
+WHAT THE PIPELINE DID NOT ENFORCE
+================================================================================
+
+Biology / provenance flags (26)
+  These would have STOPPED a strict run. They did not stop this one.
+  - [(no code)] /entities/proteins/0
+      {'name': 'LpxA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/1
+      {'name': 'LpxC', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxC', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/2
+      {'name': 'LpxD', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxD', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/3
+      {'name': 'LpxH', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxH', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/4
+      {'name': 'LpxB', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxB', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/5
+      {'name': 'LpxK', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxK', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/6
+      {'name': 'WaaA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'WaaA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/7
+      {'name': 'LpxL', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxL', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LpxL"
+      OR gene:"LpxL") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LpxL" OR gene:"LpxL")']}}
+  - [(no code)] /entities/proteins/8
+      {'name': 'LpxM', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxM', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LpxM"
+      OR gene:"LpxM") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LpxM" OR gene:"LpxM")']}}
+  - [(no code)] /entities/proteins/9
+      {'name': 'FtsH', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'FtsH', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"FtsH"
+      OR gene:"FtsH") AND organism_name:"Escherichia coli"',
+      '(protein_name:"FtsH" OR gene:"FtsH")']}}
+  - [(no code)] /entities/proteins/10
+      {'name': 'LapB', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LapB', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LapB"
+      OR gene:"LapB") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LapB" OR gene:"LapB")']}}
+  - [(no code)] /entities/proteins/11
+      {'name': 'YejM', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'YejM', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"YejM"
+      OR gene:"YejM") AND organism_name:"Escherichia coli"',
+      '(protein_name:"YejM" OR gene:"YejM")']}}
+  - [(no code)] /entities/proteins/12
+      {'name': 'MsbA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'MsbA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/0
+      {'name': 'LpxA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/1
+      {'name': 'LpxC', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxC', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/2
+      {'name': 'LpxD', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxD', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/3
+      {'name': 'LpxH', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxH', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/4
+      {'name': 'LpxB', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxB', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/5
+      {'name': 'LpxK', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxK', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/6
+      {'name': 'WaaA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'WaaA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+  - [(no code)] /entities/proteins/7
+      {'name': 'LpxL', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxL', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LpxL"
+      OR gene:"LpxL") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LpxL" OR gene:"LpxL")']}}
+  - [(no code)] /entities/proteins/8
+      {'name': 'LpxM', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LpxM', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LpxM"
+      OR gene:"LpxM") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LpxM" OR gene:"LpxM")']}}
+  - [(no code)] /entities/proteins/9
+      {'name': 'FtsH', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'FtsH', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"FtsH"
+      OR gene:"FtsH") AND organism_name:"Escherichia coli"',
+      '(protein_name:"FtsH" OR gene:"FtsH")']}}
+  - [(no code)] /entities/proteins/10
+      {'name': 'LapB', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'LapB', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"LapB"
+      OR gene:"LapB") AND organism_name:"Escherichia coli"',
+      '(protein_name:"LapB" OR gene:"LapB")']}}
+  - [(no code)] /entities/proteins/11
+      {'name': 'YejM', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'YejM', 'organism':
+      'Escherichia coli'}, 'provider': 'UniProt', 'source': 'api', 'candidates':
+      [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False,
+      'resolution': {'status': 'novel', 'issue': 'implausible_name_match',
+      'order_step': 'name_plausibility_gate', 'failed_check':
+      'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:"YejM"
+      OR gene:"YejM") AND organism_name:"Escherichia coli"',
+      '(protein_name:"YejM" OR gene:"YejM")']}}
+  - [(no code)] /entities/proteins/12
+      {'name': 'MsbA', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'MsbA', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0,
+      'reviewed': False, 'resolution': {'status': 'novel', 'issue':
+      'implausible_name_match', 'order_step': 'name_plausibility_gate',
+      'failed_check': 'identity_evidence_missing'}}}
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

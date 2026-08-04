@@ -1,0 +1,665 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Lactococcus lactis subsp. lactis KF147"
+      },
+      {
+        "name": "Lactiplantibacillus plantarum"
+      },
+      {
+        "name": "Escherichia coli"
+      },
+      {
+        "name": "Staphylococcus aureus"
+      },
+      {
+        "name": "Mycobacterium tuberculosis"
+      },
+      {
+        "name": "Bacillus subtilis"
+      },
+      {
+        "name": "Flavobacterium meningosepticum"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "canonical_id": "cytosol",
+        "evidence": "DHNA in the cytosol"
+      },
+      {
+        "name": "cell membrane",
+        "canonical_id": "plasma_membrane",
+        "evidence": "MenA joins DHNA and prenyl diphosphate"
+      },
+      {
+        "name": "extracellular space",
+        "canonical_id": "extracellular",
+        "evidence": "secreted by L. lactis"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "demethylmenaquinone (DMK)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "menaquinone (MK)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "prenyl diphosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenG",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "NoxAB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cytosolic state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cytoplasm",
+      "evidence": "DHNA in the cytosol"
+    },
+    {
+      "name": "membrane state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cell membrane",
+      "evidence": "MenA joins DHNA and prenyl diphosphate"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "extracellular space",
+      "evidence": "secreted by L. lactis"
+    },
+    {
+      "name": "cytoplasmic state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Expected compartments: cytoplasm"
+    },
+    {
+      "name": "membrane state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "cell membrane",
+      "evidence": "Expected compartments: cell membrane"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Lactococcus lactis subsp. lactis KF147",
+      "subcellular_location": "extracellular space",
+      "evidence": "Expected compartments: extracellular space"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "cytosolic state",
+        "evidence": "chorismate in the cytosol"
+      },
+      {
+        "compound": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "biological_state": "cytosolic state",
+        "evidence": "intracellular DHNA"
+      },
+      {
+        "compound": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "biological_state": "extracellular state",
+        "evidence": "extracellular DHNA accumulation rate"
+      },
+      {
+        "compound": "prenyl diphosphate",
+        "biological_state": "membrane state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate"
+      },
+      {
+        "compound": "demethylmenaquinone (DMK)",
+        "biological_state": "membrane state",
+        "evidence": "MenA produces DMK at the membrane"
+      },
+      {
+        "compound": "chorismate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "chorismate concentration is described"
+      },
+      {
+        "compound": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "biological_state": "cytoplasmic state",
+        "evidence": "[DHNA]in"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "MenA",
+        "biological_state": "membrane state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate"
+      },
+      {
+        "protein": "MenF",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MenF and MenD concentrations"
+      },
+      {
+        "protein": "MenD",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MenF and MenD concentrations"
+      },
+      {
+        "protein": "MenH",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      },
+      {
+        "protein": "MenC",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      },
+      {
+        "protein": "MenE",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      },
+      {
+        "protein": "MenB",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      },
+      {
+        "protein": "MenI",
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MenF catalyzes the conversion of chorismate to isochorismate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenF catalyzes the first reaction converting chorismate to isochorismate",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD catalyzes the conversion of isochorismate to SEPHCHC",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenD catalyzes the second reaction converting isochorismate to SEPHCHC",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_010",
+        "name": "MenH reaction",
+        "enzymes": [
+          {
+            "protein": "MenH",
+            "evidence": "MenH converts SEPHCHC to SHCHC",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenH converts SEPHCHC to SHCHC in DHNA biosynthesis",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "MenC reaction",
+        "enzymes": [
+          {
+            "protein": "MenC",
+            "evidence": "MenC converts SHCHC to OSB",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenC catalyzes one of the intermediate reactions to produce OSB",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "MenE reaction",
+        "enzymes": [
+          {
+            "protein": "MenE",
+            "evidence": "MenE converts OSB to OSB-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenE converts OSB to OSB-CoA in DHNA biosynthesis",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "MenB reaction",
+        "enzymes": [
+          {
+            "protein": "MenB",
+            "evidence": "MenB converts OSB-CoA to DHNA-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenB converts OSB-CoA to DHNA-CoA in DHNA biosynthesis",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "1,4-dihydroxy-2-naphthoic acid (DHNA)"
+        ],
+        "locked_reaction_id": "rxn_lock_011",
+        "name": "MenI reaction",
+        "enzymes": [
+          {
+            "protein": "MenI",
+            "evidence": "MenI converts DHNA-CoA to DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "MenI converts DHNA-CoA to DHNA in DHNA biosynthesis",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+          "prenyl diphosphate"
+        ],
+        "outputs": [
+          "demethylmenaquinone (DMK)"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenA reaction",
+        "enzymes": [
+          {
+            "protein": "MenA",
+            "evidence": "MenA joins DHNA and prenyl diphosphate to produce DMK",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "membrane state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone",
+        "scope_membership": "auxiliary"
+      },
+      {
+        "inputs": [
+          "demethylmenaquinone (DMK)"
+        ],
+        "outputs": [
+          "menaquinone (MK)"
+        ],
+        "locked_reaction_id": "rxn_lock_009",
+        "name": "MenG reaction",
+        "enzymes": [
+          {
+            "protein": "MenG",
+            "evidence": "MenG demethylates DMK to generate MK",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "membrane state",
+        "evidence": "MenG demethylates DMK to generate MK",
+        "scope_membership": "auxiliary"
+      },
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "k2[MenF][A]",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "k2[MenF][A]",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "kcatD[MenD][B]",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "kcatD[MenD][B]",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "1,4-dihydroxy-2-naphthoic acid (DHNA)"
+        ],
+        "name": "chorismate to DHNA (seven-enzyme pathway)",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenD",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenH",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenC",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenE",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenB",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          },
+          {
+            "protein": "MenI",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.",
+            "provenance": "inferred",
+            "confidence": 0.85
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA."
+      }
+    ],
+    "transports": [
+      {
+        "name": "DHNA export",
+        "cargo": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "from_biological_state": "cytosolic state",
+        "to_biological_state": "extracellular state",
+        "elements_with_states": [
+          {
+            "element": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+            "side": "left",
+            "biological_state": "cytosolic state",
+            "evidence": "DHNA in the cytosol"
+          },
+          {
+            "element": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "DHNA secreted by L. lactis"
+          }
+        ],
+        "evidence": "DHNA secreted by L. lactis"
+      },
+      {
+        "name": "DHNA export to extracellular space",
+        "cargo": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "from_biological_state": "cytoplasmic state",
+        "to_biological_state": "extracellular state",
+        "elements_with_states": [
+          {
+            "element": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+            "side": "left",
+            "biological_state": "cytoplasmic state",
+            "evidence": "[DHNA]in"
+          },
+          {
+            "element": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "extracellular DHNA accumulation rate"
+          }
+        ],
+        "evidence": "extracellular DHNA accumulation rate"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "entity_2": "MenD",
+        "name": "DHNA allosteric inhibition of MenD",
+        "relationship": "inhibits",
+        "biological_state": "cytosolic state",
+        "evidence": "MenD can be allosterically inhibited by DHNA"
+      },
+      {
+        "entity_1": "MenD",
+        "entity_2": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "name": "MenD inhibition by DHNA",
+        "relationship": "inhibited_by",
+        "evidence": "MenD can be allosterically inhibited by DHNA"
+      },
+      {
+        "entity_1": "NoxAB",
+        "entity_2": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "name": "NoxAB interacts with DHNA",
+        "relationship": "interacts_with",
+        "evidence": "knocked out noxAB (encodes for NADH:quinone oxidoreductases) to prevent DHNA from interacting with quinone reductases"
+      },
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "entity_2": "NoxAB",
+        "name": "DHNA-NoxAB interaction",
+        "relationship": "interacts_with",
+        "evidence": "knocked out noxAB (encodes for NADH:quinone oxidoreductases) to prevent DHNA from interacting with quinone reductases"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 11,
+    "exported_locked_reactions": 11,
+    "quarantined_locked_reactions": 0
+  }
+}

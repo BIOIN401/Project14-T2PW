@@ -1,0 +1,61 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1594.8s (26m34s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 26 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxb_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxk_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_waaa_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_msba_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: unexportable_entity:2
+[post_normalization_contract_report] gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'LpxA' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxc_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'LpxC' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'LpxD' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'LpxH' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'LpxB' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxk_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'LpxK' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_waaa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'WaaA' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'LpxL' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'LpxM' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'FtsH' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/10: Protein 'LapB' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/11: Protein 'YejM' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_msba_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein 'MsbA' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 17
+  contract_errors = 13
+  entities = 37
+  gate_errors = 13
+  proteins = 5
+  reactions = 12
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1348 B)
+  - contract_reports.json  (57472 B)
+  - final_mapped.json  (70163 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (24958 B)
+  - merged_payload.json  (26169 B)
+  - rag_admission_report.json  (367364 B)
+  - stage1_payload.json  (19287 B)

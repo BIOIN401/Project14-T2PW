@@ -1,0 +1,285 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Listeria monocytogenes"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytosol",
+        "evidence": "the last cytosolic metabolite of the pathway"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "ThDP",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "2-oxoglutarate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "intermediate I",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "intermediate II",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "menaquinone",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "α-ketoglutarate",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "menaquinone biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "",
+          "organism": "",
+          "chunk_id": ""
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": ""
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.6
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "MenD homotetramer",
+        "components": [
+          "MenD"
+        ],
+        "cofactors": [
+          "ThDP"
+        ],
+        "evidence": "the enzyme has a homotetrameric quaternary structure",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "the enzyme has a homotetrameric quaternary structure"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Listeria monocytogenes cytosolic state",
+      "species": "Listeria monocytogenes",
+      "subcellular_location": "cytosol",
+      "evidence": "the last cytosolic metabolite of the pathway"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "1,4-dihydroxy-2-naphthoic acid",
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "the last cytosolic metabolite of the pathway"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "2-oxoglutarate",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "SEPHCHC synthase reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD catalyses the first irreversible step",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "2-oxoglutarate"
+        ],
+        "outputs": [
+          "intermediate I"
+        ],
+        "name": "2-oxoglutarate decarboxylation",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+            "provenance": "inferred",
+            "confidence": 0.9
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I"
+      },
+      {
+        "inputs": [
+          "intermediate I",
+          "isochorismate"
+        ],
+        "outputs": [
+          "intermediate II"
+        ],
+        "name": "intermediate II formation",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "subsequent addition of isochorismate generating intermediate II",
+            "provenance": "inferred",
+            "confidence": 0.9
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "subsequent addition of isochorismate generating intermediate II"
+      },
+      {
+        "inputs": [
+          "intermediate II"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "name": "SEPHCHC release",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "breakdown to release SEPHCHC",
+            "provenance": "inferred",
+            "confidence": 0.9
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "breakdown to release SEPHCHC"
+      },
+      {
+        "inputs": [
+          "α-ketoglutarate",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "name": "SEPHCHC synthase reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway"
+          }
+        ],
+        "evidence": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway",
+        "scope_membership": "core",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "menaquinone biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "",
+          "organism": "",
+          "chunk_id": ""
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": ""
+          }
+        ],
+        "rag_confidence": 0.6
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid",
+        "entity_2": "MenD",
+        "name": "DHNA inhibition of MenD",
+        "relationship": "inhibits",
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "weak inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid"
+      },
+      {
+        "entity_1": "ThDP",
+        "entity_2": "MenD",
+        "name": "ThDP cofactor binding",
+        "relationship": "binds",
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "ThDP cofactor-bound"
+      },
+      {
+        "entity_1": "ThDP",
+        "entity_2": "MenD homotetramer",
+        "name": "ThDP cofactor binding to MenD homotetramer",
+        "relationship": "binds",
+        "biological_state": "Listeria monocytogenes cytosolic state",
+        "evidence": "ThDP cofactor-bound"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

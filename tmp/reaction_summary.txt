@@ -1,43 +1,25 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: ALAS2-catalyzed condensation of glycine and succinyl-CoA
-  Reactants: glycine [mitochondrial matrix state], succinyl-CoA [mitochondrial matrix state]
-  Products:  aminolevulinic acid [mitochondrial matrix state]
-  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0), 5-aminolevulinic acid synthase [unknown] (role=catalyst, confidence=1.0), ALAS [unknown] (role=catalyst, confidence=1.0), aminolevulinic acid synthase (ALAS) [unknown] (role=catalyst, confidence=1.0)
+REACTION 1: LSS reaction
+  Reactants: 2,3-oxidosqualene [unknown]
+  Products:  lanosterol [unknown]
+  Modifier:  LSS [Homo sapiens endoplasmic reticulum state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: glycine -> 5-aminolevulinate (ALA)
-  Reactants: glycine [mitochondrial matrix state], succinyl-Coenzyme A (SCoA) [unknown]
-  Products:  5-aminolevulinate (ALA) [unknown], carbon dioxide [unknown], CoA-SH [unknown]
-  Modifier:  5-Aminolevulinate synthase (ALAS) [unknown] (role=catalyst, confidence=1.0)
+REACTION 2: CYP51A1 reaction
+  Reactants: lanosterol [unknown]
+  Products:  4,4-dimethylcholesta-8(9),14,24-trien-3β-ol [unknown]
+  Modifier:  CYP51A1 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: ferrous iron insertion into protoporphyrin IX
-  Reactants: ferrous iron [unknown], protoporphyrin IX [unknown]
-  Products:  heme [mitochondrial matrix state]
-  Modifier:  ferrochelatase [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 4: succinyl-CoA -> δALA
-  Reactants: succinyl-CoA [mitochondrial matrix state], glycine [mitochondrial matrix state]
-  Products:  δALA [unknown]
-  Modifier:  MISSING
-  QA flags:  none
-
-REACTION 5: heme production
-  Reactants: PLP [unknown]
-  Products:  heme [mitochondrial matrix state]
-  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 6: ALAS-catalyzed reaction
-  Reactants: ALA [unknown]
-  Products:  porphyrin [unknown]
-  Modifier:  ALAS [unknown] (role=catalyst, confidence=1.0)
+REACTION 3: DHCR24 reaction
+  Reactants: desmosterol [unknown]
+  Products:  cholesterol [unknown]
+  Modifier:  DHCR24 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-1 locked reaction found
-1 exported
+3 locked reactions found
+3 exported
 0 quarantined reactions due to unresolved compound reference

@@ -1,0 +1,344 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondria",
+        "canonical_id": "mitochondrion",
+        "evidence": "SFXNs are mitochondrial transmembrane proteins"
+      },
+      {
+        "name": "mitochondrial matrix",
+        "canonical_id": "mitochondrial_matrix",
+        "evidence": "SFXN1 is essential for serine transport into the mitochondrial matrix"
+      },
+      {
+        "name": "cytosol",
+        "canonical_id": "cytosol",
+        "evidence": "formate is exported to the cytosol"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "serine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "5,10-methylene-THF",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "formate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "citrate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acetyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "SFXN1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SFXN2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SFXN3",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SFXN5",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "serine hydroxymethyltransferase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PCBP2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "frataxin",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "NFS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ISCU",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SLC25A1/CIC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "SFXN1 is essential for serine transport into the mitochondrial matrix"
+    },
+    {
+      "name": "cytosolic state",
+      "species": "Homo sapiens",
+      "subcellular_location": "cytosol",
+      "evidence": "formate is exported to the cytosol"
+    },
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondria",
+      "evidence": "SFXNs are mitochondrial transmembrane proteins"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "serine",
+        "biological_state": "cytosolic state",
+        "evidence": "SFXN1 is essential for serine transport from cytosol"
+      },
+      {
+        "compound": "serine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine enters the mitochondrial branch of one-carbon metabolism"
+      },
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase"
+      },
+      {
+        "compound": "formate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "formate is exported to the cytosol"
+      },
+      {
+        "compound": "formate",
+        "biological_state": "cytosolic state",
+        "evidence": "formate is exported to the cytosol"
+      },
+      {
+        "compound": "citrate",
+        "biological_state": "mitochondrial state",
+        "evidence": "citrate is produced in the tricarboxylic acid cycle"
+      },
+      {
+        "compound": "citrate",
+        "biological_state": "cytosolic state",
+        "evidence": "citrate exported to the cytosol by SLC25A1/CIC"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial state",
+        "evidence": "heme biosynthesis"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN1",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN1 is a mitochondrial transmembrane protein"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 is a mitochondrial transmembrane protein"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "serine"
+        ],
+        "outputs": [
+          "serine"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "serine transport into mitochondria by SFXN1",
+        "enzymes": [
+          {
+            "protein": "SFXN1",
+            "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+        "scope_membership": "auxiliary"
+      },
+      {
+        "inputs": [
+          "serine"
+        ],
+        "outputs": [
+          "glycine",
+          "5,10-methylene-THF"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "serine hydroxymethyltransferase reaction",
+        "enzymes": [
+          {
+            "protein": "serine hydroxymethyltransferase",
+            "evidence": "catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF",
+        "scope_membership": "auxiliary"
+      },
+      {
+        "inputs": [
+          "formate"
+        ],
+        "outputs": [
+          "formate"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "formate export to cytosol",
+        "evidence": "formate is exported to the cytosol where it fuels the folate cycle",
+        "scope_membership": "auxiliary"
+      }
+    ],
+    "transports": [
+      {
+        "name": "serine transport via SFXN1",
+        "cargo": "serine",
+        "from_biological_state": "cytosolic state",
+        "to_biological_state": "mitochondrial matrix state",
+        "transporters": [
+          {
+            "protein": "SFXN1",
+            "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "serine",
+            "side": "left",
+            "biological_state": "cytosolic state",
+            "evidence": "SFXN1 is essential for serine transport from cytosol"
+          },
+          {
+            "element": "serine",
+            "side": "right",
+            "biological_state": "mitochondrial matrix state",
+            "evidence": "into the mitochondrial matrix"
+          }
+        ],
+        "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 regulates ferrochelatase levels",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial state",
+        "evidence": "inhibiting the translation of erythroid ALAS2"
+      },
+      {
+        "entity_1": "PCBP2",
+        "entity_2": "SFXN3",
+        "name": "PCBP2 associates with SFXN3 via TOM20",
+        "relationship": "associates with",
+        "evidence": "SFXN3 can form a complex with PCBP2 via TOM20"
+      }
+    ]
+  }
+}

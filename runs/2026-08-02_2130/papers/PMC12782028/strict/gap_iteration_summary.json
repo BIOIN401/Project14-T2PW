@@ -1,0 +1,1308 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 3,
+        "organisms_added": 0,
+        "locations_added": 7,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 8,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:lss",
+            "entity_type": "protein",
+            "name": "LSS",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:cyp51a1",
+            "entity_type": "protein",
+            "name": "CYP51A1",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "entity_type": "protein",
+            "name": "DHCR24",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:23oxidosqualene",
+            "entity_type": "compound",
+            "name": "2,3-oxidosqualene",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:lanosterol",
+            "entity_type": "compound",
+            "name": "lanosterol",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:desmosterol",
+            "entity_type": "compound",
+            "name": "desmosterol",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:cholesterol",
+            "entity_type": "compound",
+            "name": "cholesterol",
+            "path": "/entities/compounds/4",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:ed8f9ec27201b512",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:lss\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": false, \"m… (+186 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:lss",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:cyp51a1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23oxidosqualene",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:lanosterol",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:desmosterol",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:cholesterol",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:lss",
+            "entity_type": "protein",
+            "name": "LSS",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LSS",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b5347ecc5950a552",
+                  "preview": "{\"uniprot\": \"P48449\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 119,
+                  "hash": "sha256:8075357f688e57a7",
+                  "preview": "[\"(protein_name:\\\"LSS\\\" OR gene:\\\"LSS\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"LSS\\\" OR gene:\\\"LSS\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 770,
+                  "hash": "sha256:42819cc3c5a32ff0",
+                  "preview": "[{\"accession\": \"P48449\", \"protein_name\": \"Lanosterol synthase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0ACI8RYH2\", \"protein_name\": \"Lanosterol synthase\", \"organis… (+570 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 368,
+                  "hash": "sha256:27bcad247737eac0",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P48449\", \"pathbank_protein_id\": \"421\"}, \"pathbank_protein_id\": 421, \"confidence\": 1.0, \"chosen_rule\": \"db_top_… (+168 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2242,
+                  "hash": "sha256:91c6b8e0a91d66df",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"LSS\\\" OR gene:\\\"LSS\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"LSS\\\" OR gene:\\\"LSS\\\")\", \"mapped_ids\": {\"uniprot\": \"P48449\"}, \"confidence\": 1… (+2042 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 51,
+                  "hash": "sha256:2567b9622de36fcb",
+                  "preview": "{\"uniprot\": \"P48449\", \"pathbank_protein_id\": \"421\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b5347ecc5950a552",
+                  "preview": "{\"uniprot\": \"P48449\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:c918ee55405020c1",
+                  "preview": "{\"uniprot\": \"A0ACI8RYH2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:95905da5813c1a0c",
+                  "preview": "{\"uniprot\": \"A0ACI8TXU6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:099a5c9c4807c4bf",
+                  "preview": "{\"uniprot\": \"A0ACI8TXY9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:8c2e46c439a2a0e8",
+                  "preview": "{\"uniprot\": \"C9J315\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7ee3a70dd56ea516",
+                  "preview": "{\"uniprot\": \"A0A0G2JS81\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:f3ef93c1d7464f0c",
+                  "preview": "{\"uniprot\": \"A0ACI8SE81\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate from PathBankDB provides a high-confidence mapping to UniProt P48449 (Lanosterol synthase), which is a reviewed entry and matches the protein entity type and the expected human protein context.",
+              "source": "llm",
+              "raw": {
+                "chars": 261,
+                "hash": "sha256:dd0fde0bf58bcebc",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate from PathBankDB provides a high-confidence mapping to UniProt P48449 (Lanosterol synthase), which is a reviewed entry and matches the … (+61 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:cyp51a1",
+            "entity_type": "protein",
+            "name": "CYP51A1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "CYP51A1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ee4941dab2a2d86a",
+                  "preview": "{\"uniprot\": \"Q16850\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 135,
+                  "hash": "sha256:1cf72eb0a84e0b97",
+                  "preview": "[\"(protein_name:\\\"CYP51A1\\\" OR gene:\\\"CYP51A1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"CYP51A1\\\" OR gene:\\\"CYP51A1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 852,
+                  "hash": "sha256:2a7be30dce72362f",
+                  "preview": "[{\"accession\": \"Q16850\", \"protein_name\": \"Lanosterol 14-alpha demethylase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"H7C0D0\", \"protein_name\": \"Lanosterol 14-alpha de… (+652 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 384,
+                  "hash": "sha256:11e64a090d7dd74a",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q16850\", \"pathbank_protein_id\": \"259\"}, \"pathbank_protein_id\": 259, \"confidence\": 1.0, \"chosen_rule\": \"db_top_… (+184 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2488,
+                  "hash": "sha256:2d4442634863423d",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"CYP51A1\\\" OR gene:\\\"CYP51A1\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"CYP51A1\\\" OR gene:\\\"CYP51A1\\\")\", \"mapped_ids\": {\"uniprot\": \"Q16850\"},… (+2288 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 51,
+                  "hash": "sha256:6b6fedbe9de1a4ed",
+                  "preview": "{\"uniprot\": \"Q16850\", \"pathbank_protein_id\": \"259\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ee4941dab2a2d86a",
+                  "preview": "{\"uniprot\": \"Q16850\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:13b0f263247939f4",
+                  "preview": "{\"uniprot\": \"H7C0D0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:05b4eb45a612b71d",
+                  "preview": "{\"uniprot\": \"A0A8I5KRT9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:165331cb93c409ad",
+                  "preview": "{\"uniprot\": \"Q05D40\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:0b3e722dd0ca4608",
+                  "preview": "{\"uniprot\": \"A0ACI8RMQ1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:9725367d003bcb48",
+                  "preview": "{\"uniprot\": \"A0ACI8PGY1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ca2c3d29557ab0de",
+                  "preview": "{\"uniprot\": \"A0ACI8PVH2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate provides the highest confidence (1.0) and includes both UniProt (Q16850) and PathBank protein IDs, which directly matches the protein entity type and the specific gene name CYP51A1.",
+              "source": "llm",
+              "raw": {
+                "chars": 255,
+                "hash": "sha256:f20f403118052d3e",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate provides the highest confidence (1.0) and includes both UniProt (Q16850) and PathBank protein IDs, which directly matches the pr… (+55 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 26.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:447284f9728468a9",
+                  "preview": "location_frequency=26"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 0.95,
+              "reason": "CYP51A1 is a cytochrome P450 enzyme, which are characteristically membrane-bound proteins located in the endoplasmic reticulum membrane. The candidate 'Endoplasmic Reticulum Membrane' has a significantly higher evidence score (26.0) compare… (+35 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 353,
+                "hash": "sha256:1ebe882240e1e4ab",
+                "preview": "{\"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 0.95, \"reason\": \"CYP51A1 is a cytochrome P450 enzyme, which are characteristically membrane-bound proteins located in the endoplasmic reticul… (+153 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "protein:dhcr24",
+            "entity_type": "protein",
+            "name": "DHCR24",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "DHCR24",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b6321f591d0d1d12",
+                  "preview": "{\"uniprot\": \"Q15392\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 131,
+                  "hash": "sha256:fdb4a47da74dffb0",
+                  "preview": "[\"(protein_name:\\\"DHCR24\\\" OR gene:\\\"DHCR24\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"DHCR24\\\" OR gene:\\\"DHCR24\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 826,
+                  "hash": "sha256:c95cee655d7643dc",
+                  "preview": "[{\"accession\": \"Q15392\", \"protein_name\": \"Delta(24)-sterol reductase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A0A0MTI1\", \"protein_name\": \"Delta(24)-sterol reduct… (+626 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 381,
+                  "hash": "sha256:0bf90144d9f346df",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q15392\", \"pathbank_protein_id\": \"1688\"}, \"pathbank_protein_id\": 1688, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+181 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2406,
+                  "hash": "sha256:82950b81dc2eb70c",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"DHCR24\\\" OR gene:\\\"DHCR24\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"DHCR24\\\" OR gene:\\\"DHCR24\\\")\", \"mapped_ids\": {\"uniprot\": \"Q15392\"}, \"co… (+2206 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:f153df3938c46b59",
+                  "preview": "{\"uniprot\": \"Q15392\", \"pathbank_protein_id\": \"1688\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b6321f591d0d1d12",
+                  "preview": "{\"uniprot\": \"Q15392\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7ac1e479bda9ffdf",
+                  "preview": "{\"uniprot\": \"A0A0A0MTI1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:87c5c17886cd31fd",
+                  "preview": "{\"uniprot\": \"A0A3B3IT58\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:e9d468df2e00cea6",
+                  "preview": "{\"uniprot\": \"A0A3B3ITT9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ef7a7b5791d4d43b",
+                  "preview": "{\"uniprot\": \"A0ACI8S1X7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b7f3d33113490d67",
+                  "preview": "{\"uniprot\": \"A0A3B3ISR5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:002ca2538c035d6a",
+                  "preview": "{\"uniprot\": \"A0ACI8RIE4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate (PathBankDB) provides a high-confidence mapping to UniProt Q15392, which is the reviewed entry for Delta(24)-sterol reductase in Homo sapiens, matching the protein entity type and name.",
+              "source": "llm",
+              "raw": {
+                "chars": 259,
+                "hash": "sha256:29f9268de9580681",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate (PathBankDB) provides a high-confidence mapping to UniProt Q15392, which is the reviewed entry for Delta(24)-sterol reductase in… (+59 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 116.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 22,
+                  "hash": "sha256:e395305e58659792",
+                  "preview": "location_frequency=116"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 1.0,
+              "reason": "The candidate 'Endoplasmic Reticulum Membrane' has a significantly higher evidence score (116.0) compared to 'Endoplasmic Reticulum' (1.0) in the provided database context.",
+              "source": "llm",
+              "raw": {
+                "chars": 249,
+                "hash": "sha256:08a6a0736f97b218",
+                "preview": "{\"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 1.0, \"reason\": \"The candidate 'Endoplasmic Reticulum Membrane' has a significantly higher evidence score (116.0) compared to 'Endoplasmic Ret… (+49 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "compound:23oxidosqualene",
+            "entity_type": "compound",
+            "name": "2,3-oxidosqualene",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-oxidosqualene",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 208,
+                  "hash": "sha256:432cc0986f5c4419",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C01054\", \"name\": \"(S)-2,3-Epoxysqualene\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C21732\", \"name\": \"(3S,22S)-2,3:22,23-Diepoxy-2,3,22,23-tetrahydrosqualene\", \"score\":… (+8 chars elided)",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "2,3-oxidosqualene",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:lanosterol",
+            "entity_type": "compound",
+            "name": "lanosterol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "lanosterol",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 3,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:e9430d73163bb155",
+                  "preview": "{\"kegg\": \"C01724\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 249,
+                  "hash": "sha256:f4280fabcda7baa6",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C01724\", \"name\": \"Lanosterol\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C05108\", \"name\": \"14-Demethyllanosterol\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C05109\", \"… (+49 chars elided)",
+                  "items": 3
+                }
+              },
+              "hmdb": {
+                "query": "lanosterol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:desmosterol",
+            "entity_type": "compound",
+            "name": "desmosterol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "desmosterol",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:4eefd24165e918a2",
+                  "preview": "{\"kegg\": \"C01802\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 161,
+                  "hash": "sha256:a56deb21add0e5be",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C01802\", \"name\": \"Desmosterol\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C05107\", \"name\": \"7-Dehydrodesmosterol\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "desmosterol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:cholesterol",
+            "entity_type": "compound",
+            "name": "cholesterol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "cholesterol",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7308e9c24e5ab8ef",
+                  "preview": "{\"kegg\": \"C00187\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 493,
+                  "hash": "sha256:fc1f97fb66ffb3d1",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00187\", \"name\": \"Cholesterol\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C02530\", \"name\": \"Cholesterol ester\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C18043\", \"nam… (+293 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "cholesterol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

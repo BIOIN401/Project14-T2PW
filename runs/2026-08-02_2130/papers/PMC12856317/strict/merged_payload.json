@@ -1,0 +1,211 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "canonical_id": "mitochondrial_matrix",
+        "evidence": "mitochondrial matrix"
+      },
+      {
+        "name": "mitochondrion",
+        "canonical_id": "mitochondrion",
+        "evidence": "in the mitochondrion"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "hemin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PLP",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "ALAS2 homodimer",
+        "components": [
+          "ALAS2"
+        ],
+        "evidence": "ALAS2 is a PLP-dependent homodimer enzyme",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "ALAS2 is a PLP-dependent homodimer enzyme (abstract)"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "mitochondrial matrix"
+    },
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrion",
+      "evidence": "in the mitochondrion"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mitochondrial matrix"
+      },
+      {
+        "compound": "hemin",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mitochondrial matrix"
+      },
+      {
+        "compound": "aminolevulinic acid",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mitochondrial matrix"
+      },
+      {
+        "compound": "PLP",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mitochondrial matrix"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial state",
+        "evidence": "in the mitochondrion"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAS2 reaction",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          },
+          {
+            "protein_complex": "ALAS2 homodimer",
+            "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "scope_membership": "core"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibits ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme acts as a reversible mixed inhibitor that reduces enzymatic activity"
+      },
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme binding to ALAS2",
+        "relationship": "binds_to",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity"
+      },
+      {
+        "entity_1": "hemin",
+        "entity_2": "ALAS2",
+        "name": "hemin binds ALAS2",
+        "relationship": "binds_to",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "Titration of WT ALAS2 into hemin (ferric chloride heme) resulted in robust binding"
+      },
+      {
+        "entity_1": "hemin",
+        "entity_2": "ALAS2",
+        "name": "hemin inhibits ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "WT ALAS2 activity decreased significantly with increasing hemin concentration"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}
