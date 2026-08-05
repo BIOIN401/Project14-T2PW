@@ -458,6 +458,17 @@ def run(
 
     command = [str(part) for part in command]
     cwd = cwd or os.getcwd()
+
+    # Windows ``CreateProcess`` will not resolve a RELATIVE executable written
+    # with forward slashes -- and every prompt in this sprint spells the
+    # interpreter ``.venv/Scripts/python.exe``. Normalise argv[0] against cwd so
+    # the documented invocation works from Git Bash as well as from PowerShell.
+    if command and (os.sep in command[0] or "/" in command[0]):
+        candidate = os.path.normpath(os.path.join(cwd, command[0]))
+        if os.path.exists(candidate):
+            command[0] = candidate
+        else:
+            command[0] = os.path.normpath(command[0])
     report = CleanupReport(
         label=label,
         command=command,

@@ -25,7 +25,7 @@ Column meanings:
 
 | ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| INIT-001 | Sprint init + baseline capture | `READY` | — | `9e1b9ab` | `sprint/pwml-recovery` | none | `docs/pwml_recovery_sprint/BASELINE.md`, `.gitignore`, evidence commit | Lead | full suite ×10 chunks | — | — | — | awaiting approval |
+| INIT-001 | Sprint init + baseline capture | `REVIEW` | — | `721a256` | `sprint/pwml-recovery` | none | `docs/pwml_recovery_sprint/BASELINE.md`, evidence commit (no `.gitignore` change — O-2 open) | **product owner** | full suite ×10 chunks | — | `0c469f7`, `<baseline>` | — | **product-owner approval; and a decision on the stale replay pin (BASELINE § 5)** |
 | SPIKE-002 | Compound-resolution extraction scoping | `BLOCKED` | INIT-001 | — | none (no code) | none | none — investigation only | Lead | none | — | — | — | INIT-001 |
 | R-003 | False-identifier triage (10 findings) | `BLOCKED` | INIT-001 | — | none (read-only) | none | none | Lead | none | — | — | — | INIT-001 |
 | R-004 | RAG-reintroduction triage (3 claims, PMC12657337) | `BLOCKED` | INIT-001 | — | none (read-only) | none | none | Lead | none | — | — | — | INIT-001 |
@@ -114,3 +114,8 @@ Column meanings:
 | Date | Entry |
 |---|---|
 | 2026-08-05 | Ledger created. `sprint/pwml-recovery` cut from `research-mode` @ `9e1b9ab`. All tasks `BLOCKED` pending product-owner approval of the setup report. |
+| 2026-08-05 | Control-plane audit passed. Every `MASTER_PLAN` § 1 / § 2 citation verified against the source; `baseline_acceptance.json` SHA-256 matches `PROVENANCE.md`; all 28 `TEST_MATRIX` files exist; the 7 tracked modifications are exactly as documented. Three citation line-drifts (≤ 6 lines) recorded in the report; all function-level claims exact. |
+| 2026-08-05 | INIT-001 Step 0: `evidence/bounded_run.py` created (Windows Job Object, `KILL_ON_JOB_CLOSE`; cleanup in `finally`; graceful→forced; survivor verification). Validated 6/6 synthetic cases, **0 proved survivors**. `batch/runner.py` not modified (owned by C-032). |
+| 2026-08-05 | INIT-001 Step 3: `runs_verify/2026-08-04_1754/` committed at `0c469f7` — 152 files, ~6 MB, `cache_snapshot/` (38 MB, 2 files) excluded. `.git` 158 → 159 MB. C-010's last two allowlist legs are now verifiable in an isolated worktree. |
+| 2026-08-05 | INIT-001 Step 4: baseline measured. Smoke **457** ✔, chunk D **177** ✔, A **123** ✔, B **225** ✔, C **109** ✔. Full suite **2311 passed / 2 failed / 8 skipped** over 104 files. `bench_acceptance.py` re-run is **byte-identical** to the committed baseline (SHA-256 `d3538f4b…4ec3`). Every heavy job: **0 surviving owned processes** (G11). |
+| 2026-08-05 | **BLOCKER RAISED.** The pinned `FULL_STACK_BASELINE` in `test_strict_quarantine_real_artifact_replay.py` fails on `ORIGIN_SHA` — 23 legs pinned, 39 measured — because `runs/2026-08-02_2130` was archived at `5f2cd2f` (2026-08-04) after the pin was written at `404cc8d` (2026-08-01). Proven sprint-independent: no sprint commit touched `runs/` or the test, and the test globs `runs/` only. Affects TRAP-2 and C-010's acceptance. See `BASELINE.md` § 5. Wave A0 not dispatched. |

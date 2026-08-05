@@ -1,9 +1,10 @@
 # PWML Recovery Sprint — Baseline
 
-**Status: TEMPLATE — NOT YET MEASURED.**
+**Status: MEASURED by INIT-001 on 2026-08-05.**
 
-INIT-001 fills every `TBD` below and commits the result. Until then, no acceptance claim
-in this sprint has a comparison surface, and no branch may be merged.
+Every command below ran through the bounded foreground wrapper
+(`evidence/bounded_run.py`), one heavy job at a time. Cleanup reports are in § 8;
+**every job reported a final surviving count of 0.**
 
 ---
 
@@ -17,78 +18,135 @@ in this sprint has a comparison surface, and no branch may be merged.
 | HEAD date | Tue Aug 4 17:38:06 2026 -0600 |
 | Ahead of `main` by | 72 commits, behind by 0 |
 | Integration branch | `sprint/pwml-recovery` |
-| Measured on | TBD (date, machine, Python 3.13.6, Windows) |
+| SHA at INIT-001 start | `721a256d3934f936cf48a5369cba15ebe05c1a48` |
+| Measured on | 2026-08-05, Windows 11, `.venv/Scripts/python.exe` 3.13.6 |
+| Wrapper | `docs/pwml_recovery_sprint/evidence/bounded_run.py`, Windows Job Object with `KILL_ON_JOB_CLOSE` |
 
 ---
 
 ## 1. Test suite — full, chunked
 
-`--basetemp` per chunk. Never unchunked.
+104 test files, contiguous **alphabetical** partition into 10 chunks (reproducible
+and unbiased), unique `--basetemp` per chunk, run strictly sequentially. Exact
+membership: `evidence/baseline_suite_result.json`.
 
-| Chunk | Passed | Failed | Skipped | Runtime |
-|---|---|---|---|---|
-| 1 | TBD | TBD | TBD | TBD |
-| … | | | | |
-| **TOTAL** | **TBD** | **TBD** | **TBD** | **TBD** |
+| Chunk | Files | Passed | Failed | Skipped | Errors | Runtime |
+|---|---|---|---|---|---|---|
+| 01 `test_adversarial_actor_entity_type` … `test_batch_preflight` | 11 | 263 | 0 | 0 | 0 | 28.1 s |
+| 02 `test_batch_report` … `test_db_candidate_species_evidence` | 11 | 282 | 0 | 0 | 0 | 20.4 s |
+| 03 `test_db_resolver_primitives` … `test_gap_resolver` | 11 | 225 | 0 | 0 | 0 | 39.6 s |
+| 04 `test_gap_resolver_agent_tools` … `test_paper_eligibility_corrections` | 11 | **284** | 0 | 0 | 0 | 9.3 s |
+| 05 `test_pathbank_unknown_fallback` … `test_protein_export_policy` | 10 | 288 | 0 | 0 | 0 | 20.0 s |
+| 06 `test_pwml_db_resolver` … `test_rag_extract` | 10 | 159 | 0 | 0 | 0 | 32.9 s |
+| 07 `test_rag_foundation` … `test_rag_select` | 10 | 170 | 0 | 0 | 0 | 3.2 s |
+| 08 `test_rag_synonym_merge` … `test_research_mode_normalizer` | 10 | 163 | 0 | 0 | 0 | 12.5 s |
+| 09 `test_research_mode_orchestration` … `test_stage_contracts` | 10 | 136 | 0 | 0 | 0 | 9.4 s |
+| 10 `test_stage_one_boundary` … `test_strict_quarantine_versioning` | 10 | 341 | **2** | 8 | 0 | 302.2 s |
+| **TOTAL** | **104** | **2311** | **2** | **8** | **0** | **~478 s** |
 
-Any pre-existing failure or skip is recorded here so it is never mistaken for a
-sprint-induced regression. Note in particular whether chunk E
-(`test_strict_quarantine_real_artifact_replay`) ran or **skipped** — it skips silently
-when `runs/` is absent.
+### Chunk 04 required a split — a chunking artifact, not a failure
+
+As one group, chunk 04 aborted at collection with
+`ImportError: cannot import name '_completion_is_empty' from 't2pw.llm.client'
+(unknown location)`, and pytest's `Interrupted: 1 error during collection` meant
+**none of its 11 files ran**. Re-run split, everything passes:
+
+| Split | Files | Result |
+|---|---|---|
+| 04a | `test_llm_client_empty_completion_retry.py` alone | **29 passed** in 0.09 s |
+| 04b | the other 10 files | **255 passed** in 7.33 s |
+
+**Cause — a pre-existing test-isolation defect, unrelated to this sprint.**
+Bisected: `test_gap_resolver_agent_tools.py` and `test_gap_resolver_stage3_issues.py`
+each leave a stub for `t2pw.llm.client` in `sys.modules`. Any later real import in
+the same pytest session gets the stub, which has no `__file__` — hence "unknown
+location". `test_interactive_curator.py` and
+`test_gap_resolver_biological_state_resolution.py` do **not** do this.
+
+```
+test_gap_resolver_agent_tools            + llm_client -> 1 error in 0.17s
+test_interactive_curator                 + llm_client -> 47 passed in 0.30s
+test_gap_resolver_stage3_issues          + llm_client -> 1 error in 0.35s
+test_gap_resolver_biological_state_reso. + llm_client -> 31 passed in 0.90s
+```
+
+No merge gate is affected: chunks A–E never co-locate these files. Any future
+chunking must keep the two gap-resolver files out of a group containing
+`test_llm_client_empty_completion_retry.py`.
+
+### Chunk E **RAN — it did not skip**
+
+`runs/` is committed, so the parameterized replay harness had inputs.
+Run on its own: **159 passed, 2 failed, 0 skipped** in 31.7 s. The 8 skips in
+chunk 10 come from its other nine files.
+
+The 2 failures are **pre-existing on `ORIGIN_SHA`** and are analysed in § 5.
 
 ---
 
 ## 2. Gate suites
 
-| Suite | Expected | Measured |
-|---|---|---|
-| Smoke (A+B+C) | 457 passed, ~40 s | TBD |
-| Chunk D | 177 passed, ~222 s | TBD |
-| Chunk A | 123 passed, ~12 s | TBD |
-| Chunk B | 225 passed, ~25 s | TBD |
-| Chunk C | 109 passed, ~2 s | TBD |
+| Suite | Expected | Measured | |
+|---|---|---|---|
+| Smoke (A+B+C) | 457 passed, ~40 s | **457 passed**, 30.6 s | ✔ |
+| Chunk D | 177 passed, ~222 s | **177 passed**, 199.5 s | ✔ |
+| Chunk A | 123 passed, ~12 s | **123 passed**, 2.8 s | ✔ |
+| Chunk B | 225 passed, ~25 s | **225 passed**, 26.1 s | ✔ |
+| Chunk C | 109 passed, ~2 s | **109 passed**, 2.2 s | ✔ |
+| Chunk E | — | **159 passed, 2 failed** | see § 5 |
 
 ---
 
-## 3. Benchmark — `runs/2026-08-02_2130` (committed, 208 tracked files)
+## 3. Benchmark — `runs/2026-08-02_2130`
 
 ```
 .venv/Scripts/python.exe scripts/bench_acceptance.py \
-  --run-dir runs/2026-08-02_2130 \
-  --json docs/pwml_recovery_sprint/evidence/baseline_acceptance.json
+  --run-dir runs/2026-08-02_2130 --json <out>.json
 ```
 
-Gold set `2026-08-01.1`. **If any value differs from Expected, STOP** — the baseline has
-drifted and every downstream acceptance criterion is invalid.
+**The re-run is byte-identical to the committed `evidence/baseline_acceptance.json`:**
+SHA-256 `d3538f4b1cefc1f8e7aca933318df13c9967ce1071e48f8e6a3e4bd6830f4ec3`,
+242,199 bytes — matching `evidence/PROVENANCE.md` exactly. Nothing has drifted.
 
-| Metric | Expected | Measured |
-|---|---|---|
-| False real identifiers | 10 | TBD |
-| Placeholder-backed proteins | 21 | TBD |
-| Unsupported reactions | 7 | TBD |
-| Orphaned references | 2 | TBD |
-| Missing supported reactions | 3 | TBD |
-| Missing pathway anchors | 4 | TBD |
-| Quarantined processes | 3 | TBD |
-| Requested-pathway coverage | 0/8 | TBD |
-| Semantic confirmed | 0/8 | TBD |
-| Strict PWML success | 0/4 | TBD |
-| Research deliverable produced | 4/8 | TBD |
-| Research semantically confirmed | 1/8 | TBD |
-| Extraction success | 8/8 | TBD |
-| Identity: verified / placeholder / unresolved / PathBank-Unknown | 1 / 21 / 108 / 5 | TBD |
+Gold set `2026-08-01.1`. 10 papers, 20 legs attempted, 16 scored.
 
-Strict failures by boundary — expected: 6 `stage3_normalization_gate`,
-2 `stage1_extraction`, 2 `scope_ambiguity`.
+| Metric | Expected | Measured | |
+|---|---|---|---|
+| False real identifiers | 10 | **10** | ✔ |
+| Placeholder-backed proteins | 21 | **21** | ✔ |
+| Unsupported reactions | 7 | **7** | ✔ |
+| Orphaned references | 2 | **2** | ✔ |
+| Missing supported reactions | 3 | **3** | ✔ |
+| Missing pathway anchors | 4 | **4** | ✔ |
+| Quarantined processes | 3 | **3** | ✔ |
+| Semantic pathway success | 0/8 | **0/8** | ✔ |
+| Strict PWML success | 0/4 | **0/4** | ✔ |
+| Research deliverable produced | 4/8 | **4/8 = 50%** | ✔ |
+| Research semantically confirmed | 1/8 | **1/8 = 12%** | ✔ |
+| Extraction success | 8/8 | **8/8 = 100%** | ✔ |
+| Gold relevance prevalence | — | 8/10 = 80% | |
+| Identity: verified / placeholder / unresolved / PathBank-Unknown | 1 / 21 / 108 / 5 | **1 / 21 / 108 / 5** | ✔ |
 
-Payload sources scored — expected: `final_mapped.json` 11, `merged_payload.json` 5.
+Strict failures by boundary — expected 6 / 2 / 2:
+**`stage3_normalization_gate` 6, `stage1_extraction` 2, `scope_ambiguity` 2** ✔
+
+Payload sources scored — expected 11 / 5:
+**`final_mapped.json` 11, `merged_payload.json` 5** ✔
+
+`scripts/bench_acceptance.py` exits **1**; that is its "acceptance not met" signal,
+not a crash. Recorded so a future runner does not read it as infrastructure failure.
+
+Two caveats the scorer itself emits, carried forward: 5 legs were scored from
+pre-mapping `merged_payload.json`, so their identity and false-identifier counts
+are **floors, not measurements**; and 3 checks could not be evaluated at all and are
+excluded from `confirmed` rather than counted as passes.
 
 ---
 
 ## 4. Pinned baselines inside the test suite
 
-From `tests/test_strict_quarantine_real_artifact_replay.py`. **C-010 changes these by
-design (TRAP-2).** Record the pre-change values so the delta is provable.
+From `tests/test_strict_quarantine_real_artifact_replay.py:384-408`, as currently
+pinned. **C-010 changes these by design (TRAP-2).** Recorded so the delta is provable.
 
 ```python
 FULL_STACK_BASELINE = {
@@ -106,15 +164,85 @@ RESIDUAL_CODES_BY_ROW = {
 }
 ```
 
-The change log (`docs/change_log.md`) must carry the same table and must never disagree.
+`docs/change_log.md:147` carries the same "17 legs, 19 rows" figures and agrees.
 
 ---
 
-## 5. C-010 expected per-leg delta allowlist
+## 5. ⚠ The pinned replay baseline is ALREADY STALE on `ORIGIN_SHA`
 
-Measured on `ORIGIN_SHA` across every archived leg carrying a `final_mapped.json`, with
-`pathway_context=None` (matching the archived-leg reality that no leg carries Stage-0
-context).
+**This is the most consequential finding of INIT-001 and it is not in the plan.**
+
+Two tests in `test_strict_quarantine_real_artifact_replay.py` fail **before any
+sprint code change**:
+
+```
+FAILED ...::test_no_archived_leg_carries_stage_zero_context
+FAILED ...::test_the_full_stack_baseline_is_exactly_what_was_reported
+```
+
+### Proof the sprint did not cause them
+
+| Check | Result |
+|---|---|
+| `git diff ORIGIN_SHA..HEAD -- runs/ tests/test_strict_quarantine_real_artifact_replay.py` | **empty** |
+| `git status --porcelain runs/` | **empty** — fully tracked, 754 files, clean |
+| Test input scope | `RUNS = ROOT / "runs"` (`:104`) — **`runs_verify/` is never globbed** |
+
+The evidence commit added only `runs_verify/2026-08-04_1754/`, which this test does
+not read. Inputs and test are byte-identical to `ORIGIN_SHA`; the failures pre-date
+the sprint branch.
+
+### Failure 1 — `FULL_STACK_BASELINE`: 23 legs pinned, 39 measured
+
+```
+measured = {'legs_examined': 39, 'quarantine_admitted': 27, 'quarantine_refused': 12,
+            'stage3_after_pass': 27, 'required_contract_pass': 8,
+            'reached_ir': 8, 'ir_pass': 8, 'exportable': 8}
+```
+
+**When it broke.** The pin was written at `404cc8d` (2026-08-01). `runs/2026-08-02_2130`
+— 16 further legs — was committed at `5f2cd2f` (2026-08-04), *three commits before the
+sprint branch was cut*, and nobody re-measured. Four `runs/` directories now contribute
+legs: `2026-07-27_1623` (5), `2026-07-28_0919` (4), `2026-07-28_2122` (16),
+`2026-08-02_2130` (16).
+
+**Why it matters beyond a stale number.** This test is parameterized over the
+*filesystem*. Every milestone benchmark T-100…T-105 archives a new run, so each one
+silently re-breaks a merge-gate test. The gate is not stable across the sprint it is
+meant to guard.
+
+### Failure 2 — `key_compounds` carriers
+
+9 files under `runs/` contain `key_compounds`. Classified:
+
+| | |
+|---|---|
+| Files carrying it | 9 — **all `stage0_attempts.json`** |
+| **Payload files (`final_mapped.json` / `merged_payload.json`) carrying it** | **0** |
+| Run directory | all 9 in `runs/2026-08-02_2130` |
+
+**`MASTER_PLAN` § 1's premise is intact.** The C-010 allowlist was measured with
+`pathway_context=None` "matching the archived-leg reality that no leg carries Stage-0
+context". No *payload* carries it — that remains true. What changed is that
+`runs/2026-08-02_2130` introduced a new **diagnostic** artifact, `stage0_attempts.json`,
+which persists Stage-0 context for the first time; the test globs every `*.json`, so it
+now trips on a diagnostic rather than a payload. The assertion is broader than its own
+docstring, which is specifically about *payload-only discovery*.
+
+**Consequence for C-010.** TRAP-2 tells its implementer that `FULL_STACK_BASELINE`
+moves by design and that reverting behaviour to make it pass is a reject. But the pin is
+*already* wrong for an unrelated reason, so an implementer cannot distinguish "my fix
+moved it" from "it was broken before I arrived" unless the pre-existing delta above is
+treated as the true starting point. **This needs a product-owner decision before C-010
+is dispatched** — see the report accompanying this file.
+
+---
+
+## 6. C-010 expected per-leg delta allowlist
+
+Unchanged from the diagnosis; reproduced here for the acceptance comparison. Measured on
+`ORIGIN_SHA` across every archived leg carrying a `final_mapped.json`, with
+`pathway_context=None`.
 
 ```
 legs examined : 32      unchanged : 26      CHANGED : 6      errors : 0
@@ -141,51 +269,76 @@ Three properties the allowlist asserts, all required:
 strongest available evidence that the fix removes only the false refusal and does not
 weaken a biological gate.
 
-**The last two rows require `runs_verify/2026-08-04_1754/` to be committed.** Until INIT-001
-commits it, C-010's allowlist cannot be verified in an isolated worktree.
+**The last two rows are now verifiable in an isolated worktree** —
+`runs_verify/2026-08-04_1754/` was committed by INIT-001 (§ 7).
+
+Note that this allowlist globs `runs/` **and** `runs_verify/` (32 legs), while the
+replay test globs `runs/` only (39 legs). Two different populations; do not compare the
+counts.
 
 ---
 
-## 6. Repository size and cache state
+## 7. Repository size and cache state
 
 | Item | Size | Tracked | Note |
 |---|---|---|---|
-| `.git` | 158 MB | — | |
-| `data/enrichment_cache.json` | 39.4 MB | **yes**, modified | **no branch may commit a cache modification** (TRAP-5) |
-| `data/id_mapping_cache.json` | 4.4 MB | **yes**, modified | same |
-| `runs_verify/2026-08-04_1754/` total | 44 MB | no | evidence needed by C-010, C-014, C-042 |
-| └ `cache_snapshot/` | 38 MB | no | **exclude from the evidence commit** |
-| └ `papers/` | 5.7 MB | no | commit |
-| └ metadata | ~140 KB | no | commit |
-| Evidence-commit size | **~5.9 MB** | | |
-| All 8 untracked `cache_snapshot/` dirs | 304 MB | no | see DECISIONS O-2 |
+| `.git` before INIT-001 | 158 MB | — | |
+| `.git` after the evidence commit | **159 MB** | — | +~1 MB (6 MB of JSON compresses well) |
+| `data/enrichment_cache.json` | 39.4 MB | **yes**, still modified | untouched — O-3 open (TRAP-5) |
+| `data/id_mapping_cache.json` | 4.4 MB | **yes**, still modified | untouched — O-3 open |
+| `runs_verify/2026-08-04_1754/` total | 44 MB | partially | |
+| └ `papers/` + metadata | ~6 MB | **yes — committed, 152 files** | |
+| └ `cache_snapshot/` | 38 MB, 2 files | **no — excluded** | recent `runs_verify` convention |
+| All 8 untracked `cache_snapshot/` dirs | 304 MB | no | **O-2 still open** — no `.gitignore` rule added |
 
-Precedent is mixed: 16 `cache_snapshot` files are tracked under older `runs/`, none under
-recent `runs_verify/`. Follow the recent convention.
+Verification required by INIT-001 Step 3:
+
+```
+git ls-files runs_verify/2026-08-04_1754 | wc -l              -> 152   (must be > 0) ✔
+git ls-files 'runs_verify/2026-08-04_1754/cache_snapshot/*'   -> 0     (must be 0)   ✔
+```
 
 ---
 
-## 7. Working-tree state at branch creation
+## 8. Cleanup reports — gate G11
 
-Preserved exactly. Nothing stashed, reset or discarded.
+Every heavy job, in execution order. Isolation was a Windows **Job Object with
+`KILL_ON_JOB_CLOSE`** in every case; no run fell back to the process-group model.
 
-Tracked modifications carried onto `sprint/pwml-recovery` (all scratch/generated,
-**none sprint-related**):
+| Job | Root PID | Exit reason | Exit code | Descendants obs. | Terminated | **Survivors** | Cleanup |
+|---|---|---|---|---|---|---|---|
+| suite chunk01–10 (10 jobs) | see `baseline_suite_result.json` | completed ×9, nonzero ×1 | — | 1–3 each | all | **0** | ok |
+| c04a | 801724 | completed | 0 | 1 | 1 | **0** | ok |
+| c04b | 801708 | completed | 0 | 1 | 1 | **0** | ok |
+| smoke | 799864 | completed | 0 | 9 | 9 | **0** | ok |
+| chunkD | 802844 | completed | 0 | 1 | 1 | **0** | ok |
+| chunkA | 806756 | completed | 0 | 1 | 1 | **0** | ok |
+| chunkB | 806224 | completed | 0 | 8 | 8 | **0** | ok |
+| chunkC | 807404 | completed | 0 | 1 | 1 | **0** | ok |
+| chunkE | 806936 | nonzero | 1 | 1 | 1 | **0** | ok |
+| bench_acceptance | 804840 | nonzero | 1 | 1 | 1 | **0** | ok |
+
+**Total surviving owned processes across the entire baseline: 0.**
+
+Pre-existing Python processes were detected and **reported, never killed**, per
+`[S8]` item 4.
+
+---
+
+## 9. Working-tree state — unchanged by INIT-001
+
+The 7 tracked modifications are exactly as expected and were **left untouched**;
+O-3 is a product-owner decision.
 
 ```
  M data/enrichment_cache.json     39.4 MB   regenerable lookup cache
  M data/id_mapping_cache.json      4.4 MB   regenerable lookup cache
- M out/enrichment_dump.json         82 KB   run artifact (dir is gitignored, file tracked)
- M outputs/pathway.pwml             35 KB   run artifact (dir is gitignored, file tracked)
- M tmp/draft_graph.json            9.5 KB   run artifact (dir is gitignored, file tracked)
+ M out/enrichment_dump.json         82 KB   run artifact
+ M outputs/pathway.pwml             35 KB   run artifact
+ M tmp/draft_graph.json            9.5 KB   run artifact
  M tmp/qa_report.json              5.8 KB   run artifact
  M tmp/reaction_summary.txt        1.1 KB   run artifact
 ```
 
-Untracked, repo-local:
-
-```
-runs_verify/2026-08-04_{1148,1207,1234,1306,1358,1504,1647}/cache_snapshot/   7 × 38 MB
-runs_verify/2026-08-04_1754/                                                  44 MB  SPRINT-RELATED
-topics_flip_strict.txt  topics_regression_research.txt  topics_verify_subset.txt   run inputs
-```
+No other tracked file was modified — the repository matches the state the control
+plane was committed against.

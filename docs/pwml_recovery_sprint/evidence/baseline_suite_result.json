@@ -1,0 +1,1193 @@
+{
+  "totals": {
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "survivors_total": 0,
+  "chunks": [
+    {
+      "label": "chunk01",
+      "files": [
+        "test_adversarial_actor_entity_type.py",
+        "test_adversarial_diagnostics_isolation.py",
+        "test_adversarial_json_repair_guard.py",
+        "test_adversarial_row_repair_deletion.py",
+        "test_apply_audit_patch_lock_policy.py",
+        "test_apply_audit_patch_referential_integrity.py",
+        "test_audit_json_llm_payload.py",
+        "test_baseline_regression_2026_07_28.py",
+        "test_batch_driver.py",
+        "test_batch_fetch.py",
+        "test_batch_preflight.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 28.1,
+      "root_pid": 793972,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 17,
+      "descendants_terminated": 17,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk01",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk01",
+          "tests/test_adversarial_actor_entity_type.py",
+          "tests/test_adversarial_diagnostics_isolation.py",
+          "tests/test_adversarial_json_repair_guard.py",
+          "tests/test_adversarial_row_repair_deletion.py",
+          "tests/test_apply_audit_patch_lock_policy.py",
+          "tests/test_apply_audit_patch_referential_integrity.py",
+          "tests/test_audit_json_llm_payload.py",
+          "tests/test_baseline_regression_2026_07_28.py",
+          "tests/test_batch_driver.py",
+          "tests/test_batch_fetch.py",
+          "tests/test_batch_preflight.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:01:39+00:00",
+        "finished_at": "2026-08-05T21:02:07+00:00",
+        "duration_seconds": 28.10920979999355,
+        "timeout_seconds": 2400.0,
+        "root_pid": 793972,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 793984,
+            "name": "python.exe",
+            "ppid": 793972
+          },
+          {
+            "pid": 795128,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 795204,
+            "name": "python.exe",
+            "ppid": 795128
+          },
+          {
+            "pid": 794724,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 794708,
+            "name": "python.exe",
+            "ppid": 794724
+          },
+          {
+            "pid": 794736,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 794740,
+            "name": "python.exe",
+            "ppid": 794736
+          },
+          {
+            "pid": 791356,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 793224,
+            "name": "python.exe",
+            "ppid": 791356
+          },
+          {
+            "pid": 795472,
+            "name": "python.exe",
+            "ppid": 795484
+          },
+          {
+            "pid": 795484,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 795588,
+            "name": "python.exe",
+            "ppid": 795596
+          },
+          {
+            "pid": 795596,
+            "name": "python.exe",
+            "ppid": 795472
+          },
+          {
+            "pid": 786340,
+            "name": "python.exe",
+            "ppid": 794884
+          },
+          {
+            "pid": 794884,
+            "name": "python.exe",
+            "ppid": 793984
+          },
+          {
+            "pid": 794824,
+            "name": "python.exe",
+            "ppid": 786340
+          },
+          {
+            "pid": 794964,
+            "name": "python.exe",
+            "ppid": 794824
+          }
+        ],
+        "descendants_terminated": [
+          786340,
+          791356,
+          793224,
+          793984,
+          794708,
+          794724,
+          794736,
+          794740,
+          794824,
+          794884,
+          794964,
+          795128,
+          795204,
+          795472,
+          795484,
+          795588,
+          795596
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk02",
+      "files": [
+        "test_batch_report.py",
+        "test_batch_research_gate_fail_open.py",
+        "test_batch_run.py",
+        "test_bench_acquisition_and_artifacts.py",
+        "test_bench_controls.py",
+        "test_bench_goldset_and_semantic.py",
+        "test_canonicalization_preflight_and_species.py",
+        "test_completeness_audit.py",
+        "test_compound_templates.py",
+        "test_curation_patch_transaction.py",
+        "test_db_candidate_species_evidence.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 20.4,
+      "root_pid": 787676,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 24,
+      "descendants_terminated": 24,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk02",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk02",
+          "tests/test_batch_report.py",
+          "tests/test_batch_research_gate_fail_open.py",
+          "tests/test_batch_run.py",
+          "tests/test_bench_acquisition_and_artifacts.py",
+          "tests/test_bench_controls.py",
+          "tests/test_bench_goldset_and_semantic.py",
+          "tests/test_canonicalization_preflight_and_species.py",
+          "tests/test_completeness_audit.py",
+          "tests/test_compound_templates.py",
+          "tests/test_curation_patch_transaction.py",
+          "tests/test_db_candidate_species_evidence.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:02:07+00:00",
+        "finished_at": "2026-08-05T21:02:27+00:00",
+        "duration_seconds": 20.398470099986298,
+        "timeout_seconds": 2400.0,
+        "root_pid": 787676,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 794752,
+            "name": "python.exe",
+            "ppid": 787676
+          },
+          {
+            "pid": 793792,
+            "name": "python.exe",
+            "ppid": 795524
+          },
+          {
+            "pid": 795524,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 795572,
+            "name": "taskkill.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 794900,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 794960,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 795436,
+            "name": "python.exe",
+            "ppid": 794960
+          },
+          {
+            "pid": 793976,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 795492,
+            "name": "python.exe",
+            "ppid": 793976
+          },
+          {
+            "pid": 788688,
+            "name": "python.exe",
+            "ppid": 795464
+          },
+          {
+            "pid": 795464,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 791820,
+            "name": "python.exe",
+            "ppid": 794828
+          },
+          {
+            "pid": 794828,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 790680,
+            "name": "python.exe",
+            "ppid": 794472
+          },
+          {
+            "pid": 794472,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 794800,
+            "name": "python.exe",
+            "ppid": 795076
+          },
+          {
+            "pid": 795076,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 794764,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 788748,
+            "name": "python.exe",
+            "ppid": 793964
+          },
+          {
+            "pid": 793964,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 794832,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 795480,
+            "name": "python.exe",
+            "ppid": 794832
+          },
+          {
+            "pid": 793268,
+            "name": "python.exe",
+            "ppid": 794752
+          },
+          {
+            "pid": 793712,
+            "name": "python.exe",
+            "ppid": 793268
+          }
+        ],
+        "descendants_terminated": [
+          788688,
+          788748,
+          790680,
+          791820,
+          793268,
+          793712,
+          793792,
+          793964,
+          793976,
+          794472,
+          794752,
+          794764,
+          794800,
+          794828,
+          794832,
+          794900,
+          794960,
+          795076,
+          795436,
+          795464,
+          795480,
+          795492,
+          795524,
+          795572
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk03",
+      "files": [
+        "test_db_resolver_primitives.py",
+        "test_early_failure_replay.py",
+        "test_empty_extraction_payload.py",
+        "test_enrich_entities_concurrency.py",
+        "test_enrich_entities_promotion.py",
+        "test_entity_identity_contracts.py",
+        "test_entity_type_gate.py",
+        "test_extraction_diagnostics.py",
+        "test_failure_detail.py",
+        "test_focused_repair.py",
+        "test_gap_resolver.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 39.6,
+      "root_pid": 793900,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk03",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk03",
+          "tests/test_db_resolver_primitives.py",
+          "tests/test_early_failure_replay.py",
+          "tests/test_empty_extraction_payload.py",
+          "tests/test_enrich_entities_concurrency.py",
+          "tests/test_enrich_entities_promotion.py",
+          "tests/test_entity_identity_contracts.py",
+          "tests/test_entity_type_gate.py",
+          "tests/test_extraction_diagnostics.py",
+          "tests/test_failure_detail.py",
+          "tests/test_focused_repair.py",
+          "tests/test_gap_resolver.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:02:27+00:00",
+        "finished_at": "2026-08-05T21:03:07+00:00",
+        "duration_seconds": 39.56031500000972,
+        "timeout_seconds": 2400.0,
+        "root_pid": 793900,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 793896,
+            "name": "python.exe",
+            "ppid": 793900
+          }
+        ],
+        "descendants_terminated": [
+          793896
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk04",
+      "files": [
+        "test_gap_resolver_agent_tools.py",
+        "test_gap_resolver_biological_state_resolution.py",
+        "test_gap_resolver_stage3_issues.py",
+        "test_interactive_curator.py",
+        "test_llm_client_empty_completion_retry.py",
+        "test_localized_repair.py",
+        "test_locked_noop_quarantine_policy.py",
+        "test_map_ids.py",
+        "test_map_ids_name_gate.py",
+        "test_paper_eligibility.py",
+        "test_paper_eligibility_corrections.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "nonzero",
+      "exit_code": 2,
+      "returned_code": 2,
+      "duration_seconds": 1.3,
+      "root_pid": 791372,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk04",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk04",
+          "tests/test_gap_resolver_agent_tools.py",
+          "tests/test_gap_resolver_biological_state_resolution.py",
+          "tests/test_gap_resolver_stage3_issues.py",
+          "tests/test_interactive_curator.py",
+          "tests/test_llm_client_empty_completion_retry.py",
+          "tests/test_localized_repair.py",
+          "tests/test_locked_noop_quarantine_policy.py",
+          "tests/test_map_ids.py",
+          "tests/test_map_ids_name_gate.py",
+          "tests/test_paper_eligibility.py",
+          "tests/test_paper_eligibility_corrections.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:03:07+00:00",
+        "finished_at": "2026-08-05T21:03:08+00:00",
+        "duration_seconds": 1.349116099998355,
+        "timeout_seconds": 2400.0,
+        "root_pid": 791372,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "nonzero",
+        "exit_code": 2,
+        "returned_code": 2,
+        "descendants_observed": [
+          {
+            "pid": 793636,
+            "name": "python.exe",
+            "ppid": 791372
+          }
+        ],
+        "descendants_terminated": [
+          793636
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk05",
+      "files": [
+        "test_pathbank_unknown_fallback.py",
+        "test_payload_models.py",
+        "test_pipeline_cleanup.py",
+        "test_pipeline_reaction_rag_provenance.py",
+        "test_preprocessor.py",
+        "test_probe_decimal_normalization.py",
+        "test_probe_json_repair_deletion.py",
+        "test_probe_row_field_exactness.py",
+        "test_process_normalizer.py",
+        "test_protein_export_policy.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 20.0,
+      "root_pid": 790184,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk05",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk05",
+          "tests/test_pathbank_unknown_fallback.py",
+          "tests/test_payload_models.py",
+          "tests/test_pipeline_cleanup.py",
+          "tests/test_pipeline_reaction_rag_provenance.py",
+          "tests/test_preprocessor.py",
+          "tests/test_probe_decimal_normalization.py",
+          "tests/test_probe_json_repair_deletion.py",
+          "tests/test_probe_row_field_exactness.py",
+          "tests/test_process_normalizer.py",
+          "tests/test_protein_export_policy.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:03:08+00:00",
+        "finished_at": "2026-08-05T21:03:29+00:00",
+        "duration_seconds": 20.0101963999914,
+        "timeout_seconds": 2400.0,
+        "root_pid": 790184,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 796460,
+            "name": "python.exe",
+            "ppid": 790184
+          }
+        ],
+        "descendants_terminated": [
+          796460
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk06",
+      "files": [
+        "test_pwml_db_resolver.py",
+        "test_pwml_ir.py",
+        "test_pwml_writer.py",
+        "test_rag_acquire.py",
+        "test_rag_admission_adversarial.py",
+        "test_rag_admission_production_path.py",
+        "test_rag_cached_replay.py",
+        "test_rag_conform_merge.py",
+        "test_rag_differential_gate.py",
+        "test_rag_extract.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 32.9,
+      "root_pid": 792424,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk06",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk06",
+          "tests/test_pwml_db_resolver.py",
+          "tests/test_pwml_ir.py",
+          "tests/test_pwml_writer.py",
+          "tests/test_rag_acquire.py",
+          "tests/test_rag_admission_adversarial.py",
+          "tests/test_rag_admission_production_path.py",
+          "tests/test_rag_cached_replay.py",
+          "tests/test_rag_conform_merge.py",
+          "tests/test_rag_differential_gate.py",
+          "tests/test_rag_extract.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:03:29+00:00",
+        "finished_at": "2026-08-05T21:04:02+00:00",
+        "duration_seconds": 32.92460269998992,
+        "timeout_seconds": 2400.0,
+        "root_pid": 792424,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 795908,
+            "name": "python.exe",
+            "ppid": 792424
+          }
+        ],
+        "descendants_terminated": [
+          795908
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk07",
+      "files": [
+        "test_rag_foundation.py",
+        "test_rag_gap_admission.py",
+        "test_rag_ingest.py",
+        "test_rag_payload_gate_guardrails.py",
+        "test_rag_provenance_gates.py",
+        "test_rag_relation_recall.py",
+        "test_rag_retrieve.py",
+        "test_rag_reversible_reaction_preservation.py",
+        "test_rag_seed_entity_reimport.py",
+        "test_rag_select.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 3.2,
+      "root_pid": 758396,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk07",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk07",
+          "tests/test_rag_foundation.py",
+          "tests/test_rag_gap_admission.py",
+          "tests/test_rag_ingest.py",
+          "tests/test_rag_payload_gate_guardrails.py",
+          "tests/test_rag_provenance_gates.py",
+          "tests/test_rag_relation_recall.py",
+          "tests/test_rag_retrieve.py",
+          "tests/test_rag_reversible_reaction_preservation.py",
+          "tests/test_rag_seed_entity_reimport.py",
+          "tests/test_rag_select.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:04:02+00:00",
+        "finished_at": "2026-08-05T21:04:05+00:00",
+        "duration_seconds": 3.180737599992426,
+        "timeout_seconds": 2400.0,
+        "root_pid": 758396,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 794700,
+            "name": "python.exe",
+            "ppid": 758396
+          }
+        ],
+        "descendants_terminated": [
+          794700
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk08",
+      "files": [
+        "test_rag_synonym_merge.py",
+        "test_rag_synthesize.py",
+        "test_rag_triage_orchestration.py",
+        "test_rag_typed_gap_resolution.py",
+        "test_rag_typed_resolution_integrity.py",
+        "test_reaction_lock_manifest.py",
+        "test_reaction_preservation_validator.py",
+        "test_reference_repair.py",
+        "test_research_mode_contracts.py",
+        "test_research_mode_normalizer.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 12.5,
+      "root_pid": 794696,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk08",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk08",
+          "tests/test_rag_synonym_merge.py",
+          "tests/test_rag_synthesize.py",
+          "tests/test_rag_triage_orchestration.py",
+          "tests/test_rag_typed_gap_resolution.py",
+          "tests/test_rag_typed_resolution_integrity.py",
+          "tests/test_reaction_lock_manifest.py",
+          "tests/test_reaction_preservation_validator.py",
+          "tests/test_reference_repair.py",
+          "tests/test_research_mode_contracts.py",
+          "tests/test_research_mode_normalizer.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:04:05+00:00",
+        "finished_at": "2026-08-05T21:04:17+00:00",
+        "duration_seconds": 12.548968600021908,
+        "timeout_seconds": 2400.0,
+        "root_pid": 794696,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 794980,
+            "name": "python.exe",
+            "ppid": 794696
+          }
+        ],
+        "descendants_terminated": [
+          794980
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk09",
+      "files": [
+        "test_research_mode_orchestration.py",
+        "test_research_mode_report.py",
+        "test_research_mode_tiers.py",
+        "test_sbml_render_pathwhiz_like.py",
+        "test_scope_membership_filter_end_to_end.py",
+        "test_stage0_case_c_retry_clobber.py",
+        "test_stage0_scope_fallback.py",
+        "test_stage2_mapping_boundary.py",
+        "test_stage3_gate_report_lifecycle.py",
+        "test_stage_contracts.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": ""
+      },
+      "exit_reason": "completed",
+      "exit_code": 0,
+      "returned_code": 0,
+      "duration_seconds": 9.4,
+      "root_pid": 797268,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk09",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk09",
+          "tests/test_research_mode_orchestration.py",
+          "tests/test_research_mode_report.py",
+          "tests/test_research_mode_tiers.py",
+          "tests/test_sbml_render_pathwhiz_like.py",
+          "tests/test_scope_membership_filter_end_to_end.py",
+          "tests/test_stage0_case_c_retry_clobber.py",
+          "tests/test_stage0_scope_fallback.py",
+          "tests/test_stage2_mapping_boundary.py",
+          "tests/test_stage3_gate_report_lifecycle.py",
+          "tests/test_stage_contracts.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:04:17+00:00",
+        "finished_at": "2026-08-05T21:04:27+00:00",
+        "duration_seconds": 9.418314200011082,
+        "timeout_seconds": 2400.0,
+        "root_pid": 797268,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "completed",
+        "exit_code": 0,
+        "returned_code": 0,
+        "descendants_observed": [
+          {
+            "pid": 797280,
+            "name": "python.exe",
+            "ppid": 797268
+          }
+        ],
+        "descendants_terminated": [
+          797280
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    },
+    {
+      "label": "chunk10",
+      "files": [
+        "test_stage_one_boundary.py",
+        "test_streamlit_quarantine_boundary.py",
+        "test_streamlit_stage2_orchestration.py",
+        "test_streamlit_stage8_export_contract.py",
+        "test_strict_failure_replay.py",
+        "test_strict_quarantine.py",
+        "test_strict_quarantine_contract_alignment.py",
+        "test_strict_quarantine_locks_and_scope.py",
+        "test_strict_quarantine_real_artifact_replay.py",
+        "test_strict_quarantine_versioning.py"
+      ],
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "xfailed": 0,
+        "_summary_line": "            and \"key_compounds\" in path.read_text(encoding=\"utf-8\", errors=\"ignore\")"
+      },
+      "exit_reason": "nonzero",
+      "exit_code": 1,
+      "returned_code": 1,
+      "duration_seconds": 302.2,
+      "root_pid": 797056,
+      "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+      "descendants_observed": 1,
+      "descendants_terminated": 1,
+      "final_surviving_count": 0,
+      "cleanup_success": true,
+      "cleanup_report": {
+        "label": "chunk10",
+        "command": [
+          "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "--basetemp=C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\chunk10",
+          "tests/test_stage_one_boundary.py",
+          "tests/test_streamlit_quarantine_boundary.py",
+          "tests/test_streamlit_stage2_orchestration.py",
+          "tests/test_streamlit_stage8_export_contract.py",
+          "tests/test_strict_failure_replay.py",
+          "tests/test_strict_quarantine.py",
+          "tests/test_strict_quarantine_contract_alignment.py",
+          "tests/test_strict_quarantine_locks_and_scope.py",
+          "tests/test_strict_quarantine_real_artifact_replay.py",
+          "tests/test_strict_quarantine_versioning.py"
+        ],
+        "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+        "started_at": "2026-08-05T21:04:27+00:00",
+        "finished_at": "2026-08-05T21:09:29+00:00",
+        "duration_seconds": 302.15745909998077,
+        "timeout_seconds": 2400.0,
+        "root_pid": 797056,
+        "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+        "process_group": null,
+        "exit_reason": "nonzero",
+        "exit_code": 1,
+        "returned_code": 1,
+        "descendants_observed": [
+          {
+            "pid": 797136,
+            "name": "python.exe",
+            "ppid": 797056
+          }
+        ],
+        "descendants_terminated": [
+          797136
+        ],
+        "graceful_attempted": false,
+        "forced": false,
+        "final_surviving_count": 0,
+        "survivors": [],
+        "preexisting_reported": [
+          {
+            "pid": 723348,
+            "name": "python.exe"
+          },
+          {
+            "pid": 791976,
+            "name": "python.exe"
+          },
+          {
+            "pid": 793692,
+            "name": "python.exe"
+          }
+        ],
+        "cleanup_success": true,
+        "notes": []
+      }
+    }
+  ]
+}
