@@ -196,10 +196,86 @@ bodies are generated *from* those reports.
 
 ---
 
+## D-011 — O-2 resolved: ignore `runs_verify/*/cache_snapshot/` · 2026-08-05 · LOCKED
+
+Add a **narrowly scoped** `.gitignore` rule for `runs_verify/*/cache_snapshot/`.
+
+Measured at decision time: 8 directories × 38 MB = **304 MB**, 2 files each, all
+untracked, against a 159 MB `.git`. Every byte is a regenerable copy of
+`data/enrichment_cache.json` + `data/id_mapping_cache.json`.
+
+Scope is deliberately narrow. The **16 `cache_snapshot` files already tracked under the
+older `runs/`** stay tracked — the rule does not reach them, and rewriting history is not
+what was decided.
+
+**The existing directories are NOT deleted.** Their size is reported; deletion is a
+separate, recoverable housekeeping decision that has not been taken.
+
+**Applied:** `.gitignore` at the INIT-001 follow-up commit.
+
+---
+
+## D-012 — Baseline cohort is frozen to a manifest · 2026-08-05 · LOCKED
+
+The replay merge gate must **not** simply be re-pinned from 23 to 39 while it still
+globs the filesystem.
+
+Replace the dynamic cohort with an **explicit, version-controlled manifest** of the 39
+currently intended pre-implementation legs. Every entry is verified before freezing. The
+merge-gate test reads **only** the manifest, so a newly generated benchmark directory
+cannot silently redefine the baseline — the failure mode that made `FULL_STACK_BASELINE`
+stale on `ORIGIN_SHA` (23 pinned, 39 measured; see `BASELINE.md` § 5).
+
+New legs enter the baseline **only** through an intentional manifest update with review.
+
+C-010's six expected changes are preserved **separately** (`BASELINE.md` § 6) so its
+intended delta can never be confused with this unrelated repair. The populations differ:
+the allowlist spans `runs/` **and** `runs_verify/` (32 legs); this gate reads `runs/`
+only (39 legs). Exactly **two** of the six fall inside the gate's cohort.
+
+This is pre-Wave-A0 **test-harness maintenance**: implementation by subagent, independent
+review, focused tests, and a passing baseline gate **before C-010 is dispatched**.
+
+**Implements:** H-001. **Blocks:** C-010 and all of Wave A0.
+
+---
+
+## D-013 — Replay assertion is scoped to payloads · 2026-08-05 · LOCKED
+
+The nine `key_compounds` occurrences in `stage0_attempts.json` are **diagnostics, not
+pathway payloads** — 0 payload files carry it.
+
+Narrow the replay assertion so it examines the authoritative payload files and excludes
+diagnostic attempt records. **No pathway biology and no production behaviour may be
+altered to make this test pass.** Independent review and focused verification required.
+
+`MASTER_PLAN` § 1's `pathway_context=None` premise is unaffected and remains correct.
+
+**Implements:** H-002.
+
+---
+
+## D-014 — O-3 resolved: scratch files are protected · 2026-08-05 · LOCKED
+
+Leave all **seven** existing tracked modifications exactly unchanged for the duration of
+the sprint:
+
+```
+data/enrichment_cache.json   data/id_mapping_cache.json   out/enrichment_dump.json
+outputs/pathway.pwml   tmp/draft_graph.json   tmp/qa_report.json
+tmp/reaction_summary.txt
+```
+
+Do **not** stage, commit, reset, restore, stash, regenerate or reformat them. They are
+protected developer scratch state. This strengthens TRAP-5 from "never commit a cache
+modification" to "never touch any of these seven, by any means".
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
 |---|---|---|---|
 | O-1 | `placeholder_backed_proteins` (21 in the pinned run): gold-set error class, or legitimate biology preservation? | any branch that touches protein export policy | It is a genuine disagreement between two intentional designs, not a defect. TRAP-3 forbids agents from resolving it. |
-| O-2 | Should `runs_verify/*/cache_snapshot/` be gitignored? 8 dirs × 38 MB = 304 MB untracked; 16 such files are tracked in older `runs/`, none in recent `runs_verify/`. | INIT-001 evidence commit | Repository convention is genuinely mixed; committing or ignoring is a storage-policy call. |
-| O-3 | Disposition of the 7 modified tracked scratch files, notably `data/enrichment_cache.json` (39 MB). | INIT-001 | Committing adds ~39 MB to a 158 MB `.git`; discarding loses cached lookups worth ~22 min per leg. |
+
+**Closed:** O-2 → D-011 · O-3 → D-014.

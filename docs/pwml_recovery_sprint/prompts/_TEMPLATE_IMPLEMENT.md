@@ -59,6 +59,9 @@ TRAPS
 - **Never say "make test X pass."** Say what behaviour must hold. Otherwise TRAP-2 gets
   satisfied by reverting the fix.
 - **Cite evidence, not conclusions.** "`_degree_zero_exports` at `:1876` runs after
-  `_drop_quarantined_processes` at `:1868`" — not "there is an index bug."
+  `_drop_quarantined_processes` at `:1862`" — not "there is an index bug."
+- **Resolve bare filenames to canonical paths.** `MASTER_PLAN.md` § 9 has the table;
+  `pipeline.py`, `map_ids.py` and `extract.py` all have re-export shims under `src/`
+  that must never be edited.
 - **Pure-move branches** (C-011, C-012) get a golden behavioural-equivalence test as
   their primary acceptance criterion, not a test count.

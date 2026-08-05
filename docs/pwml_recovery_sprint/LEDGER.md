@@ -25,24 +25,39 @@ Column meanings:
 
 | ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| INIT-001 | Sprint init + baseline capture | `REVIEW` | — | `721a256` | `sprint/pwml-recovery` | none | `docs/pwml_recovery_sprint/BASELINE.md`, evidence commit (no `.gitignore` change — O-2 open) | **product owner** | full suite ×10 chunks | — | `0c469f7`, `<baseline>` | — | **product-owner approval; and a decision on the stale replay pin (BASELINE § 5)** |
-| SPIKE-002 | Compound-resolution extraction scoping | `BLOCKED` | INIT-001 | — | none (no code) | none | none — investigation only | Lead | none | — | — | — | INIT-001 |
-| R-003 | False-identifier triage (10 findings) | `BLOCKED` | INIT-001 | — | none (read-only) | none | none | Lead | none | — | — | — | INIT-001 |
-| R-004 | RAG-reintroduction triage (3 claims, PMC12657337) | `BLOCKED` | INIT-001 | — | none (read-only) | none | none | Lead | none | — | — | — | INIT-001 |
+| INIT-001 | Sprint init + baseline capture | `ACCEPTED` | — | `721a256` | `sprint/pwml-recovery` | none | `BASELINE.md`, evidence commit, `bounded_run.py` | product owner | full suite ×10 chunks | smoke 457 ✔ | `0c469f7`, `0132cb8` | — | — |
+| SPIKE-002 | Compound-resolution extraction scoping | `READY` | INIT-001 ✔ | read at dispatch | none (no code) | none | none — investigation only | Lead | none | — | — | — | subagent registration |
+| R-003 | False-identifier triage (10 findings) | `READY` | INIT-001 ✔ | read at dispatch | none (read-only) | none | none | Lead | none | — | — | — | subagent registration |
+| R-004 | RAG-reintroduction triage (3 claims, PMC12657337) | `READY` | INIT-001 ✔ | read at dispatch | none (read-only) | none | none | Lead | none | — | — | — | subagent registration |
 
-## Wave A0
+## Pre-Wave-A0 — test-harness maintenance (D-012, D-013)
+
+**These block C-010 and all of Wave A0.** The replay merge gate must be green, on a
+frozen cohort, before any implementation branch is dispatched against it.
 
 | ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-010 | p01 stale positional index | `BLOCKED` | INIT-001 | — | `agent/p01-stale-index` | `.claude/worktrees/p01-stale-index` | `strict_quarantine.py` :: `_surviving_processes`, `_degree_zero_exports`, `quarantine_and_close`; `tests/test_strict_quarantine.py`; `tests/test_strict_quarantine_real_artifact_replay.py`; `docs/change_log.md` | C-041 impl | A, E | smoke | — | M1 | INIT-001 |
-| C-011 | p00a canonical-freeze seam | `BLOCKED` | INIT-001 | — | `agent/p00a-freeze-seam` | `.claude/worktrees/p00a-freeze-seam` | `streamlit_app.py` :: `run_post_pipeline_sbml_artifacts` | C-012 impl | D | smoke + D | — | — | INIT-001 |
-| C-012 | p00b driver seam | `BLOCKED` | INIT-001 | — | `agent/p00b-driver-seam` | `.claude/worktrees/p00b-driver-seam` | `driver.py` :: `_drive` → `_finalize_*` | C-011 impl | B + golden | smoke | — | — | INIT-001 |
-| C-013 | p04a two versioned hashes | `BLOCKED` | INIT-001 | — | `agent/p04a-hash-module` | `.claude/worktrees/p04a-hash-module` | NEW `pipeline/canonical_hash.py`; `gate_reports.py` :: `payload_sha256`, `stamp_report`, `gate_verdict` | C-020 impl | smoke | smoke | — | — | INIT-001 |
-| C-014 | p03a LLM request timeout | `BLOCKED` | INIT-001 | — | `agent/p03a-llm-timeout` | `.claude/worktrees/p03a-llm-timeout` | `llm/client.py` :: `OpenAI(...)`, `chat_detailed`, `chat_with_tools` | C-032 impl | A, C | smoke | — | — | INIT-001 |
-| C-015 | p20 lineage schema | `BLOCKED` | INIT-001 | — | `agent/p20-lineage-schema` | `.claude/worktrees/p20-lineage-schema` | NEW `pipeline/lineage.py` | C-038 impl | new | smoke | — | — | INIT-001 |
-| C-016 | p30 RAG stopping policy | `BLOCKED` | INIT-001 | — | `agent/p30-rag-stop-policy` | `.claude/worktrees/p30-rag-stop-policy` | NEW `rag/loop_policy.py` | C-043 impl | new, C | smoke | — | — | INIT-001 |
-| C-017 | p40 semantic production module | `BLOCKED` | INIT-001 | — | `agent/p40-semantic-module` | `.claude/worktrees/p40-semantic-module` | NEW `bench/semantic_production.py` | C-056a impl | B | smoke | — | — | INIT-001 |
-| C-018 | p50 cofactor / assay-reporter policy | `BLOCKED` | INIT-001 | — | `agent/p50-cofactor-classifier` | `.claude/worktrees/p50-cofactor-classifier` | NEW `pipeline/cofactor_policy.py` | R-003 | new, C | smoke | — | — | INIT-001 |
+| H-001 | Freeze the baseline cohort to a manifest | `READY` | — | read at dispatch | `agent/h01-baseline-manifest` | `.claude/worktrees/h01-baseline-manifest` | `test_strict_quarantine_real_artifact_replay.py` :: `RUNS`, `_legs`, `_leg_ids`, `FULL_STACK_BASELINE`, `RESIDUAL_CODES_BY_{LEG,ROW}`, `test_the_full_stack_baseline_...`; NEW manifest; `docs/change_log.md` baseline table | `pwml-reviewer` (≠ H-002 impl) | A, E, smoke | smoke | — | — | subagent registration |
+| H-002 | Scope the replay assertion to payloads | `READY` | — | read at dispatch | `agent/h02-replay-payload-scope` | `.claude/worktrees/h02-replay-payload-scope` | `test_strict_quarantine_real_artifact_replay.py` :: `test_no_archived_leg_carries_stage_zero_context` **only** | `pwml-reviewer` (≠ H-001 impl) | E, A | smoke | — | — | subagent registration |
+
+Same file, different functions. Whichever merges second rebases and re-runs chunk E
+before review; they are not reviewed as one unit.
+
+## Wave A0
+
+**Blocked on H-001 + H-002, not only on INIT-001.**
+
+| ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| C-010 | p01 stale positional index | `BLOCKED` | INIT-001 | — | `agent/p01-stale-index` | `.claude/worktrees/p01-stale-index` | `strict_quarantine.py` :: `_surviving_processes`, `_degree_zero_exports`, `quarantine_and_close`; `tests/test_strict_quarantine.py`; `tests/test_strict_quarantine_real_artifact_replay.py`; `docs/change_log.md` | C-041 impl | A, E | smoke | — | M1 | H-001, H-002 |
+| C-011 | p00a canonical-freeze seam | `BLOCKED` | H-001, H-002 | — | `agent/p00a-freeze-seam` | `.claude/worktrees/p00a-freeze-seam` | `streamlit_app.py` :: `run_post_pipeline_sbml_artifacts` | C-012 impl | D | smoke + D | — | — | H-001, H-002 |
+| C-012 | p00b driver seam | `BLOCKED` | INIT-001 | — | `agent/p00b-driver-seam` | `.claude/worktrees/p00b-driver-seam` | `driver.py` :: `_drive` → `_finalize_*` | C-011 impl | B + golden | smoke | — | — | H-001, H-002 |
+| C-013 | p04a two versioned hashes | `BLOCKED` | INIT-001 | — | `agent/p04a-hash-module` | `.claude/worktrees/p04a-hash-module` | NEW `pipeline/canonical_hash.py`; `gate_reports.py` :: `payload_sha256`, `stamp_report`, `gate_verdict` | C-020 impl | smoke | smoke | — | — | H-001, H-002 |
+| C-014 | p03a LLM request timeout | `BLOCKED` | INIT-001 | — | `agent/p03a-llm-timeout` | `.claude/worktrees/p03a-llm-timeout` | `llm/client.py` :: `OpenAI(...)`, `chat_detailed`, `chat_with_tools` | C-032 impl | A, C | smoke | — | — | H-001, H-002 |
+| C-015 | p20 lineage schema | `BLOCKED` | INIT-001 | — | `agent/p20-lineage-schema` | `.claude/worktrees/p20-lineage-schema` | NEW `pipeline/lineage.py` | C-038 impl | new | smoke | — | — | H-001, H-002 |
+| C-016 | p30 RAG stopping policy | `BLOCKED` | INIT-001 | — | `agent/p30-rag-stop-policy` | `.claude/worktrees/p30-rag-stop-policy` | NEW `rag/loop_policy.py` | C-043 impl | new, C | smoke | — | — | H-001, H-002 |
+| C-017 | p40 semantic production module | `BLOCKED` | INIT-001 | — | `agent/p40-semantic-module` | `.claude/worktrees/p40-semantic-module` | NEW `bench/semantic_production.py` | C-056a impl | B | smoke | — | — | H-001, H-002 |
+| C-018 | p50 cofactor / assay-reporter policy | `BLOCKED` | INIT-001 | — | `agent/p50-cofactor-classifier` | `.claude/worktrees/p50-cofactor-classifier` | NEW `pipeline/cofactor_policy.py` | R-003 | new, C | smoke | — | — | H-001, H-002 |
 
 ## Wave A1
 
@@ -58,7 +73,7 @@ Column meanings:
 | C-030 | p04b hash wiring | `BLOCKED` | C-011, C-013 | `agent/p04b-hash-wiring` | `streamlit_app.py` :: `freeze_canonical_payload` | C-052 impl | D | — |
 | C-031 | p02 quarantine artifacts | `BLOCKED` | C-012 | `agent/p02-quarantine-artifacts` | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | M1 |
 | C-032 | p03b deadline + checkpoints | `BLOCKED` | C-012, C-014 | `agent/p03b-deadline-module` | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
-| C-033 | p10 identity hydration | `BLOCKED` | INIT-001 | `agent/p10-identity-hydration` | `map_ids.py` :: 2 fns; `entity_identity.py`; NEW `mapping/uniprot_evidence.py` | C-044 impl | C | M2 |
+| C-033 | p10 identity hydration | `BLOCKED` | H-001, H-002 | `agent/p10-identity-hydration` | `src/t2pw/mapping/map_ids.py` :: 2 fns; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py` (**not** `src/map_ids.py`) | C-044 impl | C | M2 |
 | C-034 | p21 lineage: extraction | `BLOCKED` | C-015 | `agent/p21-lineage-extract` | `extraction/extract.py` | rotate | A | — |
 | C-035 | p22 lineage: RAG | `BLOCKED` | C-015 | `agent/p22-lineage-rag` | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
 | C-036 | p23 lineage: audit | `BLOCKED` | C-015 | `agent/p23-lineage-audit` | `curation/apply_audit_patch.py` | rotate | A | — |
@@ -73,7 +88,7 @@ Column meanings:
 | C-041 | p08 release status + coverage split | `BLOCKED` | C-010, C-012 | `agent/p08-release-status` | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
 | C-042 | p03c extraction escalation ladder | `BLOCKED` | C-032, C-038 | `agent/p03c-extraction-ladder` | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | M2 |
 | C-043 | p32 RAG loop controller | `BLOCKED` | C-016, C-021 | `agent/p32-rag-controller` | NEW `rag/controller.py` | C-055 impl | C | — |
-| C-044 | p26 lineage: mapping | `BLOCKED` | C-015, C-033 | `agent/p26-lineage-mapping` | `map_ids.py` (lineage writes) | C-033 impl | C | — |
+| C-044 | p26 lineage: mapping | `BLOCKED` | C-015, C-033 | `agent/p26-lineage-mapping` | `src/t2pw/mapping/map_ids.py` (lineage writes; **not** `src/map_ids.py`) | C-033 impl | C | — |
 
 ## Wave D
 
@@ -119,3 +134,9 @@ Column meanings:
 | 2026-08-05 | INIT-001 Step 3: `runs_verify/2026-08-04_1754/` committed at `0c469f7` — 152 files, ~6 MB, `cache_snapshot/` (38 MB, 2 files) excluded. `.git` 158 → 159 MB. C-010's last two allowlist legs are now verifiable in an isolated worktree. |
 | 2026-08-05 | INIT-001 Step 4: baseline measured. Smoke **457** ✔, chunk D **177** ✔, A **123** ✔, B **225** ✔, C **109** ✔. Full suite **2311 passed / 2 failed / 8 skipped** over 104 files. `bench_acceptance.py` re-run is **byte-identical** to the committed baseline (SHA-256 `d3538f4b…4ec3`). Every heavy job: **0 surviving owned processes** (G11). |
 | 2026-08-05 | **BLOCKER RAISED.** The pinned `FULL_STACK_BASELINE` in `test_strict_quarantine_real_artifact_replay.py` fails on `ORIGIN_SHA` — 23 legs pinned, 39 measured — because `runs/2026-08-02_2130` was archived at `5f2cd2f` (2026-08-04) after the pin was written at `404cc8d` (2026-08-01). Proven sprint-independent: no sprint commit touched `runs/` or the test, and the test globs `runs/` only. Affects TRAP-2 and C-010's acceptance. See `BASELINE.md` § 5. Wave A0 not dispatched. |
+| 2026-08-05 | **INIT-001 ACCEPTED** by the product owner. |
+| 2026-08-05 | Product-owner rulings applied → **D-011** (O-2 closed: narrow `.gitignore` for `runs_verify/*/cache_snapshot/`; 304 MB reported, **nothing deleted**), **D-012** (baseline cohort frozen to a reviewed manifest, not re-pinned), **D-013** (replay assertion scoped to payload files), **D-014** (O-3 closed: the 7 scratch files are protected — never staged, committed, reset, restored, stashed, regenerated or reformatted). O-1 remains the only open question. |
+| 2026-08-05 | New pre-Wave-A0 tasks **H-001** and **H-002** created and prompted. Wave A0 and C-010 now block on them, not on INIT-001. Cohort measured and verified: 39 legs, `evidence/baseline_cohort_measured.json` + `baseline_cohort_measure.py`. Exactly **2 of C-010's 6** allowlist legs fall inside the gate's cohort, so the two deltas stay separable. |
+| 2026-08-05 | Six missing Wave A0 prompts written from the templates: C-012, C-014, C-015, C-016, C-017, C-018. All ten A0/pre-A0 prompts now instruct the agent to read the base SHA with `git rev-parse sprint/pwml-recovery` **at dispatch**, never from a document. |
+| 2026-08-05 | Control-plane corrections: three line-number drifts fixed (`_drop_quarantined_processes` `:1868`→`:1862`; `_revalidate_surviving_processes` `:1449`→`:1448`; TRAP-2's replay pin `:416`→`:384-393` def / `:432` assert) in `MASTER_PLAN`, `_SHARED_BLOCKS` and `_TEMPLATE_IMPLEMENT`. C-033/C-044 ownership path-qualified, and a canonical-path table added to `MASTER_PLAN` § 9 covering the `pipeline.py` / `map_ids.py` / `extract.py` re-export shims. |
+| 2026-08-05 | **Awaiting session restart** to register the four project subagents. Nothing dispatched. |

@@ -164,9 +164,16 @@ TRAP-1  PMC12452463's gold export_rationale records the route as chemically
         strict_acceptance_eligible=false. It must NEVER count as strict success.
         Any agent optimizing toward "PMC12452463 passes strict" is chasing the
         wrong target.
-TRAP-2  tests/test_strict_quarantine_real_artifact_replay.py:416 pins
-        FULL_STACK_BASELINE by exact equality. C-010 changes it BY DESIGN.
-        An agent that makes this test pass by reverting behaviour is rejected.
+TRAP-2  tests/test_strict_quarantine_real_artifact_replay.py pins
+        FULL_STACK_BASELINE at :384-393 and asserts it by exact equality at
+        :432. C-010 changes it BY DESIGN. An agent that makes this test pass by
+        reverting behaviour is rejected.
+        NOTE: H-001 freezes this gate's cohort to an explicit manifest and
+        re-records its expectations BEFORE C-010 is dispatched, because the pin
+        was already stale on ORIGIN_SHA for unrelated reasons (BASELINE.md
+        section 5). You inherit a PASSING gate. Exactly TWO of C-010's six
+        allowlist legs fall inside its cohort; the other four are under
+        runs_verify/, which this gate does not read.
 TRAP-3  placeholder_backed_proteins (21 in the pinned run) is a standing POLICY
         DISAGREEMENT between gold set and pipeline, not a defect. No agent may
         "fix" it. Escalate to the product owner.

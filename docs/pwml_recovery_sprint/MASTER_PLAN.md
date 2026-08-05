@@ -13,7 +13,7 @@ All measured on `ORIGIN_SHA`. Anything not listed here is an assumption, not a f
 ### 1.1 The primary defect — confirmed live and reproduced
 
 `quarantine_and_close` (`strict_quarantine.py:1736-2045`) calls
-`_drop_quarantined_processes` at `:1868`, compacting every process bucket, then calls
+`_drop_quarantined_processes` at `:1862`, compacting every process bucket, then calls
 `_degree_zero_exports` at `:1876`, which resolves **original** admission indices against
 the **compacted** lists via `_surviving_processes` (`:1193-1206`). Out-of-range indices
 are silently skipped; shifted in-range indices resolve to the wrong row.
@@ -99,7 +99,7 @@ Strict failures by boundary: 6 stage3_normalization_gate, 2 stage1_extraction,
 | SBML canonical binding | `sbml_input_path = canonical_json`; `sbml_input_source = CANONICAL_PAYLOAD_KEY` | read |
 | Canonical hash ↔ gate binding | `payload_sha256(final_mapped.json) == final_stage3_gate_report.payload_sha256 == cccf95c8…` on committed `1647/PMC12856317` | **verified** |
 | Real-artifact replay harness | `tests/test_strict_quarantine_real_artifact_replay.py`, 7 tests, parameterized over `runs/` | read |
-| Explicit-failure pattern for bad indices | `_revalidate_surviving_processes:1449-1453` | read |
+| Explicit-failure pattern for bad indices | `_revalidate_surviving_processes:1448-1453` | read |
 | RAG scope contract | `triage.py` (198 L), `eligibility.py` (2300 L), `admission.compare_requested_pathway`/`compare_organism` | read |
 | RAG gap detector | `retrieve.detect_gaps:656`, `class Gap:220` (carries `gap_id`, `missing_relationship`, `adjacent_entities`, `expected_type`, `requested_pathway`, `requested_organism`, `reason`), `GapContractError:191` | read |
 | RAG query planning | `retrieve.py` (1254 L), `acquire.py` (1043 L), `select.py` (557 L) | read |
@@ -234,9 +234,18 @@ correct outcome is `review_required` with `strict_acceptance_eligible=false`. It
 never count as strict success. Any agent optimizing toward "PMC12452463 passes strict" is
 chasing the wrong target.
 
-**TRAP-2** `test_strict_quarantine_real_artifact_replay.py:416` pins `FULL_STACK_BASELINE`
-by exact equality. C-010 changes it by design. An agent that makes this test pass by
-reverting behaviour must be rejected.
+**TRAP-2** `test_strict_quarantine_real_artifact_replay.py` pins `FULL_STACK_BASELINE`
+at `:384-393` and asserts it by exact equality at `:432`. C-010 changes it by design. An
+agent that makes this test pass by reverting behaviour must be rejected.
+
+**TRAP-2 is superseded in part by H-001.** The pin was measured against a *filesystem
+glob* and was already stale on `ORIGIN_SHA` — 23 pinned, 39 measured — for reasons
+unrelated to C-010 (`BASELINE.md` § 5). H-001 freezes the cohort to a manifest and
+re-records the expectations **before** C-010 is dispatched. C-010's implementer therefore
+inherits a *passing* gate, and the only delta they may cause is the six-leg allowlist in
+`BASELINE.md` § 6 — of which **exactly two fall inside this gate's cohort**
+(`runs/2026-08-02_2130/papers/PMC12096016/strict` and `.../PMC12856317/research`); the
+other four live under `runs_verify/`, which this gate does not read.
 
 **TRAP-3** `placeholder_backed_proteins` is a standing policy disagreement, not a defect.
 No agent may "fix" it. Escalate.
@@ -270,6 +279,22 @@ correction and Day 7 for verification.
 Ownership is exclusive. A diff outside the owned list is an automatic reject.
 Reviewer is always a different agent than the implementer.
 
+**Canonical paths — bare filenames in this table are not unique on disk.** Resolve every
+row to these, and never edit a re-export shim:
+
+| Bare name used below | Canonical file | Decoy to avoid |
+|---|---|---|
+| `pipeline.py` | `src/t2pw/pipeline/pipeline.py` | `src/pipeline.py` (1-line `import *` shim) |
+| `map_ids.py` | `src/t2pw/mapping/map_ids.py` | `src/map_ids.py` (5-line shim) |
+| `extract.py` | `src/t2pw/extraction/extract.py` (C-034) | `src/extract.py`; `src/t2pw/rag/extract.py` |
+| `driver.py` | `src/t2pw/batch/driver.py` | — unique |
+| `runner.py` | `src/t2pw/batch/runner.py` | — unique |
+| `ir.py` | `src/t2pw/pwml/ir.py` | — unique |
+| `acceptance.py` | `src/t2pw/bench/acceptance.py` | — unique |
+| `gate_reports.py` | `src/t2pw/pipeline/gate_reports.py` | — unique |
+| `streamlit_app.py` | `src/t2pw/app/streamlit_app.py` | — unique |
+| `strict_quarantine.py` | `src/t2pw/pipeline/strict_quarantine.py` | — unique |
+
 | ID | Branch | Wave | Depends | Owns (file :: function) | Reviewer | Focused | Chunk D |
 |---|---|---|---|---|---|---|---|
 | C-010 | `agent/p01-stale-index` | A0 | — | `strict_quarantine.py` :: `_surviving_processes`, `_degree_zero_exports`, `quarantine_and_close`; `test_strict_quarantine.py`; `test_strict_quarantine_real_artifact_replay.py`; `docs/change_log.md` | C-041 impl | A, E | — |
@@ -286,7 +311,7 @@ Reviewer is always a different agent than the implementer.
 | C-030 | `agent/p04b-hash-wiring` | B | C-011, C-013 | `streamlit_app.py` :: `freeze_canonical_payload` | C-052 impl | D | ✔ |
 | C-031 | `agent/p02-quarantine-artifacts` | B | C-012 | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | — |
 | C-032 | `agent/p03b-deadline-module` | B | C-012, C-014 | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
-| C-033 | `agent/p10-identity-hydration` | B | — | `map_ids.py` :: `verify_real_protein_identity`, `_enforce_shipped_identity_names`; `entity_identity.py`; NEW `mapping/uniprot_evidence.py` | C-044 impl | C | — |
+| C-033 | `agent/p10-identity-hydration` | B | — | `src/t2pw/mapping/map_ids.py` :: `verify_real_protein_identity`, `_enforce_shipped_identity_names`; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py`. **Not** `src/map_ids.py` — that is a 5-line re-export shim | C-044 impl | C | — |
 | C-034 | `agent/p21-lineage-extract` | B | C-015 | `extraction/extract.py` | rotate | A | — |
 | C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
 | C-036 | `agent/p23-lineage-audit` | B | C-015 | `curation/apply_audit_patch.py` | rotate | A | — |
@@ -296,7 +321,7 @@ Reviewer is always a different agent than the implementer.
 | C-041 | `agent/p08-release-status` | C | C-010, C-012 | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
 | C-042 | `agent/p03c-extraction-ladder` | C | C-032, C-038 | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | — |
 | C-043 | `agent/p32-rag-controller` | C | C-016, C-021 | NEW `rag/controller.py` (unwired) | C-055 impl | C | — |
-| C-044 | `agent/p26-lineage-mapping` | C | C-015, C-033 | `map_ids.py` (lineage writes only) | C-033 impl | C | — |
+| C-044 | `agent/p26-lineage-mapping` | C | C-015, C-033 | `src/t2pw/mapping/map_ids.py` (lineage writes only). **Not** `src/map_ids.py` — re-export shim | C-033 impl | C | — |
 | C-050 | `agent/p05b-prefreeze-call` | D | C-040, C-030 | `streamlit_app.py` :: enrichment block **above** the seam | C-052 impl | D | ✔ |
 | C-051 | `agent/p05c-ir-assert-only` | D | C-040, C-050 | `ir.py` :: `build_pwml_ir` | C-040 impl | D | ✔ |
 | C-052 | `agent/p06b-freeze-enforce` | D | C-030, C-050, C-020 | `streamlit_app.py` :: `freeze_canonical_payload`, `run_pwml_export`, SBML binding | C-030 impl | D | ✔ |

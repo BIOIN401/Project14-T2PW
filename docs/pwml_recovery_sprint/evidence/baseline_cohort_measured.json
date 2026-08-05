@@ -1,0 +1,576 @@
+{
+  "measured_on": "2026-08-05",
+  "cohort_source": "tests/test_strict_quarantine_real_artifact_replay.py::_legs (filesystem glob of runs/, TO BE REPLACED by H-001)",
+  "max_payload_bytes": 2000000,
+  "full_stack_measured": {
+    "legs_examined": 39,
+    "quarantine_admitted": 27,
+    "quarantine_refused": 12,
+    "stage3_after_pass": 27,
+    "required_contract_pass": 8,
+    "reached_ir": 8,
+    "ir_pass": 8,
+    "exportable": 8
+  },
+  "residual_codes_by_leg": {
+    "no_biological_states": 4,
+    "species_missing_classification": 19,
+    "species_missing_taxonomy": 19
+  },
+  "residual_codes_by_row": {
+    "no_biological_states": 4,
+    "species_missing_classification": 27,
+    "species_missing_taxonomy": 27
+  },
+  "c010_allowlist_legs_inside_cohort": [
+    "runs/2026-08-02_2130/papers/PMC12096016/strict",
+    "runs/2026-08-02_2130/papers/PMC12856317/research"
+  ],
+  "legs": [
+    {
+      "leg_id": "2026-07-27_1623/PMC12312563__structures-/research",
+      "path": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-27_1623/PMC12312563__structures-/strict",
+      "path": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "stage3_before": "pass",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-27_1623/PMC12444477__the-regulat/research",
+      "path": "runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-27_1623/PMC13231680__mechanistic/research",
+      "path": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-27_1623/PMC13231680__mechanistic/strict",
+      "path": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_0919/PMC13231680__mechanistic/research",
+      "path": "runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "no_biological_states"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_0919/PMC13278307__an-overview/strict",
+      "path": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12180156__update-of-t/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "no_biological_states"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12180156__update-of-t/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12312563__structures-/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12312563__structures-/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12421875__the-growth-/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "no_biological_states"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12421875__the-growth-/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12444477__the-regulat/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12444477__the-regulat/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12624714__membrane-pr/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research",
+      "stage3_before": "pass",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12624714__membrane-pr/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict",
+      "stage3_before": "pass",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12657337__high-level-/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "no_biological_states"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12657337__high-level-/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12856317__a-reversibl/research",
+      "path": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC12856317__a-reversibl/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC13231680__mechanistic/strict",
+      "path": "runs/2026-07-28_2122/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-07-28_2122/PMC13233763__glycine-the/research",
+      "path": "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12096016/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12096016/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12096016/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12180156/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12180156/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12180156/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12312563/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12312563/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12421875/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12421875/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12421875/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12421875/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "fail",
+      "ir": null,
+      "exportable": false,
+      "required_codes": [
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification",
+        "species_missing_taxonomy",
+        "species_missing_classification"
+      ],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12444477/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12444477/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12444477/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12452463/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12452463/research",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12657337/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12657337/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12657337/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12657337/strict",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12782028/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+      "stage3_before": "pass",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12856317/research",
+      "path": "runs/2026-08-02_2130/papers/PMC12856317/research",
+      "stage3_before": "fail",
+      "quarantine": "refused",
+      "stage3_after": null,
+      "required_contract": null,
+      "ir": null,
+      "exportable": false,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC12856317/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+      "stage3_before": "pass",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    },
+    {
+      "leg_id": "2026-08-02_2130/PMC13231680/strict",
+      "path": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+      "stage3_before": "fail",
+      "quarantine": "ok",
+      "stage3_after": "pass",
+      "required_contract": "pass",
+      "ir": "pass",
+      "exportable": true,
+      "required_codes": [],
+      "ir_codes": []
+    }
+  ]
+}

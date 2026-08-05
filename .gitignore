@@ -27,3 +27,14 @@ data/rag_index/
 # isolated checkout here (.claude/settings.json -> worktree.baseRef = "head").
 # These are working copies of tracked content, never a source of truth.
 .claude/worktrees/
+
+# Per-run lookup-cache snapshots under runs_verify/ (DECISIONS.md D-011, O-2).
+# 8 dirs x 38 MB = 304 MB against a 159 MB .git, and every byte is a regenerable
+# copy of data/enrichment_cache.json + data/id_mapping_cache.json.
+#
+# Deliberately NARROW: it matches runs_verify/*/cache_snapshot/ only. The 16
+# cache_snapshot files already tracked under the older runs/ stay tracked --
+# this rule does not reach them, and untracking history is not what was decided.
+# The existing directories are NOT deleted; that is a separate, recoverable
+# housekeeping call.
+runs_verify/*/cache_snapshot/
