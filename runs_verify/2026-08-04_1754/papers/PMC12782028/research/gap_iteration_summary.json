@@ -1,0 +1,1653 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 0,
+        "organisms_added": 0,
+        "locations_added": 21,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 21,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:sqle",
+            "entity_type": "protein",
+            "name": "SQLE",
+            "path": "/entities/proteins/4",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:fdft1",
+            "entity_type": "protein",
+            "name": "FDFT1",
+            "path": "/entities/proteins/5",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:hmgcr",
+            "entity_type": "protein",
+            "name": "HMGCR",
+            "path": "/entities/proteins/6",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:hmgcs1",
+            "entity_type": "protein",
+            "name": "HMGCS1",
+            "path": "/entities/proteins/7",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:mvk",
+            "entity_type": "protein",
+            "name": "MVK",
+            "path": "/entities/proteins/8",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:fdps",
+            "entity_type": "protein",
+            "name": "FDPS",
+            "path": "/entities/proteins/9",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:mvd",
+            "entity_type": "protein",
+            "name": "MVD",
+            "path": "/entities/proteins/10",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:idi1",
+            "entity_type": "protein",
+            "name": "IDI1",
+            "path": "/entities/proteins/11",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:acat2",
+            "entity_type": "protein",
+            "name": "ACAT2",
+            "path": "/entities/proteins/12",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:lipa",
+            "entity_type": "protein",
+            "name": "LIPA",
+            "path": "/entities/proteins/13",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:lbr",
+            "entity_type": "protein",
+            "name": "LBR",
+            "path": "/entities/proteins/14",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:hsd17b7",
+            "entity_type": "protein",
+            "name": "HSD17B7",
+            "path": "/entities/proteins/15",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          "…+9 more item(s) elided"
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:acaf3415e91996dd",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:sqle\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup… (+178 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:sqle",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:fdft1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:hmgcr",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:hmgcs1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:mvk",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:fdps",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:mvd",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:idi1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:acat2",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lipa",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lbr",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:hsd17b7",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          "…+9 more item(s) elided"
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:sqle",
+            "entity_type": "protein",
+            "name": "SQLE",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "SQLE",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:97786bd23f725561",
+                  "preview": "{\"uniprot\": \"Q14534\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:d96c4c294591ecc8",
+                  "preview": "[\"(protein_name:\\\"SQLE\\\" OR gene:\\\"SQLE\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"SQLE\\\" OR gene:\\\"SQLE\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 772,
+                  "hash": "sha256:fa898e9b69c7b798",
+                  "preview": "[{\"accession\": \"Q14534\", \"protein_name\": \"Squalene monooxygenase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"E7EVQ6\", \"protein_name\": \"Squalene monooxygenase\", \"organ… (+572 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 21.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a13a10c778346a3",
+                  "preview": "location_frequency=21"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "protein:fdft1",
+            "entity_type": "protein",
+            "name": "FDFT1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "FDFT1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1ae76c2038c01592",
+                  "preview": "{\"uniprot\": \"P37268\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:193afbc7a3dd3c1b",
+                  "preview": "[\"(protein_name:\\\"FDFT1\\\" OR gene:\\\"FDFT1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"FDFT1\\\" OR gene:\\\"FDFT1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 750,
+                  "hash": "sha256:faafb249b9bb3267",
+                  "preview": "[{\"accession\": \"P37268\", \"protein_name\": \"Squalene synthase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"Q6IAX1\", \"protein_name\": \"Squalene synthase\", \"organism\": \"Hom… (+550 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 21.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a13a10c778346a3",
+                  "preview": "location_frequency=21"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 15.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:11fed6725da9d690",
+                  "preview": "location_frequency=15"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 1.0,
+              "reason": "The candidate 'Endoplasmic Reticulum Membrane' has the highest evidence score (21.0) and is biologically consistent with FDFT1 (Farnesyl-diphosphate farnesyltransferase 1), which is an integral membrane protein of the ER.",
+              "source": "llm",
+              "raw": {
+                "chars": 298,
+                "hash": "sha256:2d7a1d20cba998d6",
+                "preview": "{\"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 1.0, \"reason\": \"The candidate 'Endoplasmic Reticulum Membrane' has the highest evidence score (21.0) and is biologically consistent with FDFT… (+98 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          {
+            "issue_key": "protein:hmgcr",
+            "entity_type": "protein",
+            "name": "HMGCR",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "HMGCR",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1e1e3b88970a6b88",
+                  "preview": "{\"uniprot\": \"P04035\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:88d44ded0678d527",
+                  "preview": "[\"(protein_name:\\\"HMGCR\\\" OR gene:\\\"HMGCR\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"HMGCR\\\" OR gene:\\\"HMGCR\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 912,
+                  "hash": "sha256:db34017e2ea98e4e",
+                  "preview": "[{\"accession\": \"P04035\", \"protein_name\": \"3-hydroxy-3-methylglutaryl-coenzyme A reductase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A7P0Z481\", \"protein_name\": \"3-… (+712 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 29.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a7c6d73f96bd662",
+                  "preview": "location_frequency=29"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum",
+              "confidence": 1.0,
+              "reason": "HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase) is the rate-limiting enzyme in the mevalonate pathway and is known to be an integral membrane protein of the endoplasmic reticulum, which is supported by the highest evidence score in the can… (+12 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 320,
+                "hash": "sha256:02481fa9df2089c3",
+                "preview": "{\"choice\": \"Endoplasmic Reticulum\", \"confidence\": 1.0, \"reason\": \"HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase) is the rate-limiting enzyme in the mevalonate pathway and is known to be an integral … (+120 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum",
+            "chosen_state": "Homo sapiens endoplasmic reticulum"
+          },
+          {
+            "issue_key": "protein:hmgcs1",
+            "entity_type": "protein",
+            "name": "HMGCS1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "HMGCS1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:044395df66b37b12",
+                  "preview": "{\"uniprot\": \"Q01581\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 131,
+                  "hash": "sha256:39b55b7f1b40545a",
+                  "preview": "[\"(protein_name:\\\"HMGCS1\\\" OR gene:\\\"HMGCS1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"HMGCS1\\\" OR gene:\\\"HMGCS1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 912,
+                  "hash": "sha256:18f66f2d72c49b0c",
+                  "preview": "[{\"accession\": \"Q01581\", \"protein_name\": \"Hydroxymethylglutaryl-CoA synthase, cytoplasmic\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0ABB0MV10\", \"protein_name\": \"Hy… (+712 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 22.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:c1bd2f010d90d617",
+                  "preview": "location_frequency=22"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytoplasm",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytosol",
+              "confidence": 0.95,
+              "reason": "HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1) is the rate-limiting enzyme in the mevalonate pathway, which occurs in the cytosol. The candidate 'Cytosol' has a significantly higher evidence score (22.0) compared to 'Cytoplasm' (3.0) in… (+31 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 326,
+                "hash": "sha256:149337c962135894",
+                "preview": "{\"choice\": \"Cytosol\", \"confidence\": 0.95, \"reason\": \"HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1) is the rate-limiting enzyme in the mevalonate pathway, which occurs in the cytosol. The candidat… (+126 chars elided)"
+              }
+            },
+            "chosen_location": "Cytosol",
+            "chosen_state": "AutoState_homo_sapienscytosol"
+          },
+          {
+            "issue_key": "protein:mvk",
+            "entity_type": "protein",
+            "name": "MVK",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "MVK",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:98970069387e9e17",
+                  "preview": "{\"uniprot\": \"Q03426\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 119,
+                  "hash": "sha256:43c2d518f87e7676",
+                  "preview": "[\"(protein_name:\\\"MVK\\\" OR gene:\\\"MVK\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"MVK\\\" OR gene:\\\"MVK\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 760,
+                  "hash": "sha256:2781b107d382462b",
+                  "preview": "[{\"accession\": \"Q03426\", \"protein_name\": \"Mevalonate kinase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A1B0GWC2\", \"protein_name\": \"Mevalonate kinase\", \"organism\": … (+560 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 23.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:ebf836303957107c",
+                  "preview": "location_frequency=23"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 14.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:4f11279c628b1c5d",
+                  "preview": "location_frequency=14"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.9,
+              "reason": "Cytoplasm has the highest evidence score (23.0) compared to Cytosol (14.0) in the provided candidate list.",
+              "source": "llm",
+              "raw": {
+                "chars": 162,
+                "hash": "sha256:8b5bae6d58575c53",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.9, \"reason\": \"Cytoplasm has the highest evidence score (23.0) compared to Cytosol (14.0) in the provided candidate list.\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:fdps",
+            "entity_type": "protein",
+            "name": "FDPS",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "FDPS",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f160c4648645e439",
+                  "preview": "{\"uniprot\": \"P14324\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:2fd175b2cd43b6f2",
+                  "preview": "[\"(protein_name:\\\"FDPS\\\" OR gene:\\\"FDPS\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"FDPS\\\" OR gene:\\\"FDPS\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 848,
+                  "hash": "sha256:a03bf5eeff4988a2",
+                  "preview": "[{\"accession\": \"P14324\", \"protein_name\": \"Farnesyl pyrophosphate synthase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A087X090\", \"protein_name\": \"Farnesyl pyrophosp… (+648 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 40.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:e6c81a3547d065bd",
+                  "preview": "location_frequency=40"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 32.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:caaee4f125748e7a",
+                  "preview": "location_frequency=32"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.9,
+              "reason": "Cytoplasm has the highest score and frequency in the provided candidate list for FDPS (Farnesyl diphosphate synthase).",
+              "source": "llm",
+              "raw": {
+                "chars": 174,
+                "hash": "sha256:6858af44b6e63f7c",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.9, \"reason\": \"Cytoplasm has the highest score and frequency in the provided candidate list for FDPS (Farnesyl diphosphate synthase).\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:mvd",
+            "entity_type": "protein",
+            "name": "MVD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "MVD",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ec5f3fb691f4f095",
+                  "preview": "{\"uniprot\": \"P53602\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 119,
+                  "hash": "sha256:9aaad538a28e2f50",
+                  "preview": "[\"(protein_name:\\\"MVD\\\" OR gene:\\\"MVD\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"MVD\\\" OR gene:\\\"MVD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 866,
+                  "hash": "sha256:d199338e1df78e0e",
+                  "preview": "[{\"accession\": \"P53602\", \"protein_name\": \"Diphosphomevalonate decarboxylase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"H3BP35\", \"protein_name\": \"Diphosphomevalonate … (+666 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 22.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:c1bd2f010d90d617",
+                  "preview": "location_frequency=22"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 16.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:c67d7eb5f46c741d",
+                  "preview": "location_frequency=16"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.9,
+              "reason": "Cytoplasm has the highest evidence score (22.0) compared to Cytosol (16.0) in the provided candidate list.",
+              "source": "llm",
+              "raw": {
+                "chars": 162,
+                "hash": "sha256:13eb71c8b924b080",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.9, \"reason\": \"Cytoplasm has the highest evidence score (22.0) compared to Cytosol (16.0) in the provided candidate list.\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:idi1",
+            "entity_type": "protein",
+            "name": "IDI1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "IDI1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b2336790265465a0",
+                  "preview": "{\"uniprot\": \"Q13907\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:0c0c5d88c11c7ac6",
+                  "preview": "[\"(protein_name:\\\"IDI1\\\" OR gene:\\\"IDI1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"IDI1\\\" OR gene:\\\"IDI1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 961,
+                  "hash": "sha256:8502d23e477c1273",
+                  "preview": "[{\"accession\": \"Q13907\", \"protein_name\": \"Isopentenyl-diphosphate Delta-isomerase 1\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A8Q3WKR8\", \"protein_name\": \"Isopente… (+761 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Peroxisome",
+                "score": 21.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a13a10c778346a3",
+                  "preview": "location_frequency=21"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum",
+                "score": 6.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:10a233e23a5fac42",
+                  "preview": "location_frequency=6"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Peroxisome",
+              "confidence": 0.9,
+              "reason": "The candidate 'Peroxisome' has the highest evidence score (21.0) and location frequency in the provided database context for IDI1.",
+              "source": "llm",
+              "raw": {
+                "chars": 187,
+                "hash": "sha256:77f87fa39ce32950",
+                "preview": "{\"choice\": \"Peroxisome\", \"confidence\": 0.9, \"reason\": \"The candidate 'Peroxisome' has the highest evidence score (21.0) and location frequency in the provided database context for IDI1.\"}"
+              }
+            },
+            "chosen_location": "Peroxisome",
+            "chosen_state": "AutoState_homo_sapiensperoxisome"
+          },
+          {
+            "issue_key": "protein:acat2",
+            "entity_type": "protein",
+            "name": "ACAT2",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ACAT2",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:39ef97d9e458f86f",
+                  "preview": "{\"uniprot\": \"Q9BWD1\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:3ca0e06deafc9fb6",
+                  "preview": "[\"(protein_name:\\\"ACAT2\\\" OR gene:\\\"ACAT2\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ACAT2\\\" OR gene:\\\"ACAT2\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 839,
+                  "hash": "sha256:0ec2a8be639a3d5a",
+                  "preview": "[{\"accession\": \"Q9BWD1\", \"protein_name\": \"Acetyl-CoA acetyltransferase, cytosolic\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"O75908\", \"protein_name\": \"Sterol O-acylt… (+639 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 21.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:9a13a10c778346a3",
+                  "preview": "location_frequency=21"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrial Inner Membrane",
+                "score": 15.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:11fed6725da9d690",
+                  "preview": "location_frequency=15"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrial Matrix",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrion",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.9,
+              "reason": "The candidate 'Cytoplasm' has the highest evidence score (21.0) among the provided options in the pathbank_db.",
+              "source": "llm",
+              "raw": {
+                "chars": 166,
+                "hash": "sha256:46f0a850dd33a5aa",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.9, \"reason\": \"The candidate 'Cytoplasm' has the highest evidence score (21.0) among the provided options in the pathbank_db.\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:lipa",
+            "entity_type": "protein",
+            "name": "LIPA",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LIPA",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d378631763fb41b9",
+                  "preview": "{\"uniprot\": \"P38571\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:b06de9528da02e4b",
+                  "preview": "[\"(protein_name:\\\"LIPA\\\" OR gene:\\\"LIPA\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"LIPA\\\" OR gene:\\\"LIPA\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 850,
+                  "hash": "sha256:61c01d535f93cd44",
+                  "preview": "[{\"accession\": \"P38571\", \"protein_name\": \"Lysosomal acid lipase/cholesteryl ester hydrolase\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A0A0MT32\", \"protein_name\": \"… (+650 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 73.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:b5baa3146ed58e8e",
+                  "preview": "location_frequency=73"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cell Membrane",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Lysosome",
+                "score": 23.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:ebf836303957107c",
+                  "preview": "location_frequency=23"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.73,
+              "reason": "The candidate 'Cytoplasm' has the highest frequency score (73) among the provided options in the pathbank_db source.",
+              "source": "llm",
+              "raw": {
+                "chars": 173,
+                "hash": "sha256:6f3e8a90052fbcca",
+                "preview": "{\"choice\": \"Cytoplasm\", \"confidence\": 0.73, \"reason\": \"The candidate 'Cytoplasm' has the highest frequency score (73) among the provided options in the pathbank_db source.\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_homo_sapienscytoplasm"
+          },
+          {
+            "issue_key": "protein:lbr",
+            "entity_type": "protein",
+            "name": "LBR",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LBR",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:93ea4f1282ed314f",
+                  "preview": "{\"uniprot\": \"Q14739\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 119,
+                  "hash": "sha256:54908cd740ba7c13",
+                  "preview": "[\"(protein_name:\\\"LBR\\\" OR gene:\\\"LBR\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"LBR\\\" OR gene:\\\"LBR\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 787,
+                  "hash": "sha256:8f7a87bae308aa9f",
+                  "preview": "[{\"accession\": \"Q14739\", \"protein_name\": \"Delta(14)-sterol reductase LBR\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A494C1L1\", \"protein_name\": \"Delta(14)-sterol re… (+587 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Inner Membrane",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Inner Membrane",
+              "confidence": 0.9,
+              "reason": "LBR (Lamin B Receptor) is a well-characterized integral membrane protein primarily located in the inner nuclear membrane. The candidate 'Inner Membrane' has the highest score and matches the known biological function of the protein.",
+              "source": "llm",
+              "raw": {
+                "chars": 293,
+                "hash": "sha256:33c7842b01963331",
+                "preview": "{\"choice\": \"Inner Membrane\", \"confidence\": 0.9, \"reason\": \"LBR (Lamin B Receptor) is a well-characterized integral membrane protein primarily located in the inner nuclear membrane. The candidate 'Inne… (+93 chars elided)"
+              }
+            },
+            "chosen_location": "Inner Membrane",
+            "chosen_state": "AutoState_homo_sapiensinner_membrane"
+          },
+          {
+            "issue_key": "protein:hsd17b7",
+            "entity_type": "protein",
+            "name": "HSD17B7",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "HSD17B7",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f7ce64572a4468e1",
+                  "preview": "{\"uniprot\": \"P56937\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 135,
+                  "hash": "sha256:4c296f02fae66736",
+                  "preview": "[\"(protein_name:\\\"HSD17B7\\\" OR gene:\\\"HSD17B7\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"HSD17B7\\\" OR gene:\\\"HSD17B7\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 909,
+                  "hash": "sha256:55bcb77a40a94199",
+                  "preview": "[{\"accession\": \"P56937\", \"protein_name\": \"3-keto-steroid reductase/17-beta-hydroxysteroid dehydrogenase 7\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0ACI8RGE0\", \"pr… (+709 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cell Membrane",
+                "score": 6.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:10a233e23a5fac42",
+                  "preview": "location_frequency=6"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Endoplasmic Reticulum Membrane",
+                "score": 18.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:547699298d2f9328",
+                  "preview": "location_frequency=18"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Endoplasmic Reticulum Membrane",
+              "confidence": 0.95,
+              "reason": "The candidate 'Endoplasmic Reticulum Membrane' has a significantly higher evidence score (18.0) compared to 'Cell Membrane' (6.0) and is biologically consistent with HSD17B7, which is a known member of the steroid hormone dehydrogenase fami… (+33 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 351,
+                "hash": "sha256:2f32bb36cc16d82e",
+                "preview": "{\"choice\": \"Endoplasmic Reticulum Membrane\", \"confidence\": 0.95, \"reason\": \"The candidate 'Endoplasmic Reticulum Membrane' has a significantly higher evidence score (18.0) compared to 'Cell Membrane' … (+151 chars elided)"
+              }
+            },
+            "chosen_location": "Endoplasmic Reticulum Membrane",
+            "chosen_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+          },
+          "…+9 more item(s) elided"
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    },
+    {
+      "round": 2,
+      "summary": {},
+      "db": {},
+      "stage3": {},
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

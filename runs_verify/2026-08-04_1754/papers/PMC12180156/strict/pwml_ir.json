@@ -1,0 +1,2287 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Homo sapiens",
+      "pathwhiz_id": 1,
+      "taxonomy_id": "9606",
+      "classification": "Eukaryote",
+      "common_name": "Human"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "cytosol"
+    },
+    {
+      "key": "scl_2",
+      "name": "mitochondrial matrix"
+    },
+    {
+      "key": "scl_3",
+      "name": "mitochondria"
+    },
+    {
+      "key": "scl_4",
+      "name": "inner mitochondrial membrane"
+    },
+    {
+      "key": "scl_5",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    }
+  ],
+  "cell_types": [
+    {
+      "key": "ct_1",
+      "name": "erythroid cells"
+    }
+  ],
+  "tissues": [
+    {
+      "key": "tis_1",
+      "name": "bone marrow"
+    }
+  ],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "mitochondrial state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_3",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "cytosolic state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_3",
+      "name": "mitochondrial matrix state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_2",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_4",
+      "name": "inner mitochondrial membrane state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_4",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "serine",
+        "pathwhiz_id": 120,
+        "pathbank_compound_id": 120,
+        "mapped_ids": {
+          "hmdb": "HMDB0000187",
+          "kegg": "C00065",
+          "chebi": "17115",
+          "pubchem": "5951",
+          "cas": "56-45-1",
+          "biocyc": "SER",
+          "chemspider": "5736",
+          "drugbank": "DB00133",
+          "pathbank_compound_id": "120"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "serine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 120,
+              "name": "L-Serine",
+              "short_name": "Ser",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000187",
+                "kegg": "C00065",
+                "chebi": "CHEBI:17115",
+                "pubchem": "5951",
+                "cas": "56-45-1",
+                "biocyc": "SER",
+                "chemspider": "5736",
+                "drugbank": "DB00133",
+                "pathbank_compound_id": "120"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 120,
+          "resolved_name": "L-Serine"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 120,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000187",
+        "kegg_id": "C00065",
+        "chebi_id": "17115",
+        "pubchem_cid": "5951",
+        "cas": "56-45-1",
+        "biocyc_id": "SER",
+        "chemspider_id": "5736",
+        "short_name": "Ser",
+        "synonyms": [
+          "L-Serine",
+          "L-2-Amino-3-hydroxypropionic acid",
+          "L-3-Hydroxy-alanine",
+          "Serine"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytosolic state"
+          },
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "Glycine",
+        "pathwhiz_id": 78,
+        "pathbank_compound_id": 78,
+        "mapped_ids": {
+          "hmdb": "HMDB0000123",
+          "kegg": "C00037",
+          "chebi": "15428",
+          "pubchem": "5257127",
+          "cas": "56-40-6",
+          "biocyc": "GLY",
+          "chemspider": "730",
+          "drugbank": "DB00145",
+          "pathbank_compound_id": "78"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "glycine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 78,
+              "name": "Glycine",
+              "short_name": "Gly",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000123",
+                "kegg": "C00037",
+                "chebi": "CHEBI:15428",
+                "pubchem": "5257127",
+                "cas": "56-40-6",
+                "biocyc": "GLY",
+                "chemspider": "730",
+                "drugbank": "DB00145",
+                "pathbank_compound_id": "78"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 78,
+          "resolved_name": "Glycine"
+        },
+        "raw_name": "glycine",
+        "db_status": "matched_offline_name_index",
+        "db_id": 78,
+        "db_row": {
+          "id": 78,
+          "name": "Glycine"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000123",
+        "kegg_id": "C00037",
+        "chebi_id": "15428",
+        "pubchem_cid": "5257127",
+        "cas": "56-40-6",
+        "biocyc_id": "GLY",
+        "chemspider_id": "730",
+        "short_name": "Gly",
+        "synonyms": [
+          "Glycine",
+          "Aminoacetic acid",
+          "Gly"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "5,10-methylene-THF",
+        "pathwhiz_id": 1178,
+        "pathbank_compound_id": 1178,
+        "mapped_ids": {
+          "hmdb": "HMDB0001533",
+          "kegg": "C00143",
+          "chebi": "15636",
+          "pubchem": "439175",
+          "cas": "3432-99-3",
+          "biocyc": "METHYLENE-THF",
+          "chemspider": "388320",
+          "pathbank_compound_id": "1178"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "5,10-methylene-THF"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1178,
+              "name": "5,10-Methylene-THF",
+              "short_name": "5XM-THF",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001533",
+                "kegg": "C00143",
+                "chebi": "CHEBI:15636",
+                "pubchem": "439175",
+                "cas": "3432-99-3",
+                "biocyc": "METHYLENE-THF",
+                "chemspider": "388320",
+                "pathbank_compound_id": "1178"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1178,
+          "resolved_name": "5,10-Methylene-THF"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1178,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001533",
+        "kegg_id": "C00143",
+        "chebi_id": "15636",
+        "pubchem_cid": "439175",
+        "cas": "3432-99-3",
+        "biocyc_id": "METHYLENE-THF",
+        "chemspider_id": "388320",
+        "short_name": "5XM-THF",
+        "synonyms": [
+          "5,10-methylene-THF",
+          "5,10-Methylenetetrahydrofolate",
+          "(6R)-5,10-Methylenetetrahydrofolate"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "heme",
+        "pathwhiz_id": 1799,
+        "pathbank_compound_id": 1799,
+        "mapped_ids": {
+          "hmdb": "HMDB0003178",
+          "kegg": "C00032",
+          "chebi": "17627",
+          "cas": "14875-96-8",
+          "biocyc": "HEME_A",
+          "chemspider": "24604415",
+          "drugbank": "DB02577",
+          "pathbank_compound_id": "1799",
+          "pubchem": "3334"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "heme"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1799,
+              "name": "Heme",
+              "short_name": "Heme",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0003178",
+                "kegg": "C00032",
+                "chebi": "CHEBI:17627",
+                "cas": "14875-96-8",
+                "biocyc": "HEME_A",
+                "chemspider": "24604415",
+                "drugbank": "DB02577",
+                "pathbank_compound_id": "1799"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1799,
+          "resolved_name": "Heme"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1799,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0003178",
+        "kegg_id": "C00032",
+        "chebi_id": "17627",
+        "pubchem_cid": "3334",
+        "cas": "14875-96-8",
+        "biocyc_id": "HEME_A",
+        "chemspider_id": "24604415",
+        "short_name": "Heme",
+        "synonyms": [
+          "Heme",
+          "Haem",
+          "Protoheme",
+          "Heme B",
+          "Protoheme IX"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_5",
+        "name": "tetrahydrofolate (THF)",
+        "pathwhiz_id": 1221,
+        "pathbank_compound_id": 1221,
+        "mapped_ids": {
+          "kegg": "C00101",
+          "hmdb": "HMDB0001846",
+          "chebi": "20506",
+          "pubchem": "13781857",
+          "cas": "135-16-0",
+          "biocyc": "THF",
+          "chemspider": "18714427",
+          "drugbank": "DB00116",
+          "pathbank_compound_id": "1221"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "tetrahydrofolate (THF)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1221,
+              "name": "Tetrahydrofolic acid",
+              "short_name": "THFA",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001846",
+                "kegg": "C00101",
+                "chebi": "CHEBI:20506",
+                "pubchem": "13781857",
+                "cas": "135-16-0",
+                "biocyc": "THF",
+                "chemspider": "18714427",
+                "drugbank": "DB00116"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "pathbank_compound_id": 1221,
+          "resolved_name": "Tetrahydrofolic acid"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1221,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001846",
+        "kegg_id": "C00101",
+        "chebi_id": "20506",
+        "pubchem_cid": "13781857",
+        "cas": "135-16-0",
+        "biocyc_id": "THF",
+        "chemspider_id": "18714427",
+        "short_name": "THFA",
+        "synonyms": [
+          "Tetrahydrofolate",
+          "5,6,7,8-Tetrahydrofolate",
+          "Tetrahydrofolic acid",
+          "THF",
+          "(6S)-Tetrahydrofolate",
+          "(6S)-Tetrahydrofolic acid",
+          "(6S)-THFA"
+        ],
+        "type": "Compound",
+        "compound_class": "cofactor",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_6",
+        "name": "iron",
+        "pathwhiz_id": 9794,
+        "pathbank_compound_id": 9794,
+        "mapped_ids": {
+          "hmdb": "HMDB0015531",
+          "kegg": "C00023",
+          "chebi": "18248",
+          "pubchem": "23925",
+          "cas": "7439-89-6",
+          "chemspider": "22368",
+          "drugbank": "DB01592",
+          "pathbank_compound_id": "9794"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "iron"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9794,
+              "name": "Iron",
+              "short_name": "Iron",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0015531",
+                "kegg": "C00023",
+                "chebi": "CHEBI:18248",
+                "pubchem": "23925",
+                "cas": "7439-89-6",
+                "chemspider": "22368",
+                "drugbank": "DB01592",
+                "pathbank_compound_id": "9794"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9794,
+          "resolved_name": "Iron"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 9794,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0015531",
+        "kegg_id": "C00023",
+        "chebi_id": "18248",
+        "pubchem_cid": "23925",
+        "cas": "7439-89-6",
+        "chemspider_id": "22368",
+        "short_name": "Iron",
+        "synonyms": [
+          "Iron"
+        ],
+        "type": "Compound",
+        "compound_class": "ion",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial state"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "SHMT2",
+        "pathwhiz_id": 737,
+        "pathbank_protein_id": 737,
+        "mapped_ids": {
+          "uniprot": "P34897",
+          "pathbank_protein_id": "737",
+          "gene_name": "SHMT2"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "SHMT2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 737,
+              "name": "Serine hydroxymethyltransferase, mitochondrial",
+              "uniprot": "P34897",
+              "gene_name": "SHMT2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "SHMT2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:737, uniprot:P34897",
+            "judged_candidate": {
+              "pathbank_protein_id": 737,
+              "name": "Serine hydroxymethyltransferase, mitochondrial",
+              "uniprot": "P34897",
+              "gene_name": "SHMT2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 737,
+                "name": "Serine hydroxymethyltransferase, mitochondrial",
+                "uniprot": "P34897",
+                "gene_name": "SHMT2",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "SHMT2",
+              "kind": "protein",
+              "resolved_name": "Serine hydroxymethyltransferase, mitochondrial",
+              "identity": "uniprot:P34897",
+              "compared_names": [
+                "Serine hydroxymethyltransferase, mitochondrial"
+              ],
+              "matched_symbol": "SHMT2"
+            }
+          },
+          "identity_status": "verified",
+          "pathbank_protein_id": 737,
+          "resolved_name": "Serine hydroxymethyltransferase, mitochondrial"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "Glycine hydroxymethyltransferase",
+          "Serine methylase",
+          "SHMT2",
+          "Serine hydroxymethyltransferase, mitochondrial"
+        ],
+        "uniprot": "P34897",
+        "gene_name": "SHMT2",
+        "ec_number": "2.1.2.1",
+        "ec_numbers": [
+          "2.1.2.1"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "ferrochelatase",
+        "pathwhiz_id": 4374,
+        "pathbank_protein_id": 4374,
+        "mapped_ids": {
+          "uniprot": "Q53FU1",
+          "pathbank_protein_id": "4374"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ferrochelatase",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "ambiguity": {
+            "candidate_count": 3,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              {
+                "accession": "Q53FU1",
+                "reason": "ambiguous_insufficient_margin"
+              },
+              {
+                "accession": "Q5TZY0",
+                "reason": "ambiguous_insufficient_margin"
+              },
+              {
+                "accession": "Q7KZA3",
+                "reason": "ambiguous_insufficient_margin"
+              }
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            {
+              "pathbank_protein_id": 4375,
+              "name": "Ferrochelatase",
+              "uniprot": "Q5TZY0",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            {
+              "pathbank_protein_id": 4376,
+              "name": "Ferrochelatase",
+              "uniprot": "Q7KZA3",
+              "gene_name": "DKFZp686P18130",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "identity_status": "verified",
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "ferrochelatase",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:4374, uniprot:Q53FU1",
+            "judged_candidate": {
+              "pathbank_protein_id": 4374,
+              "name": "Ferrochelatase",
+              "uniprot": "Q53FU1",
+              "gene_name": "",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 4374,
+                "name": "Ferrochelatase",
+                "uniprot": "Q53FU1",
+                "gene_name": "",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "ferrochelatase",
+              "kind": "protein",
+              "resolved_name": "Ferrochelatase",
+              "identity": "uniprot:Q53FU1",
+              "compared_names": [
+                "Ferrochelatase"
+              ]
+            }
+          },
+          "pathbank_protein_id": 4374,
+          "resolved_name": "Ferrochelatase"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "Ferrochelatase"
+        ],
+        "uniprot": "Q53FU1",
+        "ec_number": "4.98.1.1",
+        "ec_numbers": [
+          "4.98.1.1"
+        ]
+      },
+      {
+        "key": "prot_3",
+        "name": "ALAS2",
+        "pathwhiz_id": 17,
+        "pathbank_protein_id": 17,
+        "mapped_ids": {
+          "uniprot": "P22557",
+          "pathbank_protein_id": "17",
+          "gene_name": "ALAS2"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ALAS2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "ALAS2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:17, uniprot:P22557",
+            "judged_candidate": {
+              "pathbank_protein_id": 17,
+              "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "uniprot": "P22557",
+              "gene_name": "ALAS2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 17,
+                "name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+                "uniprot": "P22557",
+                "gene_name": "ALAS2",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "ALAS2",
+              "kind": "protein",
+              "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial",
+              "identity": "uniprot:P22557",
+              "compared_names": [
+                "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+              ],
+              "matched_symbol": "ALAS2"
+            }
+          },
+          "identity_status": "verified",
+          "pathbank_protein_id": 17,
+          "resolved_name": "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "5-aminolevulinic acid synthase 2",
+          "Delta-ALA synthase 2",
+          "Delta-aminolevulinate synthase 2",
+          "ALAS2",
+          "ALASE",
+          "ASB",
+          "5-aminolevulinate synthase, erythroid-specific, mitochondrial"
+        ],
+        "uniprot": "P22557",
+        "gene_name": "ALAS2",
+        "ec_number": "2.3.1.37",
+        "ec_numbers": [
+          "2.3.1.37"
+        ]
+      },
+      {
+        "key": "prot_4",
+        "name": "SFXN1",
+        "pathwhiz_id": 3907,
+        "pathbank_protein_id": 3907,
+        "mapped_ids": {
+          "uniprot": "Q9H9B4",
+          "pathbank_protein_id": "3907",
+          "gene_name": "SFXN1"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "SFXN1",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 3907,
+              "name": "Sideroflexin-1",
+              "uniprot": "Q9H9B4",
+              "gene_name": "SFXN1",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "SFXN1",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:3907, uniprot:Q9H9B4",
+            "judged_candidate": {
+              "pathbank_protein_id": 3907,
+              "name": "Sideroflexin-1",
+              "uniprot": "Q9H9B4",
+              "gene_name": "SFXN1",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 3907,
+                "name": "Sideroflexin-1",
+                "uniprot": "Q9H9B4",
+                "gene_name": "SFXN1",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "SFXN1",
+              "kind": "protein",
+              "resolved_name": "Sideroflexin-1",
+              "identity": "uniprot:Q9H9B4",
+              "compared_names": [
+                "Sideroflexin-1"
+              ],
+              "matched_symbol": "SFXN1"
+            }
+          },
+          "pathbank_protein_id": 3907,
+          "resolved_name": "Sideroflexin-1",
+          "identity_status": "verified"
+        },
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "SFXN1",
+          "Sideroflexin-1"
+        ],
+        "uniprot": "Q9H9B4",
+        "gene_name": "SFXN1"
+      },
+      {
+        "key": "prot_5",
+        "name": "SFXN2",
+        "pathwhiz_id": 3908,
+        "pathbank_protein_id": 3908,
+        "mapped_ids": {
+          "uniprot": "Q96NB2",
+          "pathbank_protein_id": "3908",
+          "gene_name": "SFXN2"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "SFXN2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 3908,
+              "name": "Sideroflexin-2",
+              "uniprot": "Q96NB2",
+              "gene_name": "SFXN2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "SFXN2",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:3908, uniprot:Q96NB2",
+            "judged_candidate": {
+              "pathbank_protein_id": 3908,
+              "name": "Sideroflexin-2",
+              "uniprot": "Q96NB2",
+              "gene_name": "SFXN2",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 3908,
+                "name": "Sideroflexin-2",
+                "uniprot": "Q96NB2",
+                "gene_name": "SFXN2",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "SFXN2",
+              "kind": "protein",
+              "resolved_name": "Sideroflexin-2",
+              "identity": "uniprot:Q96NB2",
+              "compared_names": [
+                "Sideroflexin-2"
+              ],
+              "matched_symbol": "SFXN2"
+            }
+          },
+          "pathbank_protein_id": 3908,
+          "resolved_name": "Sideroflexin-2",
+          "identity_status": "verified"
+        },
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "SFXN2",
+          "Sideroflexin-2"
+        ],
+        "uniprot": "Q96NB2",
+        "gene_name": "SFXN2"
+      },
+      {
+        "key": "prot_6",
+        "name": "SFXN4",
+        "pathwhiz_id": 3910,
+        "pathbank_protein_id": 3910,
+        "mapped_ids": {
+          "uniprot": "Q6P4A7",
+          "pathbank_protein_id": "3910",
+          "gene_name": "SFXN4"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "SFXN4",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 3910,
+              "name": "Sideroflexin-4",
+              "uniprot": "Q6P4A7",
+              "gene_name": "SFXN4",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "SFXN4",
+            "organism": "Homo sapiens",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "identity": "pathbank_protein_id:3910, uniprot:Q6P4A7",
+            "judged_candidate": {
+              "pathbank_protein_id": 3910,
+              "name": "Sideroflexin-4",
+              "uniprot": "Q6P4A7",
+              "gene_name": "SFXN4",
+              "species_id": 1,
+              "score": 1.0,
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 3910,
+                "name": "Sideroflexin-4",
+                "uniprot": "Q6P4A7",
+                "gene_name": "SFXN4",
+                "species_id": 1,
+                "score": 1.0,
+                "organism": "Homo sapiens",
+                "taxonomy_id": "9606"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "SFXN4",
+              "kind": "protein",
+              "resolved_name": "Sideroflexin-4",
+              "identity": "uniprot:Q6P4A7",
+              "compared_names": [
+                "Sideroflexin-4"
+              ],
+              "matched_symbol": "SFXN4"
+            }
+          },
+          "pathbank_protein_id": 3910,
+          "resolved_name": "Sideroflexin-4",
+          "identity_status": "verified"
+        },
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Homo sapiens",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Homo sapiens",
+        "species_id": 1,
+        "pathbank_species_id": 1,
+        "synonyms": [
+          "Breast cancer resistance marker 1",
+          "SFXN4",
+          "BCRM1",
+          "Sideroflexin-4"
+        ],
+        "uniprot": "Q6P4A7",
+        "gene_name": "SFXN4"
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "Serine hydroxymethyltransferase, mitochondrial",
+        "pathwhiz_id": 671,
+        "pathbank_complex_id": 671,
+        "mapping_meta": {
+          "pathbank_complex_id": 671,
+          "pathbank_protein_complex_id": 671,
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 671,
+              "pathbank_protein_complex_id": 671,
+              "name": "Serine hydroxymethyltransferase, mitochondrial",
+              "species_id": 1,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "Serine hydroxymethyltransferase, mitochondrial",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "SFXN4 complex",
+        "mapping_meta": {
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "novel_complex_from_resolved_components",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_complex_from_resolved_components"
+          },
+          "route": "complex",
+          "query": {
+            "name": "SFXN4 complex",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_6",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "ALAS2 complex",
+        "mapping_meta": {
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "novel_complex_from_resolved_components",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_complex_from_resolved_components"
+          },
+          "route": "complex",
+          "query": {
+            "name": "ALAS2 complex",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_3",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_4",
+        "name": "ferrochelatase complex",
+        "pathwhiz_id": 912,
+        "pathbank_complex_id": 912,
+        "mapping_meta": {
+          "species_id": 1,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.5733,
+          "candidates": [
+            {
+              "pathbank_complex_id": 912,
+              "pathbank_protein_complex_id": 912,
+              "name": "Ferrochelatase, mitochondrial",
+              "species_id": 1,
+              "score": 0.5733
+            }
+          ],
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_complex_name_species",
+            "order_step": "complex_name_species"
+          },
+          "route": "complex",
+          "query": {
+            "name": "ferrochelatase complex",
+            "organism": "Homo sapiens"
+          },
+          "issues": []
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Homo sapiens",
+        "species_id": 1,
+        "components": [
+          {
+            "protein_key": "prot_2",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "SHMT2 reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_1_right_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "ALAS2 reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "inhibitor"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "ferrochelatase reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "SFXN4 regulates ferrochelatase",
+        "interaction_type": "regulates",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_6"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_2"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "SFXN1 transports serine",
+        "interaction_type": "transports",
+        "biological_state_key": "bs_4",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_4"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        }
+      },
+      {
+        "key": "int_3",
+        "type": "interaction",
+        "name": "SFXN2 regulates iron homeostasis",
+        "interaction_type": "regulates",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_5"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_6"
+        }
+      },
+      {
+        "key": "int_4",
+        "type": "interaction",
+        "name": "SFXN4 regulates heme biosynthesis",
+        "interaction_type": "regulates",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_6"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      },
+      {
+        "key": "int_5",
+        "type": "interaction",
+        "name": "THF is cofactor for one-carbon metabolism",
+        "interaction_type": "cofactor_of",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_5"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 298,
+      "hidden": false
+    },
+    {
+      "key": "pcl_4",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_2",
+      "x": 240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_3",
+      "x": 440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 640,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_4",
+      "biological_state_key": "bs_4",
+      "x": 840,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_5",
+      "biological_state_key": "bs_1",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_6",
+      "biological_state_key": "bs_4",
+      "x": 1240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_4",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_1",
+      "x": 1440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_5",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_1",
+      "x": 40,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_6",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_4",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_4",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 350,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_3",
+      "biological_state_key": "bs_3",
+      "x": 0,
+      "y": 700,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_4",
+      "biological_state_key": "bs_4",
+      "x": 0,
+      "y": 1050,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 489 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M380 489 L540 442",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 489 L540 537",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M700 442 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M1300 489 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M1460 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_11",
+      "path": "M1460 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_right_2",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_3"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_4"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_7"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_8"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_10"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_11"
+        }
+      ]
+    }
+  ]
+}

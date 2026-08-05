@@ -1,0 +1,210 @@
+{
+  "stage": "final_pre_export_stage3_gates",
+  "ok": false,
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "enterobactin synthase complex"
+    ],
+    "n_autostate_created": 0,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 0,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "no_op_quarantined_count": 0,
+    "locked_no_op_quarantined_count": 0,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 0,
+    "nucleic_acid_named_entities_relocated": 0,
+    "entity_type_mismatches_flagged": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [],
+    "false_protein_promotions_blocked": 0,
+    "unused_proteins_quarantined": 0,
+    "unused_proteins_flagged_for_review": 0,
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    }
+  },
+  "connectivity": {
+    "n_reactions": 6,
+    "n_transports": 2,
+    "n_interactions": 1,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 40,
+    "n_edges": 58,
+    "n_components": 2,
+    "main_component_size": 38,
+    "largest_component_pct": 95.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "errors": [
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'EntH' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "EntH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"EntH\" OR gene:\"EntH\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"EntH\" OR gene:\"EntH\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "EntH",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "identity": "uniprot:P0A8Y8",
+            "judged_candidate": {
+              "accession": "P0A8Y8",
+              "protein_name": "Proofreading thioesterase EntH",
+              "gene_names": "2 item(s), 16 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "EntH",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 240 chars elided",
+              "8 key(s), 250 chars elided",
+              "8 key(s), 262 chars elided",
+              "8 key(s), 255 chars elided",
+              "8 key(s), 227 chars elided",
+              "8 key(s), 236 chars elided",
+              "8 key(s), 249 chars elided",
+              "8 key(s), 252 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "EntH",
+              "kind": "protein",
+              "resolved_name": "Proofreading thioesterase EntH",
+              "identity": "uniprot:P0A8Y8",
+              "compared_names": "1 item(s), 34 chars elided"
+            },
+            "competing_accessions": [
+              "a0a0h2yxh5",
+              "a7ziy1",
+              "b5ypu3",
+              "b7l8i0",
+              "b7n9k4",
+              "p0a8y9",
+              "q8xbu9"
+            ]
+          },
+          "resolved_name": "Proofreading thioesterase EntH",
+          "identity_status": "unresolved",
+          "name_gate": {
+            "verdict": "keep",
+            "reason": "shared_meaningful_token",
+            "entity_name": "EntH",
+            "kind": "protein",
+            "resolved_name": "Proofreading thioesterase EntH",
+            "identity": "uniprot:P0A8Y8",
+            "compared_names": [
+              "Proofreading thioesterase EntH"
+            ]
+          },
+          "rejected_mapped_ids": {
+            "uniprot": "P0A8Y8"
+          }
+        },
+        "mapped_ids": {},
+        "synonyms": []
+      }
+    }
+  ],
+  "report_schema_version": 1,
+  "phase": "final_pre_export",
+  "payload_sha256": "9efd83b1f6bab7e505388c6cbbdaf6cde3d37a51f4ade0bcb2b972eb55fb026d"
+}

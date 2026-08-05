@@ -1,0 +1,1236 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Homo sapiens",
+      "pathwhiz_id": 1,
+      "taxonomy_id": "9606",
+      "classification": "Eukaryote",
+      "common_name": "Human"
+    },
+    {
+      "key": "sp_2",
+      "name": "Arabidopsis thaliana",
+      "pathwhiz_id": 4,
+      "taxonomy_id": "3702"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "mitochondrial matrix"
+    },
+    {
+      "key": "scl_2",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "mitochondrial matrix state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "glycine",
+        "pathwhiz_id": 78,
+        "pathbank_compound_id": 78,
+        "mapping_meta": {
+          "query": {
+            "name": "glycine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 78,
+              "name": "Glycine",
+              "short_name": "Gly",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000123",
+                "kegg": "C00037",
+                "chebi": "CHEBI:15428",
+                "pubchem": "5257127",
+                "cas": "56-40-6",
+                "biocyc": "GLY",
+                "chemspider": "730",
+                "drugbank": "DB00145",
+                "pathbank_compound_id": "78"
+              }
+            },
+            {
+              "pathbank_compound_id": 109420,
+              "name": "Glycine ",
+              "short_name": "",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "750",
+                "pathbank_compound_id": "109420"
+              }
+            },
+            {
+              "pathbank_compound_id": 247609,
+              "name": "glycine",
+              "short_name": "",
+              "score": 1.0,
+              "mapped_ids": {
+                "pathbank_compound_id": "247609"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_exact_name",
+            "order_step": "exact_normalized_name"
+          }
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 78,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "short_name": "Gly",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "succinyl-CoA",
+        "pathwhiz_id": 808,
+        "pathbank_compound_id": 808,
+        "mapped_ids": {
+          "hmdb": "HMDB0001022",
+          "kegg": "C00091",
+          "chebi": "15380",
+          "pubchem": "439161",
+          "cas": "604-98-8",
+          "biocyc": "3-METHYLBENZYLSUCCINYL-COA",
+          "chemspider": "388307",
+          "pathbank_compound_id": "808"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "succinyl-CoA"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 808,
+              "name": "Succinyl-CoA",
+              "short_name": "Suc-CoA",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001022",
+                "kegg": "C00091",
+                "chebi": "CHEBI:15380",
+                "pubchem": "439161",
+                "cas": "604-98-8",
+                "biocyc": "3-METHYLBENZYLSUCCINYL-COA",
+                "chemspider": "388307",
+                "pathbank_compound_id": "808"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 808,
+          "resolved_name": "Succinyl-CoA"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 808,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001022",
+        "kegg_id": "C00091",
+        "chebi_id": "15380",
+        "pubchem_cid": "439161",
+        "cas": "604-98-8",
+        "biocyc_id": "3-METHYLBENZYLSUCCINYL-COA",
+        "chemspider_id": "388307",
+        "short_name": "Suc-CoA",
+        "synonyms": [
+          "succinyl-CoA",
+          "Succinyl coenzyme A"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "aminolevulinic acid",
+        "pathwhiz_id": 894,
+        "pathbank_compound_id": 894,
+        "mapped_ids": {
+          "hmdb": "HMDB0001149",
+          "kegg": "C00430",
+          "chebi": "17549",
+          "pubchem": "137",
+          "cas": "106-60-5",
+          "biocyc": "5-AMINO-LEVULINATE",
+          "chemspider": "134",
+          "drugbank": "DB00855",
+          "pathbank_compound_id": "894"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "aminolevulinic acid"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 894,
+              "name": "5-Aminolevulinic acid",
+              "short_name": "5-Amnva",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001149",
+                "kegg": "C00430",
+                "chebi": "CHEBI:17549",
+                "pubchem": "137",
+                "cas": "106-60-5",
+                "biocyc": "5-AMINO-LEVULINATE",
+                "chemspider": "134",
+                "drugbank": "DB00855",
+                "pathbank_compound_id": "894"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 894,
+          "resolved_name": "5-Aminolevulinic acid"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 894,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001149",
+        "kegg_id": "C00430",
+        "chebi_id": "17549",
+        "pubchem_cid": "137",
+        "cas": "106-60-5",
+        "biocyc_id": "5-AMINO-LEVULINATE",
+        "chemspider_id": "134",
+        "short_name": "5-Amnva",
+        "synonyms": [
+          "5-Aminolevulinate",
+          "5-Amino-4-oxopentanoate",
+          "5-Amino-4-oxovaleric acid",
+          "5-Amino-4-oxopentanoic acid"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "heme",
+        "pathwhiz_id": 1799,
+        "pathbank_compound_id": 1799,
+        "mapped_ids": {
+          "hmdb": "HMDB0003178",
+          "kegg": "C00032",
+          "chebi": "17627",
+          "cas": "14875-96-8",
+          "biocyc": "HEME_A",
+          "chemspider": "24604415",
+          "drugbank": "DB02577",
+          "pathbank_compound_id": "1799",
+          "pubchem": "3334"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "heme"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1799,
+              "name": "Heme",
+              "short_name": "Heme",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0003178",
+                "kegg": "C00032",
+                "chebi": "CHEBI:17627",
+                "cas": "14875-96-8",
+                "biocyc": "HEME_A",
+                "chemspider": "24604415",
+                "drugbank": "DB02577",
+                "pathbank_compound_id": "1799"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1799,
+          "resolved_name": "Heme"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1799,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0003178",
+        "kegg_id": "C00032",
+        "chebi_id": "17627",
+        "pubchem_cid": "3334",
+        "cas": "14875-96-8",
+        "biocyc_id": "HEME_A",
+        "chemspider_id": "24604415",
+        "short_name": "Heme",
+        "synonyms": [
+          "Heme",
+          "Haem",
+          "Protoheme",
+          "Heme B",
+          "Protoheme IX"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_5",
+        "name": "Pyridoxal 5'-phosphate",
+        "pathwhiz_id": 1148,
+        "pathbank_compound_id": 1148,
+        "mapped_ids": {
+          "hmdb": "HMDB0001491",
+          "kegg": "C00018",
+          "chebi": "18405",
+          "pubchem": "1051",
+          "cas": "54-47-7",
+          "biocyc": "PYRIDOXAL_PHOSPHATE",
+          "chemspider": "1022",
+          "drugbank": "DB00114",
+          "pathbank_compound_id": "1148"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "pyridoxal 5'-phosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1148,
+              "name": "Pyridoxal 5'-phosphate",
+              "short_name": "Pyr-5'P",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001491",
+                "kegg": "C00018",
+                "chebi": "CHEBI:18405",
+                "pubchem": "1051",
+                "cas": "54-47-7",
+                "biocyc": "PYRIDOXAL_PHOSPHATE",
+                "chemspider": "1022",
+                "drugbank": "DB00114",
+                "pathbank_compound_id": "1148"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1148,
+          "resolved_name": "Pyridoxal 5'-phosphate"
+        },
+        "raw_name": "pyridoxal 5'-phosphate",
+        "db_status": "matched_offline_name_index",
+        "db_id": 1148,
+        "db_row": {
+          "id": 1148,
+          "name": "Pyridoxal 5'-phosphate"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001491",
+        "kegg_id": "C00018",
+        "chebi_id": "18405",
+        "pubchem_cid": "1051",
+        "cas": "54-47-7",
+        "biocyc_id": "PYRIDOXAL_PHOSPHATE",
+        "chemspider_id": "1022",
+        "short_name": "Pyr-5'P",
+        "synonyms": [
+          "Pyridoxal phosphate",
+          "Pyridoxal 5'-phosphate",
+          "Pyridoxal 5-phosphate",
+          "PLP"
+        ],
+        "type": "Compound",
+        "compound_class": "cofactor",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_6",
+        "name": "carbon dioxide",
+        "pathwhiz_id": 1316,
+        "pathbank_compound_id": 1316,
+        "mapping_meta": {
+          "query": {
+            "name": "carbon dioxide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1316,
+              "name": "Carbon dioxide",
+              "short_name": "CO2",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001967",
+                "kegg": "C00011",
+                "chebi": "CHEBI:16526",
+                "pubchem": "280",
+                "cas": "124-38-9",
+                "chemspider": "274",
+                "pathbank_compound_id": "1316"
+              }
+            },
+            {
+              "pathbank_compound_id": 113249,
+              "name": "Carbon Dioxide",
+              "short_name": "CD",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "99987",
+                "pubchem": "6757657575",
+                "cas": "765",
+                "biocyc": "7576565",
+                "chemspider": "5765765756757",
+                "pathbank_compound_id": "113249"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_exact_name",
+            "order_step": "exact_normalized_name"
+          }
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1316,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 0.85,
+        "provenance": "inferred",
+        "short_name": "CO2",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_7",
+        "name": "CoA-SH",
+        "pathwhiz_id": 282377,
+        "pathbank_compound_id": 282377,
+        "mapped_ids": {
+          "chebi": "57287",
+          "pathbank_compound_id": "282377"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "CoA-SH"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 282377,
+              "name": "coenzyme A(4−)",
+              "short_name": "CoA-SH",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:57287",
+                "pathbank_compound_id": "282377"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "exact_normalized_name"
+          },
+          "pathbank_compound_id": 282377,
+          "resolved_name": "coenzyme A(4−)"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 282377,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 0.85,
+        "provenance": "inferred",
+        "chebi_id": "57287",
+        "short_name": "CoA-SH",
+        "synonyms": [
+          "CoA-SH"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound"
+      },
+      {
+        "key": "cmp_8",
+        "name": "coenzyme A",
+        "pathwhiz_id": 1099,
+        "pathbank_compound_id": 1099,
+        "mapped_ids": {
+          "hmdb": "HMDB0001423",
+          "kegg": "C00010",
+          "chebi": "1146900",
+          "pubchem": "6816",
+          "cas": "85-61-0",
+          "biocyc": "CO-A",
+          "chemspider": "6557",
+          "pathbank_compound_id": "1099"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "coenzyme A"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1099,
+              "name": "Coenzyme A",
+              "short_name": "CoA",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001423",
+                "kegg": "C00010",
+                "chebi": "CHEBI:1146900",
+                "pubchem": "6816",
+                "cas": "85-61-0",
+                "biocyc": "CO-A",
+                "chemspider": "6557",
+                "pathbank_compound_id": "1099"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "exact_normalized_name"
+          },
+          "pathbank_compound_id": 1099,
+          "resolved_name": "Coenzyme A"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1099,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 0.85,
+        "provenance": "inferred",
+        "hmdb_id": "HMDB0001423",
+        "kegg_id": "C00010",
+        "chebi_id": "1146900",
+        "pubchem_cid": "6816",
+        "cas": "85-61-0",
+        "biocyc_id": "CO-A",
+        "chemspider_id": "6557",
+        "short_name": "CoA",
+        "synonyms": [
+          "CoA",
+          "Coenzyme A",
+          "CoA-SH"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "mitochondrial matrix state"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "Unknown",
+        "pathwhiz_id": 9659,
+        "pathbank_protein_id": 9659,
+        "mapped_ids": {
+          "uniprot": "Unknown",
+          "pathbank_protein_id": 9659
+        },
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_unknown_protein_fallback",
+          "confidence": 0.0,
+          "identity_status": "placeholder",
+          "pathbank_protein_id": 9659,
+          "fallback_used": true,
+          "fallback_reason": "all_normal_protein_identity_strategies_failed",
+          "cross_species_placeholder": true,
+          "resolution": {
+            "status": "fallback",
+            "issue": "pathbank_unknown_sentinel",
+            "order_step": "pathbank_unknown_protein_fallback"
+          },
+          "placeholder_target_organisms": [
+            "Homo sapiens"
+          ]
+        },
+        "species": "Arabidopsis thaliana",
+        "taxonomy_id": "3702",
+        "organism": "Arabidopsis thaliana",
+        "species_id": 4,
+        "pathbank_species_id": 4,
+        "pw_protein_id": 9659,
+        "synonyms": [],
+        "uniprot": "UNKNOWN",
+        "uniprot_id": "Unknown"
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "ALAS2",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Homo sapiens",
+            "pathbank_species_id": 1,
+            "species_id": 1,
+            "taxonomy_id": "9606",
+            "common_name": "Human",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "route": "complex",
+          "query": {
+            "name": "ALAS2",
+            "organism": "Homo sapiens"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_unknown_protein_fallback",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "fallback",
+            "issue": "pathbank_unknown_sentinel_component",
+            "order_step": "pathbank_unknown_protein_fallback"
+          },
+          "issues": [],
+          "species_id": 1,
+          "identity_status": "placeholder",
+          "fallback_used": true,
+          "fallback_reason": "all_normal_protein_identity_strategies_failed",
+          "real_mapping_failure_reason": "all_normal_protein_identity_strategies_failed",
+          "role_evidence": {
+            "declared_role": "catalyst",
+            "allowed_role": "enzyme",
+            "role_basis": "canonical_actor_membership",
+            "reason": "canonical_actor_membership",
+            "ok": true,
+            "provenance": "inferred",
+            "evidence_digest": {
+              "chars": 107,
+              "sha256": "88b15db511a21a06baa0731fb8861b2a0c478330bdd1ae95a5eccc6bc43dd165",
+              "excerpt": "ALAS2 catalyzes the condensation of glycine and succinyl-CoA to produce ALA, carbon dioxide, and Coenzyme A",
+              "truncated": false
+            },
+            "direct_evidence_present": true
+          },
+          "cross_species_placeholder": true,
+          "target_organism": "Homo sapiens",
+          "functional_enzyme_name": "ALAS2",
+          "sentinel_pathbank_protein_id": 9659,
+          "provenance": "extracted",
+          "evidence_digest": {
+            "chars": 90,
+            "sha256": "b20b4aefb7f68e2602ba8c1cd6d384a027880f2bbe4b0307599051696f13d562",
+            "excerpt": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+            "truncated": false
+          }
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "class": "protein_complex",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "evidence": "PLP-dependent homodimer enzyme",
+        "species": "Arabidopsis thaliana",
+        "taxonomy_id": "9606",
+        "species_ref": {
+          "name": "Homo sapiens",
+          "pathbank_species_id": 1,
+          "species_id": 1,
+          "taxonomy_id": "9606",
+          "common_name": "Human",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Arabidopsis thaliana",
+        "species_id": 4,
+        "pathbank_species_id": 4,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "ALAS2-catalyzed ALA synthesis",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_1_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "ALAS2-catalyzed ALA synthesis (full)",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_2_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_2_right_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_2_right_3",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "heme inhibits ALAS2",
+        "interaction_type": "inhibits",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        },
+        "right": {
+          "entity_type": "protein_complex",
+          "entity_key": "pc_1"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "ALAS2 cofactor PLP",
+        "interaction_type": "cofactor",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein_complex",
+          "entity_key": "pc_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_5"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 52,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 554,
+      "zindex": 10,
+      "visualization_template_id": 85,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_1",
+      "x": 640,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 85,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 1400,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 442 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M220 537 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M220 442 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M220 537 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M920 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M920 489 L1080 584",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M380 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_3"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_4"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_7"
+        },
+        {
+          "process_member_key": "rxn_2_right_2",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_2_right_3",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_10"
+        }
+      ]
+    }
+  ]
+}

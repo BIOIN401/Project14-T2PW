@@ -1,0 +1,1110 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 5,
+        "organisms_added": 0,
+        "locations_added": 1,
+        "location_states_filled": 0,
+        "complex_components_structured": 1,
+        "complex_components_resolved": 1,
+        "complex_stoichiometry_issues_deferred": 1,
+        "items_considered": 6,
+        "enrichment_patches_accepted": 2,
+        "enrichment_patches_rejected": 3
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:alas1",
+            "entity_type": "protein",
+            "name": "ALAS1",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:clpxp protease",
+            "entity_type": "protein",
+            "name": "CLPXP protease",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:lonp1 protease",
+            "entity_type": "protein",
+            "name": "LONP1 protease",
+            "path": "/entities/proteins/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "entity_type": "protein_complex",
+            "name": "ALAS2 homodimer",
+            "path": "/entities/protein_complexes/0",
+            "needs_id_mapping": false,
+            "has_complex_db_id": false,
+            "complex_level_id_optional": true,
+            "needs_species": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "protein_complex_missing_components": false,
+            "component_missing_stoichiometry": true,
+            "component_protein_unresolved": false,
+            "missing_component_stoichiometry": [
+              {
+                "component_index": 0,
+                "component": "ALAS2",
+                "path": "/entities/protein_complexes/0/components/0",
+                "code": "component_missing_stoichiometry",
+                "resolution_owner": "audit"
+              }
+            ],
+            "unresolved_components": [],
+            "missing_fields": [
+              "location",
+              "components.stoichiometry"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ],
+            "resolved_by_gap_resolver": false
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:b898f2054cd7179e",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:alas2\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": false, … (+186 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:alas2",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Protein entity requires ID mapping via protein databases (UniProt/Ensembl) to resolve missing mapped_ids."
+          },
+          {
+            "issue_key": "protein:alas1",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Protein entity requires ID mapping via protein databases (UniProt/Ensembl) to resolve missing mapped_ids."
+          },
+          {
+            "issue_key": "protein:clpxp protease",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Protein entity requires ID mapping via protein databases to resolve missing mapped_ids."
+          },
+          {
+            "issue_key": "protein:lonp1 protease",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Protein entity requires ID mapping via protein databases to resolve missing mapped_ids."
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 5
+            },
+            "rationale": "Compound entity requires ID mapping via compound databases (ChEBI/PubChem) and HMDB lookup due to unmapped status."
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 5
+            },
+            "rationale": "Complex requires resolving component ALAS2 (protein) first to determine stoichiometry and pathbank_protein_id, and requires location resolution."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:alas2",
+            "entity_type": "protein",
+            "name": "ALAS2",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ALAS2",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:8455119a0d7d4e40",
+                  "preview": "[\"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 752,
+                  "hash": "sha256:7d6bf63834b92dd7",
+                  "preview": "[{\"accession\": \"P22557\", \"protein_name\": \"5-aminolevulinate synthase, erythroid-specific, mitochondrial\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"A0A2R8Y6N3\", \"prot… (+552 chars elided)",
+                  "items": 5
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 866,
+                  "hash": "sha256:405eee22dca54aed",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}, \"pathbank_protein_id\": 17, \"confidence\": 1.0, \"chosen_rule\": \"db_top_ca… (+666 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2479,
+                  "hash": "sha256:f03b84eea86466f9",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ALAS2\\\" OR gene:\\\"ALAS2\\\")\", \"mapped_ids\": {\"uniprot\": \"P22557\"}, \"confid… (+2279 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 50,
+                  "hash": "sha256:89916c5139c77e55",
+                  "preview": "{\"uniprot\": \"P22557\", \"pathbank_protein_id\": \"17\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:62a864e14453be20",
+                  "preview": "{\"uniprot\": \"P22557\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7367ba1093db17ce",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6N3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:813381505f4763eb",
+                  "preview": "{\"uniprot\": \"A0A2R8Y836\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:fbc1396814874879",
+                  "preview": "{\"uniprot\": \"A0ACI8Q6V7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2743677a6adf1f3d",
+                  "preview": "{\"uniprot\": \"Q6QNT2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:df9d9a75b06c506e",
+                  "preview": "{\"uniprot\": \"A0A2R8Y6R4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:d644e5cd57431acf",
+                  "preview": "{\"uniprot\": \"A0A2R8Y782\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a database-backed match (PathBankDB) providing both UniProt (P22557) and PathBank IDs, which is the highest quality match for a protein entity.",
+              "source": "llm",
+              "raw": {
+                "chars": 220,
+                "hash": "sha256:321174bb03a155d5",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a database-backed match (PathBankDB) providing both UniProt (P22557) and PathBank IDs, which is the highest quality match for… (+20 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:alas1",
+            "entity_type": "protein",
+            "name": "ALAS1",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ALAS1",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f288674d02047456",
+                  "preview": "{\"uniprot\": \"P13196\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:2870666fa3295e47",
+                  "preview": "[\"(protein_name:\\\"ALAS1\\\" OR gene:\\\"ALAS1\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ALAS1\\\" OR gene:\\\"ALAS1\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 699,
+                  "hash": "sha256:843085b1f4e14f4f",
+                  "preview": "[{\"accession\": \"P13196\", \"protein_name\": \"5-aminolevulinate synthase, non-specific, mitochondrial\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"Q5JAM2\", \"protein_name\":… (+499 chars elided)",
+                  "items": 5
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 671,
+                  "hash": "sha256:a5008702090e3502",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P13196\", \"pathbank_protein_id\": \"22\"}, \"pathbank_protein_id\": 22, \"confidence\": 1.0, \"chosen_rule\": \"db_top_ca… (+471 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2426,
+                  "hash": "sha256:adf7b64ec9a2773b",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"ALAS1\\\" OR gene:\\\"ALAS1\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ALAS1\\\" OR gene:\\\"ALAS1\\\")\", \"mapped_ids\": {\"uniprot\": \"P13196\"}, \"confid… (+2226 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 50,
+                  "hash": "sha256:a8265f51d3777283",
+                  "preview": "{\"uniprot\": \"P13196\", \"pathbank_protein_id\": \"22\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f288674d02047456",
+                  "preview": "{\"uniprot\": \"P13196\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f118e2ccfbcee037",
+                  "preview": "{\"uniprot\": \"Q5JAM2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:30350bea35c60b43",
+                  "preview": "{\"uniprot\": \"H7C4H7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:32c169da7c23936f",
+                  "preview": "{\"uniprot\": \"H7C5B0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:4a31c2f5cb2a08c8",
+                  "preview": "{\"uniprot\": \"A0ACI8PHI6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ba3e06f505026555",
+                  "preview": "{\"uniprot\": \"A0ACI8PYF7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:49164e421897d626",
+                  "preview": "{\"uniprot\": \"A0ACI8Q608\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate is a database-backed match (PathBankDB) providing both UniProt (P13196) and PathBank IDs, which aligns perfectly with the protein entity type and the high-confidence UniProt result found in the background context.",
+              "source": "llm",
+              "raw": {
+                "chars": 287,
+                "hash": "sha256:8f67691b2eec3331",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate is a database-backed match (PathBankDB) providing both UniProt (P13196) and PathBank IDs, which aligns perfectly with the protei… (+87 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:clpxp protease",
+            "entity_type": "protein",
+            "name": "CLPXP protease",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "CLPXP protease",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:bd1d81ae68e8b72c",
+                  "preview": "{\"uniprot\": \"A0A080MD05\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:715e7c6bd36f9e5c",
+                  "preview": "[\"(protein_name:\\\"CLPXP protease\\\" OR gene:\\\"CLPXP protease\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"CLPXP protease\\\" OR gene:\\\"CLPXP protease\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 846,
+                  "hash": "sha256:500bea33fa343001",
+                  "preview": "[{\"accession\": \"A0A080MD05\", \"protein_name\": \"ClpXP protease specificity-enhancing factor\", \"organism\": \"Candidatus Accumulibacter cognatus\", \"reviewed\": false, \"score\": 0.135}, {\"accession\": \"N9M940\"… (+646 chars elided)",
+                  "items": 5
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2718,
+                  "hash": "sha256:5444be88713350d6",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"CLPXP protease\\\" OR gene:\\\"CLPXP protease\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"CLPXP protease\\\" OR g… (+2518 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:bd1d81ae68e8b72c",
+                  "preview": "{\"uniprot\": \"A0A080MD05\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d50f27c3287da6fa",
+                  "preview": "{\"uniprot\": \"N9M940\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:aeb8b2a5ddf527a9",
+                  "preview": "{\"uniprot\": \"N9P6D8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:586037d1031e5966",
+                  "preview": "{\"uniprot\": \"N9PZT1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:3d06ba0f06470675",
+                  "preview": "{\"uniprot\": \"A0A011MYZ6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.42,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "protein:lonp1 protease",
+            "entity_type": "protein",
+            "name": "LONP1 protease",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LONP1 protease",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:df6e2c6ff6703ef6",
+                  "preview": "{\"uniprot\": \"P36776\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 1217,
+                  "hash": "sha256:1b6a31ffa2e7135a",
+                  "preview": "[\"(protein_name:\\\"LONP1 protease\\\" OR gene:\\\"LONP1 protease\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"LONP1 protease\\\" OR gene:\\\"LONP1 protease\\\")\", \"(protein_name:\\\"LONP1\\\" OR gene:\\\"L… (+1017 chars elided)",
+                  "items": 22
+                },
+                "candidates": {
+                  "chars": 708,
+                  "hash": "sha256:4e1a2e86e7a82718",
+                  "preview": "[{\"accession\": \"P36776\", \"protein_name\": \"Lon protease homolog, mitochondrial\", \"organism\": \"Homo sapiens\", \"reviewed\": true, \"score\": 1.0}, {\"accession\": \"B3KU28\", \"protein_name\": \"Lon protease homol… (+508 chars elided)",
+                  "items": 5
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 4942,
+                  "hash": "sha256:7adaad556514eda4",
+                  "preview": "{\"status\": \"mapped\", \"query\": \"(protein_name:\\\"LONP1 protease\\\" OR gene:\\\"LONP1 protease\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"LONP1 protease\\\" OR gene:\\\"LONP1 protease\\\") | (protein… (+4742 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:df6e2c6ff6703ef6",
+                  "preview": "{\"uniprot\": \"P36776\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_alias_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:17fdb84a86a3e4dd",
+                  "preview": "{\"uniprot\": \"B3KU28\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:5d961946897cf3fc",
+                  "preview": "{\"uniprot\": \"B4DPX0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:974a5e744d515845",
+                  "preview": "{\"uniprot\": \"K7EJE8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.9,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c419e717066d1d4c",
+                  "preview": "{\"uniprot\": \"K7EKE6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:8993e174349a337f",
+                  "preview": "{\"uniprot\": \"B3KXS5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3edf829eebbb9d63",
+                  "preview": "{\"uniprot\": \"E5KMI6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.88,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:eef80fcf3f00a487",
+                  "preview": "{\"uniprot\": \"Q2VPA0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The candidate P36776 is a reviewed UniProt entry for 'Lon protease homolog, mitochondrial' in Homo sapiens, which is the exact match for the requested LONP1 protease.",
+              "source": "llm",
+              "raw": {
+                "chars": 220,
+                "hash": "sha256:59a465a73d36527b",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The candidate P36776 is a reviewed UniProt entry for 'Lon protease homolog, mitochondrial' in Homo sapiens, which is the exact match for the request… (+20 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 385,
+                  "hash": "sha256:f7488a42c2fa43b6",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+185 chars elided)",
+                  "items": 5
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2725,
+                  "hash": "sha256:fc0d3e6c51cfc22b",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", … (+2525 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 196,
+                  "hash": "sha256:53cfb976af6e43fd",
+                  "preview": "{\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", \"chemspider\": \"730\", \"drugbank\": \"DB00145\", \"pathbank_compound_id\": \"78\"}",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The first candidate provides a comprehensive set of high-quality, cross-referenced IDs (HMDB, KEGG, ChEBI, PubChem, CAS, etc.) that perfectly match the entity 'glycine' (compound). The KEGG ID C00037 is confirmed by the background context a… (+37 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 331,
+                "hash": "sha256:43cded4baac1d5ea",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The first candidate provides a comprehensive set of high-quality, cross-referenced IDs (HMDB, KEGG, ChEBI, PubChem, CAS, etc.) that perfectly match … (+131 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "entity_type": "protein_complex",
+            "name": "ALAS2 homodimer",
+            "status": "ok",
+            "component_resolution": {
+              "changed": true,
+              "resolved_components": [
+                {
+                  "chars": 98,
+                  "hash": "sha256:838b7a62b8e23faa",
+                  "preview": "{\"component_index\": 0, \"component\": \"ALAS2\", \"path\": \"/entities/protein_complexes/0/components/0\"}",
+                  "keys": 3
+                }
+              ],
+              "unresolved_components": [],
+              "missing_stoichiometry": [
+                {
+                  "chars": 170,
+                  "hash": "sha256:6ea93112c1d8baaf",
+                  "preview": "{\"component_index\": 0, \"component\": \"ALAS2\", \"path\": \"/entities/protein_complexes/0/components/0\", \"code\": \"component_missing_stoichiometry\", \"resolution_owner\": \"audit\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "unresolved_issues": [
+              {
+                "component_index": 0,
+                "component": "ALAS2",
+                "path": "/entities/protein_complexes/0/components/0",
+                "code": "component_missing_stoichiometry",
+                "resolution_owner": "audit"
+              }
+            ],
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": [
+          {
+            "component_index": 0,
+            "component": "ALAS2",
+            "path": "/entities/protein_complexes/0/components/0",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          }
+        ]
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 1
+    }
+  ]
+}

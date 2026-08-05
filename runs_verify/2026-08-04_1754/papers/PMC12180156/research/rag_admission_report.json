@@ -1,0 +1,4811 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.887059,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.887059,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.807686,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.807686,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.76637,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.76637,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.736373,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.736373,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.824779,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.824779,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.793371,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.793371,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.773427,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.773427,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.693991,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.693991,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.877273,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.877273,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.799034,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.799034,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.734796,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.734796,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.685709,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.685709,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-172fe210",
+      "gap_ids": [
+        "gap-orphan_metabolite-172fe210"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.883693,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883693,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-172fe210",
+      "gap_ids": [
+        "gap-orphan_metabolite-172fe210"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.778078,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778078,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-172fe210",
+      "gap_ids": [
+        "gap-orphan_metabolite-172fe210"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.69871,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.69871,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9d363f57",
+      "gap_ids": [
+        "gap-orphan_metabolite-9d363f57"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.957143,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957143,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9d363f57",
+      "gap_ids": [
+        "gap-orphan_metabolite-9d363f57"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.879132,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.879132,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9d363f57",
+      "gap_ids": [
+        "gap-orphan_metabolite-9d363f57"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.79905,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.79905,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-76d3167a",
+      "gap_ids": [
+        "gap-orphan_metabolite-76d3167a"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.933855,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.933855,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-76d3167a",
+      "gap_ids": [
+        "gap-orphan_metabolite-76d3167a"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.887251,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.887251,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-76d3167a",
+      "gap_ids": [
+        "gap-orphan_metabolite-76d3167a"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.743147,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.743147,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1e6992c",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1e6992c"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.917161,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.917161,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1e6992c",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1e6992c"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.823759,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.823759,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-c1e6992c",
+      "gap_ids": [
+        "gap-orphan_metabolite-c1e6992c"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.750523,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.750523,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.8392,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.8392,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.770309,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.770309,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.761936,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.761936,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-533ac435",
+      "gap_ids": [
+        "gap-missing_compartment-533ac435"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.853031,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.853031,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-533ac435 asks for a compartment/location for '5,10-methylene-THF'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-533ac435",
+      "gap_ids": [
+        "gap-missing_compartment-533ac435"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.796488,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.796488,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-533ac435 asks for a compartment/location for '5,10-methylene-THF'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-533ac435",
+      "gap_ids": [
+        "gap-missing_compartment-533ac435"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.735284,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.735284,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-533ac435 asks for a compartment/location for '5,10-methylene-THF'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.857924,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.857924,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.778036,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778036,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.668902,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.668902,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-f25a6020",
+      "gap_ids": [
+        "gap-missing_compartment-f25a6020"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.885362,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.885362,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-f25a6020 asks for a compartment/location for 'citrate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-f25a6020",
+      "gap_ids": [
+        "gap-missing_compartment-f25a6020"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.746025,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.746025,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-f25a6020 asks for a compartment/location for 'citrate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-f25a6020",
+      "gap_ids": [
+        "gap-missing_compartment-f25a6020"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.715183,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.715183,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-f25a6020 asks for a compartment/location for 'citrate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.849073,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.849073,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.784508,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.784508,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.753718,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.753718,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_ids": [
+        "gap-missing_compartment-08242d9e"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.836507,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.836507,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-08242d9e asks for a compartment/location for 'ALAS2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_ids": [
+        "gap-missing_compartment-08242d9e"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.834651,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.834651,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-08242d9e asks for a compartment/location for 'ALAS2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-42c3d817",
+      "gap_ids": [
+        "gap-missing_compartment-42c3d817"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.821726,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.821726,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-42c3d817 asks for a compartment/location for 'serine hydroxymethyltransferase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-42c3d817",
+      "gap_ids": [
+        "gap-missing_compartment-42c3d817"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.80059,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.80059,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-42c3d817 asks for a compartment/location for 'serine hydroxymethyltransferase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-42c3d817",
+      "gap_ids": [
+        "gap-missing_compartment-42c3d817"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.729944,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.729944,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-42c3d817 asks for a compartment/location for 'serine hydroxymethyltransferase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "gap_ids": [
+        "gap-unmapped_enzyme-b95c0695"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.921053,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921053,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-b95c0695 asks for the identity of 'SFXN1'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "gap_ids": [
+        "gap-unmapped_enzyme-b95c0695"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.785102,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.785102,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-b95c0695 asks for the identity of 'SFXN1'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "gap_ids": [
+        "gap-unmapped_enzyme-b95c0695"
+      ],
+      "name": "mitochondrial serine hydroxymethyltransferase reaction in plants",
+      "inputs": [
+        "glycine"
+      ],
+      "outputs": [
+        "serine"
+      ],
+      "enzymes": [
+        "mitochondrial serine hydroxymethyltransferase (SHMT)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.737485,
+        "span": "In plants, however, the reaction catalyzed by the mitochondrial serine hydroxymethyltransferase (SHMT) runs in the direction producing serine from glycine [ 27 ]"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.737485,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-b95c0695 asks for the identity of 'SFXN1'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "gap_ids": [
+        "gap-unmapped_enzyme-b95c0695"
+      ],
+      "name": "serine cleavage to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine",
+        "5,10-methylene-THF"
+      ],
+      "enzymes": [
+        "serine hydroxymethyltransferase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.737485,
+        "span": "In mitochondria, serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.737485,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-b95c0695 asks for the identity of 'SFXN1'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "gap_ids": [
+        "gap-unmapped_enzyme-b95c0695"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.705645,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.705645,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-b95c0695 asks for the identity of 'SFXN1'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.916667,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.916667,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.778101,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778101,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.73906,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.73906,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "mitochondrial serine hydroxymethyltransferase reaction in plants",
+      "inputs": [
+        "glycine"
+      ],
+      "outputs": [
+        "serine"
+      ],
+      "enzymes": [
+        "mitochondrial serine hydroxymethyltransferase (SHMT)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.70646,
+        "span": "In plants, however, the reaction catalyzed by the mitochondrial serine hydroxymethyltransferase (SHMT) runs in the direction producing serine from glycine [ 27 ]"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.70646,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "serine cleavage to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine",
+        "5,10-methylene-THF"
+      ],
+      "enzymes": [
+        "serine hydroxymethyltransferase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.70646,
+        "span": "In mitochondria, serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.70646,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a82e2c1e"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.89058,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.89058,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a82e2c1e asks for the identity of 'SFXN3'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a82e2c1e"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.802851,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.802851,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a82e2c1e asks for the identity of 'SFXN3'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a82e2c1e"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.718899,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.718899,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a82e2c1e asks for the identity of 'SFXN3'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a82e2c1e"
+      ],
+      "name": "mitochondrial serine hydroxymethyltransferase reaction in plants",
+      "inputs": [
+        "glycine"
+      ],
+      "outputs": [
+        "serine"
+      ],
+      "enzymes": [
+        "mitochondrial serine hydroxymethyltransferase (SHMT)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.659824,
+        "span": "In plants, however, the reaction catalyzed by the mitochondrial serine hydroxymethyltransferase (SHMT) runs in the direction producing serine from glycine [ 27 ]"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.659824,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a82e2c1e asks for the identity of 'SFXN3'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a82e2c1e"
+      ],
+      "name": "serine cleavage to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine",
+        "5,10-methylene-THF"
+      ],
+      "enzymes": [
+        "serine hydroxymethyltransferase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.659824,
+        "span": "In mitochondria, serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.659824,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a82e2c1e asks for the identity of 'SFXN3'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "gap_ids": [
+        "gap-unmapped_enzyme-da2eceff"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.911854,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.911854,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-da2eceff asks for the identity of 'SFXN4'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "gap_ids": [
+        "gap-unmapped_enzyme-da2eceff"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.779691,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.779691,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-da2eceff asks for the identity of 'SFXN4'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "gap_ids": [
+        "gap-unmapped_enzyme-da2eceff"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.740987,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.740987,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-da2eceff asks for the identity of 'SFXN4'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-314a89a8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-314a89a8"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.921053,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.921053,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-314a89a8 asks for the identity of 'SFXN5'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-314a89a8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-314a89a8"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.759664,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.759664,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-314a89a8 asks for the identity of 'SFXN5'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-314a89a8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-314a89a8"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.742502,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.742502,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-314a89a8 asks for the identity of 'SFXN5'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.914235,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.914235,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.790843,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.790843,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.771416,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.771416,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.856491,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.856491,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.837736,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.837736,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-bd427fea",
+      "gap_ids": [
+        "gap-unmapped_enzyme-bd427fea"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.877073,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.877073,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-bd427fea asks for the identity of 'serine hydroxymethyltransferase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-bd427fea",
+      "gap_ids": [
+        "gap-unmapped_enzyme-bd427fea"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.845966,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.845966,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-bd427fea asks for the identity of 'serine hydroxymethyltransferase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-bd427fea",
+      "gap_ids": [
+        "gap-unmapped_enzyme-bd427fea"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.834911,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.834911,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-bd427fea asks for the identity of 'serine hydroxymethyltransferase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-bd427fea",
+      "gap_ids": [
+        "gap-unmapped_enzyme-bd427fea"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "WT ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.693036,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.693036,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-bd427fea asks for the identity of 'serine hydroxymethyltransferase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.899157,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.899157,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.844752,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.844752,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.761584,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.761584,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-19023d3f",
+      "gap_ids": [
+        "gap-orphan_metabolite-19023d3f"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.918682,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.918682,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-19023d3f",
+      "gap_ids": [
+        "gap-orphan_metabolite-19023d3f"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.819886,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.819886,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-19023d3f",
+      "gap_ids": [
+        "gap-orphan_metabolite-19023d3f"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.774364,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.774364,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f703a4d6",
+      "gap_ids": [
+        "gap-dangling_reaction-f703a4d6"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.891125,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.891125,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f703a4d6",
+      "gap_ids": [
+        "gap-dangling_reaction-f703a4d6"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.780406,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.780406,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-f703a4d6",
+      "gap_ids": [
+        "gap-dangling_reaction-f703a4d6"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.727357,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.727357,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9a835aaa",
+      "gap_ids": [
+        "gap-orphan_metabolite-9a835aaa"
+      ],
+      "name": "cysteine -> sulfur",
+      "inputs": [
+        "cysteine"
+      ],
+      "outputs": [
+        "sulfur"
+      ],
+      "enzymes": [
+        "cysteine desulfurases (NFS1)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.869603,
+        "span": "sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.869603,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9a835aaa",
+      "gap_ids": [
+        "gap-orphan_metabolite-9a835aaa"
+      ],
+      "name": "folate-dependent conversion to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis in Homo sapiens",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.824405,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.824405,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9a835aaa",
+      "gap_ids": [
+        "gap-orphan_metabolite-9a835aaa"
+      ],
+      "name": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [
+        "aminolevulinic acid synthase (ALAS)"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.767274,
+        "span": "aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )"
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.767274,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "unsupported_catalyst_injection: aminolevulinic acid synthase (ALAS) is not the catalyst the span attaches to this reaction"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 86,
+    "considered": 86
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 47,
+    "evidence_relation_disagrees_with_claim": 26,
+    "evidence_relation_roles_unassignable": 6,
+    "evidence_states_no_reaction_relation": 23,
+    "no_local_evidence_span": 31,
+    "unsupported_catalyst_injection": 26
+  },
+  "by_gap": {
+    "gap-dangling_reaction-f703a4d6": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-08242d9e": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-missing_compartment-42c3d817": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-533ac435": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-620f98fd": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-8fdb6683": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-f25a6020": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-011ae1e3": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-172fe210": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-19023d3f": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-6a1dd341": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-orphan_metabolite-76d3167a": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-8d2af9c8": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-orphan_metabolite-9a835aaa": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-9d363f57": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-c1e6992c": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-e3984916": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-fa99291c": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-314a89a8": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-3a877526": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-65f444d8": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-unmapped_enzyme-a2da3551": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-a82e2c1e": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-b95c0695": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-bd427fea": {
+      "accepted": 0,
+      "rejected": 4
+    },
+    "gap-unmapped_enzyme-da2eceff": {
+      "accepted": 0,
+      "rejected": 3
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "Here, we identify a reversible mechanism by which heme inhibits its synthesis by affecting mature mitochondrial ALAS2 activity, challenging the idea that erythroid heme synthesis is an all-or-nothing process."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [
+        "heme biosynthesis in Homo sapiens"
+      ],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "This upper estimate is commensurate with the IC 50 values we report for mitochondrial ALAS2-heme inhibition, connecting our in vitro research to a plausible cellular state."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-f25a6020",
+      "gap_kind": "missing_compartment",
+      "target": "citrate",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "bfb1cf26228e56e53a11850109298d9a",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "span": "Currently, however, there is no strong evidence for a dedicated mitochondrial citrate importer, but the observed reduction in cytosolic citrate in SFXN5-deficient neutrophils suggests a function for SFXN5 in modulating citrate homeostasis, potentially through export, recycling, or exchange mechanisms [ 29 ]."
+      },
+      "source_paper": {
+        "source_id": "seed_paper"
+      },
+      "target_entity_bucket": "compounds",
+      "target_entity_type": "compound",
+      "requested_pathway": "heme biosynthesis in Homo sapiens",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [],
+      "organism_match": "match",
+      "requested_pathway_match": "unknown",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'citrate' is not an entity of this payload, so there is nothing to locate"
+      ]
+    }
+  ],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-b95c0695",
+      "label": "SFXN1",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "label": "SFXN2",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a82e2c1e",
+      "label": "SFXN3",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "label": "SFXN4",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-314a89a8",
+      "label": "SFXN5",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "label": "ferrochelatase",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "label": "ALAS2",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-bd427fea",
+      "label": "serine hydroxymethyltransferase",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 8,
+    "unresolved_for_unknown_fallback": 8,
+    "unknown_fallback_present": 0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        3,
+        6,
+        1,
+        -11,
+        12
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 6,
+      "warning_count": 7,
+      "patch_count": 12,
+      "accepted_patch_count": 11,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Resolved missing identifiers for Fur by adding UniProt P0A9A2, removed the bare 'enterobactin synthase' protein and replaced the complex components with EntD/EntE/EntF per evidence, added species fields to the complex, and removed the inter… (+53 chars elided)",
+      "top_errors": [
+        "Stage 3 registry reference validation failed: unknown entity: ent gene clusters",
+        "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+        "Protein 'enterobactin synthase' is missing species/organism and a UniProt or DrugBank identifier."
+      ],
+      "gap_mapped_ids_added": 2,
+      "gap_locations_added": 4,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

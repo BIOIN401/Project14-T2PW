@@ -1,0 +1,55 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 1083.5s (18m03s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 34878 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 8
+  entities = 14
+  gate_errors = 0
+  proteins = 1
+  pwml = {'compounds': 8, 'proteins': 1, 'reactions': 2, 'edges': 10}
+  pwml_bytes = 34878
+  reactions = 2
+  runtime_schema_findings = 8
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (939 B)
+  - contract_reports.json  (10516 B)
+  - final_mapped.json  (60913 B)
+  - final_stage3_gate_report.json  (2516 B)
+  - gap_iteration_summary.json  (210 B)
+  - merged_payload.json  (5509 B)
+  - pathway.pwml  (34878 B)
+  - pwml_ir.json  (34445 B)
+  - pwml_ir_report.json  (2779 B)
+  - pwml_ir_validation.json  (233 B)
+  - pwml_qa.json  (576 B)
+  - pwml_required_field_gate_report.json  (3303 B)
+  - pwml_validation_report.json  (19586 B)
+  - rag_admission_report.json  (55533 B)
+  - stage1_payload.json  (3795 B)

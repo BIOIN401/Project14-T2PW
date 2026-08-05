@@ -1,0 +1,447 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "canonical_id": "mitochondrial_matrix",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "name": "cytosol",
+        "canonical_id": "cytosol",
+        "evidence": "Formate is exported to the cytosol"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "serine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "5,10-methylene-THF",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "formate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "δ-aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "citrate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "SFXN1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN3",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN5",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "serine hydroxymethyltransferase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "SFXN3-PCBP2 complex",
+        "components": [
+          "SFXN3",
+          "PCBP2"
+        ],
+        "evidence": "SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20"
+        ]
+      },
+      {
+        "name": "MCIA complex",
+        "evidence": "SFXN4 as a complex I assembly factor, interacting with components of the mitochondrial complex I intermediate assembly (MCIA) complex",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "SFXN4 as a complex I assembly factor, interacting with components of the mitochondrial complex I intermediate assembly (MCIA) complex"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "serine transport from cytosol into the mitochondrial matrix"
+    },
+    {
+      "name": "cytosolic state",
+      "species": "Homo sapiens",
+      "subcellular_location": "cytosol",
+      "evidence": "Formate is exported to the cytosol"
+    },
+    {
+      "name": "mitochondrial inner membrane state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial inner membrane",
+      "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+    },
+    {
+      "name": "mitochondrial outer membrane state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial outer membrane",
+      "evidence": "SFXN2 is found in either the IMM or the outer mitochondrial membrane (OMM)"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "serine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase"
+      },
+      {
+        "compound": "formate",
+        "biological_state": "cytosolic state",
+        "evidence": "Formate is exported to the cytosol"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme biosynthesis"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "iron from the cytosol to the mitochondrial matrix"
+      },
+      {
+        "compound": "5,10-methylene-THF",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      {
+        "compound": "formate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "converted to formate, which is exported from mitochondria"
+      },
+      {
+        "compound": "citrate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "citrate is produced in the tricarboxylic acid cycle and exported to the cytosol by SLC25A1/CIC"
+      },
+      {
+        "compound": "citrate",
+        "biological_state": "cytosolic state",
+        "evidence": "citrate is produced in the tricarboxylic acid cycle and exported to the cytosol by SLC25A1/CIC"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN1",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN2 is found in either the IMM or the outer mitochondrial membrane"
+      },
+      {
+        "protein": "SFXN3",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane"
+      },
+      {
+        "protein": "SFXN5",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN5 is primarily expressed in the brain"
+      },
+      {
+        "protein": "SFXN1",
+        "biological_state": "mitochondrial inner membrane state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+      },
+      {
+        "protein": "SFXN3",
+        "biological_state": "mitochondrial inner membrane state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial inner membrane state",
+        "evidence": "SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM)"
+      },
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial inner membrane state",
+        "evidence": "SFXN2 is found in either the IMM or the outer mitochondrial membrane (OMM)"
+      },
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial outer membrane state",
+        "evidence": "SFXN2 is found in either the IMM or the outer mitochondrial membrane (OMM)"
+      },
+      {
+        "protein": "serine hydroxymethyltransferase",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "In mitochondria, serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "serine"
+        ],
+        "outputs": [
+          "glycine",
+          "5,10-methylene-THF"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "serine hydroxymethyltransferase reaction",
+        "enzymes": [
+          {
+            "protein": "serine hydroxymethyltransferase",
+            "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase",
+        "scope_membership": "core"
+      }
+    ],
+    "transports": [
+      {
+        "name": "SFXN1-mediated serine transport",
+        "cargo": "serine",
+        "from_biological_state": "cytosolic state",
+        "to_biological_state": "mitochondrial matrix state",
+        "transporters": [
+          {
+            "protein": "SFXN1",
+            "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "serine",
+            "side": "left",
+            "biological_state": "cytosolic state",
+            "evidence": "serine transport from cytosol"
+          },
+          {
+            "element": "serine",
+            "side": "right",
+            "biological_state": "mitochondrial matrix state",
+            "evidence": "into the mitochondrial matrix"
+          }
+        ],
+        "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "name": "formate export from mitochondria",
+        "cargo": "formate",
+        "from_biological_state": "mitochondrial matrix state",
+        "to_biological_state": "cytosolic state",
+        "elements_with_states": [
+          {
+            "element": "formate",
+            "side": "left",
+            "biological_state": "mitochondrial matrix state",
+            "evidence": "Formate is exported"
+          },
+          {
+            "element": "formate",
+            "side": "right",
+            "biological_state": "cytosolic state",
+            "evidence": "to the cytosol"
+          }
+        ],
+        "evidence": "Formate is exported to the cytosol"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase levels",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "MCIA complex",
+        "name": "SFXN4 interacts with MCIA complex",
+        "relationship": "interacts with",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 as a complex I assembly factor, interacting with components of the mitochondrial complex I intermediate assembly (MCIA) complex"
+      },
+      {
+        "entity_1": "SFXN2",
+        "entity_2": "iron",
+        "name": "SFXN2 regulates iron",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN2 may be involved in iron export from mitochondria, or in regulating iron utilization within the organelle"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "iron",
+        "name": "SFXN4 regulates iron",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "heme",
+        "name": "SFXN4 regulates heme",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "glycine",
+        "entity_2": "heme",
+        "name": "glycine is heme precursor",
+        "relationship": "precursor_of",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "Glycine is the direct precursor for heme"
+      },
+      {
+        "entity_1": "SFXN3-PCBP2 complex",
+        "entity_2": "iron",
+        "name": "SFXN3-PCBP2 complex facilitates iron entry",
+        "relationship": "facilitates_transport_of",
+        "evidence": "SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria"
+      },
+      {
+        "entity_1": "SFXN5",
+        "entity_2": "citrate",
+        "name": "SFXN5 regulates citrate",
+        "relationship": "regulates",
+        "biological_state": "cytosolic state",
+        "evidence": "SFXN5 has been proposed to modulate cytosolic citrate, possibly by exporting citrate from the mitochondrion"
+      },
+      {
+        "entity_1": "ALAS2",
+        "entity_2": "δ-aminolevulinic acid",
+        "name": "ALAS2 catalyzes synthesis of δ-aminolevulinic acid",
+        "relationship": "catalyzes_synthesis_of",
+        "evidence": "erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

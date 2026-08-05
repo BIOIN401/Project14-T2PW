@@ -1,0 +1,63 @@
+{
+  "run_id": "sha256:e54eb281853e6bf6",
+  "boundary_count": 2,
+  "outcomes": [
+    "valid_json_zero_processes"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:fa32cc4e7765646b",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ],
+      "note": "structurally_empty_payload_retry"
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 2,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:c156660cc7ffdbaa",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ],
+      "note": "structurally_empty_payload_exhausted"
+    }
+  ]
+}

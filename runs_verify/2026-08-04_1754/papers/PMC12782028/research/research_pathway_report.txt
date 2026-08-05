@@ -1,0 +1,191 @@
+================================================================================
+CHOLESTEROL BIOSYNTHESIS
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            3
+  Entities             11
+  Distinct sources     1
+  Tiers                A=10   B=0   C=4   D=0
+  NEEDS REVIEW         4 element(s) are Tier C or D
+  Review flags         1
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 3   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LSS reaction
+
+  IN    2,3-oxidosqualene
+
+  OUT   lanosterol
+
+  ENZYME  LSS
+          Tier A - DB-grounded [uniprot: P48449]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] cholesterol biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 3   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  CYP51A1 reaction
+
+  IN    lanosterol
+
+  OUT   4,4-dimethylcholesta-8(9),14,24-trien-3β-ol
+
+  ENZYME  CYP51A1
+          Tier A - DB-grounded [uniprot: Q16850]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] cholesterol biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 3   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  DHCR24 reaction
+
+  IN    desmosterol
+
+  OUT   cholesterol
+
+  ENZYME  DHCR24
+          Tier A - DB-grounded [uniprot: Q15392]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] cholesterol biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    4,4-dimethylcholesta-8(9),14,24-trien-3β-ol
+              stated in a single source
+  [Tier C] reaction  CYP51A1 reaction
+              stated in a single source
+  [Tier C] reaction  DHCR24 reaction
+              stated in a single source
+  [Tier C] reaction  LSS reaction
+              stated in a single source
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (7)
+  - cholesterol   [drugbank: DB04540]
+  - lanosterol   [pathbank_compound_id: 966]
+  - desmosterol   [pathbank_compound_id: 1690]
+  - 2,3-oxidosqualene   [pathbank_compound_id: 284941]
+  - CYP51A1   [uniprot: Q16850]
+  - DHCR24   [uniprot: Q15392]
+  - LSS   [uniprot: P48449]
+
+Tier B — corroborated by a second paper (no identifier)   (0)
+  (none)
+
+Tier C — single-source (review)   (1)
+  - 4,4-dimethylcholesta-8(9),14,24-trien-3β-ol
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  seed paper (uploaded)
+    cholesterol biosynthesis
+
+================================================================================
+WHAT THE PIPELINE DID NOT ENFORCE
+================================================================================
+
+Biology / provenance flags (1)
+  These would have STOPPED a strict run. They did not stop this one.
+  - [(no code)] /processes
+      {'exception_type': 'ValueError', 'exception_message': 'Registry validation
+      failed:\n/processes/interactions/0/entity_1 unknown entity:
+      oxysterols\n/processes/interactions/0/entity_2 unknown entity:
+      inflammation', 'validator': 'Registry'}
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

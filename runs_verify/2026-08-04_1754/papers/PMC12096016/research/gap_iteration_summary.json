@@ -1,0 +1,1745 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 4,
+        "organisms_added": 2,
+        "locations_added": 17,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 18,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:entd",
+            "entity_type": "protein",
+            "name": "EntD",
+            "path": "/entities/proteins/5",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:enth",
+            "entity_type": "protein",
+            "name": "EntH",
+            "path": "/entities/proteins/6",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "entity_type": "protein",
+            "name": "Isochorismatase (EntB)",
+            "path": "/entities/proteins/7",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:enterobactin synthase",
+            "entity_type": "protein",
+            "name": "enterobactin synthase",
+            "path": "/entities/proteins/8",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:chorismate",
+            "entity_type": "compound",
+            "name": "chorismate",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoic acid",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoic acid",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:pyruvate",
+            "entity_type": "compound",
+            "name": "pyruvate",
+            "path": "/entities/compounds/4",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:nadh",
+            "entity_type": "compound",
+            "name": "NADH",
+            "path": "/entities/compounds/5",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:nad",
+            "entity_type": "compound",
+            "name": "NAD+",
+            "path": "/entities/compounds/6",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:atp",
+            "entity_type": "compound",
+            "name": "ATP",
+            "path": "/entities/compounds/7",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          "…+6 more item(s) elided"
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:017820da424de681",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:entd\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup… (+182 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:entd",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:enth",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:enterobactin synthase",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:chorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoic acid",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:pyruvate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:nadh",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:nad",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:atp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          "…+6 more item(s) elided"
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:entd",
+            "entity_type": "protein",
+            "name": "EntD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntD",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:82339f9b55e4cd6f",
+                  "preview": "{\"uniprot\": \"P19925\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:0de92d64ef4dd765",
+                  "preview": "[\"(protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntD\\\" OR gene:\\\"EntD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 965,
+                  "hash": "sha256:14b533dff878da14",
+                  "preview": "[{\"accession\": \"P19925\", \"protein_name\": \"Enterobactin synthase component D\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0A3B9\", \"protein_name\": \"En… (+765 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Membrane",
+                "score": 27.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:3a65e59671728d36",
+                  "preview": "location_frequency=27"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Membrane",
+              "confidence": 0.9,
+              "reason": "The candidate 'Membrane' has a significantly higher evidence score (27.0) compared to 'Cytosol' (1.0) in the provided database context for Escherichia coli.",
+              "source": "llm",
+              "raw": {
+                "chars": 211,
+                "hash": "sha256:45248dbf6a4a6485",
+                "preview": "{\"choice\": \"Membrane\", \"confidence\": 0.9, \"reason\": \"The candidate 'Membrane' has a significantly higher evidence score (27.0) compared to 'Cytosol' (1.0) in the provided database context for Escheric… (+11 chars elided)"
+              }
+            },
+            "chosen_location": "Membrane",
+            "chosen_state": "AutoState_escherichia_colimembrane"
+          },
+          {
+            "issue_key": "protein:enth",
+            "entity_type": "protein",
+            "name": "EntH",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "EntH",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:584e79327ff06d65",
+                  "preview": "{\"uniprot\": \"P0A8Y8\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:81fff9b2572c2a70",
+                  "preview": "[\"(protein_name:\\\"EntH\\\" OR gene:\\\"EntH\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"EntH\\\" OR gene:\\\"EntH\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 988,
+                  "hash": "sha256:dcdf603c236f38a8",
+                  "preview": "[{\"accession\": \"P0A8Y8\", \"protein_name\": \"Proofreading thioesterase EntH\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"B5YPU3\", \"protein_name\": \"Proof… (+788 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2590,
+                  "hash": "sha256:e3e78ca97e5b6df8",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"EntH\\\" OR gene:\\\"EntH\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"EntH\\\" OR gene:\\\"EntH\\\")\", \"mapped_id… (+2390 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:584e79327ff06d65",
+                  "preview": "{\"uniprot\": \"P0A8Y8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:83a9a5dbb809eb98",
+                  "preview": "{\"uniprot\": \"B5YPU3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7d9bf55263e7aca9",
+                  "preview": "{\"uniprot\": \"P0A8Y9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:807e1637da443d00",
+                  "preview": "{\"uniprot\": \"B7N9K4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ed75f7bd1e628cbc",
+                  "preview": "{\"uniprot\": \"Q8XBU9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:e978c839be66346c",
+                  "preview": "{\"uniprot\": \"A0A0H2YXH5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:53ad8ad60d5ecc98",
+                  "preview": "{\"uniprot\": \"B7L8I0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f09113ec0478e31e",
+                  "preview": "{\"uniprot\": \"A7ZIY1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "The candidate P0A8Y8 is a reviewed UniProt entry for 'Proofreading thioesterase EntH' in Escherichia coli (strain K12), which matches the protein type and the organism context provided in the background query. It has the highest confidence … (+24 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 319,
+                "hash": "sha256:805464c17fcc05d9",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"The candidate P0A8Y8 is a reviewed UniProt entry for 'Proofreading thioesterase EntH' in Escherichia coli (strain K12), which matches the protein t… (+119 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "protein:isochorismatase entb",
+            "entity_type": "protein",
+            "name": "Isochorismatase (EntB)",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "Isochorismatase (EntB)",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ede20b0e42c0ebff",
+                  "preview": "{\"uniprot\": \"P0DPC1\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 626,
+                  "hash": "sha256:6ca0f375aea2c4e7",
+                  "preview": "[\"(protein_name:\\\"Isochorismatase (EntB)\\\" OR gene:\\\"Isochorismatase (EntB)\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"Isochorismatase\\\" OR gene:\\\"Isochorismatase\\\") AND organism_nam… (+426 chars elided)",
+                  "items": 8
+                },
+                "candidates": {
+                  "chars": 1131,
+                  "hash": "sha256:2e0fbb5e286dea9c",
+                  "preview": "[{\"accession\": \"P0DPC1\", \"protein_name\": \"Phenazine biosynthesis protein PhzD2\", \"organism\": \"Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 … (+931 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "protein:enterobactin synthase",
+            "entity_type": "protein",
+            "name": "enterobactin synthase",
+            "status": "ok",
+            "organism_added": "Escherichia coli",
+            "background": {
+              "protein_api": {
+                "query": "enterobactin synthase",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:584e79327ff06d65",
+                  "preview": "{\"uniprot\": \"P0A8Y8\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 195,
+                  "hash": "sha256:b0a9e916d3bd0d8c",
+                  "preview": "[\"(protein_name:\\\"enterobactin synthase\\\" OR gene:\\\"enterobactin synthase\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"enterobactin synthase\\\" OR gene:\\\"enterobactin synthase\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 934,
+                  "hash": "sha256:d14d62cc844b1931",
+                  "preview": "[{\"accession\": \"P0A8Y8\", \"protein_name\": \"Proofreading thioesterase EntH\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.475}, {\"accession\": \"P19925\", \"protein_name\": \"Ente… (+734 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 646,
+                  "hash": "sha256:f0772832a2b360ec",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P10378\", \"pathbank_protein_id\": \"6301\"}, \"pathbank_protein_id\": 6301, \"confidence\": 0.91, \"chosen_rule\": \"db_t… (+446 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2778,
+                  "hash": "sha256:cf7391380cb03e38",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"enterobactin synthase\\\" OR gene:\\\"enterobactin synthase\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"ent… (+2578 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 0.91,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:b5d5f16a5781cf63",
+                  "preview": "{\"uniprot\": \"P10378\", \"pathbank_protein_id\": \"6301\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:584e79327ff06d65",
+                  "preview": "{\"uniprot\": \"P0A8Y8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:82339f9b55e4cd6f",
+                  "preview": "{\"uniprot\": \"P19925\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:819876a14e4d8192",
+                  "preview": "{\"uniprot\": \"P10378\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a4f90a80251d15f9",
+                  "preview": "{\"uniprot\": \"P11454\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:43bd262835baf77d",
+                  "preview": "{\"uniprot\": \"P0ADI4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b7f6b839f7aa898f",
+                  "preview": "{\"uniprot\": \"Q8XBV9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.91,
+              "reason": "The candidate from PathBankDB (index 0) provides a high-confidence mapping to UniProt P10378, which is explicitly identified as 'Enterobactin synthase component E'. While 'enterobactin synthase' is a multi-component complex, the database-ba… (+146 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:bd85305cc6b29851",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.91, \"reason\": \"The candidate from PathBankDB (index 0) provides a high-confidence mapping to UniProt P10378, which is explicitly identified as 'Enterobactin synth… (+200 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:chorismate",
+            "entity_type": "compound",
+            "name": "chorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "chorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 4,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3b3da167e138b029",
+                  "preview": "{\"kegg\": \"C00251\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 336,
+                  "hash": "sha256:7374b4625c8df2a6",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00251\", \"name\": \"Chorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C11355\", \"name\": \"… (+136 chars elided)",
+                  "items": 4
+                }
+              },
+              "hmdb": {
+                "query": "chorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "isochorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 171,
+                  "hash": "sha256:b9855c4a3d39d029",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C18054\", \"name\": \"2-Amino-2-deoxyisochorismate\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "isochorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 348,
+                  "hash": "sha256:9bd7de4d44cf80d2",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00885\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": … (+148 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc48c64e22695323",
+                  "preview": "{\"kegg\": \"C18054\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "The first candidate provides an exact match for 'isochorismate' (KEGG C00885) with high confidence. The second candidate is a different chemical entity (2-Amino-2-deoxyisochorismate) and is therefore incorrect.",
+              "source": "llm",
+              "raw": {
+                "chars": 265,
+                "hash": "sha256:0317eec04b0307da",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.95, \"reason\": \"The first candidate provides an exact match for 'isochorismate' (KEGG C00885) with high confidence. The second candidate is a different chemical en… (+65 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 583,
+                  "hash": "sha256:7f0136d67bda9ebf",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00230\", \"name\": \"3,4-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\"… (+383 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 808,
+                  "hash": "sha256:71e87596ec2b78b7",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.322, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00… (+608 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3a2cb4d502bc3734",
+                  "preview": "{\"kegg\": \"C00196\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5e4c17c01923df66",
+                  "preview": "{\"kegg\": \"C00230\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:47f492d610d578ea",
+                  "preview": "{\"kegg\": \"C04171\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2966d747fb28a1c6",
+                  "preview": "{\"kegg\": \"C04524\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b3fa608cf2977dd3",
+                  "preview": "{\"kegg\": \"C05200\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:65888b5a46e7c2e6",
+                  "preview": "{\"kegg\": \"C21853\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 2,
+              "confidence": 0.42,
+              "reason": "The source name '2,3-dihydro-2,3-dihydroxybenzoate' is an exact match for the name of candidate index 2, '(2S,3S)-2,3-Dihydro-2,3-dihydroxybenzoate', whereas other candidates represent different chemical structures (e.g., 2,3-dihydroxybenzo… (+30 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 325,
+                "hash": "sha256:fa6eeb87c33c6826",
+                "preview": "{\"selected_index\": 2, \"confidence\": 0.42, \"reason\": \"The source name '2,3-dihydro-2,3-dihydroxybenzoate' is an exact match for the name of candidate index 2, '(2S,3S)-2,3-Dihydro-2,3-dihydroxybenzoate… (+125 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoic acid",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoic acid",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydroxybenzoic acid",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 3,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 272,
+                  "hash": "sha256:ff7660303dde1291",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.4324}, {\"database\": \"kegg\", \"id\": \"C00230\", \"name\": \"3,4-Dihydroxybenzoate\", \"score\": 0.4324}, {\"database\": \"kegg\", \"i… (+72 chars elided)",
+                  "items": 3
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydroxybenzoic acid",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:pyruvate",
+            "entity_type": "compound",
+            "name": "pyruvate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "pyruvate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7c8a05b4cebf0e19",
+                  "preview": "{\"kegg\": \"C00022\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 515,
+                  "hash": "sha256:dbc3ad7ba2ae9c89",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00022\", \"name\": \"Pyruvate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C02193\", \"name\": \"Pyruvate oxime\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02601\", \"name\": \"[… (+315 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "pyruvate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:nadh",
+            "entity_type": "compound",
+            "name": "NADH",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "NADH",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 4,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7f8b11afb89bde0f",
+                  "preview": "{\"kegg\": \"C00004\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 414,
+                  "hash": "sha256:a724a642334c3e17",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00004\", \"name\": \"NADH\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C04856\", \"name\": \"(6S)-6beta-Hydroxy-1,4,5,6-tetrahydronicotinamide-adenine dinucleotide\", \"score\": 0.… (+214 chars elided)",
+                  "items": 4
+                }
+              },
+              "hmdb": {
+                "query": "NADH",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:nad",
+            "entity_type": "compound",
+            "name": "NAD+",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "NAD+",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:374022b4242339fe",
+                  "preview": "{\"kegg\": \"C00003\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 444,
+                  "hash": "sha256:c9ce36664287edef",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00003\", \"name\": \"NAD+\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C03544\", \"name\": \"[Xanthine dehydrogenase]\", \"score\": 0.55}, {\"database\": \"kegg\", \"id\": \"C00004\", \"nam… (+244 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "NAD+",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:atp",
+            "entity_type": "compound",
+            "name": "ATP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "ATP",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b66cf626f741e636",
+                  "preview": "{\"kegg\": \"C00002\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 496,
+                  "hash": "sha256:ddb599f2b35bfb66",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00002\", \"name\": \"ATP\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C13740\", \"name\": \"alpha,beta-Methylene ATP\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C13741\", \"name… (+296 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "ATP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          "…+6 more item(s) elided"
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

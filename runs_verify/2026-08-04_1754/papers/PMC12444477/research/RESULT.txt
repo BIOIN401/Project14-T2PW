@@ -1,0 +1,69 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : research
+status     : timeout
+stage      : unknown
+wall time  : 1800.8s (30m00s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : the child process was still running after 1800s and was killed, so this paper+mode produced nothing
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+The parent kills a stuck child rather than letting it eat the night. Typical causes: an LLM request with no server-side timeout, a wedged PathBank MySQL socket, or a Streamlit rerun that never returns.
+
+--- child stderr (tail) ---
+2026-08-04 19:44:06.603 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 3/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 4/8; retrying as a transient.
+Preprocessor reply was truncated (2274 chars); recovered 14 field(s) by repairing the JSON.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/8; retrying as a transient.
+Preprocessor reply was truncated (578 chars); recovered 8 field(s) by repairing the JSON.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 2/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 3/8; retrying as a transient.
+LLM returned an empty completion for preprocessor (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 4/8; retrying as a transient.
+2026-08-04 20:03:50.771 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-04 20:03:50.772 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-04 20:03:50.772 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-04 20:03:51.060 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-04 20:03:51.060 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-04 20:03:51.061 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

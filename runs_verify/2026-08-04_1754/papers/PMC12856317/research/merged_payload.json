@@ -1,0 +1,239 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "taxonomy_id": "9606"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "mitochondrial matrix"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "pyridoxal 5-phosphate",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "CLPXP protease",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "LONP1 protease",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "ALAS2 homodimer",
+        "components": [
+          "ALAS2"
+        ],
+        "evidence": "the enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS), a PLP-dependent homodimer enzyme",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "the enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS), a PLP-dependent homodimer enzyme"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "the mitochondrial matrix is the cellular compartment where heme biosynthesis is initiated"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "condensation of glycine and succinyl-CoA"
+      },
+      {
+        "compound": "succinyl-CoA",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "condensation of glycine and succinyl-CoA"
+      },
+      {
+        "compound": "aminolevulinic acid",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "produces aminolevulinic acid"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "interaction between heme and mitochondrial human ALAS2"
+      },
+      {
+        "compound": "pyridoxal 5-phosphate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "covalently bound to the PLP cofactor"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mature mitochondrial ALAS2"
+      },
+      {
+        "protein": "ALAS1",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binding to the ALAS1 isoform also results in degradation"
+      },
+      {
+        "protein": "CLPXP protease",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme-bound ALAS2 recruits the CLPXP protease"
+      },
+      {
+        "protein": "LONP1 protease",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "LONP1- or CLPXP-mediated degradation"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAS2-mediated condensation of glycine and succinyl-CoA",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "rate-limiting enzyme aminolevulinic acid synthase 2 (ALAS2)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          },
+          {
+            "protein_complex": "ALAS2 homodimer",
+            "evidence": "the enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS), a PLP-dependent homodimer enzyme",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "scope_membership": "core"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibition of ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+      },
+      {
+        "entity_1": "pyridoxal 5-phosphate",
+        "entity_2": "ALAS2",
+        "name": "PLP cofactor binding to ALAS2",
+        "relationship": "cofactor_of",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the catalytically active holoenzyme that is covalently bound to the PLP cofactor"
+      },
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS1",
+        "name": "heme binding to ALAS1",
+        "relationship": "binds",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binding to mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation"
+      },
+      {
+        "entity_1": "ALAS1",
+        "entity_2": "LONP1 protease",
+        "name": "ALAS1 degradation by LONP1",
+        "relationship": "degraded_by",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binding to mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation"
+      },
+      {
+        "entity_1": "ALAS1",
+        "entity_2": "CLPXP protease",
+        "name": "ALAS1 degradation by CLPXP",
+        "relationship": "degraded_by",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme binding to mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation"
+      },
+      {
+        "entity_1": "ALAS2",
+        "entity_2": "CLPXP protease",
+        "name": "ALAS2 recruitment of CLPXP",
+        "relationship": "recruits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "extracellular",
+        "evidence": "extracellular environment"
+      },
+      {
+        "name": "outer membrane",
+        "evidence": "outer membrane receptors"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHB-AMP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferric iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferri-enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferrous iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "nucleic_acids": [
+      {
+        "name": "ent operon",
+        "class": "nucleic_acid",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "EntC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EntF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "FepA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "enterobactin synthase complex",
+        "class": "protein_complex",
+        "components": [
+          "EntD",
+          "EntE",
+          "EntF"
+        ],
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "evidence": "enterobactin synthase complex, which includes EntD, EntE, and EntF"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "E. coli cellular state",
+      "species": "Escherichia coli",
+      "evidence": "bacterial cell"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Escherichia coli",
+      "subcellular_location": "extracellular",
+      "evidence": "extracellular environment"
+    },
+    {
+      "name": "E. coli outer membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "outer membrane receptors"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "FepA",
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "outer membrane receptors (e.g. FepA)"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "Chorismate to isochorismate by EntC",
+        "enzymes": [
+          {
+            "protein": "EntC",
+            "evidence": "catalyzed by isochorismate synthase (EntC)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC).",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "Isochorismate to DHB by EntB",
+        "enzymes": [
+          {
+            "protein": "EntB",
+            "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "outputs": [
+          "DHB-AMP"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "DHB activation to DHB-AMP by EntE",
+        "enzymes": [
+          {
+            "protein": "EntE",
+            "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP.",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "outputs": [
+          "enterobactin"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "Enterobactin assembly by enterobactin synthase complex",
+        "enzymes": [
+          {
+            "protein_complex": "enterobactin synthase complex",
+            "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "The final steps involve the assembly of three DHB molecules into the cyclic trilactone structure of enterobactin, catalyzed by the enterobactin synthase complex.",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "enterobactin",
+          "ferric iron"
+        ],
+        "outputs": [
+          "ferri-enterobactin"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "Enterobactin binds ferric iron",
+        "evidence": "It binds ferric iron with high affinity.",
+        "scope_membership": "auxiliary"
+      }
+    ],
+    "transports": [
+      {
+        "name": "Enterobactin secretion",
+        "cargo": "enterobactin",
+        "from_biological_state": "E. coli cellular state",
+        "to_biological_state": "extracellular state",
+        "elements_with_states": [
+          {
+            "element": "enterobactin",
+            "side": "left",
+            "biological_state": "E. coli cellular state",
+            "evidence": "Enterobactin is secreted by bacteria into the extracellular environment"
+          },
+          {
+            "element": "enterobactin",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "Enterobactin is secreted by bacteria into the extracellular environment"
+          }
+        ],
+        "evidence": "Enterobactin is secreted by bacteria into the extracellular environment"
+      },
+      {
+        "name": "Ferri-enterobactin import via FepA",
+        "cargo": "ferri-enterobactin",
+        "from_biological_state": "extracellular state",
+        "to_biological_state": "E. coli cellular state",
+        "transporters": [
+          {
+            "protein": "FepA",
+            "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+          }
+        ],
+        "elements_with_states": [
+          {
+            "element": "ferri-enterobactin",
+            "side": "left",
+            "biological_state": "extracellular state",
+            "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+          },
+          {
+            "element": "ferri-enterobactin",
+            "side": "right",
+            "biological_state": "E. coli cellular state",
+            "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+          }
+        ],
+        "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "Fur",
+        "entity_2": "ferrous iron",
+        "name": "Fur binds ferrous iron",
+        "relationship": "binds",
+        "biological_state": "E. coli cellular state",
+        "evidence": "Fur binds ferrous iron (Fe2+) to form a complex"
+      },
+      {
+        "entity_1": "Fur",
+        "entity_2": "ent operon",
+        "name": "Fur-Fe2+ represses ent operon",
+        "relationship": "inhibits",
+        "biological_state": "E. coli cellular state",
+        "evidence": "represses the transcription of enterobactin biosynthesis genes"
+      }
+    ]
+  }
+}

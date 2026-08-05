@@ -1,0 +1,334 @@
+{
+  "entities": {
+    "cell_types": [
+      {
+        "name": "erythroid cells"
+      }
+    ],
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "tissues": [
+      {
+        "name": "bone marrow"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytosol",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "name": "mitochondria",
+        "evidence": "In mitochondria, serine enters the mitochondrial branch"
+      },
+      {
+        "name": "inner mitochondrial membrane",
+        "evidence": "SFXNs are integral membrane proteins predominantly localized in the mitochondrial inner membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "serine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "5,10-methylene-THF",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "tetrahydrofolate (THF)",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "SHMT2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN1",
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN2",
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN4",
+        "class": "transporter",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondria",
+      "evidence": "In mitochondria, serine enters the mitochondrial branch"
+    },
+    {
+      "name": "cytosolic state",
+      "species": "Homo sapiens",
+      "subcellular_location": "cytosol",
+      "evidence": "serine transport from cytosol into the mitochondrial matrix"
+    },
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "serine transport from cytosol into the mitochondrial matrix"
+    },
+    {
+      "name": "inner mitochondrial membrane state",
+      "species": "Homo sapiens",
+      "subcellular_location": "inner mitochondrial membrane",
+      "evidence": "SFXNs are integral membrane proteins predominantly localized in the mitochondrial inner membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "serine",
+        "biological_state": "cytosolic state",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "compound": "serine",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase"
+      },
+      {
+        "compound": "5,10-methylene-THF",
+        "biological_state": "mitochondrial state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 KO cells exhibit increased mitochondrial iron content"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial state",
+        "evidence": "heme is produced in mitochondria"
+      },
+      {
+        "compound": "tetrahydrofolate (THF)",
+        "biological_state": "mitochondrial state",
+        "evidence": "one-carbon metabolism in mitochondria uses THF coenzyme"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN1",
+        "biological_state": "inner mitochondrial membrane state",
+        "evidence": "SFXNs are integral membrane proteins predominantly localized in the mitochondrial inner membrane"
+      },
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 is found in either the IMM or the outer mitochondrial membrane"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "inner mitochondrial membrane state",
+        "evidence": "SFXNs are integral membrane proteins predominantly localized in the mitochondrial inner membrane"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial state",
+        "evidence": "ALAS2 is a mitochondrial enzyme"
+      },
+      {
+        "protein": "ferrochelatase",
+        "biological_state": "mitochondrial state",
+        "evidence": "ferrochelatase is a mitochondrial enzyme"
+      },
+      {
+        "protein": "SHMT2",
+        "biological_state": "mitochondrial state",
+        "evidence": "SHMT2 is a mitochondrial enzyme"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "serine"
+        ],
+        "outputs": [
+          "glycine",
+          "5,10-methylene-THF"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "SHMT2 reaction",
+        "enzymes": [
+          {
+            "protein": "SHMT2",
+            "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "serine is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase",
+        "scope_membership": "anaplerotic"
+      },
+      {
+        "inputs": [
+          "glycine"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "name": "ALAS2 reaction",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "ALAS2 is a key enzyme in heme synthesis",
+            "provenance": "inferred",
+            "confidence": 0.85
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "ALAS2 is a key enzyme in the heme synthesis pathway"
+      },
+      {
+        "inputs": [
+          "iron"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "name": "ferrochelatase reaction",
+        "enzymes": [
+          {
+            "protein": "ferrochelatase",
+            "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+            "provenance": "inferred",
+            "confidence": 0.85
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 regulates ferrochelatase",
+        "relationship": "regulates",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "entity_1": "SFXN1",
+        "entity_2": "serine",
+        "name": "SFXN1 transports serine",
+        "relationship": "transports",
+        "biological_state": "inner mitochondrial membrane state",
+        "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "entity_1": "SFXN2",
+        "entity_2": "iron",
+        "name": "SFXN2 regulates iron homeostasis",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 is hypothesized to contribute to mitochondrial iron homeostasis"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "heme",
+        "name": "SFXN4 regulates heme biosynthesis",
+        "relationship": "regulates",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "entity_1": "tetrahydrofolate (THF)",
+        "entity_2": "SHMT2",
+        "name": "THF is cofactor for one-carbon metabolism",
+        "relationship": "cofactor_of",
+        "biological_state": "mitochondrial state",
+        "evidence": "one-carbon metabolism uses the tetrahydrofolate (THF) coenzyme"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}
