@@ -21,11 +21,12 @@ looking for one in the payload -- see ``test_no_archived_leg_carries_stage_zero_
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from collections import Counter
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Iterator, List, Tuple
 
 import pytest
 
@@ -103,6 +104,27 @@ def _ir_codes(payload: Dict[str, Any]) -> List[str]:
 
 RUNS = ROOT / "runs"
 
+#: The frozen baseline cohort. **This is the only thing that decides membership.**
+#:
+#: The cohort used to be discovered by ``RUNS.glob("*/papers/*/*")``. That made the
+#: merge gate a function of the working directory: every milestone benchmark
+#: archives a new run directory under ``runs/``, and each one silently redefined
+#: the population the gate was supposed to be guarding. It also went stale without
+#: anyone noticing -- the pin said 23 legs while the glob returned 39.
+#:
+#: Reading a version-controlled manifest instead means a leg enters or leaves the
+#: baseline only through a reviewed edit, and creating a run directory cannot move
+#: the gate. See the ``what_this_is`` / ``additions_require_review`` keys in the
+#: file itself.
+#:
+#: **This manifest is NOT C-010's per-leg delta allowlist**
+#: (``docs/pwml_recovery_sprint/BASELINE.md`` § 6). That allowlist spans ``runs/``
+#: *and* ``runs_verify/`` (32 legs) and lists legs whose *verdict* is expected to
+#: change; this manifest lists which legs are *measured* and says nothing about
+#: their verdicts. Two of C-010's six legs happen to sit inside this cohort. The
+#: overlap is incidental and must never be used to pre-apply C-010's delta here.
+BASELINE_COHORT_MANIFEST = ROOT / "tests" / "data" / "baseline_cohort_manifest.json"
+
 #: Legs whose merged payload is large enough that normalizing it in a unit test
 #: is measured in tens of seconds. Replaying them is still useful, so they are
 #: not skipped -- but the whole module is marked slow for the same reason.
@@ -114,21 +136,103 @@ pytestmark = pytest.mark.skipif(
 )
 
 
+class BaselineCohortError(AssertionError):
+    """A frozen manifest entry did not resolve.
+
+    Raised, never swallowed and never downgraded to a skip. Silently dropping an
+    unresolvable entry is exactly how the previous glob-driven gate broke: the
+    cohort changed underneath the pinned totals and every aggregate moved with it.
+    """
+
+
+def _read_manifest(path: Path | None = None) -> Dict[str, Any]:
+    """Load and structurally validate the manifest. Any defect is fatal."""
+
+    manifest_path = BASELINE_COHORT_MANIFEST if path is None else path
+    if not manifest_path.is_file():
+        raise BaselineCohortError(
+            f"the frozen baseline cohort manifest is missing: {manifest_path}. "
+            "The replay merge gate has no cohort without it and must not fall "
+            "back to globbing runs/."
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != 1:
+        raise BaselineCohortError(
+            f"{manifest_path}: unsupported schema_version "
+            f"{manifest.get('schema_version')!r}, expected 1"
+        )
+    if manifest.get("max_payload_bytes") != _MAX_PAYLOAD_BYTES:
+        raise BaselineCohortError(
+            f"{manifest_path}: max_payload_bytes {manifest.get('max_payload_bytes')!r} "
+            f"disagrees with the harness bound {_MAX_PAYLOAD_BYTES}. Widening the "
+            "bound in one place only would change the cohort by stealth."
+        )
+    return manifest
+
+
+def _manifest_legs(path: Path | None = None) -> List[Path]:
+    """Resolve every manifest entry to a leg directory, or fail loudly."""
+
+    manifest = _read_manifest(path)
+    entries = manifest.get("legs")
+    if not isinstance(entries, list) or not entries:
+        raise BaselineCohortError(f"{path or BASELINE_COHORT_MANIFEST}: 'legs' is empty")
+    declared = manifest.get("leg_count")
+    if declared != len(entries):
+        raise BaselineCohortError(
+            f"{path or BASELINE_COHORT_MANIFEST}: leg_count {declared!r} disagrees "
+            f"with {len(entries)} entries"
+        )
+
+    seen: set[str] = set()
+    out: List[Path] = []
+    unresolved: List[str] = []
+    for entry in entries:
+        rel = str(entry.get("path", ""))
+        if rel in seen:
+            raise BaselineCohortError(
+                f"duplicate manifest entry {rel!r}: a leg counted twice would "
+                "inflate every aggregate below"
+            )
+        seen.add(rel)
+        leg = ROOT / rel
+        payload_name = str(entry.get("payload", ""))
+        payload = leg / payload_name
+        if not leg.is_dir():
+            unresolved.append(f"{rel} (leg directory absent)")
+        elif not payload.is_file():
+            unresolved.append(f"{rel} (payload {payload_name!r} absent)")
+        elif payload.stat().st_size > _MAX_PAYLOAD_BYTES:
+            unresolved.append(
+                f"{rel} (payload {payload_name!r} is {payload.stat().st_size} bytes, "
+                f"over the {_MAX_PAYLOAD_BYTES} bound)"
+            )
+        else:
+            out.append(leg)
+
+    if unresolved:
+        raise BaselineCohortError(
+            f"{len(unresolved)} of {len(entries)} frozen baseline cohort entries do "
+            "not resolve on disk. The cohort must NEVER shrink silently -- restore "
+            "the artifacts, or make the removal an explicit reviewed manifest edit "
+            "together with a re-measured FULL_STACK_BASELINE and the table in "
+            "docs/change_log.md. Unresolved: " + "; ".join(unresolved)
+        )
+    return out
+
+
 def _legs() -> List[Path]:
-    """Every archived leg that kept a payload we can put through the gate."""
+    """The frozen baseline cohort: read from the manifest, never globbed.
+
+    ``runs/`` is still allowed to be absent -- the whole module skips in that case
+    (``pytestmark`` above) and returning an empty list keeps parametrization from
+    erroring during collection. What is *not* allowed is ``runs/`` existing while a
+    manifest entry does not: that is a shrinking cohort and it raises.
+    """
 
     if not RUNS.is_dir():
         return []
-    out: List[Path] = []
-    for leg in sorted(RUNS.glob("*/papers/*/*")):
-        if not leg.is_dir():
-            continue
-        for name in ("final_mapped.json", "merged_payload.json"):
-            path = leg / name
-            if path.exists() and path.stat().st_size <= _MAX_PAYLOAD_BYTES:
-                out.append(leg)
-                break
-    return out
+    return _manifest_legs()
 
 
 def _leg_ids() -> List[str]:
@@ -378,38 +482,50 @@ def test_stage_three_recovery_is_not_strict_exportability() -> None:
 #: than a bound, because "at least one leg exports" is the claim that was already
 #: too weak to catch the original overstatement.
 #:
-#: When a new batch lands in ``runs/`` this test fails by construction. That is
-#: the intended cost: re-measure, update the table here AND in the change log,
-#: and the two can never disagree.
+#: Measured over the FROZEN cohort in ``BASELINE_COHORT_MANIFEST`` -- 39 legs,
+#: verified entry by entry on ``sprint/pwml-recovery`` @ ``2b786aa`` before any
+#: C-branch landed. A new batch landing in ``runs/`` no longer moves these
+#: numbers, which is the whole point: the gate measures a reviewed population,
+#: not whatever happens to be on disk. Changing them requires a manifest edit,
+#: a fresh measurement, and the matching edit to ``docs/change_log.md`` -- all in
+#: one commit, so the three can never disagree.
+#:
+#: These are baseline *measurements*, not targets, and they are NOT C-010's
+#: expected delta. C-010 changes what some legs' verdicts ARE; this pins which
+#: legs are counted and what they measure today. Do not pre-apply one to the other.
 FULL_STACK_BASELINE: Dict[str, int] = {
-    "legs_examined": 23,
-    "quarantine_admitted": 18,
-    "quarantine_refused": 5,
-    "stage3_after_pass": 18,
-    "required_contract_pass": 1,
-    "reached_ir": 1,
-    "ir_pass": 1,
-    "exportable": 1,
+    "legs_examined": 39,
+    "quarantine_admitted": 27,
+    "quarantine_refused": 12,
+    "stage3_after_pass": 27,
+    "required_contract_pass": 8,
+    "reached_ir": 8,
+    "ir_pass": 8,
+    "exportable": 8,
 }
 
 #: How many LEGS exhibit each residual code, and how many error ROWS carry it.
 #: Different numbers for the same defect -- a leg with two undeclared species
 #: contributes one to the first and two to the second -- and conflating them is
-#: how "17 legs" turns into "17 rows" in a report.
+#: how "19 legs" turns into "19 rows" in a report.
 RESIDUAL_CODES_BY_LEG: Dict[str, int] = {
-    "species_missing_classification": 17,
-    "species_missing_taxonomy": 17,
-    "no_biological_states": 4,
-}
-RESIDUAL_CODES_BY_ROW: Dict[str, int] = {
     "species_missing_classification": 19,
     "species_missing_taxonomy": 19,
     "no_biological_states": 4,
 }
+RESIDUAL_CODES_BY_ROW: Dict[str, int] = {
+    "species_missing_classification": 27,
+    "species_missing_taxonomy": 27,
+    "no_biological_states": 4,
+}
 
 _REMEASURE = (
-    "the cached legs in runs/ have changed. Re-measure, then update BOTH this "
-    "baseline and the table in docs/change_log.md so they cannot disagree."
+    "the frozen baseline cohort no longer measures what was pinned. The cohort "
+    "itself cannot drift (it is tests/data/baseline_cohort_manifest.json, not a "
+    "glob), so either an artifact under runs/ changed or the pipeline's verdict "
+    "on one of these legs changed. Establish which, then update the manifest if "
+    "and only if membership was meant to change, and update BOTH this baseline "
+    "and the table in docs/change_log.md so they cannot disagree."
 )
 
 
@@ -438,9 +554,12 @@ def test_the_full_stack_baseline_is_exactly_what_was_reported() -> None:
     assert dict(by_row) == RESIDUAL_CODES_BY_ROW, f"{_REMEASURE} by_row={dict(by_row)}"
 
     # The two halves of the reported claim, spelled out so neither can be read as
-    # the other: Stage 3 recovery is complete, exportability is 1 in 18.
+    # the other: Stage 3 recovery is complete, exportability is 8 in 27.
     assert measured["stage3_after_pass"] == measured["quarantine_admitted"]
     assert measured["exportable"] < measured["quarantine_admitted"]
+
+    # And the population it was measured over is the frozen one, not a glob.
+    assert len(rows) == len(_manifest_legs())
 
 
 def test_no_leg_fails_the_ir_once_the_required_contract_passes() -> None:
@@ -451,3 +570,198 @@ def test_no_leg_fails_the_ir_once_the_required_contract_passes() -> None:
 
     for row in reached_ir:
         assert row["ir"] == "pass", (row["leg"], row["ir_codes"])
+
+
+# ── The cohort is frozen, and the freeze is what is under test here ─────────
+#
+# Everything above measures legs. Everything below measures the thing that
+# decides WHICH legs get measured. That used to be a filesystem glob, so the
+# merge gate was a function of the working directory and moved whenever a
+# benchmark archived a run. These tests exist so it can never do that again.
+
+
+@pytest.fixture
+def new_run_directory() -> Iterator[Path]:
+    """A plausible freshly-archived batch, created under ``runs/`` and removed.
+
+    Shaped to match ``*/papers/*/*`` exactly, because the point is that the
+    *retired* glob would have swallowed it. Torn down in a finalizer so a failing
+    assertion still cannot leave it behind in the working tree.
+    """
+
+    holder = RUNS / "_h001_synthetic_new_batch"
+    leg = holder / "papers" / "PMC00000000" / "strict"
+    shutil.rmtree(holder, ignore_errors=True)
+    leg.mkdir(parents=True)
+    (leg / "final_mapped.json").write_text(
+        json.dumps({"processes": {}, "entities": {}}), encoding="utf-8"
+    )
+    try:
+        yield holder
+    finally:
+        shutil.rmtree(holder, ignore_errors=True)
+
+
+def test_a_new_run_directory_cannot_change_the_baseline_cohort(
+    new_run_directory: Path,
+) -> None:
+    """The reason this branch exists.
+
+    T-100..T-105 each archive a run directory. Under the old glob every one of
+    them silently redefined the population the merge gate measures -- the gate
+    guarding the sprint was rewritten by the sprint. The manifest ends that:
+    membership is a reviewed file, not a directory listing.
+    """
+
+    # The fixture is real, and the retired glob WOULD have picked it up. Without
+    # this the test could pass against a fixture that never existed.
+    globbed = sorted(RUNS.glob("*/papers/*/*"))
+    assert any(
+        leg.is_relative_to(new_run_directory) for leg in globbed
+    ), "fixture did not land where the retired glob would have found it"
+
+    cohort = _legs()
+    frozen = [ROOT / entry["path"] for entry in _read_manifest()["legs"]]
+
+    assert cohort == frozen
+    assert len(cohort) == FULL_STACK_BASELINE["legs_examined"]
+    assert not any(leg.is_relative_to(new_run_directory) for leg in cohort)
+    assert not any(new_run_directory.name in leg_id for leg_id in _leg_ids())
+
+
+def test_a_manifest_entry_missing_from_disk_fails_loudly(tmp_path: Path) -> None:
+    """A cohort that shrinks quietly is how the previous gate broke.
+
+    The failure has to name the entry: "38 legs instead of 39" sends a reader
+    looking for a pipeline regression, when what happened is that an artifact
+    went missing.
+    """
+
+    manifest = _read_manifest()
+    entries = [dict(entry) for entry in manifest["legs"]]
+    vanished = "runs/2099-01-01_0000/papers/PMC99999999/strict"
+    entries[7] = {"path": vanished, "payload": "final_mapped.json", "payload_bytes": 1}
+    broken = tmp_path / "broken_manifest.json"
+    broken.write_text(
+        json.dumps({**manifest, "legs": entries, "leg_count": len(entries)}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(BaselineCohortError) as excinfo:
+        _manifest_legs(broken)
+
+    message = str(excinfo.value)
+    assert vanished in message, message
+    assert "leg directory absent" in message, message
+    assert "NEVER shrink silently" in message, message
+
+    # The real manifest is untouched and still resolves in full.
+    assert len(_manifest_legs()) == FULL_STACK_BASELINE["legs_examined"]
+
+
+def test_a_duplicate_manifest_entry_fails_loudly(tmp_path: Path) -> None:
+    """A leg listed twice would inflate every aggregate without moving the count check."""
+
+    manifest = _read_manifest()
+    entries = [dict(entry) for entry in manifest["legs"]]
+    entries[3] = dict(entries[2])
+    duplicated = tmp_path / "duplicate_manifest.json"
+    duplicated.write_text(
+        json.dumps({**manifest, "legs": entries, "leg_count": len(entries)}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(BaselineCohortError) as excinfo:
+        _manifest_legs(duplicated)
+
+    assert entries[2]["path"] in str(excinfo.value)
+
+
+def test_the_frozen_manifest_is_internally_consistent_and_fully_resolvable() -> None:
+    """Every entry verified the way it was verified at freeze time."""
+
+    manifest = _read_manifest()
+    entries = manifest["legs"]
+
+    assert manifest["schema_version"] == 1
+    assert manifest["max_payload_bytes"] == _MAX_PAYLOAD_BYTES
+    assert manifest["root"] == "runs"
+    # Recorded so a reader can see the cohort is a reviewed population, not a scan.
+    assert manifest["what_this_is"]
+    assert manifest["additions_require_review"]
+    assert manifest["this_is_not_the_c010_allowlist"]
+
+    paths = [entry["path"] for entry in entries]
+    assert len(entries) == manifest["leg_count"] == FULL_STACK_BASELINE["legs_examined"]
+    assert len(set(paths)) == len(paths)
+    assert paths == sorted(paths), "entries are stored in the order the harness reports"
+
+    for entry in entries:
+        leg = ROOT / entry["path"]
+        assert entry["path"].startswith("runs/"), entry
+        assert leg.is_dir(), entry
+        payload = leg / entry["payload"]
+        assert payload.is_file(), entry
+        assert payload.stat().st_size == entry["payload_bytes"], entry
+        assert payload.stat().st_size <= _MAX_PAYLOAD_BYTES, entry
+        # The recorded payload is the one the unchanged preference order picks.
+        resolved, _body = _payload_for(leg)
+        assert resolved == entry["payload"], entry
+
+    assert _legs() == [ROOT / path for path in paths]
+
+
+def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
+    """The table in the log and the pin in this module cannot drift apart again.
+
+    They already had. The pin said 23 legs, the glob returned 39, and the log
+    still said 17 legs / 19 rows. Every number below is rendered from the pinned
+    dicts, so updating one without the other fails here rather than in a report
+    six weeks later.
+    """
+
+    # Whitespace-normalized: the log is hand-wrapped prose and a claim that gets
+    # reflowed across a line break is still the same claim.
+    log = " ".join((ROOT / "docs" / "change_log.md").read_text(encoding="utf-8").split())
+
+    admitted = FULL_STACK_BASELINE["quarantine_admitted"]
+    by_leg = RESIDUAL_CODES_BY_LEG
+    by_row = RESIDUAL_CODES_BY_ROW
+    fragments = [
+        f"across the {FULL_STACK_BASELINE['legs_examined']} cached legs",
+        f"| quarantine | {admitted} admitted, "
+        f"{FULL_STACK_BASELINE['quarantine_refused']} refused |",
+        f"| Stage 3 after quarantine | "
+        f"**{FULL_STACK_BASELINE['stage3_after_pass']} / {admitted} pass** |",
+        f"| required-field contract | "
+        f"{FULL_STACK_BASELINE['required_contract_pass']} / {admitted} pass |",
+        f"| IR build + validation | {FULL_STACK_BASELINE['ir_pass']} / "
+        f"{FULL_STACK_BASELINE['reached_ir']} of those reaching it |",
+        f"| **fully exportable** | **{FULL_STACK_BASELINE['exportable']} / {admitted}** |",
+        # The one-line restatement earlier in the log, which is the same claim and
+        # must therefore move with it.
+        f"({FULL_STACK_BASELINE['legs_examined']} legs; {admitted} admitted / "
+        f"{FULL_STACK_BASELINE['quarantine_refused']} refused; "
+        f"{FULL_STACK_BASELINE['stage3_after_pass']}/{admitted} Stage 3; "
+        f"{FULL_STACK_BASELINE['required_contract_pass']}/{admitted} required contract; "
+        f"{FULL_STACK_BASELINE['ir_pass']}/{FULL_STACK_BASELINE['reached_ir']} IR; "
+        f"{FULL_STACK_BASELINE['exportable']}/{admitted} exportable; "
+        f"by leg {by_leg['species_missing_classification']}/"
+        f"{by_leg['species_missing_taxonomy']}/{by_leg['no_biological_states']}, "
+        f"by row {by_row['species_missing_classification']}/"
+        f"{by_row['species_missing_taxonomy']}/{by_row['no_biological_states']})",
+    ]
+    # Legs and rows are different numbers for the same defect; the log has to say
+    # both, because reporting one as the other is the error this pin was born from.
+    for code in sorted(by_leg):
+        fragments.append(f"`{code}` ({by_leg[code]} legs, {by_row[code]} rows)")
+
+    missing = [fragment for fragment in fragments if fragment not in log]
+    assert not missing, (
+        "docs/change_log.md disagrees with the pinned baseline in this module. "
+        f"Absent from the log: {missing}"
+    )
+
+    # And the log has to say the cohort is frozen, so a reader is not left to
+    # assume it is still discovered by scanning runs/.
+    assert "tests/data/baseline_cohort_manifest.json" in log

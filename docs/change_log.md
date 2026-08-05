@@ -72,12 +72,12 @@ session keys and artifacts being gone can only mean they were cleared ahead of i
 `decision_matches` for the second payload directly.
 
 **5 — The full-stack baseline is pinned, not narrated.** Same measurement as
-below (23 legs; 18 admitted / 5 refused; 18/18 Stage 3; 1/18 required contract;
-1/1 IR; 1/18 exportable; by leg 17/17/4, by row 19/19/4) now asserted as an exact
+below (39 legs; 27 admitted / 12 refused; 27/27 Stage 3; 8/27 required contract;
+8/8 IR; 8/27 exportable; by leg 19/19/4, by row 27/27/4) now asserted as an exact
 equality in `test_the_full_stack_baseline_is_exactly_what_was_reported`, with leg
-counts and row counts kept as separate assertions. A new batch in `runs/` fails it
-by construction — re-measure and update both the test and this log, and the two
-cannot disagree.
+counts and row counts kept as separate assertions. Re-measure and update both the
+test and this log together, and the two cannot disagree. *(Numbers re-measured
+2026-08-05 over the frozen cohort — see the note under the table below.)*
 
 **Also removed:** `assert ... == candidate or True`, which was tautologically
 true. The intended assertion — the research candidate equals the mapped payload it
@@ -133,19 +133,38 @@ disk — with the quarantined process absent from the bytes.
 
 **5 — Stage-3 recovery is not strict exportability, and the previous entry
 conflated them.** That entry reported "remaining downstream gate failures: none"
-on the strength of Stage 3 alone. Measured full-stack across the 23 cached legs:
+on the strength of Stage 3 alone. Measured full-stack across the 39 cached legs:
 
 | stage | result |
 |---|---|
-| quarantine | 18 admitted, 5 refused |
-| Stage 3 after quarantine | **18 / 18 pass** |
-| required-field contract | 1 / 18 pass |
-| IR build + validation | 1 / 1 of those reaching it |
-| **fully exportable** | **1 / 18** |
+| quarantine | 27 admitted, 12 refused |
+| Stage 3 after quarantine | **27 / 27 pass** |
+| required-field contract | 8 / 27 pass |
+| IR build + validation | 8 / 8 of those reaching it |
+| **fully exportable** | **8 / 27** |
 
-The 17 failures are one class, and quarantine is the wrong place to fix it:
-`species_missing_classification` (17 legs, 19 rows), `species_missing_taxonomy`
-(17 legs, 19 rows), `no_biological_states` (4 legs). The gate wants a numeric
+> **Re-measured and frozen, 2026-08-05 (branch `agent/h01-baseline-manifest`).**
+> The table above originally read 23 legs / 18 admitted / 1 exportable. It went
+> stale because the cohort was discovered by globbing `runs/`: the 2026-08-02_2130
+> batch added 16 legs and nobody re-measured, so the pinned totals and the actual
+> population had disagreed since 2026-08-04. Worse, every milestone benchmark
+> archives a run directory, so the population — and therefore the merge gate —
+> was being redefined by the sprint it was supposed to be guarding.
+>
+> The cohort is now an explicit, version-controlled manifest,
+> `tests/data/baseline_cohort_manifest.json`: 39 legs, each verified present,
+> tracked and within the payload bound before freezing. The replay harness reads
+> only that file, a missing entry fails loudly rather than shrinking the cohort,
+> and a leg enters or leaves only through a reviewed edit. **No pipeline
+> behaviour changed** — nothing under `src/` was touched — so the movement from
+> 1/18 to 8/27 exportable is entirely the 16 previously unmeasured legs, not a
+> change in any leg's verdict. This is also *not* C-010's per-leg delta
+> allowlist (`docs/pwml_recovery_sprint/BASELINE.md` § 6), which is a different
+> population spanning `runs/` and `runs_verify/`; the two must not be conflated.
+
+The 19 failures are one class, and quarantine is the wrong place to fix it:
+`species_missing_classification` (19 legs, 27 rows), `species_missing_taxonomy`
+(19 legs, 27 rows), `no_biological_states` (4 legs, 4 rows). The gate wants a numeric
 taxonomy id and a Prokaryote/Eukaryote classification on every species row because
 a species with no reference-DB identity is created fresh in Rails; the archived
 payloads carry species rows with neither. Inventing them inside quarantine would
