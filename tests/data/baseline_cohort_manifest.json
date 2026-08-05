@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "cohort_id": "pre-implementation-baseline-2026-08-05",
+  "frozen_on": "2026-08-05",
+  "what_this_is": "The pre-implementation baseline cohort for the PWML recovery sprint: every archived leg under runs/ that kept a replayable payload, as measured on sprint/pwml-recovery @ 2b786aa before any C-branch landed. tests/test_strict_quarantine_real_artifact_replay.py reads ONLY this file to decide cohort membership. It no longer globs the filesystem, so archiving a new run directory cannot redefine the merge gate.",
+  "additions_require_review": "A leg enters or leaves this cohort only through a reviewed edit of this file, made together with the re-measured FULL_STACK_BASELINE / RESIDUAL_CODES_* pins in the test module and the baseline table in docs/change_log.md. All four move together or none of them do.",
+  "this_is_not_the_c010_allowlist": "Do not read this as C-010's expected per-leg delta allowlist (docs/pwml_recovery_sprint/BASELINE.md section 6). That allowlist is a DIFFERENT population -- it spans runs/ AND runs_verify/ (32 legs) -- and it lists legs whose VERDICT is expected to change. This manifest lists which legs are MEASURED and says nothing about their verdicts. Exactly two of C-010's six legs happen to fall inside this cohort (runs/2026-08-02_2130/papers/PMC12096016/strict and runs/2026-08-02_2130/papers/PMC12856317/research); that overlap is incidental and must not be used to pre-apply C-010's delta here.",
+  "root": "runs",
+  "max_payload_bytes": 2000000,
+  "payload_preference_order": [
+    "final_mapped.json",
+    "merged_payload.json"
+  ],
+  "leg_count": 39,
+  "legs": [
+    {
+      "path": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 417347
+    },
+    {
+      "path": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 559939
+    },
+    {
+      "path": "runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 16360
+    },
+    {
+      "path": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 186031
+    },
+    {
+      "path": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 118735
+    },
+    {
+      "path": "runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 161356
+    },
+    {
+      "path": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 1469408
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 103424
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 111087
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 34179
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 75372
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 379313
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 130203
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 274820
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 306325
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 18728
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 5974
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 817052
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 157717
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 97894
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 142902
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 194783
+    },
+    {
+      "path": "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 405286
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12096016/research",
+      "payload": "final_mapped.json",
+      "payload_bytes": 79627
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 62720
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12180156/research",
+      "payload": "final_mapped.json",
+      "payload_bytes": 36217
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 61656
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12312563/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 8060
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12421875/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 23799
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12421875/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 20977
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12444477/research",
+      "payload": "final_mapped.json",
+      "payload_bytes": 62902
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 72309
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12452463/research",
+      "payload": "final_mapped.json",
+      "payload_bytes": 54187
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12657337/research",
+      "payload": "merged_payload.json",
+      "payload_bytes": 51803
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12657337/strict",
+      "payload": "merged_payload.json",
+      "payload_bytes": 39367
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 56899
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12856317/research",
+      "payload": "final_mapped.json",
+      "payload_bytes": 20016
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 23819
+    },
+    {
+      "path": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+      "payload": "final_mapped.json",
+      "payload_bytes": 15765
+    }
+  ]
+}
