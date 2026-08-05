@@ -5,11 +5,24 @@ Run by the test-runner agent. It reports numbers and fixes nothing.
 ---
 
 ```
-[S1] [S5] [S7]
+[S1] [S5] [S7] [S8]
 
 ROLE
   Milestone validation. You run suites and benchmarks and report results.
   You do NOT fix code, edit tests, or propose patches.
+
+PROCESS LIFECYCLE -- HARD RULE, read [S8] in full before running anything
+  Every command in this prompt runs through the bounded foreground wrapper whose
+  path INIT-001 recorded. No detached processes, no nohup, no untracked
+  background jobs, no Start-Process without bounded waiting.
+  ONE heavy job at a time. Never pytest -n auto. Never concurrent benchmarks.
+  Cleanup targets ONLY PIDs this job created. Global kills are forbidden.
+  A job is NOT complete when pytest prints its summary -- it is complete when the
+  root exited, every owned descendant exited, cleanup verification passed, and
+  the cleanup report was recorded.
+  If ANY owned process survives cleanup: this is an INFRASTRUCTURE FAILURE.
+  Stop dispatch, report PID + command line + start time + memory. Do not report
+  the test as passed.
 
 MILESTONE        <M1..M5>
 INTEGRATION SHA  <sha>
@@ -58,6 +71,12 @@ REPORT
   ## NONDETERMINISM      legs re-run, variance observed
   ## REMAINING FAILURES  leg | class | owner | needs code? yes/no + why
   ## ARTIFACTS WRITTEN   paths committed under evidence/
+  ## CLEANUP REPORT      one row per job:
+       root PID/process group | timeout | exit reason | exit code |
+       descendants observed | descendants terminated | final surviving count |
+       cleanup success/failure
+       final surviving count MUST be 0 for every job, or this milestone is an
+       infrastructure failure regardless of the test numbers.
 ```
 
 ---

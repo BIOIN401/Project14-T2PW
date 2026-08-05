@@ -47,6 +47,10 @@ No patch merges unless **all** of these hold:
 9. It adds a regression test for the demonstrated failure, and that test **fails on the
    base SHA**.
 10. The integration smoke suite (457 tests, ~40 s) passes after the merge.
+11. **Test-process lifecycle holds.** Every test, benchmark, pipeline leg and LLM-backed
+    command ran through the bounded foreground wrapper, and the cleanup report shows
+    **zero surviving owned processes**. A run with survivors is an *infrastructure
+    failure*, not a test result. See `TEST_MATRIX.md` § 0.
 
 **A benchmark failure does not by itself justify a code change.** Classify it first as
 `product_contract_violation`, `gold_data_defect`, or `policy_disagreement`, citing the
@@ -54,6 +58,10 @@ gold `relevance_note` / `export_rationale`. Only the first justifies code.
 
 ### Sprint-wide constraints
 
+- **Every test, benchmark and pipeline command runs through the bounded foreground
+  wrapper.** No detached processes, no `nohup`, no untracked background jobs. Cleanup
+  targets only PIDs the job created — `taskkill /IM python.exe` and `pkill python` are
+  forbidden. One heavy job at a time; never `pytest -n auto`. `TEST_MATRIX.md` § 0.
 - **`--basetemp=<dir>` on every pytest invocation.** Without it 83 tests error with
   `PermissionError` and you will report a false regression. Never run the full suite
   unchunked (~16 GB).

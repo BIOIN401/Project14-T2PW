@@ -202,6 +202,7 @@ Everything else is interface-separable and must not be scheduled as serial.
 | G8 | No exporter repairs biology after the freeze |
 | G9 | A regression test exists for the demonstrated failure, and it **fails on the base SHA** |
 | G10 | Smoke suite (457 tests, ~40 s) passes after the merge, on the integration branch |
+| **G11** | **Test-process lifecycle.** Every test/benchmark/pipeline/LLM command in the branch's evidence ran through the bounded foreground wrapper, and the cleanup report shows **final surviving count = 0**. A run with surviving owned processes is an **infrastructure failure**, not a test result, and cannot satisfy G3, G4 or G10. Full policy: `TEST_MATRIX.md` § 0 |
 
 **Reject** when: an earlier merge invalidated the branch's assumptions (rebase and rerun
 first); the diff is correct but out of boundary; a report claims runtime behaviour with

@@ -41,6 +41,12 @@ MERGE GATES -- all must hold. Any failure stops the merge.
   G8  no exporter repairs biology after the freeze
   G9  a regression test exists AND fails on the base SHA
   G10 smoke passes after the merge, on the integration branch
+  G11 test-process lifecycle: every command in the branch's evidence ran through
+      the bounded foreground wrapper, and the cleanup report shows FINAL
+      SURVIVING COUNT = 0. Survivors make the run an INFRASTRUCTURE FAILURE, not
+      a test result -- it cannot satisfy G3, G4 or G10. If any agent reports a
+      survivor, STOP ALL DISPATCH and record PID, command line, start time and
+      memory in the ledger before continuing.
 
 REPORT
   ## MERGED                    yes/no

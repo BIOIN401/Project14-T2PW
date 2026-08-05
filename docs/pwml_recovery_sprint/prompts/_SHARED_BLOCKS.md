@@ -89,6 +89,71 @@ Never claim a benchmark number whose source run is not committed.
 ## RISK            (what a reviewer should look hardest at)
 ```
 
+## S8 — Test-process lifecycle policy (HARD MERGE RULE)
+
+```
+This is a merge gate (G11), not a suggestion. A run that violates it is an
+INFRASTRUCTURE FAILURE, not a test result, and must never be reported as passed.
+
+WHY: orphaned pytest/Streamlit/LLM descendants survive their parent and consume
+the developer's machine memory for hours. A full suite alone approaches 16 GB.
+
+1. BOUNDED FOREGROUND ONLY
+   Every test, benchmark, pipeline leg and LLM-backed command runs through the
+   bounded foreground-process wrapper (path recorded by INIT-001).
+   NEVER: detached processes, nohup, untracked background jobs, or Start-Process
+   without bounded waiting and guaranteed cleanup.
+
+2. THE WRAPPER MUST
+   - record root PID, command, start time, working directory, timeout, ownership
+   - place the command in an isolated process group (POSIX) or Job Object (Windows)
+   - enforce an outer wall-clock timeout
+   - run cleanup in finally/trap on EVERY exit path: success, failure, timeout,
+     cancellation, shell interruption, agent failure
+   - terminate all remaining descendants OWNED BY THAT JOB
+   - graceful termination first, forced termination after a short grace period
+   - VERIFY no tracked process from that job is still alive
+   - preserve and return the REAL test exit code, unless cleanup verification
+     itself failed
+
+3. PLATFORM
+   Windows : prefer a Job Object set to terminate members when closed. If no safe
+             implementation is available, track the root PID and use
+             `taskkill /PID <owned-pid> /T /F` inside guaranteed cleanup.
+   POSIX   : new process group; TERM the group, then KILL after the grace period.
+
+4. NEVER GLOBAL CLEANUP
+   FORBIDDEN: `taskkill /IM python.exe`, `pkill python`, or killing every Java,
+   Node, pytest or Python process.
+   Cleanup targets ONLY PIDs / process groups created and recorded by the current
+   test job. Pre-existing processes are REPORTED, never silently killed.
+
+5. COMPLETION IS NOT "PYTEST PRINTED A SUMMARY"
+   A job is complete only when: root process exited AND all owned descendants
+   exited AND cleanup verification passed AND exit status + cleanup result were
+   recorded.
+
+6. SURVIVORS ARE AN INFRASTRUCTURE FAILURE
+   If any owned process survives cleanup: classify the run as an infrastructure
+   failure, STOP further dispatch, and report the surviving PID, command line,
+   start time and memory usage. Do NOT report the test as passed.
+
+7. ONE HEAVY JOB AT A TIME
+   At most one full suite, benchmark, or memory-heavy pipeline leg concurrently.
+   NEVER `pytest -n auto`. Never concurrent full benchmarks. Focused tests may run
+   concurrently only when their resource limits and ownership stay explicit.
+
+8. BASETEMP
+   Keep the unique `--basetemp` path. Remove temp dirs after completion when safe.
+   Do not confuse temporary FILES with active MEMORY consumption -- deleting a
+   basetemp directory does not reclaim a leaked process's RAM.
+
+9. CLEANUP REPORT -- required on EVERY test record
+   root PID / process group | timeout | exit reason | exit code |
+   descendants observed | descendants terminated | final surviving count |
+   cleanup success/failure
+```
+
 ## S7 — Standing traps
 
 ```

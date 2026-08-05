@@ -8,6 +8,92 @@ Runtimes measured on `ORIGIN_SHA`, Windows, `.venv/Scripts/python.exe` (3.13.6).
 
 ---
 
+## 0. Test-process lifecycle policy — HARD MERGE RULE (G11)
+
+**This is a merge gate, not a suggestion.** A run that violates it is an
+**infrastructure failure**, not a test result, and must never be reported as passed.
+
+**Why it exists.** Orphaned pytest, Streamlit and LLM descendants outlive their parent
+and consume the developer's machine memory for hours. A full suite alone approaches
+16 GB, and a killed batch child can leave a Streamlit process holding the socket that
+hung it.
+
+### The rules
+
+1. **Bounded foreground only.** Every test, benchmark, pipeline leg and LLM-backed
+   command runs through the bounded foreground-process wrapper whose path INIT-001
+   records. **Never** detached processes, `nohup`, untracked background jobs, or
+   `Start-Process` without bounded waiting and guaranteed cleanup.
+
+2. **The wrapper must** record root PID, command, start time, working directory, timeout
+   and ownership · place the command in an isolated process group (POSIX) or Job Object
+   (Windows) · enforce an outer wall-clock timeout · run cleanup in `finally`/trap on
+   **every** exit path including cancellation and agent failure · terminate all remaining
+   descendants **owned by that job** · attempt graceful termination first, then forced
+   termination after a short grace period · **verify** no tracked process from that job is
+   still alive · preserve and return the **real** test exit code unless cleanup
+   verification itself failed.
+
+3. **Platform.** Windows: prefer a Job Object configured to terminate members when
+   closed; failing that, track the root PID and use `taskkill /PID <owned-pid> /T /F`
+   inside guaranteed cleanup. POSIX: new process group, `TERM` the group, then `KILL`
+   after the grace period.
+
+4. **Never global cleanup.** `taskkill /IM python.exe`, `pkill python`, or killing every
+   Java/Node/pytest/Python process are **forbidden**. Cleanup may target only PIDs and
+   process groups created and recorded by the current job. Pre-existing processes are
+   **reported**, never silently killed.
+
+5. **Completion is not "pytest printed a summary."** A job is complete only when the root
+   process exited **and** all owned descendants exited **and** cleanup verification
+   passed **and** exit status plus cleanup result were recorded.
+
+6. **Survivors are an infrastructure failure.** If any owned process survives cleanup:
+   classify the run as an infrastructure failure, **stop further dispatch**, and report
+   the surviving PID, command line, start time and memory usage. Do not report the test
+   as passed.
+
+7. **One heavy job at a time.** At most one full suite, benchmark or memory-heavy
+   pipeline leg concurrently. **Never `pytest -n auto`.** Never concurrent full
+   benchmarks. Focused tests may run concurrently only when their resource limits and
+   ownership remain explicit.
+
+8. **Basetemp.** Keep the unique `--basetemp` path. Remove temp directories after
+   completion when safe — but do not confuse temporary *files* with active *memory*.
+   Deleting a basetemp directory does not reclaim a leaked process's RAM.
+
+### Cleanup report — required on every test record
+
+| Field | |
+|---|---|
+| root PID / process group | |
+| timeout | |
+| exit reason | `completed` \| `nonzero` \| `timeout` \| `cancelled` \| `infrastructure_failure` |
+| exit code | the real one |
+| descendants observed | |
+| descendants terminated | |
+| final surviving count | **must be 0** |
+| cleanup success/failure | |
+
+### Existing machinery to build on
+
+`batch/runner.py` already implements owned-PID tree termination and is the correct model
+— it is **not** a global killer:
+
+| Function | Lines | Does |
+|---|---|---|
+| `launch_child` | 1140–1180 | `CREATE_NEW_PROCESS_GROUP` (nt) / `start_new_session` (posix); bounded `communicate(timeout=)`; `_kill_tree` on both `TimeoutExpired` and `KeyboardInterrupt`; `_DRAIN_TIMEOUT` for pipe close |
+| `_kill_tree` | 1107–1137 | `taskkill /F /T /PID <owned pid>`, then `os.killpg`, then `proc.kill()` — **owned PID only** |
+| `child_env` | 265–276 | child environment |
+
+**What it lacks** against this policy: no graceful-then-forced escalation (it goes
+straight to `/F`), no post-kill survivor verification, no structured cleanup report, and
+it is used only for batch legs — **not for pytest runs**. INIT-001 extends this
+discipline into an orchestration-only wrapper rather than replacing it, and must not
+modify `runner.py` (that file is owned by C-032).
+
+---
+
 ## Chunks
 
 | Chunk | Files | Tests | Runtime |
