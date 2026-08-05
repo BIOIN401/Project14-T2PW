@@ -1,0 +1,355 @@
+# PWML Recovery Sprint — Product Contract
+
+**Authority.** When a benchmark result, a test, or an agent's judgement disagrees with
+this document, this document wins. A benchmark failure does not by itself justify a
+code change.
+
+---
+
+## 1. What the product is
+
+An **evidence-supported pathway reconstruction system**, not a paper transcription tool.
+
+The supplied paper establishes the requested pathway, organism, biological context and
+initial evidence. Where the paper is insufficient, the system uses targeted RAG,
+trusted biological databases, supporting papers, deterministic inference and bounded
+repair passes to fill specific detected gaps.
+
+> **Target behaviour.** Every run produces useful diagnostic artifacts, and every
+> biologically recoverable request produces the strongest defensible PWML pathway that
+> can be reconstructed from the paper plus traceable external evidence.
+
+A technically recoverable problem must not cause a run to produce no PWML.
+
+### Unacceptable terminal blockers
+
+None of these may end a run without a PWML:
+
+- a stale positional index
+- an initial empty `{}` extraction
+- a single LLM refusal or malformed response
+- a missing or stale gate report
+- repairable reference corruption
+- an irrelevant degree-zero entity
+- an entity groundable through an available database
+- an incomplete source paper where targeted RAG can recover the missing information
+- a timeout without usable checkpoints or recovery information
+- a valid pathway core suppressed because optional peripheral material is unresolved
+
+### The hard limit
+
+The system must **never invent** reactions, directionality, stoichiometry, identities,
+enzymes, locations or other biological content merely to guarantee a PWML file.
+
+**A smaller supported pathway is preferable to a larger contaminated one.**
+
+---
+
+## 2. Correctness and depth are separate dimensions
+
+### Correctness — every retained element must be defensible
+
+Defensible means: from the supplied paper, from retrieved supporting evidence, from a
+trusted biological database, or from a valid deterministic transformation.
+
+Correct entities and biological identities · no false real identifiers · correct
+reactions · correct reactant/product roles · correct directionality and reversibility ·
+correct stoichiometry · correct enzyme, modifier, transporter and cargo relationships ·
+correct complexes and components · correct cellular locations · correct organism
+context · no assay reporters as pathway members · no contextual gene-list neighbours as
+participants · no unrelated-pathway reactions · no unsupported retained reactions · no
+broken references.
+
+### Depth — may vary with available evidence
+
+Missing detail initiates targeted retrieval and gap resolution. It **does not**
+automatically terminate export.
+
+Recovery process:
+
+1. Extract explicit claims from the paper and supplements.
+2. Determine the requested pathway and organism context.
+3. Identify missing anchors, reactions, participants, identities, directionality,
+   locations or connectivity.
+4. Form targeted RAG queries for **those specific gaps**.
+5. Retrieve from trusted databases and additional papers.
+6. Add only content meeting a defined evidence threshold.
+7. Remove unsupported or irrelevant content.
+8. Revalidate.
+9. Repeat within a **bounded** loop until a defensible connected pathway exists or
+   retrieval is genuinely exhausted.
+10. Generate PWML from the resulting canonical biological graph.
+
+---
+
+## 3. Provenance requirement
+
+The final pathway must distinguish at least:
+
+- explicitly stated in the supplied paper
+- added from RAG-supported external literature
+- grounded through a biological database
+- added through deterministic inference
+- added or changed by audit/repair
+- unresolved or excluded
+
+Every externally added entity and process identifies: the stage that introduced it, why,
+its supporting source or database record, whether it was paper-explicit, its
+evidence/support level, and any uncertainty or review requirement.
+
+The schema may differ; the information must be traceable. This exists so that false
+content can be attributed empirically to Stage 1, RAG, inference, audit, mapping, gap
+resolution or another stage.
+
+---
+
+## 4. Output states
+
+### `release_ready`
+Valid PWML with a defensible connected pathway. All blocking technical and biological
+checks pass. May be a smaller core, reported with an explicit completeness score.
+
+### `review_required`
+Valid, useful PWML produced, but one or more important biological uncertainties are
+explicitly identified. Must not be represented as fully confirmed.
+
+### `diagnostic_only`
+Recovery and retrieval could not establish a defensible pathway core. All diagnostic
+artifacts, partial structured data, evidence, failure reasons and checkpoints are
+preserved.
+
+A no-PWML outcome is **exceptional** and must state exactly: what essential biological
+requirement could not be supported; which repair and retrieval steps were attempted;
+which evidence was searched; why a smaller valid core could not be exported; why
+exporting would require inventing biology.
+
+**Decision (locked):** no separate `core_release_ready` state. A shallow but fully
+supported core is `release_ready` with an explicit completeness score. A separate state
+multiplies branching for no added information.
+
+---
+
+## 5. Canonical payload requirement
+
+`final_mapped.json` is the primary reproducible deliverable. It represents the final
+post-review, post-grounding, post-repair, post-quarantine, gate-passing biological graph
+used to create PWML and SBML.
+
+Reloading `final_mapped.json` and exporting it again must produce a **biologically
+equivalent** PWML pathway.
+
+Byte-identical XML is not required. Acceptable to differ: XML ordering, whitespace,
+generated internal XML IDs, timestamps, non-biological layout metadata.
+
+Must remain equivalent: reactions · reactants and products · directionality and
+reversibility · stoichiometry · enzymes and modifiers · transports and cargo · entities
+and biological identifiers · complexes and their components · cellular locations ·
+process-to-entity references · organism context.
+
+**Exporters must not independently add, remove, resolve or reinterpret biological
+content after the canonical graph is frozen.** If an exporter must perform a biological
+mutation, then `final_mapped.json` is not canonical and the mutation must move upstream
+of the freeze.
+
+**Equivalence must be proven by parsing and normalizing the JSON, PWML and SBML graphs
+and comparing the dimensions above.** Comparing one JSON hash to itself proves nothing
+and is not acceptable evidence.
+
+---
+
+## 6. Hashing
+
+Two versioned canonical projections, each excluding all hash and stamp fields from its
+own input (`payload_sha256`, `canonical_graph_sha256`, `canonical_payload_sha256`,
+`hash_schema_version`, `report_schema_version`, `phase`, `artifact_set_version`). A hash
+is never an input to itself.
+
+| Hash | Covers | Bound by |
+|---|---|---|
+| `canonical_graph_sha256` | biological content only — entities, identifiers, reactions, roles, stoichiometry, directionality, complexes, locations, references | **exporters** |
+| `canonical_payload_sha256` | the complete saved `final_mapped.json` including lineage, evidence, confidence, provenance | **persisted-artifact integrity** |
+
+Two guarantees: the exported biological graph has not changed; the evidence record
+supporting it has not been altered.
+
+The projection is an **allowlist**, never a denylist — a denylist silently admits every
+future field into the graph hash.
+
+Lineage must not change graph equivalence, but lineage changes must remain detectable.
+
+Historical hashes keep their existing meaning under `hash_schema_version`. Never
+silently redefine `payload_sha256`.
+
+---
+
+## 7. Coverage policy
+
+`requested_core_coverage_below_minimum` **triggers targeted retrieval before
+classification**. It is not, by itself, a refusal.
+
+After bounded retrieval is exhausted:
+
+- surviving fragment biologically correct, internally connected, representable without
+  guessing → **`review_required` PWML**; not `release_ready`; not strict benchmark
+  success. Record completeness, missing anchors, retrieval attempts, and why further
+  supported expansion failed.
+- no defensible connected core, or serialization would require invention →
+  **`diagnostic_only`**.
+
+The coverage threshold blocks release-ready status, not PWML production. **The threshold
+value itself does not move.**
+
+---
+
+## 8. Identity verification
+
+Order: accession already present on the entity → PathBank by exact identifier → if
+PathBank evidence is inadequate, UniProt by exact accession → cache and persist the
+record and its response provenance → convert to an **immutable**
+`identity_evidence_candidate` → run the existing species, name/gene, score and conflict
+checks **unchanged** → materialize the verified identity in `final_mapped.json`.
+
+**Exporters perform no network or database lookups.** UniProt must not be required to
+re-export saved canonical JSON.
+
+`verification_status` is distinct from `identity_status`:
+
+| Value | Meaning | Consequence |
+|---|---|---|
+| `verified` | evidence retrieved and confirms the claim | accession retained, materialized |
+| `rejected` | evidence retrieved and contradicts the claim | **the only case where identifiers may be stripped** |
+| `unavailable` | network/DB failure | accession preserved as `unverified_claim`; not promoted; **not erased**; export identity degrades to placeholder if a verified identity is essential |
+| `not_evaluated` | the ladder did not run | never treated as `false` |
+
+**A lookup failure is not evidence that an accession is false.**
+
+Never accept an identifier because its format is valid.
+
+---
+
+## 9. Timeout and budget
+
+`leg_timeout_seconds` defaults to **3600 s**; the 120 s parent/child grace is preserved,
+giving the child **3480 s**. Per-leg overrides may exist but must be explicit and
+recorded in the run manifest — no silent extension of difficult benchmark legs.
+
+All stages use one monotonic per-leg deadline and record elapsed and remaining budget.
+No LLM call starts unless its configured maximum duration plus the downstream
+finalization reserve fits the remaining budget. The reserve is configurable and
+eventually calibrated from recorded stage runtimes; it covers checkpoint persistence,
+validation, status classification and diagnostic-artifact writing. A checkpoint is
+persisted before any potentially long LLM or retrieval call.
+
+**Stage-1 extraction: at most three total model attempts, including the first.**
+1 normal · 2 structurally-empty repair · 3 a materially different strategy (narrower
+section-based extraction or an alternate model), only if budget remains.
+
+If attempts 1 and 2 return the same empty response hash, the same prompt must **never**
+go to the same model a third time. Spend the remaining budget on a genuinely different
+mechanism: narrower extraction, deterministic text recovery, supplemental-material
+retrieval, or targeted RAG reconstruction.
+
+The attempt cap is a safety ceiling, not a promise that all attempts run.
+
+### Termination reasons — never conflated
+
+| Reason | Means |
+|---|---|
+| `retrieval_exhausted` | the configured retrieval ladder **actually completed** and produced no admissible new claims |
+| `no_new_claims` | retrieval completed but did not expand the graph |
+| `budget_exhausted` | another recovery step might have helped; wall-clock did not allow it |
+| `operation_timeout` | an individual external operation exceeded its deadline |
+| `identical_empty_response` | repeated extraction returned the same structurally empty response |
+| `scientifically_unrecoverable` | evidence sources exhausted; no defensible pathway core |
+
+### On timeout or budget exhaustion, preserve
+
+last completed stage · current structured payload · all retrieved evidence · attempt
+numbers, prompts/models and response hashes · elapsed and remaining budget · the next
+recovery step that was skipped · the exact stop reason.
+
+Classification after budget exhaustion follows the graph that already exists: correct
+connected core → `review_required` PWML; no defensible core → `diagnostic_only`; a
+budget-limited run can **never** be `release_ready` while required checks or recovery
+steps remain incomplete.
+
+### Denominators
+
+`budget_exhausted` counts as an **operational failure** in pipeline-completion and
+end-to-end strict-success metrics. It must never be relabelled semantic failure,
+scientific insufficiency, or retrieval exhaustion. Semantic metrics record
+`not_evaluated` where semantic evaluation never ran and report those legs separately.
+
+---
+
+## 10. RAG
+
+Each retrieved reaction may enter the pathway only when it fills a **specific detected
+typed gap** and passes pathway, organism and evidence admission.
+
+Every RAG round must **re-enter normalization, mapping, gates, persistence and
+classification**. A round that retrieves and merges without re-entering all five is a
+failure regardless of what it retrieved.
+
+The loop is bounded, deadline-aware, and checkpoints before each round. It stops with an
+explicit reason from §9. Deduplication is against **all claims ever seen**, not only
+admitted ones, or judge-rejected claims recur every round and the loop never converges.
+
+A rejected RAG claim must not be reintroduced by a later stage.
+
+Supporting passages and source identifiers are retained through final export.
+
+---
+
+## 11. Semantic evaluation
+
+Semantic checks must affect the **runtime `release_status`**. Wiring them only into
+benchmark denominators is insufficient.
+
+The pipeline must distinguish, without collapsing any into another:
+
+- pipeline execution succeeded
+- strict technical gates passed
+- semantic evaluation passed
+- semantic evaluation failed
+- semantic evaluation **was not performed**
+
+`not_evaluated` is never `false`.
+
+---
+
+## 12. `partial_only`
+
+`expected_export = partial_only` is a statement about the **source** and about the
+strict benchmark denominator. It is **not** a prohibition on generating PWML.
+
+- generate useful research or diagnostic artifacts where possible
+- exclude such papers from the strict-PWML success denominator
+- do not label them release-ready unless they independently meet the standard
+- do not embed gold-set-only policy into the general production pipeline
+
+`expected_export` must be an explicitly required gold field; a silent default moves
+papers out of the strict denominator without anyone deciding to.
+
+---
+
+## 13. Standing policy positions
+
+| Item | Position |
+|---|---|
+| `placeholder_backed_proteins` (21 in the pinned run) | **Standing disagreement**, not a defect. The gold set counts it as an error class; the pipeline treats `Unknown`-backed export as legitimate biology preservation. No agent may "fix" it. Escalate. |
+| PMC12452463 | Gold `export_rationale` records the route as chemically **broken** (EntA absent; nothing converts 2,3-dihydro-2,3-dihydroxybenzoate onward). Correct outcome after the index fix is `review_required` with `strict_acceptance_eligible=false`. **Never strict success.** |
+| Negative controls | PMC13231680 and PMC12180156 are `mechanistic_relevance=context_only` by design. PMC13231680's rationale calls an empty pathway plus a rejection reason the *correct* outcome. |
+| Artifact naming | `pathway.pwml` = `release_ready` only. `pathway.review_required.pwml` = valid, needs review. No final PWML for `diagnostic_only`. Batch artifact set only — the interactive download and `outputs/` are unchanged. Structured status is authoritative; the filename is a migration aid. |
+
+---
+
+## 14. Adjudication rule
+
+Before proposing a code change justified by a benchmark failure, classify it:
+
+- `product_contract_violation` — **only this justifies code**
+- `gold_data_defect`
+- `policy_disagreement`
+
+cite the gold `relevance_note` / `export_rationale`.

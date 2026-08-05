@@ -22,3 +22,8 @@ temp_pytest_probe/
 
 # RAG (optional) local, rebuildable evidence index + embedding cache (WP0).
 data/rag_index/
+
+# Agent worktrees for the PWML recovery sprint. Each implementer branch gets an
+# isolated checkout here (.claude/settings.json -> worktree.baseRef = "head").
+# These are working copies of tracked content, never a source of truth.
+.claude/worktrees/
