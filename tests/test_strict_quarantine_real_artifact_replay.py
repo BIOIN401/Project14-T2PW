@@ -23,8 +23,12 @@ rather than an oversight: nine ``stage0_attempts.json`` files under
 Nothing downstream reads them -- quarantine, the coverage check and the exporter
 all take the payload -- so they do not make payload-only discovery defensible,
 and they are excluded from that assertion **by name**. They remain measured, and
-any *unlisted* artifact that starts carrying the context fails
-``test_no_unlisted_artifact_quietly_carries_stage_zero_context``.
+any *unlisted* artifact under the harness's ``_MAX_PAYLOAD_BYTES`` size bound
+that starts carrying the context fails
+``test_no_unlisted_artifact_quietly_carries_stage_zero_context``. The bound is
+inherited from the assertion this module has always made and is not a judgement
+that a larger artifact would be acceptable: an unlisted file over the bound is
+unread, and so is silent.
 """
 
 from __future__ import annotations
@@ -378,8 +382,10 @@ _PAYLOAD_FILENAMES: Tuple[str, ...] = ("final_mapped.json", "merged_payload.json
 #: binding filter on the assertion is the ``_PAYLOAD_FILENAMES`` allowlist, so
 #: this list on its own would only *document* an intention. The mechanism is
 #: ``test_no_unlisted_artifact_quietly_carries_stage_zero_context``, which fails
-#: on any artifact under ``runs/`` that carries the marker and appears on neither
-#: list. That is what makes the next Stage-0-carrying diagnostic turn something
+#: on any artifact under ``runs/`` within ``_MAX_PAYLOAD_BYTES`` that carries the
+#: marker and appears on neither list (over that bound it is unread, and so is
+#: silent -- the bound is inherited, not a judgement). That is what makes the
+#: next Stage-0-carrying diagnostic turn something
 #: red and force a maintainer to classify it in review, instead of it vanishing
 #: into a category. The evidence already excluded is not lost either -- see
 #: ``_stage_zero_diagnostic_carriers`` and
@@ -416,8 +422,8 @@ def _archived_payload_files(root: Path) -> List[Path]:
             # the allowlist below, so it is documentation plus belt-and-braces
             # (adding a diagnostic name to _PAYLOAD_FILENAMES could not smuggle
             # one in), NOT the guarantee. The guarantee that an unlisted artifact
-            # cannot carry Stage-0 context unnoticed is a test:
-            # test_no_unlisted_artifact_quietly_carries_stage_zero_context.
+            # within _MAX_PAYLOAD_BYTES cannot carry Stage-0 context unnoticed is
+            # a test: test_no_unlisted_artifact_quietly_carries_stage_zero_context.
             continue
         if path.name not in _PAYLOAD_FILENAMES:
             continue
@@ -486,11 +492,12 @@ def test_the_stage_zero_payload_scan_is_not_vacuous() -> None:
     The floor is a *measured* number, not a derived one. ``>= len(_manifest_legs())``
     reads like a check but cannot fail while the manifest resolves, because every
     cohort leg's payload is in this population by construction. 51 is what this
-    tree actually holds (14 ``final_mapped.json`` + 41 ``merged_payload.json`` on
-    disk, less the 4 over ``_MAX_PAYLOAD_BYTES``), so dropping either name from
-    ``_PAYLOAD_FILENAMES`` takes it to 14 or 37 and fires. A floor rather than an
-    equality for the same reason as the diagnostics count: a new batch
-    legitimately archives more payloads and must not move a gate.
+    tree actually holds: 14 ``final_mapped.json`` and 41 ``merged_payload.json``
+    on disk, less 4 over ``_MAX_PAYLOAD_BYTES`` -- 2 of each, not 4 of one --
+    giving 12 and 39. So dropping either name from ``_PAYLOAD_FILENAMES`` takes
+    this to 12 or 39 and fires. A floor rather than an equality for the same
+    reason as the diagnostics count: a new batch legitimately archives more
+    payloads and must not move a gate.
     """
 
     examined = _archived_payload_files(RUNS)
@@ -580,6 +587,12 @@ def test_no_unlisted_artifact_quietly_carries_stage_zero_context() -> None:
     The base assertion caught that case by accident, by being too broad. This
     catches it on purpose, by requiring every marker-carrying artifact under
     ``runs/`` to be on one of the two named lists.
+
+    Bounded, and say so rather than overclaim: like the assertion it backs, this
+    reads only files within ``_MAX_PAYLOAD_BYTES``, so an unlisted artifact over
+    2 MB carrying the marker passes here unnoticed. That bound is inherited from
+    the scan this module has always run and is not a judgement that a larger
+    artifact would be fine; widening it is a separate, deliberate change.
 
     Deliberately NOT achieved by widening
     ``test_no_archived_leg_carries_stage_zero_context``: that one makes a claim
