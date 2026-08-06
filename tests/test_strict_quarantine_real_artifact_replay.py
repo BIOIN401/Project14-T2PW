@@ -11,11 +11,24 @@ cleanly where it is absent, and every one of them is a no-op rather than a
 failure when a leg has no usable artifact. Nothing here reaches the network, a
 database, or an LLM -- normalization is pure Python and mapping is not re-run.
 
-**No Stage-0 context is stored in any archived leg.** Every ``pathway_context``
-lives in ``st.session_state`` and is dropped when the run ends, so the replay is
+**No archived PAYLOAD carries Stage-0 context.** Every ``pathway_context`` lives
+in ``st.session_state`` and is dropped when the run ends, so the replay is
 necessarily run in the undeclared-core regime. That is itself the evidence for
 why ``quarantine_and_close`` takes the context as an explicit argument instead of
 looking for one in the payload -- see ``test_no_archived_leg_carries_stage_zero_context``.
+
+Archived *diagnostics* are a different matter, and the distinction is deliberate
+rather than an oversight: nine ``stage0_attempts.json`` files under
+``runs/2026-08-02_2130`` record the candidate ``key_compounds`` Stage 0 proposed.
+Nothing downstream reads them -- quarantine, the coverage check and the exporter
+all take the payload -- so they do not make payload-only discovery defensible,
+and they are excluded from that assertion **by name**. They remain measured, and
+any *unlisted* artifact under the harness's ``_MAX_PAYLOAD_BYTES`` size bound
+that starts carrying the context fails
+``test_no_unlisted_artifact_quietly_carries_stage_zero_context``. The bound is
+inherited from the assertion this module has always made and is not a judgement
+that a larger artifact would be acceptable: an unlisted file over the bound is
+unread, and so is silent.
 """
 
 from __future__ import annotations
@@ -341,24 +354,350 @@ def test_a_real_leg_that_survives_keeps_processes(leg: Path) -> None:
         assert result.coverage[countable] >= 1
 
 
+#: The Stage-0 context's own key, and therefore the marker a file has to contain
+#: for the claim below to be false. Named once so the assertion, the diagnostic
+#: query and the fixtures cannot drift onto different strings.
+_STAGE_ZERO_CONTEXT_MARKER = "key_compounds"
+
+#: The files the harness treats as a leg's authoritative payload: the same pair,
+#: in the same preference order, that ``_payload_for`` reads. A claim about what
+#: an archived *payload* carries is a claim about these files and nothing else,
+#: so the scan below is defined by this list rather than by "every json under
+#: ``runs/``".
+_PAYLOAD_FILENAMES: Tuple[str, ...] = ("final_mapped.json", "merged_payload.json")
+
+#: Diagnostic artifacts excluded from the payload scan **by name**, on purpose.
+#:
+#: ``stage0_attempts.json`` arrived with ``runs/2026-08-02_2130`` and is the first
+#: artifact that persists Stage-0 *attempt records* -- what Stage 0 tried, the
+#: candidate ``key_compounds`` it proposed, whether the attempt was accepted.
+#: Nine of them contain the marker today. That is a different claim from the one
+#: this module makes: a diagnostic recording what Stage 0 *attempted* is not a
+#: payload *carrying* Stage-0 context. Nothing downstream reads it -- quarantine,
+#: the coverage check and the exporter all take the payload -- so its presence
+#: does not make payload-only discovery defensible.
+#:
+#: Excluded one filename at a time rather than by a blanket "anything that is not
+#: a payload" rule. Be precise about where that guarantee actually lives: the
+#: binding filter on the assertion is the ``_PAYLOAD_FILENAMES`` allowlist, so
+#: this list on its own would only *document* an intention. The mechanism is
+#: ``test_no_unlisted_artifact_quietly_carries_stage_zero_context``, which fails
+#: on any artifact under ``runs/`` within ``_MAX_PAYLOAD_BYTES`` that carries the
+#: marker and appears on neither list (over that bound it is unread, and so is
+#: silent -- the bound is inherited, not a judgement). That is what makes the
+#: next Stage-0-carrying diagnostic turn something
+#: red and force a maintainer to classify it in review, instead of it vanishing
+#: into a category. The evidence already excluded is not lost either -- see
+#: ``_stage_zero_diagnostic_carriers`` and
+#: ``test_the_excluded_stage_zero_diagnostics_are_still_detectable``.
+_STAGE_ZERO_DIAGNOSTIC_FILENAMES: Tuple[str, ...] = ("stage0_attempts.json",)
+
+
+def _files_carrying_stage_zero_context(paths: List[Path]) -> List[str]:
+    """Of ``paths``, the ones whose text contains the Stage-0 context marker."""
+
+    return [
+        str(path)
+        for path in paths
+        if _STAGE_ZERO_CONTEXT_MARKER
+        in path.read_text(encoding="utf-8", errors="ignore")
+    ]
+
+
+def _archived_payload_files(root: Path) -> List[Path]:
+    """Every authoritative payload archived under ``root``.
+
+    Whole-tree: this is a *content* scan over every archived payload that exists,
+    not a cohort selection. The frozen manifest decides which legs are *measured*
+    (``_legs``); the claim here is about every payload on disk, and narrowing it
+    to the cohort would let a payload outside the cohort start carrying Stage-0
+    context unnoticed.
+    """
+
+    out: List[Path] = []
+    for path in sorted(root.rglob("*.json")):
+        if path.name in _STAGE_ZERO_DIAGNOSTIC_FILENAMES:
+            # Excluded by name, deliberately -- see the constant. Honest about
+            # what this line is: for every input that exists it is redundant with
+            # the allowlist below, so it is documentation plus belt-and-braces
+            # (adding a diagnostic name to _PAYLOAD_FILENAMES could not smuggle
+            # one in), NOT the guarantee. The guarantee that an unlisted artifact
+            # within _MAX_PAYLOAD_BYTES cannot carry Stage-0 context unnoticed is
+            # a test: test_no_unlisted_artifact_quietly_carries_stage_zero_context.
+            continue
+        if path.name not in _PAYLOAD_FILENAMES:
+            continue
+        if path.stat().st_size > _MAX_PAYLOAD_BYTES:
+            continue
+        out.append(path)
+    return out
+
+
+def _payload_context_carriers(root: Path) -> List[str]:
+    """Authoritative payloads under ``root`` that carry Stage-0 context."""
+
+    return _files_carrying_stage_zero_context(_archived_payload_files(root))
+
+
+def _stage_zero_diagnostic_carriers(root: Path) -> List[str]:
+    """The excluded half, kept queryable so the evidence is not lost.
+
+    The assertion no longer looks at diagnostics; this does, so "excluded from
+    that assertion" can never quietly become "not measured anywhere".
+    """
+
+    return _files_carrying_stage_zero_context(
+        sorted(
+            path
+            for path in root.rglob("*.json")
+            if path.name in _STAGE_ZERO_DIAGNOSTIC_FILENAMES
+            and path.stat().st_size <= _MAX_PAYLOAD_BYTES
+        )
+    )
+
+
 def test_no_archived_leg_carries_stage_zero_context() -> None:
     """Why the context is a parameter and not something to go looking for.
 
-    If a single archived payload carried ``key_compounds``, payload-only discovery
-    would be defensible on real data. None does: the Stage-0 context lives in
-    session state for the length of a run and is never written down, so a
-    coverage check that reads only the payload runs in the undeclared-core regime
-    on every production payload that exists.
+    If a single archived PAYLOAD carried ``key_compounds``, payload-only
+    discovery would be defensible on real data. None does: the Stage-0 context
+    lives in session state for the length of a run and is never written down, so
+    a coverage check that reads only the payload runs in the undeclared-core
+    regime on every production payload that exists.
+
+    **Scope, stated so the assertion and the claim cannot drift apart again.**
+    This examines the authoritative payload files only -- ``final_mapped.json``
+    and ``merged_payload.json``, the pair ``_payload_for`` prefers -- across the
+    whole of ``runs/``. Diagnostic attempt records are excluded by name
+    (``_STAGE_ZERO_DIAGNOSTIC_FILENAMES``), and nine of them do contain the
+    marker today: a diagnostic recording what Stage 0 *attempted* is not a
+    payload carrying Stage-0 context. Those nine remain visible through
+    ``_stage_zero_diagnostic_carriers``. The assertion still fails the moment a
+    real payload starts carrying the context -- proven by fixture in
+    ``test_a_payload_carrying_stage_zero_context_still_fails_the_assertion``.
     """
 
-    carriers = [
-        str(path)
-        for path in RUNS.rglob("*.json")
-        if path.stat().st_size <= _MAX_PAYLOAD_BYTES
-        and "key_compounds" in path.read_text(encoding="utf-8", errors="ignore")
-    ]
+    carriers = _payload_context_carriers(RUNS)
 
     assert carriers == []
+
+
+def test_the_stage_zero_payload_scan_is_not_vacuous() -> None:
+    """A narrowed scan that examines nothing would pass for the wrong reason.
+
+    Scoping an assertion is how a test gets defanged by accident: filter until
+    the population is empty and the claim is green and meaningless. So pin that
+    the scan really does read the archived payloads.
+
+    The floor is a *measured* number, not a derived one. ``>= len(_manifest_legs())``
+    reads like a check but cannot fail while the manifest resolves, because every
+    cohort leg's payload is in this population by construction. 51 is what this
+    tree actually holds: 14 ``final_mapped.json`` and 41 ``merged_payload.json``
+    on disk, less 4 over ``_MAX_PAYLOAD_BYTES`` -- 2 of each, not 4 of one --
+    giving 12 and 39. So dropping either name from ``_PAYLOAD_FILENAMES`` takes
+    this to 12 or 39 and fires. A floor rather than an equality for the same
+    reason as the diagnostics count: a new batch legitimately archives more
+    payloads and must not move a gate.
+    """
+
+    examined = _archived_payload_files(RUNS)
+
+    assert examined, "the payload scan examined nothing"
+    assert len(examined) >= 51, {
+        "examined": len(examined),
+        "measured_floor": 51,
+        "names": sorted({path.name for path in examined}),
+    }
+    assert {path.name for path in examined} <= set(_PAYLOAD_FILENAMES)
+
+
+def test_a_payload_carrying_stage_zero_context_still_fails_the_assertion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The narrowing did not defang the claim -- shown, not argued.
+
+    Built entirely under ``tmp_path``: the assertion reads its root from the
+    module global, so redirecting that is enough and nothing is written into the
+    tracked ``runs/`` tree. Both authoritative payload names are exercised,
+    because catching one and missing the other would be the same defect in a
+    smaller form.
+    """
+
+    for index, payload_name in enumerate(_PAYLOAD_FILENAMES):
+        leg = tmp_path / f"batch{index}" / "papers" / "PMC00000000" / "strict"
+        leg.mkdir(parents=True)
+        (leg / payload_name).write_text(
+            json.dumps(
+                {
+                    "processes": {},
+                    "entities": {},
+                    "pathway_context": {_STAGE_ZERO_CONTEXT_MARKER: ["ATP"]},
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        monkeypatch.setattr(sys.modules[__name__], "RUNS", leg.parents[2])
+        with pytest.raises(AssertionError):
+            test_no_archived_leg_carries_stage_zero_context()
+
+
+def test_a_diagnostic_carrying_stage_zero_context_is_deliberately_excluded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The exclusion is a decision, so it gets a test that says so out loud.
+
+    A ``stage0_attempts.json`` that records the ``key_compounds`` Stage 0
+    proposed is a diagnostic about an attempt, not a payload carrying context,
+    and it must not fail the assertion. Stated here rather than left as a silent
+    consequence of the filter, so that removing the exclusion breaks a test whose
+    name explains what was intended.
+    """
+
+    leg = tmp_path / "papers" / "PMC00000000" / "strict"
+    leg.mkdir(parents=True)
+    (leg / "stage0_attempts.json").write_text(
+        json.dumps(
+            {
+                "run_id": "synthetic",
+                "attempt_count": 1,
+                "attempts": [{_STAGE_ZERO_CONTEXT_MARKER: ["ATP"]}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys.modules[__name__], "RUNS", tmp_path)
+
+    # Must not raise. The diagnostic is excluded by name.
+    test_no_archived_leg_carries_stage_zero_context()
+
+    assert _payload_context_carriers(tmp_path) == []
+    # ...and it is excluded, not invisible.
+    assert len(_stage_zero_diagnostic_carriers(tmp_path)) == 1
+    assert "stage0_attempts.json" in _STAGE_ZERO_DIAGNOSTIC_FILENAMES
+
+
+def test_no_unlisted_artifact_quietly_carries_stage_zero_context() -> None:
+    """The tripwire, restored on purpose after the narrowing removed it.
+
+    Scoping the owned assertion to the payload allowlist is right -- a diagnostic
+    is not a payload -- but on its own it also stops anyone noticing a *new kind*
+    of artifact that starts persisting Stage-0 context: an unlisted file is on
+    neither list, so it fails no payload scan and appears in no diagnostic query.
+    The base assertion caught that case by accident, by being too broad. This
+    catches it on purpose, by requiring every marker-carrying artifact under
+    ``runs/`` to be on one of the two named lists.
+
+    Bounded, and say so rather than overclaim: like the assertion it backs, this
+    reads only files within ``_MAX_PAYLOAD_BYTES``, so an unlisted artifact over
+    2 MB carrying the marker passes here unnoticed. That bound is inherited from
+    the scan this module has always run and is not a judgement that a larger
+    artifact would be fine; widening it is a separate, deliberate change.
+
+    Deliberately NOT achieved by widening
+    ``test_no_archived_leg_carries_stage_zero_context``: that one makes a claim
+    about payloads and must keep making exactly that claim. This is the separate
+    claim that the classification is complete.
+    """
+
+    unlisted = [
+        str(path)
+        for path in sorted(RUNS.rglob("*.json"))
+        if path.name not in _PAYLOAD_FILENAMES
+        and path.name not in _STAGE_ZERO_DIAGNOSTIC_FILENAMES
+        and path.stat().st_size <= _MAX_PAYLOAD_BYTES
+        and _STAGE_ZERO_CONTEXT_MARKER
+        in path.read_text(encoding="utf-8", errors="ignore")
+    ]
+
+    assert unlisted == [], (
+        f"{len(unlisted)} artifact(s) under runs/ carry Stage-0 context "
+        f"({_STAGE_ZERO_CONTEXT_MARKER!r}) and are on neither list: not in "
+        f"{_PAYLOAD_FILENAMES} (authoritative payloads, whose claim is "
+        "test_no_archived_leg_carries_stage_zero_context) and not in "
+        f"{_STAGE_ZERO_DIAGNOSTIC_FILENAMES} (diagnostics, deliberately "
+        "excluded from that claim). Classify each one rather than silencing "
+        "this: if it is a payload, add it to _PAYLOAD_FILENAMES and the owned "
+        "assertion must then hold for it; if it is a diagnostic, add it to "
+        "_STAGE_ZERO_DIAGNOSTIC_FILENAMES together with the reason it is not a "
+        f"payload carrying context. Unlisted: {unlisted}"
+    )
+
+
+def test_the_unlisted_artifact_tripwire_fires_on_an_unrecognised_diagnostic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """That the tripwire bites, shown on the exact case that motivates it.
+
+    ``stage0_attempts_v2.json`` -- a plausible successor to the artifact this
+    module already excludes -- carrying the marker must turn something red. Both
+    existing scans are silent on it, correctly and for opposite reasons: it is
+    not an authoritative payload, and it is not a named diagnostic. Without the
+    tripwire it would pass everywhere, which is the one thing the base
+    assertion, for all its over-breadth, did not permit.
+
+    ``tmp_path`` only; the tracked ``runs/`` tree is never written to.
+    """
+
+    leg = tmp_path / "papers" / "PMC00000000" / "strict"
+    leg.mkdir(parents=True)
+    (leg / "stage0_attempts_v2.json").write_text(
+        json.dumps({"attempts": [{_STAGE_ZERO_CONTEXT_MARKER: ["ATP"]}]}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys.modules[__name__], "RUNS", tmp_path)
+
+    # Neither existing scan sees it. That is precisely why this exists.
+    assert _payload_context_carriers(tmp_path) == []
+    assert _stage_zero_diagnostic_carriers(tmp_path) == []
+
+    with pytest.raises(AssertionError) as excinfo:
+        test_no_unlisted_artifact_quietly_carries_stage_zero_context()
+
+    # It has to NAME the offender: "something is unlisted" sends nobody anywhere.
+    assert "stage0_attempts_v2.json" in str(excinfo.value)
+
+
+def test_the_excluded_stage_zero_diagnostics_are_still_detectable() -> None:
+    """Excluded from one assertion is not the same as gone.
+
+    Nine ``stage0_attempts.json`` files under ``runs/2026-08-02_2130`` carry the
+    marker; that measurement is what justified narrowing the assertion, and it
+    has to stay checkable or the justification decays into a claim in a commit
+    message. Asserted as a floor rather than an equality: a new batch may archive
+    more diagnostics, and pinning the count would reintroduce exactly the
+    "creating a run directory moves the gate" coupling the frozen cohort removed.
+
+    One assertion only, on purpose. Checking that the returned paths carry a
+    diagnostic name, or that none of them is a payload, would be tautological --
+    ``_stage_zero_diagnostic_carriers`` filters on exactly that -- and a
+    tautology sitting next to a real assertion reads like extra coverage while
+    providing none. The name/disjointness claims are made where they can fail:
+    ``test_the_scanned_payload_names_are_the_ones_the_harness_treats_as_payloads``
+    and ``test_no_unlisted_artifact_quietly_carries_stage_zero_context``.
+    """
+
+    diagnostics = _stage_zero_diagnostic_carriers(RUNS)
+
+    assert len(diagnostics) >= 9, diagnostics
+
+
+def test_the_scanned_payload_names_are_the_ones_the_harness_treats_as_payloads() -> None:
+    """The scan must not invent its own idea of what a payload is.
+
+    ``_payload_for`` decides which file a leg's payload *is*, and the frozen
+    manifest records the name it resolved to for every cohort leg. If this scan
+    listed a different set, the assertion would be about files nothing else
+    considers authoritative.
+    """
+
+    assert _PAYLOAD_FILENAMES == ("final_mapped.json", "merged_payload.json")
+    recorded = {str(entry["payload"]) for entry in _read_manifest()["legs"]}
+    assert recorded <= set(_PAYLOAD_FILENAMES), recorded
+
+    # And the excluded diagnostics are a disjoint, non-empty, named set.
+    assert _STAGE_ZERO_DIAGNOSTIC_FILENAMES
+    assert not set(_STAGE_ZERO_DIAGNOSTIC_FILENAMES) & set(_PAYLOAD_FILENAMES)
 
 
 # ── Full stack: Stage 3 is not exportability ────────────────────────────────
