@@ -3,6 +3,12 @@
 **Status: COMPLETE, independently reviewed.** 2026-08-05.
 Investigation only — no branch, no code, no file modified.
 
+> **Amended 2026-08-05**, after the investigation closed, by a documentation-only closeout
+> correction (finding D-4): three of this report's own line citations were imprecise and
+> have been corrected in §1, §5 and §7. The corrections are listed at the end of §9. That
+> amendment modified no source file and no other document. The "Working tree" and "G11"
+> rows below describe the investigation as it ran, not this amendment.
+
 | | |
 |---|---|
 | Base | `sprint/pwml-recovery` @ `2b786aa4af1ba14ac8a27f0a749eab8affae7a6b` |
@@ -21,7 +27,7 @@ Investigation only — no branch, no code, no file modified.
 module-level and parameter-closed; every row field they read is payload-level
 (`name`, `raw_name`, `mapped_ids`, `mapping_meta`, flat id fields) reached through
 `_first_nonempty` (`ir.py:74-92`) or `PathWhizCompoundResolver.resolve`
-(`db_resolver.py:279-305`). `row["key"]` — the one field that exists only after
+(`db_resolver.py:278-423`). `row["key"]` — the one field that exists only after
 `_dedupe_named_rows` — is never read, only carried through `dict(row)` copies.
 
 Measured, not inferred: `_resolve_compound_rows` runs correctly on raw
@@ -101,7 +107,7 @@ the reviewer, **understated**. `_canonicalize_compound_offline` writes `aliases`
 (`process_normalizer.py:626-636`), which `strict_quarantine.py:79-84` imports
 character-for-character, keys on `name` + `synonyms` only — and `_find_entity_row`
 (`:639-646`) and `_remove_entity` (`:649-659`) key on `name` **alone**. `resolve_entity`
-(`ir.py:1400-1416`) emits `unresolved_entity_reference` at **error** severity on a miss.
+(`ir.py:1400-1433`) emits `unresolved_entity_reference` at **error** severity on a miss.
 A pre-freeze rename that writes only `aliases` makes quarantine prune the renamed
 compound and the referencing reaction breaks. **This is a silent reaction-dropper and a
 G7 concern.** On the measured case the alias is not even written — `_norm("glycine") ==
@@ -181,7 +187,7 @@ lists SPIKE-002 only; the C-013/C-030 projection interaction must be stated.
 
 ## 7. DB reachable — **YES**
 
-`PathBankDbResolver.from_env()` (`map_ids.py:819-873`) constructed; `available() → True`;
+`PathBankDbResolver.from_env()` (`map_ids.py:820-873`) constructed; `available() → True`;
 `_ensure_connection() → True`; a live query returned in 0.31 s:
 `{'id': 78, 'name': 'Glycine', 'hmdb_id': 'HMDB0000123', 'kegg_id': 'C00037',
 'chebi_id': '15428', 'drugbank_id': 'DB00145', 'cas': '56-40-6'}`.
@@ -241,6 +247,22 @@ serialization prep `:1507-2007`. Cleanest single seams: `:1054` and `:1152`.
 | `build_pwml_ir` `:966-2007`, 1042 lines | exact | ✅ |
 | "`_dedupe_named_rows` / lookup at `:1030`" | `:1030` is the **component** loop; the **compound** path dedupes at `:1100-1105` and discards the lookup (`rows, _ =`). The `lookup` bound at `:1030` is never read anywhere in the file — a dead local | ⚠ mis-citation. Corrects the premise; **the answer to Q2 is unchanged and is "no"** |
 | `MASTER_PLAN.md:38-45` / probe docstring `:11-16` magnitude | see §6 | ❌ factually wrong, ~10× inflated |
+
+**Corrections to this report's own citations, 2026-08-05 (source: independent closeout
+review, finding D-4).** Three ranges in this report were imprecise and have been corrected
+in place above. Each corrected range was re-read against the source at
+`1c2dbee` before being written; the `def` line and the last line of the function were
+confirmed in every case.
+
+| Section | Previously written | Corrected to | What was wrong |
+|---|---|---|---|
+| §1 | `PathWhizCompoundResolver.resolve` `db_resolver.py:279-305` | `db_resolver.py:278-423` | start off by one (`def` is `:278`); end 118 lines short (function ends `:423`) |
+| §5 / R1 | `resolve_entity` `ir.py:1400-1416` | `ir.py:1400-1433` | `:1400-1416` covers only the miss/error path; the function ends at `:1433` |
+| §7 | `PathBankDbResolver.from_env()` `map_ids.py:819-873` | `map_ids.py:820-873` | off by one — `:819` is the `@classmethod` decorator, `def` is `:820` |
+
+All three are citation-precision corrections: no verdict, risk, finding or measurement in
+this report was restated or revised. The closeout review verified every other range in
+this report as exact; none of those was touched.
 
 ## 10. Items requiring the product owner
 
