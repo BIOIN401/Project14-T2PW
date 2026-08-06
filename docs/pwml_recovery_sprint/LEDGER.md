@@ -43,6 +43,22 @@ frozen cohort, before any implementation branch is dispatched against it.
 Same file, different functions. Whichever merges second rebases and re-runs chunk E
 before review; they are not reviewed as one unit.
 
+## Pre-Wave-A0 — G11 infrastructure (D-017, D-018)
+
+Opened 2026-08-05 by product-owner ruling, on findings the closeout review produced.
+G11 is a hard merge rule that is currently **unenforceable after the fact**: the wrapper
+can be killed by its own output-forwarding and leave no cleanup report, and no report is
+committed anywhere, so no G11 claim in this sprint is checkable against an artifact.
+
+| ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| H-003 | Repair the wrapper's Unicode output-forwarding defect | `READY` | — | read at dispatch | `agent/h03-wrapper-unicode-drain` | assigned at dispatch | `evidence/bounded_run.py`, `evidence/bounded_run_selftest.py` — **temporary ownership grant, this task only** | `pwml-reviewer`, then `pwml-test-runner` | full synthetic lifecycle suite | smoke | — | — | — |
+| H-004 | Durable, version-controlled G11 evidence | `BLOCKED` | H-003 | read at dispatch | `agent/h04-durable-g11-evidence` | assigned at dispatch | `TEST_MATRIX.md` § 0; `_SHARED_BLOCKS.md` block S8; NEW `evidence/g11/` | `pwml-reviewer`, then `pwml-test-runner` | field-presence + collision checks | smoke | — | — | H-003 |
+
+**H-003 is the prerequisite for H-004**: requiring a committed report from every job is
+only sound once the wrapper reliably writes one. Neither task may touch `src/`, `tests/`
+or `batch/runner.py` (C-032's). **H-004 is prospective only — no historical backfill.**
+
 ## Wave A0
 
 **H-001 and H-002 are merged and ACCEPTED; the replay merge gate is green on a frozen
