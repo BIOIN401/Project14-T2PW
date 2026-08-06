@@ -61,6 +61,13 @@ hung it.
 8. **Basetemp.** Keep the unique `--basetemp` path. Remove temp directories after
    completion when safe — but do not confuse temporary *files* with active *memory*.
    Deleting a basetemp directory does not reclaim a leaked process's RAM.
+   The parent of `--basetemp` must already exist; pytest does not create intermediate
+   directories and every test errors in setup if it is missing.
+
+9. **The cleanup report is committed, not pasted.** Every job's `--json` report goes to a
+   path allocated under `evidence/g11/<TASK-ID>/<SEQ>-<label>.json` and is committed with
+   the branch. A pasted table is not evidence: a G11 claim must be checkable against a
+   committed artifact. See `evidence/g11/README.md`.
 
 ### Cleanup report — required on every test record
 
@@ -73,7 +80,26 @@ hung it.
 | descendants observed | |
 | descendants terminated | |
 | final surviving count | **must be 0** |
-| cleanup success/failure | |
+| cleanup success/failure | **must be `true`** — a count of 0 alone is not sufficient |
+
+### Durable evidence — where that report lives
+
+```bash
+# 1. allocate a unique path BEFORE the job (never hand-write one, never reuse one)
+<py> docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py next --task <ID> --label <l>
+# 2. run the job with --json pointing at it
+<py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label <l> --timeout <s> \
+     --json docs/pwml_recovery_sprint/evidence/g11/<ID>/<SEQ>-<l>.json -- <cmd...>
+# 3. validate, then commit the report with the branch
+<py> docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py check --task <ID>
+```
+
+A job with no committed report is **uncertifiable under G11** — it is not a passed test.
+The artifact must exist and validate on its own; an acceptable exit code proves nothing,
+because an unwritable `--json` still returns the child's real code. Reports are
+credential-free and small: no captured stdout, no logs, no caches.
+`evidence/g11/README.md` states the required fields, the naming scheme and the credential
+and size rules. **Prospective only — no historical report is ever reconstructed.**
 
 ### Existing machinery to build on
 

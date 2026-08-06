@@ -1,0 +1,68 @@
+{
+  "label": "g11-selftest",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py",
+    "selftest"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a4e9c764eb0dd0323",
+  "started_at": "2026-08-06T05:10:44+00:00",
+  "finished_at": "2026-08-06T05:10:46+00:00",
+  "duration_seconds": 1.2438519999850541,
+  "timeout_seconds": 300.0,
+  "root_pid": 950832,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 939420,
+      "name": "python.exe",
+      "ppid": 950832
+    },
+    {
+      "pid": 943964,
+      "name": "python.exe",
+      "ppid": 939420
+    },
+    {
+      "pid": 952128,
+      "name": "python.exe",
+      "ppid": 943964
+    }
+  ],
+  "descendants_terminated": [
+    939420,
+    943964,
+    952128
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 943880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 946988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 950772,
+      "name": "python.exe"
+    },
+    {
+      "pid": 952672,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/H-004/01-selftest.json",
+  "json_report_written": true,
+  "json_report_error": ""
+}

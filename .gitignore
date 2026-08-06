@@ -38,3 +38,14 @@ data/rag_index/
 # The existing directories are NOT deleted; that is a separate, recoverable
 # housekeeping call.
 runs_verify/*/cache_snapshot/
+
+# Captured child stdout under the G11 durable-evidence tree. The committed
+# artifact there is the structured JSON cleanup report, never a log dump.
+#
+# Deliberately NARROW, like the rule above: it matches only log/stdout captures
+# inside docs/pwml_recovery_sprint/evidence/g11/, so the .json reports -- the
+# whole point of that directory -- stay tracked. g11_evidence.py rejects any
+# non-.json file there as well, so this is a backstop, not the only guard.
+docs/pwml_recovery_sprint/evidence/g11/**/*.log
+docs/pwml_recovery_sprint/evidence/g11/**/*.out
+docs/pwml_recovery_sprint/evidence/g11/**/*.out.txt

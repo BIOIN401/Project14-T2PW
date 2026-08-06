@@ -1,0 +1,126 @@
+{
+  "label": "smoke",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/h004bt/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a4e9c764eb0dd0323",
+  "started_at": "2026-08-06T05:12:18+00:00",
+  "finished_at": "2026-08-06T05:12:48+00:00",
+  "duration_seconds": 29.303344199986896,
+  "timeout_seconds": 900.0,
+  "root_pid": 943048,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 950524,
+      "name": "python.exe",
+      "ppid": 943048
+    },
+    {
+      "pid": 951324,
+      "name": "python.exe",
+      "ppid": 955432
+    },
+    {
+      "pid": 955432,
+      "name": "python.exe",
+      "ppid": 950524
+    },
+    {
+      "pid": 954536,
+      "name": "python.exe",
+      "ppid": 955756
+    },
+    {
+      "pid": 955756,
+      "name": "python.exe",
+      "ppid": 950524
+    },
+    {
+      "pid": 952216,
+      "name": "python.exe",
+      "ppid": 955928
+    },
+    {
+      "pid": 955928,
+      "name": "python.exe",
+      "ppid": 950524
+    },
+    {
+      "pid": 955036,
+      "name": "python.exe",
+      "ppid": 955988
+    },
+    {
+      "pid": 955988,
+      "name": "python.exe",
+      "ppid": 950524
+    }
+  ],
+  "descendants_terminated": [
+    950524,
+    951324,
+    952216,
+    954536,
+    955036,
+    955432,
+    955756,
+    955928,
+    955988
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 943880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 952664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 952672,
+      "name": "python.exe"
+    },
+    {
+      "pid": 953148,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/H-004/03-smoke.json",
+  "json_report_written": true,
+  "json_report_error": ""
+}
