@@ -256,6 +256,12 @@ _UNICODE_CHILD = (
 
 _CP1252_ENV = {"PYTHONIOENCODING": "cp1252:strict", "PYTHONUTF8": "0"}
 
+#: Spelled out here rather than read off the module, so a build that lacks the
+#: constant FAILS case 8 on observed behaviour instead of aborting with
+#: AttributeError before ``_record`` can run. Case 8 also checks that the wrapper
+#: still exports it under this name, which keeps the two in step.
+_EXPECTED_UNWRITABLE_MARKER = "BOUNDED_RUN_JSON_REPORT_UNWRITABLE"
+
 
 def _wrapper_subprocess(label: str, child_code: str, json_path: Optional[str],
                         env_extra: Optional[Dict[str, str]] = None,
@@ -324,6 +330,13 @@ def _report_from_render(stderr_text: str, label: str) -> bounded_run.CleanupRepo
     rep.forced = _grab(r"forced\s+: (\S+)") == "True"
     rep.json_report_written = _grab(r"json report written\s+: (\S+)") == "True"
     rep.json_report_error = _grab(r"json report ERROR\s+: (.+)") or ""
+    # These two must be reconstructed as well, or the persisted artifact keeps the
+    # dataclass defaults and reads `cleanup_success: false` next to
+    # `final_surviving_count: 0` -- the ambiguous pair a G11 checker keying on the
+    # survivor count alone would misread. Anchored to line starts so a note that
+    # merely mentions cleanup cannot be picked up instead.
+    rep.cleanup_success = _grab(r"(?m)^cleanup\s+: (\S+)") == "success"
+    rep.json_report_path = _grab(r"(?m)^json report\s+: (.+)") or ""
     return rep
 
 
@@ -387,11 +400,16 @@ def case_8_unwritable_json() -> bool:
     ok = _record("8. unwritable --json destination", rep, [rep.root_pid or 0], [
         ("wrapper did not crash: child's REAL code 5 returned", rc == 5),
         ("condition NAMED on stderr, not silently skipped",
-         bounded_run.JSON_REPORT_UNWRITABLE_MARKER in err_text),
+         _EXPECTED_UNWRITABLE_MARKER in err_text),
+        ("wrapper exports that marker constant",
+         getattr(bounded_run, "JSON_REPORT_UNWRITABLE_MARKER", None)
+         == _EXPECTED_UNWRITABLE_MARKER),
         ("report itself records json_report_written == False",
          rep.json_report_written is False and rep.json_report_error != ""),
         ("cleanup result NOT lost: full report still rendered",
          "FINAL SURVIVING COUNT" in err_text and rep.final_surviving_count == 0),
+        ("cleanup_success recorded True", rep.cleanup_success is True),
+        ("report location recorded (json_report_path)", rep.json_report_path != ""),
         ("child's exit code preserved in the record", rep.exit_code == 5),
         ("no traceback", "Traceback" not in err_text),
         ("no stray file created at the destination",
