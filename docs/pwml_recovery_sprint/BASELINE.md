@@ -93,7 +93,17 @@ The 2 failures are **pre-existing on `ORIGIN_SHA`** and are analysed in § 5.
 | Chunk A | 123 passed, ~12 s | **123 passed**, 2.8 s | ✔ |
 | Chunk B | 225 passed, ~25 s | **225 passed**, 26.1 s | ✔ |
 | Chunk C | 109 passed, ~2 s | **109 passed**, 2.2 s | ✔ |
-| Chunk E | — | **159 passed, 2 failed** | see § 5 |
+| Chunk E | 173 passed, ~20 s | **173 passed, 0 failed**, 18.2 s | ✔ |
+
+> **Corrected 2026-08-06 (H-005).** This row originally read "| Chunk E | — | **159
+> passed, 2 failed** | see § 5 |", the pre-sprint figure. The accepted gate value after
+> H-001 + H-002 is **173 passed / 0 failed**, and it is measured here rather than copied:
+> `pytest -q --basetemp=C:/pt/h5e tests/test_strict_quarantine_real_artifact_replay.py`
+> under the wrapper → `173 passed in 18.22s`, exit 0, final surviving count 0
+> (`evidence/g11/H-005/05-chunk-e.json`; an earlier identical-result run is
+> `04-chunk-e.json`). **§ 1's "Chunk E RAN" note and § 5 keep the 159/2 figure and are
+> left untouched** — they are the correct historical INIT-001 record of `ORIGIN_SHA`,
+> before H-001 froze the cohort manifest and H-002 landed.
 
 ---
 
@@ -164,7 +174,15 @@ RESIDUAL_CODES_BY_ROW = {
 }
 ```
 
-`docs/change_log.md:147` carries the same "17 legs, 19 rows" figures and agrees.
+> **Corrected 2026-08-06 (H-005).** This line originally read: "`docs/change_log.md:147`
+> carries the same '17 legs, 19 rows' figures and agrees." **It is stale in both halves.**
+> The line number moved — `:147` is now inside the H-001 re-measurement note — and the
+> figures moved with H-001: `docs/change_log.md:165-167` now reads
+> **`species_missing_classification` (19 legs, 27 rows), `species_missing_taxonomy`
+> (19 legs, 27 rows), `no_biological_states` (4 legs, 4 rows)**, matching
+> `tests/test_strict_quarantine_real_artifact_replay.py:850-859` as re-pinned by H-001.
+> The 17/19 block above is the INIT-001 record of what was pinned on `ORIGIN_SHA` and is
+> deliberately left standing as history; it is **not** the current pin.
 
 ---
 
@@ -202,9 +220,20 @@ measured = {'legs_examined': 39, 'quarantine_admitted': 27, 'quarantine_refused'
 
 **When it broke.** The pin was written at `404cc8d` (2026-08-01). `runs/2026-08-02_2130`
 — 16 further legs — was committed at `5f2cd2f` (2026-08-04), *three commits before the
-sprint branch was cut*, and nobody re-measured. Four `runs/` directories now contribute
-legs: `2026-07-27_1623` (5), `2026-07-28_0919` (4), `2026-07-28_2122` (16),
-`2026-08-02_2130` (16).
+sprint branch was cut*, and nobody re-measured. Four `runs/` directories contribute legs:
+`2026-07-27_1623` (5), `2026-07-28_0919` (**2**), `2026-07-28_2122` (16),
+`2026-08-02_2130` (16) = **39**.
+
+> **Corrected 2026-08-06 (H-005).** The breakdown originally gave `2026-07-28_0919` as
+> **4**, summing to 41 against a stated 39-leg total. Re-derived directly from the
+> committed cohort manifest `tests/data/baseline_cohort_manifest.json`
+> (`sha256 086aa65a86b45be0a0bf32113b4ff6fd66599862c5ff2eacc7212d90aeebe013`,
+> `cohort_id pre-implementation-baseline-2026-08-05`): declared `leg_count` 39, 39 leg
+> entries, 39 unique paths, and by first path segment `2026-07-27_1623` = 5,
+> `2026-07-28_0919` = **2**, `2026-07-28_2122` = 16, `2026-08-02_2130` = 16, sum 39.
+> Cleanup report `evidence/g11/H-005/06-manifest-derivation.json`. Note the manifest is
+> H-001's frozen cohort and is now the sole membership source — the harness no longer
+> globs the filesystem — so this breakdown can no longer drift with an archived run.
 
 **Why it matters beyond a stale number.** This test is parameterized over the
 *filesystem*. Every milestone benchmark T-100…T-105 archives a new run, so each one

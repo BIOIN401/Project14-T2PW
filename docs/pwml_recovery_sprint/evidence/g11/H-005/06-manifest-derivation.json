@@ -1,0 +1,48 @@
+{
+  "label": "manifest-derivation",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import json,collections,hashlib,pathlib; p=pathlib.Path('tests/data/baseline_cohort_manifest.json'); b=p.read_bytes(); m=json.loads(b.decode('utf-8')); legs=m['legs']; c=collections.Counter(l['path'].split('/')[1] for l in legs); print('sha256(manifest)=',hashlib.sha256(b).hexdigest()); print('cohort_id=',m['cohort_id'],'frozen_on=',m['frozen_on'],'root=',m['root']); print('declared leg_count=',m['leg_count'],' actual len(legs)=',len(legs),' unique paths=',len({l['path'] for l in legs})); [print('  ',k,'=',c[k]) for k in sorted(c)]; print('  SUM =',sum(c.values()))"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a789aadba92619c7f",
+  "started_at": "2026-08-06T16:38:27+00:00",
+  "finished_at": "2026-08-06T16:38:28+00:00",
+  "duration_seconds": 0.5564334000227973,
+  "timeout_seconds": 300.0,
+  "root_pid": 1113420,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [],
+  "descendants_terminated": [],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1107964,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1108128,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1113452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1113456,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-a789aadba92619c7f/docs/pwml_recovery_sprint/evidence/g11/H-005/06-manifest-derivation.json",
+  "json_report_written": true,
+  "json_report_error": ""
+}
