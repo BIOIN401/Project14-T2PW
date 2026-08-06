@@ -50,10 +50,29 @@ corrected probe (H-005, 2026-08-06), reported in five categories that are never 
 | prefix normalization | **8** — `CHEBI:` stripped from `mapped_ids.chebi` and `chebi_id` | **4 of 4** |
 | identity materialization | **16** — `pathwhiz_id`, `db_id`, `db_status`, `chosen_rule` | **4 of 4** |
 
+Rows are paired on `mapping_meta.query.name`, the pre-freeze extraction name, strictly
+one-to-one; `raw_name` is **not** used, as anchor or fallback, because the exporter under
+examination writes it. Missing, duplicated or unmatched lineage is a named failure that
+yields `RESULT: UNDETERMINED` and a nonzero exit — **never** a clean result.
+
 **The `PRODUCT_CONTRACT` § 5 violation is real and remains blocking.** It is violated by
 **kind, not by count**: a post-freeze rename with no provenance record, a fabricated
-`db_row`, `CHEBI:` stripping on 4 of 4, identity materialization on 4 of 4. **T-102
-acceptance is per category — all five must be 0.**
+`db_row`, `CHEBI:` stripping on 4 of 4, identity materialization on 4 of 4.
+
+**Acceptance for C-050/C-051:** all five counts 0, with `RESULT: MEASURED`.
+
+**This is NECESSARY BUT NOT SUFFICIENT for T-102.** Per **D-016 (LOCKED)**, T-102
+equivalence is **not narrowed to compounds**: it must verify **both** compound identity
+**and** organism/species equivalence, across canonical JSON, PWML **and** SBML
+(`TEST_MATRIX.md:265` states the same). The probe above measures compound rows in the
+canonical JSON only, so **passing it does not satisfy T-102**. Compound identity
+equivalence remains required; organism/species equivalence across JSON/PWML/SBML remains
+required and is not measured here. Two live examples of that second dimension, both
+outside this probe's scope, both measured on the same leg: protein `ALAS2` gains
+`pathwhiz_id 17` (`evidence/finding_alas2_identity_placeholder_2026-08-06.md`); and the
+single species row moves from `entities.species` to a **top-level `species` group**,
+gaining `pathwhiz_id 1` and losing its `mapping_meta` — which carried the
+`taxonomy_backfill` provenance for `taxonomy_id 9606`.
 
 > **Corrected 2026-08-06 (H-005). The previous text was wrong on three counts and is kept
 > here so the correction is auditable.** It read: "adds `pathwhiz_id`/`db_id` to all four

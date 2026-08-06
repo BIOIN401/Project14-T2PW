@@ -44,32 +44,52 @@ identity materialization on 4 of 4. Only the magnitude was overstated.
 HOW ROWS ARE PAIRED NOW
 -----------------------
 Renaming is the behaviour under examination, so the pairing must not depend on the
-post-rename name. Two independent pairings are computed and required to agree.
+post-rename name -- and it must not depend on any field the exporter itself
+authors.
 
-1. **Rename lineage.** The exporter preserves the pre-rename name in ``raw_name``.
-   The lineage key of an IR row is ``raw_name`` when present, else ``name``; the
-   canonical key is ``name``. ``raw_name`` is by construction the name the
-   canonical payload used, i.e. a lineage established before canonicalization.
-2. **Position.** Both lists are the same ``entities.compounds`` array; index i
-   pairs with index i. This consults no exporter-written field at all.
+**The anchor is ``mapping_meta.query.name``, and nothing else.** It is written
+upstream of the freeze, it is the extraction-time name the mapper was queried
+with, and the exporter carries it through a rename untouched. Measured on the
+committed leg: the canonical row named ``glycine`` and the IR row named
+``Glycine`` both carry ``mapping_meta.query.name == "glycine"``.
 
-Neither alone is sufficient, which is the point of requiring both. ``raw_name`` is
-written by the very code under examination, so a rename that simply omitted
-``raw_name`` would be invisible to pairing (1) -- it would surface as an unmatched
-row. Position is not written by the exporter, but it is meaningful only when the
-two lists have equal length and preserve order. Requiring agreement turns a
-dishonestly-recorded rename into a loud ``PAIRING_DISAGREEMENT`` rather than a
-spurious pile of "added" identifiers.
+**``raw_name`` is deliberately NOT used -- not as the anchor and not as a
+fallback.** It is created by the code under examination, so it cannot establish
+independent pre-canonical lineage: an exporter that renamed a row and simply did
+not write ``raw_name`` would defeat it. The earlier revision of this probe used
+``raw_name`` with a positional cross-check; that is superseded. Position is not
+used as a gate either, because ``PRODUCT_CONTRACT`` section 5 explicitly permits
+ordering to differ, so a positional disagreement is not evidence of anything.
 
-**Unmatched and ambiguous rows fail loudly and by name.** They are never folded
-into "added" or "removed". When any of ``ROW_COUNT_MISMATCH``,
-``AMBIGUOUS_CANONICAL_NAME``, ``AMBIGUOUS_LINEAGE_KEY``, ``UNMATCHED_IR_ROW``,
-``UNMATCHED_CANONICAL_ROW`` or ``PAIRING_DISAGREEMENT`` fires, the probe prints
-``PROBE INTEGRITY: FAILED``, suppresses the category counts (they would be
-meaningless) and exits **2**. Exit 2 means "this probe could not measure", NOT
-"the exporter is clean" and NOT "the exporter is dirty". ``--selfcheck`` runs each
-of those six conditions against crafted rows and asserts it fires; run it under
-the wrapper like any other test.
+Matching is **strict, unique and one-to-one**. An anchor must be present exactly
+once on the canonical side and exactly once on the IR side for its rows to pair.
+
+**Every lineage defect is loud, named, and fails closed:**
+
+* ``LINEAGE_ANCHOR_MISSING`` -- a row carries no usable
+  ``mapping_meta.query.name``. Presence is **verified, never assumed**: it is
+  absent in production today (``runs/2026-08-02_2130/papers/PMC12856317/strict``
+  has a protein row with ``mapping_meta.query`` of ``null``), so a missing anchor
+  is its own condition and never silently degrades to another key.
+* ``AMBIGUOUS_LINEAGE_ANCHOR`` -- the same anchor on two rows of one side.
+* ``UNMATCHED_IR_ROW`` / ``UNMATCHED_CANONICAL_ROW`` -- an anchor present on one
+  side only. Never counted as an addition or a removal.
+
+**A lineage failure can never present as a clean result.** This is the property
+the whole probe exists to protect, so it is worth stating precisely. On failure
+the probe still classifies the rows that *did* pair -- suppressing them outright
+would be blind exactly when the exporter is dishonest -- but it labels the counts
+a **LOWER BOUND**, prints ``RESULT: UNDETERMINED`` instead of ``RESULT:
+MEASURED``, and exits **2**. **Zero in every category alongside
+``UNDETERMINED`` is not a zero-mutation result and must never be read as one.**
+Only ``RESULT: MEASURED`` with exit ``0`` asserts that the whole population was
+measured.
+
+``--selfcheck`` runs every one of those conditions against crafted rows, plus the
+two cases that matter most: that a rename which creates **no** ``raw_name`` still
+pairs through the anchor, and that a population of one perfectly clean paired row
+plus one unmatched row **cannot** produce a passing conclusion. Run it under the
+wrapper like any other test.
 
 WHAT IT REPORTS -- FIVE CATEGORIES, NEVER CONFLATED
 ---------------------------------------------------
@@ -91,10 +111,18 @@ WHY IT IS COMMITTED
 PRODUCT_CONTRACT section 5 requires that reloading ``final_mapped.json`` and
 exporting again produce a biologically equivalent pathway, and that exporters not
 "add, remove, resolve or reinterpret biological content after the canonical graph
-is frozen". Measurement A is the falsification of that today. It is the acceptance
-target for C-050/C-051 and for milestone T-102: after those branches **all five
-category counts must be 0**, which is the same requirement as "the diff is empty",
-stated per category so no one category can be traded against another.
+is frozen". Measurement A is the falsification of that today, and it is an
+acceptance target for C-050/C-051: after those branches **all five category counts
+must be 0** with ``RESULT: MEASURED``, which is the same requirement as "the diff
+is empty", stated per category so no one category can be traded against another.
+
+**This probe is NECESSARY BUT NOT SUFFICIENT for milestone T-102.** ``DECISIONS.md``
+**D-016 (LOCKED)** rules that *T-102 equivalence is NOT narrowed to compounds*: it
+must verify **both** compound identity **and** organism/species equivalence, across
+canonical JSON, PWML **and** SBML. This probe measures compound rows in the JSON
+only. **Passing it does not satisfy T-102.** Compound identity equivalence remains
+required; organism/species equivalence across JSON/PWML/SBML remains required and
+is measured elsewhere.
 
 INVOCATION
 ----------
@@ -158,70 +186,87 @@ def _is_prefix_normalization(before: Any, after: Any) -> bool:
     return _strip_prefix(before) == _strip_prefix(after)
 
 
-def _lineage_key(ir_row: Dict[str, Any]) -> str:
-    raw = ir_row.get("raw_name")
-    return str(raw) if isinstance(raw, str) and raw.strip() else str(ir_row.get("name"))
+LINEAGE_POINTER = "mapping_meta.query.name"
+
+
+def _lineage_anchor(row: Dict[str, Any]) -> str | None:
+    """The pre-freeze extraction name this row was mapped from, or None.
+
+    ``raw_name`` is NOT consulted here, and must not be added as a fallback: it is
+    written by the exporter under examination and therefore cannot establish
+    independent pre-canonical lineage.
+    """
+
+    meta = row.get("mapping_meta")
+    if not isinstance(meta, dict):
+        return None
+    query = meta.get("query")
+    if not isinstance(query, dict):
+        return None
+    name = query.get("name")
+    if not isinstance(name, str) or not name.strip():
+        return None
+    return name
+
+
+def _index_by_anchor(
+    rows: List[Dict[str, Any]], side: str
+) -> Tuple[Dict[str, int], List[str]]:
+    """Anchor -> row index, unique only. Missing and duplicated anchors are problems."""
+
+    problems: List[str] = []
+    seen: Dict[str, List[int]] = {}
+    for index, row in enumerate(rows):
+        anchor = _lineage_anchor(row)
+        if anchor is None:
+            problems.append(
+                f"LINEAGE_ANCHOR_MISSING: {side} row {index} name={row.get('name')!r} carries "
+                f"no usable {LINEAGE_POINTER}; it cannot be paired and is NOT assumed "
+                f"unchanged, added or removed"
+            )
+            continue
+        seen.setdefault(anchor, []).append(index)
+
+    unique: Dict[str, int] = {}
+    for anchor, indices in seen.items():
+        if len(indices) > 1:
+            problems.append(
+                f"AMBIGUOUS_LINEAGE_ANCHOR: {side} rows {indices} all carry "
+                f"{LINEAGE_POINTER}={anchor!r}; one-to-one matching is impossible"
+            )
+            continue
+        unique[anchor] = indices[0]
+    return unique, problems
 
 
 def _pair_rows(
     canonical: List[Dict[str, Any]], ir: List[Dict[str, Any]]
 ) -> Tuple[List[Tuple[Dict[str, Any], Dict[str, Any]]], List[str]]:
-    """Pair by rename lineage, corroborate by position, fail loudly on anything else."""
+    """Strict one-to-one pairing on the pre-freeze lineage anchor. Fails closed."""
 
-    problems: List[str] = []
+    canonical_by_anchor, problems = _index_by_anchor(canonical, "canonical")
+    ir_by_anchor, ir_problems = _index_by_anchor(ir, "IR")
+    problems = problems + ir_problems
 
-    canonical_by_name: Dict[str, int] = {}
-    for index, row in enumerate(canonical):
-        name = str(row.get("name"))
-        if name in canonical_by_name:
-            problems.append(
-                f"AMBIGUOUS_CANONICAL_NAME: canonical rows {canonical_by_name[name]} and "
-                f"{index} both named {name!r}; no unambiguous partner exists"
-            )
-        canonical_by_name[name] = index
-
-    lineage_seen: Dict[str, int] = {}
-    lineage_pairing: Dict[int, int] = {}
-    for index, row in enumerate(ir):
-        key = _lineage_key(row)
-        if key in lineage_seen:
-            problems.append(
-                f"AMBIGUOUS_LINEAGE_KEY: IR rows {lineage_seen[key]} and {index} both trace "
-                f"to canonical name {key!r}"
-            )
-        lineage_seen[key] = index
-        if key in canonical_by_name:
-            lineage_pairing[index] = canonical_by_name[key]
-        else:
-            problems.append(
-                f"UNMATCHED_IR_ROW: IR row {index} name={row.get('name')!r} "
-                f"raw_name={row.get('raw_name')!r} traces to canonical name {key!r}, which no "
-                f"canonical row carries. NOT counted as an addition."
-            )
-
-    claimed = set(lineage_pairing.values())
-    for index, row in enumerate(canonical):
-        if index not in claimed:
-            problems.append(
-                f"UNMATCHED_CANONICAL_ROW: canonical row {index} name={row.get('name')!r} is "
-                f"claimed by no IR row. NOT counted as a removal."
-            )
-
-    if len(canonical) != len(ir):
+    for anchor in sorted(set(ir_by_anchor) - set(canonical_by_anchor)):
+        row = ir[ir_by_anchor[anchor]]
         problems.append(
-            f"ROW_COUNT_MISMATCH: {len(canonical)} canonical compound rows vs {len(ir)} IR "
-            f"rows; positional corroboration is unavailable"
+            f"UNMATCHED_IR_ROW: IR row {ir_by_anchor[anchor]} name={row.get('name')!r} carries "
+            f"{LINEAGE_POINTER}={anchor!r}, which no canonical row uniquely carries. "
+            f"NOT counted as an addition."
         )
-    else:
-        for index in range(len(ir)):
-            if lineage_pairing.get(index, index) != index:
-                problems.append(
-                    f"PAIRING_DISAGREEMENT: IR row {index} pairs to canonical row "
-                    f"{lineage_pairing[index]} by rename lineage but to canonical row {index} "
-                    f"by position; the exporter's own lineage record is not trustworthy here"
-                )
+    for anchor in sorted(set(canonical_by_anchor) - set(ir_by_anchor)):
+        row = canonical[canonical_by_anchor[anchor]]
+        problems.append(
+            f"UNMATCHED_CANONICAL_ROW: canonical row {canonical_by_anchor[anchor]} "
+            f"name={row.get('name')!r} carries {LINEAGE_POINTER}={anchor!r}, which no IR row "
+            f"uniquely carries. NOT counted as a removal."
+        )
 
-    pairs = [(canonical[c_index], ir[index]) for index, c_index in sorted(lineage_pairing.items())]
+    pairs = [
+        (canonical[canonical_by_anchor[anchor]], ir[ir_by_anchor[anchor]])
+        for anchor in sorted(set(canonical_by_anchor) & set(ir_by_anchor))
+    ]
     return pairs, problems
 
 
@@ -306,6 +351,78 @@ CATEGORIES = (
 )
 
 
+def _report(
+    canonical_rows: List[Dict[str, Any]], ir_rows: List[Dict[str, Any]]
+) -> Tuple[List[str], int]:
+    """Build the whole measurement-A body. Returns (lines, exit_code).
+
+    Factored out of ``measurement_a`` so ``--selfcheck`` can assert on the VERDICT
+    -- in particular that an unmatched or ambiguous row can never yield
+    ``RESULT: MEASURED`` or exit 0, no matter how clean the rows that did pair are.
+    """
+
+    lines: List[str] = []
+    pairs, problems = _pair_rows(canonical_rows, ir_rows)
+    lines.append(f"    pairing anchor: {LINEAGE_POINTER} (pre-freeze); strict one-to-one;")
+    lines.append("    raw_name is NOT used, as anchor or fallback -- the exporter writes it")
+    lines.append(f"    {len(canonical_rows)} canonical rows, {len(ir_rows)} IR rows, "
+                 f"{len(pairs)} paired, {len(problems)} lineage problem(s)")
+
+    if problems:
+        lines.append("")
+        for problem in problems:
+            lines.append(f"  !! {problem}")
+
+    totals = {key: 0 for key, _ in CATEGORIES}
+    rows_hit = {key: 0 for key, _ in CATEGORIES}
+    lines.append("")
+    for canonical_row, ir_row in pairs:
+        found = _classify(canonical_row, ir_row)
+        lines.append(f"  canonical {canonical_row.get('name')!r}  ->  IR {ir_row.get('name')!r}")
+        for key, title in CATEGORIES:
+            entries = found[key]
+            totals[key] += len(entries)
+            rows_hit[key] += 1 if entries else 0
+            lines.append(f"      {title:<32}: {len(entries)}")
+            for entry in entries:
+                lines.append(f"          - {entry}")
+        for entry in found["structural_observations"]:
+            lines.append(f"      (structural, non-biological, not counted): {entry}")
+        for entry in found["fields_dropped"]:
+            lines.append(f"      (canonical fields absent from the IR row): {entry}")
+
+    lines.append("")
+    lines.append("  ---- FIVE CATEGORIES, REPORTED SEPARATELY, NEVER SUMMED ----")
+    for key, title in CATEGORIES:
+        lines.append(f"    {title:<32}: {totals[key]:>3} instance(s) across "
+                     f"{rows_hit[key]} of {len(pairs)} paired compound row(s)")
+    lines.append("")
+
+    unpaired = len(problems)
+    if problems:
+        lines.append(f"  RESULT: UNDETERMINED -- {unpaired} lineage problem(s) above.")
+        lines.append(f"  The five counts are a LOWER BOUND over the {len(pairs)} row(s) that")
+        lines.append("  paired. They say NOTHING about the rows that did not. ZERO IN EVERY")
+        lines.append("  CATEGORY HERE IS NOT A ZERO-MUTATION RESULT and must never be read as")
+        lines.append("  one; an exporter that breaks lineage cannot thereby appear clean.")
+        code = 2
+    else:
+        lines.append(f"  RESULT: MEASURED -- all {len(pairs)} row(s) paired one-to-one on "
+                     f"{LINEAGE_POINTER}.")
+        code = 0
+
+    lines.append("")
+    lines.append("  ACCEPTANCE for C-050/C-051: EVERY one of the five counts must be 0 AND")
+    lines.append("  the result must be MEASURED. A single total is deliberately not printed:")
+    lines.append("  the categories are different kinds of PRODUCT_CONTRACT section 5")
+    lines.append("  violation and must not trade off against one another.")
+    lines.append("  NECESSARY BUT NOT SUFFICIENT FOR T-102. DECISIONS.md D-016 (LOCKED):")
+    lines.append("  T-102 is NOT narrowed to compounds -- it must also verify organism/species")
+    lines.append("  equivalence across canonical JSON, PWML and SBML. This probe covers")
+    lines.append("  compound rows in the JSON only. Passing it does not satisfy T-102.")
+    return lines, code
+
+
 def measurement_a() -> int:
     print("=== A. canonical payload vs shipped IR (committed artifacts) ===")
     print(f"    leg: {PASSING_LEG}")
@@ -320,53 +437,11 @@ def measurement_a() -> int:
 
     canonical = json.loads(canonical_path.read_text(encoding="utf-8"))
     ir = json.loads(ir_path.read_text(encoding="utf-8"))
-    canonical_rows = canonical["entities"]["compounds"]
-    ir_rows = ir["entities"]["compounds"]
-
-    pairs, problems = _pair_rows(canonical_rows, ir_rows)
-    print(f"    pairing: rename lineage (raw_name -> name), corroborated by position")
-    print(f"    {len(canonical_rows)} canonical rows, {len(ir_rows)} IR rows, "
-          f"{len(pairs)} paired, {len(problems)} integrity problem(s)")
-    if problems:
-        print()
-        for problem in problems:
-            print(f"  !! {problem}")
-        print()
-        print("  PROBE INTEGRITY: FAILED -- category counts suppressed, they would be")
-        print("  meaningless with rows that could not be paired. This says nothing about")
-        print("  whether the exporter mutates biology; it says this probe cannot tell.")
-        return 2
-
-    totals = {key: 0 for key, _ in CATEGORIES}
-    rows_hit = {key: 0 for key, _ in CATEGORIES}
+    lines, code = _report(canonical["entities"]["compounds"], ir["entities"]["compounds"])
+    for line in lines:
+        print(line)
     print()
-    for canonical_row, ir_row in pairs:
-        found = _classify(canonical_row, ir_row)
-        print(f"  canonical {canonical_row.get('name')!r}  ->  IR {ir_row.get('name')!r}")
-        for key, title in CATEGORIES:
-            entries = found[key]
-            totals[key] += len(entries)
-            rows_hit[key] += 1 if entries else 0
-            print(f"      {title:<32}: {len(entries)}")
-            for entry in entries:
-                print(f"          - {entry}")
-        for entry in found["structural_observations"]:
-            print(f"      (structural, non-biological, not counted): {entry}")
-        for entry in found["fields_dropped"]:
-            print(f"      (canonical fields absent from the IR row): {entry}")
-
-    print()
-    print("  ---- FIVE CATEGORIES, REPORTED SEPARATELY, NEVER SUMMED ----")
-    for key, title in CATEGORIES:
-        print(f"    {title:<32}: {totals[key]:>3} instance(s) across "
-              f"{rows_hit[key]} of {len(pairs)} compound rows")
-    print()
-    print("  ACCEPTANCE after C-050/C-051 (milestone T-102): EVERY one of the five")
-    print("  counts above must be 0, and no pairing integrity problem may be reported.")
-    print("  A single total is deliberately not printed: the categories are different")
-    print("  kinds of PRODUCT_CONTRACT section 5 violation and must not trade off.")
-    print()
-    return 0
+    return code
 
 
 def measurement_b() -> None:
@@ -401,41 +476,106 @@ def measurement_b() -> None:
 def _selfcheck() -> int:
     """Prove each named loud condition actually fires. Runtime, not assertion by prose."""
 
-    def row(name: str, **extra: Any) -> Dict[str, Any]:
-        return {"name": name, **extra}
+    def row(name: str, anchor: str | None = None, **extra: Any) -> Dict[str, Any]:
+        built: Dict[str, Any] = {"name": name, **extra}
+        if anchor is not None:
+            built["mapping_meta"] = {"query": {"name": anchor}}
+        return built
 
-    cases: List[Tuple[str, List[Dict[str, Any]], List[Dict[str, Any]]]] = [
-        ("AMBIGUOUS_CANONICAL_NAME", [row("a"), row("a")], [row("a"), row("a")]),
-        ("AMBIGUOUS_LINEAGE_KEY", [row("a"), row("b")],
-         [row("A", raw_name="a"), row("B", raw_name="a")]),
-        # A rename the exporter did NOT record: no raw_name, so lineage finds nothing.
-        ("UNMATCHED_IR_ROW", [row("a")], [row("Zed")]),
-        ("UNMATCHED_CANONICAL_ROW", [row("a"), row("b")], [row("a")]),
-        ("ROW_COUNT_MISMATCH", [row("a"), row("b")], [row("a")]),
-        # Lineage says IR row 0 came from canonical 'b'; position says 'a'.
-        ("PAIRING_DISAGREEMENT", [row("a"), row("b")],
-         [row("B", raw_name="b"), row("A", raw_name="a")]),
+    checks: List[Tuple[str, bool, str]] = []
+
+    def record(label: str, passed: bool, detail: str) -> None:
+        checks.append((label, passed, detail))
+        print(f"  {'OK  ' if passed else 'FAIL'} {label:<46} {detail}")
+
+    # --- every lineage defect must fire, by name -----------------------------
+    named: List[Tuple[str, List[Dict[str, Any]], List[Dict[str, Any]]]] = [
+        ("LINEAGE_ANCHOR_MISSING (canonical side)", [row("a")], [row("a", "a")]),
+        ("LINEAGE_ANCHOR_MISSING (IR side)", [row("a", "a")], [row("a")]),
+        ("AMBIGUOUS_LINEAGE_ANCHOR (canonical side)",
+         [row("a", "x"), row("b", "x")], [row("a", "x")]),
+        ("AMBIGUOUS_LINEAGE_ANCHOR (IR side)",
+         [row("a", "x")], [row("a", "x"), row("b", "x")]),
+        ("UNMATCHED_IR_ROW", [row("a", "a")], [row("Zed", "zed")]),
+        ("UNMATCHED_CANONICAL_ROW", [row("a", "a"), row("b", "b")], [row("a", "a")]),
     ]
-
-    failures = 0
-    for expected, canonical, ir in cases:
+    for label, canonical, ir in named:
+        condition = label.split(" ")[0]
         _pairs, problems = _pair_rows(canonical, ir)
-        fired = any(problem.startswith(expected) for problem in problems)
-        print(f"  {'OK  ' if fired else 'FAIL'} {expected:<28} -> {problems}")
-        failures += 0 if fired else 1
+        record(label, any(p.startswith(condition) for p in problems), str(problems))
 
-    clean = [row("a", mapped_ids={"chebi": "CHEBI:1"})]
-    same = [row("a", mapped_ids={"chebi": "CHEBI:1"})]
-    _pairs, problems = _pair_rows(clean, same)
-    counts = _classify(clean[0], same[0])
-    quiet = not problems and not any(counts[key] for key, _ in CATEGORIES)
-    sizes = {key: len(counts[key]) for key, _ in CATEGORIES}
-    print(f"  {'OK  ' if quiet else 'FAIL'} identical rows report nothing -> "
-          f"problems={problems} category_sizes={sizes}")
-    failures += 0 if quiet else 1
+    # --- a rename that creates NO raw_name still pairs, via the anchor -------
+    canonical = [row("glycine", "glycine", mapped_ids={"chebi": "CHEBI:1"})]
+    renamed_no_raw_name = [row("Glycine", "glycine", mapped_ids={"chebi": "CHEBI:1"})]
+    assert "raw_name" not in renamed_no_raw_name[0]
+    lines, code = _report(canonical, renamed_no_raw_name)
+    body = "\n".join(lines)
+    record(
+        "rename WITHOUT raw_name still pairs via the anchor",
+        code == 0 and "RESULT: MEASURED" in body and "1. name changes                 : 1" in body,
+        f"exit={code} name_changes_reported={'1. name changes                 : 1' in body}",
+    )
 
-    print(f"  selfcheck: {len(cases) + 1 - failures}/{len(cases) + 1} passed")
-    return 1 if failures else 0
+    # --- raw_name is never consulted, even when it lies ---------------------
+    lying = [row("Glycine", "glycine", raw_name="something-else",
+                 mapped_ids={"chebi": "CHEBI:1"})]
+    _pairs, problems = _pair_rows(canonical, lying)
+    record("a misleading raw_name does not affect pairing", not problems, str(problems))
+
+    # --- THE CRITICAL ONE ---------------------------------------------------
+    # One perfectly clean paired row plus one unmatched row. Every category is 0.
+    # This must NOT read as a pass.
+    clean_plus_unmatched_canonical = [row("a", "a", mapped_ids={"chebi": "CHEBI:1"}),
+                                      row("b", "b")]
+    clean_plus_unmatched_ir = [row("a", "a", mapped_ids={"chebi": "CHEBI:1"})]
+    lines, code = _report(clean_plus_unmatched_canonical, clean_plus_unmatched_ir)
+    body = "\n".join(lines)
+    all_zero = all(f"{title:<32}:   0 instance" in body for _key, title in CATEGORIES)
+    record(
+        "clean paired row + unmatched row cannot pass",
+        all_zero and code == 2 and "RESULT: UNDETERMINED" in body
+        and "RESULT: MEASURED" not in body and "LOWER BOUND" in body,
+        f"all_five_counts_zero={all_zero} exit={code} "
+        f"undetermined={'RESULT: UNDETERMINED' in body} "
+        f"measured={'RESULT: MEASURED' in body}",
+    )
+
+    # --- and the negative: genuinely identical rows report nothing ----------
+    identical = [row("a", "a", mapped_ids={"chebi": "CHEBI:1"})]
+    lines, code = _report(identical, [row("a", "a", mapped_ids={"chebi": "CHEBI:1"})])
+    body = "\n".join(lines)
+    record(
+        "identical rows report nothing and are MEASURED",
+        code == 0 and "RESULT: MEASURED" in body
+        and all(f"{title:<32}:   0 instance" in body for _key, title in CATEGORIES),
+        f"exit={code}",
+    )
+
+    passed = sum(1 for _l, ok, _d in checks if ok)
+    print(f"  selfcheck: {passed}/{len(checks)} passed")
+    return 0 if passed == len(checks) else 1
+
+
+def _demo_lineage_failure() -> int:
+    """Print a real failing report and return its code, so the PROCESS exit is observable.
+
+    ``--selfcheck`` asserts on ``_report``'s return value in-process; this makes the
+    same guarantee visible in a wrapper cleanup report as a nonzero ``exit_code``.
+    The population is one clean paired row, one row with a missing anchor and one
+    unmatched row -- every category count is 0 and it still must not pass.
+    """
+
+    canonical = [
+        {"name": "a", "mapping_meta": {"query": {"name": "a"}}},
+        {"name": "b", "mapping_meta": {"query": {"name": "b"}}},
+        {"name": "c"},
+    ]
+    ir = [{"name": "a", "mapping_meta": {"query": {"name": "a"}}}]
+    lines, code = _report(canonical, ir)
+    for line in lines:
+        print(line)
+    print(f"\n  process exit code: {code}")
+    return code
 
 
 def main(argv: List[str] | None = None) -> int:
@@ -445,6 +585,9 @@ def main(argv: List[str] | None = None) -> int:
     if "--selfcheck" in args:
         print("=== pairing selfcheck: every loud condition must fire ===")
         return _selfcheck()
+    if "--demo-lineage-failure" in args:
+        print("=== demo: lineage failure must exit nonzero, not look clean ===")
+        return _demo_lineage_failure()
     code = measurement_a()
     measurement_b()
     return code

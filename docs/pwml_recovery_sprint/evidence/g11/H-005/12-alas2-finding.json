@@ -1,0 +1,48 @@
+{
+  "label": "alas2-finding",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import json,pathlib; b='runs/2026-08-02_2130/papers/PMC12856317/'; d=json.load(open(b+'strict/final_mapped.json',encoding='utf-8')); r=json.load(open(b+'research/final_mapped.json',encoding='utf-8')); t=pathlib.Path(b+'01_source_text.txt').read_text(encoding='utf-8',errors='replace'); print('STRICT protein :',json.dumps(d['entities']['proteins'])); print('STRICT complex :',json.dumps(d['entities']['protein_complexes'])); print('RESEARCH protein:',json.dumps(r['entities']['proteins'][0].get('name')),json.dumps(r['entities']['proteins'][0].get('uniprot_id')),json.dumps(r['entities']['proteins'][0].get('mapped_ids'))); print('source bytes   :',len(t.encode('utf-8',errors='replace'))); print('P22557 count   :',t.count('P22557')); print('ALAS2 count    :',t.count('ALAS2')); v=json.load(open('runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json',encoding='utf-8')); print('1647 ALAS2     :',json.dumps(v['entities']['proteins'][0].get('mapped_ids')))"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a789aadba92619c7f",
+  "started_at": "2026-08-06T17:35:15+00:00",
+  "finished_at": "2026-08-06T17:35:16+00:00",
+  "duration_seconds": 0.5967991999932565,
+  "timeout_seconds": 300.0,
+  "root_pid": 1129764,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [],
+  "descendants_terminated": [],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1126028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1126260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1126340,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1130164,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-a789aadba92619c7f/docs/pwml_recovery_sprint/evidence/g11/H-005/12-alas2-finding.json",
+  "json_report_written": true,
+  "json_report_error": ""
+}

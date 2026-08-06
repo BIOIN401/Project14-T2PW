@@ -124,7 +124,26 @@ by which step commits them instead.
 | `repro_stale_index_synthetic.py` | The mechanism, with no artifacts. Basis for C-010's first unit test. | **none** — runs in any checkout | < 1 s |
 | `repro_stale_index_real_artifact.py` | The same defect on production payloads, and the Fur → index-shift chain. | 2 of 4 legs need INIT-001; prints `[skip]` until then | seconds |
 | `probe_downstream_gates.py` | How far a fixed leg gets: Stage-3 PASS, required-field PASS, **IR build FAIL**. The guard against overclaiming C-010. | 1 of 2 legs needs INIT-001 | seconds; may attempt a DB connection |
-| `probe_exporter_identity_mutation.py` | Nine identifiers added to Glycine after the freeze. **Acceptance target for C-050/C-051 and T-102.** | **none beyond already-committed legs** | seconds; may attempt a DB connection |
+| `probe_exporter_identity_mutation.py` | Post-freeze mutation on `runs_verify/2026-08-04_1647/…/strict`, in five categories that are never summed: **name changes 1** (`glycine → Glycine`, no provenance record) · **mapped-ID changes 1** (heme `mapped_ids.pubchem`, a within-row re-projection) · **synthetic database rows 1** (a fabricated `db_row`) · **prefix normalization 8** (4 of 4 rows) · **identity materialization 16** (4 of 4 rows). Rows pair on the pre-freeze `mapping_meta.query.name`, strictly one-to-one; a lineage failure exits nonzero as `UNDETERMINED` and can never read as clean. **Acceptance target for C-050/C-051** — all five 0 with `RESULT: MEASURED`. **Necessary but NOT sufficient for T-102** (D-016: T-102 also requires organism/species equivalence across JSON, PWML and SBML; this measures compound rows in the JSON only). Full output: `probe_exporter_identity_mutation_2026-08-06.md`. | **none beyond already-committed legs** | seconds; may attempt a DB connection |
+
+> **Corrected 2026-08-06 (H-005).** The `probe_exporter_identity_mutation.py` row
+> previously read: *"Nine identifiers added to Glycine after the freeze. **Acceptance
+> target for C-050/C-051 and T-102.**"* Both halves were wrong and are quoted here rather
+> than deleted. **(a)** All nine of Glycine's identifiers are present in the canonical
+> row; only the `chebi` *value* differs (`CHEBI:15428` → `15428`). The "nine added" figure
+> came from the probe pairing rows on the raw `name` while the exporter renamed
+> `glycine → Glycine`. **(b)** Naming it an acceptance target for T-102 contradicts
+> **D-016 (LOCKED)**, which rules T-102 is not narrowed to compounds. It is an acceptance
+> target for C-050/C-051, and only a necessary component of T-102.
+
+### Findings recorded as evidence
+
+These are measured records, not scripts and not fixes. Each states its own status.
+
+| File | Records | Status |
+|---|---|---|
+| `probe_exporter_identity_mutation_2026-08-06.md` | The corrected probe's full output, the superseded pre-fix output, and the before/after per category. | Measurement |
+| `finding_alas2_identity_placeholder_2026-08-06.md` | `runs/2026-08-02_2130/papers/PMC12856317/strict` ships protein `ALAS2` as a literal `"Unknown"` on a cross-species PathBank row, while `P22557` appears **twice** in the supplied paper evidence. | **UNRESOLVED. Not a fix. Closes nothing, including O-1.** |
 
 ### Invocation
 
@@ -133,6 +152,9 @@ by which step commits them instead.
 ```
 
 Run from the repository root. `_repo_root.py` is a helper module, not a script.
+`probe_exporter_identity_mutation.py` additionally accepts `--selfcheck` (proves every
+lineage-failure condition fires) and `--demo-lineage-failure` (proves a lineage failure
+exits nonzero rather than presenting as clean).
 
 ### Monkeypatching is a measurement device
 
