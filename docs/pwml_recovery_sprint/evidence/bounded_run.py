@@ -36,6 +36,12 @@ Guarantees
 5. Survivors are **verified** by re-snapshotting the process table, not assumed.
 6. The child's real exit code is returned unless cleanup verification itself
    failed.
+7. Arbitrary child output cannot crash the parent-side drain: forwarding is
+   encoded against the destination stream's own encoding, never assuming a UTF-8
+   console and never depending on ``PYTHONIOENCODING`` (H-003 / D-017).
+8. A writable ``--json`` destination receives the report on **every** exit path,
+   including one where an exception escapes the wait loop; an unwritable one is a
+   distinct reported condition, never a silent skip.
 
 Forbidden here, permanently: ``taskkill /IM``, ``pkill``, or any kill by image
 name. Cleanup targets only PIDs this job created. Processes that already existed
@@ -81,6 +87,63 @@ DEFAULT_GRACE_SECONDS = 3.0
 #: How long to keep re-checking the process table for survivors after forcing.
 _SURVIVOR_SETTLE_SECONDS = 2.0
 _POLL_INTERVAL = 0.1
+
+#: Emitted on stderr, and recorded in ``notes``, when a ``--json`` destination
+#: could not be written. A missing cleanup report makes a run uncertifiable under
+#: G11, so the condition is announced loudly rather than skipped silently.
+JSON_REPORT_UNWRITABLE_MARKER = "BOUNDED_RUN_JSON_REPORT_UNWRITABLE"
+
+
+def _forward_text(stream: Any, text: str) -> None:
+    """Write *text* to *stream* without letting the console encoding raise.
+
+    The child's output is arbitrary bytes, read back with ``errors="replace"``
+    -- which can itself *introduce* U+FFFD -- and a cp1252 console cannot encode
+    that. ``TextIOWrapper.write`` then raises ``UnicodeEncodeError``, a
+    ``ValueError``, from inside the drain. The encoding is therefore handled
+    *here*, at the point of forwarding: no global interpreter state is mutated
+    and no console configuration is assumed.
+
+    Encodability is tested *before* the write, not caught after it, so a
+    tee-style stream that already committed the chunk to a log file is never
+    handed it twice. Text the console can take is written verbatim; only text it
+    cannot is ``backslashreplace``d, so nothing is silently dropped. Never
+    raises: an unwritable console is no reason to abandon a job or its report.
+    """
+
+    if not text:
+        return
+    # A wrapper stream (e.g. baseline_suite's _Tee) may declare no encoding of
+    # its own while ultimately writing to the real console; ask that console.
+    encoding = (
+        getattr(stream, "encoding", None)
+        or getattr(sys.__stdout__, "encoding", None)
+        or "utf-8"
+    )
+    payload = text
+    try:
+        text.encode(encoding)
+    except (UnicodeError, LookupError):
+        try:
+            payload = text.encode(encoding, errors="backslashreplace").decode(encoding)
+        except Exception:  # noqa: BLE001 - unknown/stateful codec: ASCII is universal
+            payload = text.encode("ascii", errors="backslashreplace").decode("ascii")
+    except Exception:  # noqa: BLE001 - a stream lying about its encoding
+        payload = text
+
+    try:
+        stream.write(payload)
+        stream.flush()
+        return
+    except UnicodeEncodeError:
+        pass  # the declared encoding was not the real one: escape everything
+    except Exception:  # noqa: BLE001 - closed/detached stream: nothing to forward to
+        return
+    try:
+        stream.write(text.encode("ascii", errors="backslashreplace").decode("ascii"))
+        stream.flush()
+    except Exception:  # noqa: BLE001
+        return
 
 
 # --------------------------------------------------------------------------- #
@@ -245,6 +308,12 @@ class CleanupReport:
     preexisting_reported: List[Dict[str, Any]] = dataclasses.field(default_factory=list)
     cleanup_success: bool = False
     notes: List[str] = dataclasses.field(default_factory=list)
+    #: Where the structured report was asked to go, and whether it got there.
+    #: A run whose report was never written is uncertifiable under G11, so the
+    #: outcome is part of the record rather than an unobservable side effect.
+    json_report_path: str = ""
+    json_report_written: bool = False
+    json_report_error: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
@@ -276,7 +345,11 @@ class CleanupReport:
             f"forced                  : {self.forced}",
             f"FINAL SURVIVING COUNT   : {self.final_surviving_count}",
             f"cleanup                 : {'success' if self.cleanup_success else 'FAILURE'}",
+            f"json report             : {self.json_report_path or '(not requested)'}",
+            f"json report written     : {self.json_report_written}",
         ]
+        if self.json_report_error:
+            lines.append(f"json report ERROR       : {self.json_report_error}")
         for surv in self.survivors:
             lines.append(f"  SURVIVOR pid={surv.get('pid')} name={surv.get('name')} "
                          f"ppid={surv.get('ppid')} rss={surv.get('rss_mb')}")
@@ -453,8 +526,14 @@ def run(
     grace: float = DEFAULT_GRACE_SECONDS,
     echo: bool = True,
     env: Optional[Dict[str, str]] = None,
+    report_out: Optional[List[CleanupReport]] = None,
 ) -> CleanupReport:
-    """Run *command* in the foreground, bounded, with guaranteed cleanup."""
+    """Run *command* in the foreground, bounded, with guaranteed cleanup.
+
+    *report_out*, if given, receives the :class:`CleanupReport` as soon as it is
+    constructed, so a caller still holds the cleanup record on the paths where
+    this function re-raises instead of returning.
+    """
 
     command = [str(part) for part in command]
     cwd = cwd or os.getcwd()
@@ -476,6 +555,8 @@ def run(
         started_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
         timeout_seconds=float(timeout),
     )
+    if report_out is not None:
+        report_out.append(report)
 
     # Pre-existing processes are REPORTED, never killed ([S8] item 4). Snapshot
     # before the child starts so ownership is unambiguous afterwards.
@@ -494,7 +575,20 @@ def run(
     fd, log_path = tempfile.mkstemp(prefix=f"boundedrun_{label}_", suffix=".log")
     os.close(fd)
 
+    def _note_once(note: str) -> None:
+        # _drain runs every poll interval; a repeated fault must not grow the
+        # report without bound.
+        if note not in report.notes:
+            report.notes.append(note)
+
     def _drain() -> None:
+        """Forward whatever the child has written since the last call.
+
+        Nothing here may raise: this runs inside the wait loop *and* as the first
+        statement of the cleanup ``finally``, so an escaping exception would skip
+        termination, survivor verification and the cleanup report entirely.
+        """
+
         nonlocal read_cursor
         if not echo:
             return
@@ -503,11 +597,19 @@ def run(
                 fh.seek(read_cursor)
                 chunk = fh.read()
                 read_cursor = fh.tell()
-            if chunk:
-                sys.stdout.write(chunk)
-                sys.stdout.flush()
         except OSError:
-            pass
+            return
+        except Exception as exc:  # noqa: BLE001 - drain faults never abort a job
+            _note_once(f"drain read failed: {type(exc).__name__}: {exc}")
+            return
+        if not chunk:
+            return
+        try:
+            # sys.stdout is resolved per call on purpose: callers such as
+            # baseline_suite.py swap in a tee for the duration of the run.
+            _forward_text(sys.stdout, chunk)
+        except Exception as exc:  # noqa: BLE001 - belt and braces
+            _note_once(f"drain forward failed: {type(exc).__name__}: {exc}")
 
     try:
         kwargs: Dict[str, Any] = {"cwd": cwd, "env": env or os.environ.copy()}
@@ -591,14 +693,21 @@ def run(
                 pass
 
         if proc is not None:
-            # Capture descendants one last time before killing anything.
-            live = snapshot_processes()
-            for pid in descendants_of(proc.pid, live):
-                if pid not in owned and pid not in before:
-                    owned[pid] = live[pid][1]
-                    report.descendants_observed.append(
-                        {"pid": pid, "name": live[pid][1], "ppid": live[pid][0]}
-                    )
+            # Capture descendants one last time before killing anything. Guarded:
+            # a fault while *observing* must not skip the termination and
+            # survivor verification below -- the PIDs owned so far still get killed.
+            try:
+                live = snapshot_processes()
+                for pid in descendants_of(proc.pid, live):
+                    if pid not in owned and pid not in before:
+                        owned[pid] = live[pid][1]
+                        report.descendants_observed.append(
+                            {"pid": pid, "name": live[pid][1], "ppid": live[pid][0]}
+                        )
+            except Exception as exc:  # noqa: BLE001
+                _note_once(
+                    f"final descendant capture failed: {type(exc).__name__}: {exc}"
+                )
 
             outstanding = _still_alive(owned)
             if outstanding:
@@ -665,6 +774,39 @@ def run(
     return report
 
 
+def emit_json_report(report: CleanupReport, json_path: Optional[str]) -> None:
+    """Persist *report* to *json_path*. Never raises.
+
+    An unwritable destination is a **distinct, reported condition**: named on
+    stderr with :data:`JSON_REPORT_UNWRITABLE_MARKER`, recorded in ``notes`` and
+    ``json_report_error``, and the rendered report still reaches stderr, so the
+    cleanup result is not lost with it. It must not become an exception -- that
+    would destroy the very record the caller needs.
+    """
+
+    report.json_report_path = json_path or ""
+    if not json_path:
+        return
+    try:
+        report.json_report_written = True
+        # Serialise first: a serialisation fault must not leave a truncated file
+        # that a later reader would mistake for a cleanup report.
+        payload = json.dumps(report.to_dict(), indent=2)
+        with open(json_path, "w", encoding="utf-8") as fh:
+            fh.write(payload)
+    except Exception as exc:  # noqa: BLE001 - reported, never fatal
+        report.json_report_written = False
+        report.json_report_error = f"{type(exc).__name__}: {exc}"
+        report.notes.append(
+            f"{JSON_REPORT_UNWRITABLE_MARKER}: {json_path}: {report.json_report_error}"
+        )
+        _forward_text(
+            sys.stderr,
+            f"\n{JSON_REPORT_UNWRITABLE_MARKER} path={json_path} "
+            f"error={report.json_report_error}\n",
+        )
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Bounded foreground process wrapper (sprint gate G11 / [S8])."
@@ -685,18 +827,25 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not command:
         parser.error("no command given (use: ... --timeout N -- <command>)")
 
-    report = run(
-        command,
-        timeout=args.timeout,
-        label=args.label,
-        cwd=args.cwd,
-        grace=args.grace,
-        echo=not args.quiet,
-    )
-    print(report.render(), file=sys.stderr)
-    if args.json_path:
-        with open(args.json_path, "w", encoding="utf-8") as fh:
-            json.dump(report.to_dict(), fh, indent=2)
+    # Emitted from a `finally`, with `run` handing the report over as soon as it
+    # exists, so a writable --json destination receives it on EVERY exit path --
+    # including one where an exception escapes `run`. A run with no cleanup
+    # report is uncertifiable under G11.
+    holder: List[CleanupReport] = []
+    try:
+        report = run(
+            command,
+            timeout=args.timeout,
+            label=args.label,
+            cwd=args.cwd,
+            grace=args.grace,
+            echo=not args.quiet,
+            report_out=holder,
+        )
+    finally:
+        if holder:
+            emit_json_report(holder[0], args.json_path)
+            _forward_text(sys.stderr, holder[0].render() + "\n")
     return int(report.returned_code if report.returned_code is not None else 1)
 
 
