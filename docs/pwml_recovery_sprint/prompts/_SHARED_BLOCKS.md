@@ -152,6 +152,32 @@ the developer's machine memory for hours. A full suite alone approaches 16 GB.
    root PID / process group | timeout | exit reason | exit code |
    descendants observed | descendants terminated | final surviving count |
    cleanup success/failure
+
+10. THE REPORT IS COMMITTED, NOT PASTED
+   A pasted table is not evidence. Every job's --json report goes to a UNIQUE,
+   version-controlled path and is committed with your branch:
+
+     <py> docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py next \
+          --task <YOUR-ID> --label <label>          # allocate; never reuse one
+     <py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label <label> \
+          --timeout <s> --json <the allocated path> -- <command...>
+     <py> docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py check \
+          --task <YOUR-ID>                          # before you commit
+
+   A job with no committed report is UNCERTIFIABLE under G11 -- it is not a
+   passed test. The artifact must exist and validate ON ITS OWN: an acceptable
+   exit code proves nothing, because an unwritable --json still returns the
+   child's real exit code. `cleanup_success: true` is required; a final
+   surviving count of 0 alone is NOT sufficient.
+
+   Reports are credential-free and small. `command` is copied verbatim, so a
+   token, key or connection string on the command line lands in the artifact:
+   run `check` before committing, and if it finds one, do NOT commit and do NOT
+   edit the report -- rotate the credential and re-run with the secret in the
+   environment. Never commit captured stdout, logs, caches or basetemp trees.
+
+   PROSPECTIVE ONLY. Never reconstruct, synthesize or backfill a report for a
+   job that already ran. Details: docs/pwml_recovery_sprint/evidence/g11/README.md
 ```
 
 ## S7 — Standing traps
