@@ -1,0 +1,77 @@
+{
+  "label": "g11-spec-selftest",
+  "command": [
+    "python",
+    "docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py",
+    "selftest"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a80c4e39b4c6d3f8d",
+  "started_at": "2026-08-06T20:13:38+00:00",
+  "finished_at": "2026-08-06T20:13:40+00:00",
+  "duration_seconds": 1.4008908999967389,
+  "timeout_seconds": 600.0,
+  "root_pid": 1162236,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1160944,
+      "name": "python.exe",
+      "ppid": 1162236
+    },
+    {
+      "pid": 1157772,
+      "name": "git.exe",
+      "ppid": 1160944
+    }
+  ],
+  "descendants_terminated": [
+    1157772,
+    1160944
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1157404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1157412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1173352,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1175400,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/H-006/03-g11-spec-selftest.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:3784b5bdd7953bf4ff175ae882a4636801e67aad92dcd600dbcafd45782a1662",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a80c4e39b4c6d3f8d\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 47203,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a80c4e39b4c6d3f8d",
+    "repo_head": "ad917c23ef667794320d74fb97771ca49c4b847a",
+    "repo_source": "git",
+    "wrapper_vs_head": "modified:' M'",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

@@ -1,13 +1,15 @@
 """Validation of ``bounded_run.py``: the six cases INIT-001 § Step 0c requires,
-plus the two H-003 / D-017 cases for the restricted-console drain defect.
+the two H-003 / D-017 cases for the restricted-console drain defect, and the four
+H-006 cases for the report schema version and the wrapper build identity.
 
 Every case must pass **and** end with zero surviving owned processes. Survival is
 proved by an explicit post-run liveness check of the recorded PIDs against a fresh
 process-table snapshot -- never by assuming that a kill worked.
 
-Cases 1-6 call ``bounded_run.run`` in-process. Cases 7-8 run ``bounded_run.py``
-as a *subprocess*, because they are about ``main()``: the ``--json`` report and
-the encoding of the parent's own stdout. Case 7 forces
+Cases 1-6 call ``bounded_run.run`` in-process. Cases 7-12 run ``bounded_run.py``
+as a *subprocess*, because they are about ``main()``: the ``--json`` report, the
+encoding of the parent's own stdout, and -- for 9-12 -- the identity fields of the
+artifact a real invocation leaves behind. Case 7 forces
 ``PYTHONIOENCODING=cp1252:strict`` on that subprocess, so the restricted-console
 failure reproduces deterministically whether the developer's console is UTF-8 or
 cp1252. That environment variable is the *fault injection*, never a fix.
@@ -22,6 +24,7 @@ Children are trivial ``python`` scripts. No pytest, no pipeline, no LLM.
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import json
 import os
 import re
@@ -419,17 +422,266 @@ def case_8_unwritable_json() -> bool:
     return ok
 
 
+# --------------------------------------------------------------------------- #
+# H-006 -- report schema version and wrapper build identity.
+#
+# All four run ``bounded_run.py`` as a subprocess: the claim is about the ARTIFACT
+# a real invocation leaves behind, not about an in-process value. Every expected
+# digest and every git fact is computed HERE, independently, and never read back
+# out of the report being judged.
+# --------------------------------------------------------------------------- #
+
+EVIDENCE_DIR = os.path.dirname(WRAPPER)
+G11_DIR = os.path.join(EVIDENCE_DIR, "g11")
+REPO_ROOT = os.path.abspath(os.path.join(EVIDENCE_DIR, "..", "..", ".."))
+
+sys.path.insert(0, G11_DIR)
+import g11_evidence  # noqa: E402
+
+
+def _digest_of(path: str) -> str:
+    """Independent SHA-256 of a file's raw bytes, in the report's own spelling."""
+
+    digest = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for block in iter(lambda: fh.read(65536), b""):
+            digest.update(block)
+    return "sha256:" + digest.hexdigest()
+
+
+def _git_in_repo(*args: str) -> str:
+    """Ground truth from git, asked independently of the wrapper."""
+
+    proc = subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "-C", REPO_ROOT, *args],
+        capture_output=True, text=True, timeout=120, check=False,
+    )
+    return proc.stdout if proc.returncode == 0 else ""
+
+
+def _wrapper_report(wrapper_path: str, label: str,
+                    json_path: str) -> Tuple[int, Optional[Dict[str, Any]]]:
+    """Run *wrapper_path* itself; return (rc, its decoded ``--json`` report)."""
+
+    argv = [PY, wrapper_path, "--label", label, "--timeout", "60", "--quiet",
+            "--json", json_path, "--", PY, "-c", "print('h006 child')"]
+    proc = subprocess.run(argv, capture_output=True, timeout=180)
+    try:
+        with open(json_path, "r", encoding="utf-8") as fh:
+            return proc.returncode, json.load(fh)
+    except (OSError, ValueError):
+        return proc.returncode, None
+
+
+def _as_report(payload: Optional[Dict[str, Any]], label: str
+               ) -> bounded_run.CleanupReport:
+    if not payload:
+        return bounded_run.CleanupReport(label=label, command=[PY, "-c"],
+                                         cwd="", started_at="")
+    return bounded_run.CleanupReport(
+        **{k: v for k, v in payload.items() if k in _REPORT_FIELDS}
+    )
+
+
+def case_9_schema_and_build_fields() -> bool:
+    """H-006 (a): the new fields are present and correctly populated in a report
+    the wrapper actually produced, the schema VALIDATES, and the repository SHA
+    and dirty-state recorded beside them are TRUTHFUL."""
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case9_")
+    json_path = os.path.join(tmp, "01-identity.json")
+    rc, payload = _wrapper_report(WRAPPER, "c9-identity", json_path)
+    data = payload or {}
+    build = data.get("wrapper_build") or {}
+    head = _git_in_repo("rev-parse", "HEAD").strip()
+    repo_dirty = bool(
+        _git_in_repo("status", "--porcelain", "--untracked-files=no").strip())
+    wrapper_dirty = bool(_git_in_repo("status", "--porcelain", "--", WRAPPER).strip())
+    rep = _as_report(data, "c9-identity")
+
+    ok = _record("9. schema + build identity", rep, [rep.root_pid or 0], [
+        ("the wrapper wrote its --json report", payload is not None),
+        ("schema_version == the wrapper's declared version",
+         data.get("schema_version") == bounded_run.REPORT_SCHEMA_VERSION),
+        ("schema VALIDATES: no violations",
+         bounded_run.validate_report_schema(data) == []),
+        ("digest == independently hashed bytes of the wrapper that ran",
+         build.get("digest") == _digest_of(WRAPPER)),
+        ("wrapper_build.path names the executed wrapper",
+         os.path.normcase(build.get("path") or "") == os.path.normcase(WRAPPER)),
+        ("repo_head TRUTHFUL: equals `git rev-parse HEAD`",
+         bool(head) and build.get("repo_head") == head),
+        ("repo dirty-state TRUTHFUL: equals `git status --porcelain -uno`",
+         build.get("repo_tracked_files_dirty") is repo_dirty),
+        ("wrapper-vs-HEAD state TRUTHFUL: 'clean' iff git reports it clean",
+         (build.get("wrapper_vs_head") == "clean") is (not wrapper_dirty)),
+        ("child's REAL exit code still 0", rc == 0 and data.get("exit_code") == 0),
+        ("cleanup_success", data.get("cleanup_success") is True),
+        ("reported survivors == 0", data.get("final_surviving_count") == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_10_identity_stable_and_sensitive() -> bool:
+    """H-006 (b): the identity is STABLE across runs of one build and CHANGES
+    when the wrapper's own content changes. A constant would satisfy case 9 and
+    be worthless, so both halves are asserted here."""
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case10_")
+    copy = os.path.join(tmp, "bounded_run.py")
+    shutil.copyfile(WRAPPER, copy)
+    build_a = _digest_of(copy)
+    rc1, r1 = _wrapper_report(copy, "c10-build-a1", os.path.join(tmp, "01-a1.json"))
+    rc2, r2 = _wrapper_report(copy, "c10-build-a2", os.path.join(tmp, "02-a2.json"))
+    with open(copy, "ab") as fh:
+        fh.write(b"\r\n# H-006 selftest: the wrapper's own content changed here.\r\n")
+    build_b = _digest_of(copy)
+    rc3, r3 = _wrapper_report(copy, "c10-build-b", os.path.join(tmp, "03-b.json"))
+
+    runs = [r1, r2, r3]
+    d1, d2, d3 = [((r or {}).get("wrapper_build") or {}).get("digest") for r in runs]
+    tracked = [pid for pid in ((r or {}).get("root_pid") for r in runs) if pid]
+    rep = _as_report(r3, "c10-build-b")
+
+    ok = _record("10. identity stable and sensitive", rep, tracked, [
+        ("all three runs produced a report", all(r is not None for r in runs)),
+        ("STABLE: two runs of the SAME build agree", d1 is not None and d1 == d2),
+        ("...and both equal the independently hashed build", d1 == build_a),
+        ("SENSITIVE: a content change moved the digest",
+         d3 is not None and d3 == build_b and d3 != d1),
+        ("not a constant: the two builds really do differ", build_a != build_b),
+        ("every run kept its child's real exit code",
+         rc1 == 0 and rc2 == 0 and rc3 == 0),
+        ("every run reported cleanup_success",
+         all((r or {}).get("cleanup_success") is True for r in runs)),
+        ("every run reported 0 survivors",
+         all((r or {}).get("final_surviving_count") == 0 for r in runs)),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_11_identity_from_the_executing_copy() -> bool:
+    """H-006 (c): the CROSS-CHECKOUT failure mode made into a test. A copy of the
+    wrapper runs from OUTSIDE the repository; the recorded identity must be the
+    copy that RAN, never the build sitting in the tree."""
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case11_")
+    outside = os.path.join(tmp, "bounded_run.py")
+    shutil.copyfile(WRAPPER, outside)
+    # Deliberately NOT byte-identical: an identical copy would make every digest
+    # comparison below vacuously true.
+    with open(outside, "ab") as fh:
+        fh.write(b"\r\n# H-006 selftest: out-of-tree build, distinct from the tree's.\r\n")
+    json_path = os.path.join(tmp, "01-crosscheckout.json")
+    rc, payload = _wrapper_report(outside, "c11-crosscheckout", json_path)
+    data = payload or {}
+    build = data.get("wrapper_build") or {}
+    inside_repo = os.path.normcase(os.path.abspath(tmp)).startswith(
+        os.path.normcase(os.path.abspath(REPO_ROOT)) + os.sep)
+    rep = _as_report(data, "c11-crosscheckout")
+
+    ok = _record("11. identity from executing copy", rep, [rep.root_pid or 0], [
+        ("the copy really is outside the repository", not inside_repo),
+        ("the out-of-tree wrapper produced a report", payload is not None),
+        ("digest == the COPY that ran", build.get("digest") == _digest_of(outside)),
+        ("digest != the wrapper build in the tree",
+         build.get("digest") != _digest_of(WRAPPER)),
+        ("path == the copy that ran, not the tree's",
+         os.path.normcase(build.get("path") or "") == os.path.normcase(outside)),
+        ("identity NOT taken from the tree's repository",
+         os.path.normcase(build.get("repo_root") or "")
+         != os.path.normcase(REPO_ROOT)),
+        ("schema still VALIDATES for an out-of-tree build",
+         bounded_run.validate_report_schema(data) == []),
+        ("child's REAL exit code preserved", rc == 0 and data.get("exit_code") == 0),
+        ("cleanup_success", data.get("cleanup_success") is True),
+        ("reported survivors == 0", data.get("final_surviving_count") == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_12_preexisting_reports_still_validate() -> bool:
+    """H-006 (d): reports written before these fields existed must STILL validate,
+    and no committed one may be edited or regenerated to acquire them -- a
+    reconstruction is not evidence of the original run."""
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case12_")
+    fresh = os.path.join(tmp, "01-fresh.json")
+    rc, payload = _wrapper_report(WRAPPER, "c12-compat", fresh)
+    data = payload or {}
+    legacy = {k: v for k, v in data.items()
+              if k not in ("schema_version", "wrapper_build")}
+    legacy_path = os.path.join(tmp, "02-legacy.json")
+    with open(legacy_path, "w", encoding="utf-8") as fh:
+        json.dump(legacy, fh, indent=2)
+
+    task_dirs = [
+        os.path.join(G11_DIR, name) for name in sorted(os.listdir(G11_DIR))
+        if os.path.isdir(os.path.join(G11_DIR, name))
+        and g11_evidence.TASK_RE.match(name)
+    ]
+    # COMMITTED means tracked by git, not merely present: the path this very run
+    # allocated is sitting in one of these directories as an unwritten placeholder
+    # while the case executes, and it is not a pre-existing report.
+    committed = [
+        os.path.normpath(os.path.join(REPO_ROOT, line.strip()))
+        for line in _git_in_repo("ls-files", "--", *task_dirs).splitlines()
+        if line.strip()
+    ]
+    without_fields = []
+    for path in committed:
+        with open(path, "r", encoding="utf-8") as fh:
+            if "schema_version" not in json.load(fh):
+                without_fields.append(path)
+    # `-uno` so this task's own, still-untracked new reports are not counted as
+    # tampering with a committed one.
+    edited = _git_in_repo("status", "--porcelain", "--untracked-files=no", "--",
+                          *task_dirs).strip()
+    rep = _as_report(data, "c12-compat")
+
+    ok = _record("12. pre-existing reports validate", rep, [rep.root_pid or 0], [
+        ("g11 check accepts the NEW, versioned report",
+         g11_evidence.check_report(fresh) == []),
+        ("the legacy shape carries NEITHER new field",
+         "schema_version" not in legacy and "wrapper_build" not in legacy),
+        ("g11 check accepts a report WITHOUT the new fields",
+         g11_evidence.check_report(legacy_path) == []),
+        ("validate_report_schema treats absence as valid, not schema 0 == invalid",
+         bounded_run.validate_report_schema(legacy) == []),
+        ("committed pre-H-006 reports were found", len(without_fields) >= 16),
+        ("every committed pre-H-006 report still validates",
+         all(g11_evidence.check_report(p) == [] for p in without_fields)),
+        ("no committed report was edited or regenerated", edited == ""),
+        ("child's REAL exit code preserved", rc == 0 and data.get("exit_code") == 0),
+        ("cleanup_success", data.get("cleanup_success") is True),
+        ("reported survivors == 0", data.get("final_surviving_count") == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
 def main() -> int:
     print("=" * 74)
-    print("bounded_run.py -- INIT-001 Step 0c validation + H-003 drain cases")
+    print("bounded_run.py -- INIT-001 Step 0c + H-003 drain + H-006 identity cases")
     print(f"platform={sys.platform}  python={sys.version.split()[0]}  pid={os.getpid()}")
     print(f"wrapper under test: {WRAPPER}")
+    # [S8] self-reference: name the wrapper build that produced everything below.
+    print(f"wrapper build under test: "
+          f"{bounded_run.wrapper_build_identity().get('digest')}")
+    print(f"report schema version   : {bounded_run.REPORT_SCHEMA_VERSION}")
     print("=" * 74)
 
     outcomes = [
         case_1_normal(), case_2_nonzero(), case_3_hang(),
         case_4_grandchild(), case_5_forced(), case_6_cancelled(),
         case_7_unencodable_child_output(), case_8_unwritable_json(),
+        case_9_schema_and_build_fields(),
+        case_10_identity_stable_and_sensitive(),
+        case_11_identity_from_the_executing_copy(),
+        case_12_preexisting_reports_still_validate(),
     ]
 
     print()

@@ -42,6 +42,9 @@ Guarantees
 8. A writable ``--json`` destination receives the report on **every** exit path,
    including one where an exception escapes the wait loop; an unwritable one is a
    distinct reported condition, never a silent skip.
+9. Every report states its own ``schema_version`` and the ``wrapper_build`` that
+   produced it -- a digest of the *executing* module, so the artifact answers
+   ``[S8]``'s self-reference question without git archaeology (H-006).
 
 Forbidden here, permanently: ``taskkill /IM``, ``pkill``, or any kill by image
 name. Cleanup targets only PIDs this job created. Processes that already existed
@@ -63,8 +66,10 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import hashlib
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -278,6 +283,223 @@ def descendants_of(root_pid: int, table: Dict[int, Tuple[int, str]]) -> List[int
 
 
 # --------------------------------------------------------------------------- #
+# Report schema version  (H-006)
+# --------------------------------------------------------------------------- #
+
+#: Version of the REPORT CONTRACT -- the set, types and meanings of the fields a
+#: consumer reads out of a cleanup report. Distinct from the wrapper build
+#: identity below on purpose: this number describes the SHAPE of the record, the
+#: digest describes the CODE that produced it. Neither substitutes for the other.
+#:
+#: BUMP DISCIPLINE. Bump when a consumer that validated against version N could
+#: MISREAD an N+1 report: a field is removed, renamed, or retyped; a field's
+#: meaning changes under an unchanged name (including the value domain of
+#: ``exit_reason`` or ``isolation``); a field's units change.
+#: DO NOT bump for: ADDING a field (additive change is compatible -- a consumer
+#: ignores keys it does not know); any change to cleanup, termination or
+#: survivor-verification BEHAVIOUR, or to comments, docstrings and internals
+#: (that is ``wrapper_build.digest``'s job, and it moves on EVERY content
+#: change); or new *values* a field's documented meaning already permits.
+#:
+#: Version 1 is the first to carry the field at all. A report without it came from
+#: a pre-H-006 wrapper: it is schema 0, still valid (:func:`validate_report_schema`
+#: treats absence as valid), and it must NEVER be backfilled -- a reconstruction is
+#: not evidence of the original run.
+REPORT_SCHEMA_VERSION = 1
+
+
+# --------------------------------------------------------------------------- #
+# Wrapper build identity  (H-006).  Rationale in full: evidence/g11/README.md.
+#
+# ``command`` names the CHILD; nothing named the WRAPPER, so ``[S8]``'s
+# self-reference obligation could not be met FROM the artifact. The substitute was
+# git archaeology (``git log -1 -- <report>`` -> the wrapper in that tree), which
+# fails three ways. The identity below is instead a SHA-256 over the RAW BYTES of
+# the module ACTUALLY EXECUTING, read via ``__file__`` -- never from the tree,
+# from git, or from an environment variable a caller can set:
+#   (a) CROSS-CHECKOUT EXECUTION (one tree's wrapper run while committing on
+#       another's branch): defeated -- digest and path are the file's that ran,
+#       whichever checkout it came from. Selftest case 11 proves it.
+#   (b) REBASE / SQUASH moving the commit ``git log -1`` resolves to: defeated --
+#       a content digest is not a commit reference and does not move.
+#   (c) A STALE WRAPPER run before the commit: defeated -- it hashes to its own
+#       stale content, which cannot match the wrapper the commit carries.
+# Raw bytes, so two checkouts whose line endings differ are correctly different
+# builds. Repository SHA and dirty state are recorded IN ADDITION, resolved from
+# the WRAPPER's own directory (never the caller's cwd, which may be another
+# checkout). They are context, never identity: a wrapper can be modified relative
+# to HEAD or live outside any repository, and ``repo_head`` would then name bytes
+# other than the ones that ran.
+# --------------------------------------------------------------------------- #
+
+#: Bound on each read-only ``git`` metadata call. Exceeding it degrades the
+#: repository context to "unavailable"; it never blocks or fails a job.
+GIT_METADATA_TIMEOUT_SECONDS = 20.0
+
+_DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+
+
+def _sha256_file(path: str) -> Tuple[str, int, str]:
+    """``(hexdigest, size_bytes, error)`` for *path*. Never raises."""
+
+    digest = hashlib.sha256()
+    size = 0
+    try:
+        with open(path, "rb") as fh:
+            while True:
+                block = fh.read(65536)
+                if not block:
+                    break
+                size += len(block)
+                digest.update(block)
+    except OSError as exc:
+        return "", 0, f"{type(exc).__name__}: {exc}"
+    return digest.hexdigest(), size, ""
+
+
+def _git(cwd: str, *args: str) -> Tuple[Optional[str], str]:
+    """Run one read-only ``git`` command in *cwd*. ``(stdout, error)``.
+
+    ``core.fsmonitor=false`` stops git from spawning a background file-system
+    monitor daemon that would outlive this process: a wrapper that leaks a
+    process while recording its own provenance would be self-defeating.
+    """
+
+    try:
+        proc = subprocess.run(  # noqa: S603 - fixed read-only argv
+            ["git", "-c", "core.fsmonitor=false", "-C", cwd, *args],
+            capture_output=True, text=True, check=False,
+            timeout=GIT_METADATA_TIMEOUT_SECONDS,
+        )
+    except Exception as exc:  # noqa: BLE001 - git absent, or slower than the bound
+        return None, f"{type(exc).__name__}: {exc}"
+    if proc.returncode != 0:
+        lines = (proc.stderr or "").strip().splitlines()
+        return None, lines[0] if lines else f"git exited {proc.returncode}"
+    return proc.stdout, ""
+
+
+def _repository_facts(wrapper_path: str) -> Dict[str, Any]:
+    """Repository context for the executing wrapper, resolved from ITS directory.
+
+    ``repo_head`` is never wrapper identity on its own. ``wrapper_vs_head`` says
+    whether the executing bytes match what that commit carries, and
+    ``repo_tracked_files_dirty`` says whether the checkout as a whole was clean,
+    so a reader can never mistake the SHA for a promise about the bytes that ran.
+    """
+
+    facts: Dict[str, Any] = {
+        "repo_root": "",
+        "repo_head": "",
+        "repo_source": "unavailable",
+        "wrapper_vs_head": "unknown",
+        "repo_tracked_files_dirty": None,
+        "repo_error": "",
+    }
+    directory = os.path.dirname(wrapper_path) or "."
+    out, err = _git(directory, "rev-parse", "HEAD", "--show-toplevel")
+    if out is None:
+        facts["repo_source"] = "not_a_repository"
+        facts["repo_error"] = err
+        return facts
+    lines = [line.strip() for line in out.splitlines() if line.strip()]
+    if len(lines) < 2:
+        facts["repo_error"] = "unexpected rev-parse output"
+        return facts
+    facts["repo_head"], facts["repo_root"] = lines[0], os.path.normpath(lines[1])
+    facts["repo_source"] = "git"
+
+    status, err = _git(directory, "status", "--porcelain", "--", wrapper_path)
+    if status is None:
+        facts["repo_error"] = err
+    else:
+        # The porcelain status code is COLUMN-significant (" M" unstaged, "M "
+        # staged), so the leading space must survive: never ``strip()`` it away.
+        rows = [line for line in status.splitlines() if line.strip()]
+        code = rows[0][:2] if rows else ""
+        if not code:
+            facts["wrapper_vs_head"] = "clean"
+        elif code == "??":
+            facts["wrapper_vs_head"] = "untracked"
+        else:
+            facts["wrapper_vs_head"] = f"modified:{code!r}"
+
+    dirty, err = _git(directory, "status", "--porcelain", "--untracked-files=no")
+    if dirty is None:
+        facts["repo_error"] = facts["repo_error"] or err
+    else:
+        facts["repo_tracked_files_dirty"] = bool(dirty.strip())
+    return facts
+
+
+def compute_wrapper_build() -> Dict[str, Any]:
+    """Identify the wrapper build that is running, from the running module."""
+
+    path = os.path.abspath(__file__)
+    hexdigest, size, error = _sha256_file(path)
+    build: Dict[str, Any] = {
+        "digest": f"sha256:{hexdigest}" if hexdigest else "",
+        "digest_algorithm": "sha256",
+        "digest_scope": "raw_bytes_of_the_executing_module_file",
+        "path": path,
+        "size_bytes": size,
+        "digest_error": error,
+    }
+    build.update(_repository_facts(path))
+    return build
+
+
+_WRAPPER_BUILD: Optional[Dict[str, Any]] = None
+
+
+def wrapper_build_identity() -> Dict[str, Any]:
+    """Cached per process. A fresh dict each call, so no report can mutate it.
+
+    Resolved when the first :class:`CleanupReport` is constructed -- which is
+    before ``run()`` snapshots the pre-existing process table -- so the
+    short-lived ``git`` children it needs are finished and gone before ownership
+    is established, and can neither be mistaken for nor interfere with the job's
+    owned descendants.
+    """
+
+    global _WRAPPER_BUILD
+    if _WRAPPER_BUILD is None:
+        _WRAPPER_BUILD = compute_wrapper_build()
+    return dict(_WRAPPER_BUILD)
+
+
+def validate_report_schema(payload: Dict[str, Any]) -> List[str]:
+    """Validate the H-006 identity fields of a decoded report. ``[]`` == valid.
+
+    ABSENCE IS VALID. A report with no ``schema_version`` came from a wrapper
+    build predating the field; it is schema 0 and it is not defective. Backfilling
+    one would be a reconstruction, not evidence, and is forbidden.
+    """
+
+    bad: List[str] = []
+    if "schema_version" not in payload:
+        if "wrapper_build" in payload:
+            bad.append("wrapper_build_without_schema_version")
+        return bad
+    version = payload["schema_version"]
+    if isinstance(version, bool) or not isinstance(version, int):
+        return bad + [f"schema_version_not_an_integer:{type(version).__name__}"]
+    if version < 1:
+        bad.append(f"schema_version_out_of_range:{version}")
+    if version > REPORT_SCHEMA_VERSION:
+        bad.append(f"schema_version_from_a_newer_wrapper:{version}")
+    build = payload.get("wrapper_build")
+    if not isinstance(build, dict):
+        return bad + ["wrapper_build_missing_or_not_an_object"]
+    digest = build.get("digest")
+    if not isinstance(digest, str) or not _DIGEST_RE.match(digest):
+        bad.append(f"wrapper_build_digest_malformed:{digest!r}")
+    if not isinstance(build.get("path"), str) or not build.get("path"):
+        bad.append("wrapper_build_path_missing")
+    return bad
+
+
+# --------------------------------------------------------------------------- #
 # Report
 # --------------------------------------------------------------------------- #
 
@@ -314,14 +536,31 @@ class CleanupReport:
     json_report_path: str = ""
     json_report_written: bool = False
     json_report_error: str = ""
+    #: Version of the report contract this record was written against. See
+    #: :data:`REPORT_SCHEMA_VERSION` for the bump discipline. Its absence in an
+    #: artifact means schema 0 -- a pre-H-006 wrapper -- not a defect.
+    schema_version: int = REPORT_SCHEMA_VERSION
+    #: WHICH WRAPPER BUILD produced this record, digested from the running module.
+    #: ``command`` names the child; this names the wrapper.
+    wrapper_build: Dict[str, Any] = dataclasses.field(
+        default_factory=wrapper_build_identity
+    )
 
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
 
     def render(self) -> str:
+        build = self.wrapper_build if isinstance(self.wrapper_build, dict) else {}
         lines = [
             "",
             "================ CLEANUP REPORT ================",
+            f"report schema version   : {self.schema_version}",
+            f"wrapper build           : {build.get('digest', '')}",
+            f"wrapper path (executed) : {build.get('path', '')}",
+            f"wrapper vs HEAD         : {build.get('wrapper_vs_head', 'unknown')}"
+            f"  @ {build.get('repo_head', '') or '(no repository)'}"
+            f"  [{build.get('repo_source', 'unavailable')}"
+            f", worktree dirty={build.get('repo_tracked_files_dirty')}]",
             f"label                   : {self.label}",
             f"command                 : {' '.join(self.command)}",
             f"cwd                     : {self.cwd}",
