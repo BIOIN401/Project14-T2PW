@@ -272,6 +272,98 @@ modification" to "never touch any of these seven, by any means".
 
 ---
 
+## D-015 — Compound canonicalization is pre-freeze · 2026-08-05 · LOCKED
+
+**Compound name and identity canonicalization is part of the canonical biological
+representation, even when it introduces no new reaction.** It must occur deterministically
+**before** the canonical payload is frozen.
+
+Adopt the `LIFT_WITH_ADAPTER` direction from SPIKE-002. The pre-freeze operation must:
+
+- produce the resolution report;
+- use an **explicit, unambiguous rename map**;
+- **atomically** propagate each rename to **every** process participant reference;
+- preserve the original supported name as an **alias or synonym** where appropriate;
+- preserve **reaction count and participant connectivity**;
+- **fail visibly** on ambiguous or dangling references;
+- avoid inventing identity or any other biology;
+- finish **all network-dependent resolution before the freeze**.
+
+After the freeze, PWML and SBML exporters must not query external services, materialize new
+identity fields, rename entities, or reinterpret biology.
+
+This closes the question SPIKE-002 § 10 item 1 raised — whether canonicalization is biology
+and where it belongs. It is biology, and it belongs upstream of the freeze.
+
+**Implements:** the reshaped C-040 / C-050 / C-051 chain.
+**Evidence:** `SPIKE-002-REPORT.md` § 2, § 5 (R1), § 6, § 7.
+
+---
+
+## D-016 — Species canonicalization is pre-freeze, and T-102 keeps species · 2026-08-05 · LOCKED
+
+**Species and organism context are also part of the canonical biological representation.**
+`_canonicalize_species_offline` must therefore be moved into an **explicitly owned pre-freeze
+task**. It is currently named in no `MASTER_PLAN` § 9 row — that ownership gap is closed by
+this ruling, not deferred.
+
+**T-102 equivalence is NOT narrowed to compounds.** It must verify **both** compound identity
+**and** organism/species equivalence, across canonical JSON, PWML **and** SBML.
+
+This resolves SPIKE-002 § 10 item 2 against the alternative of scoping T-102 to compounds.
+
+**Evidence:** `SPIKE-002-REPORT.md` § 5 (R2) — the same post-freeze rewrite mechanism on
+organism context, a `PRODUCT_CONTRACT` § 5 must-remain-equivalent dimension.
+
+---
+
+## D-017 — The bounded wrapper's output forwarding is a G11 defect · 2026-08-05 · LOCKED
+
+A job that is killed by its own wrapper and leaves **no cleanup report** is uncertifiable
+under G11. Repairing that is pre-Wave-A0 harness work, not a nicety.
+
+Temporary ownership of `evidence/bounded_run.py` and `evidence/bounded_run_selftest.py` is
+granted to `pwml-implementer` **for that task only**; the grant expires with it.
+`batch/runner.py` remains C-032's and must not be touched.
+
+**Implements:** H-001's successor task **H-003**, merged at `aab975a`.
+**Accepted rulings, not to be reopened without new evidence:** the ~441-line change against
+the ~400 estimate is acceptable and recorded as a deviation; the cleanup-`finally` guard is
+retained because observation itself can fault; the child's **real** exit code is retained
+when the `--json` destination is unwritable — a synthetic infrastructure code would lose
+exactly what the requirement protects.
+
+---
+
+## D-018 — G11 evidence is durable, version-controlled and prospective · 2026-08-05 · LOCKED
+
+Every future test, benchmark, pipeline leg or LLM-backed job receives a **unique `--json`
+report path under a version-controlled evidence location**, so a G11 claim is checkable
+against a committed artifact rather than a pasted table.
+
+Compliance logic must:
+
+1. require the expected artifact to exist **independently of any wrapper or child exit
+   code** — a missing artifact cannot pass because an exit code happens to be acceptable;
+2. require `cleanup_success: true` — **`final_surviving_count: 0` alone is insufficient**,
+   because the count can keep its default while a child is still alive;
+3. validate the expected report schema and required fields;
+4. **not** treat `json_report_written: false` from a direct `run()` caller as a wrapper
+   violation when `main()` and `--json` were never invoked;
+5. commit only **credential-free, bounded** evidence — never captured bulk output or caches.
+
+**Prospective only.** Historical runs that lack reports are **not** backfilled. A
+reconstruction produced after the fact is not evidence of the original run, and the record's
+statement that the pre-A0 jobs cannot be reconstructed stands.
+
+**Implements:** **H-004**, merged at `a04a0aa`.
+**Known follow-ups, deliberately not implemented out of boundary:** `CleanupReport` carries
+no `schema_version` and no `wrapper_build` field. Both require `bounded_run.py`, which H-004
+did not own. Until a `wrapper_build` field exists, no artifact can prove which wrapper
+produced it — git archaeology is an inference from the tree, not proof from the artifact.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
