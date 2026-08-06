@@ -39,10 +39,35 @@ gate **and** the required-field gate. IR build then fails on
 
 `build_pwml_ir` (`pwml/ir.py:966-2007`) calls `_resolve_compound_rows` (`:797`).
 Measured on committed `runs_verify/2026-08-04_1647/papers/PMC12856317/strict/`,
-`final_mapped.json → pwml_ir.json` adds `pathwhiz_id`/`db_id` to all four compounds and
-gives Glycine **nine** external identifiers absent from the canonical payload
-(`drugbank DB00145`, `hmdb HMDB0000123`, `kegg C00037`, `chebi 15428`,
-`pubchem 5257127`, `chemspider 730`, `cas 56-40-6`, `pathbank_compound_id 78`).
+`final_mapped.json → pwml_ir.json` mutates all four compound rows. Re-measured by the
+corrected probe (H-005, 2026-08-06), reported in five categories that are never summed:
+
+| Category | Instances | Rows |
+|---|---|---|
+| name changes | **1** — `glycine → Glycine`, no provenance record | 1 of 4 |
+| mapped-ID changes | **1** — heme `mapped_ids.pubchem='3334'`, a within-row re-projection of that row's own `pubchem_cid` | 1 of 4 |
+| synthetic database rows | **1** — `db_row {"id": 78, "name": "Glycine"}` fabricated at export time | 1 of 4 |
+| prefix normalization | **8** — `CHEBI:` stripped from `mapped_ids.chebi` and `chebi_id` | **4 of 4** |
+| identity materialization | **16** — `pathwhiz_id`, `db_id`, `db_status`, `chosen_rule` | **4 of 4** |
+
+**The `PRODUCT_CONTRACT` § 5 violation is real and remains blocking.** It is violated by
+**kind, not by count**: a post-freeze rename with no provenance record, a fabricated
+`db_row`, `CHEBI:` stripping on 4 of 4, identity materialization on 4 of 4. **T-102
+acceptance is per category — all five must be 0.**
+
+> **Corrected 2026-08-06 (H-005). The previous text was wrong on three counts and is kept
+> here so the correction is auditable.** It read: "adds `pathwhiz_id`/`db_id` to all four
+> compounds and gives Glycine **nine** external identifiers absent from the canonical
+> payload (`drugbank DB00145`, `hmdb HMDB0000123`, `kegg C00037`, `chebi 15428`,
+> `pubchem 5257127`, `chemspider 730`, `cas 56-40-6`, `pathbank_compound_id 78`)."
+> (1) **All nine are present** in the canonical Glycine row's `mapped_ids`; only the
+> `chebi` *value* differs (`CHEBI:15428` → `15428`). (2) The prose said nine but the list
+> held **eight** — `biocyc GLY` was the missing ninth. (3) The companion "**ten**
+> identifiers added post-freeze" was an artefact of the probe pairing canonical and IR
+> rows on raw `name`: the rename made Glycine's canonical row unfindable, so its own nine
+> identifiers were counted as additions. True figure: **1**. Evidence:
+> `evidence/probe_exporter_identity_mutation_2026-08-06.md`, cleanup reports
+> `evidence/g11/H-005/`. The magnitude was overstated; the violation was not.
 
 ### 1.3 Refusal evidence destroyed at the batch boundary — confirmed live
 
