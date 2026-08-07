@@ -58,7 +58,15 @@ extending them is in scope; reimplementing them is not.
 Stop and report **without committing** if: the change needs an unowned file · an
 unexpected test outside your focused set fails · your dependency's merged behaviour
 differs from what your prompt assumes · you would have to violate an invariant · the work
-exceeds ~400 changed lines (propose a split instead).
+exceeds either declared budget below, predicted or actual (propose a split instead).
+
+**Work to your card's declared budgets — there is no universal changed-line threshold.**
+Follow its **exact allowed manifest**; its **hand-authored** max additions-plus-deletions;
+and, budgeted **separately**, its **machine-generated evidence** — max artifact count **and**
+a size limit. If the card declares none of these, stop and ask first. An over-budget commit
+requires **renewed explicit authority granting revised budgets**; never self-authorize one,
+and technical success does not excuse one. Split **only** where each half is independently
+implementable **and** validatable — never leave or merge an unvalidated half. See `[S4]`, D-019.
 
 ## Evidence
 
