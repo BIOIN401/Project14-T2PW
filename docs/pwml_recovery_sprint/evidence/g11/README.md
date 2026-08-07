@@ -56,8 +56,9 @@ no report** — `check` fails it as `report_never_written` and it must never be 
 
 ## Required minimum content
 
-Specified against what `bounded_run.CleanupReport` actually emits (`bounded_run.py:285`,
-written at `:777`), not against a wish. `g11_evidence.py selftest` regenerates a report
+Specified against what `bounded_run.CleanupReport` actually emits (the `CleanupReport`
+dataclass, `bounded_run.py:507-508`, written out by `emit_json_report` at `:1016`), not
+against a wish. `g11_evidence.py selftest` regenerates a report
 from a live wrapped command and asserts this exact set, so the specification cannot drift
 away from the tool.
 
@@ -75,23 +76,136 @@ away from the tool.
 `infrastructure_failure`. The dataclass default `unknown` means `run()` never classified
 the exit, so it is not a valid record.
 
-**Two fields the objective asks for and the artifact does not carry.** Adding either
-requires editing `bounded_run.py`, which H-004 does not own, so both are stated here as
-requirements for a follow-up task rather than implemented:
-
-* **report-schema version** — `CleanupReport` has none. This specification is versioned
-  instead (`G11_SPEC_VERSION`), and the required field set is the structural contract.
-* **wrapper build identity** — `command` names the *child*, never the wrapper, and there
-  is no build/SHA field. `[S8]`'s self-reference clause wants each result to state which
-  wrapper build produced it. Partial mitigation only: the report is committed on the
-  branch that ran it, so `git log -1 -- <report>` gives the commit and
-  `git show <commit>:docs/pwml_recovery_sprint/evidence/bounded_run.py` gives the wrapper
-  build present in that tree. That is an inference from the tree, **not proof from the
-  artifact** — a stale wrapper run before the commit would not be visible. A
-  `wrapper_build` field in `CleanupReport` is the real fix.
-
 A compliant report may describe a **failed job**. G11 is about process lifecycle; the
 test outcome is a separate question, read from `exit_reason` / `exit_code`.
+
+---
+
+## Schema version and wrapper build identity
+
+H-004 recorded both as **missing** and could not add them: that needed `bounded_run.py`,
+which it did not own. **H-006 added them.** Every report a post-H-006 wrapper writes now
+carries two more fields — and `check` does **not** require either (see "Which artifacts
+carry it").
+
+| Field | |
+|---|---|
+| `schema_version` | version of the *report contract* — the set, types and meanings of the fields. Bump discipline is stated at `bounded_run.REPORT_SCHEMA_VERSION`: **bump** when a consumer validating against version N could misread an N+1 report (a field removed, renamed, retyped, re-meant, or its units changed); **do not bump** for an *added* field, for a change in cleanup/termination behaviour, or for a new value a field's documented meaning already permits. |
+| `wrapper_build` | which wrapper build wrote the record: `digest` (SHA-256 over the raw bytes of the **executing** module), `digest_algorithm`, `digest_scope`, `path`, `size_bytes`, `digest_error`, plus repository context `repo_root`, `repo_head`, `repo_source`, `wrapper_vs_head`, `repo_tracked_files_dirty`, `repo_error`. |
+
+**`repo_head` is context, never the identity.** It is recorded *in addition*. The
+executing wrapper may differ from HEAD (`wrapper_vs_head: "modified:' M'"`) or live
+outside any repository (`repo_source: not_a_repository`); in both cases the SHA names
+bytes other than the ones that ran, and only the digest names the bytes that ran. Not
+hypothetical: H-006's own evidence was necessarily produced while its wrapper was still
+uncommitted, and `H-006/*.json` say exactly that. Repository facts are resolved from the
+**wrapper's own directory**, never the caller's cwd, which may be a different checkout.
+
+### The archaeology substitute, and its three failure modes
+
+Before H-006 a report could only be attributed to a wrapper by inference from the tree:
+`git log -1 -- <report>` for the commit, then
+`git show <commit>:docs/pwml_recovery_sprint/evidence/bounded_run.py` for the wrapper in
+it. That is an inference from the tree, **not proof from the artifact**, and it fails
+three ways — all three defeated by a digest of the executing module:
+
+1. **Cross-checkout execution.** An agent holding a main checkout *and* a worktree can run
+   one tree's wrapper while committing on the other's branch; the archaeology then names a
+   file that never executed. The digest is taken from the module that ran, wherever it
+   lived. `bounded_run_selftest.py` case 11 proves this by running a modified copy from
+   **outside** the repository and checking the recorded identity is the copy's.
+2. **Rebase / squash.** History rewriting moves the commit `git log -1` resolves to, and
+   the "wrapper in that tree" moves with it. A content digest is not a commit reference.
+3. **A stale wrapper**, run before the commit that carries it, hashes to its own stale
+   content, which cannot match the wrapper in the commit.
+
+### Which artifacts carry it
+
+* **`H-006/*.json` and every task after it** carry `schema_version` and `wrapper_build`.
+* **`H-004/*.json` and `H-005/*.json` never will.** They were produced by a wrapper build
+  that had no such field. They are *schema 0*: still valid, still compliant, and **not**
+  to be edited or regenerated to acquire the fields. The rule that forbids backfilling a
+  report forbids backfilling a field into one — a reconstruction is not evidence of the
+  original run. Their wrapper build is, and remains, **unproven from the artifact**; the
+  weak archaeology above is the only attribution they will ever have.
+
+### Byte identity: what the digest hashes, and what it does not
+
+`wrapper_build.digest` is SHA-256 over the **raw bytes of the executing module**, read
+from `os.path.abspath(__file__)`. It is deliberately sensitive to **every** byte-level
+difference, including CRLF/LF line-ending transformations. That sensitivity is the point:
+two checkouts whose line endings differ are genuinely running different bytes, and the
+field is meant to say so.
+
+**Consequence an auditor must know before concluding anything.** This repository has
+`core.autocrlf=true` and **no `.gitattributes`**. The checked-out file that actually
+executes therefore contains **CRLF**, while the committed Git blob contains **LF**. The
+two hash differently, and both hashes are correct answers to different questions:
+
+| What you hash | For `bounded_run.py` at `4afcc6d` | Answers |
+|---|---|---|
+| the **executing worktree bytes** (CRLF) | `sha256:69f9f1b5…aad5`, 46 712 B | *which bytes ran* — this is what `wrapper_build.digest` records |
+| the **committed Git blob** (LF, normalized) | `sha256:ffd5b424…fd98`, 45 620 B | *what the repository stores* |
+
+So hashing `git show <commit>:<path>` **may correctly produce a different value, and that
+by itself does not disprove the artifact.** Comparing the normalized blob hash against a
+recorded raw-byte digest is a category error. Compare like with like, or expect a
+mismatch on any Windows checkout.
+
+**`repo_head` remains contextual metadata, never a substitute for the digest.** A
+repository SHA cannot identify bytes that were never committed.
+
+### Verifying a recorded digest
+
+Cross-platform, read-only. Nothing below writes to the repository or touches protected
+state.
+
+**1 — hash the candidate executing file as raw bytes** (no text mode, no newline
+translation), and print both the digest and the byte length:
+
+```
+python -c "import hashlib,pathlib,sys; b=pathlib.Path(sys.argv[1]).read_bytes(); print(len(b),hashlib.sha256(b).hexdigest())" "<path-to-bounded_run.py>"
+```
+
+Compare **both** numbers against the artifact's `wrapper_build.digest` (strip the
+`sha256:` prefix) and `wrapper_build.size_bytes`. Read them with:
+
+```
+python -c "import json,sys; d=json.load(open(sys.argv[1]))['wrapper_build']; print(d['size_bytes'], d['digest'], d['path'])" <artifact.json>
+```
+
+A match on digest **and** size means the file you hashed is byte-identical to the module
+that produced the artifact. `path` tells you where that module lived at run time — useful
+when the same build exists in several checkouts.
+
+**2 — separately, hash the committed blob** when you want to compare worktree bytes
+against repository content. This is a *different* question from step 1 and will differ
+whenever line endings are normalized:
+
+```
+python -c "import hashlib,subprocess,sys; p=subprocess.run(['git','cat-file','blob',sys.argv[1]],capture_output=True,check=True); b=p.stdout; print(len(b),hashlib.sha256(b).hexdigest())" "<rev>:<path>"
+```
+
+**Python** does the reading in both steps: step 1 reads the worktree file as raw bytes, and
+step 2 has Python invoke Git and capture Git's stdout as raw bytes. **No Git byte stream
+passes through a shell pipeline, `>`, `Out-File`, or any other text-decoding layer** — which
+is what avoids Windows PowerShell 5.1 re-encoding native output; `check=True` makes step 2
+fail closed if `git cat-file` fails. A difference here is expected under `core.autocrlf=true`
+and is **not** evidence against the artifact: the repository stores a normalized form.
+
+**What this can and cannot establish.** The digest is a **fingerprint of the executed
+bytes**, nothing more. It lets you confirm that a wrapper file you already hold is or is
+not the one that ran. It **cannot reconstruct** the executing module: if the wrapper was
+dirty or lived outside any repository and those bytes no longer exist anywhere, the digest
+proves only that they differed from whatever you can still obtain — it will not give them
+back, and no repository SHA will either. An artifact whose wrapper bytes are gone is
+attributable only to the extent that some surviving copy hashes to the recorded value.
+
+`check` deliberately does not require the two fields: requiring them would make every
+pre-H-006 artifact non-compliant overnight, which is precisely the pressure to backfill.
+`bounded_run.validate_report_schema()` validates them when present and treats their
+absence as valid, and selftest case 12 asserts every committed pre-H-006 report still
+passes `check`, unmodified.
 
 ---
 
@@ -144,7 +258,8 @@ you are still responsible for reading the `command` field.
 Reports are structured JSON of ~1.5–3 KB. `check` rejects anything over 64 KiB and rejects
 any non-`.json` file in a task directory. **Captured child stdout never enters version
 control**; `.gitignore` excludes `*.log` / `*.out` / `*.out.txt` under this tree as a
-backstop. `bounded_run.py` already deletes its own temporary child log (`:768`). Never
+backstop. `bounded_run.py` already deletes its own temporary child log (the guarded
+`os.unlink(log_path)` at `bounded_run.py:1007-1010`). Never
 commit a cache, a `--basetemp` tree or a benchmark output directory here.
 
 ---
