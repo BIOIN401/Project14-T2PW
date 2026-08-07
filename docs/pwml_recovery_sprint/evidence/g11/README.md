@@ -164,7 +164,7 @@ state.
 translation), and print both the digest and the byte length:
 
 ```
-python -c "import hashlib,sys; b=open(sys.argv[1],'rb').read(); print(len(b), hashlib.sha256(b).hexdigest())" <path-to-bounded_run.py>
+python -c "import hashlib,pathlib,sys; b=pathlib.Path(sys.argv[1]).read_bytes(); print(len(b),hashlib.sha256(b).hexdigest())" "<path-to-bounded_run.py>"
 ```
 
 Compare **both** numbers against the artifact's `wrapper_build.digest` (strip the
@@ -183,11 +183,15 @@ against repository content. This is a *different* question from step 1 and will 
 whenever line endings are normalized:
 
 ```
-git show <commit>:docs/pwml_recovery_sprint/evidence/bounded_run.py | python -c "import hashlib,sys; b=sys.stdin.buffer.read(); print(len(b), hashlib.sha256(b).hexdigest())"
+python -c "import hashlib,subprocess,sys; p=subprocess.run(['git','cat-file','blob',sys.argv[1]],capture_output=True,check=True); b=p.stdout; print(len(b),hashlib.sha256(b).hexdigest())" "<rev>:<path>"
 ```
 
-A difference here is expected under `core.autocrlf=true` and is **not** evidence against
-the artifact. It tells you only that the repository stores a normalized form.
+**Python** does the reading in both steps: step 1 reads the worktree file as raw bytes, and
+step 2 has Python invoke Git and capture Git's stdout as raw bytes. **No Git byte stream
+passes through a shell pipeline, `>`, `Out-File`, or any other text-decoding layer** — which
+is what avoids Windows PowerShell 5.1 re-encoding native output; `check=True` makes step 2
+fail closed if `git cat-file` fails. A difference here is expected under `core.autocrlf=true`
+and is **not** evidence against the artifact: the repository stores a normalized form.
 
 **What this can and cannot establish.** The digest is a **fingerprint of the executed
 bytes**, nothing more. It lets you confirm that a wrapper file you already hold is or is
