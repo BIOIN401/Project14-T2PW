@@ -61,7 +61,22 @@ STOP and report WITHOUT committing if:
   - A test outside your focused set fails and you did not expect it.
   - Your dependency's merged behaviour differs from what this prompt assumes.
   - You would have to violate S3.
-  - The work exceeds ~400 changed lines. Report a proposed split instead.
+  - Either DECLARED BUDGET below is predicted or discovered to be exceeded.
+    Propose a split instead. An over-budget commit may only be created after
+    RENEWED EXPLICIT AUTHORITY granting a REVISED budget; no implementer,
+    reviewer or test-runner may self-authorize one, and technical success or
+    later approval does not cure one.
+
+DECLARED BUDGETS (D-019). Every card declares both BEFORE dispatch; there is no
+universal line threshold, the card's own numbers bind:
+  - HAND-AUTHORED: exact allowed manifest, and max additions plus deletions.
+  - MACHINE-GENERATED EVIDENCE, budgeted separately: max artifact count AND a
+    size limit (bytes or changed lines); an explicit 0 when unauthorized.
+
+SPLITTING. Acceptance-criterion atomicity is weighed when the card is scoped and
+budgeted. Split ONLY where each half is independently implementable AND
+independently validatable. A budget never justifies merging or leaving behind an
+unvalidated semantic half -- if no such boundary exists, stop and say so.
 ```
 
 ## S5 — Evidence standard

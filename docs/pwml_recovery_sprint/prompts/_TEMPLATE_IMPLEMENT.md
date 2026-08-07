@@ -51,7 +51,15 @@ TRAPS
 ## Rules for whoever writes the prompt
 
 - **One narrow, testable change per branch.** If the body needs more than about six
-  `IMPLEMENT` steps or the estimate exceeds ~400 lines, split the branch first.
+  `IMPLEMENT` steps, split the branch first. **Every card declares, before dispatch (D-019):**
+  the **exact allowed manifest**; the **hand-authored** max additions-plus-deletions; and a
+  **separate machine-generated-evidence budget** — max artifact count **and** a size limit,
+  an explicit `0` when generation is unauthorized. Where **acceptance-criterion atomicity**
+  constrains how small the card can be, state that rationale in the card. Any proposed split
+  must name boundaries at which each half is **independently implementable and independently
+  validatable** — never one that merges or leaves behind an unvalidated semantic half. A
+  predicted or actual overrun obliges the implementer to **stop before committing** and obtain
+  **renewed explicit authority with a revised budget**; see `[S4]`.
 - **`OWNS` is function-level**, not file-level, wherever two branches share a file.
   `streamlit_app.py :: run_post_pipeline_sbml_artifacts` — never bare `streamlit_app.py`.
 - **`MUST NOT CHANGE` is where correctness is preserved.** An agent that does not know a
