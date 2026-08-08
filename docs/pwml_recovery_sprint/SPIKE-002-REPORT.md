@@ -99,6 +99,12 @@ pre-split by the Lead before dispatch** — module-extraction and adapter/propag
 separate branches — or the implementer is obligated to stop and propose a split on
 arrival. The conclusion is robust across both the 600 and 700 figures.
 
+> **Superseded prospectively by D-019 (LOCKED).** The paragraph above records the sizing rule
+> as it stood when this report was authored; its `_SHARED_BLOCKS.md:64` pointer is historical,
+> not current. D-019 removed the universal `~400` threshold and the unconditional obligation
+> to pre-split C-040 that followed from it. Sizing and splitting are now governed by declared
+> card-specific budgets and D-019's independently-implementable-AND-validatable split rule.
+
 ## 5. Risks
 
 **R1 — rename propagation, HIGH, currently unscoped in C-050.** Confirmed real and, per
@@ -277,6 +283,10 @@ remains the only open question.
    C-040/C-050/C-051 actually rest on, and it is not in `DECISIONS.md`.**
 2. **The species gap (R2) needs a branch or an explicit deferral.** Either add a C-04x,
    or rule that T-102's "diff must be EMPTY" is scoped to compounds only.
+   > **Resolved by D-016 (LOCKED): the compound-only alternative is superseded and is no
+   > longer available.** T-102 must verify **both** compound identity **and**
+   > organism/species equivalence across canonical JSON, PWML **and** SBML. The species
+   > gap is owned by **C-045** (`MASTER_PLAN` § 9), planning-only and not yet dispatchable.
 3. **`MASTER_PLAN.md:38-45` and `probe_exporter_identity_mutation.py:11-16` are
    factually wrong and must be amended.** `MASTER_PLAN` is sprint authority; the sprint
    must not carry a 10×-inflated number into its own planning. The §5 violation is
