@@ -203,6 +203,9 @@ WAVE C   C-040 p05a-resolution-extract [SPIKE-002]
          C-042 p03c-extraction-ladder  [C-032, C-038]
          C-043 p32-rag-controller      [C-016, C-021]
          C-044 p26-lineage-mapping     [C-015, C-033]
+         C-045 pre-freeze species/organism canonicalization
+               -- PLANNING ONLY; blocked pending separate product-owner
+                  authorization of its complete implementation authority
 
 WAVE D   C-050 p05b-prefreeze-call     [C-040, C-030]
          C-051 p05c-ir-assert-only     [C-040, C-050]
@@ -366,6 +369,7 @@ row to these, and never edit a re-export shim:
 | C-042 | `agent/p03c-extraction-ladder` | C | C-032, C-038 | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | — |
 | C-043 | `agent/p32-rag-controller` | C | C-016, C-021 | NEW `rag/controller.py` (unwired) | C-055 impl | C | — |
 | C-044 | `agent/p26-lineage-mapping` | C | C-015, C-033 | `src/t2pw/mapping/map_ids.py` (lineage writes only). **Not** `src/map_ids.py` — re-export shim | C-033 impl | C | — |
+| C-045 | — **planning only, no branch** | C | — | `ir.py` :: `_canonicalize_species_offline` — **sole owner** (D-016). Species/organism canonicalization is a **pre-freeze semantic unit**: it must execute **before** the canonical freeze, and must preserve or record organism/species provenance. It does **not** absorb compound canonicalization, which remains C-040's. **PLANNING ONLY — unimplemented, undispatched, not dispatchable**; this entry establishes no card, dependency, reviewer, test chunk, branch or implementation budget | — | — | — |
 | C-050 | `agent/p05b-prefreeze-call` | D | C-040, C-030 | `streamlit_app.py` :: enrichment block **above** the seam | C-052 impl | D | ✔ |
 | C-051 | `agent/p05c-ir-assert-only` | D | C-040, C-050 | `ir.py` :: `build_pwml_ir` | C-040 impl | D | ✔ |
 | C-052 | `agent/p06b-freeze-enforce` | D | C-030, C-050, C-020 | `streamlit_app.py` :: `freeze_canonical_payload`, `run_pwml_export`, SBML binding | C-030 impl | D | ✔ |
@@ -380,6 +384,11 @@ row to these, and never edit a re-export shim:
 
 ### Requirements carried into specific prompts
 
+- **C-045** — species/organism canonicalization is pre-freeze biology (**D-016**, LOCKED).
+  T-102 is **not** narrowed to compounds: it continues to require **both** compound
+  identity **and** organism/species equivalence across canonical JSON, PWML **and** SBML,
+  and C-045 must not narrow it. Dispatching C-045 requires separate product-owner
+  authorization establishing its complete implementation authority.
 - **C-020** — equivalence must be proven by parsing and normalizing the JSON, PWML and
   SBML graphs. Comparing one JSON hash to itself is not acceptable evidence.
 - **C-011** — receives the same before/after behavioural-equivalence protection as C-012:
