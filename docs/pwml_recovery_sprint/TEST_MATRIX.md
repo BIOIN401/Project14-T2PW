@@ -281,3 +281,11 @@ different Stage-1 draws at temperature 0 in this repository.
 Full suite per-chunk counts · smoke 457 · chunk D 177 · `bench_acceptance.py` on
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
+
+> **C-011 clarification (C011-ARTIFACT-MANIFEST-RATIFICATION-001).** For C-011 the
+> "before" state is the behaviour at its **dispatch-time `BASE`** — the integration SHA
+> its branch is cut from — not `ORIGIN_SHA`. `ORIGIN_SHA` is retained as an **equality
+> witness**: C-011 must prove `run_post_pipeline_sbml_artifacts` is unchanged between
+> the two and record both SHAs plus the result in
+> `evidence/c011_freeze_seam_before.json`, its one authorized artifact. Inequality is a
+> hard stop. No other card's obligation changes.
