@@ -244,6 +244,14 @@ dict before and after on: sorted key set · `canonical_payload_sha256` ·
 
 "Before" fixtures are captured on `ORIGIN_SHA` and committed under `evidence/`.
 
+> **C-011 clarification (C011-ARTIFACT-MANIFEST-RATIFICATION-001).** For C-011 the
+> "before" state is the behaviour at its **dispatch-time `BASE`** — the integration SHA
+> its branch is cut from — not `ORIGIN_SHA`. `ORIGIN_SHA` is retained as an **equality
+> witness**: C-011 must prove `run_post_pipeline_sbml_artifacts` is unchanged between
+> the two and record both SHAs plus the result in
+> `evidence/c011_freeze_seam_before.json`, its one authorized artifact. Inequality is a
+> hard stop. No other card's obligation changes.
+
 ---
 
 ## Regression-test standard (gate G9)
