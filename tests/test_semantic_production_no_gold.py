@@ -11,6 +11,7 @@ import json
 import os
 import subprocess
 import sys
+from types import MappingProxyType
 
 from t2pw.bench import semantic as bench_semantic
 from t2pw.bench import semantic_production as sp
@@ -121,6 +122,9 @@ def test_d_five_d006_states_are_independently_reachable():
     ]
     states = [axes(no_payload), axes(passed), axes(failed), axes(unasked)]
     assert len(set(states)) == len(states)
+    # A real payload is never reported as "no payload": NO_PAYLOAD is state 5, and
+    # attaching it to a mapping that IS a payload would be a false reason on state 1.
+    assert sp.evaluate_production_semantics(MappingProxyType(payload())).evaluated is True
 
 
 def test_e_import_graph_carries_no_benchmark_harness(tmp_path):
@@ -138,6 +142,28 @@ def test_e_import_graph_carries_no_benchmark_harness(tmp_path):
     assert set(graph["own"]) == {"t2pw.bench.semantic", "t2pw.bench.semantic_production"}
     for name in HARNESS + REMOTE:
         assert name not in graph["loaded"]
+
+
+def test_h_anchor_match_needs_whole_tokens_and_floors_both_operands():
+    """CHECK_ANCHORS is this module's ONLY "is this the pathway that was asked for?"
+    question and C-056a wires it to release_status, so a permissive match ships a pathway
+    the run never produced. Every pair below is a false anchor that a raw substring test
+    accepts and ``goldset.contains_term`` rejects."""
+
+    for requested, name in (("alanine biosynthesis", "alan"), ("ALA", "alanine"),
+                            ("menaquinone biosynthesis", "quinone"),
+                            ("glycolysis", "lysis"), ("AA", "isoamyl aacid")):
+        check = sp.evaluate_production_semantics(
+            {"entities": {"compounds": [{"name": name}]}},
+            requested_pathway=requested).checks[bench_semantic.CHECK_ANCHORS]
+        assert check.ok is False, f"{name!r} must not anchor the request {requested!r}"
+        assert check.findings[0]["missing_anchor"] == requested
+    # ...while a genuine whole-token anchor still matches, in both directions.
+    for requested, name in (("lipid A biosynthesis", "lipid A"), ("lipid A", "lipid A biosynthesis")):
+        check = sp.evaluate_production_semantics(
+            {"entities": {"compounds": [{"name": name}]}},
+            requested_pathway=requested).checks[bench_semantic.CHECK_ANCHORS]
+        assert check.ok is True, f"{name!r} must anchor the request {requested!r}"
 
 
 def test_g_unknown_backed_protein_is_counted_never_adjudicated():

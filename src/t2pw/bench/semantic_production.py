@@ -18,12 +18,17 @@ absent from ``failed_checks`` -- not evaluated is never a pass and never a failu
 C-056a must read THREE facts, not one. ``confirmed`` cannot be ``True`` on a production
 run by construction: ``retained_reactions_match_supported_signatures`` needs
 quote-verified signatures that exist only in the gold set. Combine ``evaluated``, ``ok``
-and ``inapplicable_checks``. ``scientific_errors`` likewise counts only checks that ran --
-a zero beside a name in ``inapplicable_checks`` means "not measured", not "clean".
+and ``inapplicable_checks``. In ``scientific_errors`` a zero beside a name in
+``inapplicable_checks`` means "not measured", not "clean": most keys are counted from a
+partial pass, only the two gold-only keys are omitted, and ``to_dict`` (``semantic.py:324``)
+re-fills all nine from ``ERROR_ORDER`` anyway -- so a consumer of the SERIALIZED map must
+cross-reference ``inapplicable_checks``. Not this module's behaviour to change.
 """
 
 from __future__ import annotations
 
+import re
+from collections.abc import Mapping as _AbcMapping
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 # The ONLY t2pw.bench import: the validator whose vocabulary and helpers are reused.
@@ -46,8 +51,8 @@ NO_ORGANISM_CONTEXT = "this run supplied no requested-organism context to compar
 NO_CORE_FLOOR = "this run configured no minimum connected-core size"
 NO_PAYLOAD = "the run produced no payload to evaluate"
 
-#: Mirrors ``goldset.MIN_SUBSTRING_TERM``: a shorter name matches by equality only, since
-#: a 2-character entity name would otherwise match any request by containment.
+#: Value of ``goldset.MIN_SUBSTRING_TERM``. A needle shorter than this matches by equality
+#: only, so a 2-character name cannot anchor a request by containment.
 _MIN_CONTAINMENT = 4
 
 
@@ -58,15 +63,30 @@ def _not_evaluated(name: str, reason: str) -> CheckResult:
     return CheckResult(name=name, ok=True, summary=f"not evaluated: {reason}", inapplicable_reason=reason)
 
 
+def _contains_token(haystack: str, needle: str) -> bool:
+    """LOCAL RESTATEMENT of ``goldset.contains_term`` -- IMPLEMENT-5 bars importing it and
+    ``semantic`` does not re-export it, so keep the two in step BY HAND. Both arguments are
+    already ``normalize_name``-folded. Whole-token boundaries stop ``ala``
+    (5-aminolevulinic acid) anchoring ``alanine``; the floor is measured WITHOUT spaces and
+    applies to whichever string is the needle, so a 2-character request cannot anchor
+    itself inside a long payload name."""
+
+    if not haystack or not needle or len(needle.replace(" ", "")) < _MIN_CONTAINMENT:
+        return False
+    return re.search(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack) is not None
+
+
 def _mentions(term: str, vocabulary: Sequence[str]) -> str:
+    """The payload name that anchors ``term``, or ``""``. Containment is tested in BOTH
+    directions -- the request may name the whole pathway ("lipid A biosynthesis") while the
+    payload names its core ("lipid A") -- and each direction floors its own needle."""
+
     needle = _s.normalize_name(term)
     if not needle:
         return ""
     for value in vocabulary:
         candidate = _s.normalize_name(value)
-        if candidate == needle or (
-            candidate and len(candidate) >= _MIN_CONTAINMENT and (candidate in needle or needle in candidate)
-        ):
+        if candidate == needle or _contains_token(needle, candidate) or _contains_token(candidate, needle):
             return value
     return ""
 
@@ -243,7 +263,9 @@ def evaluate_production_semantics(
     """
 
     report = SemanticReport(paper_id=paper_id, mode=mode)
-    if not isinstance(payload, dict) or not payload:
+    # ``Mapping``, not ``dict``, per the annotation: reporting a MappingProxyType payload
+    # as "the run produced no payload" is a false reason on a REAL payload.
+    if not isinstance(payload, _AbcMapping) or not payload:
         report.evaluated = False
         report.not_evaluated_reason = NO_PAYLOAD
         report.scientific_errors = {key: 0 for key in _s.ERROR_ORDER}
