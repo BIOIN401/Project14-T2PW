@@ -66,6 +66,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
+from t2pw.pipeline import canonical_hash as _canonical
+
 __all__ = [
     "ARTIFACT_SET_VERSION",
     "ARTIFACT_SET_VERSION_KEY",
@@ -172,6 +174,7 @@ def stamp_report(
     phase: str,
     payload: Any = None,
     payload_hash: Optional[str] = None,
+    hash_schema: int = _canonical.HASH_SCHEMA_VERSION_LEGACY,
 ) -> Dict[str, Any]:
     """Return ``report`` with its version, phase and (optionally) payload binding.
 
@@ -183,6 +186,11 @@ def stamp_report(
     neither leaves the binding off, which is correct for the two non-final phases
     -- their payloads are intermediate by definition and nothing downstream is
     entitled to treat them as what shipped.
+
+    ``hash_schema`` defaults to 1 -- the single ``payload_sha256`` binding, byte
+    for byte what this function has always written. A caller that asks for schema
+    2 gets the D-001 split as well, and must hand over the payload itself: the two
+    canonical projections are computed from the object, not from a digest of it.
     """
 
     stamped: Dict[str, Any] = dict(report or {})
@@ -192,6 +200,12 @@ def stamp_report(
         stamped[PAYLOAD_SHA256_KEY] = payload_hash
     elif payload is not None:
         stamped[PAYLOAD_SHA256_KEY] = payload_sha256(payload)
+    if hash_schema == _canonical.HASH_SCHEMA_VERSION:
+        if payload is None:
+            raise ValueError("hash schema 2 needs the payload, not only its digest")
+        stamped[_canonical.CANONICAL_GRAPH_SHA256_KEY] = _canonical.canonical_graph_sha256(payload)
+        stamped[_canonical.CANONICAL_PAYLOAD_SHA256_KEY] = _canonical.canonical_payload_sha256(payload)
+        stamped[_canonical.HASH_SCHEMA_VERSION_KEY] = _canonical.HASH_SCHEMA_VERSION
     return stamped
 
 
@@ -279,6 +293,9 @@ REASON_MALFORMED = "final_gate_report_malformed"
 REASON_PAYLOAD_UNBOUND = "final_gate_report_not_bound_to_a_payload"
 REASON_PAYLOAD_MISSING = "canonical_payload_missing"
 REASON_PAYLOAD_MISMATCH = "final_gate_report_payload_mismatch"
+REASON_UNSUPPORTED_HASH_SCHEMA = "unsupported_hash_schema_version"
+REASON_CANONICAL_GRAPH_MISMATCH = "canonical_graph_mismatch"
+REASON_CANONICAL_PAYLOAD_MISMATCH_GRAPH_INTACT = "canonical_payload_mismatch_graph_intact"
 
 
 @dataclass(frozen=True)
@@ -382,16 +399,36 @@ def gate_verdict(artifacts: Mapping[str, Any]) -> GateVerdict:
     if ok is True and errors:
         return _fail_closed(REASON_MALFORMED)
 
-    recorded_hash = str(final_report.get(PAYLOAD_SHA256_KEY) or "")
-    if not recorded_hash:
+    hash_schema = final_report.get(
+        _canonical.HASH_SCHEMA_VERSION_KEY, _canonical.HASH_SCHEMA_VERSION_LEGACY
+    )
+    if hash_schema not in _canonical.SUPPORTED_HASH_SCHEMA_VERSIONS:
+        return _fail_closed(f"{REASON_UNSUPPORTED_HASH_SCHEMA}:{hash_schema!r}")
+    # (recorded key, how to recompute it, why disagreement is fatal). Schema 2
+    # keeps its two failures apart instead of collapsing them into
+    # REASON_PAYLOAD_MISMATCH: "the exported biology is not the gated biology" and
+    # "the evidence record moved, the biology did not" are different findings about
+    # different guarantees. Both still fail closed -- a report about a payload that
+    # is not the one in hand is not a statement about what shipped, whichever half
+    # of it moved.
+    checks = (
+        [
+            (_canonical.CANONICAL_GRAPH_SHA256_KEY, _canonical.canonical_graph_sha256,
+             REASON_CANONICAL_GRAPH_MISMATCH),
+            (_canonical.CANONICAL_PAYLOAD_SHA256_KEY, _canonical.canonical_payload_sha256,
+             REASON_CANONICAL_PAYLOAD_MISMATCH_GRAPH_INTACT),
+        ]
+        if hash_schema == _canonical.HASH_SCHEMA_VERSION
+        else [(PAYLOAD_SHA256_KEY, payload_sha256, REASON_PAYLOAD_MISMATCH)]
+    )
+    if not all(str(final_report.get(key) or "") for key, _, _ in checks):
         return _fail_closed(REASON_PAYLOAD_UNBOUND)
     canonical = artifacts.get(CANONICAL_PAYLOAD_KEY)
     if not isinstance(canonical, Mapping) or not canonical:
         return _fail_closed(REASON_PAYLOAD_MISSING)
-    if payload_sha256(canonical) != recorded_hash:
-        # The report is about a payload that is not the one in hand. Whatever it
-        # says, it is not a statement about what shipped.
-        return _fail_closed(REASON_PAYLOAD_MISMATCH)
+    for key, digest, reason in checks:
+        if digest(canonical) != str(final_report.get(key) or ""):
+            return _fail_closed(reason)
 
     failed = ok is not True
     return GateVerdict(
