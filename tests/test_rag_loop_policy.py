@@ -43,6 +43,8 @@ def test_each_reason_is_produced_by_a_state_that_yields_only_it(reason):
     decision = decide(state(**ONLY[reason]))
     assert (decision.should_continue, decision.reason, decision.also_true) == (
         False, reason, ())
+    assert decide(state(identical_empty_responses=1,  # 1 empty is not 2; core defensible
+                        evidence_sources_exhausted=True)).should_continue is True
 
 
 def test_retrieval_exhausted_unreachable_when_the_deadline_cut_the_ladder_short():
@@ -53,6 +55,9 @@ def test_retrieval_exhausted_unreachable_when_the_deadline_cut_the_ladder_short(
     done = decide(state(ladder_completed=True, new_admissible_claims=0, graph_delta=0))
     assert done.reason == RETRIEVAL_EXHAUSTED
     assert BUDGET_EXHAUSTED not in (done.reason,) + done.also_true
+    spent = decide(state(now=1000.0, ladder_completed=True,  # clock spent AND ladder DONE
+                         new_admissible_claims=0, graph_delta=0))
+    assert (spent.reason, spent.also_true) == (RETRIEVAL_EXHAUSTED, ())
 
 
 def test_a_rejected_claim_is_not_new_in_a_later_round_so_the_loop_converges():
