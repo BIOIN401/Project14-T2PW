@@ -119,6 +119,32 @@ def test_vocabularies_are_closed_and_frozen() -> None:
     assert len(set(L.STAGES)) == len(L.STAGES) and "export" not in L.STAGES
 
 
+def test_typed_source_is_validated_exactly_like_a_mapping() -> None:
+    # LineageSource is what seven producer cards import; it must not be a way around
+    # the checks a mapping gets, or support="direct" names a source that does not exist.
+    for build in (lambda **kw: L.LineageSource(**kw), lambda **kw: entry(sources=[kw])):
+        with pytest.raises(L.LineageError, match=r"^sources: .*source_id or a uri"):
+            build(source_type="uniprot")
+        with pytest.raises(L.LineageError, match=r"^sources\.source_id: expected a str"):
+            build(source_id=123)  # a LineageError naming the field, not a bare TypeError
+    typed = entry(sources=[L.LineageSource(source_id=" PMC1 ", source_type="paper")])
+    assert typed == entry(sources=[{"source_id": "PMC1", "source_type": "paper"}])
+    row: dict = {}
+    L.record(row, typed)
+    assert L.read(row) == L.Lineage((typed,))  # what writes must read back, not raise
+
+
+@pytest.mark.parametrize("origin", ["rag_literature", "database_grounded"])
+def test_externally_added_origin_always_needs_a_source(origin) -> None:
+    assert L.SOURCED_ORIGINS == ("rag_literature", "database_grounded")
+    kw = dict(origin=origin, support="unsupported", paper_explicit="not_evaluated")
+    with pytest.raises(L.LineageError, match="^sources: origin=" + repr(origin)):
+        entry(sources=[], **kw)        # § 3 binds it to a source at EVERY support level
+    assert entry(sources=[_SOURCE], **kw).sources
+    assert entry(origin="unresolved", support="unsupported", sources=[],  # a failed
+                 paper_explicit="not_evaluated").origin  # lookup, not a sourceless claim
+
+
 def test_module_imports_no_stage_module() -> None:
     tree = ast.parse(Path(L.__file__).read_text(encoding="utf-8"))
     mods = {a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}

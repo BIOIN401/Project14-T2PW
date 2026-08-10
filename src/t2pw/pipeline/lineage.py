@@ -18,10 +18,12 @@ offending field; a silently dropped entry reads as "this content was original".
 **Order-independent**: equality and serialization both go through
 :meth:`Lineage.canonical`, so entry order never matters; duplicates are kept, because
 dedup removes. **Evidence-bound**: ``direct``/``indirect`` support requires a named
-source. **Pointer, not copy**: :class:`LineageSource` names a record, the retrieved
-payload stays in ``rag_provenance`` / ``db_row``; this duplicates no existing carrier,
-and ``source_id`` is checked only for non-emptiness -- accepting an identifier for its
-*format* is a standing invariant violation. **Leaf**: imports no stage module.
+source, and any :data:`SOURCED_ORIGINS` origin requires one at *every* support level.
+**One validator**: :class:`LineageSource` validates on construction, so the typed
+constructor and a plain mapping cannot disagree. **Pointer, not copy**: it names a
+record, the retrieved payload stays in ``rag_provenance`` / ``db_row``; this duplicates
+no existing carrier, and ``source_id`` is checked only for non-emptiness -- accepting an
+identifier for its *format* is a standing invariant violation. **Leaf**: no stage import.
 **Three-valued** ``paper_explicit``: a stage that did not evaluate it records
 ``not_evaluated``, which is never ``not_explicit``.
 
@@ -43,6 +45,9 @@ LINEAGE_KEY = "provenance_lineage"
 #: Every stage allowed to introduce or change biological content, in pipeline order --
 #: also the canonical sort order of a lineage. Deliberately NO exporter stage: an
 #: exporter may not change biology after the canonical graph is frozen.
+#: THIS ORDER IS LOAD-BEARING. ``_entry_key`` sorts by ``STAGES.index``, so a new stage
+#: must be APPENDED: inserting one mid-tuple silently reorders every lineage already
+#: serialized, and every downstream comparison of one against a stored artifact.
 STAGES: Tuple[str, ...] = (
     "preprocessing", "paper_extraction", "normalization", "deterministic_inference",
     "identifier_mapping", "entity_enrichment", "rag_retrieval", "rag_admission",
@@ -55,6 +60,11 @@ ORIGINS: Tuple[str, ...] = (
     "paper_stated", "rag_literature", "database_grounded", "inferred",
     "audit_modified", "unresolved", "excluded",
 )
+
+#: Origins asserting content came from OUTSIDE the paper. § 3 requires those to identify
+#: "its supporting source or database record", so they need one at any support level. A
+#: failed lookup is ``unresolved``, never a sourceless ``database_grounded``.
+SOURCED_ORIGINS: Tuple[str, ...] = ("rag_literature", "database_grounded")
 
 #: Evidence/support level, weakest first (compare with ``SUPPORT_LEVELS.index``):
 #: ``direct`` a named source states this fact · ``indirect`` a named source supports it
@@ -95,26 +105,32 @@ def _choice(value: Any, allowed: Tuple[str, ...], name: str) -> str:
 
 @dataclass(frozen=True)
 class LineageSource:
-    """A pointer to the paper, passage or database record backing an entry."""
+    """A pointer to the paper, passage or database record backing an entry. Validated
+    HERE, not in :func:`_source`, so the typed constructor is not a way around a
+    mapping's checks: an anonymous source would let ``support="direct"`` name nothing."""
 
     source_id: str = ""     # PMCID / DOI / accession / PathBank id / filename
-    source_type: str = ""   # advisory: "paper" | "pathbank" | "uniprot" | ...
+    source_type: str = ""   # advisory FREE text, not a closed vocabulary: never aggregate on it
     uri: str = ""
     locator: str = ""       # section, chunk id, row id -- whatever resolves it
+
+    def __post_init__(self) -> None:
+        for field in fields(self):
+            object.__setattr__(self, field.name,
+                               _text(getattr(self, field.name), f"sources.{field.name}"))
+        if not (self.source_id or self.uri):
+            raise LineageError("sources: each source needs a source_id or a uri")
 
 
 def _source(value: Any) -> LineageSource:
     if isinstance(value, LineageSource):
-        return value
+        return value  # already validated by LineageSource.__post_init__
     if not isinstance(value, Mapping):
         raise LineageError(f"sources: expected a mapping, got {type(value).__name__}")
     unknown = sorted(set(value) - _SOURCE_FIELDS)
     if unknown:
         raise LineageError(f"sources: unknown field(s) {unknown}")
-    source = LineageSource(**{k: _text(value[k], f"sources.{k}") for k in value})
-    if not (source.source_id or source.uri):
-        raise LineageError("sources: each source needs a source_id or a uri")
-    return source
+    return LineageSource(**dict(value))
 
 
 @dataclass(frozen=True)
@@ -148,8 +164,10 @@ class LineageEntry:
         if not isinstance(self.sources, (list, tuple)):
             raise LineageError(f"sources: expected a list, got {type(self.sources).__name__}")
         parsed = tuple(sorted((_source(s) for s in self.sources), key=astuple))
-        if self.support in ("direct", "indirect") and not parsed:
-            raise LineageError(f"sources: support={self.support!r} requires a named source")
+        if not parsed and (self.support in ("direct", "indirect")
+                           or self.origin in SOURCED_ORIGINS):
+            raise LineageError(f"sources: origin={self.origin!r} support={self.support!r} "
+                               "requires a named source")
         put(self, "sources", parsed)
 
     def as_dict(self) -> Dict[str, Any]:  # plain JSON types; ``sources`` as a list
