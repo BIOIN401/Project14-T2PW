@@ -44,6 +44,9 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
     QUARANTINED_UNMAPPED_ENTITY,
     QUARANTINED_WEAK_EVIDENCE,
     REMOVED_ENTITY_REPORT_FILENAME,
+    StrictQuarantineInvariantError,
+    _degree_zero_exports,
+    _surviving_processes,
     evaluate_core_coverage,
     quarantine_and_close,
     write_quarantine_artifacts,
@@ -881,3 +884,78 @@ def test_the_quarantine_report_counts_every_state(tmp_path: Path) -> None:
         QUARANTINED_DISCONNECTED,
     }
     assert sum(counts.values()) == len(result.quarantine_report["admissions"])
+
+
+# ── 10. Admission indices address the pre-prune lists ───────────────────────
+
+
+def _admission(index: int) -> dict:
+    return {"state": CORE_ACCEPTED, "bucket": "reactions", "index": index}
+
+
+def _stale_index_payload() -> dict:
+    """The committed reproduction fixture, loaded rather than copied: a reviewer
+    re-runs ``evidence/repro_stale_index_synthetic.py`` and a copy could drift."""
+
+    evidence = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
+    sys.path.insert(0, str(evidence))
+    try:
+        import repro_stale_index_synthetic as fixture
+    finally:
+        sys.path.remove(str(evidence))
+    return fixture.payload()
+
+
+def test_a_compacted_process_list_does_not_manufacture_degree_zero_entities() -> None:
+    """Five reactions: 0 and 1 quarantined, 2-4 admitted with EntC, EntD, EntF.
+
+    ``_drop_quarantined_processes`` compacts the bucket to three rows while the
+    admission records still say 2, 3 and 4. Index 2 then aliased onto the third
+    survivor, 3 and 4 fell out of range and were skipped, so only EntF read as
+    referenced: EntC and EntD were reported degree-zero and a complete, correctly
+    declared pathway refused export over nothing.
+    """
+
+    result = quarantine_and_close(_stale_index_payload(), strict_db=True)
+    proteins = [row["name"] for row in result.payload["entities"]["proteins"]]
+
+    assert result.quarantine_report["strict_invariants"]["degree_zero_exports"] == []
+    assert result.ok is True
+    assert result.refusal_reasons == []
+    assert proteins == ["EntC", "EntD", "EntF"]
+
+
+def test_an_admission_index_that_does_not_resolve_raises_rather_than_being_skipped() -> None:
+    """Skipping one deletes a surviving process's edges without saying so."""
+
+    payload = _glutathione_payload()
+    admissions = [_admission(7)]
+
+    with pytest.raises(StrictQuarantineInvariantError) as excinfo:
+        _degree_zero_exports(payload, admissions, process_snapshot=payload["processes"])
+
+    # The message has to name the row, not just say an index did not resolve.
+    assert "/processes/reactions/7" in str(excinfo.value)
+    # The default is unchanged: the audited-safe callers must keep skipping,
+    # because _revalidate_surviving_processes records the vanished row itself as
+    # process_row_vanished_during_closure and raising there would lose that.
+    assert _surviving_processes(payload, admissions) == []
+
+
+def test_a_protein_no_admitted_process_reaches_is_still_reported_degree_zero() -> None:
+    """The fix removes a FALSE degree-zero; the check itself still fires.
+
+    Only reaction 0 is admitted, so reaction 1's enzyme is unreferenced, and
+    ``SOD1`` is declared but reached by nothing. Both must still be reported.
+    """
+
+    payload = _glutathione_payload()
+    payload["entities"]["proteins"].append(
+        {"name": "SOD1", "species": "Homo sapiens", "mapped_ids": {"uniprot": "P00441"}}
+    )
+
+    found = _degree_zero_exports(
+        payload, [_admission(0)], process_snapshot=payload["processes"]
+    )
+
+    assert [row["name"] for row in found] == ["glutathione synthetase", "SOD1"]

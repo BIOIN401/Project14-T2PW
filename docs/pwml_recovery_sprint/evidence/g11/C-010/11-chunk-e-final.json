@@ -1,0 +1,76 @@
+{
+  "label": "chunk-e-final",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-p",
+    "pythonpath_probe",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/c010/e2",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+  "started_at": "2026-08-10T18:10:38+00:00",
+  "finished_at": "2026-08-10T18:10:57+00:00",
+  "duration_seconds": 18.643397300009383,
+  "timeout_seconds": 3600.0,
+  "root_pid": 419008,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 416348,
+      "name": "python.exe",
+      "ppid": 419008
+    }
+  ],
+  "descendants_terminated": [
+    416348
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 395528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 402696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407164,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407848,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-010/11-chunk-e-final.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+    "repo_head": "9e06360c6592f3dc1ccaf6b30976c49d306600e6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

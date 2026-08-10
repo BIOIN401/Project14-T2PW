@@ -1,0 +1,78 @@
+{
+  "label": "base-sha-regression",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-p",
+    "pythonpath_probe",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/c010/base",
+    "--tb=line",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py::test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs",
+    "tests/test_strict_quarantine_real_artifact_replay.py::test_the_full_stack_baseline_is_exactly_what_was_reported"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+  "started_at": "2026-08-10T18:06:49+00:00",
+  "finished_at": "2026-08-10T18:06:50+00:00",
+  "duration_seconds": 0.7947074999974575,
+  "timeout_seconds": 1800.0,
+  "root_pid": 415340,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 2,
+  "returned_code": 2,
+  "descendants_observed": [
+    {
+      "pid": 415536,
+      "name": "python.exe",
+      "ppid": 415340
+    }
+  ],
+  "descendants_terminated": [
+    415536
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 395528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 402696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 416076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 416116,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-010/08-base-sha-regression.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+    "repo_head": "9e06360c6592f3dc1ccaf6b30976c49d306600e6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

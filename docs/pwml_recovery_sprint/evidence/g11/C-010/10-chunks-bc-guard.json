@@ -1,0 +1,137 @@
+{
+  "label": "chunks-bc-guard",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "pythonpath_probe",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/c010/bc",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+  "started_at": "2026-08-10T18:08:20+00:00",
+  "finished_at": "2026-08-10T18:08:46+00:00",
+  "duration_seconds": 26.135123200001544,
+  "timeout_seconds": 1800.0,
+  "root_pid": 418628,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 418664,
+      "name": "python.exe",
+      "ppid": 418628
+    },
+    {
+      "pid": 416204,
+      "name": "python.exe",
+      "ppid": 418664
+    },
+    {
+      "pid": 417396,
+      "name": "python.exe",
+      "ppid": 416204
+    },
+    {
+      "pid": 418284,
+      "name": "python.exe",
+      "ppid": 418664
+    },
+    {
+      "pid": 418332,
+      "name": "python.exe",
+      "ppid": 418284
+    },
+    {
+      "pid": 403820,
+      "name": "python.exe",
+      "ppid": 418764
+    },
+    {
+      "pid": 418764,
+      "name": "python.exe",
+      "ppid": 418664
+    },
+    {
+      "pid": 417136,
+      "name": "python.exe",
+      "ppid": 417328
+    },
+    {
+      "pid": 417328,
+      "name": "python.exe",
+      "ppid": 418664
+    }
+  ],
+  "descendants_terminated": [
+    403820,
+    416204,
+    417136,
+    417328,
+    417396,
+    418284,
+    418332,
+    418664,
+    418764
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 395528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 402696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 415116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 418412,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-010/10-chunks-bc-guard.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-a931503c554f6eb56",
+    "repo_head": "9e06360c6592f3dc1ccaf6b30976c49d306600e6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
