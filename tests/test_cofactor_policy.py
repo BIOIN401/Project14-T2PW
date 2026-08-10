@@ -46,9 +46,10 @@ CASES = (
     ("α-ketoglutarate", GLY, HB, R_HUB, "2-oxoglutarate"),
     ("acetyl CoA", GLY, HB, R_HUB, "acetyl-CoA"),
     ("THF", GLY, HB, R_HUB, "tetrahydrofolate"),
-    # (f) D13: reporters, which no pre-existing list contained at all
+    # (f) D13 reporters (no list had any) + D15: the EC 3.2.1.23 activity name is NOT one (GLB1)
     ("GFP", GLY, RPT, R_RPT, "fluorescent protein"),
     ("X-gal", GLY, RPT, R_RPT, "detection dye or probe"),
+    ("beta-galactosidase", Ctx("glycosphingolipid degradation", "Homo sapiens"), UNK, R_VOC, ""),
 )
 
 
@@ -60,10 +61,12 @@ def test_verdict_reason_family_and_closed_vocabularies(name, ctx, verdict, reaso
     assert got.confidence in cp.CONFIDENCES
 
 
-def test_context_is_a_parameter_one_molecule_two_requested_pathways():
+def test_context_escapes_govern_both_verdict_and_confidence():
     gly, oxp = cp.classify_entity("ATP", GLY), cp.classify_entity("ATP", OXP)
-    assert (gly.verdict, oxp.verdict) == (CUR, PAR)
+    assert (gly.verdict, oxp.verdict, gly.confidence) == (CUR, PAR, "high")  # ATP HAS an escape
     assert (gly.matched_context, oxp.matched_context) == ("", "atp synthesis")
+    p = Ctx("pyrimidine nucleotide biosynthesis", "Escherichia coli")  # CTP/GMP synthase products
+    assert {cp.classify_entity(n, p).confidence for n in ("UTP","CTP","GMP","AMP")} == {"moderate"}
 
 
 def test_organism_is_a_parameter_for_a_reporter_with_a_native_host():
@@ -90,5 +93,6 @@ def test_leaf_module_has_no_network_db_or_llm_path_and_is_dead_code():
             mods.add((node.module or "").split(".")[0])
     assert mods == {"__future__", "re", "dataclasses"}  # no requests/urllib/sqlite3/openai/t2pw
     src = pathlib.Path(cp.__file__).resolve().parents[2]
+    assert src.parent == pathlib.Path(__file__).resolve().parents[1]  # same checkout as this test
     assert [p.name for p in src.rglob("*.py") if p.name != "cofactor_policy.py"
             and "cofactor_policy" in p.read_text(encoding="utf-8", errors="ignore")] == []

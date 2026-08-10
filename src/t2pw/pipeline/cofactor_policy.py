@@ -60,10 +60,11 @@ _HUB: dict[str, tuple[str, ...]] = {
     "2-oxoglutarate": ("2-oxoglutarate", "alpha-ketoglutarate", "2-ketoglutarate", "akg"),
     "quinone pool": ("quinone", "ubiquinone", "ubiquinol", "coenzyme q", "coq")}
 #: No pre-existing list held ANY reporter, so PRODUCT_CONTRACT s.2 "no assay reporters" had none.
-_REPORTER: dict[str, tuple[str, ...]] = {
+#: ``lacz`` is the E. coli reporter GENE; the EC 3.2.1.23 ACTIVITY names are deliberately absent --
+#: human GLB1/LCT, K. lactis LAC4, Aspergillus, Bacteroides carry them natively (R-003 BLOCKING-1).
+_REPORTER: dict[str, tuple[str, ...]] = {"LacZ": ("lacz",),
     "fluorescent protein": ("gfp", "egfp", "green fluorescent protein", "mcherry", "dsred", "rfp"),
     "luciferase": ("luciferase", "firefly luciferase", "renilla luciferase", "luciferin"),
-    "beta-galactosidase": ("beta-galactosidase", "b-galactosidase", "lacz"),
     "viability dye": ("mtt", "xtt", "wst-1", "wst-8", "resazurin", "alamar blue"),
     "detection dye or probe": ("x-gal", "onpg", "propidium iodide", "dapi", "hoechst 33342",
                                "brdu", "edu", "jc-1", "tmrm", "fura-2", "fluo-4", "luminol")}
@@ -95,21 +96,19 @@ _SUBJECT_OF: dict[str, tuple[str, ...]] = {
     "pyridoxal phosphate": ("vitamin b6", "pyridoxal", "pyridoxine"),
     "L-glutamate": _GLN, "L-glutamine": _GLN, "2-oxoglutarate": _TCA + _GLN,
     "quinone pool": ("ubiquinone biosynthesis", "coenzyme q biosynthesis", "electron transport",
-                     "respiratory chain"),
-    "fluorescent protein": ("bioluminescence",), "luciferase": ("bioluminescence", "luciferin"),
-    "beta-galactosidase": ("lactose", "lac operon", "galactose")}
+                     "respiratory chain"), "luciferase": ("bioluminescence", "luciferin"),
+    "fluorescent protein": ("bioluminescence",), "LacZ": ("lactose", "lac operon", "galactose")}
 #: Organisms genuinely encoding the reporter. Matching the ORGANISM but not the
 #: pathway yields ``unknown``, never ``assay_reporter``: LacZ in an E. coli
 #: lipid-A paper is probably a reporter, but this module cannot tell.
 _REPORTER_NATIVE_ORG: dict[str, tuple[str, ...]] = {
-    "fluorescent protein": ("aequorea", "discosoma"), "beta-galactosidase": ("escherichia coli",),
+    "fluorescent protein": ("aequorea", "discosoma"), "LacZ": ("escherichia coli",),
     "luciferase": ("photinus", "renilla", "aliivibrio")}
-#: Families moved ACROSS the base-SHA class boundary -- flagged ``moderate`` under
-#: their own reason code so R-003 adjudicates exactly these: currency already held
-#: them under another spelling (Pi/PPi/NH3), or they are not metabolites at all
-#: (electron). CoA moved the other way, currency -> hub. Bare ``pi`` is DROPPED
-#: from COFACTOR_NAMES: "PI" is also phosphatidylinositol, and an unknown beats a
-#: confident wrong call on a two-letter token in a lipid pathway.
+#: Families moved ACROSS the base-SHA class boundary -- flagged ``moderate`` under their own reason
+#: code so R-003 adjudicates exactly these: currency already held them under another spelling
+#: (Pi/PPi/NH3), or they are not metabolites at all (electron). CoA moved the other way, currency
+#: -> hub. Bare ``pi`` is DROPPED from COFACTOR_NAMES: "PI" is also phosphatidylinositol, and an
+#: unknown beats a confident wrong call on a two-letter token in a lipid pathway.
 _RECONCILED = frozenset({"Pi", "PPi", "NH3", "electron"})
 _STRIP_RE = re.compile(r"[^a-z0-9+]")
 
@@ -167,7 +166,7 @@ def classify_entity(name: object, context: PathwayContext) -> Classification:
     if hit is None:
         return out(UNKNOWN, "not_in_curated_vocabulary", "low")
     family, verdict = hit
-    marker = _has(pathway, _SUBJECT_OF.get(family, ()))
+    marker = _has(pathway, escapes := _SUBJECT_OF.get(family, ()))  # no escapes -> never "high"
     if marker:
         return out(PARTICIPANT, "subject_of_the_requested_pathway", "high", marker)
     if verdict == ASSAY_REPORTER:
@@ -178,5 +177,5 @@ def classify_entity(name: object, context: PathwayContext) -> Classification:
     if verdict == COFACTOR_OR_CURRENCY:
         if family in _RECONCILED:
             return out(verdict, "currency_spelling_reconciled_from_hub_list", "moderate")
-        return out(verdict, "ubiquitous_currency_metabolite", "high")
+        return out(verdict, "ubiquitous_currency_metabolite", "high" if escapes else "moderate")
     return out(HUB, "connectivity_hub_not_pathway_evidence", "moderate")
