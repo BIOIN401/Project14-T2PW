@@ -1480,6 +1480,103 @@ def _run_app(at: Any, budget: _Budget) -> Tuple[bool, str]:
     return False, ""
 
 
+# ---------------------------------------------------------------------------
+# Terminal paths. Lifted verbatim out of _drive so each exit is separately
+# addressable; they must stay byte-equivalent to what _drive used to do inline.
+# ---------------------------------------------------------------------------
+def _finalize_timeout(
+    outcome: RunOutcome,
+    *,
+    message: str,
+    detail: str,
+    codes: Optional[List[str]] = None,
+) -> None:
+    """Terminal path: an interaction ran out of the leg's wall-clock budget."""
+
+    _fail(
+        outcome,
+        status=_STATUS_TIMEOUT,
+        kind=KIND_TIMEOUT,
+        message=message,
+        detail=detail,
+        codes=codes,
+    )
+
+
+def _finalize_gate_failure(
+    outcome: RunOutcome,
+    *,
+    verdict: Any,
+    blocking_issues: List[Any],
+    codes: List[str],
+    code_lines: List[str],
+    joined: str,
+    crashed: bool,
+    stage3_gate: Dict[str, Any],
+    gate_fail: Dict[str, Any],
+) -> None:
+    """Terminal path: the gate channel or the contract channel blocked the run."""
+
+    _fail(
+        outcome,
+        status=_STATUS_FAIL,
+        kind=_classify(
+            text=joined,
+            issue_codes=codes,
+            contract_signal=True,
+            ambiguous=False,
+            no_reactions=False,
+            crashed=crashed,
+        ),
+        message=(
+            "post-pipeline validation failed: "
+            f"{len(blocking_issues)} blocking issue(s) at "
+            f"{_text(verdict.stage) or 'a stage boundary'}"
+            + (
+                f" [{verdict.reason}]"
+                if verdict.source == SOURCE_FAIL_CLOSED
+                else ""
+            )
+        ),
+        detail="\n".join(part for part in (joined, *code_lines) if part)
+        or _json_text(
+            {
+                "gate_verdict": {
+                    "failed": verdict.failed,
+                    "source": verdict.source,
+                    "reason": verdict.reason,
+                    "stage": verdict.stage,
+                },
+                FINAL_GATE_REPORT_KEY: stage3_gate,
+                # Retained as evidence, never as arithmetic.
+                "superseded_gate_fail_report": gate_fail,
+            }
+        ),
+        codes=codes,
+    )
+
+
+def _finalize_pwml_export(
+    outcome: RunOutcome,
+    *,
+    xml: bytes,
+    pwml_result: Dict[str, Any],
+    joined: str,
+    codes: List[str],
+) -> None:
+    """Terminal path: strict mode produced PWML XML, so the leg is a pass."""
+
+    outcome.counts["pwml_bytes"] = len(xml)
+    pwml_counts = _safe_dict(pwml_result.get("counts"))
+    if pwml_counts:
+        outcome.counts["pwml"] = {str(k): v for k, v in pwml_counts.items()}
+    outcome.status = _STATUS_PASS
+    outcome.failure_kind = ""
+    outcome.message = f"strict run completed; pathway.pwml is {len(xml)} bytes"
+    outcome.detail = joined
+    outcome.issue_codes = codes
+
+
 def _drive(
     paper: Any,
     mode_label: str,
@@ -1516,10 +1613,8 @@ def _drive(
     # ── 1. Load the app ────────────────────────────────────────────────────
     timed_out, detail = _run_app(at, budget)
     if timed_out:
-        _fail(
+        _finalize_timeout(
             outcome,
-            status=_STATUS_TIMEOUT,
-            kind=KIND_TIMEOUT,
             message="the app did not finish its first render",
             detail=detail,
         )
@@ -1552,10 +1647,8 @@ def _drive(
     at.radio(key=KEY_INPUT_MODE).set_value(INPUT_MODE_PASTE)
     timed_out, detail = _run_app(at, budget)
     if timed_out:
-        _fail(
+        _finalize_timeout(
             outcome,
-            status=_STATUS_TIMEOUT,
-            kind=KIND_TIMEOUT,
             message="the app hung while switching to the requested export/input mode",
             detail=detail,
         )
@@ -1580,10 +1673,8 @@ def _drive(
     submit.click()
     timed_out, detail = _run_app(at, budget)
     if timed_out:
-        _fail(
+        _finalize_timeout(
             outcome,
-            status=_STATUS_TIMEOUT,
-            kind=KIND_TIMEOUT,
             message="extraction did not finish inside the time budget",
             detail=detail,
         )
@@ -1684,10 +1775,8 @@ def _drive(
     post_button.click()
     timed_out, detail = _run_app(at, budget)
     if timed_out:
-        _fail(
+        _finalize_timeout(
             outcome,
-            status=_STATUS_TIMEOUT,
-            kind=KIND_TIMEOUT,
             message="audit and DB mapping did not finish inside the time budget",
             detail=detail,
         )
@@ -1823,42 +1912,16 @@ def _drive(
     )
     outcome.counts["blocking_issues"] = len(blocking_issues)
     if blocking_gate or error_count:
-        _fail(
+        _finalize_gate_failure(
             outcome,
-            status=_STATUS_FAIL,
-            kind=_classify(
-                text=joined,
-                issue_codes=codes,
-                contract_signal=True,
-                ambiguous=False,
-                no_reactions=False,
-                crashed=bool(exceptions),
-            ),
-            message=(
-                "post-pipeline validation failed: "
-                f"{len(blocking_issues)} blocking issue(s) at "
-                f"{_text(verdict.stage) or 'a stage boundary'}"
-                + (
-                    f" [{verdict.reason}]"
-                    if verdict.source == SOURCE_FAIL_CLOSED
-                    else ""
-                )
-            ),
-            detail="\n".join(part for part in (joined, *code_lines) if part)
-            or _json_text(
-                {
-                    "gate_verdict": {
-                        "failed": verdict.failed,
-                        "source": verdict.source,
-                        "reason": verdict.reason,
-                        "stage": verdict.stage,
-                    },
-                    FINAL_GATE_REPORT_KEY: stage3_gate,
-                    # Retained as evidence, never as arithmetic.
-                    "superseded_gate_fail_report": gate_fail,
-                }
-            ),
+            verdict=verdict,
+            blocking_issues=blocking_issues,
             codes=codes,
+            code_lines=code_lines,
+            joined=joined,
+            crashed=bool(exceptions),
+            stage3_gate=stage3_gate,
+            gate_fail=gate_fail,
         )
         return
 
@@ -1935,10 +1998,8 @@ def _drive(
     pwml_button.click()
     timed_out, detail = _run_app(at, budget)
     if timed_out:
-        _fail(
+        _finalize_timeout(
             outcome,
-            status=_STATUS_TIMEOUT,
-            kind=KIND_TIMEOUT,
             message="PWML export did not finish inside the time budget",
             detail=detail,
             codes=codes,
@@ -1999,15 +2060,13 @@ def _drive(
         )
         return
 
-    outcome.counts["pwml_bytes"] = len(xml)
-    pwml_counts = _safe_dict(pwml_result.get("counts"))
-    if pwml_counts:
-        outcome.counts["pwml"] = {str(k): v for k, v in pwml_counts.items()}
-    outcome.status = _STATUS_PASS
-    outcome.failure_kind = ""
-    outcome.message = f"strict run completed; pathway.pwml is {len(xml)} bytes"
-    outcome.detail = joined
-    outcome.issue_codes = pwml_codes
+    _finalize_pwml_export(
+        outcome,
+        xml=xml,
+        pwml_result=pwml_result,
+        joined=joined,
+        codes=pwml_codes,
+    )
 
 
 __all__ = [
