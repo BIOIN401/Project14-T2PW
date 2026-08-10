@@ -5,6 +5,49 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Degree zero is answered against the pre-prune process snapshot (2026-08-10, branch `agent/p01-stale-index`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,
+`tests/test_strict_quarantine.py`, `tests/test_strict_quarantine_real_artifact_replay.py`
+
+`quarantine_and_close` compacted every process bucket in
+`_drop_quarantined_processes`, then asked `_degree_zero_exports` a question
+phrased in the ORIGINAL admission indices: out-of-range ones were skipped in
+silence and shifted ones resolved to the wrong row, so entities reached only by a
+skipped row read as degree-zero and a complete, correctly declared pathway
+refused to export — the stale positional index `PRODUCT_CONTRACT.md` § 1 names as
+a blocker that must never end a run without a PWML. The buckets are now
+deep-copied into an immutable snapshot immediately before the compaction, and
+`_degree_zero_exports` takes its REFERENCE set from that snapshot while still
+reading entity rows from the post-drop payload. `_surviving_processes` grew
+`strict=`, raising the new `StrictQuarantineInvariantError` instead of skipping;
+it defaults to False because `_revalidate_surviving_processes` is *supposed* to
+meet a vanished row and records `process_row_vanished_during_closure`.
+
+No gate was weakened: six of 32 archived legs stop being refused for a reason
+that was never true, no leg gains a degree-zero entity, `PMC12856317/research`
+stays refused on `unexportable_entity:1`, and `PMC12452463` clearing this
+boundary is not strict success — its gold `export_rationale` records the route as
+chemically broken, so its outcome is `review_required`. Pinned per leg in
+`EXPECTED_P01_DELTAS`. **Re-measured full-stack across the 39 cached legs** of the
+frozen cohort in `tests/data/baseline_cohort_manifest.json`, unchanged:
+
+| stage | result |
+|---|---|
+| quarantine | 28 admitted, 11 refused |
+| Stage 3 after quarantine | **28 / 28 pass** |
+| required-field contract | 9 / 28 pass |
+| IR build + validation | 9 / 9 of those reaching it |
+| **fully exportable** | **9 / 28** |
+
+That is the whole delta: one cohort leg,
+`runs/2026-08-02_2130/papers/PMC12096016/strict`, moves from refused to admitted
+and clears every later stage (39 legs; 28 admitted / 11 refused; 28/28 Stage 3;
+9/28 required contract; 9/9 IR; 9/28 exportable; by leg 19/19/4, by row 27/27/4).
+The residual codes below do not move; that leg contributes none.
+
+---
+
 ## A decision is bound to its inputs, not only its payload; research fails open through the whole boundary (2026-07-31, branch `research-mode`)
 
 **Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,

@@ -97,6 +97,7 @@ __all__ = [
     "ACCEPTED_STATES",
     "QUARANTINE_STATES",
     "StrictQuarantineResult",
+    "StrictQuarantineInvariantError",
     "QUARANTINE_REPORT_FILENAME",
     "REMOVED_ENTITY_REPORT_FILENAME",
     "CLOSURE_REPORT_FILENAME",
@@ -1190,9 +1191,31 @@ def _admit_processes(
 # ── Graph closure ───────────────────────────────────────────────────────────
 
 
+class StrictQuarantineInvariantError(RuntimeError):
+    """An admission record did not address the payload it was written against.
+
+    Indices are assigned by enumerating the process lists, so an accepted record
+    that stops resolving means the lists moved underneath the decision. Skipping
+    it deletes a surviving process's edges silently, which reads downstream as a
+    degree-zero entity and refuses an export nothing was wrong with.
+    """
+
+
 def _surviving_processes(
-    payload: Mapping[str, Any], admissions: Sequence[Mapping[str, Any]]
+    payload: Mapping[str, Any],
+    admissions: Sequence[Mapping[str, Any]],
+    *,
+    strict: bool = False,
 ) -> List[Tuple[str, Dict[str, Any]]]:
+    """The rows the accepted admission records point at.
+
+    ``strict`` decides what an unresolvable ``(bucket, index)`` means. Skipping is
+    right where a row is *expected* to have gone: closure quarantines it through
+    :func:`_revalidate_surviving_processes`, which records
+    ``process_row_vanished_during_closure`` instead. Where the caller believes
+    every record resolves, a skip is an invariant break and must say so.
+    """
+
     processes = _safe_dict(payload.get("processes"))
     out: List[Tuple[str, Dict[str, Any]]] = []
     for record in admissions:
@@ -1203,6 +1226,12 @@ def _surviving_processes(
         index = int(record.get("index") or 0)
         if 0 <= index < len(rows) and isinstance(rows[index], dict):
             out.append((bucket, rows[index]))
+        elif strict:
+            raise StrictQuarantineInvariantError(
+                f"admission record {record.get('pointer') or f'/processes/{bucket}/{index}'} "
+                f"({record.get('state')}) does not resolve: bucket {bucket!r} holds "
+                f"{len(rows)} row(s). The process lists moved after admission."
+            )
     return out
 
 
@@ -1662,14 +1691,27 @@ def _reconcile_locked_reactions(
 def _degree_zero_exports(
     payload: Mapping[str, Any],
     admissions: Sequence[Mapping[str, Any]],
+    *,
+    process_snapshot: Mapping[str, Any],
 ) -> List[Dict[str, str]]:
     """Surviving proteins/complexes with no surviving reference.
 
     Components of a surviving complex are exempt -- they have no edge by
     construction, and requirement 3 says to preserve them.
+
+    Two sources, deliberately. Entity rows come from ``payload`` -- the post-drop
+    graph, the rows an export would carry. REFERENCES come from
+    ``process_snapshot``, the buckets as they were before
+    :func:`_drop_quarantined_processes` compacted them, because admission indices
+    address the original lists and resolving them against the compacted ones
+    silently drops surviving reactions and reports their enzymes as degree-zero.
+    ``strict=True``: every accepted record resolves against that snapshot by
+    construction, so one that does not makes this answer wrong, not incomplete.
     """
 
-    referenced = _referenced_entity_norms(payload, admissions)
+    reference = {**payload, "processes": process_snapshot}
+    _surviving_processes(reference, admissions, strict=True)
+    referenced = _referenced_entity_norms(reference, admissions)
     surviving_complex_norms = {
         _normalize(_row_name(row))
         for row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
@@ -1859,6 +1901,11 @@ def quarantine_and_close(
             int(max_iterations),
         )
 
+    # The buckets as closure left them, taken BEFORE the compaction that
+    # invalidates every admission index. Deep-copied so the compaction cannot
+    # reach it, never written to after: it is the only surviving record of which
+    # row each accepted record was written for.
+    process_snapshot: Dict[str, Any] = deepcopy(_safe_dict(working.get("processes")))
     _drop_quarantined_processes(working, admissions)
     lock_accounting = _reconcile_locked_reactions(working, admissions, originals)
 
@@ -1873,7 +1920,7 @@ def quarantine_and_close(
 
     registry = _build_registry(working)
     overlaps = _entity_type_overlaps(working)
-    degree_zero = _degree_zero_exports(working, admissions)
+    degree_zero = _degree_zero_exports(working, admissions, process_snapshot=process_snapshot)
     unexportable = _unexportable_entities(working, registry, strict_db=strict_db)
     unaccounted_locks = int(lock_accounting.get("unaccounted_locked_reactions") or 0)
     invariants = {

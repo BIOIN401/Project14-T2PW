@@ -53,6 +53,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     normalize_process_payload,
     run_strict_post_normalization_gates,
 )
+import t2pw.pipeline.strict_quarantine as SQ  # noqa: E402
 from t2pw.pipeline.strict_quarantine import quarantine_and_close  # noqa: E402
 from t2pw.pwml.ir import (  # noqa: E402
     build_pwml_ir,
@@ -832,15 +833,23 @@ def test_stage_three_recovery_is_not_strict_exportability() -> None:
 #: These are baseline *measurements*, not targets, and they are NOT C-010's
 #: expected delta. C-010 changes what some legs' verdicts ARE; this pins which
 #: legs are counted and what they measure today. Do not pre-apply one to the other.
+#:
+#: **Re-measured for C-010, 2026-08-10.** Resolving degree zero against the
+#: pre-prune snapshot moves exactly one cohort leg,
+#: ``runs/2026-08-02_2130/papers/PMC12096016/strict``, from refused to admitted;
+#: it then clears every later stage, so admitted 27 -> 28, refused 12 -> 11,
+#: Stage 3 27 -> 28, contract 8 -> 9, IR 8 -> 9, exportable 8 -> 9. The residual
+#: counts do not move: that leg contributes none. ``PMC12856317/research``, the
+#: other cohort leg in ``EXPECTED_P01_DELTAS``, stays refused.
 FULL_STACK_BASELINE: Dict[str, int] = {
     "legs_examined": 39,
-    "quarantine_admitted": 27,
-    "quarantine_refused": 12,
-    "stage3_after_pass": 27,
-    "required_contract_pass": 8,
-    "reached_ir": 8,
-    "ir_pass": 8,
-    "exportable": 8,
+    "quarantine_admitted": 28,
+    "quarantine_refused": 11,
+    "stage3_after_pass": 28,
+    "required_contract_pass": 9,
+    "reached_ir": 9,
+    "ir_pass": 9,
+    "exportable": 9,
 }
 
 #: How many LEGS exhibit each residual code, and how many error ROWS carry it.
@@ -1104,3 +1113,100 @@ def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
     # And the log has to say the cohort is frozen, so a reader is not left to
     # assume it is still discovered by scanning runs/.
     assert "tests/data/baseline_cohort_manifest.json" in log
+
+
+# ── C-010: which archived legs the pre-prune reference set actually moves ───
+#
+# A different population from the frozen cohort above, measured differently: every
+# leg under runs/ AND runs_verify/, replayed straight from final_mapped.json, no
+# Stage-3 normalization, pathway_context=None -- exactly as
+# docs/pwml_recovery_sprint/evidence/allowlist_generator.py does it.
+
+#: Every archived leg whose verdict moves, and how. 32 measured, 26 unmoved.
+#: Tuple: dz_before, dz_after, ok_before, ok_after, refusals_before, refusals_after.
+#:
+#: **Not a target, and no gate is weakened.** ``PMC12856317/research`` stays
+#: ``ok=False`` on ``unexportable_entity:1``, and ``PMC12452463`` clearing this
+#: boundary is not strict success: its gold ``export_rationale`` records the route
+#: as chemically broken, so ``PRODUCT_CONTRACT.md`` § 13 makes it ``review_required``.
+EXPECTED_P01_DELTAS: Dict[str, Tuple[Any, ...]] = {
+    "runs/2026-08-02_2130/papers/PMC12096016/strict":
+        (["EntA", "Unknown", "enterobactin synthase complex"], [], False, True,
+         ["degree_zero_export:3"], []),
+    "runs/2026-08-02_2130/papers/PMC12856317/research":
+        (["ALAS2", "ALAS2 homodimer"], [], False, False,
+         ["degree_zero_export:2", "unexportable_entity:1"], ["unexportable_entity:1"]),
+    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict":
+        (["EntE"], [], False, True, ["degree_zero_export:1"], []),
+    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict":
+        (["EntA"], [], False, True, ["degree_zero_export:1"], []),
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research":
+        (["Isochorismatase (EntB)"], [], False, True, ["degree_zero_export:1"], []),
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict":
+        (["EntD", "EntF"], [], False, True, ["degree_zero_export:2"], []),
+}
+
+
+_SHIPPED_DEGREE_ZERO = SQ._degree_zero_exports
+_SHIPPED_SURVIVING = SQ._surviving_processes
+
+
+def _pre_c010_degree_zero(payload, admissions, **_ignored):
+    """The pre-C-010 answer: references resolved against the POST-drop payload.
+
+    A measurement device, not a proposed behaviour. Assertion 2 below needs both
+    sides in one process, because "no unlisted leg moved" compares a leg's before
+    to its after. Two substitutions into the SHIPPED code rather than a copy of
+    the old body, so it cannot drift away from what it claims to reproduce.
+    """
+
+    return _SHIPPED_DEGREE_ZERO(payload, admissions, process_snapshot=payload.get("processes") or {})
+
+
+def _pre_c010_surviving(payload, admissions, **_ignored):
+    return _SHIPPED_SURVIVING(payload, admissions)  # the other half: skip, never raise
+
+
+def _p01_observables(payload: Dict[str, Any]) -> Tuple[List[str], bool, List[str]]:
+    result = quarantine_and_close(deepcopy(payload), strict_db=True, pathway_context=None)
+    degree_zero = result.quarantine_report["strict_invariants"]["degree_zero_exports"]
+    return sorted(row["name"] for row in degree_zero), result.ok, list(result.refusal_reasons)
+
+
+def test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Three claims, all required; the third is the one that bounds the fix.
+
+    A leg absent from this checkout is skipped, the way the module already skips
+    on ``runs/`` absence: ``runs_verify/2026-08-04_1754/`` is committed
+    separately and its absence is a checkout difference, not a disagreement.
+    What is never skipped is a present leg that moves in an unrecorded way.
+    """
+
+    expected = {rel: row for rel, row in EXPECTED_P01_DELTAS.items() if (ROOT / rel).is_dir()}
+    assert expected, "no allowlisted leg is present in this checkout"
+    legs: List[Path] = []
+    for base in ("runs", "runs_verify"):
+        if (ROOT / base).is_dir():
+            legs.extend(sorted((ROOT / base).glob("*/papers/*/*/final_mapped.json")))
+
+    moved: Dict[str, Tuple[Any, ...]] = {}
+    for path in legs:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        with monkeypatch.context() as patched:
+            patched.setattr(SQ, "_surviving_processes", _pre_c010_surviving)
+            patched.setattr(SQ, "_degree_zero_exports", _pre_c010_degree_zero)
+            before = _p01_observables(payload)
+        after = _p01_observables(payload)
+        if before != after:
+            rel = path.parent.relative_to(ROOT).as_posix()
+            moved[rel] = (before[0], after[0], before[1], after[1], before[2], after[2])
+
+    # 1. every allowlisted leg transitions exactly as tabulated.
+    for rel, tabulated in sorted(expected.items()):
+        assert moved.get(rel) == tabulated, rel
+    # 2. nothing else moved, in ANY of the three observables.
+    assert sorted(moved) == sorted(expected)
+    # 3. no leg GAINS a degree-zero entity: the fix only ever removes a false one.
+    assert [rel for rel, row in sorted(moved.items()) if row[1]] == []
