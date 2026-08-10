@@ -43,23 +43,21 @@ TERMINATION_PRECEDENCE: Tuple[str, ...] = (
 TERMINATION_REASONS: FrozenSet[str] = frozenset(TERMINATION_PRECEDENCE)
 
 
-def claim_key(claim: Any) -> str:
-    """Content-addressed identity of ONE claim, independent of the judge's verdict.
+def claim_identity_key(claim: Any) -> str:
+    """Verdict-, gap- and name-independent identity of ONE claim: its chemistry.
 
-    Keyed on the gap it says it fills plus the chemistry it asserts, so a re-offer in a
-    later round hashes to the same key whether it was admitted or rejected; gap ids are
-    content-addressed (``retrieve.make_gap_id``), so an unfilled gap keeps its id across
-    rounds. Takes a mapping or an ``admission.RagReactionCandidate``-shaped object.
+    Prefers the audited ``RagReactionCandidate.claim_identity()`` when the object has it
+    (synonyms collapsed via ``canonical_name``), else the same (inputs, outputs, enzymes,
+    reversible) shape for mappings. Name and gap are excluded exactly as at
+    ``admission.py:1485``: the same chemistry under other wording or against another gap
+    is the SAME claim and must never read as new.
     """
+    audited = getattr(claim, "claim_identity", None)
+    if callable(audited):
+        return hashlib.sha1(repr(audited()).encode("utf-8")).hexdigest()[:16]
     read = claim.get if isinstance(claim, dict) else lambda k: getattr(claim, k, None)
-
-    def tokens(value: Any) -> Tuple[str, ...]:
-        items = value if isinstance(value, (list, tuple, set, frozenset)) else ()
-        return tuple(sorted(str(item).strip().casefold() for item in items))
-
-    identity = (str(read("gap_id") or "").strip().casefold(),
-                str(read("name") or "").strip().casefold(),
-                tokens(read("inputs")), tokens(read("outputs")), tokens(read("enzymes")))
+    identity = (*(tuple(sorted(str(i).strip().casefold() for i in read(f) or ()))
+                  for f in ("inputs", "outputs", "enzymes")), bool(read("reversible")))
     return hashlib.sha1(repr(identity).encode("utf-8")).hexdigest()[:16]
 
 
@@ -69,8 +67,8 @@ class SeenClaims:
 
     PRODUCT_CONTRACT §10: deduplication is against ALL claims ever seen, not only the
     admitted ones, or judge-rejected claims recur every round and the loop never
-    converges. Immutable, and a later stage refuses any claim whose key is in
-    :attr:`keys`, which is how a rejected claim is never reintroduced.
+    converges. Keys are :func:`claim_identity_key`, so a re-offer under another gap or
+    another paper's wording is recognised; a later stage refuses any key already here.
     """
 
     keys: FrozenSet[str] = frozenset()
@@ -81,7 +79,7 @@ class SeenClaims:
         keys = set(self.keys)
         novel: List[str] = []
         for claim in claims:
-            key = claim_key(claim)
+            key = claim_identity_key(claim)
             if key not in keys:
                 keys.add(key)
                 novel.append(key)
@@ -128,6 +126,7 @@ class LoopDecision:
     should_continue: bool
     reason: Optional[str] = None
     also_true: Tuple[str, ...] = ()  # also held, lost on precedence; never conflated
+    #: Budget accounting reads THIS, not ``also_true`` (see _conditions' carve-out).
     counts: Dict[str, Any] = field(default_factory=dict)
 
 

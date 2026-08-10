@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-import time
+import ast
+import inspect
 
 import pytest
 
 from t2pw.rag.loop_policy import (
     BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, NO_NEW_CLAIMS, OPERATION_TIMEOUT,
     RETRIEVAL_EXHAUSTED, SCIENTIFICALLY_UNRECOVERABLE, TERMINATION_PRECEDENCE,
-    TERMINATION_REASONS, LoopState, SeenClaims, claim_key, decide,
+    TERMINATION_REASONS, LoopState, SeenClaims, claim_identity_key, decide,
 )
 
 #: A healthy mid-loop state: budget left, the round completed, the graph grew.
@@ -32,8 +33,8 @@ def state(**overrides) -> LoopState:
     return LoopState(**{**BASE, **overrides})
 
 
-def claim(name: str) -> dict:
-    return {"gap_id": "gap-1", "name": name, "inputs": ["a"], "outputs": ["b"]}
+def claim(reactant: str, name: str = "step", gap: str = "gap-1") -> dict:
+    return {"gap_id": gap, "name": name, "inputs": [reactant], "outputs": ["b"]}
 
 
 @pytest.mark.parametrize("reason", TERMINATION_PRECEDENCE)
@@ -55,12 +56,14 @@ def test_retrieval_exhausted_unreachable_when_the_deadline_cut_the_ladder_short(
 
 
 def test_a_rejected_claim_is_not_new_in_a_later_round_so_the_loop_converges():
-    seen, novel = SeenClaims().observe([claim("A"), claim("B")])  # both REJECTED
+    seen, novel = SeenClaims().observe([claim("a"), claim("c")])  # both REJECTED
     assert len(novel) == 2
-    again, novel_again = seen.observe([claim("A"), claim("B")])
-    assert novel_again == () and again.keys == seen.keys
-    assert claim_key(claim("A")) in seen.keys  # a later stage refuses to re-offer it
-    decision = decide(state(new_admissible_claims=len(novel_again), graph_delta=0))
+    # Re-offered against a DIFFERENT gap, under a DIFFERENT paper's wording: same claim.
+    again, new2 = seen.observe([claim("a", name="R4 demethylation", gap="gap-9"),
+                                claim("c", gap="gap-9")])
+    assert new2 == () and again.keys == seen.keys
+    assert claim_identity_key(claim("a")) in seen.keys  # a later stage refuses it
+    decision = decide(state(new_admissible_claims=len(new2), graph_delta=0))
     assert (decision.should_continue, decision.reason) == (False, NO_NEW_CLAIMS)
 
 
@@ -82,12 +85,12 @@ def test_the_round_bound_and_the_time_bound_each_stop_the_loop(bound):
     assert (decision.should_continue, decision.reason) == (False, BUDGET_EXHAUSTED)
 
 
-def test_decide_is_pure_and_reads_no_clock(monkeypatch):
-    def boom(*args, **kwargs):
-        raise AssertionError("the policy takes `now` as an input; it reads no clock")
-
-    for name in ("monotonic", "time", "perf_counter"):
-        monkeypatch.setattr(time, name, boom)
+def test_decide_is_pure_and_the_module_imports_no_clock_no_io():
+    tree = ast.parse(inspect.getsource(inspect.getmodule(decide)))
+    imported = {n.module or "" for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)}
+    imported |= {a.name for n in ast.walk(tree) if isinstance(n, ast.Import)
+                 for a in n.names}
+    assert imported == {"__future__", "dataclasses", "typing", "hashlib"}  # no clock/IO
     before = state(operation_timed_out=True)
-    assert decide(before) == decide(before)
+    assert decide(before) == decide(before)           # same input, same output
     assert before == state(operation_timed_out=True)  # the input was not mutated
