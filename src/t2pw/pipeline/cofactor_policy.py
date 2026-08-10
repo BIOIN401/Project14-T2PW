@@ -104,13 +104,15 @@ _SUBJECT_OF: dict[str, tuple[str, ...]] = {
 _REPORTER_NATIVE_ORG: dict[str, tuple[str, ...]] = {
     "fluorescent protein": ("aequorea", "discosoma"), "LacZ": ("escherichia coli",),
     "luciferase": ("photinus", "renilla", "aliivibrio")}
+if _STRAY_ORG := sorted(set(_REPORTER_NATIVE_ORG) - set(_REPORTER)):  # stray key -> () -> mis-call
+    raise ValueError(f"_REPORTER_NATIVE_ORG keys must be _REPORTER families: {_STRAY_ORG}")
 #: Families moved ACROSS the base-SHA class boundary -- flagged ``moderate`` under their own reason
 #: code so R-003 adjudicates exactly these: currency already held them under another spelling
 #: (Pi/PPi/NH3), or they are not metabolites at all (electron). CoA moved the other way, currency
 #: -> hub. Bare ``pi`` is DROPPED from COFACTOR_NAMES: "PI" is also phosphatidylinositol, and an
 #: unknown beats a confident wrong call on a two-letter token in a lipid pathway.
 _RECONCILED = frozenset({"Pi", "PPi", "NH3", "electron"})
-_STRIP_RE = re.compile(r"[^a-z0-9+]")
+_STRIP_RE = re.compile(r"[^a-z0-9]")  # "+" folds away too: ONE fold for entity names AND markers
 
 
 def _normalize(name: object) -> str:
@@ -120,8 +122,8 @@ def _normalize(name: object) -> str:
 
 
 def _has(text: object, markers: tuple[str, ...]) -> str:
-    folded = " ".join(str(text or "").casefold().split())
-    return next((m for m in markers if folded and m in folded), "")
+    folded = _normalize(text)  # SAME fold as entity names: alpha/beta, punctuation, "+", spacing
+    return next((m for m in markers if folded and _normalize(m) in folded), "")
 
 
 VOCABULARY: dict[str, tuple[str, str]] = {}
@@ -166,7 +168,7 @@ def classify_entity(name: object, context: PathwayContext) -> Classification:
     if hit is None:
         return out(UNKNOWN, "not_in_curated_vocabulary", "low")
     family, verdict = hit
-    marker = _has(pathway, escapes := _SUBJECT_OF.get(family, ()))  # no escapes -> never "high"
+    marker = _has(pathway, _SUBJECT_OF.get(family, ()))  # ADDITIVE: a miss is "not evaluated here"
     if marker:
         return out(PARTICIPANT, "subject_of_the_requested_pathway", "high", marker)
     if verdict == ASSAY_REPORTER:
@@ -177,5 +179,5 @@ def classify_entity(name: object, context: PathwayContext) -> Classification:
     if verdict == COFACTOR_OR_CURRENCY:
         if family in _RECONCILED:
             return out(verdict, "currency_spelling_reconciled_from_hub_list", "moderate")
-        return out(verdict, "ubiquitous_currency_metabolite", "high" if escapes else "moderate")
+        return out(verdict, "ubiquitous_currency_metabolite", "moderate")  # capped: never "high"
     return out(HUB, "connectivity_hub_not_pathway_evidence", "moderate")

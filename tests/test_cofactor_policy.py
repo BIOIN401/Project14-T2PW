@@ -3,6 +3,7 @@ reconciled disagreement between ``admission._cofactors``/``._hubs`` and
 ``semantic._cofactor_names``. Fails on the base SHA: the module is new."""
 
 import ast
+import json
 import pathlib
 
 import pytest
@@ -16,6 +17,7 @@ CUR, HB, RPT, UNK, PAR = "cofactor_or_currency", "hub", "assay_reporter", "unkno
 R_CUR, R_HUB = "ubiquitous_currency_metabolite", "connectivity_hub_not_pathway_evidence"
 R_RECON, R_SUBJ = "currency_spelling_reconciled_from_hub_list", "subject_of_the_requested_pathway"
 R_RPT, R_VOC = "assay_reporter_not_pathway_member", "not_in_curated_vocabulary"
+GOLD = pathlib.Path(cp.__file__).resolve().parents[1] / "bench/gold/pinned_v1.json"  # the REAL gold
 
 CASES = (
     # (a) one clear case per verdict, each carrying a reason
@@ -63,7 +65,7 @@ def test_verdict_reason_family_and_closed_vocabularies(name, ctx, verdict, reaso
 
 def test_context_escapes_govern_both_verdict_and_confidence():
     gly, oxp = cp.classify_entity("ATP", GLY), cp.classify_entity("ATP", OXP)
-    assert (gly.verdict, oxp.verdict, gly.confidence) == (CUR, PAR, "high")  # ATP HAS an escape
+    assert (gly.verdict, oxp.verdict, gly.confidence) == (CUR, PAR, "moderate")  # ATP HAS an escape
     assert (gly.matched_context, oxp.matched_context) == ("", "atp synthesis")
     p = Ctx("pyrimidine nucleotide biosynthesis", "Escherichia coli")  # CTP/GMP synthase products
     assert {cp.classify_entity(n, p).confidence for n in ("UTP","CTP","GMP","AMP")} == {"moderate"}
@@ -96,3 +98,27 @@ def test_leaf_module_has_no_network_db_or_llm_path_and_is_dead_code():
     assert src.parent == pathlib.Path(__file__).resolve().parents[1]  # same checkout as this test
     assert [p.name for p in src.rglob("*.py") if p.name != "cofactor_policy.py"
             and "cofactor_policy" in p.read_text(encoding="utf-8", errors="ignore")] == []
+
+
+def test_reporter_native_org_keys_must_be_reporter_families():
+    src = pathlib.Path(cp.__file__).read_text(encoding="utf-8")  # stray key -> () -> mis-call
+    typo = src.replace('"LacZ": ("escherichia coli",)', '"LacZee": ("escherichia coli",)', 1)
+    assert typo != src and set(cp._REPORTER_NATIVE_ORG) <= set(cp._REPORTER)
+    with pytest.raises(ValueError, match="_REPORTER_NATIVE_ORG"):  # tables + guard, no dataclasses
+        exec(compile(typo.split("#: Families moved")[0], cp.__file__, "exec"), {"__name__": "t"})
+
+
+def test_marker_matching_shares_the_entity_name_normalization():
+    assert cp._normalize("NAD+") == cp._normalize("NAD")  # ONE fold, so "+" is not a match hazard
+    assert cp._has("β-oxidation of fatty acids", ("beta-oxidation",)) == "beta-oxidation"
+    nad = cp.classify_entity("NAD+", Ctx("NAD+ biosynthesis I", "Escherichia coli"))  # gold organism
+    assert (nad.verdict, nad.matched_context, nad.confidence) == (PAR, "nad biosynthesis", "high")
+
+
+def test_gold_expected_substrates_and_products_are_never_confidently_disposable():
+    """REAL gold: no expected substrate/product may be a reporter or HIGH-confidence currency."""
+    for case in json.loads(GOLD.read_text("utf-8"))["cases"]:
+        ctx = Ctx(case["requested_pathway"], case["requested_organism"])
+        for e in case["expected_substrates"] + case["expected_products"]:
+            got = cp.classify_entity(e["name"], ctx)
+            assert (got.verdict, got.confidence) != (CUR, "high") and got.verdict != RPT, got
