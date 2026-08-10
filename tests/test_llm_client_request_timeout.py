@@ -2,9 +2,9 @@
 
 Before this file, ``grep -c "timeout=" src/t2pw/llm/client.py`` was 0: neither
 ``OpenAI(...)`` construction set one, so a request's only ceiling was the SDK's
-600 s default and one ``chat_detailed`` could burn ~4871 s against a 3480 s child
-deadline. Offline throughout -- the client is a canned stub, nothing reaches a
-provider.
+600 s READ default times its own 3 internal HTTP attempts, and one
+``chat_detailed`` could burn far past the 3480 s child deadline. Offline
+throughout -- the client is a canned stub, nothing reaches a provider.
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ class _Completions:
         self.calls.append(kwargs)
         item = self._script.pop(0) if self._script else HANG
         if item is HANG:
-            time.sleep(min(kwargs.get("timeout") or UNBOUNDED_SECONDS, UNBOUNDED_SECONDS))
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
             raise openai.APITimeoutError("request timed out")
         if isinstance(item, Exception):
             raise item
@@ -98,7 +98,7 @@ def test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound(llm) ->
         client_mod.chat_detailed(MESSAGES, model_override="m", timeout=0.05)
     elapsed = time.monotonic() - started
     assert caught.value.terminal_reason == "operation_timeout"
-    assert [call["timeout"] for call in fake.calls] == [0.05, 0.05]
+    assert [c["timeout"].read for c in fake.calls] == [0.05, 0.05]
     assert elapsed < UNBOUNDED_SECONDS, "the request reached the transport unbounded"
     assert elapsed <= bound + 1.0, f"{elapsed:.3f}s exceeded the bound of {bound}s"
 
@@ -113,11 +113,16 @@ def test_b_worst_case_duration_is_the_hand_computed_value(monkeypatch) -> None:
     assert client_mod.worst_case_call_seconds(tool_rounds=1, **cfg) == pytest.approx(272.8, abs=1e-9)
     for name in ("LLM_MAX_RETRIES", "LLM_RETRY_BASE_SLEEP", "LLM_RETRY_MAX_SLEEP", "LLM_CALL_SPACING"):
         monkeypatch.delenv(name, raising=False)
-    # Shipped defaults: 8 x 300 + (1+2+4+8+16+20+20+20) + 8 x 0.35 = 2493.8 s,
-    # which is what makes D-005's 3480 s child deadline enforceable at all.
+    # Shipped defaults, SDK retries pinned off: 8 x 300 + (1+2+4+8+16+20+20+20)
+    # + 8 x 0.35 = 2493.8 s, what makes D-005's 3480 s deadline enforceable.
     assert client_mod.REQUEST_TIMEOUT_SECONDS == 300.0
     assert client_mod.worst_case_call_seconds() == pytest.approx(2493.8, abs=1e-9)
     assert client_mod.worst_case_call_seconds() < 3480.0
+    # The SDK multiplier must be PRICED, not assumed to be 1: at the SDK's own
+    # default of 2 this config really costs 3 x 30 s + 2 x 8 s backoff per attempt.
+    assert client_mod.SDK_MAX_RETRIES == 0
+    monkeypatch.setattr(client_mod, "SDK_MAX_RETRIES", 2)
+    assert client_mod.worst_case_call_seconds(**cfg) == pytest.approx(440.4, abs=1e-9)
 
 
 def test_c_a_per_call_override_is_honoured_and_does_not_leak(llm) -> None:
@@ -127,7 +132,8 @@ def test_c_a_per_call_override_is_honoured_and_does_not_leak(llm) -> None:
     client_mod.chat_detailed(MESSAGES, model_override="m", timeout=7.5)
     client_mod.chat_detailed(MESSAGES, model_override="m")
     client_mod.chat_with_tools(MESSAGES, TOOLS, lambda *_: {}, model_override="m", timeout=9.0)
-    assert [call["timeout"] for call in fake.calls] == [7.5, default, 9.0]
+    assert [c["timeout"].read for c in fake.calls] == [7.5, default, 9.0]
+    assert [c["timeout"].connect for c in fake.calls] == [5.0, 5.0, 5.0]
     assert client_mod.REQUEST_TIMEOUT_SECONDS == default
 
 
@@ -174,4 +180,10 @@ def test_e_both_openai_constructions_receive_the_timeout(monkeypatch) -> None:
     for provider in ("openrouter", "local"):
         monkeypatch.setenv("LLM_PROVIDER", provider)
         _second_copy(f"c014_probe_{provider}")
-    assert [kw.get("timeout") for kw in built] == [42.0, 42.0]
+    assert [kw["timeout"].read for kw in built] == [42.0, 42.0]
+    # A bare float expands to connect=42.0 as well, relaxing the SDK's own 5 s
+    # connect: MORE permissive than base, which MUST NOT CHANGE forbids.
+    assert [kw["timeout"].connect for kw in built] == [5.0, 5.0]
+    # Left unset, the SDK's default of 2 makes one create() three HTTP attempts,
+    # so worst_case_call_seconds under-reports every call by ~3x.
+    assert [kw["max_retries"] for kw in built] == [0, 0]

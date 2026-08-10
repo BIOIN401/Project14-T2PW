@@ -1,11 +1,13 @@
 import hashlib
 import json
 import logging
+import math
 import os
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
+import httpx
 from dotenv import load_dotenv
 from openai import OpenAI
 from openai import RateLimitError, APIError, APITimeoutError, AuthenticationError, BadRequestError
@@ -23,19 +25,38 @@ PROVIDER = (os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
 
 #: One provider request's wall-clock ceiling, in seconds. Read ONCE, here, and
 #: applied to BOTH client constructions below and to every request either retry
-#: loop issues. Nothing set a timeout before, so the real ceiling was the SDK's
-#: own 600 s default: 300 s is strictly tighter, never more permissive, and it is
-#: what lets a deadline be enforced -- at LLM_MAX_RETRIES=8 one call's worst case
-#: is 2493.8 s, inside D-005's 3480 s child deadline, where 600 s gave 4893.8 s.
-#: A bad or non-positive value falls back rather than raising: an operator's typo
-#: must not make this module unimportable, nor reopen the unbounded request.
+#: loop issues. Nothing set a timeout before, so the READ ceiling was the SDK's
+#: own 600 s default: 300 s is tighter on every phase and looser on none, which
+#: is what :func:`_timeout` guarantees and a bare float would not. A bad, non-
+#: positive or non-finite value falls back rather than raising: an operator's
+#: typo must not make this module unimportable, and ``inf``/``nan`` must not
+#: reopen the unbounded request that this whole block exists to close.
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 300.0
+#: The SDK's own connect default, preserved. A bare float overwrites it with the
+#: full request ceiling, so a black-holed endpoint would cost 300 s per connect
+#: instead of 5 s -- 60x MORE permissive than the base this patch replaces.
+CONNECT_TIMEOUT_SECONDS = 5.0
+#: The SDK retries internally, invisibly to the loops below, defaulting to 2: one
+#: create() is really 3 HTTP attempts, so a "300 s" request truly costs 900 s+
+#: and no computed budget could hold it. Pinned to 0 -- this module's own loop is
+#: the retry authority (8 attempts, 1-20 s backoff, wider exception coverage),
+#: and the hidden second layer is exactly what made the worst case uncomputable.
+#: :func:`worst_case_call_seconds` prices whatever value stands here, so raising
+#: it stays honest rather than silently unbudgeted.
+SDK_MAX_RETRIES = 0
 try:
     REQUEST_TIMEOUT_SECONDS = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS") or 0)
 except ValueError:
     REQUEST_TIMEOUT_SECONDS = 0.0
-if REQUEST_TIMEOUT_SECONDS <= 0:
+if not math.isfinite(REQUEST_TIMEOUT_SECONDS) or REQUEST_TIMEOUT_SECONDS <= 0:
     REQUEST_TIMEOUT_SECONDS = DEFAULT_REQUEST_TIMEOUT_SECONDS
+
+
+def _timeout(seconds: float) -> httpx.Timeout:
+    """``seconds`` for the whole request, but connect stays at 5 s: ``httpx``
+    expands a bare float to EVERY phase, connect included, which would relax
+    connect from the SDK's 5 s to the full ceiling."""
+    return httpx.Timeout(seconds, connect=CONNECT_TIMEOUT_SECONDS)
 
 
 def _mask(s: str, keep: int = 8) -> str:
@@ -63,7 +84,8 @@ if PROVIDER == "openrouter":
     _client = OpenAI(
         base_url=base_url,
         api_key=api_key,
-        timeout=REQUEST_TIMEOUT_SECONDS,
+        timeout=_timeout(REQUEST_TIMEOUT_SECONDS),
+        max_retries=SDK_MAX_RETRIES,
         default_headers={
             "HTTP-Referer": os.getenv("OPENROUTER_SITE_URL", "http://localhost:8501"),
             "X-Title": os.getenv("OPENROUTER_APP_NAME", "PWML Multi-Stage Pipeline"),
@@ -75,7 +97,8 @@ elif PROVIDER == "local":
     base_url = (os.getenv("LMSTUDIO_BASE_URL") or "http://127.0.0.1:1234/v1").strip()
     model = (os.getenv("LMSTUDIO_MODEL") or "meta-llama-3.1-8b-instruct").strip()
 
-    _client = OpenAI(base_url=base_url, api_key="lm-studio", timeout=REQUEST_TIMEOUT_SECONDS)
+    _client = OpenAI(base_url=base_url, api_key="lm-studio", max_retries=SDK_MAX_RETRIES,
+                     timeout=_timeout(REQUEST_TIMEOUT_SECONDS))
     _model = model
 
 else:
@@ -404,16 +427,21 @@ def worst_case_call_seconds(
     ceiling, every backoff sleep is taken (the exception paths sleep after the
     last attempt, which the empty-completion path skips) and every
     ``LLM_CALL_SPACING`` pause is taken. No run pays all three maxima at once; a
-    deadline must assume it could. ``tool_rounds`` prices
-    :func:`chat_with_tools` -- at most ``max_tool_rounds`` tool rounds plus one
-    forced final round; ``tool_executor`` time is not configuration and is excluded.
+    deadline must assume it could. The SDK's OWN retries are priced too -- they
+    are invisible to the loops below, so omitting them under-reports a call by
+    ``1 + SDK_MAX_RETRIES`` times, which is unsafe in the one direction that
+    matters. ``tool_rounds`` prices :func:`chat_with_tools` -- at most
+    ``max_tool_rounds`` tool rounds plus one forced final round; ``tool_executor``
+    time is not configuration and is excluded.
     """
     attempts = int(os.getenv("LLM_MAX_RETRIES", "8")) if max_retries is None else int(max_retries)
     attempts = max(1, attempts)
     base = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0")) if base_sleep is None else float(base_sleep)
     ceiling = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0")) if max_sleep is None else float(max_sleep)
     gap = float(os.getenv("LLM_CALL_SPACING", "0.35")) if spacing is None else float(spacing)
-    per_attempt = resolve_request_timeout(timeout)
+    # One create() is 1 + SDK_MAX_RETRIES HTTP attempts, each bounded by the
+    # timeout, separated by the SDK's own backoff (capped at 8 s per retry).
+    per_attempt = resolve_request_timeout(timeout) * (1 + SDK_MAX_RETRIES) + 8.0 * SDK_MAX_RETRIES
     backoff = sum(min(base * (2 ** i), ceiling) for i in range(attempts))
     per_round = attempts * per_attempt + backoff + attempts * gap
     return per_round * (1 + max(0, int(tool_rounds)))
@@ -580,7 +608,7 @@ def chat_detailed(
         "messages": messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
-        "timeout": request_timeout,
+        "timeout": _timeout(request_timeout),
     }
 
     # OpenAI-compatible response_format
@@ -805,7 +833,7 @@ def chat_with_tools(
             "messages": msgs,
             "temperature": temperature,
             "max_tokens": max_tokens,
-            "timeout": request_timeout,
+            "timeout": _timeout(request_timeout),
         }
         # Captured rather than re-derived: it is the single fact that decides
         # whether a content-less reply is a legitimate function-calling turn or
