@@ -43,6 +43,14 @@ TERMINATION_PRECEDENCE: Tuple[str, ...] = (
 TERMINATION_REASONS: FrozenSet[str] = frozenset(TERMINATION_PRECEDENCE)
 
 
+def _field(value: Any) -> Tuple[str, ...]:
+    """One chemistry field, order-free, one key per chemistry (§10, or no convergence):
+    internal whitespace collapses so ``"acetyl  CoA"`` IS ``"acetyl CoA"``, and a scalar
+    ``str``/``bytes`` is ONE element, so ``"abc"`` never collides with ``list("abc")``."""
+    items = () if not value else (value,) if isinstance(value, (str, bytes)) else value
+    return tuple(sorted(" ".join(str(i).split()).casefold() for i in items))
+
+
 def claim_identity_key(claim: Any) -> str:
     """Verdict-, gap- and name-independent identity of ONE claim: its chemistry.
 
@@ -56,8 +64,8 @@ def claim_identity_key(claim: Any) -> str:
     if callable(audited):
         return hashlib.sha1(repr(audited()).encode("utf-8")).hexdigest()[:16]
     read = claim.get if isinstance(claim, dict) else lambda k: getattr(claim, k, None)
-    identity = (*(tuple(sorted(str(i).strip().casefold() for i in read(f) or ()))
-                  for f in ("inputs", "outputs", "enzymes")), bool(read("reversible")))
+    identity = (*(_field(read(f)) for f in ("inputs", "outputs", "enzymes")),
+                bool(read("reversible")))
     return hashlib.sha1(repr(identity).encode("utf-8")).hexdigest()[:16]
 
 

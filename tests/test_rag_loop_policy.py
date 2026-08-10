@@ -94,3 +94,29 @@ def test_decide_is_pure_and_the_module_imports_no_clock_no_io():
     before = state(operation_timed_out=True)
     assert decide(before) == decide(before)           # same input, same output
     assert before == state(operation_timed_out=True)  # the input was not mutated
+
+
+class _Audited:  # RagReactionCandidate-shaped: the object itself collapses its synonyms
+    outputs, enzymes, reversible = ["b"], [], False
+    def __init__(self, wording): self.inputs = [wording]
+    def claim_identity(self): return ("acetyl-coenzyme-a",), ("b",), (), False
+
+
+def test_the_audited_claim_identity_decides_the_key_not_the_mapping_fallback():
+    """Pins the ``claim_identity()`` branch: delete it and the raw wording is read, so
+    ONE chemistry offered under two synonyms reads as two claims and the loop spins."""
+    key = claim_identity_key(_Audited("acetyl-CoA"))
+    assert key == claim_identity_key(_Audited("Acetyl coenzyme A"))
+    assert key != claim_identity_key({"inputs": ["acetyl-CoA"], "outputs": ["b"]})
+
+
+def test_internal_whitespace_does_not_split_one_chemistry_into_two_claims():
+    """§10 convergence: another paper's spacing is not another claim."""
+    seen, _ = SeenClaims().observe([{"inputs": ["acetyl CoA"], "outputs": ["b"]}])
+    assert seen.observe([{"inputs": ["acetyl  CoA"], "outputs": ["b"]}])[1] == ()
+
+
+def test_a_scalar_string_field_never_collides_with_its_own_characters():
+    """Iterating ``"abc"`` yields ``'a','b','c'``: two chemistries sharing one key."""
+    assert (claim_identity_key({"inputs": "abc", "outputs": ["b"]})
+            != claim_identity_key({"inputs": ["a", "b", "c"], "outputs": ["b"]}))
