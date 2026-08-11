@@ -1,11 +1,13 @@
 import hashlib
 import json
 import logging
+import math
 import os
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
+import httpx
 from dotenv import load_dotenv
 from openai import OpenAI
 from openai import RateLimitError, APIError, APITimeoutError, AuthenticationError, BadRequestError
@@ -20,6 +22,41 @@ ENV_PATH = PROJECT_ROOT / ".env"
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 PROVIDER = (os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
+
+#: One provider request's wall-clock ceiling, in seconds. Read ONCE, here, and
+#: applied to BOTH client constructions below and to every request either retry
+#: loop issues. Nothing set a timeout before, so the READ ceiling was the SDK's
+#: own 600 s default: 300 s is tighter on every phase and looser on none, which
+#: is what :func:`_timeout` guarantees and a bare float would not. A bad, non-
+#: positive or non-finite value falls back rather than raising: an operator's
+#: typo must not make this module unimportable, and ``inf``/``nan`` must not
+#: reopen the unbounded request that this whole block exists to close.
+DEFAULT_REQUEST_TIMEOUT_SECONDS = 300.0
+#: The SDK's own connect default, preserved. A bare float overwrites it with the
+#: full request ceiling, so a black-holed endpoint would cost 300 s per connect
+#: instead of 5 s -- 60x MORE permissive than the base this patch replaces.
+CONNECT_TIMEOUT_SECONDS = 5.0
+#: The SDK retries internally, invisibly to the loops below, defaulting to 2: one
+#: create() is really 3 HTTP attempts, so a "300 s" request truly costs 900 s+
+#: and no computed budget could hold it. Pinned to 0 -- this module's own loop is
+#: the retry authority (8 attempts, 1-20 s backoff, wider exception coverage),
+#: and the hidden second layer is exactly what made the worst case uncomputable.
+#: :func:`worst_case_call_seconds` prices whatever value stands here, so raising
+#: it stays honest rather than silently unbudgeted.
+SDK_MAX_RETRIES = 0
+try:
+    REQUEST_TIMEOUT_SECONDS = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS") or 0)
+except ValueError:
+    REQUEST_TIMEOUT_SECONDS = 0.0
+if not math.isfinite(REQUEST_TIMEOUT_SECONDS) or REQUEST_TIMEOUT_SECONDS <= 0:
+    REQUEST_TIMEOUT_SECONDS = DEFAULT_REQUEST_TIMEOUT_SECONDS
+
+
+def _timeout(seconds: float) -> httpx.Timeout:
+    """``seconds`` for the whole request, but connect stays at 5 s: ``httpx``
+    expands a bare float to EVERY phase, connect included, which would relax
+    connect from the SDK's 5 s to the full ceiling."""
+    return httpx.Timeout(seconds, connect=CONNECT_TIMEOUT_SECONDS)
 
 
 def _mask(s: str, keep: int = 8) -> str:
@@ -47,6 +84,8 @@ if PROVIDER == "openrouter":
     _client = OpenAI(
         base_url=base_url,
         api_key=api_key,
+        timeout=_timeout(REQUEST_TIMEOUT_SECONDS),
+        max_retries=SDK_MAX_RETRIES,
         default_headers={
             "HTTP-Referer": os.getenv("OPENROUTER_SITE_URL", "http://localhost:8501"),
             "X-Title": os.getenv("OPENROUTER_APP_NAME", "PWML Multi-Stage Pipeline"),
@@ -58,7 +97,8 @@ elif PROVIDER == "local":
     base_url = (os.getenv("LMSTUDIO_BASE_URL") or "http://127.0.0.1:1234/v1").strip()
     model = (os.getenv("LMSTUDIO_MODEL") or "meta-llama-3.1-8b-instruct").strip()
 
-    _client = OpenAI(base_url=base_url, api_key="lm-studio")
+    _client = OpenAI(base_url=base_url, api_key="lm-studio", max_retries=SDK_MAX_RETRIES,
+                     timeout=_timeout(REQUEST_TIMEOUT_SECONDS))
     _model = model
 
 else:
@@ -216,12 +256,15 @@ def _is_content_filter(reason: Any) -> bool:
 #: Terminal reasons a completion call can carry back. ``""`` means it succeeded.
 TERMINAL_CONTENT_FILTER = "content_filter"
 TERMINAL_EMPTY_AFTER_RETRIES = "empty_after_retries"
+#: D-005 spelling. Running out of wall clock is its own outcome, never the two above.
+TERMINAL_OPERATION_TIMEOUT = "operation_timeout"
 
 #: Raw response statuses, one per observable provider behaviour.
 STATUS_OK = "ok"
 STATUS_EMPTY = "empty"
 STATUS_CONTENT_FILTER = "content_filter"
 STATUS_ERROR = "error"
+STATUS_TIMEOUT = "timeout"
 
 #: Longest error/preview string kept on a diagnostics row. Diagnostics are
 #: written on every attempt, so nothing unbounded may enter them.
@@ -333,6 +376,75 @@ class CompletionResult:
 
     text: str
     diagnostics: CompletionDiagnostics
+
+
+class LLMOperationTimeout(RuntimeError):
+    """Every attempt of one call exceeded its request timeout.
+
+    D-005's ``operation_timeout`` at the client boundary: a SEPARATE outcome from
+    an empty completion (``""`` + ``terminal_reason="empty_after_retries"``), a
+    moderation refusal (``"content_filter"``) and a malformed response (a plain
+    ``RuntimeError``). Subclasses ``RuntimeError`` so existing handlers are
+    unaffected.
+    """
+
+    terminal_reason = TERMINAL_OPERATION_TIMEOUT
+
+    def __init__(self, message: str, diagnostics: Optional[CompletionDiagnostics] = None) -> None:
+        super().__init__(message)
+        self.diagnostics = diagnostics
+
+
+def resolve_request_timeout(override: Optional[float] = None) -> float:
+    """Ceiling for one request: ``override`` if given, else the module default.
+
+    The override applies to that call and nothing else, so shrinking a request
+    to a remaining budget cannot leak into the next one.
+    """
+    if override is None:
+        return REQUEST_TIMEOUT_SECONDS
+    value = float(override)
+    if value <= 0:
+        raise ValueError(f"request timeout override must be > 0 seconds, got {override!r}")
+    return value
+
+
+def worst_case_call_seconds(
+    *,
+    timeout: Optional[float] = None,
+    max_retries: Optional[int] = None,
+    base_sleep: Optional[float] = None,
+    max_sleep: Optional[float] = None,
+    spacing: Optional[float] = None,
+    tool_rounds: int = 0,
+) -> float:
+    """Upper bound on what one call here can consume, computable BEFORE it runs.
+
+    The number a budget check needs; without it a deadline is unenforceable.
+    Unsupplied arguments are read from the same env vars, with the same defaults,
+    as the retry loops below. An UPPER bound on purpose, so fitting a call inside
+    a budget is never wrong in the unsafe direction: every attempt burns its full
+    ceiling, every backoff sleep is taken (the exception paths sleep after the
+    last attempt, which the empty-completion path skips) and every
+    ``LLM_CALL_SPACING`` pause is taken. No run pays all three maxima at once; a
+    deadline must assume it could. The SDK's OWN retries are priced too -- they
+    are invisible to the loops below, so omitting them under-reports a call by
+    ``1 + SDK_MAX_RETRIES`` times, which is unsafe in the one direction that
+    matters. ``tool_rounds`` prices :func:`chat_with_tools` -- at most
+    ``max_tool_rounds`` tool rounds plus one forced final round; ``tool_executor``
+    time is not configuration and is excluded.
+    """
+    attempts = int(os.getenv("LLM_MAX_RETRIES", "8")) if max_retries is None else int(max_retries)
+    attempts = max(1, attempts)
+    base = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0")) if base_sleep is None else float(base_sleep)
+    ceiling = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0")) if max_sleep is None else float(max_sleep)
+    gap = float(os.getenv("LLM_CALL_SPACING", "0.35")) if spacing is None else float(spacing)
+    # One create() is 1 + SDK_MAX_RETRIES HTTP attempts, each bounded by the
+    # timeout, separated by the SDK's own backoff (capped at 8 s per retry).
+    per_attempt = resolve_request_timeout(timeout) * (1 + SDK_MAX_RETRIES) + 8.0 * SDK_MAX_RETRIES
+    backoff = sum(min(base * (2 ** i), ceiling) for i in range(attempts))
+    per_round = attempts * per_attempt + backoff + attempts * gap
+    return per_round * (1 + max(0, int(tool_rounds)))
 
 
 def _completion_is_empty(resp: Any, *, tools_were_sent: bool) -> bool:
@@ -450,8 +562,14 @@ def chat_detailed(
     model_override: Optional[str] = None,
     model_env_var: Optional[str] = None,
     stage_name: Optional[str] = None,
+    timeout: Optional[float] = None,
 ) -> CompletionResult:
     """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+
+    ``timeout`` bounds each attempt of THIS call only, defaulting to
+    :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+    whole call in advance. A budget spent on timeouts raises
+    :class:`LLMOperationTimeout`, never the empty string.
 
     The text returned is identical to what ``chat`` returns for the same inputs;
     the only behavioural difference anywhere in this function relative to the
@@ -484,11 +602,13 @@ def chat_detailed(
         request_hash=_hash(messages),
     )
 
+    request_timeout = resolve_request_timeout(timeout)
     kwargs: Dict[str, Any] = {
         "model": resolved_model,
         "messages": messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
+        "timeout": _timeout(request_timeout),
     }
 
     # OpenAI-compatible response_format
@@ -635,7 +755,14 @@ def chat_detailed(
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
-        except (APITimeoutError, APIError) as e:
+        except APITimeoutError as e:
+            # Same budget, same backoff -- retry semantics are untouched. What is
+            # new: the attempt is bounded, and it is never an empty completion.
+            last_err = e
+            diagnostics.note(attempt=attempt + 1, status=STATUS_TIMEOUT, error=str(e))
+            time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+
+        except APIError as e:
             last_err = e
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
@@ -647,6 +774,13 @@ def chat_detailed(
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
+    if isinstance(last_err, APITimeoutError):
+        diagnostics.terminal_reason = TERMINAL_OPERATION_TIMEOUT
+        raise LLMOperationTimeout(
+            f"LLM request for {stage_name or 'chat'} exceeded its {request_timeout}s timeout "
+            f"on all {max_retries} attempts. Last error: {last_err}",
+            diagnostics,
+        )
     raise RuntimeError(f"LLM failed after {max_retries} retries. Last error: {last_err}")
 
 
@@ -663,9 +797,14 @@ def chat_with_tools(
     model_override: Optional[str] = None,
     model_env_var: Optional[str] = None,
     stage_name: Optional[str] = None,
+    timeout: Optional[float] = None,
 ) -> str:
     """
     Agentic tool-calling loop using the OpenAI function-calling protocol.
+
+    ``timeout`` bounds each attempt of every round of THIS call, defaulting to
+    :data:`REQUEST_TIMEOUT_SECONDS`. Price the whole loop in advance with
+    ``worst_case_call_seconds(tool_rounds=max_tool_rounds)``.
 
     Sends messages + tool definitions to the model.
     When the model returns tool_calls, executes them via tool_executor and
@@ -679,6 +818,7 @@ def chat_with_tools(
     max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
     base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
     max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    request_timeout = resolve_request_timeout(timeout)
     resolved_model = _resolve_model(
         model_override=model_override,
         model_env_var=model_env_var,
@@ -693,6 +833,7 @@ def chat_with_tools(
             "messages": msgs,
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "timeout": _timeout(request_timeout),
         }
         # Captured rather than re-derived: it is the single fact that decides
         # whether a content-less reply is a legitimate function-calling turn or
@@ -780,12 +921,21 @@ def chat_with_tools(
             except RateLimitError as e:
                 last_err = e
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
-            except (APITimeoutError, APIError) as e:
+            except APITimeoutError as e:
+                # Same budget and backoff; the attempt is bounded, the exit named.
+                last_err = e
+                time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+            except APIError as e:
                 last_err = e
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
             except json.JSONDecodeError as e:
                 last_err = e
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+        if isinstance(last_err, APITimeoutError):
+            raise LLMOperationTimeout(
+                f"chat_with_tools request for {stage_name or 'chat_with_tools'} exceeded its "
+                f"{request_timeout}s timeout on all {max_retries} attempts. Last error: {last_err}"
+            )
         raise RuntimeError(f"chat_with_tools call failed after retries. Last error: {last_err}")
 
     for _ in range(max_tool_rounds):
