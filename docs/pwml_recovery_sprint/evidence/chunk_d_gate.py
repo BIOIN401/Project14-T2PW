@@ -1,40 +1,34 @@
 """Deterministic split-process Chunk D gate (authorization CONTROL-PLANE-RECONCILE-001).
 
 Chunk D's monolithic definition runs 177 tests across seven files in ONE process.
-Two of those files drive Streamlit ``AppTest``. Running several ``AppTest``
-instances in a single process eventually leaves a worker thread without a
-``ScriptRunContext``, and the run dies with ``RuntimeError: FragmentThreadState
-not initialized`` (``streamlit/.../script_run_context.py:144``), reached via
-``streamlit_app.py:6187`` -> ``tools/pathwhiz_converter/ui.py:26``. The
-repository already documents this as "a Streamlit harness fault, not an app
-fault" (``tests/test_streamlit_quarantine_boundary.py:425-430``).
+Two of those files drive Streamlit ``AppTest``, and several ``AppTest`` instances
+in one process eventually leave a worker thread without a ``ScriptRunContext``:
+the run dies with ``RuntimeError: FragmentThreadState not initialized``
+(``script_run_context.py:144``) via ``streamlit_app.py:6187`` -> ``ui.py:26``.
+The repository calls this "a Streamlit harness fault, not an app fault"
+(``tests/test_streamlit_quarantine_boundary.py:425-430``).
 
-The monolithic gate therefore FLAPS -- observed passing and failing on the same
-trees, failing on a DIFFERENT test each time. A flapping gate is not a gate: it
-cannot distinguish a regression from harness noise, in either direction.
+The monolithic gate therefore FLAPS -- passing and failing on the same trees, on
+a DIFFERENT test each time. A flapping gate is not a gate: it cannot distinguish
+a regression from harness noise, in either direction.
 
-Separating the AppTest surface from the other five files is process isolation,
-not a test change: no test body, fixture, assertion, production source file or
-test datum is touched, and no retry is involved -- a component that fails,
-fails. MEASURED LIMIT: this fixes the 150 non-AppTest tests completely, but NOT
-``qb``, whose 23 AppTest instances share one process so the fault is
-intra-file. Numbers and consequences: ``TEST_MATRIX.md`` § "Chunk D".
+Separating the AppTest surface from the other five files is process isolation, not
+a test change: no test body, fixture, assertion, source file or datum is touched,
+and no retry is added. MEASURED LIMIT: ``core``/``s8`` become deterministic, while
+``qb`` stays NONDETERMINISTIC -- green more often than red, cause unresolved. See
+``TEST_MATRIX.md`` § "Chunk D"; never read a ``qb`` red as expected.
 
-``collect`` is the proof that the split is faithful: it collects node IDs from
-the ORIGINAL monolithic selection and from each component, then compares the
-SETS -- not the counts -- and fails on any omission, addition or overlap. Each
-parse is cross-checked against pytest's own "N tests collected" line, so a
-silent parse miss cannot be mistaken for agreement.
+``collect`` proves the split is faithful: it collects node IDs from the ORIGINAL
+monolithic selection and from each component, compares the SETS -- not the counts
+-- and fails on any omission, addition or overlap. Each parse is cross-checked
+against pytest's own "N tests collected" line, so a parse miss is not agreement.
 
-Every pytest invocation, collection included, goes through ``bounded_run.py``
-with its own ``--json`` cleanup report (gate G11 / ``[S8]``), its own SHORT
-``--basetemp`` (Windows ``MAX_PATH`` is 260), and a ``PYTHONPATH`` pinned to
-THIS checkout's ``src`` -- the venv's editable-install ``.pth`` points at the
-main checkout, so an unqualified pytest in a worktree silently tests the wrong
-tree. Components run strictly one at a time: the one-heavy-process rule.
+``run`` also asserts each component EXECUTED its full expected count.
 
-Exit 0 only when every selected component passed (``run``), or the sets matched
-exactly (``collect``).
+Every pytest invocation, collection included, goes through ``bounded_run.py`` with
+its own ``--json`` cleanup report (G11 / ``[S8]``), its own SHORT ``--basetemp``
+(``MAX_PATH`` is 260) which it CREATES, and a ``PYTHONPATH`` pinned to THIS
+checkout's ``src`` -- the venv's ``.pth`` aims at the main checkout. One at a time.
 """
 
 from __future__ import annotations
@@ -58,13 +52,17 @@ CORE = [
 #: One AppTest file per component -- necessary, and for ``qb`` not sufficient.
 S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
-COMPONENTS: List[Tuple[str, List[str]]] = [("core", CORE), ("s8", S8), ("qb", QB)]
+#: ``(name, files, expected_count)`` -- counts ``collect`` proves; re-prove to change.
+COMPONENTS: List[Tuple[str, List[str], int]] = [
+    ("core", CORE, 150), ("s8", S8, 4), ("qb", QB, 23)]
 #: The original monolithic selection, verbatim -- what the split must equal.
 MONOLITHIC = CORE + S8 + QB
 
 #: Permissive after ``::`` on purpose: a parameterised ID may contain spaces.
 NODE_ID = re.compile(r"^tests/.+\.py::.+$")
 COLLECTED = re.compile(r"^(\d+) tests? collected")
+#: VERDICTS only -- skipped/error/deselected excluded, so "145 passed, 5 errors" is 145.
+RAN = re.compile(r"(\d+) (?:passed|failed|xfailed|xpassed)")
 
 
 def _parse(text: str) -> Tuple[Set[str], Optional[int]]:
@@ -91,6 +89,7 @@ def _pytest(label: str, report: str, tmp: str, files: Sequence[str],
     report goes to stderr and passes straight through.
     """
 
+    os.makedirs(tmp, exist_ok=True)  # pytest mkdirs basetemp with parents=False
     proc = subprocess.run(
         [sys.executable, BOUNDED_RUN, "--label", f"chunkd-{label}",
          "--timeout", str(timeout), "--json", report, "--",
@@ -113,7 +112,7 @@ def collect(reports: Dict[str, str], tmp: str, timeout: float) -> int:
     print(f"monolithic : exit={code} parsed={len(base)} pytest_said={said}")
 
     union: Set[str] = set()
-    for name, files in COMPONENTS:
+    for name, files, _expect in COMPONENTS:
         code, out = _pytest(name, reports[name], tmp, files, timeout, ("--collect-only",))
         ids, said = _parse(out)
         overlap = union & ids
@@ -137,17 +136,19 @@ def run(reports: Dict[str, str], tmp: str, timeout: float,
     ``--only`` drives one component per operator call WITHOUT splitting the
     gate's definition -- selection, isolation and basetemp are still the ones
     above. The gate is met when all three passed on the same tree, however many
-    calls that took.
+    calls that took. A zero exit is not trusted alone: the count must match too.
     """
 
-    selected = [(n, f) for n, f in COMPONENTS if only in (None, n)]
+    selected = [(n, f, e) for n, f, e in COMPONENTS if only in (None, n)]
     failed = []
-    for name, files in selected:
+    for name, files, expect in selected:
         code, out = _pytest(name, reports[name], tmp, files, timeout)
         print(out, end="")
-        print(f"[chunk-d] component {name}: exit={code}", flush=True)
-        if code != 0:
-            failed.append(name)
+        last = (out.strip().splitlines() or [""])[-1]
+        ran = sum(int(n) for n in RAN.findall(last))
+        print(f"[chunk-d] component {name}: exit={code} ran={ran}/{expect}", flush=True)
+        if code != 0 or ran != expect:
+            failed.append(f"{name}(exit={code},ran={ran}/{expect})")
     print(f"[chunk-d] components={len(selected)}/{len(COMPONENTS)} "
           f"failed={failed or 'none'}")
     return 1 if failed else 0
@@ -160,15 +161,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                         help="G11 report path per component (g11_evidence.py next)")
     parser.add_argument("--tmp", required=True, help="SHORT basetemp root (MAX_PATH)")
     parser.add_argument("--timeout", type=float, default=2400.0)
-    parser.add_argument("--only", choices=[name for name, _ in COMPONENTS],
+    parser.add_argument("--only", choices=[c[0] for c in COMPONENTS],
                         help="run ONE component (collect always proves all three)")
     args = parser.parse_args(argv)
 
     paths = dict(pair.split("=", 1) for pair in args.report)
     if args.mode == "collect":
-        needed = ["mono"] + [name for name, _ in COMPONENTS]
+        needed = ["mono"] + [c[0] for c in COMPONENTS]
     else:
-        needed = [args.only] if args.only else [name for name, _ in COMPONENTS]
+        needed = [args.only] if args.only else [c[0] for c in COMPONENTS]
     absent = [name for name in needed if not paths.get(name)]
     if absent:
         parser.error(f"missing --report for: {absent}")

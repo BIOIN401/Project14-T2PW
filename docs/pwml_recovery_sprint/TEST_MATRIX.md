@@ -175,35 +175,35 @@ C-010's allowlist is unverifiable in an isolated worktree.
   tests/test_strict_quarantine_real_artifact_replay.py
 ```
 
-### Chunk D — split-process gate, and what it does NOT fix (RECONCILE-B)
+### Chunk D — split-process gate (RECONCILE-B)
 
-The one-process form ran all 177 tests together and **flapped**: passing at `85fae43` and
-reports `05`/`18`, failing at `04`/`07`/`25`/`26`/`44`/`45` and in three reviewer runs, on
-a *different* test each time. Cause, already documented at
-`tests/test_streamlit_quarantine_boundary.py:425-430`: several Streamlit `AppTest`
-instances in one process eventually leave a worker thread without a `ScriptRunContext`, so
-`streamlit_app.py:6187` → `ui.py:26` (`st.subheader`) raises `RuntimeError:
-FragmentThreadState not initialized`. The app script dies mid-render and the test then
-fails on the widget that was never created (`KeyError: 'refinement_generate_pwml'`).
+The one-process form ran all 177 tests together and **flapped**: green at `85fae43` and
+reports `05`/`18`, red at `04`/`07`/`25`/`26`/`44`/`45` and in three reviewer runs, on a
+*different* test each time. Cause, documented at
+`tests/test_streamlit_quarantine_boundary.py:425-430`: several `AppTest` instances in one
+process eventually lose their `ScriptRunContext`, so `streamlit_app.py:6187` → `ui.py:26`
+raises `FragmentThreadState not initialized` and the test fails on a widget never created.
 
 `chunk_d_gate.py` runs the same 177 tests as three isolated processes. **Set-identity is
-proven, not assumed** — `collect` compares node-ID *sets*: mono 177 = core 150 + s8 4 +
-qb 23; union 177, missing 0, extra 0. Measured at clean base `0182eae`:
+proven** — `collect` compares node-ID *sets*: 177 = 150 + 4 + 23, missing 0, extra 0.
 
-| Component | Result at base | Runtime |
+| Component | Behaviour | Runtime |
 |---|---|---|
 | `core` (5 files, 150 tests) | **150 passed** — deterministic | 0.93 s |
-| `s8` (4 AppTest tests) | **4 passed** | 0.53 s |
-| `qb` (23 AppTest tests) | **2 failed, 21 passed** — same at tip | 452 s · tip 451 s |
+| `s8` (4 AppTest tests) | **4 passed** — deterministic | 0.53 s |
+| `qb` (23 AppTest tests) | **NONDETERMINISTIC — see below** | 360–510 s |
 
-**File-level isolation does not fix `qb`, and this is a pre-existing base failure, not a
-regression.** The fault is *intra-file*: that one file runs 23 `AppTest` instances in a
-single process. Four isolated runs — two at base, one at tip, one bounded out early — each
-hit it: both runs that ran to completion were **2 failed / 21 passed**, at base AND at
-tip, on a *different pair of tests each time*. The flap is relocated, not removed. Fixing
-it needs its own card and **must not** be done by editing assertions, adding retries or
-dropping tests. `core` and `s8` are therefore the parts of Chunk D that can gate a merge
-today; **whether `qb` blocks a merge is a product-owner decision and is not settled here.**
+**`qb` is nondeterministic; it is NOT a base failure.** Across seven known runs on
+byte-identical trees: **3 green · 2 red (2 failed / 21 passed) · 2 killed at too short a
+bound** — green in the orchestrator's main checkout and worktree and in a reviewer run of
+this runner, red only in this lane's two completed runs. It passes more often than it
+fails: **never read a `qb` red as expected**. Cause **unresolved**, needs its own card,
+never by editing assertions or dropping tests; G11 keeps no stdout, so red names are lost.
+
+**This branch cannot have caused it:** `0182eae:tests` == `6949548:tests` == `bb4099b8…`
+and `:src` == `d919bd8e…`, so this diff provably cannot change a Chunk D outcome. What is
+unsatisfied is the pre-existing fact that **Chunk D has no reliable green baseline** — not
+this lane's to fix. **Chunk D is still 177 tests**; gating on `qb` is the owner's call.
 
 ---
 
@@ -243,8 +243,8 @@ today; **whether `qb` blocks a merge is a product-owner decision and is not sett
 | C-056b | B | — | — | |
 | C-057 | A, E | — | — | |
 
-**"Chunk D" in this table means the split-process gate** (`chunk_d_gate.py`), not the
-one-process form: `core` + `s8` are deterministic, `qb` fails at base — see § Chunk D.
+**"Chunk D" here = the split-process gate** (`chunk_d_gate.py`), still all 177 tests: `core`
+and `s8` are deterministic, `qb` is nondeterministic and unresolved — see § Chunk D.
 
 ---
 
