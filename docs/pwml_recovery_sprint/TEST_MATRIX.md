@@ -128,15 +128,19 @@ modify `runner.py` (that file is owned by C-032).
 | **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 225 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
 | **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 150 | **0.9 s** |
-| **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **each** | 4 + 23 | 0.5 s · **452 s** ⚠ |
+| **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10 min for all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
-**SMOKE = A + B + C = 457 tests, ~40 s.** Runs after **every** merge, on the integration
-branch. Gate G10.
+**SMOKE = A + B + C = 460 tests, ~40 s.** Runs after **every** merge, on the integration
+branch. Gate G10. **457 was the INIT-001 figure and is obsolete**: C-010 moved the pinned
+baseline deliberately, 457 → 460, with an exact documented delta, and every A0 merge from
+`72ee20f` onward measured 460. Any live instruction still saying 457 is stale.
 
-**Chunk D is excluded from the smoke gate** — 222 s is too slow per merge. It is
-**mandatory as a focused test** for every branch marked ✔ below, because that is exactly
-where their regressions land and none of it appears in the smoke suite.
+**Chunk D is excluded from the smoke gate.** Its deterministic core is 150 tests in
+**~1 s**, but the complete 177-test gate costs **~10 min** — the 27 isolated AppTest
+processes, not the core — which is too slow per merge. It is **mandatory as a focused
+test** for every branch marked ✔ below, because that is exactly where their regressions
+land and none of it appears in the smoke suite.
 
 **Chunk E skips silently when `runs/` is absent.** `runs/` is committed, so a clean clone
 has it; `runs_verify/2026-08-04_1754/` is not yet committed and INIT-001 must fix that or
@@ -147,7 +151,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 457 passed
+# SMOKE (every merge) — expect 460 passed
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -161,49 +165,90 @@ C-010's allowlist is unverifiable in an isolated worktree.
   tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py \
   tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
 
-# CHUNK D — AUTHORITATIVE GATE is the split-process runner, never the one-process form
-# above-style single call: that form flaps (see § Chunk D below). One component per call.
+# CHUNK D — AUTHORITATIVE GATE is the split-process runner, never the one-process form.
+# ONE call runs the whole gate: it proves the partition, runs the 150-test core in one
+# process, then each of the 27 AppTest node IDs ALONE in a fresh process, serially.
+# --task lets it allocate its own ~32 G11 reports; 32 paths do not fit on a CLI.
 .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/bounded_run.py \
-  --label chunkd-core --timeout 2400 --json <outer-report> -- \
+  --label chunkd --timeout 3000 --json <outer-report> -- \
   .venv/Scripts/python.exe -u docs/pwml_recovery_sprint/evidence/chunk_d_gate.py run \
-  --only core --tmp <short-tmp> --timeout 2400 --report core=<report>
-#   ... repeat with --only s8 and --only qb. Prove the split is set-identical first:
-#   chunk_d_gate.py collect --tmp <short-tmp> --report mono=<p> --report core=<p> ...
+  --tmp <short-tmp> --task <ID> --timeout 900 --node-timeout 600
+#   --only core|s8|qb narrows EXECUTION; the partition proof always covers all three.
+#   --label-prefix attributes each run's artifacts when a matrix runs the gate repeatedly.
+#   --report-root writes them to the branch when the measured tree is an export.
+# The runner's own focused tests (parser + runner, 10 cases):
+#   ... bounded_run.py --label chunkd-selftest --timeout 900 --json <report> -- \
+#       .venv/Scripts/python.exe -u docs/pwml_recovery_sprint/evidence/chunk_d_gate_selftest.py
 
 # CHUNK E (quarantine artifact replay)
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/e \
   tests/test_strict_quarantine_real_artifact_replay.py
 ```
 
-### Chunk D — split-process gate (RECONCILE-B)
+### Chunk D — split-process gate (RECONCILE-B, execution partition superseded by H-007)
 
-The one-process form ran all 177 tests together and **flapped**: green at `85fae43` and
-`evidence/g11/C-011/` reports `05`/`18`, red at C-011 `04`/`07`/`25`/`26`/`44`/`45` and in
-three reviewer runs, on a *different* test each time. Cause, documented at
+The one-process form ran all 177 tests together and **flapped**, on a *different* test each
+time; the exact committed evidence is tabulated under § "The historical `qb` sample" below,
+which supersedes every looser count of it. Cause, documented at
 `tests/test_streamlit_quarantine_boundary.py:425-430`: several `AppTest` instances in one
 process eventually lose their `ScriptRunContext`, so `streamlit_app.py:6187` → `ui.py:26`
 raises `FragmentThreadState not initialized` and the test fails on a widget never created.
 
-`chunk_d_gate.py` runs the same 177 tests as three isolated processes. **Set-identity is
-proven** — `collect` compares node-ID *sets*: 177 = 150 + 4 + 23, missing 0, extra 0.
+`chunk_d_gate.py` runs the same 177 tests as isolated processes. **Set-identity is proven
+on every invocation** — `partition` compares node-ID *sets*: 177 = 150 + 4 + 23, missing 0,
+extra 0, overlap 0 — and `run` then compares the set it EXECUTED to the set it collected,
+so a substitution fails the gate even when every job it ran was green.
 
-| Component | Behaviour | Runtime |
+### The execution partition is per NODE, not per file (H-007)
+
+**RECONCILE-B's per-FILE partition was insufficient, and this supersedes the reading that
+no process partition could work.** The documented cause is *intra-file* — one file builds
+23 `AppTest` objects in one process — so running that whole file in one fresh process
+leaves the cause in place, which is what the RECONCILE-B measurements show. Per-node
+isolation had never been tested. It now is:
+
+| Component | Execution | Result | Runtime |
+|---|---|---|---|
+| `core` (5 files, 150 tests) | one process | **150 passed** — deterministic | ~1 s |
+| `s8` (4 AppTest tests) | **4 processes, one per node** | **4 × 1 passed** | ~6 s |
+| `qb` (23 AppTest tests) | **23 processes, one per node** | see § below | ~9 min |
+
+### The historical `qb` sample — a fixed observation, cited exactly
+
+The earlier tally *"eight known runs: 3 green · 3 red · 2 killed at too short a bound"*
+is **retained as a historical observation and is not a probability or a property**. It is
+corrected here in one respect: **it mixed two different selection shapes and included runs
+with no committed artifact.** What the repository can actually support:
+
+| Selection | Committed artifacts | Result |
 |---|---|---|
-| `core` (5 files, 150 tests) | **150 passed** — deterministic | 0.93 s |
-| `s8` (4 AppTest tests) | **4 passed** — deterministic | 0.53 s |
-| `qb` (23 AppTest tests) | **NONDETERMINISTIC — see below** | 364–513 s |
+| monolithic, all **7** files | `evidence/g11/C-011/` `04` `05` `07` `18` `25` `26` `44` `45` | **2 green** (`05` 449 s, `18` 494 s) · **6 red** (414–528 s) |
+| `qb` file **alone** | `evidence/g11/RECONCILEB-001/` `18` `19` `21` `34` | **0 green · 2 red** (453 s, 455 s) · **2 killed at bound** (`18` 488 s, `19` 308 s) |
 
-**`qb` is nondeterministic; it is NOT a base failure.** Across **eight** known runs on
-byte-identical trees: **3 green · 3 red · 2 killed at too short a bound**, the green
-including a reviewer run of this runner. The red shape is **not fixed** — `2 failed / 21
-passed` twice, `3 failed / 20 passed` once — and does not track duration (green 364–512 s,
-red 377–455 s). **Never read a `qb` red as expected.** Cause **unresolved**, needs its own
-card, never by editing assertions or dropping tests; G11 keeps no stdout, so names are lost.
+The green-vs-red duration intervals overlap, so duration predicts nothing. **No committed
+artifact records a green `qb`-alone run**; the "3 green" of the old tally rests on
+observations, including a reviewer run, for which **no `--json` cleanup report was
+committed**, and that is stated plainly rather than given a false precision. G11 keeps no
+stdout, so the failing test *names* from those runs are lost.
 
-**This branch cannot have caused it:** `tests/` and `src/` are byte-identical at base and
-at EVERY commit on this branch (`:tests` == `bb4099b8…`, `:src` == `d919bd8e…`), so this
-diff cannot change a Chunk D outcome. Unsatisfied is the pre-existing **absence of a green
-baseline**, not this lane's. **Chunk D is still 177 tests**; gating on `qb` is owner's call.
+**Never read a `qb` red as expected.** A new deterministic failure, a candidate-only
+failure, or a traceback implicating the diff under test still blocks a merge.
+
+### What blocks a merge today (D-022, measured by H-007's six-run matrix)
+
+**Chunk D is still 177 tests, and all 177 are still mandatory to run and to report.**
+
+| Component | Status |
+|---|---|
+| `core` 150 + `s8` 4 = **154** | **BLOCKING.** Green in all six runs, both trees |
+| `qb` 23 | **Mandatory to run and report; temporarily NON-BLOCKING** |
+
+The six runs gave **base 1 green / 2 red, candidate 1 green / 2 red** on trees whose `tests/`
+and `src/` are byte-identical: a test-infrastructure race, filed as **BL-003**.
+
+**This is not permission to read a `qb` red as expected.** A new *deterministic* failure, a
+failure a diff *reproduces*, or a traceback *implicating* the diff still blocks the merge,
+and no `qb` test may be weakened, deselected, retried until green or called environmental.
 
 ---
 
@@ -243,8 +288,8 @@ baseline**, not this lane's. **Chunk D is still 177 tests**; gating on `qb` is o
 | C-056b | B | — | — | |
 | C-057 | A, E | — | — | |
 
-**"Chunk D" here = the split-process gate** (`chunk_d_gate.py`), still all 177 tests: `core`
-and `s8` are deterministic, `qb` is nondeterministic and unresolved — see § Chunk D.
+**"Chunk D" here = the split-process gate** (`chunk_d_gate.py`), still all 177 tests, now
+executed as the 150-test core plus 27 per-node AppTest processes — see § Chunk D and D-022.
 
 ---
 
@@ -315,7 +360,8 @@ different Stage-1 draws at temperature 0 in this repository.
 
 ## Baseline to preserve (filled by INIT-001)
 
-Full suite per-chunk counts · smoke 457 · chunk D 177 · `bench_acceptance.py` on
+Full suite per-chunk counts · smoke **460** (457 at INIT-001, moved 457→460 by C-010 with
+an exact documented delta) · chunk D 177 · `bench_acceptance.py` on
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 
