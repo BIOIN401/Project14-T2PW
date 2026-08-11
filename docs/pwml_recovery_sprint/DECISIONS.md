@@ -395,7 +395,9 @@ is what removes C-011 from the causal chain in both directions:
    durable checkpoint **outside this repository**, because the C-011 branch manifest was closed
    and adding a file to it would have been an artifact-accounting violation. Fact 2 therefore
    rests on the C-011 merge record plus an **out-of-repository wrapped report**, not on an
-   artifact in the tree. The other five facts are each checkable against committed artifacts.
+   artifact in the tree. **Facts 1, 3 and 4 are artifact-backed** — all eight exit codes were
+   reproduced from committed reports. **Facts 5 and 6 are not**: the observed traceback and the
+   isolated-run result appear in no committed artifact (see fact 6's own qualification).
 3. **The failure can occur WITH C-011** — reports `04`, `25`, `26`, `44`, `45`, and three
    independent reviewer runs.
 4. **The failure can disappear WITH C-011** — reports `05` and `18`, **exit 0**.
@@ -405,7 +407,16 @@ is what removes C-011 from the causal chain in both directions:
    in a module C-011 never touches. The repository already adjudicates this shape at
    `tests/test_streamlit_quarantine_boundary.py:425-430` as "a Streamlit harness fault, not an app
    fault".
-6. **The two affected AppTest files pass 27/27 when isolated**, exit 0, at that exact tip.
+6. **Isolation was observed green once** — the two files at 27/27, exit 0, at that exact tip —
+   **but isolation is not a reliable remedy and this fact must not be read as establishing one.**
+   Six later isolated runs of `test_streamlit_quarantine_boundary.py` alone gave **two green
+   (23 passed) and four red (2 failed / 21 passed, four different failure pairs)**;
+   `test_streamlit_stage8_export_contract.py` alone is stable at 4 passed. The fault is
+   **intra-file** — one file builds 23 `AppTest` objects in a single process — so no per-file
+   process partition can remove it. No committed artifact records an isolated run: every
+   committed chunk D report runs the full seven-file selection (verified at `0182eae`). **This
+   narrows fact 6 only.** Facts 1–5 carry the ratification on their own and the conclusion that
+   C-011 did not cause the failure is unchanged.
 
 There is **no correlation in either direction**, the failing test is **not stable across runs**
 (four different tests failed across the runs, and the failure count varied with nothing but the
@@ -494,7 +505,7 @@ resolves nothing and repairs nothing.
 | `ir.py :: _compound_external_ids` (`:558-575`) — **moved** | **C-040** | C-050, C-051 |
 | `ir.py :: _canonicalize_compound_offline` (`:578-621`) — **moved** | **C-040** | C-050, C-051 |
 | `ir.py :: _resolve_compound_rows` (`:797-897`) — **moved** | **C-040** | C-050, C-051 |
-| `ir.py :: _emit_canonicalization_preflight` (`:900-963`) — **STAYS**. C-040 owns the **re-import reference repair at `:920` and nothing else in this function** | **C-040**, minimum surface only | C-050, C-051 |
+| `ir.py :: _emit_canonicalization_preflight` (`:900-963`) — **STAYS**. C-040 owns the **`:920` re-import reference plus the one module-header import line it requires — and nothing else** | **C-040**, minimum surface only | C-050, C-051 |
 | `ir.py :: _entity_record` (`:437-449`) — stays, unmodified by all three | **no card** — untouched | all three |
 | The private leaf-helper copies inside the new module (originals `ir.py:43-96`, `:183-193`, `:244-260` **stay unmodified**) and their equality pin | **C-040** | C-050, C-051 |
 | The `apply_canonical_name` keyword-only parameter on both moved entry points, and the resolution-report shape | **C-040** | C-050, C-051 |
@@ -508,16 +519,19 @@ resolves nothing and repairs nothing.
 **Why `_emit_canonicalization_preflight` gets a minimum-surface owner rather than a freeze.**
 SPIKE-002 §3 classifies it as **staying** in `ir.py` while recording that it "also used by
 `_emit_canonicalization_preflight` at `:920`, which **stays** → must be re-imported by `ir.py`".
-Verified at `0182eae`: `_compound_external_ids` is defined at `ir.py:558` and called at `:596`
-(inside `_canonicalize_compound_offline`, which moves), `:806` (inside `_resolve_compound_rows`,
-which moves) and `:920` (inside `_emit_canonicalization_preflight`, which stays). Moving the
+Verified at `0182eae` by **word-boundary** match: `_compound_external_ids` is defined at
+`ir.py:558` with exactly **two** call sites — `:596` (in `_canonicalize_compound_offline`, which
+moves) and `:920` (in `_emit_canonicalization_preflight`, which stays). `:806` calls the
+**different** `_normalize_compound_external_ids`, whose name contains it. Moving the
 definition therefore **mandatorily** breaks `:920`, so repairing that one reference is not
 optional work and not a scope choice — it is the minimum surface required to deliver C-040's own
 declared extraction. That is the same accept-and-record shape the C-010 merge already ratified:
 *"a card that names a deliverable authorizes the minimum surface to deliver it"* (`72ee20f`).
 **No competing product semantics exist here** — the function's behaviour is identical before and
 after a pure re-import — so nothing is frozen. The grant is deliberately narrow: **C-040 may
-change the import/reference at `:920` and nothing else inside `:900-963`.** Any change to what
+change the `:920` reference plus the one `ir.py` module-header import line that re-import
+requires — which sits outside `:900-963`, and which the C-010 precedent reaches, that precedent
+having concerned a module-level `__all__` entry — and nothing else.** Any change to what
 that function *does* is outside every card's boundary and requires a new owner.
 
 **Shared acceptance harness.** **T-102 (M3)** is the single shared acceptance harness for this
@@ -581,8 +595,12 @@ Under **D-019**, each of C-040, C-050 and C-051 receives, **before** dispatch: a
 hand-authored file/function manifest, a hand-authored changed-line maximum, and a separately
 stated generated-artifact budget. **Canonical G11 reports are required and committed and are
 excluded from the hand-authored ceiling** (`G11-EVIDENCE-ACCOUNTING-001`); noncanonical generated
-artifacts are prohibited unless separately authorized. **C-040 must be pre-split**
-(`SPIKE-002-REPORT.md` §4), and per D-019 a split is permitted **only** at a boundary where each
+artifacts are prohibited unless separately authorized. **C-040's sizing is governed by D-019, not
+by `SPIKE-002-REPORT.md` §4**, which is expressly *"Superseded prospectively by D-019 (LOCKED)"*
+for removing "the unconditional obligation to pre-split C-040" — its ≈700-line measurement stands
+as fact, the obligation does not. Under D-019 the budget accommodates C-040 **or** the card is
+re-scoped before dispatch; never a split that strands an unvalidated half (the H-004 deadlock,
+`LEDGER.md:56`). A split is permitted **only** at a boundary where each
 half is independently implementable and independently validatable — a budget may never force an
 unvalidated semantic half to merge or to be left behind. Dispatching any of the three without its
 declared manifest and both budgets is a dispatch error.

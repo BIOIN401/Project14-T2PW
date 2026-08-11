@@ -364,7 +364,7 @@ row to these, and never edit a re-export shim:
 | C-036 | `agent/p23-lineage-audit` | B | C-015 | `curation/apply_audit_patch.py` | rotate | A | — |
 | C-037 | `agent/p24-lineage-gapres` | B | C-015 | `curation/gap_resolver.py` | rotate | C | — |
 | C-038 | `agent/p25-lineage-carrier` | B | C-015 | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance test | — |
-| C-040 | `agent/p05a-resolution-extract` | C | SPIKE-002 | NEW `pwml/compound_resolution.py`; `ir.py` :: `_resolve_compound_rows`, `_canonicalize_compound_offline` | C-051 impl | D | ✔ |
+| C-040 | `agent/p05a-resolution-extract` | C | SPIKE-002 | NEW `pwml/compound_resolution.py`; `ir.py` :: `_resolve_compound_rows`, `_canonicalize_compound_offline` — **INCOMPLETE: this row names 2 of the 4 functions C-040 must move (`SPIKE-002-REPORT.md` §3). Do NOT dispatch against this row; `DECISIONS.md` D-021 §2 is C-040's authoritative symbol manifest** | C-051 impl | D | ✔ |
 | C-041 | `agent/p08-release-status` | C | C-010, C-012 | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
 | C-042 | `agent/p03c-extraction-ladder` | C | C-032, C-038 | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | — |
 | C-043 | `agent/p32-rag-controller` | C | C-016, C-021 | NEW `rag/controller.py` (unwired) | C-055 impl | C | — |
