@@ -132,6 +132,17 @@ function. Not yet demonstrated firing (`name_canonicalization.species` is `[]` i
 three committed `pwml_ir_report.json`), so the gap is structural. Left as-is, T-102's
 comparator will fail on species and the failure will be misattributed to C-050.
 
+> **Superseded on ownership by D-016 (LOCKED), 2026-08-05; reconciled here under
+> `CONTROL-PLANE-RECONCILE-001` §6.** Two sentences above are no longer true of the
+> current repository and must not be cited as live authority: *"owned by nobody"* and
+> *"No row in `MASTER_PLAN.md` §9 names this function."* **`MASTER_PLAN.md:372` is that
+> row**, and it names **C-045** as **sole owner** of `ir.py :: _canonicalize_species_offline`
+> under D-016. The finding's *technical* content — the post-freeze rewrite at `:753-757`
+> and `:781-785`, the §5 dimension it touches, and the structural (not yet firing) nature
+> of the gap — stands unchanged and is still the reason C-045 exists. C-045 remains
+> **PLANNING ONLY, undispatched and not dispatchable** (`MASTER_PLAN.md:372`,
+> `:387-391`), so the risk is owned, not yet closed.
+
 **R3 — reachability-dependent export, MEDIUM.** Resolved by C-050 by construction.
 
 **R4 — `_dedupe_named_rows` runs before resolution today** (`ir.py:1100-1105`, then
@@ -237,6 +248,12 @@ when it is most needed. Confirmed in the artifacts: `"available": true` with
 - **C-051 becomes trivial** once C-050 lands: delete `ir.py:1106-1114`, replace with an
   assertion that every compound row already carries a resolution verdict, fail closed.
 - **R2 needs an owner today**, or it surfaces during T-102 on Day 4 and is misattributed.
+  > **Answered by D-016 (LOCKED); reconciled under `CONTROL-PLANE-RECONCILE-001` §6.**
+  > R2 has an owner: **C-045**, sole owner of `ir.py :: _canonicalize_species_offline`
+  > (`MASTER_PLAN.md:372`). The residual schedule risk is unchanged in substance — C-045
+  > is planning-only and undispatched, so T-102 must not be run expecting species
+  > equivalence to hold until C-045 lands, and any species failure it produces is
+  > attributable to C-045, **never** to C-050.
 
 **Natural seam.** `build_pwml_ir` splits at identity/registry `:977-1263` (the
 C-040/C-051 slice, containing the compound-resolution call at `:1106-1114`) ·

@@ -158,6 +158,40 @@ only on **product-owner approval**, which has not been given. Nothing here is di
 | C-060 | p51 false-identifier repairs | `BLOCKED` | R-003 | **Not dispatchable.** Prompt body is generated *from* R-003's report: exact findings, affected files, expected corrections, regression fixtures. |
 | C-061 | p52 missing-supported-reaction repairs | `BLOCKED` | R-004 | **Not dispatchable.** Same condition, from R-004. |
 
+## Carried Wave A0 requirements — binding on the named owners
+
+Opened 2026-08-10 under `CONTROL-PLANE-RECONCILE-001` §7. Every row below is a **deferred
+finding from a merged Wave A0 card**, bound here to the card that must discharge it.
+**Control plane only — no production change is authorized by this section, and no merged
+card is reopened.** A seam is **not complete** while its row is open.
+
+| # | Requirement | Source | Primary owner | Cross-refs |
+|---|---|---|---|---|
+| A0-C1 | `canonical_graph_sha256` must hash the normalized identifier fallback values from `mapping_meta` / `candidates` **when those values are consumed to establish canonical entity identity**, and must not hash ranking, transient metadata or provenance noise. Acceptance must cover the **60 committed rows** dependent on that fallback and must prove that changing an identity-relevant fallback **changes** the hash. `C-013.md:48-50`'s EXCLUDE line is qualified in place and may not be cited against this. | C-013 merge `09fb40d`, finding 3 | **C-030** | C-013 (qualified), C-052 |
+| A0-C2 | **Retry policy for the four call sites C-014 stripped of SDK retries** — `src/t2pw/stoich/agent.py:477`, `:552`, `:580` and `src/t2pw/rag/embed.py:154`. Each owner must **decide and test** its replacement resilience before its seam is considered complete. **Retries must not be restored now.** | C-014 merge `c832894`, finding 4 | **UNASSIGNED — see note below** | C-032 (consumer of `worst_case_call_seconds()`, cross-ref only) |
+| A0-C3 | C-056a must **not** wire the literal organism comparison unchanged; organism comparison must reuse the repository's established synonym/canonicalization behaviour (`rag/eligibility.py:1366-1404` — `_organism_aliases`, `_canonical_organism`, `_taxon`), including `E. coli` ≡ `Escherichia coli`. **No competing synonym table.** Positive, negative, abbreviation, whitespace, punctuation and deterministic-regression assertions all required. | C-017 merge `fc8b059`, finding 1 | **C-056a** | C-045 / D-016 (shared owner if one is later selected); C-056b |
+| A0-C4 | C-056a must combine `evaluated` + `ok` + `inapplicable_checks`. **`confirmed` can never be True on a production run**, so gating on it alone would ship nothing, ever. | C-017 merge `fc8b059`, finding 3 | **C-056a** | C-056b |
+| A0-C5 | A `participant` verdict must **never** protect an entity from hallucination removal and is **not** evidence of paper support; C-060's hallucination gate runs **before and independently of** any `cofactor_policy` consultation. Pinned against `src/t2pw/bench/gold/pinned_v1.json`. | C-018 merge `85fae43`, item 1 | **C-060** | R-003; D-010 constraint preserved |
+| A0-C6 | The R-003 harness must extract `name` and `aliases` from the gold objects it evaluates (they are `{name, quote}` objects, not strings) and must **fail closed** when the intended cohort or assertion count is zero. Pinned against `src/t2pw/bench/gold/pinned_v1.json`. | C-018 merge `85fae43`, item 5 | **R-003** | C-060 |
+| A0-C7 | Capture the pre-seam caller-owned payload reference and prove the intended object-sharing relationship after `freeze_canonical_payload`. `final_mapped is result["payload"]` is **tautological** (True 35 / False 4, tracking `quarantine_ok`; a share→copy mutant survives it) and is **not** sufficient. | C-011 merge `0182eae`, item 1 | **C-030** | C-050, C-052 |
+| A0-C8 | Capture and assert the **actual `canonical_json_path`** for all **39** cohort legs, **including the path supplied to downstream SBML generation**. `sbml_input_source` alone is insufficient — **nothing in the suite currently pins the SBML input path**. | C-011 merge `0182eae`, item 2 | **C-052** | C-030, C-050 |
+
+**Note on A0-C2 — the owner does not exist, and none is invented here.** A sweep of the
+whole control plane (`MASTER_PLAN.md` §9 branch register, `MASTER_PLAN.md` §2, this ledger,
+every `prompts/*.md`) returns **zero** occurrences of `stoich/agent.py` and **zero** of
+`rag/embed.py`. **No existing card owns either file.** A0-C2 is therefore recorded as an
+**unassigned ownership gap requiring a product-owner assignment**; it is not attached to
+C-032, C-035, C-042, C-043 or C-055, none of which owns those paths. Until an owner is
+assigned, the four call sites run with **no retry layer and a 300 s per-request bound**
+where they previously had the SDK's 2 retries and 600 s — a known, recorded, accepted state,
+not a defect of C-014.
+
+**A0-C7 and A0-C8 must test observable behaviour only** and must not change the established
+C-011 lifecycle semantics: the freeze order (gate, hash, stamp, serialize, hand to SBML),
+the seven-field `CanonicalFreezeResult` contract, the refusal branch, or the
+`_freeze["canonical_json_path"] or sbml_input_path` fallback. See **D-021** for the
+C-040/C-050/C-051 ownership lock that governs the surrounding seams.
+
 ## Milestone tests
 
 | ID | Milestone | Status | After | Legs | Wall clock |

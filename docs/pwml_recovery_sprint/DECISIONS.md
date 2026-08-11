@@ -376,6 +376,180 @@ The universal approximate **`~400` changed-line** threshold in `[S4]` and `_TEMP
 
 ---
 
+## D-020 — C-011's Chunk D `176 passed / 1 failed` is a ratified environment-specific baseline exception · 2026-08-10 · LOCKED
+
+The C-011 merge (`0182eae`) recorded Chunk D at **176 passed / 1 failed** against the card's
+ACCEPTANCE line of 177, and merged on an exact documented delta rather than a green run. That
+result is **retrospectively accepted as a product-owner-ratified, environment-specific baseline
+exception.** Authority: `CONTROL-PLANE-RECONCILE-001` §2.
+
+**It is accepted because the recorded evidence establishes six independent facts, not because a
+number was waved through.** The first four are the four cells of a **fully populated 2×2**, which
+is what removes C-011 from the causal chain in both directions:
+
+1. **The same failure occurs WITHOUT C-011** — report `07-chunkd-base`, `repo_head 361b158`,
+   `repo_tracked_files_dirty: false`, identical selection, **exit 1**.
+2. **The failure can disappear WITHOUT C-011** — the integration control at `85fae43`, main
+   checkout, **exit 0**.
+3. **The failure can occur WITH C-011** — reports `04`, `25`, `26`, `44`, `45`, and three
+   independent reviewer runs.
+4. **The failure can disappear WITH C-011** — reports `05` and `18`, **exit 0**.
+5. **The traceback contains no C-011 frame.** `streamlit_app.py:6187` →
+   `tools/pathwhiz_converter/ui.py:26` (`st.subheader`) → `script_run_context.py:144` →
+   `RuntimeError: FragmentThreadState not initialized`. The abort is **2,585 lines past the seam**,
+   in a module C-011 never touches. The repository already adjudicates this shape at
+   `tests/test_streamlit_quarantine_boundary.py:425-430` as "a Streamlit harness fault, not an app
+   fault".
+6. **The two affected AppTest files pass 27/27 when isolated**, exit 0, at that exact tip.
+
+There is **no correlation in either direction**, the failing test is **not stable across runs**
+(four different tests failed across the runs, and the failure count varied with nothing but the
+environment — 10 occurrences / 4 failures in one run, 2 / 1 in the next), and a defect in the seam
+would fail deterministically on the same test.
+
+**No test was rerolled, retried-until-green, deselected or excluded to manufacture this result.**
+Chunk D was not re-rolled until it went green; the run count stands as measured. That assurance is
+part of the ratification: had a green run been manufactured, this exception would not be available.
+
+**What this decision is NOT.**
+
+- It is **not permission to weaken any future acceptance criterion.** A card's stated pass count
+  remains its stated pass count.
+- It is **not permission to classify an actual regression as transient.** A failure may be called
+  environmental only where a comparably complete 2×2 is populated **with its own committed
+  evidence** — the same failure demonstrated without the change, and the change demonstrated
+  without the failure — plus a traceback that does not implicate the change. Absent that, a red
+  test is a red test.
+- It is **not retroactive cure of anything else**, and it creates no precedent for merging on a
+  narrative instead of a run.
+- It **changes nothing about C-011**: its production code, tests, fixture, git history, reviewer
+  verdict and merge all stand exactly as recorded.
+
+**The authoritative Chunk D gate going forward is the split-process Chunk D gate defined in
+`TEST_MATRIX.md`.** That gate — not this exception — is what future cards run against; this
+decision governs one historical result and does not describe, constrain or substitute for it.
+
+---
+
+## D-021 — C-040 / C-050 / C-051 ownership lock · 2026-08-10 · LOCKED
+
+The compound-resolution chain touches one lifecycle seam from three directions. This decision
+partitions it **before** dispatch so that no two cards independently reshape the same seam.
+Authority: `CONTROL-PLANE-RECONCILE-001` §8. The partition is **conservative**: it is derived
+entirely from the existing card purposes, `MASTER_PLAN` §9 (`:367`, `:373`, `:374`), SPIKE-002 and
+the locked decisions **D-015**, **D-016** and **D-019**. **It invents no product behaviour.**
+
+**None of C-040, C-050 or C-051 may begin — no dispatch, no branch, no worktree, no
+implementation — until this decision is merged into `sprint/pwml-recovery`.**
+
+### 1. Responsibility of each card
+
+**C-040 — extract, do not call.** Lift `_resolve_compound_rows` and
+`_canonicalize_compound_offline` out of `ir.py` into a new module and give them the three-part
+SPIKE-002 adapter contract. Mechanical extraction under the `LIFT_WITH_ADAPTER` verdict. C-040
+**wires nothing** and changes no caller's behaviour.
+
+**C-050 — call it pre-freeze, in the enrichment block above the seam.** Perform compound identity
+resolution **before** the canonical payload is frozen, per **D-015**, with the rename propagated
+atomically to every process participant reference.
+
+**C-051 — assert only.** Delete the now-redundant in-IR resolution call and replace it with a
+**fail-closed assertion** that every compound row already carries a resolution verdict. C-051
+resolves nothing and repairs nothing.
+
+### 2. Exactly one primary owner per production symbol
+
+| Symbol / surface | Primary owner | Not owned by |
+|---|---|---|
+| NEW `src/t2pw/pwml/compound_resolution.py` (whole module) | **C-040** | C-050, C-051 |
+| `ir.py :: _resolve_compound_rows` | **C-040** | C-050, C-051 |
+| `ir.py :: _canonicalize_compound_offline` | **C-040** | C-050, C-051 |
+| The `apply_canonical_name` keyword-only parameter on both, and the resolution-report shape | **C-040** | C-050, C-051 |
+| `ir.py :: build_pwml_ir`, **including the resolution call site at `:1106-1114`** | **C-051** | C-040, C-050 |
+| `streamlit_app.py` :: the enrichment block **above** the C-011 seam, and the pre-freeze call | **C-050** | C-040, C-051, C-052 |
+| `ir.py :: _canonicalize_species_offline` | **C-045** (D-016, unchanged) | C-040, C-050, C-051 |
+| `streamlit_app.py :: freeze_canonical_payload` | **C-030**, then **C-052** (D-021 does not move it) | C-040, C-050, C-051 |
+| `run_pwml_export` and the SBML binding | **C-052** | C-040, C-050, C-051 |
+| `rag/eligibility.py` organism helpers (`:1366-1404`) | **no card** — `MASTER_PLAN` §2 read-only (`:147`) | all three |
+
+**Shared acceptance harness.** **T-102 (M3)** is the single shared acceptance harness for this
+chain. Its **scope is owned by D-016** and may not be narrowed by any implementation card: it
+verifies **both** compound identity **and** organism/species equivalence across canonical JSON,
+PWML **and** SBML. Its **execution** is the `LEDGER.md` milestone row, run by `pwml-test-runner`
+after C-052. **No implementation card owns T-102, edits its scope, or may cite its cost as grounds
+to narrow it.** SPIKE-002 §5's hard acceptance criterion for C-050 stands and is C-050's alone:
+reaction count in `final_mapped.json` identical before and after pre-freeze resolution, proven on
+the `PMC12856317` and `PMC12452463` legs, with the extraction name written to `synonyms`.
+
+**Recorded consequence, not a new decision:** as scoped by D-016, T-102 cannot pass on C-052 alone,
+because species equivalence is owned by **C-045**, which is planning-only and undispatched. T-102
+must therefore not be read as green-able at C-052, and any species-axis failure it produces is
+attributable to C-045 — **never** to C-050. Routed to the product owner as a scheduling item; no
+scope is narrowed here.
+
+### 3. Dependency and merge order
+
+`SPIKE-002 ✔` → **C-040** (Wave C) → **C-050** (Wave D, also after C-030) → **C-051** (Wave D,
+after C-040 and C-050). Unchanged from `MASTER_PLAN` §9. **C-051 must merge last of the three**:
+its assertion is only true once C-050 actually resolves pre-freeze, so merging it earlier would
+either fail closed on every leg or force a weakened assertion. C-052 remains downstream of C-030,
+C-050 and C-020.
+
+### 4. C-011 coverage requirements carried to their selected owners
+
+The two C-011 coverage gaps are assigned **outside** this trio and are **cross-references only**
+for C-040/C-050/C-051, which may not implement them:
+
+- **Object sharing across the seam → C-030** (`LEDGER.md` A0-C7). The existing
+  `final_mapped is result["payload"]` assertion is tautological and is not a share guard.
+  **C-050 must not introduce a pre-freeze step that re-binds or replaces the caller's payload
+  object** in a way that breaks the relationship C-030 pins.
+- **Actual `canonical_json_path`, all 39 cohort legs, including the SBML input path → C-052**
+  (`LEDGER.md` A0-C8). **C-050 must not change which file the canonical path names.**
+
+### 5. One seam, one reshaper
+
+`freeze_canonical_payload` and the artifacts it produces may be reshaped by **exactly one card at
+a time**, in the merge order above. A card in this trio that finds it needs a change inside another
+card's symbol **stops and escalates**; it does not make the change, and it does not make an
+equivalent change in its own file to route around the boundary. Two cards proposing changes to the
+same lifecycle seam in the same wave is a dispatch error, to be resolved before dispatch.
+
+### 6. Semantics preserved unless a later explicit product decision changes them
+
+The **canonical payload lifecycle, gate-report production, quarantine behaviour, canonical
+JSON-write and SBML-input resolution** are preserved as they stand at `0182eae`: the freeze order
+(gate → hash → stamp → serialize → hand to SBML), the seven-field `CanonicalFreezeResult` contract,
+the refusal branch, and `_freeze["canonical_json_path"] or sbml_input_path`. **The mechanism is
+frozen; the values are not.** D-015 is exactly such an explicit product decision: moving compound
+resolution pre-freeze deliberately changes the entity `name` values that enter the frozen payload,
+and therefore changes `canonical_payload_sha256` and may change `canonical_graph_sha256`. That is
+the intended effect of D-015 and is not a violation of this clause. Any *further* change to the
+mechanism requires its own explicit product decision.
+
+### 7. Manifests and budgets are defined before dispatch
+
+Under **D-019**, each of C-040, C-050 and C-051 receives, **before** dispatch: an exact
+hand-authored file/function manifest, a hand-authored changed-line maximum, and a separately
+stated generated-artifact budget. **Canonical G11 reports are required and committed and are
+excluded from the hand-authored ceiling** (`G11-EVIDENCE-ACCOUNTING-001`); noncanonical generated
+artifacts are prohibited unless separately authorized. **C-040 must be pre-split**
+(`SPIKE-002-REPORT.md` §4), and per D-019 a split is permitted **only** at a boundary where each
+half is independently implementable and independently validatable — a budget may never force an
+unvalidated semantic half to merge or to be left behind. Dispatching any of the three without its
+declared manifest and both budgets is a dispatch error.
+
+### 8. Nothing frozen
+
+No responsibility in this partition required choosing between competing product semantics the
+repository has not settled. Every boundary above is taken from an existing card purpose, an
+existing `MASTER_PLAN` §9 row, or a locked decision (D-015, D-016, D-019). **No sub-decision is
+frozen.** Two items are **routed, not decided**: the T-102/C-045 scheduling consequence in §2, and
+the unassigned retry ownership for `stoich/agent.py` and `rag/embed.py` (`LEDGER.md` A0-C2), which
+lies outside this trio entirely.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
