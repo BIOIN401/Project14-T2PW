@@ -178,8 +178,8 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ### Chunk D — split-process gate (RECONCILE-B)
 
 The one-process form ran all 177 tests together and **flapped**: green at `85fae43` and
-reports `05`/`18`, red at `04`/`07`/`25`/`26`/`44`/`45` and in three reviewer runs, on a
-*different* test each time. Cause, documented at
+`evidence/g11/C-011/` reports `05`/`18`, red at C-011 `04`/`07`/`25`/`26`/`44`/`45` and in
+three reviewer runs, on a *different* test each time. Cause, documented at
 `tests/test_streamlit_quarantine_boundary.py:425-430`: several `AppTest` instances in one
 process eventually lose their `ScriptRunContext`, so `streamlit_app.py:6187` → `ui.py:26`
 raises `FragmentThreadState not initialized` and the test fails on a widget never created.
@@ -191,14 +191,14 @@ proven** — `collect` compares node-ID *sets*: 177 = 150 + 4 + 23, missing 0, e
 |---|---|---|
 | `core` (5 files, 150 tests) | **150 passed** — deterministic | 0.93 s |
 | `s8` (4 AppTest tests) | **4 passed** — deterministic | 0.53 s |
-| `qb` (23 AppTest tests) | **NONDETERMINISTIC — see below** | 360–510 s |
+| `qb` (23 AppTest tests) | **NONDETERMINISTIC — see below** | 364–513 s |
 
-**`qb` is nondeterministic; it is NOT a base failure.** Across seven known runs on
-byte-identical trees: **3 green · 2 red (2 failed / 21 passed) · 2 killed at too short a
-bound** — green in the orchestrator's main checkout and worktree and in a reviewer run of
-this runner, red only in this lane's two completed runs. It passes more often than it
-fails: **never read a `qb` red as expected**. Cause **unresolved**, needs its own card,
-never by editing assertions or dropping tests; G11 keeps no stdout, so red names are lost.
+**`qb` is nondeterministic; it is NOT a base failure.** Across **eight** known runs on
+byte-identical trees: **3 green · 3 red · 2 killed at too short a bound**, the green
+including a reviewer run of this runner. The red shape is **not fixed** — `2 failed / 21
+passed` twice, `3 failed / 20 passed` once — and does not track duration (green 364–512 s,
+red 377–455 s). **Never read a `qb` red as expected.** Cause **unresolved**, needs its own
+card, never by editing assertions or dropping tests; G11 keeps no stdout, so names are lost.
 
 **This branch cannot have caused it:** `tests/` and `src/` are byte-identical at base and
 at EVERY commit on this branch (`:tests` == `bb4099b8…`, `:src` == `d919bd8e…`), so this

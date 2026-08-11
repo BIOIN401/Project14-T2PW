@@ -15,8 +15,8 @@ a regression from harness noise, in either direction.
 Separating the AppTest surface from the other five files is process isolation, not
 a test change: no test body, fixture, assertion, source file or datum is touched,
 and no retry is added. MEASURED LIMIT: ``core``/``s8`` become deterministic, while
-``qb`` stays NONDETERMINISTIC -- green more often than red, cause unresolved. See
-``TEST_MATRIX.md`` § "Chunk D"; never read a ``qb`` red as expected.
+``qb`` stays NONDETERMINISTIC -- 3 green / 3 red / 2 bound-killed in 8 runs, cause
+unresolved. See ``TEST_MATRIX.md`` § "Chunk D"; never read a ``qb`` red as expected.
 
 ``collect`` proves the split is faithful: it collects node IDs from the ORIGINAL
 monolithic selection and from each component, compares the SETS -- not the counts
@@ -52,7 +52,7 @@ CORE = [
 #: One AppTest file per component -- necessary, and for ``qb`` not sufficient.
 S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
-#: ``(name, files, expected_count)`` -- counts ``collect`` proves; re-prove to change.
+#: ``(name, files, expected_count)`` -- ENFORCED by ``run``; ``collect`` only reports.
 COMPONENTS: List[Tuple[str, List[str], int]] = [
     ("core", CORE, 150), ("s8", S8, 4), ("qb", QB, 23)]
 #: The original monolithic selection, verbatim -- what the split must equal.
@@ -133,10 +133,10 @@ def run(reports: Dict[str, str], tmp: str, timeout: float,
         only: Optional[str] = None) -> int:
     """Run each selected component in its own fresh process, serialised.
 
-    ``--only`` drives one component per operator call WITHOUT splitting the
-    gate's definition -- selection, isolation and basetemp are still the ones
-    above. The gate is met when all three passed on the same tree, however many
-    calls that took. A zero exit is not trusted alone: the count must match too.
+    ``--only`` drives one component per call WITHOUT splitting the gate's
+    definition; it is met when all three passed on one tree, over however many
+    calls. A zero exit is not trusted alone: the count must match, read from the
+    LAST verdict line -- ``bounded_run`` merges stderr in after pytest's summary.
     """
 
     selected = [(n, f, e) for n, f, e in COMPONENTS if only in (None, n)]
@@ -144,8 +144,8 @@ def run(reports: Dict[str, str], tmp: str, timeout: float,
     for name, files, expect in selected:
         code, out = _pytest(name, reports[name], tmp, files, timeout)
         print(out, end="")
-        last = (out.strip().splitlines() or [""])[-1]
-        ran = sum(int(n) for n in RAN.findall(last))
+        summary = [ln for ln in out.splitlines() if RAN.search(ln)] or [""]
+        ran = sum(int(n) for n in RAN.findall(summary[-1]))
         print(f"[chunk-d] component {name}: exit={code} ran={ran}/{expect}", flush=True)
         if code != 0 or ran != expect:
             failed.append(f"{name}(exit={code},ran={ran}/{expect})")

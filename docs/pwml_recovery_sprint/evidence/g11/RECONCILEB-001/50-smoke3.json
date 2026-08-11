@@ -1,0 +1,149 @@
+{
+  "label": "smoke3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/t2pw/sm3",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+  "started_at": "2026-08-11T20:02:30+00:00",
+  "finished_at": "2026-08-11T20:02:58+00:00",
+  "duration_seconds": 27.447520299989264,
+  "timeout_seconds": 900.0,
+  "root_pid": 1161528,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1158840,
+      "name": "python.exe",
+      "ppid": 1161528
+    },
+    {
+      "pid": 1124884,
+      "name": "python.exe",
+      "ppid": 1158840
+    },
+    {
+      "pid": 1161652,
+      "name": "python.exe",
+      "ppid": 1124884
+    },
+    {
+      "pid": 1158608,
+      "name": "python.exe",
+      "ppid": 1162228
+    },
+    {
+      "pid": 1162228,
+      "name": "python.exe",
+      "ppid": 1158840
+    },
+    {
+      "pid": 1151576,
+      "name": "python.exe",
+      "ppid": 1158840
+    },
+    {
+      "pid": 1160536,
+      "name": "python.exe",
+      "ppid": 1151576
+    },
+    {
+      "pid": 1160988,
+      "name": "python.exe",
+      "ppid": 1162104
+    },
+    {
+      "pid": 1162104,
+      "name": "python.exe",
+      "ppid": 1158840
+    }
+  ],
+  "descendants_terminated": [
+    1124884,
+    1151576,
+    1158608,
+    1158840,
+    1160536,
+    1160988,
+    1161652,
+    1162104,
+    1162228
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 402168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 629796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1128736,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1154636,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-recon-cd/docs/pwml_recovery_sprint/evidence/g11/RECONCILEB-001/50-smoke3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+    "repo_head": "c24c8372f04bf1c8b2d2ac3c654735282e943713",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
