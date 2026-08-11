@@ -1,0 +1,103 @@
+{
+  "label": "g9-fails-on-base",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "\nimport ast,sys\nsys.path.insert(0,'tests'); sys.path.insert(0,'src')\nimport test_c011_freeze_seam_golden_equivalence as g\nfor label,ref in (('BASE 72ee20f',g.BASE_SHA),('working tree',None)):\n    present=any(isinstance(n,ast.FunctionDef) and n.name==g.SEAM for n in ast.parse(g._source(ref)).body)\n    print(f'{label:14s} module-level {g.SEAM}: {present}')\nprint('G9: the golden test asserts this is True, so it FAILS on the base SHA.')\n"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+  "started_at": "2026-08-10T20:37:36+00:00",
+  "finished_at": "2026-08-10T20:37:37+00:00",
+  "duration_seconds": 0.651961499999743,
+  "timeout_seconds": 300.0,
+  "root_pid": 519356,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 513800,
+      "name": "python.exe",
+      "ppid": 519356
+    }
+  ],
+  "descendants_terminated": [
+    513800
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 395528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 402696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 509232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 516068,
+      "name": "python.exe"
+    },
+    {
+      "pid": 517232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 517304,
+      "name": "python.exe"
+    },
+    {
+      "pid": 517392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 517844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 517944,
+      "name": "python.exe"
+    },
+    {
+      "pid": 519188,
+      "name": "python.exe"
+    },
+    {
+      "pid": 519248,
+      "name": "python.exe"
+    },
+    {
+      "pid": 519500,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-011\\20-g9-fails-on-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+    "repo_head": "72ee20f54b713c8477dc28d38f8053141f239307",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

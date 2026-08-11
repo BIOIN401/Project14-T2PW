@@ -1,0 +1,142 @@
+{
+  "label": "smoke-post-edit",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-rf",
+    "--basetemp=.pytest_tmp_c011/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+  "started_at": "2026-08-10T17:35:34+00:00",
+  "finished_at": "2026-08-10T17:36:02+00:00",
+  "duration_seconds": 28.529437499993946,
+  "timeout_seconds": 600.0,
+  "root_pid": 396320,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 392764,
+      "name": "python.exe",
+      "ppid": 396320
+    },
+    {
+      "pid": 399944,
+      "name": "python.exe",
+      "ppid": 392764
+    },
+    {
+      "pid": 399964,
+      "name": "python.exe",
+      "ppid": 399944
+    },
+    {
+      "pid": 399984,
+      "name": "python.exe",
+      "ppid": 392764
+    },
+    {
+      "pid": 400004,
+      "name": "python.exe",
+      "ppid": 399984
+    },
+    {
+      "pid": 400076,
+      "name": "python.exe",
+      "ppid": 392764
+    },
+    {
+      "pid": 400096,
+      "name": "python.exe",
+      "ppid": 400076
+    },
+    {
+      "pid": 399448,
+      "name": "python.exe",
+      "ppid": 400380
+    },
+    {
+      "pid": 400380,
+      "name": "python.exe",
+      "ppid": 392764
+    }
+  ],
+  "descendants_terminated": [
+    392764,
+    399448,
+    399944,
+    399964,
+    399984,
+    400004,
+    400076,
+    400096,
+    400380
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 167276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 167372,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 398968,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-011/08-smoke-post-edit.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+    "repo_head": "361b15846a3324d6a51a0942855931b184663619",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

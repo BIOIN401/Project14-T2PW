@@ -10,7 +10,7 @@ import copy
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, TypedDict
 from uuid import uuid4
 
 # Streamlit executes this file directly, so Python puts src/t2pw/app on
@@ -2490,6 +2490,117 @@ def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
         },
     }
 
+
+class CanonicalFreezeResult(TypedDict):
+    """What :func:`freeze_canonical_payload` hands back. Declared at module level
+    and BEFORE that function because this module has no ``from __future__ import
+    annotations``, so its return annotation is evaluated eagerly at import time.
+    """
+
+    payload: Dict[str, Any]
+    payload_hash: str
+    final_stage3_gate_report: Dict[str, Any]
+    quarantine_result: Dict[str, Any]
+    quarantine_ok: bool
+    canonical_json_path: Optional[Path]
+    sbml_input_source: str
+
+
+def freeze_canonical_payload(
+    final_export_payload: Dict[str, Any],
+    *,
+    strict_db: bool,
+    outputs_dir: Optional[Path],
+    pathway_context: Optional[Dict[str, Any]],
+    export_mode: ExportMode,
+    research_mode: bool,
+    tmp: Path,
+) -> CanonicalFreezeResult:
+    """Quarantine, gate, hash and serialize THE canonical payload. Lifted
+    verbatim out of :func:`run_post_pipeline_sbml_artifacts`; it still returns
+    the same plain dict, and :class:`CanonicalFreezeResult` only types that dict
+    -- it is never called here. So the AST harnesses, which exec this
+    ``FunctionDef`` alone under a prepended ``from __future__ import
+    annotations``, never evaluate the annotation and need no such class.
+    """
+
+    canonical_export_payload: Dict[str, Any] = {}
+    canonical_payload_hash = ""
+    #: Which object the SBML build and ``final_mapped.json`` were made from.
+    #: Recorded rather than inferred, because "the exporter consumed the same
+    #: payload the gate validated" is exactly the claim that used to be false
+    #: and exactly the one a test has to be able to check.
+    sbml_input_source = "enriched_pre_quarantine"
+    final_stage3_gate_report: Dict[str, Any] = {}
+    quarantine_result: Dict[str, Any] = {}
+    quarantine_ok = False
+    canonical_json_path: Optional[Path] = None
+    if final_export_payload:
+        quarantine_result = run_quarantine_boundary(
+            final_export_payload,
+            strict_db=bool(strict_db),
+            outputs_dir=Path(outputs_dir) if outputs_dir else (PROJECT_ROOT / "outputs"),
+            pathway_context=pathway_context,
+            mode=export_mode,
+        )
+        quarantine_ok = bool(quarantine_result.get("ok"))
+    if quarantine_ok:
+        # deepcopy, and the hash taken from the copy that is stored: the
+        # report's payload binding is only worth anything if the object the
+        # consumer re-hashes is the object the gate saw. Refinement review
+        # and the draft-graph builder both take the payload afterwards, and a
+        # single in-place mutation would otherwise turn every leg into a hash
+        # mismatch -- which, under a "hash differs -> FAIL" rule, fails the
+        # whole suite for a bookkeeping reason.
+        canonical_export_payload = deepcopy(_safe_dict(quarantine_result.get("payload")))
+        canonical_payload_hash = payload_sha256(canonical_export_payload)
+        try:
+            _final_gate_details = run_strict_post_normalization_gates(
+                deepcopy(canonical_export_payload),
+                # The SAME suite the initial gate ran, on the same terms. This
+                # call used to take the default (False) while the gate whose
+                # failure it is entitled to supersede ran with
+                # ``not is_research(mode)``, so a "pass" here was a pass of a
+                # weaker suite and could not honestly countermand anything.
+                enforce_all_proteins_connected=not research_mode,
+            )
+            final_stage3_gate_report = {"ok": True, **_final_gate_details}
+        except GateValidationError as _final_gate_exc:
+            final_stage3_gate_report = {"ok": False, **_safe_dict(_final_gate_exc.details)}
+        # Written on the PASSING branch as well as the failing ones. A gate
+        # that only ever records failure cannot report success, and the
+        # consumer is then left reading a stale failure as the live verdict.
+        final_stage3_gate_report = stamp_report(
+            {
+                "stage": "final_pre_export_stage3_gates",
+                **final_stage3_gate_report,
+            },
+            phase=PHASE_FINAL_PRE_EXPORT,
+            payload_hash=canonical_payload_hash,
+        )
+        canonical_json = tmp / "final.canonical.json"
+        canonical_json.write_text(
+            json.dumps(canonical_export_payload, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        # The SBML build below reads this path. Before the reordering it read
+        # the enriched, pre-quarantine file -- so the model that was built and
+        # the payload that was gated were different objects.
+        canonical_json_path = canonical_json
+        sbml_input_source = CANONICAL_PAYLOAD_KEY
+    # A quarantine refusal leaves no canonical payload, so the final gate does
+    # not run and no report is written. That is deliberate: the alternative is
+    # to synthesise a verdict for a payload that was never assembled. The
+    # artifact set is still stamped, so the consumer fails closed on the
+    # missing report rather than reading the refusal as a pass.
+    return {
+        "payload": canonical_export_payload, "payload_hash": canonical_payload_hash,
+        "final_stage3_gate_report": final_stage3_gate_report,
+        "quarantine_result": quarantine_result, "quarantine_ok": quarantine_ok,
+        "canonical_json_path": canonical_json_path, "sbml_input_source": sbml_input_source,
+    }
+
+
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -3477,74 +3588,18 @@ def run_post_pipeline_sbml_artifacts(
         # quarantined. It is gated here, serialized to final_mapped.json, and
         # handed to the SBML build below -- which is why quarantine moved up
         # from the UI block that used to run it after this function returned.
-        canonical_export_payload: Dict[str, Any] = {}
-        canonical_payload_hash = ""
-        #: Which object the SBML build and ``final_mapped.json`` were made from.
-        #: Recorded rather than inferred, because "the exporter consumed the same
-        #: payload the gate validated" is exactly the claim that used to be false
-        #: and exactly the one a test has to be able to check.
-        sbml_input_source = "enriched_pre_quarantine"
-        final_stage3_gate_report: Dict[str, Any] = {}
-        quarantine_result: Dict[str, Any] = {}
-        quarantine_ok = False
-        if final_export_payload:
-            quarantine_result = run_quarantine_boundary(
-                final_export_payload,
-                strict_db=bool(strict_db),
-                outputs_dir=Path(outputs_dir) if outputs_dir else (project_root / "outputs"),
-                pathway_context=pathway_context,
-                mode=export_mode,
-            )
-            quarantine_ok = bool(quarantine_result.get("ok"))
-        if quarantine_ok:
-            # deepcopy, and the hash taken from the copy that is stored: the
-            # report's payload binding is only worth anything if the object the
-            # consumer re-hashes is the object the gate saw. Refinement review
-            # and the draft-graph builder both take the payload afterwards, and a
-            # single in-place mutation would otherwise turn every leg into a hash
-            # mismatch -- which, under a "hash differs -> FAIL" rule, fails the
-            # whole suite for a bookkeeping reason.
-            canonical_export_payload = deepcopy(_safe_dict(quarantine_result.get("payload")))
-            canonical_payload_hash = payload_sha256(canonical_export_payload)
-            try:
-                _final_gate_details = run_strict_post_normalization_gates(
-                    deepcopy(canonical_export_payload),
-                    # The SAME suite the initial gate ran, on the same terms. This
-                    # call used to take the default (False) while the gate whose
-                    # failure it is entitled to supersede ran with
-                    # ``not is_research(mode)``, so a "pass" here was a pass of a
-                    # weaker suite and could not honestly countermand anything.
-                    enforce_all_proteins_connected=not research_mode,
-                )
-                final_stage3_gate_report = {"ok": True, **_final_gate_details}
-            except GateValidationError as _final_gate_exc:
-                final_stage3_gate_report = {"ok": False, **_safe_dict(_final_gate_exc.details)}
-            # Written on the PASSING branch as well as the failing ones. A gate
-            # that only ever records failure cannot report success, and the
-            # consumer is then left reading a stale failure as the live verdict.
-            final_stage3_gate_report = stamp_report(
-                {
-                    "stage": "final_pre_export_stage3_gates",
-                    **final_stage3_gate_report,
-                },
-                phase=PHASE_FINAL_PRE_EXPORT,
-                payload_hash=canonical_payload_hash,
-            )
-            canonical_json = tmp / "final.canonical.json"
-            canonical_json.write_text(
-                json.dumps(canonical_export_payload, indent=2, ensure_ascii=False),
-                encoding="utf-8",
-            )
-            # The SBML build below reads this path. Before the reordering it read
-            # the enriched, pre-quarantine file -- so the model that was built and
-            # the payload that was gated were different objects.
-            sbml_input_path = canonical_json
-            sbml_input_source = CANONICAL_PAYLOAD_KEY
-        # A quarantine refusal leaves no canonical payload, so the final gate does
-        # not run and no report is written. That is deliberate: the alternative is
-        # to synthesise a verdict for a payload that was never assembled. The
-        # artifact set is still stamped, so the consumer fails closed on the
-        # missing report rather than reading the refusal as a pass.
+        _freeze = freeze_canonical_payload(
+            final_export_payload, strict_db=strict_db, outputs_dir=outputs_dir,
+            pathway_context=pathway_context, export_mode=export_mode,
+            research_mode=research_mode, tmp=tmp,
+        )
+        canonical_export_payload = _freeze["payload"]
+        canonical_payload_hash = _freeze["payload_hash"]
+        sbml_input_source = _freeze["sbml_input_source"]
+        final_stage3_gate_report = _freeze["final_stage3_gate_report"]
+        quarantine_result = _freeze["quarantine_result"]
+        quarantine_ok = _freeze["quarantine_ok"]
+        sbml_input_path = _freeze["canonical_json_path"] or sbml_input_path
 
         sbml_overwatch_report: Dict[str, Any] = {}
         sbml_diagram_png_bytes = b""
