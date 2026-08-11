@@ -188,9 +188,24 @@ def _serialize(document: dict[str, Any]) -> bytes:
     return (body + "\n").encode("utf-8")
 
 
+def _fixture_bytes() -> bytes:
+    """The fixture with git's checkout filter undone. NOT a weakening: ``json.dumps``
+    writes a carriage return inside a string value as the two-character escape
+    ``\\r``, never as a raw byte, so a raw ``\\r\\n`` here can only be git's doing --
+    ``core.autocrlf`` is true system-wide, nothing overrides it, and every tracked
+    JSON is therefore LF in the object store and CRLF in the working tree. Line
+    endings in the STORED artifact are a property of the VCS, not of the seam; every
+    content byte is still compared and every field still perturbation-tested. Only
+    this read side is normalized -- ``_serialize`` builds bytes in memory git never
+    touches, and the regeneration path below still writes LF.
+    """
+
+    return FIXTURE.read_bytes().replace(b"\r\n", b"\n")
+
+
 def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> None:
     after = _document(None)
-    assert _serialize(after) == FIXTURE.read_bytes()
+    assert _serialize(after) == _fixture_bytes()
     declared = [e["path"] for e in json.loads(MANIFEST.read_text(encoding="utf-8"))["legs"]]
     assert sorted(after["legs"]) == sorted(declared) == sorted(set(declared))
     assert len(after["legs"]) == 39
@@ -202,12 +217,12 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
     for field in sorted(after["legs"][leg]):
         perturbed = copy.deepcopy(after)
         perturbed["legs"][leg][field] = "PERTURBED"
-        assert _serialize(perturbed) != FIXTURE.read_bytes(), field
+        assert _serialize(perturbed) != _fixture_bytes(), field
 
 
 def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
     first = _serialize(_document(BASE_SHA))
-    assert first == FIXTURE.read_bytes()
+    assert first == _fixture_bytes()
     assert _serialize(_document(BASE_SHA)) == first
 
 

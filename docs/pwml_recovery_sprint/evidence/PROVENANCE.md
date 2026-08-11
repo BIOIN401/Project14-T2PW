@@ -180,3 +180,8 @@ retyped — over **all 39 legs** of `tests/data/baseline_cohort_manifest.json`, 
 `run_post_pipeline_sbml_artifacts` is AST-identical there and at BASE (`5792b1c5…`), recorded
 in the fixture's `source_equivalence`. The fixture proves the extraction changed nothing
 observable at the seam. It says nothing about any leg's biology.
+
+That digest is of the **LF** form the generator writes and the object store holds. Since
+`core.autocrlf` is true system-wide with no `.gitattributes`, every tracked JSON here — this
+fixture included — checks out **CRLF** (354,121 bytes, `418c6a40…`) while `git diff` stays
+empty, so the golden test normalizes `\r\n` → `\n` on the read side only.
