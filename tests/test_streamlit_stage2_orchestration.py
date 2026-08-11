@@ -473,6 +473,7 @@ def _orchestration_harness(
         "_record_audit_round",
         "_record_gap_round",
         "_record_mapped_failure_snapshot",
+        "freeze_canonical_payload",
     ):
         _load_function(helper, namespace)
     function = _load_function("run_post_pipeline_sbml_artifacts", namespace)

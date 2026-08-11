@@ -1,0 +1,83 @@
+{
+  "label": "orch-rebased",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-rf",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/t2pw/or",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+  "started_at": "2026-08-11T03:03:44+00:00",
+  "finished_at": "2026-08-11T03:03:50+00:00",
+  "duration_seconds": 5.780316499993205,
+  "timeout_seconds": 900.0,
+  "root_pid": 643040,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 641168,
+      "name": "python.exe",
+      "ppid": 643040
+    }
+  ],
+  "descendants_terminated": [
+    641168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 395528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 402696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 629796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 640076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 641628,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-011/29-orch-rebased.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-ab6facabd81769da5",
+    "repo_head": "8956a57b3cf55d37013b42fefac8f2d449c42ea2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
