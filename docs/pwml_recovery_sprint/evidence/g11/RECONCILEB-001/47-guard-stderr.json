@@ -1,0 +1,71 @@
+{
+  "label": "guard-stderr",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "\nimport sys; sys.path.insert(0,'docs/pwml_recovery_sprint/evidence')\nimport chunk_d_gate as g\ndef ran(out):\n    s=[ln for ln in out.splitlines() if g.RAN.search(ln)] or ['']\n    return sum(int(n) for n in g.RAN.findall(s[-1]))\ncases=[\n ('clean green','.....\\n150 passed in 0.9s\\n',150),\n ('trailing ResourceWarning','150 passed in 0.9s\\nResourceWarning: unclosed socket\\n',150),\n ('trailing Exception ignored','150 passed in 0.9s\\nException ignored in: <_io.FileIO>\\n',150),\n ('shortfall + trailing noise','145 passed, 5 errors in 1s\\nException ignored in: x\\n',145),\n ('real red','2 failed, 21 passed in 450s\\n',23),\n ('no summary at all','killed\\n',0),\n]\nbad=0\nfor name,out,want in cases:\n    got=ran(out)\n    if got!=want: bad+=1\n    print(('ok  ' if got==want else 'BAD '), f'ran={got:<5} want={want:<5} {name}')\nprint('MISMATCHES:',bad)\n"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+  "started_at": "2026-08-11T20:02:04+00:00",
+  "finished_at": "2026-08-11T20:02:05+00:00",
+  "duration_seconds": 0.5311848999990616,
+  "timeout_seconds": 300.0,
+  "root_pid": 1162080,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [],
+  "descendants_terminated": [],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 402168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 629796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1160288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1160824,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-recon-cd/docs/pwml_recovery_sprint/evidence/g11/RECONCILEB-001/47-guard-stderr.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+    "repo_head": "c24c8372f04bf1c8b2d2ac3c654735282e943713",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

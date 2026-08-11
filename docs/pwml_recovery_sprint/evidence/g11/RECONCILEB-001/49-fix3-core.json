@@ -1,0 +1,102 @@
+{
+  "label": "chunkd-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/t2pw/fresh_d/df/core",
+    "tests/test_process_normalizer.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_stage_contracts.py",
+    "tests/test_payload_models.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+  "started_at": "2026-08-11T20:02:16+00:00",
+  "finished_at": "2026-08-11T20:02:18+00:00",
+  "duration_seconds": 2.1162613999913447,
+  "timeout_seconds": 480.0,
+  "root_pid": 1161616,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1159716,
+      "name": "python.exe",
+      "ppid": 1161616
+    }
+  ],
+  "descendants_terminated": [
+    1159716
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 402168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 629796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 852120,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1158464,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1158852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1160012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1161020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1161060,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-recon-cd/docs/pwml_recovery_sprint/evidence/g11/RECONCILEB-001/49-fix3-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-recon-cd",
+    "repo_head": "c24c8372f04bf1c8b2d2ac3c654735282e943713",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

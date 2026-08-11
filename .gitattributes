@@ -1,0 +1,19 @@
+# Line-ending policy. NARROW BY DESIGN -- read before adding a line.
+#
+# `core.autocrlf=true` is set globally on this machine
+# (C:/Program Files/Git/etc/gitconfig), and until this file existed no path in the
+# repository had a `text`/`eol` attribute at all. Every tracked text file is
+# therefore LF in the object store and CRLF in the working tree. For source and for
+# ordinary JSON that is harmless and intended.
+#
+# For a BYTE-EXACT GENERATED FIXTURE it is not: the bytes ARE the artifact. C-011's
+# freeze-seam fixture checks out at 354,121 bytes with 9,068 CRLF pairs while its
+# blob is 345,053 bytes with none -- and `git diff` is empty, so nothing warns you.
+# Only such paths get `-text`, and each gets its own explicit entry.
+#
+# There is deliberately NO repository-wide rule and NO wildcard. A wildcard here
+# would silently change how caches, run snapshots, source and unrelated evidence are
+# stored. A future byte-exact fixture MUST add its own path entry, in the card that
+# introduces it. Do not generalise these lines.
+
+docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json -text
