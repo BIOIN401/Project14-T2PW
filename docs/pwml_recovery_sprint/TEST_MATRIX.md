@@ -200,10 +200,10 @@ this runner, red only in this lane's two completed runs. It passes more often th
 fails: **never read a `qb` red as expected**. Cause **unresolved**, needs its own card,
 never by editing assertions or dropping tests; G11 keeps no stdout, so red names are lost.
 
-**This branch cannot have caused it:** `0182eae:tests` == `6949548:tests` == `bb4099b8…`
-and `:src` == `d919bd8e…`, so this diff provably cannot change a Chunk D outcome. What is
-unsatisfied is the pre-existing fact that **Chunk D has no reliable green baseline** — not
-this lane's to fix. **Chunk D is still 177 tests**; gating on `qb` is the owner's call.
+**This branch cannot have caused it:** `tests/` and `src/` are byte-identical at base and
+at EVERY commit on this branch (`:tests` == `bb4099b8…`, `:src` == `d919bd8e…`), so this
+diff cannot change a Chunk D outcome. Unsatisfied is the pre-existing **absence of a green
+baseline**, not this lane's. **Chunk D is still 177 tests**; gating on `qb` is owner's call.
 
 ---
 
