@@ -127,7 +127,8 @@ modify `runner.py` (that file is owned by C-032).
 | **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 123 | **12 s** |
 | **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 225 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
-| **D** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models`, `test_streamlit_stage8_export_contract`, `test_streamlit_quarantine_boundary` | 177 | **222 s** ⚠ |
+| **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 150 | **0.9 s** |
+| **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **each** | 4 + 23 | 0.5 s · **452 s** ⚠ |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
 **SMOKE = A + B + C = 457 tests, ~40 s.** Runs after **every** merge, on the integration
@@ -160,16 +161,49 @@ C-010's allowlist is unverifiable in an isolated worktree.
   tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py \
   tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
 
-# CHUNK D (export / normalization branches) — expect 177 passed
-.venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/d \
-  tests/test_process_normalizer.py tests/test_pwml_ir.py tests/test_pwml_writer.py \
-  tests/test_stage_contracts.py tests/test_payload_models.py \
-  tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+# CHUNK D — AUTHORITATIVE GATE is the split-process runner, never the one-process form
+# above-style single call: that form flaps (see § Chunk D below). One component per call.
+.venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/bounded_run.py \
+  --label chunkd-core --timeout 2400 --json <outer-report> -- \
+  .venv/Scripts/python.exe -u docs/pwml_recovery_sprint/evidence/chunk_d_gate.py run \
+  --only core --tmp <short-tmp> --timeout 2400 --report core=<report>
+#   ... repeat with --only s8 and --only qb. Prove the split is set-identical first:
+#   chunk_d_gate.py collect --tmp <short-tmp> --report mono=<p> --report core=<p> ...
 
 # CHUNK E (quarantine artifact replay)
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/e \
   tests/test_strict_quarantine_real_artifact_replay.py
 ```
+
+### Chunk D — split-process gate, and what it does NOT fix (RECONCILE-B)
+
+The one-process form ran all 177 tests together and **flapped**: passing at `85fae43` and
+reports `05`/`18`, failing at `04`/`07`/`25`/`26`/`44`/`45` and in three reviewer runs, on
+a *different* test each time. Cause, already documented at
+`tests/test_streamlit_quarantine_boundary.py:425-430`: several Streamlit `AppTest`
+instances in one process eventually leave a worker thread without a `ScriptRunContext`, so
+`streamlit_app.py:6187` → `ui.py:26` (`st.subheader`) raises `RuntimeError:
+FragmentThreadState not initialized`. The app script dies mid-render and the test then
+fails on the widget that was never created (`KeyError: 'refinement_generate_pwml'`).
+
+`chunk_d_gate.py` runs the same 177 tests as three isolated processes. **Set-identity is
+proven, not assumed** — `collect` compares node-ID *sets*: mono 177 = core 150 + s8 4 +
+qb 23; union 177, missing 0, extra 0. Measured at clean base `0182eae`:
+
+| Component | Result at base | Runtime |
+|---|---|---|
+| `core` (5 files, 150 tests) | **150 passed** — deterministic | 0.93 s |
+| `s8` (4 AppTest tests) | **4 passed** | 0.53 s |
+| `qb` (23 AppTest tests) | **2 failed, 21 passed** — same at tip | 452 s · tip 451 s |
+
+**File-level isolation does not fix `qb`, and this is a pre-existing base failure, not a
+regression.** The fault is *intra-file*: that one file runs 23 `AppTest` instances in a
+single process. Four isolated runs — two at base, one at tip, one bounded out early — each
+hit it: both runs that ran to completion were **2 failed / 21 passed**, at base AND at
+tip, on a *different pair of tests each time*. The flap is relocated, not removed. Fixing
+it needs its own card and **must not** be done by editing assertions, adding retries or
+dropping tests. `core` and `s8` are therefore the parts of Chunk D that can gate a merge
+today; **whether `qb` blocks a merge is a product-owner decision and is not settled here.**
 
 ---
 
@@ -208,6 +242,9 @@ C-010's allowlist is unverifiable in an isolated worktree.
 | C-056a | B | — | — | |
 | C-056b | B | — | — | |
 | C-057 | A, E | — | — | |
+
+**"Chunk D" in this table means the split-process gate** (`chunk_d_gate.py`), not the
+one-process form: `core` + `s8` are deterministic, `qb` fails at base — see § Chunk D.
 
 ---
 
