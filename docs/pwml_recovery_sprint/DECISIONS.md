@@ -390,7 +390,12 @@ is what removes C-011 from the causal chain in both directions:
 1. **The same failure occurs WITHOUT C-011** — report `07-chunkd-base`, `repo_head 361b158`,
    `repo_tracked_files_dirty: false`, identical selection, **exit 1**.
 2. **The failure can disappear WITHOUT C-011** — the integration control at `85fae43`, main
-   checkout, **exit 0**.
+   checkout, **exit 0**. **Provenance, stated because it differs from the other five:** this fact
+   has **no committed G11 artifact**. The control run wrote its `--json` cleanup report to the
+   durable checkpoint **outside this repository**, because the C-011 branch manifest was closed
+   and adding a file to it would have been an artifact-accounting violation. Fact 2 therefore
+   rests on the C-011 merge record plus an **out-of-repository wrapped report**, not on an
+   artifact in the tree. The other five facts are each checkable against committed artifacts.
 3. **The failure can occur WITH C-011** — reports `04`, `25`, `26`, `44`, `45`, and three
    independent reviewer runs.
 4. **The failure can disappear WITH C-011** — reports `05` and `18`, **exit 0**.
@@ -425,9 +430,25 @@ part of the ratification: had a green run been manufactured, this exception woul
 - It **changes nothing about C-011**: its production code, tests, fixture, git history, reviewer
   verdict and merge all stand exactly as recorded.
 
-**The authoritative Chunk D gate going forward is the split-process Chunk D gate defined in
-`TEST_MATRIX.md`.** That gate — not this exception — is what future cards run against; this
-decision governs one historical result and does not describe, constrain or substitute for it.
+**The required forward Chunk D gate — stated as an obligation, because it does not yet exist.**
+Under `CONTROL-PLANE-RECONCILE-001` §3 the reconciliation's **Chunk D lane** is to define a
+split-process Chunk D gate in `TEST_MATRIX.md`. **That definition has not merged**: verified at
+`0182eae`, `TEST_MATRIX.md` contains **zero** occurrences of "split-process" and the Chunk D
+lane's branch `agent/recon-chunkd-gate` is still at `0182eae` with no commit, so the gate exists
+in **no ref in this repository**. This decision therefore does **not** lock a gate it cannot
+point at. It locks two things instead:
+
+1. **The obligation.** The authoritative forward Chunk D gate **shall be** the split-process gate
+   defined in `TEST_MATRIX.md` by the Chunk D lane. Its definition, contents and runner internals
+   are that lane's to write and are neither described nor constrained here.
+2. **The effective date.** That gate is **not in effect until its definition merges** into
+   `sprint/pwml-recovery`. Until then the standing Chunk D expectation is unchanged, and this
+   exception governs **one historical result only** — the C-011 merge — and licenses nothing
+   forward.
+
+**Merge-order constraint, recorded so the reference resolves.** The Chunk D lane merges **before**
+this decision. If that order is ever inverted, this paragraph is a forward reference to an
+unmerged definition and must be read as the obligation in (1), never as a citation.
 
 ---
 
@@ -444,10 +465,17 @@ implementation — until this decision is merged into `sprint/pwml-recovery`.**
 
 ### 1. Responsibility of each card
 
-**C-040 — extract, do not call.** Lift `_resolve_compound_rows` and
-`_canonicalize_compound_offline` out of `ir.py` into a new module and give them the three-part
-SPIKE-002 adapter contract. Mechanical extraction under the `LIFT_WITH_ADAPTER` verdict. C-040
-**wires nothing** and changes no caller's behaviour.
+**C-040 — extract, do not call.** Lift the **four** functions `SPIKE-002-REPORT.md` §3 enumerates
+— `_normalize_compound_external_ids`, `_compound_external_ids`, `_canonicalize_compound_offline`
+and `_resolve_compound_rows`, **189 lines moved** — out of `ir.py` into a new module and give them
+the three-part SPIKE-002 adapter contract. Mechanical extraction under the `LIFT_WITH_ADAPTER`
+verdict. C-040 **wires nothing** and changes no caller's behaviour.
+
+**`MASTER_PLAN` §9 `:367` names only two of those four and is incomplete.** §2 below, not `:367`,
+is C-040's authoritative symbol manifest. Dispatching C-040 against the two-function row would
+authorize an implementer to touch two functions while the extraction mandatorily requires four
+plus one reference repair — the boundary escalation §5 calls a dispatch error. All line ranges in
+§2 were re-verified against `src/t2pw/pwml/ir.py` at integration `0182eae`.
 
 **C-050 — call it pre-freeze, in the enrichment block above the seam.** Perform compound identity
 resolution **before** the canonical payload is frozen, per **D-015**, with the rename propagated
@@ -462,15 +490,35 @@ resolves nothing and repairs nothing.
 | Symbol / surface | Primary owner | Not owned by |
 |---|---|---|
 | NEW `src/t2pw/pwml/compound_resolution.py` (whole module) | **C-040** | C-050, C-051 |
-| `ir.py :: _resolve_compound_rows` | **C-040** | C-050, C-051 |
-| `ir.py :: _canonicalize_compound_offline` | **C-040** | C-050, C-051 |
-| The `apply_canonical_name` keyword-only parameter on both, and the resolution-report shape | **C-040** | C-050, C-051 |
+| `ir.py :: _normalize_compound_external_ids` (`:530-555`) — **moved** | **C-040** | C-050, C-051 |
+| `ir.py :: _compound_external_ids` (`:558-575`) — **moved** | **C-040** | C-050, C-051 |
+| `ir.py :: _canonicalize_compound_offline` (`:578-621`) — **moved** | **C-040** | C-050, C-051 |
+| `ir.py :: _resolve_compound_rows` (`:797-897`) — **moved** | **C-040** | C-050, C-051 |
+| `ir.py :: _emit_canonicalization_preflight` (`:900-963`) — **STAYS**. C-040 owns the **re-import reference repair at `:920` and nothing else in this function** | **C-040**, minimum surface only | C-050, C-051 |
+| `ir.py :: _entity_record` (`:437-449`) — stays, unmodified by all three | **no card** — untouched | all three |
+| The private leaf-helper copies inside the new module (originals `ir.py:43-96`, `:183-193`, `:244-260` **stay unmodified**) and their equality pin | **C-040** | C-050, C-051 |
+| The `apply_canonical_name` keyword-only parameter on both moved entry points, and the resolution-report shape | **C-040** | C-050, C-051 |
 | `ir.py :: build_pwml_ir`, **including the resolution call site at `:1106-1114`** | **C-051** | C-040, C-050 |
 | `streamlit_app.py` :: the enrichment block **above** the C-011 seam, and the pre-freeze call | **C-050** | C-040, C-051, C-052 |
 | `ir.py :: _canonicalize_species_offline` | **C-045** (D-016, unchanged) | C-040, C-050, C-051 |
 | `streamlit_app.py :: freeze_canonical_payload` | **C-030**, then **C-052** (D-021 does not move it) | C-040, C-050, C-051 |
 | `run_pwml_export` and the SBML binding | **C-052** | C-040, C-050, C-051 |
 | `rag/eligibility.py` organism helpers (`:1366-1404`) | **no card** — `MASTER_PLAN` §2 read-only (`:147`) | all three |
+
+**Why `_emit_canonicalization_preflight` gets a minimum-surface owner rather than a freeze.**
+SPIKE-002 §3 classifies it as **staying** in `ir.py` while recording that it "also used by
+`_emit_canonicalization_preflight` at `:920`, which **stays** → must be re-imported by `ir.py`".
+Verified at `0182eae`: `_compound_external_ids` is defined at `ir.py:558` and called at `:596`
+(inside `_canonicalize_compound_offline`, which moves), `:806` (inside `_resolve_compound_rows`,
+which moves) and `:920` (inside `_emit_canonicalization_preflight`, which stays). Moving the
+definition therefore **mandatorily** breaks `:920`, so repairing that one reference is not
+optional work and not a scope choice — it is the minimum surface required to deliver C-040's own
+declared extraction. That is the same accept-and-record shape the C-010 merge already ratified:
+*"a card that names a deliverable authorizes the minimum surface to deliver it"* (`72ee20f`).
+**No competing product semantics exist here** — the function's behaviour is identical before and
+after a pure re-import — so nothing is frozen. The grant is deliberately narrow: **C-040 may
+change the import/reference at `:920` and nothing else inside `:900-963`.** Any change to what
+that function *does* is outside every card's boundary and requires a new owner.
 
 **Shared acceptance harness.** **T-102 (M3)** is the single shared acceptance harness for this
 chain. Its **scope is owned by D-016** and may not be narrowed by any implementation card: it
@@ -542,11 +590,28 @@ declared manifest and both budgets is a dispatch error.
 ### 8. Nothing frozen
 
 No responsibility in this partition required choosing between competing product semantics the
-repository has not settled. Every boundary above is taken from an existing card purpose, an
-existing `MASTER_PLAN` §9 row, or a locked decision (D-015, D-016, D-019). **No sub-decision is
-frozen.** Two items are **routed, not decided**: the T-102/C-045 scheduling consequence in §2, and
-the unassigned retry ownership for `stoich/agent.py` and `rag/embed.py` (`LEDGER.md` A0-C2), which
-lies outside this trio entirely.
+repository has not settled. Every boundary above is taken from an existing card purpose, a
+`MASTER_PLAN` §9 row, `SPIKE-002-REPORT.md` §3's own move/stay classification, or a locked
+decision (D-015, D-016, D-019). **No sub-decision is frozen.** In particular
+`_normalize_compound_external_ids`, `_compound_external_ids` and the `:920` reference repair are
+assignable **without** a product choice — SPIKE-002 §3 already classifies each as *move* or
+*stay*, and this decision only records the owner that classification implies.
+
+**Four items are routed, not decided.**
+
+1. **`MASTER_PLAN` §9 `:367` is incomplete** — it names two of C-040's four moved functions.
+   §2 supersedes it for dispatch purposes. Repairing the §9 row itself is `MASTER_PLAN`'s to do
+   and is **not** performed by this decision; until it is, §9 `:367` must not be used as C-040's
+   manifest.
+2. **The T-102 / C-045 scheduling consequence** in §2.
+3. **The unassigned retry ownership** for `stoich/agent.py` and `rag/embed.py` (`LEDGER.md`
+   A0-C2), which lies outside this trio entirely.
+4. **`G11-EVIDENCE-ACCOUNTING-001` is cited but never defined.** It is relied on by §7 above, by
+   all nine Wave A0 card budget blocks and by every A0 merge message, yet **no document under
+   `docs/pwml_recovery_sprint/` defines it** — it exists only in merge-message prose. A budget
+   exclusion that every card depends on should have a written definition. **No definition is
+   written here; that is the product owner's authority alone.** Recorded for the product owner
+   alongside the C-010/C-012 dispatch-authority item in `LEDGER.md`.
 
 ---
 
