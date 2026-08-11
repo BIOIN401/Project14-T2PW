@@ -104,14 +104,20 @@ _SUBJECT_OF: dict[str, tuple[str, ...]] = {
 _REPORTER_NATIVE_ORG: dict[str, tuple[str, ...]] = {
     "fluorescent protein": ("aequorea", "discosoma"), "LacZ": ("escherichia coli",),
     "luciferase": ("photinus", "renilla", "aliivibrio")}
-if _STRAY_ORG := sorted(set(_REPORTER_NATIVE_ORG) - set(_REPORTER)):  # stray key -> () -> mis-call
-    raise ValueError(f"_REPORTER_NATIVE_ORG keys must be _REPORTER families: {_STRAY_ORG}")
 #: Families moved ACROSS the base-SHA class boundary -- flagged ``moderate`` under their own reason
 #: code so R-003 adjudicates exactly these: currency already held them under another spelling
 #: (Pi/PPi/NH3), or they are not metabolites at all (electron). CoA moved the other way, currency
 #: -> hub. Bare ``pi`` is DROPPED from COFACTOR_NAMES: "PI" is also phosphatidylinositol, and an
 #: unknown beats a confident wrong call on a two-letter token in a lipid pathway.
 _RECONCILED = frozenset({"Pi", "PPi", "NH3", "electron"})
+#: EVERY family-keyed table: a stray key yields ``()``, the escape never fires, and a genuine
+#: participant is SILENTLY downgraded -- the direction that becomes a wrong deletion downstream.
+_FAMILIES = set(_CURRENCY) | set(_HUB) | set(_REPORTER)
+for _n, _tbl, _ok in (("_REPORTER_NATIVE_ORG", _REPORTER_NATIVE_ORG, set(_REPORTER)),
+                      ("_SUBJECT_OF", _SUBJECT_OF, _FAMILIES),
+                      ("_RECONCILED", _RECONCILED, _FAMILIES)):
+    if _STRAY := sorted(set(_tbl) - _ok):
+        raise ValueError(f"{_n} keys must be family keys of the verdict tables: {_STRAY}")
 _STRIP_RE = re.compile(r"[^a-z0-9]")  # "+" folds away too: ONE fold for entity names AND markers
 
 

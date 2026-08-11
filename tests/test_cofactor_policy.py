@@ -40,6 +40,8 @@ CASES = (
     ("diphosphate", GLY, CUR, R_RECON, "PPi"),
     ("NH4+", GLY, CUR, R_RECON, "NH3"),
     ("ammonia", GLY, CUR, R_RECON, "NH3"),
+    # correction 2's "+" fold made exactly these two keys newly reachable: a RECORDED widening
+    ("H", GLY, CUR, R_CUR, "H+"), ("NH4", GLY, CUR, R_RECON, "NH3"),
     # (f) D6 electron was hub-only -> currency; D7 glutamate family stays hub
     ("electron", GLY, CUR, R_RECON, "electron"),
     ("L-glutamate", GLY, HB, R_HUB, "L-glutamate"),
@@ -63,7 +65,7 @@ def test_verdict_reason_family_and_closed_vocabularies(name, ctx, verdict, reaso
     assert got.confidence in cp.CONFIDENCES
 
 
-def test_context_escapes_govern_both_verdict_and_confidence():
+def test_context_escape_governs_the_verdict_and_currency_stays_capped():
     gly, oxp = cp.classify_entity("ATP", GLY), cp.classify_entity("ATP", OXP)
     assert (gly.verdict, oxp.verdict, gly.confidence) == (CUR, PAR, "moderate")  # ATP HAS an escape
     assert (gly.matched_context, oxp.matched_context) == ("", "atp synthesis")
@@ -100,12 +102,15 @@ def test_leaf_module_has_no_network_db_or_llm_path_and_is_dead_code():
             and "cofactor_policy" in p.read_text(encoding="utf-8", errors="ignore")] == []
 
 
-def test_reporter_native_org_keys_must_be_reporter_families():
-    src = pathlib.Path(cp.__file__).read_text(encoding="utf-8")  # stray key -> () -> mis-call
-    typo = src.replace('"LacZ": ("escherichia coli",)', '"LacZee": ("escherichia coli",)', 1)
-    assert typo != src and set(cp._REPORTER_NATIVE_ORG) <= set(cp._REPORTER)
-    with pytest.raises(ValueError, match="_REPORTER_NATIVE_ORG"):  # tables + guard, no dataclasses
-        exec(compile(typo.split("#: Families moved")[0], cp.__file__, "exec"), {"__name__": "t"})
+@pytest.mark.parametrize("old,new,tbl", (  # a real family that is not a REPORTER family, then typos
+    ('"LacZ": ("escherichia coli",)', '"ATP": ("escherichia coli",)', "_REPORTER_NATIVE_ORG"),
+    ('"acetyl-CoA": _TCA + _FAS', '"acetyl-CoAA": _TCA + _FAS', "_SUBJECT_OF"),
+    ('frozenset({"Pi",', 'frozenset({"Pii",', "_RECONCILED")))
+def test_family_keyed_tables_reject_a_stray_key(old, new, tbl):
+    typo = pathlib.Path(cp.__file__).read_text(encoding="utf-8").replace(old, new, 1)
+    assert new in typo and set(getattr(cp, tbl)) <= {f for f, _ in cp.VOCABULARY.values()}  # today
+    with pytest.raises(ValueError, match=tbl):  # tables + guard only, no dataclasses
+        exec(compile(typo.split("_STRIP_RE")[0], cp.__file__, "exec"), {"__name__": "t"})
 
 
 def test_marker_matching_shares_the_entity_name_normalization():
