@@ -55,7 +55,7 @@ CORE = [
     "tests/test_pwml_writer.py", "tests/test_stage_contracts.py",
     "tests/test_payload_models.py",
 ]
-#: One AppTest file per component. This isolation IS the fix.
+#: One AppTest file per component -- necessary, and for ``qb`` not sufficient.
 S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
 COMPONENTS: List[Tuple[str, List[str]]] = [("core", CORE), ("s8", S8), ("qb", QB)]
