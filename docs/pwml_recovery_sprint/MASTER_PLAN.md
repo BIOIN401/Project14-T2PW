@@ -364,7 +364,7 @@ row to these, and never edit a re-export shim:
 | C-036 | `agent/p23-lineage-audit` | B | C-015 | `curation/apply_audit_patch.py` | rotate | A | — |
 | C-037 | `agent/p24-lineage-gapres` | B | C-015 | `curation/gap_resolver.py` | rotate | C | — |
 | C-038 | `agent/p25-lineage-carrier` | B | C-015 | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance test | — |
-| C-040 | `agent/p05a-resolution-extract` | C | SPIKE-002 | NEW `pwml/compound_resolution.py`; `ir.py` :: `_resolve_compound_rows`, `_canonicalize_compound_offline` | C-051 impl | D | ✔ |
+| C-040 | `agent/p05a-resolution-extract` | C | SPIKE-002 | NEW `pwml/compound_resolution.py`; `ir.py` :: `_resolve_compound_rows`, `_canonicalize_compound_offline` — **INCOMPLETE: this row names 2 of the 4 functions C-040 must move (`SPIKE-002-REPORT.md` §3). Do NOT dispatch against this row; `DECISIONS.md` D-021 §2 is C-040's authoritative symbol manifest** | C-051 impl | D | ✔ |
 | C-041 | `agent/p08-release-status` | C | C-010, C-012 | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
 | C-042 | `agent/p03c-extraction-ladder` | C | C-032, C-038 | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | — |
 | C-043 | `agent/p32-rag-controller` | C | C-016, C-021 | NEW `rag/controller.py` (unwired) | C-055 impl | C | — |
@@ -389,6 +389,29 @@ row to these, and never edit a re-export shim:
   identity **and** organism/species equivalence across canonical JSON, PWML **and** SBML,
   and C-045 must not narrow it. Dispatching C-045 requires separate product-owner
   authorization establishing its complete implementation authority.
+
+  **D-016 §9 ownership — reconciled state, `CONTROL-PLANE-RECONCILE-001` §6.** D-016 was
+  ratified while `_canonicalize_species_offline` was named in no §9 row, and it says so
+  in the present tense (`DECISIONS.md:307`: *"It is currently named in no `MASTER_PLAN`
+  §9 row — that ownership gap is closed by this ruling, not deferred."*). **That gap is
+  closed and no §9 entry is missing.** The row at **`MASTER_PLAN.md:372` IS the entry**:
+  it names C-045 **sole owner** of `ir.py :: _canonicalize_species_offline` under D-016.
+  D-016 is LOCKED, its sole-owner assignment is not overridden here, and no second owner
+  is created. `DECISIONS.md:307`'s sentence is a statement of fact **as at ratification**
+  and is read as history, not as a live claim about the current §9 table; D-016 itself is
+  not edited. `SPIKE-002-REPORT.md` §5 (R2) and §8 carried the same stale "owned by
+  nobody" reading and are annotated in place.
+
+  **Dependent cards — cross-references, no new ownership.** These consume the seam C-045
+  owns and must not reshape it: **C-040** (must not absorb species canonicalization —
+  compounds only); **C-050** (pre-freeze call site; a species failure at T-102 is
+  attributable to C-045, never to C-050); **C-051** (`ir.py :: build_pwml_ir` contains the
+  caller at `:1040-1045`, so it must assert-only and must not re-implement the rewrite);
+  **C-052** and **C-020 / T-102** (equivalence must cover organism/species across JSON,
+  PWML and SBML). **`rag/eligibility.py` is a distinct seam** and is **not** part of D-016:
+  it is §2 read-only material (`:147`) owned by no card. C-056a's organism-comparison
+  requirement reuses those audited helpers by import; it does not acquire ownership of
+  that file, and any edit to it requires a new owner and a separate product decision.
 - **C-020** — equivalence must be proven by parsing and normalizing the JSON, PWML and
   SBML graphs. Comparing one JSON hash to itself is not acceptable evidence.
 - **C-011** — receives the same before/after behavioural-equivalence protection as C-012:
