@@ -1,0 +1,80 @@
+{
+  "label": "g9-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-vv",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/Users/Angad/AppData/Local/Temp/t2pw/h08/g9",
+    "tests/test_rag_graph_delta.py::test_a_pre_existing_row_may_not_silently_lose_its_evidence_and_lineage",
+    "tests/test_rag_graph_delta.py::test_an_added_row_may_not_substitute_an_unrelated_passage_for_its_claims",
+    "tests/test_rag_graph_delta.py::test_a_pre_existing_row_that_loses_its_evidence_span_is_a_retention_loss",
+    "tests/test_rag_graph_delta.py::test_a_pre_existing_rows_lineage_may_be_neither_dropped_nor_corrupted",
+    "tests/test_rag_graph_delta.py::test_reordering_re_spacing_or_adding_evidence_is_never_reported_as_a_loss"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-h08-retention",
+  "started_at": "2026-08-12T19:22:06+00:00",
+  "finished_at": "2026-08-12T19:22:07+00:00",
+  "duration_seconds": 0.6392258999985643,
+  "timeout_seconds": 300.0,
+  "root_pid": 127112,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 129856,
+      "name": "python.exe",
+      "ppid": 127112
+    }
+  ],
+  "descendants_terminated": [
+    129856
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 102024,
+      "name": "python.exe"
+    },
+    {
+      "pid": 124020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127340,
+      "name": "python.exe"
+    },
+    {
+      "pid": 128512,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-h08-retention/docs/pwml_recovery_sprint/evidence/g11/H-008/01-g9-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-h08-retention\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-h08-retention",
+    "repo_head": "ad45dcfbfc5b4e69da243c67452a501091abb9c3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
