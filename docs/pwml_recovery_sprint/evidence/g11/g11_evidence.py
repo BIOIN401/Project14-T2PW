@@ -45,7 +45,7 @@ import re
 import subprocess
 import sys
 import tempfile
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPORTS_ROOT = HERE
@@ -241,7 +241,42 @@ def iter_reports(root: str = REPORTS_ROOT, task: Optional[str] = None) -> List[s
     return out
 
 
-def check_many(paths: List[str]) -> int:
+def selector_violation(selector: str) -> str:
+    """Why an explicitly supplied task selector resolved to nothing."""
+
+    kind = "unmatched_task" if TASK_RE.match(selector) else "malformed_task"
+    return f"{kind}:{selector} -- selector matched 0 committed artifacts"
+
+
+def resolve_selection(
+    paths: List[str], task: Optional[str], root: str = REPORTS_ROOT,
+) -> Tuple[List[str], List[str]]:
+    """Split a CLI selection into artifacts to check and unmatched selectors.
+
+    RULE 6: a supplied ``--task`` that matches nothing comes back as an
+    **unmatched selector**, never as an empty artifact list. ``check_many([])``
+    prints "0 artifact(s), 0 non-compliant" and exits 0, so an empty resolution
+    used to certify a task with no evidence at all -- and an explicit path
+    alongside it concealed the miss entirely, because the task was then ignored.
+
+    Whole-tree behaviour is unchanged: no selector of either kind means every
+    committed artifact under ``root``.
+    """
+
+    selected = list(paths)
+    unmatched: List[str] = []
+    if task is not None:
+        matched = iter_reports(root=root, task=task)
+        if matched:
+            selected.extend(matched)
+        else:
+            unmatched.append(task)
+    elif not selected:
+        selected = iter_reports(root=root)
+    return selected, unmatched
+
+
+def check_many(paths: List[str], unmatched: Sequence[str] = ()) -> int:
     failures = 0
     for path in paths:
         if not path.endswith(".json"):
@@ -255,9 +290,12 @@ def check_many(paths: List[str]) -> int:
             print(f"FAIL {path}\n     " + "\n     ".join(bad))
         else:
             print(f"ok   {path}")
+    for selector in unmatched:
+        print(f"FAIL --task {selector}\n     {selector_violation(selector)}")
     print(f"\nG11 evidence: {len(paths)} artifact(s), {failures} non-compliant "
-          f"(spec v{G11_SPEC_VERSION})")
-    return 1 if failures else 0
+          f"(spec v{G11_SPEC_VERSION})"
+          + (f"; {len(unmatched)} unmatched selector(s)" if unmatched else ""))
+    return 1 if failures or unmatched else 0
 
 
 # --------------------------------------------------------------------------- #
@@ -352,10 +390,58 @@ def test_compliance_rules() -> None:
             _write(tmp, "05-e.json", exit_reason="unknown"))
 
 
+def test_selector_resolution() -> None:
+    """RULE 6: a task selector that matches nothing must never report success.
+
+    Five cases, matching the five ways ``check`` can be invoked: known task,
+    unmatched well-formed task, malformed task, whole-tree, and an explicit
+    path supplied *alongside* an unmatched task -- the concealment case, which
+    is the only reason ``--task`` and ``paths`` are resolved together rather
+    than one falling back to the other.
+    """
+
+    with tempfile.TemporaryDirectory(prefix="g11sel_") as tmp:
+        os.makedirs(os.path.join(tmp, "H-004"))
+        known = _write(tmp, os.path.join("H-004", "01-a.json"))
+
+        # (1) a known task validates normally, over a NONZERO artifact count.
+        paths, unmatched = resolve_selection([], "H-004", root=tmp)
+        assert paths == [known] and not unmatched, (paths, unmatched)
+        assert check_many(paths, unmatched) == 0
+
+        # (2) a well-formed task matching zero artifacts exits NONZERO, and the
+        # message names the selector that matched nothing.
+        paths, unmatched = resolve_selection([], "Z-999", root=tmp)
+        assert paths == [] and unmatched == ["Z-999"], (paths, unmatched)
+        assert check_many(paths, unmatched) == 1
+        assert "unmatched_task:Z-999" in selector_violation("Z-999")
+
+        # (3) a malformed task is still rejected, and is classified as malformed.
+        # `next` keeps its own pre-existing rejection: allocate() raises.
+        assert check_many(*resolve_selection([], "nope", root=tmp)) == 1
+        assert "malformed_task:nope" in selector_violation("nope")
+        try:
+            allocate("nope", "x", root=tmp)
+        except ValueError:
+            pass
+        else:  # pragma: no cover - the guard exists; this records that it does
+            raise AssertionError("allocate() stopped rejecting a malformed task")
+
+        # (4) whole-tree checking (no selector at all) is unchanged.
+        paths, unmatched = resolve_selection([], None, root=tmp)
+        assert paths == [known] and not unmatched, (paths, unmatched)
+
+        # (5) one valid selector may not conceal another unmatched one.
+        paths, unmatched = resolve_selection([known], "Z-999", root=tmp)
+        assert paths == [known] and unmatched == ["Z-999"], (paths, unmatched)
+        assert check_many(paths, unmatched) == 1
+
+
 TESTS = [
     test_required_fields_present_in_real_wrapper_output,
     test_naming_scheme_cannot_collide,
     test_compliance_rules,
+    test_selector_resolution,
 ]
 
 
@@ -380,7 +466,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     nxt.add_argument("--task", required=True)
     nxt.add_argument("--label", required=True)
     chk = sub.add_parser("check", help="validate committed reports")
-    chk.add_argument("--task", default=None)
+    chk.add_argument("--task", default=None,
+                     help="ONE task selector; matching zero artifacts is an error")
     chk.add_argument("paths", nargs="*")
     sub.add_parser("selftest", help="prove this spec matches bounded_run.py")
     args = parser.parse_args(argv)
@@ -390,7 +477,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if args.cmd == "selftest":
         return selftest()
-    return check_many(args.paths or iter_reports(task=args.task))
+    return check_many(*resolve_selection(args.paths, args.task))
 
 
 if __name__ == "__main__":

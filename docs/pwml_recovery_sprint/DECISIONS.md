@@ -633,6 +633,178 @@ assignable **without** a product choice — SPIKE-002 §3 already classifies eac
 
 ---
 
+## D-022 — Closeout: Chunk D status, two external labels defined, two ceilings measured · 2026-08-11 · LOCKED
+
+Authority: `CONTROL-PLANE-CLOSEOUT-002`, implemented by **H-007**. **D-020 and D-021 are not
+rewritten** — this decision is appended and supersedes only the present-tense statements named
+below. No merged card is reopened; no production code, test or fixture is touched.
+
+### 1. The forward Chunk D gate is in effect, and its execution partition is per NODE
+
+**Superseded here:** D-020's *"That definition has not merged … the gate exists in no ref in
+this repository"*, and the identical claim in the C-011 `LEDGER.md` row. Both were **true when
+written at `0182eae`** and became **false at `69d4069`**, where RECONCILE-B merged the
+split-process definition into `TEST_MATRIX.md` together with `evidence/chunk_d_gate.py`.
+D-020's obligation (1) is discharged and its effective date (2) has passed.
+
+**Also superseded:** any reading of D-020 fact 6 or of the RECONCILE-B record as having proved
+that *no* process partition can stabilise the 23-test `qb` cohort. What was measured is
+narrower and stands: isolating the whole **file** in one fresh process is insufficient, which
+follows from the documented intra-file cause — one process building 23 `AppTest` objects.
+**Per-node isolation had never been tested.** H-007 tests it: the 150-test core keeps one
+deterministic process and each of the **27** AppTest node IDs runs alone in a fresh process.
+
+**Partition, proven on every invocation** and re-proven by the reviewer: **177 = 150 core + 4
+`s8` + 23 `qb`**, missing 0, extra 0, overlap 0, deselected 0, and the executed node-ID set
+equal to the collected one.
+
+**Measured status — six scheduled runs, three against a clean export of `0182eae` and three
+against H-007's tip, order declared and committed before any ran (`prompts/H-007.md` §2):**
+
+| run | tree | partition | executed | failing node |
+|---|---|---|---|---|
+| 1 | base export | 177 = 150+4+23 | **177/177** | — |
+| 2 | base export | 177 = 150+4+23 | 176/177 | `node16` |
+| 3 | base export | 177 = 150+4+23 | 176/177 | `node16` |
+| 4 | candidate `14d0833` | 177 = 150+4+23 | 176/177 | `node10` |
+| 5 | candidate `14d0833` | 177 = 150+4+23 | 176/177 | `node11` |
+| 6 | candidate `14d0833` | 177 = 150+4+23 | **177/177** | — |
+
+**Base 1 green / 2 red. Candidate 1 green / 2 red.** The **150-test core and all 4 `s8`
+nodes passed in all six runs**; every failure is in the 23-node `qb` cohort, and **no node
+failed twice in the same tree except `node16` at base**. Four different symptoms appeared —
+two different wrong `review_flags` contents, and two different `KeyError`s for a
+`session_state` key a partially-executed AppTest script never set. **None carried the
+documented `FragmentThreadState` message**, whose recorded cause — several `AppTest`s in one
+process — cannot apply under per-node isolation. Same family, new signatures. BL-003's.
+
+**Declared isolated-node diagnostic** (`prompts/H-007.md` §2.2, committed before any
+candidate run): three cold wrapped processes per failing node per tree, 18 runs, **17 passed
+/ 1 failed**. Combined with the scheduled runs, per node, base vs candidate:
+
+| node | test | base | candidate |
+|---|---|---|---|
+| `node10` | `test_all_four_artifacts_are_written_and_retained` | 6 pass / 0 fail | 4 pass / **2 fail** |
+| `node11` | `test_one_canonical_payload_is_gated_serialized_and_exported` | 6 pass / 0 fail | 5 pass / **1 fail** |
+| `node16` | `test_research_mode_surfaces_the_flags_it_did_not_act_on` | 4 pass / **2 fail** | 6 pass / 0 fail |
+
+Over all `qb` executions: **base 78 runs / 2 failures; candidate 78 runs / 3 failures.**
+
+**Ruling applied: case 2 — a test-infrastructure race.** Read node-by-node, `node16` failed
+only at base and `node10`/`node11` only at candidate. Neither half is attributable to this
+diff, and the reason is decisive rather than statistical: **`tests/` and `src/` are
+byte-identical at the base export and at the candidate tip** (`:tests`
+`bb4099b838b69bfb6d94ebcc71bcbab19e4588b4`, `:src` `d919bd8edffa7c0efe6d07960c667b05f9939bc7`),
+so the candidate contains **zero** bytes of test or production code and cannot change a
+Chunk D outcome in either direction. A "candidate-only" reading would have to accept the
+mirror-image "base-only" claim for `node16` with equal force, which is incoherent. The
+per-node diagnostic is **underpowered by construction** — at ~3% per node per run, three
+cold runs have under 12% power to reproduce one — which is stated, not dressed up.
+
+**Therefore, and until the race is fixed:**
+
+1. The **154 deterministic tests — 150 core plus 4 `s8` — are the BLOCKING Chunk D gate.**
+2. The **23-node `qb` cohort is mandatory to run and mandatory to report, and temporarily
+   non-blocking.** This is **not** permission to read any `qb` red as expected. A **new
+   deterministic** failure, a failure a diff **reproduces**, or a traceback **implicating
+   the diff** still blocks the merge, and no test may be weakened, deselected, retried until
+   green or relabelled environmental.
+3. The race is filed as infrastructure backlog item **BL-003** for a later cleanup agent,
+   with the 156 recorded executions and **four** distinct nodes — the reviewer's own run
+   added `node05` and a fifth symptom. Wave A1 is **not** held behind it.
+4. Per-node isolation is retained regardless: it frees the deterministic core to ~1 s and
+   localises a `qb` failure to one named node instead of losing it in a 23-test process.
+
+### 2. `G11-EVIDENCE-ACCOUNTING-001` — defined
+
+Cited by all nine Wave A0 card budget blocks, by every A0 merge message and by D-021 §7, and
+until now defined in no document. Definition, in full:
+
+1. **Canonical G11 cleanup reports are required and are committed** with the branch that
+   produced them, one per job, at `evidence/g11/<TASK-ID>/<SEQ>-<label>.json`.
+2. **They are excluded from every hand-authored changed-line ceiling.** A bound written for
+   hand-authored code may not be spent by machine-generated evidence the same policy compels.
+3. **They remain fully subject to G11 validation** — the exclusion is from the *budget*, never
+   from the *checker*. `g11_evidence.py check` must pass over them.
+4. **Noncanonical generated artifacts remain prohibited** unless a card separately authorises
+   them with its own artifact-count and size budget (D-019). C-011's one-fixture
+   authorisation is such a grant and is unaffected.
+
+A **canonical** report is one `bounded_run.py` itself wrote to a path allocated by
+`g11_evidence.py next`. A hand-written, reconstructed or back-filled file is not canonical and
+is not evidence; G11 is **prospective only**.
+
+### 3. `CONTROL-PLANE-RECONCILE-001` — defined
+
+The post-Wave-A0 control-plane reconciliation. **Starting SHA
+`0182eae704711d1ce1ee938a39e42748a203c203`** (the C-011 merge, integration head when it was
+authorised). **Final SHA `08d5d079ae4a71a23214004b1dfea37625a2e520`.**
+
+**Two lane merges, in this order:**
+
+| Merge | Lane | Branch | Landed |
+|---|---|---|---|
+| `69d4069` | RECONCILE-B (§3, §4) | `agent/recon-chunkd-gate` | split-process Chunk D gate in `TEST_MATRIX.md` + `evidence/chunk_d_gate.py`; a path-specific `.gitattributes` line-ending rule for the one byte-exact C-011 fixture. 250 hand-authored lines against a 250 ceiling; 50 G11 reports excluded |
+| `08d5d07` | RECONCILE-A (§2, §5–§8) | `agent/recon-control-plane` | Wave A0 ledger reconciliation, the nine card ceilings, the "0 artifacts" contradiction, D-016 ownership, D-020 and D-021. 891 hand-authored lines against a 900 ceiling; no G11 report, because the lane executed no python |
+
+**Production-code prohibition.** Neither lane could touch `src/`, `tests/` or `batch/`, and
+neither did: the `src` and `tests` tree objects are byte-identical at `0182eae` and at
+`08d5d07` (`:src` `d919bd8edffa7c0efe6d07960c667b05f9939bc7`, `:tests`
+`bb4099b838b69bfb6d94ebcc71bcbab19e4588b4`), re-verified by H-007. Every *"verified at
+`0182eae`"* citation against production code therefore remains exactly valid.
+
+**Approvals.** Each lane received an **exact unsuffixed `APPROVE`** from a fresh independent
+reviewer of its exact merged tip, told no earlier verdict bound it — RECONCILE-A after **two
+`REJECT`s and three correction rounds**, RECONCILE-B after two. Neither lane's history was
+squashed, amended, rebased away or cherry-picked.
+
+**Two worktrees — ratified.** Running the reconciliation as two branches in two worktrees
+resolved a contradiction in its own authorising instructions and is **retrospectively
+ratified as reasonable**. It creates **no general permission** to resolve a future authority
+conflict silently: the next such conflict is escalated, not resolved.
+
+### 4. C-010 and C-012 — measured ceilings, no unused headroom
+
+Derived from the Git objects, not from any report. Each branch carries **exactly one commit**
+above its base and the merge's **second parent is the reviewed tip**, so base-to-tip is
+unambiguous and **no accounting subitem is left open**.
+
+| Card | Base (merge 1st parent) | Reviewed tip (2nd parent) | Merge | Hand-authored +/− | **Final ceiling** | G11 excluded |
+|---|---|---|---|---|---|---|
+| C-010 | `9e06360` | `d784747` | `72ee20f` | +284 / −10 across 4 files | **294** (was 300) | 11 artifacts, 883 lines |
+| C-012 | `361b158` | `def6adb` | `9e06360` | +263 / −58 across 2 files | **321** (was 330) | 4 artifacts, 394 lines |
+
+Only canonical G11 evidence is excluded. C-010's hand-authored files: `docs/change_log.md`,
+`strict_quarantine.py`, `test_strict_quarantine.py`, `test_strict_quarantine_real_artifact_replay.py`.
+C-012's: `driver.py`, `test_batch_driver_seam_golden.py`.
+
+The ceilings **300** and **330** quoted in `prompts/C-010.md:149` and `prompts/C-012.md:104`
+are the historical dispatch-time limits and are left as written; **294 and 321 are the final
+ceilings** and this table is authoritative for them. **Implementation, tests, reviewer verdict
+and merge are unchanged for both cards** — this is accounting only, and neither card's
+recorded 294 / 321 measurement moves.
+
+### 5. `BL-001` — the two retry seams, one backlog item
+
+C-014 removed the SDK retry layer (`SDK_MAX_RETRIES = 0`) from four call sites that use the
+raw client **directly** and so also bypass `llm/client.py`'s own 8-attempt loop:
+`stoich/agent.py:477`, `:552`, `:580` (chat), and `rag/embed.py:163` (embeddings, via `:154`).
+
+**Retries are not restored now.** No existing card owns either file — re-verified at
+`08d5d07`, and `prompts/C-014.md:145` states it in terms — so binding the seams to C-032,
+C-035, C-042, C-043 or C-055 would invent overlapping ownership. They are bound instead to a
+single backlog item **BL-001**, which must scope an owner and a replacement-resilience test
+for both files. `LEDGER.md` A0-C2 points here. **BL-001 does not block Wave A1.**
+
+### 6. G10's smoke count is 460
+
+**457 is obsolete.** C-010 moved the pinned baseline deliberately, 457 → 460, with an exact
+documented delta, and every A0 merge from `72ee20f` on measured 460. `TEST_MATRIX.md` is
+corrected; `MASTER_PLAN.md` §5 G10 and `CLAUDE.md` rule 10 still say 457, sit outside this
+closeout's permitted change set, and are backlog item **BL-002**.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
