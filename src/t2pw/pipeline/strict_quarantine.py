@@ -843,7 +843,7 @@ def evaluate_core_coverage(
     pathway_context: Optional[Mapping[str, Any]] = None,
     min_core_processes: int = DEFAULT_MIN_CORE_PROCESSES,
     min_core_coverage: float = DEFAULT_MIN_CORE_COVERAGE,
-) -> Dict[str, Any]:
+) -> "t2pw.pipeline.release_status.CoverageVerdict":
     """Decide whether what survived is still the pathway that was requested.
 
     Two independent failures are refused here, and they are the reason this check
@@ -859,7 +859,22 @@ def evaluate_core_coverage(
 
     When no core was declared, relevance is unjudgeable and only the emptiness
     rule applies -- ``requested_core_declared`` says which regime was in force.
+
+    Returns a :class:`~t2pw.pipeline.release_status.CoverageVerdict`, which IS a
+    ``dict`` -- same keys, same values, same JSON bytes, same ``==`` against a
+    plain dict -- so every existing consumer and every pinned coverage document
+    is untouched. What the type adds is a stable shape for the consumers named in
+    ``MASTER_PLAN.md:230``: semantic accessors (``below_coverage_minimum``,
+    ``has_surviving_core``, ``missing_anchors``, ``completeness``) that answer the
+    D-002 questions without string-matching ``reasons``, and one place where
+    "undeclared" stops being reported as coverage ``0.0``.
+
+    The import is function-local on purpose: this module is imported by the
+    pipeline at large, and the coverage verdict is the only thing here that needs
+    the classification vocabulary.
     """
+
+    from t2pw.pipeline.release_status import CoverageVerdict
 
     terms = collect_requested_core_terms(
         payload, requested_core=requested_core, pathway_context=pathway_context
@@ -920,7 +935,7 @@ def evaluate_core_coverage(
             f"requested_core_coverage_below_minimum:{coverage_ratio:.3f}<{float(min_core_coverage):.3f}"
         )
 
-    return {
+    return CoverageVerdict({
         "schema_version": 1,
         "requested_core_terms": terms,
         "requested_core_declared": declared,
@@ -943,7 +958,7 @@ def evaluate_core_coverage(
         },
         "minimum_core_satisfied": not reasons,
         "reasons": reasons,
-    }
+    })
 
 
 # ── Admission ───────────────────────────────────────────────────────────────

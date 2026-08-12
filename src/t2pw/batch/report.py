@@ -48,6 +48,14 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 # cheap and offline: ``t2pw.rag.eligibility`` pulls in only ``t2pw.config``.
 from t2pw.rag.eligibility import INELIGIBLE_OUTCOMES as _ELIGIBILITY_INELIGIBLE_OUTCOMES
 
+# Release-status vocabulary, single-sourced for the same reason. Cheaper still:
+# ``t2pw.pipeline.release_status`` imports only ``dataclasses`` and ``typing``.
+from t2pw.pipeline.release_status import (
+    NOT_RECORDED as _NOT_RECORDED,
+    NOT_RELEASE_READY_NOTE as _NOT_RELEASE_READY_NOTE,
+    describe as _describe_release_status,
+)
+
 #: Report width. Notepad-friendly, and the same number the pipeline reports use.
 WIDTH = 100
 
@@ -412,6 +420,10 @@ class ModeRun:
     files: List[Tuple[str, Optional[int]]] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
     file_errors: List[Tuple[str, str]] = field(default_factory=list)
+    #: The run's release classification, exactly as the row carried it: a state
+    #: string, a serialized ``ReleaseStatus``, or ``None`` when the row records
+    #: none. Never derived from a filename and never inferred from ``status``.
+    release_status: Any = None
 
     @property
     def passed(self) -> bool:
@@ -557,6 +569,7 @@ def _to_run(row: Dict[str, Any]) -> ModeRun:
         files=_norm_files(row.get("files")),
         warnings=_norm_warnings(row.get("warnings")),
         file_errors=_norm_file_errors(row.get("files")),
+        release_status=row.get("release_status"),
     )
 
 
@@ -829,6 +842,26 @@ def _triage_matrix(papers: Sequence[PaperTriage]) -> List[str]:
     return out
 
 
+def _release_line(run: ModeRun) -> str:
+    """What this run's RELEASE state is -- never inferred from ``status``.
+
+    PRODUCT_CONTRACT 11 forbids collapsing "the pipeline ran", "the strict
+    technical gates passed" and "semantic evaluation passed" into one another,
+    and this report used to print a single ``PASS`` for all three. A reader took
+    that as "releasable". It is not: nothing in a manifest row has ever recorded
+    a semantic evaluation, so for every run printed here semantic evaluation was
+    NOT PERFORMED -- which is not a failure and is emphatically not a pass.
+
+    When the row carries a classification it is printed verbatim. When it does
+    not, this says so and states the rule, rather than guessing one from the
+    status, the counts or an artifact filename.
+    """
+
+    if run.release_status in (None, ""):
+        return f"{_NOT_RECORDED} -- {_NOT_RELEASE_READY_NOTE}"
+    return _describe_release_status(run.release_status)
+
+
 def _paper_block(paper: PaperTriage, position: int) -> List[str]:
     out: List[str] = []
     out.append(_rule("-"))
@@ -856,6 +889,7 @@ def _paper_block(paper: PaperTriage, position: int) -> List[str]:
                 first=f"{mode:<9}: ",
             )
         )
+        out.extend(_wrap(_release_line(run), indent=8, first="release      : "))
         for warning in run.warnings:
             out.extend(_wrap(warning, indent=8, first="warning      : "))
         for path, error in run.file_errors:

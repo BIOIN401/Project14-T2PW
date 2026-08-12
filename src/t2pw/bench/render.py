@@ -8,7 +8,7 @@ population, what went wrong, and what should I fix next.*
 
 from __future__ import annotations
 
-from typing import List
+from typing import Any, List
 
 from t2pw.bench.acceptance import MODE_RESEARCH, MODE_STRICT, AcceptanceReport, PaperResult
 from t2pw.bench.metrics import (
@@ -20,6 +20,11 @@ from t2pw.bench.metrics import (
     RESEARCH_FAILURE_LABELS,
 )
 from t2pw.bench.semantic import CHECK_ORDER, ERROR_ORDER
+from t2pw.pipeline.release_status import (
+    NOT_RECORDED,
+    NOT_RELEASE_READY_NOTE,
+    describe as _describe_release_status,
+)
 
 _WIDTH = 100
 _RULE = "=" * _WIDTH
@@ -160,6 +165,29 @@ def _wrap(text: str, width: int) -> List[str]:
     return lines
 
 
+def _release(leg: Any) -> List[str]:
+    """The leg's RUNTIME release classification, or an explicit "not recorded".
+
+    ``PASS`` on the line above is a TECHNICAL gate result. Printed alone it reads
+    as "released", which collapses three of the five states PRODUCT_CONTRACT 11
+    requires to stay apart -- and the strict denominator has historically been
+    built by equating a strict pass (or a ``pathway.pwml`` on disk) with a
+    release. This line states the runtime classification instead, and says so
+    plainly when the leg carries none rather than deducing one.
+    """
+
+    release = getattr(leg, "release_status", None)
+    text = (
+        f"{NOT_RECORDED} -- {NOT_RELEASE_READY_NOTE}"
+        if release in (None, "")
+        else _describe_release_status(release)
+    )
+    return [
+        ("              release : " if index == 0 else "                        ") + line
+        for index, line in enumerate(_wrap(text, 74))
+    ]
+
+
 def _paper_block(paper: PaperResult) -> List[str]:
     case = paper.case
     out: List[str] = [_THIN]
@@ -190,6 +218,7 @@ def _paper_block(paper: PaperResult) -> List[str]:
         if leg.boundary_evidence:
             for line in _wrap(leg.boundary_evidence, 84):
                 out.append(f"              {line}")
+        out.extend(_release(leg))
 
         semantic = leg.semantic
         if semantic is None or not semantic.evaluated:

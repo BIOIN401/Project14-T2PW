@@ -1,0 +1,380 @@
+"""Release status as a FIRST-CLASS runtime classification (D-002, PRODUCT_CONTRACT 4/7/11).
+
+Before this module the question "is this run releasable?" had no answer object. It
+was re-derived at each consumer from whatever happened to be nearby -- a boolean
+(``quarantine_ok``), an exit status (``status == "pass"``), or an artifact filename
+(``pathway.pwml`` exists). Each of those collapses facts the product contract says
+must never be collapsed, and none of them can carry the evidence D-002 requires a
+below-threshold run to record.
+
+Two shapes live here.
+
+:class:`CoverageVerdict`
+    What :func:`t2pw.pipeline.strict_quarantine.evaluate_core_coverage` returns.
+    A ``dict`` subclass on purpose: every existing consumer keeps working,
+    ``json.dumps`` produces the SAME BYTES, ``deepcopy`` keeps the class, and
+    ``==`` against a plain dict still holds -- so the pinned coverage documents
+    (``evidence/c011_freeze_seam_before.json``, the replay baseline) do not move.
+    What it adds is a NAMED TYPE with semantic accessors, so a consumer asks
+    ``verdict.below_coverage_minimum`` instead of string-matching a reason line.
+    That is the return-shape change ``MASTER_PLAN.md:230`` records as the reason
+    C-053, C-054, C-056b and C-057 cannot build until this lands.
+
+:class:`ReleaseStatus`
+    The classification, with PRODUCT_CONTRACT 11's five states kept apart on
+    separate fields. ``semantic_evaluation`` is a THREE-valued string, never a
+    bool, because "not evaluated" is never ``False``.
+
+What this module deliberately does NOT do: it does not evaluate semantics and it
+takes no semantic argument -- that input is C-056a's (``MASTER_PLAN.md:379``), so
+every status here carries ``SEMANTIC_NOT_EVALUATED`` with a stated reason and
+C-056a adds the input and the gating without reshaping anything. It also does not
+name artifacts (D-004 / C-053): structured status is authoritative and a filename
+is never an input here.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
+
+#: PRODUCT_CONTRACT 4 output states. There is deliberately no fourth.
+RELEASE_READY = "release_ready"
+REVIEW_REQUIRED = "review_required"
+DIAGNOSTIC_ONLY = "diagnostic_only"
+RELEASE_STATES: Tuple[str, ...] = (RELEASE_READY, REVIEW_REQUIRED, DIAGNOSTIC_ONLY)
+
+#: PRODUCT_CONTRACT 11 semantic outcomes. THREE values, never a bool: a caller
+#: that stored this as ``True``/``False`` would have to invent one of these.
+SEMANTIC_PASSED = "passed"
+SEMANTIC_FAILED = "failed"
+SEMANTIC_NOT_EVALUATED = "not_evaluated"
+
+#: Why no semantic verdict is attached yet. A reason, not a failure.
+SEMANTIC_INPUT_NOT_WIRED = (
+    "no semantic evaluation is wired into the runtime classification yet; this is "
+    "a missing input (C-056a), NOT a semantic failure and NOT a pass"
+)
+
+#: Reason vocabulary. Grouped so a report can say WHY without parsing prose.
+REASON_PIPELINE_DID_NOT_EXECUTE = "pipeline_did_not_execute"
+REASON_STRICT_GATES_BLOCKED = "strict_technical_gates_blocked_export"
+REASON_SERIALIZATION_REQUIRES_INVENTION = "serialization_would_require_invention"
+REASON_NO_DEFENSIBLE_CONNECTED_CORE = "no_defensible_connected_core"
+REASON_COVERAGE_NOT_EVALUATED = "requested_core_coverage_not_evaluated"
+
+#: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
+#: consumer has to re-type the string it string-matches on.
+COVERAGE_REASON_EMPTY = "no_surviving_process"
+COVERAGE_REASON_COUNT_BELOW_MINIMUM = "core_process_count_below_minimum"
+COVERAGE_REASON_BELOW_MINIMUM = "requested_core_coverage_below_minimum"
+
+
+def _as_tuple(value: Any) -> Tuple[str, ...]:
+    if isinstance(value, str) or not isinstance(value, Sequence):
+        return ()
+    return tuple(str(item) for item in value)
+
+
+class CoverageVerdict(dict):
+    """The core-coverage decision, as a typed view over the SAME serialized dict.
+
+    Subclassing ``dict`` rather than wrapping it is the whole design: the mapping
+    content is byte-for-byte what it always was, so ``quarantine_coverage`` in
+    every artifact, fixture and pinned baseline is unchanged, and the accessors
+    below are derived rather than stored, so ``deepcopy``/``pickle``/``json``
+    cannot see a difference either.
+    """
+
+    # -- raw facts, named -------------------------------------------------
+    @property
+    def declared(self) -> bool:
+        """Whether a requested core was declared at all, i.e. whether relevance
+        was judgeable. Distinct from "declared and nothing matched"."""
+
+        return bool(self.get("requested_core_declared"))
+
+    @property
+    def coverage_ratio(self) -> float:
+        try:
+            return float(self.get("coverage_ratio") or 0.0)
+        except (TypeError, ValueError):
+            return 0.0
+
+    @property
+    def reasons(self) -> Tuple[str, ...]:
+        return _as_tuple(self.get("reasons"))
+
+    @property
+    def minimum_core_satisfied(self) -> bool:
+        return bool(self.get("minimum_core_satisfied"))
+
+    @property
+    def surviving_processes(self) -> int:
+        try:
+            return int(self.get("surviving_processes") or 0)
+        except (TypeError, ValueError):
+            return 0
+
+    @property
+    def min_core_coverage(self) -> Optional[float]:
+        thresholds = self.get("thresholds")
+        if not isinstance(thresholds, Mapping):
+            return None
+        try:
+            return float(thresholds.get("min_core_coverage"))
+        except (TypeError, ValueError):
+            return None
+
+    # -- derived, and the reason this type exists -------------------------
+    @property
+    def completeness(self) -> Optional[float]:
+        """How much of the REQUEST survived, or ``None`` when unjudgeable.
+
+        The serialized ``coverage_ratio`` is ``0.0`` in both "nothing requested
+        was found" and "nothing was requested", which are opposite facts. The
+        serialized value cannot change (pinned), so the distinction is drawn
+        here: undeclared is ``None``, never zero.
+        """
+
+        return self.coverage_ratio if self.declared else None
+
+    @property
+    def missing_anchors(self) -> Tuple[str, ...]:
+        """The requested-core anchors nothing surviving touches. D-002 requires a
+        below-threshold run to record exactly these."""
+
+        return _as_tuple(self.get("unmatched_terms"))
+
+    def _has_reason(self, prefix: str) -> bool:
+        return any(reason.split(":", 1)[0] == prefix for reason in self.reasons)
+
+    @property
+    def below_coverage_minimum(self) -> bool:
+        """``requested_core_coverage_below_minimum`` fired. Per D-002 this is a
+        trigger for targeted retrieval and then for ``review_required`` -- it is
+        NOT, in itself, a refusal."""
+
+        return self._has_reason(COVERAGE_REASON_BELOW_MINIMUM)
+
+    @property
+    def core_process_count_below_minimum(self) -> bool:
+        return self._has_reason(COVERAGE_REASON_COUNT_BELOW_MINIMUM)
+
+    @property
+    def empty_graph(self) -> bool:
+        return self._has_reason(COVERAGE_REASON_EMPTY)
+
+    @property
+    def has_surviving_core(self) -> bool:
+        """Something survived that could be serialized without inventing biology.
+
+        Deliberately the weakest possible test -- "anything at all survived" --
+        because the product invariant forbids deleting an incomplete-but-correct
+        pathway. A fragment that is merely *shallow*, or merely *not the pathway
+        that was requested*, is still a fragment; it becomes ``review_required``,
+        never ``diagnostic_only``.
+        """
+
+        return self.surviving_processes > 0 and not self.empty_graph
+
+
+@dataclass(frozen=True)
+class ReleaseStatus:
+    """One run's release classification, with PRODUCT_CONTRACT 11 kept unfolded."""
+
+    status: str
+    #: 11(a). The pipeline ran, whatever it concluded.
+    pipeline_executed: bool
+    #: 11(b). The strict TECHNICAL gates. Never merged with the biological verdict.
+    strict_gates_passed: bool
+    #: 11(c)/(d)/(e) as ONE three-valued field. ``not_evaluated`` is never False.
+    semantic_evaluation: str = SEMANTIC_NOT_EVALUATED
+    semantic_not_evaluated_reason: str = SEMANTIC_INPUT_NOT_WIRED
+    #: Whether this run may count toward the STRICT benchmark denominator.
+    #: ``review_required`` never may -- TRAP-1 / PRODUCT_CONTRACT 13.
+    strict_acceptance_eligible: bool = False
+    #: D-002's required record.
+    completeness: Optional[float] = None
+    missing_anchors: Tuple[str, ...] = ()
+    retrieval_attempts: Optional[int] = None
+    expansion_blocked_reason: str = ""
+    coverage_evaluated: bool = False
+    reasons: Tuple[str, ...] = ()
+
+    @property
+    def semantic_confirmed(self) -> bool:
+        """Only an actual ``passed`` counts. ``not_evaluated`` is not a pass."""
+
+        return self.semantic_evaluation == SEMANTIC_PASSED
+
+    @property
+    def produced_pwml(self) -> bool:
+        """``diagnostic_only`` is the one state with no final PWML."""
+
+        return self.status in (RELEASE_READY, REVIEW_REQUIRED)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "status": self.status,
+            "pipeline_executed": self.pipeline_executed,
+            "strict_gates_passed": self.strict_gates_passed,
+            "semantic_evaluation": self.semantic_evaluation,
+            "semantic_not_evaluated_reason": self.semantic_not_evaluated_reason,
+            "strict_acceptance_eligible": self.strict_acceptance_eligible,
+            "completeness": self.completeness,
+            "missing_anchors": list(self.missing_anchors),
+            "retrieval_attempts": self.retrieval_attempts,
+            "expansion_blocked_reason": self.expansion_blocked_reason,
+            "coverage_evaluated": self.coverage_evaluated,
+            "reasons": list(self.reasons),
+        }
+
+
+def coverage_verdict(value: Any) -> Optional[CoverageVerdict]:
+    """Adapt anything a caller already holds into a :class:`CoverageVerdict`.
+
+    A verdict read back from JSON is a plain dict; re-wrapping is free and
+    lossless, so a consumer never has to care which side of a serialization
+    boundary its coverage came from.
+    """
+
+    if value is None:
+        return None
+    if isinstance(value, CoverageVerdict):
+        return value
+    if isinstance(value, Mapping):
+        return CoverageVerdict(value)
+    return None
+
+
+def classify_release_status(
+    coverage: Any = None,
+    *,
+    pipeline_executed: bool = True,
+    strict_gates_passed: bool = False,
+    serializable_without_invention: bool = True,
+    retrieval_attempts: Optional[int] = None,
+    expansion_blocked_reason: str = "",
+    extra_reasons: Sequence[str] = (),
+) -> ReleaseStatus:
+    """Classify one run from its coverage verdict and its technical outcome.
+
+    The rules are in the product's order and each refuses exactly one thing:
+
+    1. the pipeline never ran, or
+    2. the strict TECHNICAL gates blocked export, or
+    3. serialization would require inventing biology, or
+    4. nothing survived at all
+       -> ``diagnostic_only``: there is no PWML to review.
+    5. coverage was never evaluated, or the requested-core threshold was not met
+       -> ``review_required``: D-002, the threshold blocks RELEASE-READY status,
+       not PWML production. A biologically correct, internally connected fragment
+       representable without guessing is exported and flagged, never dropped, and
+       never counted as strict success.
+    6. otherwise -> ``release_ready``.
+
+    ``semantic_evaluation`` is ``not_evaluated`` on every path (see the module
+    docstring): reported, never folded into ``status``, so C-056a can start
+    failing a run on semantics without any consumer changing shape.
+    """
+
+    verdict = coverage_verdict(coverage)
+    reasons = [str(reason) for reason in extra_reasons or ()]
+    completeness = verdict.completeness if verdict is not None else None
+    missing = verdict.missing_anchors if verdict is not None else ()
+
+    if not pipeline_executed:
+        status = DIAGNOSTIC_ONLY
+        reasons.append(REASON_PIPELINE_DID_NOT_EXECUTE)
+    elif not strict_gates_passed:
+        status = DIAGNOSTIC_ONLY
+        reasons.append(REASON_STRICT_GATES_BLOCKED)
+    elif not serializable_without_invention:
+        status = DIAGNOSTIC_ONLY
+        reasons.append(REASON_SERIALIZATION_REQUIRES_INVENTION)
+    elif verdict is None:
+        status = REVIEW_REQUIRED
+        reasons.append(REASON_COVERAGE_NOT_EVALUATED)
+    elif not verdict.has_surviving_core:
+        status = DIAGNOSTIC_ONLY
+        reasons.append(REASON_NO_DEFENSIBLE_CONNECTED_CORE)
+        reasons.extend(verdict.reasons)
+    elif not verdict.minimum_core_satisfied:
+        status = REVIEW_REQUIRED
+        reasons.extend(verdict.reasons)
+    else:
+        status = RELEASE_READY
+
+    return ReleaseStatus(
+        status=status,
+        pipeline_executed=bool(pipeline_executed),
+        strict_gates_passed=bool(strict_gates_passed),
+        semantic_evaluation=SEMANTIC_NOT_EVALUATED,
+        semantic_not_evaluated_reason=SEMANTIC_INPUT_NOT_WIRED,
+        # A run may only enter the STRICT denominator when it is release-ready.
+        # review_required must never count as strict success (TRAP-1).
+        strict_acceptance_eligible=status == RELEASE_READY,
+        completeness=completeness,
+        missing_anchors=tuple(missing),
+        retrieval_attempts=retrieval_attempts,
+        expansion_blocked_reason=str(expansion_blocked_reason or ""),
+        coverage_evaluated=verdict is not None,
+        reasons=tuple(dict.fromkeys(reasons)),
+    )
+
+
+#: Rendering vocabulary, single-sourced so ``batch/report.py`` and
+#: ``bench/render.py`` cannot drift into two different words for one fact.
+NOT_RECORDED = "not recorded"
+SEMANTIC_LABELS: Dict[str, str] = {
+    SEMANTIC_PASSED: "passed",
+    SEMANTIC_FAILED: "failed",
+    SEMANTIC_NOT_EVALUATED: "NOT PERFORMED",
+}
+#: Printed wherever a technical pass could otherwise be read as release-ready.
+NOT_RELEASE_READY_NOTE = (
+    "a technical PASS is a GATE result, not a release decision; semantic "
+    "evaluation is reported separately and is never implied by it"
+)
+
+
+def describe(status: Any) -> str:
+    """One line naming the status and the three facts behind it, for reports.
+
+    Accepts a :class:`ReleaseStatus`, its ``to_dict``, a bare state string or
+    ``None``: report code renders rows written by older runs and must never raise.
+    """
+
+    if status is None:
+        return NOT_RECORDED
+    if isinstance(status, ReleaseStatus):
+        data = status.to_dict()
+    elif isinstance(status, Mapping):
+        data = dict(status)
+    else:
+        text = str(status).strip()
+        return text or NOT_RECORDED
+    state = str(data.get("status") or "").strip() or NOT_RECORDED
+    semantic = str(data.get("semantic_evaluation") or SEMANTIC_NOT_EVALUATED)
+    gates = "passed" if data.get("strict_gates_passed") else "failed"
+    ran = "ran" if data.get("pipeline_executed") else "did not run"
+    return (
+        f"{state}  [pipeline {ran}; strict gates {gates}; semantic evaluation "
+        f"{SEMANTIC_LABELS.get(semantic, semantic)}]"
+    )
+
+
+__all__ = [
+    "RELEASE_READY", "REVIEW_REQUIRED", "DIAGNOSTIC_ONLY", "RELEASE_STATES",
+    "SEMANTIC_PASSED", "SEMANTIC_FAILED", "SEMANTIC_NOT_EVALUATED",
+    "SEMANTIC_INPUT_NOT_WIRED", "SEMANTIC_LABELS",
+    "NOT_RECORDED", "NOT_RELEASE_READY_NOTE",
+    "COVERAGE_REASON_EMPTY", "COVERAGE_REASON_COUNT_BELOW_MINIMUM",
+    "COVERAGE_REASON_BELOW_MINIMUM",
+    "REASON_PIPELINE_DID_NOT_EXECUTE", "REASON_STRICT_GATES_BLOCKED",
+    "REASON_SERIALIZATION_REQUIRES_INVENTION",
+    "REASON_NO_DEFENSIBLE_CONNECTED_CORE", "REASON_COVERAGE_NOT_EVALUATED",
+    "CoverageVerdict", "ReleaseStatus",
+    "coverage_verdict", "classify_release_status", "describe",
+]
