@@ -805,6 +805,64 @@ closeout's permitted change set, and are backlog item **BL-002**.
 
 ---
 
+## D-023 — velocity control plane · effective **2026-08-12** · forward only; D-020, D-021 and D-022 are unchanged and not reopened
+
+**Velocity rulings.** Schedule by **actual dependency and semantic seam**, not rigid Wave
+B/C/D labels. **At most four concurrent implementation writers**; heavy jobs strictly
+serialized. Focused tests run at the **final card tip**. Reviewers inspect the exact diff
+and evidence, **need not duplicate every successful expensive execution**, and **may**
+independently reproduce suspicious or contract-critical behaviour. **Smoke 460 and
+whole-tree G11 remain required per merge.** Small unrelated bugs are **deferred, not
+enlarged into the current card**. **C-034 is held for re-scoping** — its declared target is
+dead demo code. **C-045 is authorized for planning and scoping only.**
+
+**Forward parallel-merge proof.** For the second or later parallel branch cut from an
+earlier common base, whole-tree equality between the merge and the standalone reviewed tip
+is **neither required nor possible**. Required instead, all three: (1) the merge's **second
+parent equals the reviewed tip SHA exactly**; (2) within the card's **owned paths** the
+**first-parent-to-merge diff equals the reviewed card diff from its dispatch base**; (3) all
+remaining tree content comes from the merge's **first parent**, already-authorized
+integration history, **not** from new unreviewed paths. This **supersedes forward** any
+whole-tree-equality reading. D-022's historical record stands.
+
+**Prospective-integration validation.** Integration is **merge-only**: review the exact card
+tip; `git merge --no-ff --no-commit <reviewed-tip>`; inspect the prospective staged merge
+against the authorized path manifest; run the card's focused tests and required gates **on
+that combined prospective state**; commit only if they pass. On failure, **freeze** the
+prospective merge state and report the affected lane — never reset, abort destructively,
+rewrite the worker branch, or commit a failing merge. **No rebase**, and integration is
+never merged back into a worker branch.
+
+**G9 clarification.** G9 is required for a **claimed correction or preservation of
+pre-existing observable behaviour**, and its proof must **fail behaviourally at the base and
+pass at the tip**. **Symbol absence is not behavioural proof.** A genuinely **new capability
+or module** receives an **explicitly labelled new acceptance test** and requires no
+fabricated base failure. **Reviewers must reject any attempt to mislabel a regression as new
+functionality.**
+
+**Chunk D cadence.** Deterministic core plus `s8` — **154 tests — is BLOCKING** per D-marked
+card. The **23-node `qb` cohort is mandatory to run and to report**. **C-030, C-050 and
+C-052** touch the Streamlit/freeze/UI seam and **must run `qb` before merge**; non-UI
+D-marked cards such as **C-040 and C-051** may run `qb` once at their **pack-level
+integration checkpoint**. A **deterministic, diff-reproducible or traceback-implicated `qb`
+failure blocks** the affected lane. **No deselection, retry-until-green, or false
+environmental relabelling.**
+
+**Seam-based concurrency.** **One writer per semantic seam per merge window**; disjoint
+functions and files may be developed **concurrently**; **merges are serial**. D-021's
+one-reshaper-at-a-time freeze-lifecycle rule **remains binding**, and **C-041 → C-031 →
+C-032 remains serialized** because `driver.py` behaviour is coupled.
+
+**Deferred findings.** A finding a card does not own goes to `FINDINGS.md`. Workers report
+them to the orchestrator and never edit that file; it is updated **once at pack closeout**.
+
+**PWML-first / SBML boundary.** **No SBML implementation, extension or refactor**;
+`src/t2pw/sbml/` is **outside every implementation boundary**. C-052 may later **read and
+assert** the existing SBML input binding; T-102 may later use the **comparator already
+delivered by C-020**.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |

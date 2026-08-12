@@ -49,8 +49,12 @@ extending them is in scope; reimplementing them is not.
 - `--basetemp=<unique dir>` on **every** pytest invocation. Without it 83 tests error
   with `PermissionError` and you will report a false regression.
 - Never run the full suite unchunked (~16 GB). Use the chunks in `TEST_MATRIX.md`.
-- Every regression test you add **must fail on the base SHA**. Your reviewer verifies
-  this independently. A test that passes without your fix is not a regression test.
+- **G9.** A claimed correction or preservation of **pre-existing observable behaviour**
+  needs a proof that **fails behaviourally on the base SHA** and passes at your tip —
+  **symbol absence is not proof**. A genuinely **new** capability or module instead gets an
+  **explicitly labelled new acceptance test**, with no fabricated base failure. Your
+  reviewer verifies this independently and rejects a regression mislabelled as new
+  functionality.
 - Never commit a cache modification. `data/enrichment_cache.json` is 39 MB and tracked.
 
 ## Stop conditions

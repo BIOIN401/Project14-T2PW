@@ -32,8 +32,12 @@ IMPLEMENT
 
 TESTS YOU MUST ADD
   <name> :: <the exact failure it catches>
-  Every regression test MUST FAIL on the base SHA. Your reviewer will verify
-  this by checking out the base, applying only your test, and running it.
+  G9. If this card CORRECTS or PRESERVES pre-existing observable behaviour, the
+  proof MUST FAIL BEHAVIOURALLY at the base SHA and pass at the tip; SYMBOL
+  ABSENCE IS NOT PROOF -- supply a shim or assert on artifact content. A
+  genuinely NEW capability or module instead gets an EXPLICITLY LABELLED new
+  acceptance test and needs no fabricated base failure. Mislabelling a regression
+  as new functionality is a reject. Your reviewer verifies this at the base.
 
 FOCUSED TESTS TO RUN
   <commands from TEST_MATRIX.md>
@@ -45,6 +49,19 @@ ACCEPTANCE — all must hold
 TRAPS
   <paste only the relevant TRAP-n from [S7], verbatim>
 ```
+
+---
+
+## The card charter contains only this
+
+Branch and **exact dispatch base** · **function-level ownership** · carried A0
+requirements · **explicit exclusions** · hand-authored **and** generated budgets · focused
+tests · applicable **real** G9 obligations · relevant traps · the **SBML prohibition** — no
+SBML implementation, extension or refactor, and `src/t2pw/sbml/` is outside every
+implementation boundary.
+
+A charter **may be an external durable record**, as H-008's was, with its hashes reported
+at closeout. **A tracked prompt commit is not required for every card.**
 
 ---
 

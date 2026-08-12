@@ -49,8 +49,10 @@ surviving count (**must be 0**) · cleanup success/failure.
 - `--basetemp=<unique dir>` on **every** pytest invocation. Without it 83 tests error
   with `PermissionError` and you will report a false regression.
 - **Never** run the full suite unchunked — it approaches 16 GB. Use `TEST_MATRIX.md`.
-- Smoke = chunks A+B+C = 457 tests, ~40 s. Chunk D = 177 tests, ~222 s. Chunk E skips
-  silently when `runs/` is absent — **report the skip**, never treat it as a pass.
+- Smoke = chunks A+B+C = **460** tests, ~40 s. Chunk D = **177** tests: the deterministic
+  core is 150 tests in ~1 s, the **complete 177-test gate 9–13 min**, dominated by the 27
+  per-node AppTest processes. Chunk E skips silently when `runs/` is absent — **report the
+  skip**, never treat it as a pass.
 - Never launch a full pinned benchmark (~7 h) unless the prompt is `T-104`/`T-105`.
   Milestone runs are scheduled by the orchestrator, never by you.
 

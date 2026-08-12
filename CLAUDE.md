@@ -44,9 +44,12 @@ No patch merges unless **all** of these hold:
 7. It preserves incomplete-but-correct pathways as `review_required` rather than dropping
    them.
 8. It does not allow exporters to repair biology after the canonical graph is frozen.
-9. It adds a regression test for the demonstrated failure, and that test **fails on the
-   base SHA**.
-10. The integration smoke suite (457 tests, ~40 s) passes after the merge.
+9. **G9.** A claimed correction or preservation of pre-existing observable behaviour
+   carries a proof that **fails behaviourally on the base SHA** and passes at the tip;
+   **symbol absence is not proof**. A genuinely new capability or module instead carries an
+   **explicitly labelled new acceptance test** and needs no fabricated base failure.
+   Mislabelling a regression as new functionality is a reject.
+10. The integration smoke suite (460 tests, ~40 s) passes after the merge.
 11. **Test-process lifecycle holds.** Every test, benchmark, pipeline leg and LLM-backed
     command ran through the bounded foreground wrapper, and the cleanup report shows
     **zero surviving owned processes**. A run with survivors is an *infrastructure
