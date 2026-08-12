@@ -128,7 +128,7 @@ modify `runner.py` (that file is owned by C-032).
 | **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 225 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
 | **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 150 | **0.9 s** |
-| **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10 min for all 27 |
+| **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
 **SMOKE = A + B + C = 460 tests, ~40 s.** Runs after **every** merge, on the integration
@@ -137,7 +137,7 @@ baseline deliberately, 457 → 460, with an exact documented delta, and every A0
 `72ee20f` onward measured 460. Any live instruction still saying 457 is stale.
 
 **Chunk D is excluded from the smoke gate.** Its deterministic core is 150 tests in
-**~1 s**, but the complete 177-test gate costs **~10 min** — the 27 isolated AppTest
+**~1 s**, but the complete 177-test gate cost **9–13 min** over six runs — the 27 AppTest
 processes, not the core — which is too slow per merge. It is **mandatory as a focused
 test** for every branch marked ✔ below, because that is exactly where their regressions
 land and none of it appears in the smoke suite.
@@ -211,7 +211,7 @@ isolation had never been tested. It now is:
 |---|---|---|---|
 | `core` (5 files, 150 tests) | one process | **150 passed** — deterministic | ~1 s |
 | `s8` (4 AppTest tests) | **4 processes, one per node** | **4 × 1 passed** | ~6 s |
-| `qb` (23 AppTest tests) | **23 processes, one per node** | see § below | ~9 min |
+| `qb` (23 AppTest tests) | **23 processes, one per node** | see § below | ~10.5 min |
 
 ### The historical `qb` sample — a fixed observation, cited exactly
 

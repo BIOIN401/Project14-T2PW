@@ -672,7 +672,7 @@ against H-007's tip, order declared and committed before any ran (`prompts/H-007
 
 **Base 1 green / 2 red. Candidate 1 green / 2 red.** The **150-test core and all 4 `s8`
 nodes passed in all six runs**; every failure is in the 23-node `qb` cohort, and **no node
-failed twice in the same tree except `node16` at base**. Three different symptoms appeared —
+failed twice in the same tree except `node16` at base**. Four different symptoms appeared —
 two different wrong `review_flags` contents, and two different `KeyError`s for a
 `session_state` key a partially-executed AppTest script never set. **None carried the
 documented `FragmentThreadState` message**, whose recorded cause — several `AppTest`s in one
