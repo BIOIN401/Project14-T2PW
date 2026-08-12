@@ -11,6 +11,7 @@ from t2pw.pipeline.entity_identity import (
     protein_external_identity as _protein_external_id,
     protein_species_context as _entity_species_context,
 )
+from t2pw.pwml.compound_resolution import _compound_external_ids, _resolve_compound_rows
 from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index
@@ -527,100 +528,6 @@ def _entity_type_from_location_bucket(bucket: str) -> Tuple[str, str]:
     }.get(bucket, ("", ""))
 
 
-def _normalize_compound_external_ids(row: Dict[str, Any]) -> Dict[str, Any]:
-    out = dict(row)
-    mapped = dict(_safe_dict(out.get("mapped_ids")))
-
-    chebi = normalize_chebi_id(out.get("chebi_id") or mapped.get("chebi"))
-    if chebi:
-        out["chebi_id"] = chebi
-        mapped["chebi"] = chebi
-
-    for direct_key, mapped_key in [
-        ("hmdb_id", "hmdb"),
-        ("kegg_id", "kegg"),
-        ("pubchem_cid", "pubchem"),
-        ("pwc_id", "pwc_id"),
-    ]:
-        value = _first_nonempty(out, [direct_key, mapped_key])
-        if value not in (None, ""):
-            text = str(value).strip()
-            if direct_key == "kegg_id":
-                text = text.removeprefix("cpd:").removeprefix("CPD:")
-            out[direct_key] = text
-            mapped[mapped_key] = text
-
-    if mapped:
-        out["mapped_ids"] = {key: value for key, value in mapped.items() if value not in (None, "")}
-    return out
-
-
-def _compound_external_ids(row: Dict[str, Any]) -> Dict[str, Any]:
-    mapped = _safe_dict(row.get("mapped_ids"))
-
-    def _pick(*keys: str) -> Any:
-        for key in keys:
-            for source in (row, mapped):
-                value = source.get(key)
-                if value not in (None, ""):
-                    return value
-        return None
-
-    return {
-        "hmdb": _pick("hmdb_id", "hmdb"),
-        "kegg": _pick("kegg_id", "kegg"),
-        "chebi": _pick("chebi_id", "chebi"),
-        "pubchem": _pick("pubchem_cid", "pubchem_id", "pubchem"),
-        "drugbank": _pick("drugbank_id", "drugbank"),
-    }
-
-
-def _canonicalize_compound_offline(
-    row: Dict[str, Any],
-    *,
-    name_index: Optional[PathwhizNameIndex],
-    report: Dict[str, Any],
-) -> None:
-    """Apply the offline id->canonical-name mapping when the live DB didn't.
-
-    Only fires when the row does not already carry a resolved ``db_row`` name
-    (i.e. the live PathBank DB was unavailable or produced no confident match)
-    and the row's external ids hit a real PathWhiz DB row in the offline index.
-    Rows with no id hit are left untouched, preserving novel/extraction names.
-    """
-    if name_index is None:
-        return
-    existing_db_row = row.get("db_row") if isinstance(row.get("db_row"), dict) else {}
-    if _canonical(existing_db_row.get("name")):
-        return  # live-DB resolution already canonicalized this compound
-    hit = name_index.compound_canonical(**_compound_external_ids(row))
-    if not hit:
-        return
-    canonical = _canonical(hit.get("name"))
-    if not canonical:
-        return
-    extraction_name = _canonical(row.get("name"))
-    row.setdefault("raw_name", extraction_name)
-    row["name"] = canonical
-    # Provide a minimal db_row so the writer emits the canonical name and the
-    # compound is treated as a trusted, DB-backed identity.
-    row["db_row"] = {"id": hit.get("id"), "name": canonical}
-    row["db_status"] = "matched_offline_name_index"
-    if extraction_name and _norm(extraction_name) != _norm(canonical):
-        aliases = _dedupe_aliases([*_safe_list(row.get("aliases")), extraction_name])
-        if aliases:
-            row["aliases"] = aliases
-        report.setdefault("name_canonicalization", {}).setdefault("compounds", []).append(
-            {
-                "from": extraction_name,
-                "to": canonical,
-                "matched_on": hit.get("matched_on"),
-                "db_id": hit.get("id"),
-                "source": "pathwhiz_id_db.json",
-            }
-        )
-
-
 # Culture-collection acronyms and strain markers used to detect the
 # strain-qualifier suffix on an organism name. Kept deliberately small and
 # case-insensitive; the heuristic below only strips a *trailing run* of such
@@ -792,109 +699,6 @@ def _canonicalize_species_offline(
             }
         )
     return "deterministic"
-
-
-def _resolve_compound_rows(
-    rows: List[Dict[str, Any]],
-    *,
-    db_resolver: Any,
-    strict_db: bool,
-    report: Dict[str, Any],
-    pointer_prefix: str,
-    name_index: Optional[PathwhizNameIndex] = None,
-) -> List[Dict[str, Any]]:
-    normalized = [_normalize_compound_external_ids(row) for row in rows]
-    resolver: Optional[PathWhizCompoundResolver] = None
-    db_reason = ""
-
-    if db_resolver is None:
-        try:
-            from t2pw.mapping.map_ids import PathBankDbResolver
-
-            db_resolver = PathBankDbResolver.from_env()
-        except Exception as exc:  # noqa: BLE001
-            db_reason = f"db_resolver_unavailable:{exc}"
-            db_resolver = None
-
-    available = bool(db_resolver is not None and getattr(db_resolver, "available", lambda: True)())
-    if db_resolver is not None and available:
-        resolver = PathWhizCompoundResolver(db_resolver)
-    elif db_resolver is not None and not db_reason:
-        db_reason = str(getattr(db_resolver, "last_error", "") or "db_unavailable")
-    elif not db_reason:
-        db_reason = "db_not_configured"
-
-    # Surface whether the live resolution DB was actually consulted so the
-    # preflight can warn when compound names may be non-canonical.
-    db_resolution = report.setdefault("db_resolution", {})
-    db_resolution["available"] = resolver is not None
-    if db_reason:
-        db_resolution["reason"] = db_reason
-
-    resolved: List[Dict[str, Any]] = []
-    for idx, row in enumerate(normalized):
-        raw_name = _canonical(row.get("raw_name") or row.get("name"))
-        legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
-        if legacy_id is not None:
-            fallback = dict(row)
-            fallback["db_status"] = "legacy_id_unverified"
-            fallback["db_id"] = legacy_id
-            fallback["chosen_rule"] = "legacy_pathwhiz_id_unverified"
-            fallback["confidence"] = max(float(fallback.get("confidence") or 0.0), 0.85)
-            report["db_resolution"]["compounds"].append(
-                {
-                    "raw_name": raw_name,
-                    "status": "legacy_id_unverified",
-                    "db_id": legacy_id,
-                    "chosen_rule": "legacy_pathwhiz_id_unverified",
-                    "confidence": fallback["confidence"],
-                    "reason": "payload_pathwhiz_id",
-                }
-            )
-            resolved.append(fallback)
-            continue
-
-        if resolver is None:
-            match = {
-                "status": "unmatched",
-                "raw_name": raw_name,
-                "chosen": None,
-                "candidates": [],
-                "chosen_rule": "",
-                "confidence": 0.0,
-                "reason": db_reason,
-            }
-        else:
-            match = resolver.resolve(row)
-
-        report["db_resolution"]["compounds"].append(match)
-        if match.get("status") == "matched" and float(match.get("confidence") or 0.0) >= 0.85:
-            resolved.append(apply_compound_db_resolution(row, match))
-            continue
-
-        issue = {
-            "entity_type": "compound",
-            "raw_name": raw_name,
-            "status": match.get("status"),
-            "reason": match.get("reason") or "low_confidence_db_match",
-            "chosen_rule": match.get("chosen_rule"),
-            "confidence": match.get("confidence", 0.0),
-            "candidates": match.get("candidates", []),
-        }
-        report["unresolved"]["db_identities"].append(issue)
-        _add_issue(
-            report,
-            "error" if strict_db else "warning",
-            "compound_db_resolution_failed",
-            f"Compound '{raw_name or idx}' did not resolve to a confident PathWhiz DB row.",
-            pointer=f"{pointer_prefix}/{idx}",
-            **issue,
-        )
-        resolved.append(apply_compound_db_resolution(row, match))
-
-    for row in resolved:
-        _canonicalize_compound_offline(row, name_index=name_index, report=report)
-    return resolved
 
 
 def _emit_canonicalization_preflight(ir: Dict[str, Any], report: Dict[str, Any]) -> None:

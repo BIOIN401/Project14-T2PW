@@ -1,0 +1,165 @@
+{
+  "label": "smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c040/sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract",
+  "started_at": "2026-08-12T21:59:13+00:00",
+  "finished_at": "2026-08-12T21:59:38+00:00",
+  "duration_seconds": 24.802233600003092,
+  "timeout_seconds": 900.0,
+  "root_pid": 205320,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 205372,
+      "name": "python.exe",
+      "ppid": 205320
+    },
+    {
+      "pid": 204904,
+      "name": "python.exe",
+      "ppid": 205372
+    },
+    {
+      "pid": 204960,
+      "name": "python.exe",
+      "ppid": 204904
+    },
+    {
+      "pid": 204976,
+      "name": "python.exe",
+      "ppid": 205372
+    },
+    {
+      "pid": 205108,
+      "name": "python.exe",
+      "ppid": 204976
+    },
+    {
+      "pid": 205268,
+      "name": "python.exe",
+      "ppid": 205308
+    },
+    {
+      "pid": 205308,
+      "name": "python.exe",
+      "ppid": 205372
+    },
+    {
+      "pid": 205640,
+      "name": "python.exe",
+      "ppid": 205696
+    },
+    {
+      "pid": 205696,
+      "name": "python.exe",
+      "ppid": 205372
+    }
+  ],
+  "descendants_terminated": [
+    204904,
+    204960,
+    204976,
+    205108,
+    205268,
+    205308,
+    205372,
+    205640,
+    205696
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 187640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 187704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 199468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 201396,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 205020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 205052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 205272,
+      "name": "python.exe"
+    },
+    {
+      "pid": 205300,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-040\\16-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract",
+    "repo_head": "e4eeef429468ef42cfdfd12295ea86447f0c674f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
