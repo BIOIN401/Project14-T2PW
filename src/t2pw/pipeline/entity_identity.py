@@ -15,6 +15,29 @@ IDENTITY_VERIFIED = "verified"
 IDENTITY_PLACEHOLDER = "placeholder"
 IDENTITY_UNRESOLVED = "unresolved"
 
+# ── verification status (D-003) ─────────────────────────────────────────────
+#
+# ``identity_status`` says what the row *is*. This second vocabulary says what
+# the identity ladder was *able to establish*, and the two are not the same
+# question: a row can be ``unresolved`` because its accession was refuted, or
+# because nothing could be looked up. Collapsing those is the failure D-003
+# forbids in terms -- "network failure is not evidence that an accession is
+# false" -- so ``unavailable`` and ``not_evaluated`` are kept strictly distinct
+# from ``rejected``, and no code path may map one onto another.
+
+#: The ladder ran and every rung passed on affirmative evidence.
+VERIFICATION_VERIFIED = "verified"
+#: The ladder ran and a rung *refuted* the identity -- wrong species, a name
+#: that cannot be this molecule, a score under the floor, an unbroken tie.
+VERIFICATION_REJECTED = "rejected"
+#: An evidence lookup was attempted and could not be completed: the network, the
+#: database, or the upstream record was not there. NOT a refutation.
+VERIFICATION_UNAVAILABLE = "unavailable"
+#: No evidence lookup was attempted, or the ladder had nothing to judge on. The
+#: default, and the state of every offline re-export. NOT a refutation.
+VERIFICATION_NOT_EVALUATED = "not_evaluated"
+
+
 
 def _mapping(value: Any) -> Mapping[str, Any]:
     return value if isinstance(value, dict) else {}
@@ -119,6 +142,22 @@ def is_placeholder_identity(row: Any) -> bool:
     """Whether the row admits it is a placeholder rather than a real mapping."""
 
     return identity_status(row) == IDENTITY_PLACEHOLDER
+
+
+def unverified_identity_claim(row: Any) -> Dict[str, Any]:
+    """The submitted-but-unverified accession a row is preserving, if any.
+
+    D-003: an accession whose verification was ``unavailable`` or
+    ``not_evaluated`` is "preserved as an unverified claim -- do not promote it,
+    do not erase it". It is therefore *not* in ``mapped_ids`` (that would be
+    promotion) and *not* only in ``rejected_mapped_ids`` (that would read as a
+    refutation). It lives here, with the state that produced it.
+    """
+
+    if not isinstance(row, dict):
+        return {}
+    claim = _mapping(_mapping(row.get("mapping_meta")).get("unverified_identity_claim"))
+    return dict(claim) if claim else {}
 
 
 def placeholder_claims_real_identity(row: Any) -> str:
