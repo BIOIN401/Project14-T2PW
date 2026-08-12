@@ -331,6 +331,29 @@ def test_dimension_7_a_changed_biological_identifier_is_reported():
     assert "15428" in differences[0].values[0] and "99999" in differences[0].values[1]
 
 
+def test_dimension_7_an_identifier_inside_a_list_container_is_read_and_compared():
+    """`pwml/writer.py:380,1219` emits EC as <ec-numbers><ec-number>...</ec-number></...>.
+
+    Reading direct children only loses every value in such a container, which made the
+    comparator report a difference between two documents that both carry the identifier.
+    """
+    payload = {"entities": {"proteins": [{"name": "ALAS2", "ec_number": "2.3.1.37"}]},
+               "processes": {}}
+    carried = ("<pathway-visualization><proteins><protein><id>1</id><name>ALAS2</name>"
+               "<ec-numbers><ec-number>2.3.1.37</ec-number></ec-numbers>"
+               "</protein></proteins></pathway-visualization>")
+    assert canonical._parse_pwml(canonical._xml_root(carried)).entities[
+        "protein|alas2"]["ids"] == {"ec": "2.3.1.37"}
+    assert biological_equivalence(json_payload=payload, pwml=carried).verdict == \
+        canonical.VERDICT_EQUIVALENT
+    # Mutation-killing: drop the container and the dimension must be reported different.
+    dropped = carried.replace(
+        "<ec-numbers><ec-number>2.3.1.37</ec-number></ec-numbers>", "")
+    differences = _differing(biological_equivalence(json_payload=payload, pwml=dropped),
+                            "entities_and_identifiers")
+    assert differences[0].values == ('[["ec", "2.3.1.37"]]', "[]")
+
+
 def test_dimension_8_a_complex_that_lost_a_component_is_reported():
     payload = _json()
     payload["entities"]["protein_complexes"] = [{
@@ -401,6 +424,9 @@ def test_the_json_parser_reads_an_artifact_this_repository_produced():
 def test_the_pwml_parser_reads_an_artifact_this_repository_produced():
     graph = canonical._parse_pwml(canonical._xml_root(REAL_PWML))
     assert graph.organism_names == ["homo sapiens"] and graph.organism_taxa == ["9606"]
+    # The real <protein> carries <uniprot-id> as a direct child and EC inside an
+    # <ec-numbers> container; <gene-name/> is empty, so `gene` is genuinely absent here.
+    assert graph.entities["protein|alas2"]["ids"] == {"uniprot": "p22557", "ec": "2.3.1.37"}
     assert graph.entities["protein_complex|alas2 complex"]["ids"] == {}
     assert graph.complexes["protein_complex|alas2 complex"] == [("protein|alas2", 1)]
     assert [k for k, _ in graph.reactions[0]["right"]] == ["compound|aminolevulinic acid"]
@@ -430,6 +456,10 @@ def test_the_real_round_trip_reports_the_losses_it_actually_has():
         "entities_and_identifiers", "process_entity_references"}
     direction = report.differences_for("directionality_and_reversibility")
     assert [d.values for d in direction] == [("null", '"right"'), ("null", "false")]
+    # Only `gene` is lost here: the PWML does carry EC, inside an <ec-numbers> container.
+    assert report.differences_for("entities_and_identifiers")[0].values == (
+        '[["ec", "2.3.1.37"], ["gene", "alas2"], ["uniprot", "p22557"]]',
+        '[["ec", "2.3.1.37"], ["uniprot", "p22557"]]')
 
 
 # ------------------------------------------------------------- contract-level obligations

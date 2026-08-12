@@ -183,7 +183,13 @@ _ID_KEYS: Dict[str, str] = {s: db for db, spellings in (
 
 
 def _norm_id(database: str, value: Any) -> str:
-    """``CHEBI:17627`` and ``17627`` agree; a redundant database prefix is lexical noise."""
+    """``CHEBI:17627`` and ``17627`` agree; a redundant database prefix is lexical noise.
+
+    A repeated identifier -- a JSON list, or a PWML ``<ec-numbers>`` container -- reduces to
+    its values sorted and comma-joined, so the two spellings of one set still agree.
+    """
+    if isinstance(value, (list, tuple, set)):
+        return ",".join(sorted(_norm_id(database, item) for item in value))
     text = str(value).strip()
     if text.casefold().startswith(database.casefold() + ":"):
         text = text[len(database) + 1:]
@@ -445,11 +451,29 @@ _BOOLEANS = {"true": True, "false": False}
 
 
 def _pwml_ids(element: ElementTree.Element) -> Dict[str, str]:
+    """Identifiers on a PWML entity, including any held in a list CONTAINER.
+
+    Some identifiers are written as a container of repeats --
+    ``<ec-numbers><ec-number>2.3.1.37</ec-number></ec-numbers>`` (`pwml/writer.py:380`
+    and `:1219`) -- so reading direct children alone loses every value inside one, and the
+    comparator would then report a difference between two documents that both carry it.
+    """
     ids: Dict[str, str] = {}
     for child in element:
+        if child.get("nil") == "true":
+            continue
         database = _ID_KEYS.get(_tag(child).casefold())
-        if database and child.get("nil") != "true" and _text(child.text):
-            ids[database] = _norm_id(database, child.text)
+        if database is not None:
+            if _text(child.text):
+                ids[database] = _norm_id(database, child.text)
+            continue
+        grouped: Dict[str, List[str]] = {}
+        for nested in child:
+            nested_db = _ID_KEYS.get(_tag(nested).casefold())
+            if nested_db and nested.get("nil") != "true" and _text(nested.text):
+                grouped.setdefault(nested_db, []).append(nested.text)
+        for nested_db, values in grouped.items():
+            ids[nested_db] = _norm_id(nested_db, values)
     return ids
 
 
