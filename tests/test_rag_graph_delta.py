@@ -1,7 +1,11 @@
 """C-021 — validating one RAG round's graph delta (PRODUCT_CONTRACT §10/§3/§11, D-008).
 
-NEW acceptance tests. ``t2pw.rag.graph_delta`` does not exist at the base SHA, so these
-replace NO prior observable behaviour and are NOT G9 regression evidence.
+NEW acceptance tests. ``t2pw.rag.graph_delta`` does not exist at the C-021 base SHA, so
+these replace NO prior observable behaviour and are NOT G9 regression evidence.
+
+The H-008 block at the end is the exception: ``validate_graph_delta`` DOES exist at that
+task's base SHA and returns ``admissible=True`` for both deltas it pins, so those two are
+genuine G9 regression evidence.
 """
 
 from __future__ import annotations
@@ -189,3 +193,101 @@ def test_the_module_imports_no_clock_no_io_and_no_retrieval_or_llm_stack():
     assert imported == {"__future__", "collections.abc", "dataclasses", "typing",
                         "t2pw.pipeline.lineage", "t2pw.pipeline.process_normalizer",
                         "t2pw.rag.admission", "t2pw.rag.loop_policy"}
+
+
+# ======================================================================================
+# H-008 -- the two fail-open retention defects (§10 retention, §3 lineage).
+# ======================================================================================
+
+#: A pre-existing row already carrying everything § 10 says must be retained. Every key it
+#: adds to ``CORE`` except ``evidence_span`` is in ``NON_BIOLOGICAL``, so ``_biology``
+#: discards it and the mutation rule cannot see it leave -- that is defect D1 exactly.
+RICH = dict(CORE, evidence=[{"text": SPAN}, {"text": "and the fold is Zn-dependent"}],
+            evidence_span=SPAN, source_papers=[{"source_id": PAPER}],
+            rag_provenance={"source_id": PAPER, "chunk_id": "c1"},
+            **{LINEAGE_KEY: [dict(ENTRY)]})
+#: Dropping all four at once is silent under every rule the base implementation has.
+CARRIERS = {"evidence": None, "source_papers": None, "rag_provenance": None,
+            LINEAGE_KEY: None}
+#: Unrelated text put where the claim's passage was.
+SUBSTITUTE = "Ribosome assembly proceeds through a 30S intermediate."
+RICH_ELEMENT = "processes.reactions[core step]"
+
+
+def rewritten(**over):
+    """``(before, after)`` where the round rewrote the ONE pre-existing ``RICH`` row.
+    ``over`` changes what that row says; a value of ``None`` DROPS that key."""
+    before, after = graphs(before=(RICH,))
+    row = dict(RICH, **over)
+    after["processes"]["reactions"][0] = {k: v for k, v in row.items() if v is not None}
+    return before, after
+
+
+def test_a_pre_existing_row_may_not_silently_lose_its_evidence_and_lineage():
+    """D1, G9. ``_biology`` drops every key in ``NON_BIOLOGICAL``, so stripping the
+    passage, the source identifier, the chunk pointer AND the lineage off a pre-existing
+    row changes nothing the mutation rule compares. Base verdict: admissible, no
+    violations. § 10 retention and § 3 attribution both say otherwise."""
+    result = validate_graph_delta(*rewritten(**CARRIERS), record())
+    assert (result.admissible, result.rules(), len(result.violations)) == (
+        False, (RULE_EVIDENCE_RETENTION, RULE_PROVENANCE), 4)
+    assert sorted(v.detail for v in result.violations) == [
+        "chunk_id", "evidence", LINEAGE_KEY, "source_paper"]
+    assert {v.element for v in result.violations} == {RICH_ELEMENT}
+    assert (result.added, result.removed) == ((), ())  # a PAIRED row, not a removal
+
+
+def test_an_added_row_may_not_substitute_an_unrelated_passage_for_its_claims():
+    """D2, G9. ``_evidence_violations`` throws the claim's passage and chunk pointer away
+    (``_, _, claim_ids, claim_span``) and asks only whether SOME text exists, so a row
+    that keeps the claim's source id and span passes at the base with a swapped passage
+    -- the retention § 10 requires reduced to the presence of any string at all."""
+    claim = {"inputs": ["a"], "outputs": ["b"], "enzymes": ["LpxC"], "evidence_span": SPAN,
+             "evidence": [{"text": SPAN}], "source_paper": {"source_id": PAPER},
+             "rag_provenance": {"source_id": PAPER, "chunk_id": "c1"}}
+    result = verdict(added(evidence=SUBSTITUTE, evidence_span=SPAN,
+                           rag_provenance={"source_id": PAPER, "chunk_id": "c99",
+                                           "gap_id": GAP}),
+                     rec=record(claims=[claim]))
+    assert (result.admissible, result.rules(), len(result.violations)) == (
+        False, (RULE_EVIDENCE_RETENTION,), 2)
+    assert sorted(v.detail for v in result.violations) == ["chunk_id", "evidence"]
+    assert [SPAN in v.observed for v in result.violations] == [False, True]  # names it
+
+
+def test_a_pre_existing_row_that_loses_its_evidence_span_is_a_retention_loss():
+    """§ 10's fourth fact. ``evidence_span`` is NOT in ``NON_BIOLOGICAL``, so the mutation
+    rule co-fires -- that existing rule is untouched. The retention loss is what is new,
+    and it is reported under its own rule rather than folded into that one."""
+    result = validate_graph_delta(*rewritten(evidence_span=None), record())
+    assert result.rules() == (RULE_MUTATED_ELEMENT, RULE_EVIDENCE_RETENTION)
+    assert [v.detail for v in result.violations] == ["evidence_span", "evidence_span"]
+
+
+@pytest.mark.parametrize("lineage", [
+    [],                                  # the round emptied it
+    [dict(ENTRY, stage="pwml_export")],  # outside C-015's closed vocabulary
+])
+def test_a_pre_existing_rows_lineage_may_be_neither_dropped_nor_corrupted(lineage):
+    """§ 3 through C-015: a lineage is append-only. ``LineageError`` is REPORTED, never
+    leaked -- a validator that raised would fail OPEN for the caller that caught it."""
+    result = validate_graph_delta(*rewritten(**{LINEAGE_KEY: lineage}), record())
+    assert (result.admissible, result.rules()) == (False, (RULE_PROVENANCE,))
+    assert result.violations[0].detail == LINEAGE_KEY
+    assert all(v.observed and v.required for v in result.violations)
+
+
+def test_reordering_re_spacing_or_adding_evidence_is_never_reported_as_a_loss():
+    """§ 10 asks for retention, not immutability, so the comparison is DIRECTIONAL and
+    order-free: neither a reordered evidence list, nor re-spaced passage text, nor an
+    appended source, pointer or lineage entry is a loss. ``_evidence_facts`` joins texts
+    with ``" ".join``, so comparing THAT would have manufactured a false loss here."""
+    before, after = rewritten(
+        evidence=[{"text": "and the fold is\n   Zn-dependent"},
+                  {"text": SPAN.replace(" ", "\n  ")},
+                  {"text": "a passage this round attached"}],
+        source_papers=[{"source_id": "PMC12452463"}, {"source_id": PAPER}],
+        rag_provenance={"source_id": PAPER, "chunk_id": "c1", "gap_id": GAP},
+        **{LINEAGE_KEY: [dict(ENTRY, reason="a second stage also touched it"),
+                         dict(ENTRY)]})
+    assert validate_graph_delta(before, after, record()).admissible is True

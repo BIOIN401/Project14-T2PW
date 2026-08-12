@@ -20,8 +20,12 @@ the document that fixes it; none is chosen here.
 * ``rejected_claim`` / ``duplicate_claim`` -- §10 "a rejected RAG claim must not be
   reintroduced by a later stage"; "deduplication is against *all claims ever seen*".
 * ``evidence_retention`` -- §10 "supporting passages and source identifiers are retained
-  through final export" -- asked of the row, and against what its own claim carried.
-* ``provenance`` -- §3 through C-015; lineage is ADDITIVE, so only an ADDED row needs one.
+  through final export" -- asked of the row, against what its own claim carried, and of
+  every PRE-EXISTING row against what IT carried before the round. That last comparison is
+  separate from ``mutated_element`` on purpose: ``_biology`` discards every retention
+  carrier, so the biology rule structurally cannot see one leave.
+* ``provenance`` -- §3 through C-015. Lineage is ADDITIVE: an ADDED row needs one, and a
+  pre-existing row may neither drop the attribution it already had nor corrupt it.
 * ``removed_element`` / ``mutated_element`` -- the seam is additive by construction
   (``conform`` builds additions ``merge_additions`` INJECTS, after the incident where
   synthesis REPLACED the rich payload), so a removal or a biology change on a pre-existing
@@ -75,6 +79,19 @@ NON_BIOLOGICAL: FrozenSet[str] = frozenset({
     "source_refs", "provenance", "confidence",         # provenance pointers and scores
     "mapping_meta", "db_status", "raw_name",           # mapping bookkeeping, not an id
     "review_flags", "preservation_status"})            # audit annotations
+
+#: §10's four retention facts, in the order :func:`_evidence_parts` returns them: the
+#: ``detail`` each loss is reported under, and its name in the message. Compared SEPARATELY
+#: from biology -- every one of these keys is in :data:`NON_BIOLOGICAL` (bar
+#: ``evidence_span``), which is exactly why the mutation rule cannot police them.
+RETENTION_FACTS: Tuple[Tuple[str, str], ...] = (
+    ("evidence", "supporting passage"), ("chunk_id", "chunk pointer"),
+    ("source_paper", "source identifier"), ("evidence_span", "evidence span"))
+
+#: What the CLAIM comparison covers. §10's other two facts are already asked of an added
+#: row against its claim by :func:`_evidence_violations`; asking twice would double-report
+#: one loss, and dropping the older check to avoid that would weaken it.
+_FROM_CLAIM: FrozenSet[str] = frozenset({"evidence", "chunk_id"})
 
 
 @dataclass(frozen=True)
@@ -186,21 +203,37 @@ def _biology(row: Mapping[str, Any]) -> Dict[str, Any]:
     return {k: _canon(v) for k, v in row.items() if k not in NON_BIOLOGICAL}
 
 
-def _evidence_facts(obj: Any) -> Tuple[str, str, FrozenSet[str], str]:
-    """``(passage text, chunk pointer, source identifiers, exact span)``, read from every
-    shape the seam produces -- a synthesized row's ``evidence`` LIST of ``RagEvidence``
-    records, the single ``evidence`` STRING ``conform`` coerces it to, the
+def _evidence_parts(obj: Any) -> Tuple[List[str], List[str], List[str], List[str]]:
+    """``(passages, chunk pointers, source identifiers, spans)`` IN THE ORDER FOUND, read
+    from every shape the seam produces -- a synthesized row's ``evidence`` LIST of
+    ``RagEvidence`` records, the single ``evidence`` STRING ``conform`` coerces it to, the
     ``rag_provenance`` chunk pointer, ``source_papers`` / ``source_paper``, ``source_refs``
-    -- so a row is never reported as having lost what it merely restated."""
+    -- so a row is never reported as having lost what it merely restated. ONE reader; the
+    two views below differ only in whether order matters, never in what they can see."""
     prov = _get(obj, "rag_provenance")
     prov = prov if isinstance(prov, Mapping) else {}
     evidence = _get(obj, "evidence")
     texts = _strs(evidence) + [t for m in _maps(evidence) for t in _strs(m.get("text"))]
-    ids = set(_strs(prov.get("source_id"))) | set(_strs(_get(obj, "source_refs")))
+    ids = _strs(prov.get("source_id")) + _strs(_get(obj, "source_refs"))
     for paper in _maps(_get(obj, "source_papers")) + _maps(_get(obj, "source_paper")):
-        ids |= set(_strs(paper.get("source_id")))
-    return (" ".join(texts), " ".join(_strs(prov.get("chunk_id"))), frozenset(ids),
-            " ".join(_strs(_get(obj, "evidence_span"))))
+        ids += _strs(paper.get("source_id"))
+    return texts, _strs(prov.get("chunk_id")), ids, _strs(_get(obj, "evidence_span"))
+
+
+def _evidence_facts(obj: Any) -> Tuple[str, str, FrozenSet[str], str]:
+    """``(passage text, chunk pointer, source identifiers, exact span)`` -- the JOINED
+    form, for the presence and span-containment checks that read a row as one blob."""
+    texts, chunks, ids, spans = _evidence_parts(obj)
+    return " ".join(texts), " ".join(chunks), frozenset(ids), " ".join(spans)
+
+
+def _retained(obj: Any) -> Tuple[FrozenSet[str], ...]:
+    """Each §10 retention fact as an ORDER-FREE set of whitespace-normalized values,
+    aligned with :data:`RETENTION_FACTS`. Deliberately NOT :func:`_evidence_facts`' joined
+    strings: those are order-sensitive, so comparing them would read a reordered evidence
+    list -- or a re-wrapped passage -- as a loss, and this validator never invents one."""
+    return tuple(frozenset(" ".join(value.split()) for value in part)
+                 for part in _evidence_parts(obj))
 
 
 def _gap_ids(row: Mapping[str, Any]) -> FrozenSet[str]:
@@ -225,6 +258,52 @@ def _provenance_violations(element: str, row: Mapping[str, Any]) -> List[Violati
     return []
 
 
+def _retention_loss(element: str, before: Any, after: Any, source: str,
+                    only: Any = None) -> List[Violation]:
+    """Every §10 fact ``before`` carried that ``after`` no longer does, restricted to
+    ``only`` when given. DIRECTIONAL: a row that ADDS a passage, a pointer or a source
+    loses nothing, so agreement is never required -- §10 asks for retention, not
+    immutability -- and reordering or re-spacing normalizes to agreement by construction.
+    Deterministic: the facts are a fixed tuple and each loss is sorted."""
+    out: List[Violation] = []
+    for (detail, name), was, now in zip(RETENTION_FACTS, _retained(before),
+                                        _retained(after)):
+        lost = sorted(was - now) if only is None or detail in only else []
+        if lost:
+            out.append(Violation(RULE_EVIDENCE_RETENTION, element,
+                                 f"lost the {name}(s) " + "; ".join(lost),
+                                 f"every {name} {source} carried", detail))
+    return out
+
+
+def _lineage_loss(element: str, pre: Mapping[str, Any],
+                  post: Mapping[str, Any]) -> List[Violation]:
+    """§3 through C-015: a lineage is APPEND-ONLY, so a pre-existing row may neither drop
+    an attribution nor arrive with a corrupted one -- either way "which stage introduced
+    this?" stops being answerable. ``LineageError`` is REPORTED, never leaked: a validator
+    that raised here would fail OPEN for any caller that caught it."""
+    required = "the lineage it carried before the round"
+    try:
+        now = frozenset(read_lineage(post).canonical())
+    except LineageError as exc:
+        return [Violation(RULE_PROVENANCE, element, f"malformed lineage: {exc}", required,
+                          LINEAGE_KEY)]
+    try:
+        was = frozenset(read_lineage(pre).canonical())
+    except LineageError:
+        # Already malformed BEFORE the round: what it held cannot be read, so only a
+        # carrier that vanished outright is attributable to this delta.
+        if now:
+            return []
+        return [Violation(RULE_PROVENANCE, element, "dropped an unreadable lineage",
+                          required, LINEAGE_KEY)]
+    lost = sorted(f"{entry.stage}/{entry.origin}" for entry in was - now)
+    if lost:
+        return [Violation(RULE_PROVENANCE, element, "lost lineage entries " +
+                          ", ".join(lost), required, LINEAGE_KEY)]
+    return []
+
+
 def _evidence_violations(element: str, row: Mapping[str, Any], claim: Any) -> List[Violation]:
     """§10's retention rule, on the row AND against the claim the row came from."""
     text, pointer, ids, span = _evidence_facts(row)
@@ -246,7 +325,9 @@ def _evidence_violations(element: str, row: Mapping[str, Any], claim: Any) -> Li
     if claim_span and claim_span not in f"{span} {text}":
         out.append(Violation(RULE_EVIDENCE_RETENTION, element, "lost the evidence_span",
                              "the claim's evidence_span retained", "evidence_span"))
-    return out
+    # The checks above ask only whether SOME passage and pointer exist, so unrelated text
+    # substituted for the claim's own passage reads as retention. §10 means the claim's.
+    return out + _retention_loss(element, claim, row, "its claim", _FROM_CLAIM)
 
 
 def _reaction_violations(element: str, row: Mapping[str, Any],
@@ -320,6 +401,11 @@ def validate_graph_delta(graph_before: Any, graph_after: Any,
                     Violation(RULE_MUTATED_ELEMENT, element, _show(now.get(f)),
                               _show(was.get(f)), f)
                     for f in sorted(set(was) | set(now)) if was.get(f) != now.get(f)]
+                # SEPARATE from the comparison above, which cannot see any of this: every
+                # retention carrier is in NON_BIOLOGICAL, so stripping a pre-existing row
+                # of its evidence and its lineage is invisible to ``mutated_element``.
+                violations += _retention_loss(element, pre, post, "before the round")
+                violations += _lineage_loss(element, pre, post)
             for row in news[len(olds):]:
                 added.append(element)
                 violations += _provenance_violations(element, row)
