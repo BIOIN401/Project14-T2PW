@@ -674,9 +674,9 @@ against H-007's tip, order declared and committed before any ran (`prompts/H-007
 nodes passed in all six runs**; every failure is in the 23-node `qb` cohort, and **no node
 failed twice in the same tree except `node16` at base**. Three different symptoms appeared —
 two different wrong `review_flags` contents, and two different `KeyError`s for a
-`session_state` key a partially-executed AppTest script never set. All are the shape the
-repository already adjudicates as a Streamlit **harness** fault
-(`tests/test_streamlit_quarantine_boundary.py:425-430`).
+`session_state` key a partially-executed AppTest script never set. **None carried the
+documented `FragmentThreadState` message**, whose recorded cause — several `AppTest`s in one
+process — cannot apply under per-node isolation. Same family, new signatures. BL-003's.
 
 **Declared isolated-node diagnostic** (`prompts/H-007.md` §2.2, committed before any
 candidate run): three cold wrapped processes per failing node per tree, 18 runs, **17 passed
@@ -710,8 +710,8 @@ cold runs have under 12% power to reproduce one — which is stated, not dressed
    the diff** still blocks the merge, and no test may be weakened, deselected, retried until
    green or relabelled environmental.
 3. The race is filed as infrastructure backlog item **BL-003** for a later cleanup agent,
-   with the three node IDs, the three symptoms and the 156 recorded executions. Wave
-   A1 is **not** held behind it.
+   with the 156 recorded executions and **four** distinct nodes — the reviewer's own run
+   added `node05` and a fifth symptom. Wave A1 is **not** held behind it.
 4. Per-node isolation is retained regardless: it frees the deterministic core to ~1 s and
    localises a `qb` failure to one named node instead of losing it in a 23-test process.
 
@@ -786,9 +786,9 @@ recorded 294 / 321 measurement moves.
 
 ### 5. `BL-001` — the two retry seams, one backlog item
 
-C-014 removed the SDK retry layer (`SDK_MAX_RETRIES = 0`) from four call sites that invoke
-`_client.chat.completions.create(...)` **directly** and so also bypass `llm/client.py`'s own
-8-attempt loop: `src/t2pw/stoich/agent.py:477`, `:552`, `:580`, and `src/t2pw/rag/embed.py:154`.
+C-014 removed the SDK retry layer (`SDK_MAX_RETRIES = 0`) from four call sites that use the
+raw client **directly** and so also bypass `llm/client.py`'s own 8-attempt loop:
+`stoich/agent.py:477`, `:552`, `:580` (chat), and `rag/embed.py:163` (embeddings, via `:154`).
 
 **Retries are not restored now.** No existing card owns either file — re-verified at
 `08d5d07`, and `prompts/C-014.md:145` states it in terms — so binding the seams to C-032,
