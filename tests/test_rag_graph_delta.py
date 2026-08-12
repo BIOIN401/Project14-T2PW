@@ -291,3 +291,59 @@ def test_reordering_re_spacing_or_adding_evidence_is_never_reported_as_a_loss():
         **{LINEAGE_KEY: [dict(ENTRY, reason="a second stage also touched it"),
                          dict(ENTRY)]})
     assert validate_graph_delta(before, after, record()).admissible is True
+
+
+#: The list shape ``synthesize._merge_into`` unions, and the ONE string
+#: ``conform._coerce_evidence_in_place`` joins it into for ``ReactionModel.evidence: str``.
+#: Under a set of WHOLE values that join is a single element, so appending a passage would
+#: replace it and read as a loss -- retention is containment in the join instead.
+PASSAGES = [{"text": SPAN}, {"text": "and the fold is Zn-dependent"}]
+JOINED = f"{SPAN} and the fold is Zn-dependent"
+APPENDED = f"{JOINED} A third passage this round found."
+REJOINED = f"and the fold is Zn-dependent {SPAN}"
+
+
+@pytest.mark.parametrize("was, now, lost", [
+    (JOINED, APPENDED, False),                    # a passage APPENDED to the join
+    (PASSAGES, REJOINED, False),                  # the same passages re-joined, reordered
+    (JOINED, JOINED.replace(" ", "\n  "), False),  # the same join, re-spaced
+    (JOINED, SPAN, True),                         # one passage genuinely DROPPED
+])
+def test_a_joined_evidence_string_is_compared_by_containment(was, now, lost):
+    """A pre-existing row in the coerced string shape. Adding to the join is not a loss;
+    dropping a passage out of it still is."""
+    before, after = graphs(before=(dict(RICH, evidence=was),))
+    after["processes"]["reactions"][0]["evidence"] = now
+    result = validate_graph_delta(before, after, record())
+    assert result.admissible is not lost
+    assert [v.detail for v in result.violations] == (["evidence"] if lost else [])
+
+
+@pytest.mark.parametrize("row_evidence, lost", [
+    (JOINED, False), (APPENDED, False), (REJOINED, False),
+    (JOINED.replace(" ", "\n  "), False), (SPAN, True),
+])
+def test_a_coerced_evidence_string_is_measured_against_its_claim(row_evidence, lost):
+    """The same fact on the added-row path over the REAL seam: the claim holds the passage
+    LIST ``_merge_into`` unioned, the row the string ``conform`` joined it into. A passage
+    present verbatim in that join is retained -- the false loss fired on exactly the
+    multi-passage claim § 10 exists to protect -- and one dropped out of it still fires."""
+    claim = {"inputs": ["a"], "outputs": ["b"], "enzymes": ["LpxC"], "evidence": PASSAGES,
+             "rag_provenance": {"source_id": PAPER, "chunk_id": "c1"}}
+    result = verdict(added(evidence=row_evidence), rec=record(claims=[claim]))
+    assert result.admissible is not lost
+    assert [v.detail for v in result.violations] == (["evidence"] if lost else [])
+
+
+def test_a_lineage_that_was_already_unreadable_may_still_not_be_dropped():
+    """A pre-existing row whose lineage does not parse still HAS an attribution, and the
+    round may not answer that by deleting the carrier. REPAIRING it is allowed, which is
+    why the branch cannot be "unreadable before, always report"."""
+    before, after = rewritten()
+    before["processes"]["reactions"][0][LINEAGE_KEY] = [dict(ENTRY, stage="pwml_export")]
+    after["processes"]["reactions"][0].pop(LINEAGE_KEY)
+    result = validate_graph_delta(before, after, record())
+    assert (result.admissible, result.rules()) == (False, (RULE_PROVENANCE,))
+    assert result.violations[0].observed == "dropped an unreadable lineage"
+    after["processes"]["reactions"][0][LINEAGE_KEY] = [dict(ENTRY)]  # repaired, not dropped
+    assert validate_graph_delta(before, after, record()).admissible is True

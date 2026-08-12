@@ -93,6 +93,13 @@ RETENTION_FACTS: Tuple[Tuple[str, str], ...] = (
 #: one loss, and dropping the older check to avoid that would weaken it.
 _FROM_CLAIM: FrozenSet[str] = frozenset({"evidence", "chunk_id"})
 
+#: Index of the passage fact -- the ONE fact a coercion joins into a single string
+#: (``conform._coerce_evidence_in_place``, for ``ReactionModel.evidence: str``), so under a
+#: set of WHOLE values that join is one element and APPENDING a passage would read as
+#: replacing it. It alone is compared by containment. ``chunk_id``, ``source_id`` and
+#: ``evidence_span`` are one scalar per record at every writer, so a set is exact there.
+_PASSAGE = 0
+
 
 @dataclass(frozen=True)
 class Violation:
@@ -264,11 +271,19 @@ def _retention_loss(element: str, before: Any, after: Any, source: str,
     ``only`` when given. DIRECTIONAL: a row that ADDS a passage, a pointer or a source
     loses nothing, so agreement is never required -- §10 asks for retention, not
     immutability -- and reordering or re-spacing normalizes to agreement by construction.
-    Deterministic: the facts are a fixed tuple and each loss is sorted."""
+    The passage fact is compared by CONTAINMENT in the joined ``after`` text rather than
+    as a whole value (:data:`_PASSAGE`) -- the shape the claim's ``evidence_span`` check
+    has always used. Deterministic: fixed facts, sorted haystack, sorted losses."""
+    was_facts, now_facts = _retained(before), _retained(after)
+    joined = " ".join(sorted(now_facts[_PASSAGE]))
     out: List[Violation] = []
-    for (detail, name), was, now in zip(RETENTION_FACTS, _retained(before),
-                                        _retained(after)):
-        lost = sorted(was - now) if only is None or detail in only else []
+    for index, (detail, name) in enumerate(RETENTION_FACTS):
+        if only is not None and detail not in only:
+            continue
+        if index == _PASSAGE:  # containment, because the carrier may be ONE joined string
+            lost = sorted(v for v in was_facts[index] if v not in joined)
+        else:
+            lost = sorted(was_facts[index] - now_facts[index])
         if lost:
             out.append(Violation(RULE_EVIDENCE_RETENTION, element,
                                  f"lost the {name}(s) " + "; ".join(lost),
