@@ -5,6 +5,9 @@
 States: `BLOCKED` → `READY` → `IMPLEMENTING` → `REVIEW` → `CORRECTION` → `INTEGRATION`
 → `BATCHED_VALIDATION` → `ACCEPTED`. Also terminal: `REJECTED`.
 
+**Statuses are updated as one compact batch at each pack closeout** — status, merge SHA and
+reviewer-verdict cells only. No essay-length status cells.
+
 Column meanings:
 
 | Column | Meaning |
@@ -165,14 +168,15 @@ Card: `prompts/H-007.md`. Outcome recorded in **D-022**.
 
 | ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| H-007 | G11 unmatched-selector fix · per-node Chunk D isolation · live-record correction | `INTEGRATION` | — | `08d5d07` | `agent/h07-closeout` | `.claude/worktrees/agent-h07-closeout` (new; the existing 27 untouched) | `evidence/g11/g11_evidence.py`; `evidence/chunk_d_gate.py`; NEW `evidence/chunk_d_gate_selftest.py`; NEW `prompts/H-007.md`; `LEDGER.md`, `TEST_MATRIX.md`, `DECISIONS.md` (append). **Zero files under `src/`, `tests/`, `batch/`; `bounded_run.py` unmodified** | independent reviewer of the exact diff | g11 selftest **4** ✔, chunk-d selftest **10** ✔; six-run base/candidate Chunk D matrix — see D-022 | smoke **460** ✔; whole-tree G11 0 non-compliant | *(this merge)* | — | — |
+| H-007 | G11 unmatched-selector fix · per-node Chunk D isolation · live-record correction | `ACCEPTED` | — | `08d5d07` | `agent/h07-closeout` | `.claude/worktrees/agent-h07-closeout` (new; the existing 27 untouched) | `evidence/g11/g11_evidence.py`; `evidence/chunk_d_gate.py`; NEW `evidence/chunk_d_gate_selftest.py`; NEW `prompts/H-007.md`; `LEDGER.md`, `TEST_MATRIX.md`, `DECISIONS.md` (append). **Zero files under `src/`, `tests/`, `batch/`; `bounded_run.py` unmodified** | independent non-author reviewer of the exact diff — **APPROVE** (exact, unsuffixed) | g11 selftest **4** ✔, chunk-d selftest **10** ✔; six-run base/candidate Chunk D matrix — see D-022 | smoke **460** ✔; whole-tree G11 0 non-compliant | `4a15230` (reviewed tip `12e4898`) | — | — |
 
 ## Wave A1
 
 | ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary | Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-020 | p06a biological-equivalence comparator | `BLOCKED` | C-013 ✔ | — | `agent/p06a-equiv-comparator` | *(not yet created)* | NEW `pipeline/canonical.py` | C-013 impl | new, D | smoke + D | — | M3 | **product-owner dispatch** (C-013 ✔ merged `09fb40d` — cleared, no longer blocking) |
-| C-021 | p31 RAG graph-delta validation | `BLOCKED` | C-015 ✔ | — | `agent/p31-rag-graph-delta` | *(not yet created)* | NEW `rag/graph_delta.py` | C-016 impl | new, C | smoke | — | — | **product-owner dispatch** (C-015 ✔ merged `8b4bc0c` — cleared, no longer blocking) |
+| C-020 | p06a biological-equivalence comparator | `ACCEPTED` | C-013 ✔ | — | `agent/p06a-equiv-comparator` | *(not yet created)* | NEW `pipeline/canonical.py` | independent non-author reviewer — **APPROVE** (exact, unsuffixed) after 1 correction round (`2d8eb56` "read PWML identifiers held in a list container") | new, D | smoke + D | `ad45dcf` (reviewed tip `2d8eb56`) | M3 | **product-owner dispatch** (C-013 ✔ merged `09fb40d` — cleared, no longer blocking) |
+| C-021 | p31 RAG graph-delta validation | `ACCEPTED` | C-015 ✔ | — | `agent/p31-rag-graph-delta` | *(not yet created)* | NEW `rag/graph_delta.py` | independent non-author reviewer — **APPROVE** (exact, unsuffixed) | new, C | smoke | `d2b2c1f` (reviewed tip `ec43bc9`) | — | **product-owner dispatch** (C-015 ✔ merged `8b4bc0c` — cleared, no longer blocking) |
+| H-008 | RAG evidence retention — close two fail-open holes in `validate_graph_delta` | `ACCEPTED` | C-021 ✔ | `ad45dcf` | `agent/h08-rag-evidence-retention` | `.claude/worktrees/agent-h08-retention` | `rag/graph_delta.py` :: `validate_graph_delta` | independent non-author reviewer — **APPROVE** (exact, unsuffixed) after 1 correction round (`57f024d` "compare the passage fact by containment, not as one value") | new, C | smoke | `3bfa7af` (reviewed tip `57f024d`) | — | — |
 
 Both A1 dependencies have merged, so under the Blockers-column legend above ("a dependency
 that has cleared does not belong here") they are shown as cleared and the real remaining

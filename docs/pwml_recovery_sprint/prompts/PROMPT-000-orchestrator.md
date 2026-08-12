@@ -67,8 +67,12 @@ MERGE GATES -- all must hold, no exceptions
   G6  no biological gate weakened to increase PWML production
   G7  incomplete-but-correct pathways still exported as review_required
   G8  no exporter repairs biology after the freeze
-  G9  a regression test exists for the demonstrated failure AND fails on the base
-  G10 smoke suite (457 tests, ~40 s) passes after the merge, on the integration
+  G9  a claimed correction or preservation of PRE-EXISTING OBSERVABLE BEHAVIOUR
+      has a proof that FAILS BEHAVIOURALLY at the base and passes at the tip;
+      symbol absence is not proof. A genuinely NEW capability or module instead
+      carries an EXPLICITLY LABELLED new acceptance test, with no fabricated base
+      failure. Mislabelling a regression as new functionality is a REJECT.
+  G10 smoke suite (460 tests, ~40 s) passes after the merge, on the integration
       branch
   G11 TEST-PROCESS LIFECYCLE. Every test/benchmark/pipeline/LLM command in the
       branch's evidence ran through the bounded foreground wrapper, and the
@@ -89,8 +93,9 @@ PROCESS LIFECYCLE -- your standing obligations
     Pre-existing processes are reported, not killed.
 
 REJECT -- do not merge, send to CORRECTION -- when
-  - an earlier merge invalidated the branch's assumptions (rebase, rerun focused
-    tests, then reconsider)
+  - an earlier merge invalidated the branch's assumptions -- proven by rerunning
+    the card's focused tests on the PROSPECTIVE COMBINED INTEGRATION STATE (the
+    --no-commit merge), never by rebasing the worker branch
   - the diff is correct but out of boundary
   - the report claims a runtime behaviour with no pasted evidence
   - a benchmark failure justifies code without an adjudication of
@@ -102,18 +107,29 @@ REJECT -- do not merge, send to CORRECTION -- when
 
 OVERNIGHT RULES
   - Dispatch only READY branches whose dependencies are merged.
-  - streamlit_app.py and driver.py are SINGLE-OWNER-PER-NIGHT, always.
-  - Give each agent: exact base SHA (read at dispatch), owned files/functions,
-    focused tests, stop conditions, [S8].
+  - ONE WRITER PER SEMANTIC SEAM PER MERGE WINDOW. Disjoint functions and files
+    may be developed CONCURRENTLY; MERGES ARE SERIAL. D-021's
+    one-reshaper-at-a-time freeze-lifecycle rule stays binding, C-041 -> C-031 ->
+    C-032 stays serialized because driver.py behaviour is coupled, and NO REBASE
+    is allowed. At most four concurrent implementation writers (D-023).
+  - The card charter carries ONLY: branch and exact dispatch base; function-level
+    ownership; carried A0 requirements; explicit exclusions; hand-authored and
+    generated budgets; focused tests; applicable REAL G9 obligations; relevant
+    traps; the SBML prohibition; [S8]. A charter MAY be an external durable
+    record, with hashes reported at closeout -- a tracked prompt commit is NOT
+    required for every card.
   - Start long jobs (chunk D, nightly full suite, milestone benchmarks) after the
     night's likely merges -- and never two at once.
   - Research agents (R-xxx) diagnose committed artifacts while implementers code.
     They take no branch.
 
 ON RETURN
-  Do not merge everything that finished. Review in DEPENDENCY ORDER. Rebase each
-  branch onto the current integration commit, rerun its focused tests, then apply
-  G1-G11.
+  Do not merge everything that finished. Review in DEPENDENCY ORDER. For each
+  branch take the `git merge --no-ff --no-commit <reviewed-tip>` state, inspect
+  it against the authorized manifest, rerun its focused tests THERE, then apply
+  G1-G11 and commit. On failure FREEZE that state and report the lane -- never
+  reset, rewrite the worker branch, or commit a failing merge. NEVER rebase, and
+  never merge integration back into a worker branch.
 
 MILESTONE BENCHMARKS -- you schedule these; agents never do
   T-100 M1  after Wave B  : 4 legs  (~1.5 h)
@@ -132,7 +148,8 @@ STANDING TRAPS -- repeat verbatim into every relevant task prompt; full text [S7
   TRAP-5 data/enrichment_cache.json is 39 MB and tracked; never commit a cache.
 
 MORNING REPORT
-  queue state per branch | merged | rejected + why | rebased | blocked + on what |
+  queue state per branch | merged | rejected + why | prospective merges frozen +
+  which lane | blocked + on what |
   benchmark results | CLEANUP REPORTS (surviving count per job) | traps hit |
   schedule delta vs the 7-day plan
 ```

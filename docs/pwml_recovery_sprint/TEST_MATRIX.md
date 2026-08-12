@@ -250,6 +250,18 @@ and `src/` are byte-identical: a test-infrastructure race, filed as **BL-003**.
 failure a diff *reproduces*, or a traceback *implicating* the diff still blocks the merge,
 and no `qb` test may be weakened, deselected, retried until green or called environmental.
 
+### Chunk D cadence — forward policy (D-023)
+
+- Deterministic core plus `s8`, **154 tests: BLOCKING** on every D-marked card.
+- The **23-node `qb` cohort: mandatory to run and to report.**
+- **C-030, C-050 and C-052** directly touch the Streamlit/freeze/UI seam and **must run
+  `qb` before merge**.
+- **Non-UI D-marked cards such as C-040 and C-051** may run `qb` once at their **pack-level
+  integration checkpoint**.
+- A **deterministic, diff-reproducible or traceback-implicated `qb` failure blocks** the
+  affected lane.
+- **No deselection, no retry-until-green, no false environmental relabelling.**
+
 ---
 
 ## Per-branch obligations
@@ -330,9 +342,19 @@ dict before and after on: sorted key set · `canonical_payload_sha256` ·
 
 ## Regression-test standard (gate G9)
 
-Every regression test must **fail on the base SHA**. The reviewer checks out the base,
-applies only the test, runs it, and pastes the failure. A regression test that passes
-without the fix is not a regression test.
+Authoritative statement (D-023). Every other live site is a compact restatement of it.
+
+1. **G9 is required for a claimed correction or preservation of pre-existing observable
+   behaviour.** That claim is what needs proof.
+2. The proof must **fail behaviourally at the base SHA and pass at the tip**. The reviewer
+   checks out the base, applies only the test, runs it, and pastes the failure.
+3. **Symbol absence is not behavioural proof.** A test that errors at the base only because
+   a new name does not exist proves nothing — supply a shim, or assert on artifact content,
+   so the base fails on *behaviour*.
+4. A genuinely **new capability or module** receives an **explicitly labelled new
+   acceptance test** and does **not** require a fabricated base failure.
+5. **Reviewers must reject any attempt to mislabel a regression as new functionality.** A
+   test that passes without the fix is not a regression test.
 
 ---
 

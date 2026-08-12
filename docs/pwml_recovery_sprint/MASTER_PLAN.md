@@ -247,29 +247,46 @@ Everything else is interface-separable and must not be scheduled as serial.
 | G6 | No biological gate weakened to increase PWML production |
 | G7 | Incomplete-but-correct pathways still exported as `review_required`, never dropped |
 | G8 | No exporter repairs biology after the freeze |
-| G9 | A regression test exists for the demonstrated failure, and it **fails on the base SHA** |
-| G10 | Smoke suite (457 tests, ~40 s) passes after the merge, on the integration branch |
+| G9 | A **claimed correction or preservation of pre-existing observable behaviour** carries a proof that **fails behaviourally on the base SHA** and passes at the tip; **symbol absence is not proof**. A genuinely **new** capability or module carries an **explicitly labelled new acceptance test** instead, with no fabricated base failure. Mislabelling a regression as new functionality is a reject. Full statement: `TEST_MATRIX.md` § Regression-test standard |
+| G10 | Smoke suite (460 tests, ~40 s) passes after the merge, on the integration branch |
 | **G11** | **Test-process lifecycle.** Every test/benchmark/pipeline/LLM command in the branch's evidence ran through the bounded foreground wrapper, and the cleanup report shows **final surviving count = 0**. A run with surviving owned processes is an **infrastructure failure**, not a test result, and cannot satisfy G3, G4 or G10. Full policy: `TEST_MATRIX.md` § 0 |
 
-**Reject** when: an earlier merge invalidated the branch's assumptions (rebase and rerun
-first); the diff is correct but out of boundary; a report claims runtime behaviour with
-no pasted evidence; a benchmark failure justifies code without an adjudication per
-`PRODUCT_CONTRACT.md` §14.
+**Reject** when: an earlier merge invalidated the branch's assumptions — now proven by
+running the card's focused tests on the **prospective combined integration state**, never
+by rebasing the worker branch; the diff is correct but out of boundary; a report claims
+runtime behaviour with no pasted evidence; a benchmark failure justifies code without an
+adjudication per `PRODUCT_CONTRACT.md` §14.
+
+**Integration is merge-only.** Review the exact tip, then on the integration branch
+`git merge --no-ff --no-commit <reviewed-tip>`, inspect the staged merge against the
+authorized manifest, run the card's focused tests and gates on that prospective state, and
+only then commit. **No rebase**, and integration is never merged back into a worker branch.
+Protocol and the **forward parallel-merge proof** (second parent · owned-path
+first-parent-to-merge diff · remaining content from the first parent):
+`prompts/_TEMPLATE_INTEGRATE.md` — its `DO` block and § Parallel branches; D-023.
 
 ---
 
 ## 6. Overnight rules
 
 - Dispatch only READY branches whose dependencies are merged.
-- **`streamlit_app.py` and `driver.py` are single-owner-per-night, always.**
-- Each agent receives: exact base SHA, owned files/functions, focused tests, stop
-  conditions.
+- **One writer per semantic seam per merge window.** Disjoint functions and files may be
+  developed **concurrently**; **merges are serial**. D-021's one-reshaper-at-a-time
+  freeze-lifecycle rule remains binding, `C-041 → C-031 → C-032` remains serialized
+  because `driver.py` behaviour is coupled, and **no rebase is allowed**.
+- Each card charter carries: branch and exact dispatch base · function-level ownership ·
+  carried A0 requirements · explicit exclusions · hand-authored and generated budgets ·
+  focused tests · applicable **real** G9 obligations · relevant traps · the **SBML
+  prohibition**. A charter may be an external durable record with its hashes reported at
+  closeout; a tracked prompt commit is not required for every card
+  (`prompts/_TEMPLATE_IMPLEMENT.md` § The card charter).
 - Start long jobs (chunk D, nightly full suite, milestone benchmarks) after the night's
   likely merges.
 - Research agents diagnose committed artifacts while implementers code. They take no
   branch.
-- On return: do not merge everything that finished. Review in dependency order, rebase,
-  rerun focused tests, then apply G1–G10.
+- On return: do not merge everything that finished. Review in dependency order, then take
+  each reviewed tip as a `--no-commit` merge and rerun its focused tests on that combined
+  prospective state before applying G1–G11 and committing the merge.
 
 ---
 
