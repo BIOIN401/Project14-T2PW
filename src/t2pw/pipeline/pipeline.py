@@ -1874,11 +1874,37 @@ def _clean_elements_with_states(items: Any) -> List[Dict[str, Any]]:
 # Spelled out here rather than imported so this module keeps its zero-dependency
 # relationship with ``t2pw.rag`` (seam S5: the orchestrator is the only place
 # allowed to reach into the RAG package, and ``pipeline`` is not it).
+#
+# It still names exactly those three RAG keys and nothing else. The lineage record
+# the carrier also copies is NOT a RAG key, so it is appended to the separate tuple
+# below rather than folded in here, and this constant's stated identity with
+# ``RAG_ADDITIVE_KEYS`` minus ``evidence`` stays literally true for anyone auditing
+# the two lists against each other.
 _RAG_ROW_CARRIER_KEYS = ("rag_provenance", "source_papers", "rag_confidence")
+
+# The one import this block permits, kept beside the rule that permits it and beside
+# its only consumer, so the whole carrier -- what may be imported, the key list, and
+# the copy loop -- reads as one unit. Seam S5 forbids reaching into ``t2pw.rag``;
+# ``t2pw.pipeline.lineage`` is a leaf of *this* package that imports no stage, so it
+# crosses no seam and adds no dependency edge the comment above is protecting.
+# Imported rather than spelled out on purpose: a literal ``"provenance_lineage"``
+# here would recreate the exact failure the carrier exists to stop -- the day the key
+# changed, the literal would quietly stop matching and every row's lineage would be
+# dropped by the rebuild again, with nothing raising.
+from t2pw.pipeline.lineage import LINEAGE_KEY  # noqa: E402
+
+# Every additive key a rebuilt process row keeps, in copy order: the RAG pointers
+# first so a RAG row's existing key order is byte-for-byte what it was, then lineage.
+_ROW_CARRIER_KEYS = _RAG_ROW_CARRIER_KEYS + (LINEAGE_KEY,)
 
 
 def _carry_rag_provenance(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
-    """Copy a process row's RAG source pointers onto its rebuilt clean row.
+    """Copy a process row's RAG source pointers and lineage onto its rebuilt clean row.
+
+    The name is historical and deliberately kept: the four call sites live inside
+    :func:`_clean_processes` and renaming would edit that function to no behavioural
+    end. What it carries is :data:`_ROW_CARRIER_KEYS`, which is the RAG pointers plus
+    the lineage record.
 
     ``_clean_processes`` rebuilds every process row from a key whitelist, and
     until now that whitelist named no RAG carrier -- so a reaction imported from
@@ -1902,8 +1928,8 @@ def _carry_rag_provenance(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
     since PMC13278307 (strict) delivered 14 reactions and not one of them belonged
     to the lipid A pathway named in its own focus box.
 
-    Only the three **namespaced** carriers in :data:`_RAG_ROW_CARRIER_KEYS` are
-    copied, and deliberately so:
+    Of the RAG keys, only the three **namespaced** carriers in
+    :data:`_RAG_ROW_CARRIER_KEYS` are copied, and deliberately so:
 
     * ``evidence`` is excluded because the process cleaners flatten it to a plain
       string through :func:`_evidence_text` on purpose (``ReactionModel.evidence``
@@ -1928,8 +1954,34 @@ def _carry_rag_provenance(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
     and count are untouched. The value is copied by reference, exactly as
     ``_clean_entities`` does for entity rows, so the carrier has the identical
     shape on both sides of the payload.
+
+    The lineage record (``t2pw.pipeline.lineage.LINEAGE_KEY``) is carried for the same
+    structural reason, and it is the more general case. A ``LineageEntry`` has **no
+    entity or reaction id field** -- attribution is POSITIONAL, it means "the row this
+    record is stored on" -- so a rebuild that does not carry unknown keys does not
+    merely produce a row with provenance missing. It produces a row that now *asserts*
+    provenance it does not have: "imported from PMC12898747 at rag_admission, review
+    required" silently becomes "the seed paper stated this". That is the same
+    attribution loss the RAG pointers above were added to stop, one level up, and it
+    reaches every stage allowed to introduce content rather than only the RAG one.
+    ``_clean_entities`` copies entity rows key-for-key, so entity lineage already
+    survived; the four process buckets rebuilt from a whitelist did not.
+
+    This function CARRIES; it does not validate, normalize, re-order or repair. The
+    record is copied by reference like the pointers above, so what arrives is
+    byte-for-byte what leaves, including an entry order that is not canonical and a
+    record ``lineage.read`` would reject. Round-tripping the value through
+    ``lineage.Lineage`` here would re-sort another stage's attribution in transit --
+    the exporter-repair shape in a new place -- and raising on a record this module
+    cannot parse would delete the very attribution that says the row is doubtful.
+    Validation belongs at the readers, where ``lineage.read`` already does it.
+
+    Lineage is appended after the RAG keys, so a RAG row's key order is unchanged, and
+    it goes through the same :func:`_is_empty_value` guard: an empty record carries no
+    attribution and ``lineage.read`` cannot tell one from an absent key, so a row with
+    nothing to carry still gains no key at all.
     """
-    for key in _RAG_ROW_CARRIER_KEYS:
+    for key in _ROW_CARRIER_KEYS:
         value = item.get(key)
         if _is_empty_value(value):
             continue
