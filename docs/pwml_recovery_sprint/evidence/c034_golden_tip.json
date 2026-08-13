@@ -1,0 +1,848 @@
+{
+  "legs": [
+    {
+      "leg": "reconstruct",
+      "ok": true,
+      "outcome": "ok",
+      "incomplete_reason": "",
+      "failure": null,
+      "contract_report": {
+        "ok": true,
+        "stage": "post_extraction",
+        "contract_type": "structural",
+        "effect_on_failure": "abort",
+        "errors": [],
+        "warnings": [],
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0
+        },
+        "runtime_schema_report": {
+          "ok": true,
+          "boundary": "post_extraction",
+          "mode": "report",
+          "errors": [],
+          "warnings": [],
+          "summary": {
+            "error_count": 0,
+            "warning_count": 0
+          }
+        }
+      },
+      "reconstruction": {
+        "shell_count": 3,
+        "shells": [
+          {
+            "name": "ADP",
+            "bucket": "compounds",
+            "role": "outputs",
+            "pointer": "/processes/reactions/0/outputs"
+          },
+          {
+            "name": "Pi",
+            "bucket": "compounds",
+            "role": "outputs",
+            "pointer": "/processes/reactions/0/outputs"
+          },
+          {
+            "name": "ATPase α",
+            "bucket": "proteins",
+            "role": "enzymes",
+            "pointer": "/processes/reactions/0/enzymes"
+          }
+        ],
+        "skipped_count": 0,
+        "skipped": [],
+        "provenance": "reconstructed_from_process_participant"
+      },
+      "repair": null,
+      "boundaries": [
+        {
+          "stage": "extraction",
+          "boundary": "stage1_extraction",
+          "outcome": "ok",
+          "model": "",
+          "finish_reason": "",
+          "attempts": 0,
+          "response_status": "",
+          "raw_entity_counts": {
+            "proteins": 2,
+            "compounds": 4,
+            "total": 6
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "transports": 0,
+            "total": 1
+          },
+          "response_hash": "sha256:9abd293dcc40a5e4",
+          "contract_ok": true,
+          "note": "stage_one_boundary_settled",
+          "registry_shells_added": 3
+        }
+      ],
+      "summary": {
+        "ok": true,
+        "outcome": "ok",
+        "payload_hash": "sha256:4534566ef34355fc",
+        "entity_counts": {
+          "proteins": 2,
+          "compounds": 4,
+          "total": 6
+        },
+        "process_counts": {
+          "reactions": 1,
+          "transports": 0,
+          "total": 1
+        },
+        "contract_summary": {
+          "error_count": 0,
+          "warning_count": 0
+        },
+        "registry_reconstruction": {
+          "shell_count": 3,
+          "shells": [
+            {
+              "name": "ADP",
+              "bucket": "compounds",
+              "role": "outputs",
+              "pointer": "/processes/reactions/0/outputs"
+            },
+            {
+              "name": "Pi",
+              "bucket": "compounds",
+              "role": "outputs",
+              "pointer": "/processes/reactions/0/outputs"
+            },
+            {
+              "name": "ATPase α",
+              "bucket": "proteins",
+              "role": "enzymes",
+              "pointer": "/processes/reactions/0/enzymes"
+            }
+          ],
+          "skipped_count": 0,
+          "skipped": [],
+          "provenance": "reconstructed_from_process_participant"
+        }
+      },
+      "payload_without_lineage": {
+        "processes": {
+          "reactions": [
+            {
+              "outputs": [
+                "ADP",
+                "Pi"
+              ],
+              "inputs": [
+                "ATP",
+                "H₂O"
+              ],
+              "evidence": "ATP is hydrolysed to ADP and Pᵢ — see § 2.",
+              "name": "ATP hydrolysis — cytosolic",
+              "enzymes": [
+                {
+                  "name": "ATPase α",
+                  "entity_type": "protein"
+                }
+              ]
+            }
+          ],
+          "transports": []
+        },
+        "entities": {
+          "proteins": [
+            {
+              "organism": "Escherichia coli",
+              "name": "LpxA",
+              "evidence": "LpxA acetylates UDP-GlcNAc."
+            },
+            {
+              "name": "ATPase α",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/enzymes",
+                "role": "enzymes"
+              }
+            }
+          ],
+          "compounds": [
+            {
+              "name": "ATP",
+              "hmdb_id": "HMDB0000538"
+            },
+            {
+              "name": "H₂O"
+            },
+            {
+              "name": "ADP",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/outputs",
+                "role": "outputs"
+              }
+            },
+            {
+              "name": "Pi",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/outputs",
+                "role": "outputs"
+              }
+            }
+          ]
+        },
+        "pathway_name": "Golden — non-canonical fixture"
+      },
+      "lineage_entry_count": 7
+    },
+    {
+      "leg": "no_reconstruct",
+      "ok": true,
+      "outcome": "ok",
+      "incomplete_reason": "",
+      "failure": null,
+      "contract_report": {
+        "ok": true,
+        "stage": "post_extraction",
+        "contract_type": "structural",
+        "effect_on_failure": "abort",
+        "errors": [],
+        "warnings": [],
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0
+        },
+        "runtime_schema_report": {
+          "ok": true,
+          "boundary": "post_extraction",
+          "mode": "report",
+          "errors": [],
+          "warnings": [],
+          "summary": {
+            "error_count": 0,
+            "warning_count": 0
+          }
+        }
+      },
+      "reconstruction": {},
+      "repair": null,
+      "boundaries": [
+        {
+          "stage": "extraction",
+          "boundary": "stage1_extraction",
+          "outcome": "ok",
+          "model": "",
+          "finish_reason": "",
+          "attempts": 0,
+          "response_status": "",
+          "raw_entity_counts": {
+            "proteins": 1,
+            "compounds": 2,
+            "total": 3
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "transports": 0,
+            "total": 1
+          },
+          "response_hash": "sha256:d43981296dbf433d",
+          "contract_ok": true,
+          "note": "stage_one_boundary_settled"
+        }
+      ],
+      "summary": {
+        "ok": true,
+        "outcome": "ok",
+        "payload_hash": "sha256:7ec3e957443a53f6",
+        "entity_counts": {
+          "proteins": 1,
+          "compounds": 2,
+          "total": 3
+        },
+        "process_counts": {
+          "reactions": 1,
+          "transports": 0,
+          "total": 1
+        },
+        "contract_summary": {
+          "error_count": 0,
+          "warning_count": 0
+        }
+      },
+      "payload_without_lineage": {
+        "processes": {
+          "reactions": [
+            {
+              "outputs": [
+                "ADP",
+                "Pi"
+              ],
+              "inputs": [
+                "ATP",
+                "H₂O"
+              ],
+              "evidence": "ATP is hydrolysed to ADP and Pᵢ — see § 2.",
+              "name": "ATP hydrolysis — cytosolic",
+              "enzymes": [
+                {
+                  "name": "ATPase α",
+                  "entity_type": "protein"
+                }
+              ]
+            }
+          ],
+          "transports": []
+        },
+        "entities": {
+          "proteins": [
+            {
+              "organism": "Escherichia coli",
+              "name": "LpxA",
+              "evidence": "LpxA acetylates UDP-GlcNAc."
+            }
+          ],
+          "compounds": [
+            {
+              "name": "ATP",
+              "hmdb_id": "HMDB0000538"
+            },
+            {
+              "name": "H₂O"
+            }
+          ]
+        },
+        "pathway_name": "Golden — non-canonical fixture"
+      },
+      "lineage_entry_count": 4
+    },
+    {
+      "leg": "repair",
+      "ok": true,
+      "outcome": "ok",
+      "incomplete_reason": "",
+      "failure": null,
+      "contract_report": {
+        "ok": true,
+        "stage": "post_extraction",
+        "contract_type": "structural",
+        "effect_on_failure": "abort",
+        "errors": [],
+        "warnings": [],
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0
+        },
+        "runtime_schema_report": {
+          "ok": true,
+          "boundary": "post_extraction",
+          "mode": "report",
+          "errors": [],
+          "warnings": [],
+          "summary": {
+            "error_count": 0,
+            "warning_count": 0
+          }
+        }
+      },
+      "reconstruction": {
+        "shell_count": 2,
+        "shells": [
+          {
+            "name": "UDP-GlcNAc",
+            "bucket": "compounds",
+            "role": "inputs",
+            "pointer": "/processes/reactions/0/inputs"
+          },
+          {
+            "name": "product",
+            "bucket": "compounds",
+            "role": "outputs",
+            "pointer": "/processes/reactions/0/outputs"
+          }
+        ],
+        "skipped_count": 0,
+        "skipped": [],
+        "provenance": "reconstructed_from_process_participant"
+      },
+      "repair": {
+        "outcome": "repaired",
+        "attempts": 1,
+        "repaired_pointers": [
+          "/entities/proteins/0"
+        ],
+        "unrepaired_pointers": [],
+        "rejected": [],
+        "reason": ""
+      },
+      "boundaries": [
+        {
+          "stage": "extraction",
+          "boundary": "stage1_row_repair",
+          "outcome": "ok",
+          "model": "golden-model",
+          "finish_reason": "stop",
+          "attempts": 1,
+          "response_status": "ok",
+          "request_hash": "sha256:fc12c36614351024",
+          "response_hash": "sha256:faf760f4dc8c08e8",
+          "raw_chars": 124,
+          "repair_kind": "contract_rows",
+          "requested_row_count": 1,
+          "repaired_row_count": 1,
+          "rejected_row_count": 0
+        },
+        {
+          "stage": "extraction",
+          "boundary": "stage1_extraction",
+          "outcome": "ok",
+          "model": "",
+          "finish_reason": "",
+          "attempts": 0,
+          "response_status": "",
+          "raw_entity_counts": {
+            "proteins": 1,
+            "compounds": 2,
+            "total": 3
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "response_hash": "sha256:b600713755714d81",
+          "contract_ok": true,
+          "note": "stage_one_boundary_settled_after_localized_repair",
+          "repaired_pointers": [
+            "/entities/proteins/0"
+          ]
+        }
+      ],
+      "summary": {
+        "ok": true,
+        "outcome": "ok",
+        "payload_hash": "sha256:f49be73810338000",
+        "entity_counts": {
+          "proteins": 1,
+          "compounds": 2,
+          "total": 3
+        },
+        "process_counts": {
+          "reactions": 1,
+          "total": 1
+        },
+        "contract_summary": {
+          "error_count": 0,
+          "warning_count": 0
+        },
+        "registry_reconstruction": {
+          "shell_count": 2,
+          "shells": [
+            {
+              "name": "UDP-GlcNAc",
+              "bucket": "compounds",
+              "role": "inputs",
+              "pointer": "/processes/reactions/0/inputs"
+            },
+            {
+              "name": "product",
+              "bucket": "compounds",
+              "role": "outputs",
+              "pointer": "/processes/reactions/0/outputs"
+            }
+          ],
+          "skipped_count": 0,
+          "skipped": [],
+          "provenance": "reconstructed_from_process_participant"
+        },
+        "row_repair": {
+          "outcome": "repaired",
+          "attempts": 1,
+          "repaired_pointers": [
+            "/entities/proteins/0"
+          ],
+          "unrepaired_pointers": [],
+          "rejected": [],
+          "reason": ""
+        }
+      },
+      "payload_without_lineage": {
+        "processes": {
+          "reactions": [
+            {
+              "outputs": [
+                "product"
+              ],
+              "inputs": [
+                "UDP-GlcNAc"
+              ],
+              "evidence": "e",
+              "name": "r"
+            }
+          ]
+        },
+        "entities": {
+          "proteins": [
+            {
+              "name": "LpxA",
+              "evidence": "LpxA acetylates UDP-GlcNAc."
+            }
+          ],
+          "compounds": [
+            {
+              "name": "UDP-GlcNAc",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/inputs",
+                "role": "inputs"
+              }
+            },
+            {
+              "name": "product",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/outputs",
+                "role": "outputs"
+              }
+            }
+          ]
+        }
+      },
+      "lineage_entry_count": 5
+    },
+    {
+      "leg": "incomplete",
+      "ok": false,
+      "outcome": "contract_failed_after_cleaning",
+      "incomplete_reason": "1 post-extraction contract error(s) remain (first: entity_missing_name); localized row repair was not attempted",
+      "failure": "1 post-extraction contract error(s) remain (first: entity_missing_name); localized row repair was not attempted",
+      "contract_report": {
+        "ok": false,
+        "stage": "post_extraction",
+        "contract_type": "structural",
+        "effect_on_failure": "abort",
+        "errors": [
+          {
+            "code": "entity_missing_name",
+            "message": "Every entity row must have a non-empty name.",
+            "pointer": "/entities/proteins/0/name",
+            "bucket": "proteins",
+            "detail": {
+              "evidence": "27 chars elided",
+              "name": ""
+            }
+          }
+        ],
+        "warnings": [],
+        "summary": {
+          "error_count": 1,
+          "warning_count": 0
+        },
+        "runtime_schema_report": {
+          "ok": true,
+          "boundary": "post_extraction",
+          "mode": "report",
+          "errors": [],
+          "warnings": [],
+          "summary": {
+            "error_count": 0,
+            "warning_count": 0
+          }
+        }
+      },
+      "reconstruction": {
+        "shell_count": 2,
+        "shells": [
+          {
+            "name": "UDP-GlcNAc",
+            "bucket": "compounds",
+            "role": "inputs",
+            "pointer": "/processes/reactions/0/inputs"
+          },
+          {
+            "name": "product",
+            "bucket": "compounds",
+            "role": "outputs",
+            "pointer": "/processes/reactions/0/outputs"
+          }
+        ],
+        "skipped_count": 0,
+        "skipped": [],
+        "provenance": "reconstructed_from_process_participant"
+      },
+      "repair": null,
+      "boundaries": [
+        {
+          "stage": "extraction",
+          "boundary": "stage1_extraction",
+          "outcome": "contract_failed_after_cleaning",
+          "model": "",
+          "finish_reason": "",
+          "attempts": 0,
+          "response_status": "",
+          "raw_entity_counts": {
+            "proteins": 1,
+            "compounds": 2,
+            "total": 3
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "response_hash": "sha256:1ee427280018cc1a",
+          "error": "1 post-extraction contract error(s) remain (first: entity_missing_name); localized row repair was not attempted",
+          "contract_ok": false,
+          "note": "stage_one_boundary_incomplete",
+          "failing_codes": [
+            "entity_missing_name"
+          ],
+          "repair_outcome": "not_attempted"
+        }
+      ],
+      "summary": {
+        "ok": false,
+        "outcome": "contract_failed_after_cleaning",
+        "payload_hash": "sha256:2da864d4e8aafda9",
+        "entity_counts": {
+          "proteins": 1,
+          "compounds": 2,
+          "total": 3
+        },
+        "process_counts": {
+          "reactions": 1,
+          "total": 1
+        },
+        "contract_summary": {
+          "error_count": 1,
+          "warning_count": 0
+        },
+        "incomplete_reason": "1 post-extraction contract error(s) remain (first: entity_missing_name); localized row repair was not attempted",
+        "registry_reconstruction": {
+          "shell_count": 2,
+          "shells": [
+            {
+              "name": "UDP-GlcNAc",
+              "bucket": "compounds",
+              "role": "inputs",
+              "pointer": "/processes/reactions/0/inputs"
+            },
+            {
+              "name": "product",
+              "bucket": "compounds",
+              "role": "outputs",
+              "pointer": "/processes/reactions/0/outputs"
+            }
+          ],
+          "skipped_count": 0,
+          "skipped": [],
+          "provenance": "reconstructed_from_process_participant"
+        }
+      },
+      "payload_without_lineage": {
+        "processes": {
+          "reactions": [
+            {
+              "outputs": [
+                "product"
+              ],
+              "inputs": [
+                "UDP-GlcNAc"
+              ],
+              "evidence": "e",
+              "name": "r"
+            }
+          ]
+        },
+        "entities": {
+          "proteins": [
+            {
+              "evidence": "LpxA acetylates UDP-GlcNAc.",
+              "name": ""
+            }
+          ],
+          "compounds": [
+            {
+              "name": "UDP-GlcNAc",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/inputs",
+                "role": "inputs"
+              }
+            },
+            {
+              "name": "product",
+              "provenance": "reconstructed_from_process_participant",
+              "resolution_status": "unresolved",
+              "reconstructed_from": {
+                "pointer": "/processes/reactions/0/outputs",
+                "role": "outputs"
+              }
+            }
+          ]
+        }
+      },
+      "lineage_entry_count": 4
+    },
+    {
+      "leg": "not_a_dict",
+      "ok": false,
+      "outcome": "contract_failed_after_cleaning",
+      "incomplete_reason": "2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+      "failure": "2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+      "contract_report": {
+        "ok": false,
+        "stage": "post_extraction",
+        "contract_type": "structural",
+        "effect_on_failure": "abort",
+        "errors": [
+          {
+            "code": "entities_required",
+            "message": "Payload must include a entities object.",
+            "pointer": "/entities",
+            "detail": {
+              "found_type": "NoneType",
+              "key_present": false
+            }
+          },
+          {
+            "code": "processes_required",
+            "message": "Payload must include a processes object.",
+            "pointer": "/processes",
+            "detail": {
+              "found_type": "NoneType",
+              "key_present": false
+            }
+          }
+        ],
+        "warnings": [
+          {
+            "code": "runtime_schema_missing_field",
+            "pointer": "/entities",
+            "message": "Required field is missing.",
+            "expected": "required field",
+            "received": "object"
+          },
+          {
+            "code": "runtime_schema_missing_field",
+            "pointer": "/processes",
+            "message": "Required field is missing.",
+            "expected": "required field",
+            "received": "object"
+          }
+        ],
+        "summary": {
+          "error_count": 2,
+          "warning_count": 2
+        },
+        "runtime_schema_report": {
+          "ok": false,
+          "boundary": "post_extraction",
+          "mode": "report",
+          "errors": [
+            {
+              "code": "runtime_schema_missing_field",
+              "pointer": "/entities",
+              "message": "Required field is missing.",
+              "expected": "required field",
+              "received": "object"
+            },
+            {
+              "code": "runtime_schema_missing_field",
+              "pointer": "/processes",
+              "message": "Required field is missing.",
+              "expected": "required field",
+              "received": "object"
+            }
+          ],
+          "warnings": [],
+          "summary": {
+            "error_count": 2,
+            "warning_count": 0
+          }
+        }
+      },
+      "reconstruction": {},
+      "repair": {
+        "outcome": "not_attempted",
+        "attempts": 0,
+        "repaired_pointers": [],
+        "unrepaired_pointers": [],
+        "rejected": [],
+        "reason": "no contract error names a repairable row; a container-level guard cannot be fixed by editing a row"
+      },
+      "boundaries": [
+        {
+          "stage": "extraction",
+          "boundary": "stage1_extraction",
+          "outcome": "contract_failed_after_cleaning",
+          "model": "",
+          "finish_reason": "",
+          "attempts": 0,
+          "response_status": "",
+          "raw_entity_counts": {
+            "total": 0
+          },
+          "raw_process_counts": {
+            "total": 0
+          },
+          "response_hash": "sha256:44136fa355b3678a",
+          "error": "2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+          "contract_ok": false,
+          "note": "stage_one_boundary_incomplete",
+          "failing_codes": [
+            "entities_required",
+            "processes_required"
+          ],
+          "repair_outcome": "not_attempted"
+        }
+      ],
+      "summary": {
+        "ok": false,
+        "outcome": "contract_failed_after_cleaning",
+        "payload_hash": "sha256:44136fa355b3678a",
+        "entity_counts": {
+          "total": 0
+        },
+        "process_counts": {
+          "total": 0
+        },
+        "contract_summary": {
+          "error_count": 2,
+          "warning_count": 2
+        },
+        "incomplete_reason": "2 post-extraction contract error(s) remain (first: entities_required); localized row repair was not attempted: no contract error names a repairable row; a container-level guard cannot be fixed by editing a row",
+        "row_repair": {
+          "outcome": "not_attempted",
+          "attempts": 0,
+          "repaired_pointers": [],
+          "unrepaired_pointers": [],
+          "rejected": [],
+          "reason": "no contract error names a repairable row; a container-level guard cannot be fixed by editing a row"
+        }
+      },
+      "payload_without_lineage": {},
+      "lineage_entry_count": 0
+    }
+  ],
+  "strict_sha256": "30bec6c5488f61801b6fc8243dd235490ffffb86e0ed4cf10d6637c0d83686ea",
+  "preservation_sha256": "2e1bf38f2e34055ee4b9c47c554f0bb2abf0d4d9aa768d57005da9430a4a5539",
+  "lineage_entry_counts": {
+    "reconstruct": 7,
+    "no_reconstruct": 4,
+    "repair": 5,
+    "incomplete": 4,
+    "not_a_dict": 0
+  },
+  "summary_payload_hash_by_leg": {
+    "reconstruct": "sha256:4534566ef34355fc",
+    "no_reconstruct": "sha256:7ec3e957443a53f6",
+    "repair": "sha256:f49be73810338000",
+    "incomplete": "sha256:2da864d4e8aafda9",
+    "not_a_dict": "sha256:44136fa355b3678a"
+  }
+}

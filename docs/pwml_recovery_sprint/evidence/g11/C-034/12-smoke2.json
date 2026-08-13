@@ -1,0 +1,157 @@
+{
+  "label": "smoke2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import t2pw,sys,pytest;print('T2PW_MODULE:',t2pw.__file__,flush=True);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c034/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p21-lineage-extract",
+  "started_at": "2026-08-13T17:54:10+00:00",
+  "finished_at": "2026-08-13T17:54:39+00:00",
+  "duration_seconds": 28.501633899999433,
+  "timeout_seconds": 1200.0,
+  "root_pid": 498348,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 488560,
+      "name": "python.exe",
+      "ppid": 498348
+    },
+    {
+      "pid": 493052,
+      "name": "python.exe",
+      "ppid": 494588
+    },
+    {
+      "pid": 494588,
+      "name": "python.exe",
+      "ppid": 488560
+    },
+    {
+      "pid": 494092,
+      "name": "python.exe",
+      "ppid": 488560
+    },
+    {
+      "pid": 497952,
+      "name": "python.exe",
+      "ppid": 494092
+    },
+    {
+      "pid": 493620,
+      "name": "python.exe",
+      "ppid": 488560
+    },
+    {
+      "pid": 494516,
+      "name": "python.exe",
+      "ppid": 493620
+    },
+    {
+      "pid": 498812,
+      "name": "python.exe",
+      "ppid": 488560
+    },
+    {
+      "pid": 498852,
+      "name": "python.exe",
+      "ppid": 498812
+    }
+  ],
+  "descendants_terminated": [
+    488560,
+    493052,
+    493620,
+    494092,
+    494516,
+    494588,
+    497952,
+    498812,
+    498852
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 486716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 486756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 493604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 494940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 495432,
+      "name": "python.exe"
+    },
+    {
+      "pid": 495640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 498084,
+      "name": "python.exe"
+    },
+    {
+      "pid": 498464,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-034/12-smoke2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p21-lineage-extract\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p21-lineage-extract",
+    "repo_head": "bcc0bfe3cdbd02f731fda09adbcf655e525a3345",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

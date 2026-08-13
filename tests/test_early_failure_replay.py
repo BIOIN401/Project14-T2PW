@@ -70,6 +70,7 @@ from t2pw.pipeline.pipeline import (  # noqa: E402
     PipelineFailure,
     run_stage_one_with_chunking,
 )
+from t2pw.pipeline.lineage import LINEAGE_KEY  # noqa: E402
 from t2pw.pipeline.preprocessor import PREPROCESS_STATUS_KEY, preprocess  # noqa: E402
 from t2pw.pipeline.stage_one_boundary import settle_stage_one  # noqa: E402
 
@@ -502,8 +503,17 @@ def test_missing_registry_rows_become_unresolved_shells_not_lost_reactions(
         assert "mapped_ids" not in row
         assert "uniprot" not in row
         assert "ec_number" not in row
-    # The name that WAS declared is untouched -- no duplicate shell for it.
-    assert entities["compounds"][0] == {"name": "L-glutamate"}
+    # The name that WAS declared is untouched -- no duplicate shell for it. Exact
+    # equality is still what pins "untouched"; C-034's ``provenance_lineage`` is
+    # the one key the boundary now writes, so it is lifted out and asserted on
+    # its own terms rather than loosening the comparison.
+    declared = entities["compounds"][0]
+    assert {k: v for k, v in declared.items() if k != LINEAGE_KEY} == {
+        "name": "L-glutamate"
+    }
+    assert [entry["origin"] for entry in declared[LINEAGE_KEY]] == ["paper_stated"]
+    for row in shells.values():
+        assert [entry["origin"] for entry in row[LINEAGE_KEY]] == ["inferred"]
 
 
 def test_the_stored_shapes_stay_small_enough_to_read() -> None:
