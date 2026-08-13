@@ -166,16 +166,29 @@ def require_skip_cause(cause: Any) -> str:
     return token
 
 
-def alternate_model_env_var() -> str:
-    """:data:`ALTERNATE_MODEL_ENV_VAR` if it names a model, else ``""``.
+def alternate_model_env_var(primary_env_var: Optional[str] = None) -> str:
+    """:data:`ALTERNATE_MODEL_ENV_VAR` if it names a DIFFERENT model, else ``""``.
 
     Returns the variable *name* because that is what ``chat_detailed`` takes.
-    An empty or whitespace value counts as unset: ``_resolve_model`` would fall
-    through it to the same model as rung 1, which is the thing rung 3 exists not
-    to be.
+
+    CORRECTION ROUND 1, finding 4. Comparing selector names was not enough: with
+    ``OPENROUTER_EXTRACTION_FALLBACK_MODEL`` and ``OPENROUTER_EXTRACTION_MODEL``
+    both set to ``same/model-x``, two different variable names resolved to one
+    model and rung 3 counted as "an alternate model" while asking the same model
+    the same thing. The module docstring already named that hazard; now the
+    resolution is compared, following ``_resolve_model``'s own fallthrough to
+    ``OPENROUTER_MODEL`` so the comparison is against the model that would
+    actually be called.
     """
 
-    return ALTERNATE_MODEL_ENV_VAR if (os.getenv(ALTERNATE_MODEL_ENV_VAR) or "").strip() else ""
+    alternate = (os.getenv(ALTERNATE_MODEL_ENV_VAR) or "").strip()
+    if not alternate:
+        return ""
+    name = (primary_env_var or "").strip() or "OPENROUTER_MODEL"
+    primary = (os.getenv(name) or "").strip() or (os.getenv("OPENROUTER_MODEL") or "").strip()
+    if primary and primary == alternate:
+        return ""
+    return ALTERNATE_MODEL_ENV_VAR
 
 
 def is_operation_timeout(exc: BaseException) -> bool:
@@ -368,6 +381,32 @@ class ExtractionLadder:
             a.request_hash == request_hash and a.model == model for a in self.issued
         )
 
+    def prompt_only_ever_returned_nothing(self, *, model: str, request_hash: str) -> bool:
+        """Whether this exact prompt already went to this model and said nothing.
+
+        CORRECTION ROUND 1, finding 1. This used to additionally require the two
+        empty bodies to be byte-identical, and whitespace defeated it: ``{}``
+        then ``{ }`` are two structurally empty replies with different hashes, so
+        :meth:`identical_empty_hash` returned ``""`` and the same prompt went to
+        the same model a third time -- the PMC12782028 defect, reproduced through
+        the real prompt builder at ``max_attempts=3``.
+
+        Body equality was never the fact that matters. Section 9's rule is about
+        a *strategy* proven inert, and asking a model a question it has already
+        answered with nothing is inert whether or not it formats the nothing the
+        same way twice. Requires at least one prior attempt at this prompt, and
+        that **every** one of them declared nothing: a prompt that once produced
+        content is not covered by this rule.
+        """
+
+        if not request_hash:
+            return False
+        prior = [
+            a for a in self.issued
+            if a.request_hash == request_hash and a.model == model
+        ]
+        return bool(prior) and all(a.structurally_empty for a in prior)
+
     def identical_empty_hash(self) -> str:
         """The response hash two attempts returned identically empty, or ``""``.
 
@@ -383,6 +422,17 @@ class ExtractionLadder:
             if empties[i].response_hash == empties[i + 1].response_hash:
                 return empties[i].response_hash
         return ""
+
+    def inert_extraction_observed(self) -> bool:
+        """Whether a rung was refused because the extraction had proven inert.
+
+        The termination reason must not depend on whether two empty replies were
+        byte-identical either: a run stopped because the same prompt had already
+        said nothing is ``identical_empty_response``, and reporting ``""`` there
+        leaves a downstream denominator with no classification at all.
+        """
+
+        return any(row.get("skip_cause") == SKIP_IDENTICAL_PROMPT for row in self.skipped)
 
     # -- the gate ----------------------------------------------------------
     def admit(
@@ -443,14 +493,15 @@ class ExtractionLadder:
                 detail="the model serving this rung could not be named",
             )
 
-        repeated = self.identical_empty_hash()
-        if repeated and self.prompt_already_sent(model=model, request_hash=request_hash):
+        if self.prompt_only_ever_returned_nothing(model=model, request_hash=request_hash):
+            repeated = self.identical_empty_hash()
             return refuse(
                 SKIP_IDENTICAL_PROMPT,
                 reason=IDENTICAL_EMPTY_RESPONSE,
                 detail=(
-                    f"two attempts already returned {repeated} from {model}; the same "
-                    "prompt must not go to the same model again"
+                    f"this prompt already went to {model} and declared nothing"
+                    + (f" ({repeated} twice)" if repeated else "")
+                    + "; the same prompt must not go to the same model again"
                 ),
             )
 

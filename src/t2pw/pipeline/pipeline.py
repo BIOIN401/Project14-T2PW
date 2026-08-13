@@ -3253,11 +3253,52 @@ def _ladder_request_hash(system_prompt: str, user_prompt: str, model: str) -> st
     return payload_hash({"system": system_prompt, "user": user_prompt, "model": model})
 
 
-def _extraction_scope_label(prompt: str) -> str:
-    """The ``<extraction_scope>`` a built prompt declares, or ``full_text``."""
+def _prompt_excerpt(prompt: str) -> str:
+    """The source text a built prompt fenced off for the model, or ``""``.
 
-    match = _EXTRACTION_SCOPE_RE.search(prompt or "")
-    return (match.group(1).strip() if match else "") or SCOPE_FULL_TEXT
+    The fences are the boundary between what the pipeline wrote and what the
+    paper says, which is what makes them the right place to split a prompt when
+    deciding how much of either is present.
+    """
+
+    head, fence, rest = (prompt or "").partition("<<<")
+    if not fence:
+        return ""
+    body, closing, _tail = rest.rpartition(">>>")
+    return body if closing else rest
+
+
+def _extraction_scope_label(prompt: str, *, reference: str = "") -> str:
+    """The ``<extraction_scope>`` a built prompt declares, or ``full_text``.
+
+    CORRECTION ROUND 1, finding 3. Two things changed, because the previous
+    version read its evidence out of a channel the untrusted input writes: the
+    paper text sits between the ``<<<``/``>>>`` fences, so a source containing
+    ``<extraction_scope>sections:results</extraction_scope>`` made an
+    un-narrowed full-text re-ask look like a narrowed one, and rung 3 went to the
+    same model over the same text.
+
+    1. The tag is read only from the prompt PREFIX, before the first fence --
+       never from the source excerpt.
+    2. A declared scope is believed only when the excerpt is **strictly shorter**
+       than ``reference``'s (the first attempt's). That is the property "narrower
+       section-based extraction" actually asserts, and no input can forge it: a
+       text cannot make itself shorter than itself.
+
+    Without a ``reference`` there is nothing to compare against, so the answer is
+    ``full_text`` -- the caller then finds no material difference and does not
+    issue the rung, which is the fail-closed direction.
+    """
+
+    prefix = (prompt or "").partition("<<<")[0]
+    match = _EXTRACTION_SCOPE_RE.search(prefix)
+    label = (match.group(1).strip() if match else "")
+    if not label:
+        return SCOPE_FULL_TEXT
+    excerpt, baseline = _prompt_excerpt(prompt), _prompt_excerpt(reference)
+    if not baseline or not excerpt or len(excerpt.strip()) >= len(baseline.strip()):
+        return SCOPE_FULL_TEXT
+    return label
 
 
 def _reply_declared_nothing(raw: str) -> bool:
@@ -3531,8 +3572,14 @@ def _run_json_stage(
             **(extra or {}),
         )
 
+    #: Attempt 1's prompt, kept so rung 3's claim to be NARROWER can be measured
+    #: against something rather than taken from a tag the source text can write.
+    first_user_prompt = ""
+
     for attempt in range(1, max_attempts + 1):
         user_prompt = build_user_prompt(prev_output, last_error)
+        if not first_user_prompt:
+            first_user_prompt = user_prompt
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
@@ -3657,33 +3704,48 @@ def _run_json_stage(
             # Localized repair, not re-extraction. Skipped for an empty reply
             # (there is nothing to repair) and for a content_filter stop (the
             # repair prompt would contain the refused text).
+            # The applicability test comes FIRST and the budget question second.
+            # CORRECTION ROUND 1, finding 2: admitting the repair rung above this
+            # guard priced a call that ``repair_json=False``, an empty reply or a
+            # content_filter stop meant would never be issued, so a tight budget
+            # reported ``budget_exhausted`` -- "another recovery step might have
+            # helped" -- for a step that did not exist, and wrote a checkpoint for
+            # a non-call. Section 9's denominator rule then books that as an
+            # operational failure of pipeline completion. Asking "is there a next
+            # step" before "can we afford it" is the only order that cannot
+            # manufacture one.
             repair_budget: Optional[int] = None
             repair_admitted = True
-            if ladder is not None:
-                # A repair draw is a model call, so it is inside § 9's ceiling of
-                # three -- before C-042 it was outside ``max_attempts`` and an
-                # extraction configured for 2 attempts could issue up to 8 calls.
-                # ``repair_json_text`` treats a budget of 0 as "not attempted"
-                # and returns without calling a model.
-                repair_budget = ladder.repair_budget(MAX_JSON_REPAIR_ATTEMPTS)
-                repair_request_hash = payload_hash(
-                    {"repair_of": raw, "error": error_msg, "model": model_identity}
-                )
-                repair_decision = ladder.admit(
-                    rung=RUNG_JSON_REPAIR,
-                    model=model_identity,
-                    request_hash=repair_request_hash,
-                    state={"phase": "json_repair", "loop_attempt": attempt},
-                )
-                repair_admitted = repair_decision.allowed
-                if not repair_admitted and repair_decision.termination_reason == BUDGET_EXHAUSTED:
-                    budget_refusal = repair_decision
             if (
                 repair_json
-                and repair_admitted
                 and not empty
                 and str(call_diag.get("terminal_reason") or "") != "content_filter"
             ):
+                if ladder is not None:
+                    # A repair draw is a model call, so it is inside section 9's
+                    # ceiling of three -- before C-042 it was outside
+                    # ``max_attempts`` and an extraction configured for 2 attempts
+                    # could issue up to 8 calls. ``repair_json_text`` treats a
+                    # budget of 0 as "not attempted" and calls no model.
+                    repair_budget = ladder.repair_budget(MAX_JSON_REPAIR_ATTEMPTS)
+                    repair_request_hash = payload_hash(
+                        {"repair_of": raw, "error": error_msg, "model": model_identity}
+                    )
+                    repair_decision = ladder.admit(
+                        rung=RUNG_JSON_REPAIR,
+                        model=model_identity,
+                        request_hash=repair_request_hash,
+                        state={"phase": "json_repair", "loop_attempt": attempt},
+                    )
+                    repair_admitted = repair_decision.allowed
+                    if (
+                        not repair_admitted
+                        and repair_decision.termination_reason == BUDGET_EXHAUSTED
+                    ):
+                        budget_refusal = repair_decision
+            else:
+                repair_admitted = False
+            if repair_admitted:
                 repair = repair_json_text(
                     raw,
                     error_msg,
@@ -3764,8 +3826,8 @@ def _run_json_stage(
     # -----------------------------------------------------------------------
     if ladder is not None and saw_empty_payload:
         scoped_prompt = build_user_prompt(prev_output, SECTION_SCOPED_RETRY_REASON)
-        scope = _extraction_scope_label(scoped_prompt)
-        rung3_env = alternate_model_env_var() or model_env_var
+        scope = _extraction_scope_label(scoped_prompt, reference=first_user_prompt)
+        rung3_env = alternate_model_env_var(model_env_var) or model_env_var
         rung3_model = _ladder_model_identity(rung3_env)
         rung3_hash = _ladder_request_hash(system_prompt, scoped_prompt, rung3_model)
         differs, why = ladder.materially_differs(
@@ -3873,7 +3935,9 @@ def _run_json_stage(
     reason = ""
     if budget_refusal is not None:
         reason = BUDGET_EXHAUSTED
-    elif ladder is not None and ladder.identical_empty_hash():
+    elif ladder is not None and (
+        ladder.inert_extraction_observed() or ladder.identical_empty_hash()
+    ):
         reason = IDENTICAL_EMPTY_RESPONSE
 
     issued = ladder.attempts_used if ladder is not None else max_attempts
