@@ -951,7 +951,9 @@ def _run_post_pipeline_research(payload: Dict[str, Any]):
 
 
 @pytest.mark.usefixtures("offline_mapping")
-def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None:
+def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """A research run must come out with the pathway it went in with.
 
     The peripheral process here is unmapped, which is the normal state of a
@@ -960,6 +962,52 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None
     that on the identical payload -- and a research run must not, because
     research mode's whole contract is that findings annotate rather than block.
     """
+
+    # Enrichment runs BETWEEN mapping and the quarantine boundary, and the shared
+    # ``offline_mapping`` stub makes it a byte-for-byte copy. That collapses the
+    # pre-enrichment artifact (``final_mapped_db``) onto the post-enrichment one
+    # (``final_mapped_enriched``), so a comparison against either looks correct
+    # and the boundary assertion below would pin nothing about quarantine -- it
+    # would silently span every stage from mapping onwards. This override is
+    # local to this test, so no other node in this file sees it, and it does what
+    # the real Stage 7 does to an already-identified protein: attach the optional
+    # UniProt annotation under ``enrichment`` (see
+    # ``enrich_entities._enrich_payload_inner``) and nothing else. Fixed content,
+    # no clock and no network, so it is deterministic; it adds no reaction,
+    # removes none, renames nothing and touches no unidentified protein, so it is
+    # biologically inert -- and the two artifacts are now genuinely different
+    # objects, which is what makes the assertion below non-vacuous.
+    import t2pw.mapping.enrich_entities as enrich_entities  # noqa: PLC0415
+
+    def _enrichment_that_annotates(
+        input_path: Any,
+        output_path: Any,
+        report_path: Any,
+        **_kwargs: Any,
+    ) -> Dict[str, Any]:
+        enriched = json.loads(Path(input_path).read_text(encoding="utf-8"))
+        for row in (enriched.get("entities") or {}).get("proteins") or []:
+            if not isinstance(row, dict):
+                continue
+            # Exactly the real stage's own guard: a protein with no accession is
+            # not enriched, so the unidentified modifier this payload exists to
+            # exercise is left untouched.
+            accession = str((row.get("mapped_ids") or {}).get("uniprot") or "")
+            if not accession:
+                continue
+            row.setdefault("enrichment", {}).setdefault("protein", {})["uniprot"] = {
+                "status": "ok",
+                "uniprot_id": accession,
+                "provenance": {"source": "test_fixture", "query": accession},
+            }
+        report = {"summary": {"enrichment_annotated_for_test": True}}
+        Path(output_path).write_text(
+            json.dumps(enriched, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
+        return report
+
+    monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
 
     at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
 
@@ -979,12 +1027,40 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None
         "glutathione synthesis",
         "peripheral OPDA reduction",
     ]
+    # The two artifacts really are different objects here, so the equality below
+    # is a statement about quarantine and not an accident of a no-op stage. If
+    # enrichment ever reverts to a pass-through, this fails loudly rather than
+    # letting the boundary assertion go quietly vacuous again.
+    assert artifacts["final_mapped_db"] != artifacts["final_mapped_enriched"], (
+        "enrichment produced no difference, so the boundary assertion below would "
+        "hold for the pre-enrichment artifact too and pin nothing"
+    )
+    # ...and the difference is annotation only: strip the enrichment block the
+    # stage added and the two artifacts are identical again. This is the proof
+    # that the arranged difference changes no biology; it is deliberately NOT
+    # part of the boundary comparison, which stays whole-object below.
+    _without_annotation = deepcopy(artifacts["final_mapped_enriched"])
+    for _row in _without_annotation["entities"]["proteins"]:
+        _row.pop("enrichment", None)
+    assert _without_annotation == artifacts["final_mapped_db"]
+
     # Byte for byte, not merely "the same processes": research quarantine forwards
-    # the mapped candidate unchanged, so the payload the boundary passed on must be
-    # equal to the one it was handed. This is the assertion that fails if quarantine
-    # ever edits a research payload -- reorders a list, drops an empty bucket,
-    # normalizes a name -- while leaving the process count intact.
-    mapped_in = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
+    # the candidate it was handed unchanged, so the payload the boundary passed on
+    # must be equal to the one it received. This is the assertion that fails if
+    # quarantine ever edits a research payload -- reorders a list, drops an empty
+    # bucket, normalizes a name -- while leaving the process count intact.
+    #
+    # The comparand is ``final_mapped_enriched`` because that key IS
+    # ``final_export_payload``, the exact object handed to
+    # ``freeze_canonical_payload`` (streamlit_app.py: the freeze call, and the
+    # artifact published under this key). ``final_mapped_db`` is the PRE-enrichment
+    # remap output, one stage too early, so comparing against it silently covers
+    # enrichment as well as quarantine; ``final_mapped`` and ``final_export_input``
+    # are both ``canonical_export_payload or final_export_payload`` and collapse to
+    # the post-quarantine object itself, which would compare the payload to itself.
+    # Indexed, not ``.get``: a missing key must fail loudly rather than fall back
+    # to a comparand that pins less.
+    mapped_in = artifacts["final_mapped_enriched"]
     assert candidate == mapped_in
 
     # And the run is not blocked one step later either. The post-mapping Stage 3
