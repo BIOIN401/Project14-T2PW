@@ -901,6 +901,19 @@ the ceiling is precisely a ladder that did not. The implemented rank in
 `operation_timeout`, `identical_empty_response` and `scientifically_unrecoverable`, and above
 `retrieval_exhausted` and `no_new_claims`.
 
+**It reaches the leg-level report.** The reason is set at two sites, not one. The ladder's
+`admit` names it on the `RungDecision` that refuses the rung, and `_run_json_stage`'s
+termination block names it on `PipelineFailure.terminal_reason` and on the
+`stage1_extraction_ladder_termination` boundary record — where a capped leg previously
+reported `""`. At the leg level it is the **last** branch, after `budget_exhausted` and
+`identical_empty_response`, and it is claimed on the ladder's **recorded cap refusal**, not
+on `attempts_remaining == 0`: the ceiling must actually have stopped a rung that wanted to
+run. A leg that merely spent its last attempt and then failed for another reason was not
+ended by the cap. `operation_timeout` is not in that chain and cannot be displaced by it:
+`_issue` records the timeout and re-raises, so a timed-out leg leaves by that exception and
+never reaches the block. Nor can a successful leg acquire the reason — both success returns
+precede the block.
+
 **`OPERATIONAL_TERMINATION_REASONS` is UNCHANGED** — it stays exactly
 `{budget_exhausted, operation_timeout}`. `attempt_cap_reached` is **not** added to it. D-005
 calls the cap *"a safety ceiling, not a promise"*, which is a different fact from a leg that

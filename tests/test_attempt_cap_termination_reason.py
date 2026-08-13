@@ -326,3 +326,225 @@ def test_a10_naming_the_stop_changes_no_admission_and_raises_no_new_exception() 
     assert decision.raise_if_refused() is None    # still not an exception path
     assert ladder.attempts_used == 1 and ladder.attempts_remaining == 0
     assert ladder.repair_budget(2) == 0           # the ceiling arithmetic is untouched
+
+
+# ===========================================================================
+# BOUNDARY EXTENSION — the LEG-level termination reason in
+# ``pipeline._run_json_stage``. Same discipline: modules imported, not the new
+# constants, so this whole file still loads at 472293c.
+# ===========================================================================
+import inspect  # noqa: E402
+
+import t2pw.pipeline.extraction_diagnostics as diag_mod  # noqa: E402
+import t2pw.pipeline.pipeline as pipeline_mod  # noqa: E402
+from t2pw.llm.client import (  # noqa: E402
+    CompletionDiagnostics, CompletionResult, LLMOperationTimeout,
+)
+from t2pw.pipeline.pipeline import PipelineFailure, _run_json_stage  # noqa: E402
+
+#: Two structurally empty payloads with DIFFERENT bytes, so they are empty
+#: without being the identical-empty signature. That separation is what lets a
+#: run reach the cap branch with nothing stronger true.
+EMPTY_A = '{"entities": {}, "processes": []}'
+EMPTY_B = '{"entities": {"proteins": []}, "processes": []}'
+
+
+class Chat:
+    """A scripted ``chat_detailed``. Offline; never reaches a provider."""
+
+    def __init__(self, *texts: str, raises=None) -> None:
+        self._texts, self._raises, self.prompts = list(texts), raises, []
+
+    def __call__(self, messages, **kwargs):
+        self.prompts.append(messages[-1]["content"])
+        if self._raises is not None:
+            raise self._raises
+        text = self._texts[min(len(self.prompts) - 1, len(self._texts) - 1)]
+        return CompletionResult(text, CompletionDiagnostics(
+            model="test-model", stage="extraction", attempts=1))
+
+    @property
+    def calls(self) -> int:
+        return len(self.prompts)
+
+
+@pytest.fixture
+def recorder():
+    rec = diag_mod.activate(run_id="c042a-leg")
+    yield rec
+    diag_mod.deactivate()
+
+
+def run_stage(chat, *, monkeypatch, ladder, max_attempts: int = 3):
+    monkeypatch.setattr(pipeline_mod, "chat_detailed", chat)
+    return _run_json_stage(
+        stage_name="extraction", system_prompt="SYSTEM",
+        build_user_prompt=lambda prev, err: pipeline_mod._build_extraction_prompt(
+            "A paper about a pathway.", prev, err),
+        max_attempts=max_attempts, temperature=0.0, max_tokens=100,
+        repair_json=False, retry_on_empty_payload=True, ladder=ladder)
+
+
+def terminations(rec):
+    return [r for r in rec.boundaries
+            if r.get("boundary") == "stage1_extraction_ladder_termination"]
+
+
+def seed_cap_refusal(ladder) -> None:
+    """Put a REAL cap refusal on the ladder without spending its ceiling.
+
+    Requirement 1 asks for the cap holding *simultaneously* with a budget refusal
+    and with an inert ladder. Inside one ``admit`` those cannot co-occur naturally
+    -- the ceiling is checked before the budget gate, so a ladder that refused on
+    budget still had attempts left -- which is itself a structural guarantee, and
+    it is asserted in ``test_l6``. Seeding the row is how the ORDERING of the
+    leg-level ``elif`` chain gets tested directly, which is what the branch does.
+    ``skipped`` is public state and a caller-supplied ladder is a supported input.
+    """
+    ladder.skipped.append({
+        "rung": el.RUNG_DIFFERENT_STRATEGY, "attempt": 99, "allowed": False,
+        "skip_cause": el.SKIP_ATTEMPT_CAP, "termination_reason": CAP,
+    })
+
+
+# ------------------------------------------------- L1 / A9 at the leg level
+def test_l1_g9_a_capped_leg_reports_the_reason_where_it_used_to_report_nothing(
+        monkeypatch, recorder) -> None:
+    """G9 BEHAVIOURAL BASE PROOF, LEG LEVEL — fails at 472293c, passes at tip.
+
+    At base ``PipelineFailure.terminal_reason`` and the boundary record are ``""``
+    for a leg the ceiling ended: the block had no branch for it. Asserted against
+    the literal, so at base this fails on the OBSERVED VALUE.
+    """
+    ladder = el.ExtractionLadder(stage="extraction", max_total_attempts=2,
+                                 deadline=None)
+    with pytest.raises(PipelineFailure) as excinfo:
+        run_stage(Chat(EMPTY_A, EMPTY_B), monkeypatch=monkeypatch, ladder=ladder)
+
+    assert any(r.get("skip_cause") == el.SKIP_ATTEMPT_CAP for r in ladder.skipped)
+    assert excinfo.value.terminal_reason != ""      # the base behaviour corrected
+    assert excinfo.value.terminal_reason == CAP
+    # ...and it reached the artifact, not only the exception.
+    row = terminations(recorder)[-1]
+    assert row["terminal_reason"] == CAP
+    assert row["extraction_ladder"]["termination_reason"] == CAP
+    assert excinfo.value.ladder["termination_reason"] == CAP
+
+
+# -------------------------------------------------------- L2/L3 precedence
+def test_l2_a_refused_budget_still_wins_when_the_cap_also_holds(
+        monkeypatch, recorder) -> None:
+    """Clause 4 over clause 5, at the leg level. ``budget_exhausted`` is retained."""
+    # 700 s of leg, a 120 s reserve, calls priced at 300 s and each taking 500 s.
+    # Draw 1 needs 420 of 700 and starts; draw 2 needs 420 of 200 and is refused.
+    # Deterministic, and it does not depend on the machine's speed.
+    clock = {"t": 0.0}
+    deadline = dl.LegDeadline(700.0, clock=lambda: clock["t"])
+    ladder = el.ExtractionLadder(stage="extraction", deadline=deadline,
+                                 price_fn=lambda **_kw: 300.0)
+    seed_cap_refusal(ladder)
+
+    class Spending(Chat):
+        def __call__(self, messages, **kwargs):
+            result = super().__call__(messages, **kwargs)
+            clock["t"] += 500.0
+            return result
+
+    with pytest.raises(PipelineFailure) as excinfo:
+        run_stage(Spending(EMPTY_A, EMPTY_B), monkeypatch=monkeypatch,
+                  ladder=ladder, max_attempts=3)
+
+    assert any(r.get("skip_cause") == el.SKIP_BUDGET_REFUSED for r in ladder.skipped)
+    assert any(r.get("skip_cause") == el.SKIP_ATTEMPT_CAP for r in ladder.skipped)
+    assert excinfo.value.terminal_reason == dl.BUDGET_EXHAUSTED
+    assert excinfo.value.terminal_reason != CAP
+    assert terminations(recorder)[-1]["terminal_reason"] == dl.BUDGET_EXHAUSTED
+
+
+def test_l3_an_inert_ladder_still_wins_when_the_cap_also_holds(
+        monkeypatch, recorder) -> None:
+    """Clause 2 over clause 5. ``identical_empty_response`` is retained."""
+    ladder = el.ExtractionLadder(stage="extraction", max_total_attempts=3,
+                                 deadline=None)
+    seed_cap_refusal(ladder)
+
+    with pytest.raises(PipelineFailure) as excinfo:
+        run_stage(Chat(EMPTY_A, EMPTY_A), monkeypatch=monkeypatch, ladder=ladder,
+                  max_attempts=2)
+
+    assert ladder.identical_empty_hash() or ladder.inert_extraction_observed()
+    assert any(r.get("skip_cause") == el.SKIP_ATTEMPT_CAP for r in ladder.skipped)
+    assert excinfo.value.terminal_reason == dl.IDENTICAL_EMPTY_RESPONSE
+    assert excinfo.value.terminal_reason != CAP
+
+
+# ------------------------------------------------------------- L4 timeout
+def test_l4_an_operation_timeout_is_never_displaced_by_the_cap(
+        monkeypatch, recorder) -> None:
+    """The cap cannot shadow ``operation_timeout`` because it never meets it.
+
+    ``_issue`` records ``operation_timeout`` and RE-RAISES, so a timed-out leg
+    leaves ``_run_json_stage`` by that exception and the termination block -- the
+    only place the cap branch lives -- is never executed on that path. Two disjoint
+    exits, proven by the exception type that actually escapes.
+    """
+    ladder = el.ExtractionLadder(stage="extraction", max_total_attempts=3,
+                                 deadline=None)
+    seed_cap_refusal(ladder)                      # the cap holds, and still loses
+
+    with pytest.raises(LLMOperationTimeout):
+        run_stage(Chat(EMPTY_A, raises=LLMOperationTimeout("overran")),
+                  monkeypatch=monkeypatch, ladder=ladder)
+
+    rows = terminations(recorder)
+    assert rows[-1]["terminal_reason"] == dl.OPERATION_TIMEOUT
+    assert not any(r.get("terminal_reason") == CAP for r in rows)
+
+
+# ----------------------------------------------------- L5 success unreachable
+def test_l5_a_successful_leg_can_never_acquire_this_reason(
+        monkeypatch, recorder) -> None:
+    """Clause 1. The block is unreachable on every success path, structurally.
+
+    Both successful exits (``return parsed, attempts`` and ``return parsed3,
+    attempts``) precede the termination block in source order, so a leg that
+    produced a payload has already returned before ``reason`` is ever computed.
+    Pinned both ways: by source order, and by a run that succeeds.
+    """
+    source = inspect.getsource(_run_json_stage)
+    block = source.index('    reason = ""')
+    returns = [i for i in range(len(source))
+               if source.startswith("            return parsed", i)]
+    assert returns and all(i < block for i in returns)
+
+    ladder = el.ExtractionLadder(stage="extraction", max_total_attempts=3,
+                                 deadline=None)
+    parsed, _attempts = run_stage(
+        Chat('{"entities": {"proteins": [{"name": "P"}]}, "processes": []}'),
+        monkeypatch=monkeypatch, ladder=ladder)
+
+    assert parsed["entities"]["proteins"][0]["name"] == "P"
+    assert terminations(recorder) == []           # no termination record at all
+    assert not any(r.get("skip_cause") == el.SKIP_ATTEMPT_CAP
+                   for r in ladder.skipped)
+
+
+# --------------------------------------- L6 the structural guarantee, recorded
+def test_l6_the_ceiling_is_checked_before_the_budget_gate_so_they_cannot_race() -> None:
+    """Why L2 seeds rather than co-produces: ``admit`` orders the two checks.
+
+    A ladder refused on budget necessarily still had attempts remaining, so within
+    one ``admit`` a budget refusal and a cap refusal cannot arise from the same
+    call. The leg-level ``elif`` chain is ordered anyway -- defence in depth, and
+    the ordering is what L2 and L3 test. If this assertion ever fails the ordering
+    guarantee has moved and L2's seeding is no longer merely a convenience.
+    """
+    source = inspect.getsource(el.ExtractionLadder.admit)
+    assert source.index("attempts_used >= self.max_total_attempts") < source.index(
+        "if self.deadline is None")
+
+    ladder = spent_ladder(cap=1)
+    decision = ladder.admit(rung=el.RUNG_NORMAL, model="m", request_hash="h")
+    assert decision.skip_cause == el.SKIP_ATTEMPT_CAP
+    assert decision.termination_reason == CAP
+    assert decision.admission is None            # the budget gate never ran
