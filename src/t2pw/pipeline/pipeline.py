@@ -14,7 +14,10 @@ from t2pw.pipeline.enzyme_cues import (
     cue_near_name,
 )
 from t2pw.pipeline.extraction_diagnostics import (
+    BOUNDARY_STAGE0_PREPROCESS,
     BOUNDARY_STAGE1_EXTRACTION,
+    BOUNDARY_STAGE1_LADDER_CHECKPOINT,
+    BOUNDARY_STAGE1_LADDER_TERMINATION,
     BOUNDARY_STAGE2_INFERENCE,
     OUTCOME_EMPTY_COMPLETION,
     OUTCOME_INVALID_JSON,
@@ -26,7 +29,21 @@ from t2pw.pipeline.extraction_diagnostics import (
     current as current_diagnostics,
     payload_hash,
 )
-from t2pw.pipeline.localized_repair import repair_json_text
+from t2pw.pipeline.extraction_ladder import (
+    BUDGET_EXHAUSTED,
+    IDENTICAL_EMPTY_RESPONSE,
+    OPERATION_TIMEOUT,
+    RUNG_DIFFERENT_STRATEGY,
+    RUNG_EMPTY_REPAIR,
+    RUNG_JSON_REPAIR,
+    RUNG_NORMAL,
+    SCOPE_FULL_TEXT,
+    ExtractionLadder,
+    LegDeadline,
+    alternate_model_env_var,
+    is_operation_timeout,
+)
+from t2pw.pipeline.localized_repair import MAX_JSON_REPAIR_ATTEMPTS, repair_json_text
 from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi_example_review_context
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
@@ -3170,6 +3187,184 @@ _STAGE_BOUNDARIES: Dict[str, str] = {
     "inference": BOUNDARY_STAGE2_INFERENCE,
 }
 
+#: The one stage § 9's three-attempt ladder governs. Stage 2 is excluded by
+#: name and not by a flag a caller could flip: its payload nests under
+#: ``additions`` and is *supposed* to be empty at the top level, so a third rung
+#: there would ask a model that correctly proposed nothing to try harder.
+_LADDER_STAGE = "extraction"
+
+#: Attempt-log note for the third rung. Two of them, for the same reason
+#: ``NOTE_EMPTY_PAYLOAD_*`` are two: a reader of
+#: ``extraction_boundary_report.json`` has to be able to tell a third rung that
+#: recovered the extraction from one that ran and still found nothing.
+NOTE_DIFFERENT_STRATEGY = "materially_different_strategy_recovered"
+NOTE_DIFFERENT_STRATEGY_EXHAUSTED = "materially_different_strategy_exhausted"
+
+#: Handed to the prompt builder as ``last_error`` to request rung 3's narrower
+#: extraction. A sentinel and not a free-form message: ``_build_extraction_prompt``
+#: branches on identity, and anything the builder does not recognise must fall
+#: through to the historical "your previous attempt returned invalid JSON" text
+#: rather than silently producing rung 1's prompt again.
+SECTION_SCOPED_RETRY_REASON = (
+    "The previous attempts returned the same structurally empty extraction, so this "
+    "attempt is narrowed to the sections most likely to state the chemistry."
+)
+
+#: How ``_run_json_stage`` reads back the scope the prompt builder actually
+#: applied. The ladder refuses to call a rung "materially different" on the
+#: strength of having *asked* for a narrower scope; it checks that one came back.
+_EXTRACTION_SCOPE_RE = re.compile(r"<extraction_scope>([^<>]*)</extraction_scope>")
+
+#: Sections whose relevance clears this are worth a narrowed re-extraction.
+#: 0.6 admits results, discussion, conclusions, methods and the abstract, and
+#: excludes introduction/background (0.4), references (0.1) and
+#: acknowledgements (0.05) -- the parts of a paper that describe other people's
+#: chemistry or none at all.
+_NARROW_MIN_RELEVANCE = 0.6
+
+#: Cap on how many sections a narrowed extraction keeps. Three is enough to hold
+#: results + methods + abstract; more than that stops being a narrowing.
+_NARROW_MAX_SECTIONS = 3
+
+
+def _ladder_model_identity(model_env_var: Optional[str]) -> str:
+    """The model *selector* a call will use, nameable before the call.
+
+    The resolved model id is not knowable here -- ``_resolve_model`` reads the
+    environment inside the client -- but § 9's rule is about whether the same
+    prompt goes to the *same model* again, and the selector answers that without
+    a provider round trip. It is never empty: a caller that names no stage
+    variable gets the global one, which is what the client would fall through
+    to, so the identity is a fact rather than a default standing in for one.
+    """
+
+    var = (model_env_var or "").strip()
+    return f"env:{var}" if var else "env:OPENROUTER_MODEL"
+
+
+def _ladder_request_hash(system_prompt: str, user_prompt: str, model: str) -> str:
+    """Fingerprint of what is about to be sent, model selector included.
+
+    Computed locally rather than read back from the provider's diagnostics:
+    "has this prompt already gone to this model" has to be answerable *before*
+    the call, and every test of the ladder runs with no provider at all.
+    """
+
+    return payload_hash({"system": system_prompt, "user": user_prompt, "model": model})
+
+
+def _prompt_excerpt(prompt: str) -> str:
+    """The source text a built prompt fenced off for the model, or ``""``.
+
+    The fences are the boundary between what the pipeline wrote and what the
+    paper says, which is what makes them the right place to split a prompt when
+    deciding how much of either is present.
+    """
+
+    head, fence, rest = (prompt or "").partition("<<<")
+    if not fence:
+        return ""
+    body, closing, _tail = rest.rpartition(">>>")
+    return body if closing else rest
+
+
+def _extraction_scope_label(prompt: str, *, reference: str = "") -> str:
+    """The ``<extraction_scope>`` a built prompt declares, or ``full_text``.
+
+    CORRECTION ROUND 1, finding 3. Two things changed, because the previous
+    version read its evidence out of a channel the untrusted input writes: the
+    paper text sits between the ``<<<``/``>>>`` fences, so a source containing
+    ``<extraction_scope>sections:results</extraction_scope>`` made an
+    un-narrowed full-text re-ask look like a narrowed one, and rung 3 went to the
+    same model over the same text.
+
+    1. The tag is read only from the prompt PREFIX, before the first fence --
+       never from the source excerpt.
+    2. A declared scope is believed only when the excerpt is **strictly shorter**
+       than ``reference``'s (the first attempt's). That is the property "narrower
+       section-based extraction" actually asserts, and no input can forge it: a
+       text cannot make itself shorter than itself.
+
+    Without a ``reference`` there is nothing to compare against, so the answer is
+    ``full_text`` -- the caller then finds no material difference and does not
+    issue the rung, which is the fail-closed direction.
+    """
+
+    prefix = (prompt or "").partition("<<<")[0]
+    match = _EXTRACTION_SCOPE_RE.search(prefix)
+    label = (match.group(1).strip() if match else "")
+    if not label:
+        return SCOPE_FULL_TEXT
+    excerpt, baseline = _prompt_excerpt(prompt), _prompt_excerpt(reference)
+    if not baseline or not excerpt or len(excerpt.strip()) >= len(baseline.strip()):
+        return SCOPE_FULL_TEXT
+    return label
+
+
+def _reply_declared_nothing(raw: str) -> bool:
+    """Whether a raw reply declared no entities and no processes.
+
+    Deliberately independent of ``retry_on_empty_payload``: that flag decides
+    whether a degenerate draw is *re-drawn*, while this decides whether two
+    replies were the same nothing -- the fact § 9's identical-empty rule turns
+    on. A blank reply counts; a reply that is not JSON does not, because "we
+    could not read it" is not "it said nothing".
+    """
+
+    if not raw.strip():
+        return True
+    try:
+        probe = json.loads(raw)
+    except ValueError:
+        return False
+    return isinstance(probe, dict) and _payload_is_structurally_empty(probe)
+
+
+def _narrow_to_high_signal_sections(text: str) -> Tuple[str, str]:
+    """A strictly narrower slice of *text*, plus its scope label.
+
+    § 9's third rung offers "narrower section-based extraction" as a materially
+    different strategy, and this is the narrowing: the sections that state
+    chemistry, in the paper's own order, with references and acknowledgements
+    gone. Reuses the Stage-2 chunker's section splitter and relevance map rather
+    than growing a second opinion about what a Results section is.
+
+    Returns ``("", "")`` when it cannot actually narrow anything -- one
+    unlabelled blob, or a selection no shorter than the original. That is the
+    honest answer and it is load-bearing: the caller treats "no narrowing
+    available" as "this rung is not materially different", and does not issue
+    it. Returning the full text with a scope label attached would let a rung
+    that changed nothing be recorded as one that changed strategy.
+    """
+
+    body = text or ""
+    sections = _split_into_sections(body)
+    if len(sections) < 2:
+        return "", ""
+
+    ranked = sorted(
+        enumerate(sections),
+        key=lambda pair: (-_get_section_relevance(pair[1][0]), pair[0]),
+    )
+    chosen = [
+        (index, entry)
+        for index, entry in ranked
+        if _get_section_relevance(entry[0]) >= _NARROW_MIN_RELEVANCE
+    ][:_NARROW_MAX_SECTIONS]
+    if not chosen:
+        chosen = ranked[:_NARROW_MAX_SECTIONS]
+    if not chosen:
+        return "", ""
+
+    chosen.sort(key=lambda pair: pair[0])
+    labels = [entry[0] for _index, entry in chosen]
+    narrowed = "\n\n".join(
+        f"{entry[0].title()}\n{entry[1]}" for _index, entry in chosen
+    ).strip()
+    if not narrowed or len(narrowed) >= len(body.strip()):
+        return "", ""
+    return narrowed, "sections:" + ",".join(labels)
+
 
 def _run_json_stage(
     *,
@@ -3183,6 +3378,8 @@ def _run_json_stage(
     repair_json: bool = True,
     repair_chat_fn: Optional[Callable[..., Any]] = None,
     retry_on_empty_payload: bool = False,
+    deadline: Optional[LegDeadline] = None,
+    ladder: Optional[ExtractionLadder] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """Draw JSON from the model, recording why each attempt looked as it did.
 
@@ -3225,6 +3422,26 @@ def _run_json_stage(
     ``processes`` object, returning ``{}`` from here would no longer fail
     anywhere -- it would ship a silently empty pathway. The leg still fails, as
     it does today, but now it fails naming the actual cause.
+
+    THE STAGE-1 ESCALATION LADDER (C-042, ``PRODUCT_CONTRACT`` § 9). For
+    ``stage_name == "extraction"`` an :class:`ExtractionLadder` counts **every**
+    model call this function issues -- the draws in the loop below *and* the
+    localized JSON repair draws, which before C-042 sat outside ``max_attempts``
+    entirely -- against a ceiling of three, and adds a third rung the loop cannot
+    express: a narrower section-scoped re-extraction, or an alternate model, that
+    runs only when a live :class:`~t2pw.pipeline.deadline.LegDeadline` says the
+    budget covers it. The measured defect it fixes is a retry that was inert:
+    PMC12782028's strict leg drew twice, changed the prompt, and got back the
+    identical empty ``response_hash`` both times.
+
+    Rung 3 is the only thing newly gated. With no deadline in scope, rungs 1 and
+    2 and the repair path behave exactly as they did before -- refusing them for
+    an undeterminable budget would stop runs that work today -- while rung 3,
+    which § 9 conditions on "only if budget remains", does not run and records
+    why. Stage 2 does not get a ladder at all: ``retry_on_empty_payload`` exists
+    because a Stage-2 payload nests under ``additions`` and is *supposed* to look
+    empty at the top level, and a third rung there would push a model that
+    correctly proposed nothing into inventing additions.
     """
 
     attempts: AttemptLogs = []
@@ -3238,8 +3455,87 @@ def _run_json_stage(
     boundary = _STAGE_BOUNDARIES.get(stage_name, stage_name)
     diagnostics = current_diagnostics()
 
+    def _persist_checkpoint(record: Any) -> Dict[str, Any]:
+        # § 9: "a checkpoint is persisted before any potentially long LLM call".
+        # It goes to the diagnostics collector, which flushes to the artifact
+        # directory on write, so the state is on disk before the call starts
+        # rather than after it returns.
+        return diagnostics.record_boundary(
+            stage=stage_name,
+            boundary=BOUNDARY_STAGE1_LADDER_CHECKPOINT,
+            attempts=int(getattr(record, "sequence", 0) or 0),
+            outcome=OUTCOME_OK,
+            ladder_checkpoint=record.to_dict(),
+        )
+
+    if ladder is None and stage_name == _LADDER_STAGE:
+        ladder = ExtractionLadder(
+            stage=stage_name, deadline=deadline, persist=_persist_checkpoint
+        )
+    elif ladder is not None and ladder.persist is None:
+        # A ladder handed in by a caller still checkpoints through this stage's
+        # recorder: the writer belongs to whoever owns the artifact directory.
+        ladder.persist = _persist_checkpoint
+    model_identity = _ladder_model_identity(model_env_var)
+    #: The most recent refusal that named ``budget_exhausted``. Held rather than
+    #: raised: a refused repair draw still falls through to the free
+    #: deterministic salvage, and only a run that ends with nothing reports it.
+    budget_refusal: Any = None
+
     def _is_degenerate(payload: Any) -> bool:
         return retry_on_empty_payload and _payload_is_structurally_empty(payload)
+
+    def _issue(messages: List[Dict[str, Any]], env_var: Optional[str]) -> Any:
+        """One model call, with an operation timeout recorded as exactly that.
+
+        The exception is re-raised unchanged -- callers up the stack still see
+        ``LLMOperationTimeout`` -- but the leg no longer loses the ladder's
+        state on the way out. ``operation_timeout`` is recorded here and nowhere
+        else, which is what keeps it from being conflated with a refused budget.
+        """
+
+        try:
+            return chat_detailed(
+                messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                response_json=True,
+                model_env_var=env_var,
+                stage_name=stage_label,
+            )
+        except BaseException as exc:  # noqa: BLE001 - recorded, then re-raised as-is
+            if ladder is not None and is_operation_timeout(exc):
+                _record_termination(
+                    OPERATION_TIMEOUT,
+                    outcome=OUTCOME_EMPTY_COMPLETION,
+                    error=f"{exc.__class__.__name__}: {exc}",
+                )
+            raise
+
+    def _record_termination(
+        reason: str,
+        *,
+        outcome: str,
+        payload: Any = None,
+        error: str = "",
+    ) -> Optional[Dict[str, Any]]:
+        """Write § 9's preservation set as a boundary record. Ladder path only."""
+
+        if ladder is None:
+            return None
+        return diagnostics.record_boundary(
+            stage=stage_name,
+            boundary=BOUNDARY_STAGE1_LADDER_TERMINATION,
+            attempts=ladder.attempts_used,
+            outcome=outcome,
+            terminal_reason=reason,
+            error=error,
+            extraction_ladder=ladder.preservation_record(
+                last_completed_stage=BOUNDARY_STAGE0_PREPROCESS,
+                payload=payload,
+                termination_reason=reason,
+            ),
+        )
 
     def _record(
         *,
@@ -3250,6 +3546,7 @@ def _run_json_stage(
         outcome: str,
         error: str = "",
         note: str = "",
+        extra: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         return diagnostics.record_boundary(
             stage=stage_name,
@@ -3272,25 +3569,53 @@ def _run_json_stage(
             error=error,
             note=note or None,
             attempt_log=call_diag.get("attempt_log") or None,
+            **(extra or {}),
         )
+
+    #: Attempt 1's prompt, kept so rung 3's claim to be NARROWER can be measured
+    #: against something rather than taken from a tag the source text can write.
+    first_user_prompt = ""
 
     for attempt in range(1, max_attempts + 1):
         user_prompt = build_user_prompt(prev_output, last_error)
+        if not first_user_prompt:
+            first_user_prompt = user_prompt
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
 
-        completion = chat_detailed(
-            messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            response_json=True,
-            model_env_var=model_env_var,
-            stage_name=stage_label,
-        )
+        if ladder is not None:
+            # The ceiling, the identical-prompt rule and (when a leg deadline is
+            # in scope) the budget gate, all before the call rather than after.
+            rung = (
+                RUNG_EMPTY_REPAIR
+                if last_error == EMPTY_PAYLOAD_RETRY_REASON
+                else RUNG_NORMAL
+            )
+            request_hash = _ladder_request_hash(system_prompt, user_prompt, model_identity)
+            decision = ladder.admit(
+                rung=rung,
+                model=model_identity,
+                request_hash=request_hash,
+                state={"phase": "draw", "loop_attempt": attempt},
+            )
+            if not decision.allowed:
+                if decision.termination_reason == BUDGET_EXHAUSTED:
+                    budget_refusal = decision
+                break
+
+        completion = _issue(messages, model_env_var)
         raw = completion.text
         call_diag = completion.diagnostics.to_dict()
+        if ladder is not None:
+            ladder.record(
+                rung=rung,
+                model=model_identity,
+                request_hash=request_hash,
+                response_hash=str(call_diag.get("response_hash") or "") or payload_hash(raw),
+                structurally_empty=_reply_declared_nothing(raw),
+            )
         log_entry: AttemptLog = {"attempt": attempt, "raw": raw, "error": None}
         log_entry["boundary_diagnostics"] = call_diag
 
@@ -3379,20 +3704,70 @@ def _run_json_stage(
             # Localized repair, not re-extraction. Skipped for an empty reply
             # (there is nothing to repair) and for a content_filter stop (the
             # repair prompt would contain the refused text).
+            # The applicability test comes FIRST and the budget question second.
+            # CORRECTION ROUND 1, finding 2: admitting the repair rung above this
+            # guard priced a call that ``repair_json=False``, an empty reply or a
+            # content_filter stop meant would never be issued, so a tight budget
+            # reported ``budget_exhausted`` -- "another recovery step might have
+            # helped" -- for a step that did not exist, and wrote a checkpoint for
+            # a non-call. Section 9's denominator rule then books that as an
+            # operational failure of pipeline completion. Asking "is there a next
+            # step" before "can we afford it" is the only order that cannot
+            # manufacture one.
+            repair_budget: Optional[int] = None
+            repair_admitted = True
             if (
                 repair_json
                 and not empty
                 and str(call_diag.get("terminal_reason") or "") != "content_filter"
             ):
+                if ladder is not None:
+                    # A repair draw is a model call, so it is inside section 9's
+                    # ceiling of three -- before C-042 it was outside
+                    # ``max_attempts`` and an extraction configured for 2 attempts
+                    # could issue up to 8 calls. ``repair_json_text`` treats a
+                    # budget of 0 as "not attempted" and calls no model.
+                    repair_budget = ladder.repair_budget(MAX_JSON_REPAIR_ATTEMPTS)
+                    repair_request_hash = payload_hash(
+                        {"repair_of": raw, "error": error_msg, "model": model_identity}
+                    )
+                    repair_decision = ladder.admit(
+                        rung=RUNG_JSON_REPAIR,
+                        model=model_identity,
+                        request_hash=repair_request_hash,
+                        state={"phase": "json_repair", "loop_attempt": attempt},
+                    )
+                    repair_admitted = repair_decision.allowed
+                    if (
+                        not repair_admitted
+                        and repair_decision.termination_reason == BUDGET_EXHAUSTED
+                    ):
+                        budget_refusal = repair_decision
+            else:
+                repair_admitted = False
+            if repair_admitted:
                 repair = repair_json_text(
                     raw,
                     error_msg,
                     stage=stage_name,
+                    max_attempts=repair_budget,
                     temperature=temperature,
                     max_tokens=max_tokens,
                     model_env_var=model_env_var,
                     chat_fn=repair_chat_fn,
                 )
+                if ladder is not None and repair.attempts:
+                    ladder.record(
+                        rung=RUNG_JSON_REPAIR,
+                        model=model_identity,
+                        request_hash=repair_request_hash,
+                        response_hash=payload_hash(repair.payload)
+                        if repair.payload is not None
+                        else "",
+                        structurally_empty=repair.payload is not None
+                        and _payload_is_structurally_empty(repair.payload),
+                        calls=int(repair.attempts),
+                    )
                 attempts.append(
                     {
                         "attempt": attempt,
@@ -3443,18 +3818,163 @@ def _run_json_stage(
             prev_output = raw
             last_error = error_msg
 
-    if saw_empty_payload:
-        raise PipelineFailure(
-            stage_name,
-            f"{stage_name.title()} stage returned a structurally empty payload "
-            f"(no entities and no processes) on all {max_attempts} attempts.",
-            attempts,
+    # -----------------------------------------------------------------------
+    # RUNG 3. § 9: "a materially different strategy (narrower section-based
+    # extraction or an alternate model), only if budget remains". Reached only
+    # after the loop has drawn nothing twice; a stage that failed on JSON syntax
+    # has a different problem and the localized repair is its rung.
+    # -----------------------------------------------------------------------
+    if ladder is not None and saw_empty_payload:
+        scoped_prompt = build_user_prompt(prev_output, SECTION_SCOPED_RETRY_REASON)
+        scope = _extraction_scope_label(scoped_prompt, reference=first_user_prompt)
+        rung3_env = alternate_model_env_var(model_env_var) or model_env_var
+        rung3_model = _ladder_model_identity(rung3_env)
+        rung3_hash = _ladder_request_hash(system_prompt, scoped_prompt, rung3_model)
+        differs, why = ladder.materially_differs(
+            model=rung3_model, request_hash=rung3_hash, scope=scope
         )
-    raise PipelineFailure(
-        stage_name,
-        f"{stage_name.title()} stage failed to produce valid JSON after {max_attempts} attempts.",
-        attempts,
-    )
+        if not differs:
+            # A2/A11: verified, not assumed. A prompt builder that ignored the
+            # section-scope request produces a differently-worded prompt for the
+            # same model over the same text, and issuing that would re-create the
+            # very defect -- an "escalation" that is a tweak.
+            ladder.refuse_not_materially_different(rung=RUNG_DIFFERENT_STRATEGY, detail=why)
+        else:
+            decision = ladder.admit(
+                rung=RUNG_DIFFERENT_STRATEGY,
+                model=rung3_model,
+                request_hash=rung3_hash,
+                scope=scope,
+                budget_conditional=True,
+                state={"phase": "different_strategy", "scope": scope},
+            )
+            if decision.termination_reason == BUDGET_EXHAUSTED:
+                budget_refusal = decision
+            if decision.allowed:
+                completion = _issue(
+                    [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": scoped_prompt},
+                    ],
+                    rung3_env,
+                )
+                raw = completion.text
+                call_diag = completion.diagnostics.to_dict()
+                ladder.record(
+                    rung=RUNG_DIFFERENT_STRATEGY,
+                    model=rung3_model,
+                    request_hash=rung3_hash,
+                    scope=scope,
+                    response_hash=str(call_diag.get("response_hash") or "")
+                    or payload_hash(raw),
+                    structurally_empty=_reply_declared_nothing(raw),
+                )
+                try:
+                    parsed3: Any = json.loads(raw)
+                except json.JSONDecodeError as exc:
+                    parsed3 = None
+                    rung3_error = f"{exc.__class__.__name__}: {exc}"
+                else:
+                    rung3_error = ""
+                    if not isinstance(parsed3, dict):
+                        parsed3 = None
+                        rung3_error = "Expected JSON object"
+                usable = parsed3 is not None and not _is_degenerate(parsed3)
+                note = (
+                    NOTE_DIFFERENT_STRATEGY
+                    if usable
+                    else NOTE_DIFFERENT_STRATEGY_EXHAUSTED
+                )
+                _record(
+                    attempt=ladder.attempts_used,
+                    raw=raw,
+                    call_diag=call_diag,
+                    parsed=parsed3,
+                    outcome=(
+                        _process_outcome(parsed3)
+                        if parsed3 is not None
+                        else (
+                            OUTCOME_EMPTY_COMPLETION
+                            if not raw.strip()
+                            else OUTCOME_INVALID_JSON
+                        )
+                    ),
+                    error=rung3_error,
+                    note=note,
+                    extra={"ladder_rung": RUNG_DIFFERENT_STRATEGY, "ladder_scope": scope},
+                )
+                attempts.append(
+                    {
+                        "attempt": ladder.attempts_used,
+                        "phase": RUNG_DIFFERENT_STRATEGY,
+                        "raw": raw,
+                        "error": rung3_error or None,
+                        "note": note,
+                        "ladder_scope": scope,
+                        "boundary_diagnostics": call_diag,
+                    }
+                )
+                if usable:
+                    logger.info(
+                        "%s recovered on the third rung: a %s extraction after two "
+                        "structurally empty draws.",
+                        stage_label,
+                        scope,
+                    )
+                    return parsed3, attempts
+
+    # -----------------------------------------------------------------------
+    # Termination. The three reasons are produced by three separate causes and
+    # never stand in for one another: a refused budget is not "the model kept
+    # returning nothing", and neither is an operation that overran (recorded in
+    # ``_issue``). Budget wins over the identical-empty reason when both are
+    # true, because § 9's budget_exhausted means precisely "another recovery
+    # step might have helped; wall-clock did not allow it" -- which is what a
+    # refused rung 3 is.
+    # -----------------------------------------------------------------------
+    reason = ""
+    if budget_refusal is not None:
+        reason = BUDGET_EXHAUSTED
+    elif ladder is not None and (
+        ladder.inert_extraction_observed() or ladder.identical_empty_hash()
+    ):
+        reason = IDENTICAL_EMPTY_RESPONSE
+
+    issued = ladder.attempts_used if ladder is not None else max_attempts
+    if saw_empty_payload:
+        message = (
+            f"{stage_name.title()} stage returned a structurally empty payload "
+            f"(no entities and no processes) on all {max_attempts} attempts."
+        )
+        outcome = OUTCOME_ZERO_PROCESSES
+        payload_at_stop: Any = {}
+    else:
+        message = (
+            f"{stage_name.title()} stage failed to produce valid JSON after "
+            f"{max_attempts} attempts."
+        )
+        outcome = OUTCOME_INVALID_JSON
+        payload_at_stop = None
+    if ladder is not None and (reason or issued != max_attempts):
+        message += (
+            f" The escalation ladder issued {issued} model attempt(s) of a permitted "
+            f"{ladder.max_total_attempts}"
+            + (f"; stop reason: {reason}." if reason else ".")
+        )
+
+    _record_termination(reason, outcome=outcome, payload=payload_at_stop)
+    failure = PipelineFailure(stage_name, message, attempts)
+    if ladder is not None:
+        # Additive, on the instance: ``PipelineFailure``'s constructor belongs to
+        # nobody's card, and a handler that does not know about these keeps
+        # behaving exactly as it did.
+        failure.terminal_reason = reason
+        failure.ladder = ladder.preservation_record(
+            last_completed_stage=BOUNDARY_STAGE0_PREPROCESS,
+            payload=payload_at_stop,
+            termination_reason=reason,
+        )
+    raise failure
 
 
 #: Attempt-log note for a draw that parsed but declared nothing at all, and was
@@ -3557,18 +4077,54 @@ def _build_extraction_prompt(
             ]
         )
 
+    # Rung 3 of the § 9 ladder: a NARROWER extraction, not a re-worded one. The
+    # text itself changes -- references, acknowledgements and the introduction's
+    # survey of other people's chemistry are dropped -- which is what makes this
+    # a different strategy rather than the prompt tweak that PMC12782028's strict
+    # leg proved inert. ``_narrow_to_high_signal_sections`` returns nothing when
+    # it cannot genuinely narrow, and then no scope tag is emitted and the caller
+    # sees ``full_text`` and refuses to count this as a rung.
+    scoped_text, scope_label = (
+        _narrow_to_high_signal_sections(input_text)
+        if last_error == SECTION_SCOPED_RETRY_REASON
+        else ("", "")
+    )
+    if scope_label:
+        prompt.extend([f"<extraction_scope>{scope_label}</extraction_scope>", ""])
+
     prompt.extend(
         [
             "Extract PWML-structured JSON strictly according to the schema.",
             "Return ONLY the JSON object.",
             "Pathway description:",
             "<<<",
-            input_text.strip(),
+            (scoped_text or input_text).strip(),
             ">>>",
         ]
     )
 
-    if prev_output and last_error == EMPTY_PAYLOAD_RETRY_REASON:
+    if last_error == SECTION_SCOPED_RETRY_REASON:
+        # No ``prev_output`` requirement and no copy of the previous reply: the
+        # previous replies were empty, so quoting one adds nothing and anchors
+        # the model on the answer that already failed. The last line is the same
+        # hard limit the rung-2 prompt carries -- a narrower scope must not
+        # become pressure to fill it, and § 1 forbids inventing biology to
+        # guarantee an output.
+        prompt.extend(
+            [
+                "",
+                "Earlier attempts over the full text returned no entities and no"
+                " processes at all.",
+                "This attempt is deliberately narrowed to the excerpt above. Read it"
+                " closely and extract every reaction and entity it states explicitly,"
+                " with verbatim evidence quotes.",
+                "If this excerpt genuinely states no reactions, return the entities it"
+                " does support with an empty processes object. Do not invent entities,"
+                " reactions, directionality or stoichiometry that the excerpt does not"
+                " state.",
+            ]
+        )
+    elif prev_output and last_error == EMPTY_PAYLOAD_RETRY_REASON:
         # A re-draw, not a repair. Telling a model that returned "{}" to "fix the
         # invalid JSON" points it at a syntax error that does not exist, and the
         # most likely fix it lands on is returning "{}" again. The instruction to

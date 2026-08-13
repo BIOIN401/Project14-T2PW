@@ -1,0 +1,327 @@
+{
+  "correction": {
+    "boundary_names": [
+      "stage1_extraction"
+    ],
+    "boundary_terminal_reasons": [],
+    "distinct_prompts": 2,
+    "failure_message": "Extraction stage returned a structurally empty payload (no entities and no processes) on all 3 attempts.",
+    "model_calls": 3,
+    "third_prompt_equals_second": true,
+    "third_prompt_model_env_var": null
+  },
+  "preservation": {
+    "broken_then_repairable": {
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 121 (char 120)",
+          "raw": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\" \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP\"}]}}"
+        },
+        {
+          "attempt": 1,
+          "error": null,
+          "note": "localized_json_repair:repaired",
+          "phase": "json_repair",
+          "raw": "",
+          "repair_attempts": 1
+        }
+      ],
+      "boundaries": [
+        {
+          "attempts": 1,
+          "boundary": "stage1_extraction",
+          "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 121 (char 120)",
+          "finish_reason": "",
+          "model": "test-model",
+          "outcome": "invalid_json",
+          "raw_chars": 204,
+          "raw_preview": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\" \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP\"… (+4 chars elided)",
+          "response_hash": "sha256:7831262652f676ae",
+          "response_status": "",
+          "stage": "extraction"
+        },
+        {
+          "attempts": 1,
+          "boundary": "stage1_json_repair",
+          "finish_reason": "",
+          "model": "test-model",
+          "outcome": "ok",
+          "raw_chars": 205,
+          "raw_entity_counts": {
+            "compounds": 1,
+            "total": 1
+          },
+          "raw_preview": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\", \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP… (+5 chars elided)",
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "repair_kind": "json_syntax",
+          "request_hash": "sha256:7831262652f676ae",
+          "response_hash": "sha256:f48b326c9c3b47ef",
+          "response_status": "",
+          "semantic_guard": {
+            "droppable_tail": 0,
+            "input_literal_count": 16,
+            "input_truncated": false,
+            "repaired_literal_count": 16
+          },
+          "stage": "extraction"
+        }
+      ],
+      "model_calls": 1,
+      "raised": null,
+      "returned": {
+        "entities": {
+          "compounds": [
+            {
+              "evidence": "ATP is consumed",
+              "name": "ATP"
+            }
+          ]
+        },
+        "processes": {
+          "reactions": [
+            {
+              "evidence": "ATP is consumed to give ADP",
+              "inputs": [
+                "ATP"
+              ],
+              "name": "r1",
+              "outputs": [
+                "ADP"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "clean_json": {
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "error": null,
+          "raw": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\", \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP\"}]}}"
+        }
+      ],
+      "boundaries": [
+        {
+          "attempts": 1,
+          "boundary": "stage1_extraction",
+          "finish_reason": "",
+          "model": "test-model",
+          "outcome": "ok",
+          "raw_chars": 205,
+          "raw_entity_counts": {
+            "compounds": 1,
+            "total": 1
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "response_hash": "sha256:f48b326c9c3b47ef",
+          "response_status": "",
+          "stage": "extraction"
+        }
+      ],
+      "model_calls": 1,
+      "raised": null,
+      "returned": {
+        "entities": {
+          "compounds": [
+            {
+              "evidence": "ATP is consumed",
+              "name": "ATP"
+            }
+          ]
+        },
+        "processes": {
+          "reactions": [
+            {
+              "evidence": "ATP is consumed to give ADP",
+              "inputs": [
+                "ATP"
+              ],
+              "name": "r1",
+              "outputs": [
+                "ADP"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "degenerate_then_recovering": {
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "error": null,
+          "note": "structurally_empty_payload_retry",
+          "raw": "{}"
+        },
+        {
+          "attempt": 2,
+          "error": null,
+          "raw": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\", \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP\"}]}}"
+        }
+      ],
+      "boundaries": [
+        {
+          "attempts": 1,
+          "boundary": "stage1_extraction",
+          "finish_reason": "",
+          "model": "test-model",
+          "note": "structurally_empty_payload_retry",
+          "outcome": "valid_json_zero_processes",
+          "raw_chars": 2,
+          "raw_entity_counts": {
+            "total": 0
+          },
+          "raw_process_counts": {
+            "total": 0
+          },
+          "response_hash": "sha256:44136fa355b3678a",
+          "response_status": "",
+          "stage": "extraction"
+        },
+        {
+          "attempts": 2,
+          "boundary": "stage1_extraction",
+          "finish_reason": "",
+          "model": "test-model",
+          "outcome": "ok",
+          "raw_chars": 205,
+          "raw_entity_counts": {
+            "compounds": 1,
+            "total": 1
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "response_hash": "sha256:f48b326c9c3b47ef",
+          "response_status": "",
+          "stage": "extraction"
+        }
+      ],
+      "model_calls": 2,
+      "raised": null,
+      "returned": {
+        "entities": {
+          "compounds": [
+            {
+              "evidence": "ATP is consumed",
+              "name": "ATP"
+            }
+          ]
+        },
+        "processes": {
+          "reactions": [
+            {
+              "evidence": "ATP is consumed to give ADP",
+              "inputs": [
+                "ATP"
+              ],
+              "name": "r1",
+              "outputs": [
+                "ADP"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "inference_stage_untouched": {
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "error": null,
+          "raw": "{}"
+        }
+      ],
+      "boundaries": [
+        {
+          "attempts": 1,
+          "boundary": "stage2_inference",
+          "finish_reason": "",
+          "model": "test-model",
+          "outcome": "valid_json_zero_processes",
+          "raw_chars": 2,
+          "raw_entity_counts": {
+            "total": 0
+          },
+          "raw_process_counts": {
+            "total": 0
+          },
+          "response_hash": "sha256:44136fa355b3678a",
+          "response_status": "",
+          "stage": "inference"
+        }
+      ],
+      "model_calls": 1,
+      "raised": null,
+      "returned": {}
+    },
+    "repair_unavailable_then_salvaged": {
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "error": null,
+          "note": "salvaged_json",
+          "raw": "{\"entities\": {\"compounds\": [{\"name\": \"ATP\", \"evidence\": \"ATP is consumed\"}]}, \"processes\": {\"reactions\": [{\"name\": \"r1\", \"inputs\": [\"ATP\"], \"outputs\": [\"ADP\"], \"evidence\": \"ATP is consumed to give ADP\"}]}, \"trailing\": "
+        }
+      ],
+      "boundaries": [
+        {
+          "attempts": 1,
+          "boundary": "stage1_extraction",
+          "finish_reason": "",
+          "model": "test-model",
+          "note": "salvaged_json",
+          "outcome": "ok",
+          "raw_chars": 218,
+          "raw_entity_counts": {
+            "compounds": 1,
+            "total": 1
+          },
+          "raw_process_counts": {
+            "reactions": 1,
+            "total": 1
+          },
+          "response_hash": "sha256:0ee5d393d1672bc4",
+          "response_status": "",
+          "stage": "extraction"
+        }
+      ],
+      "model_calls": 1,
+      "raised": null,
+      "returned": {
+        "entities": {
+          "compounds": [
+            {
+              "evidence": "ATP is consumed",
+              "name": "ATP"
+            }
+          ]
+        },
+        "processes": {
+          "reactions": [
+            {
+              "evidence": "ATP is consumed to give ADP",
+              "inputs": [
+                "ATP"
+              ],
+              "name": "r1",
+              "outputs": [
+                "ADP"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "t2pw_file": "C:/t2pwtmp/c042/base/src/t2pw/__init__.py"
+}
