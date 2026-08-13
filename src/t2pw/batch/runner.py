@@ -930,7 +930,7 @@ def _timeout_row(
 
     ceiling = leg_timeout if leg_timeout is not None else float(timeout)
     termination = (
-        leg_deadline.require_reason(reason)
+        leg_deadline.require_operational_reason(reason)
         if reason
         else leg_deadline.classify_child_kill(
             elapsed_seconds=seconds,

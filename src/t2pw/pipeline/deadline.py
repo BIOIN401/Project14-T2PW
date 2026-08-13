@@ -140,6 +140,21 @@ def is_operational(reason: Any) -> bool:
     return str(reason or "").strip() in OPERATIONAL_TERMINATION_REASONS
 
 
+def require_operational_reason(reason: Any) -> str:
+    """``reason``, if it is one of the two OPERATIONAL outcomes. Else raise.
+
+    A timeout may name only ``budget_exhausted`` or ``operation_timeout``. Any of the
+    other four inverts D-005's denominator rule -- a stopped clock reported as a
+    semantic or scientific verdict -- and ``retrieval_exhausted`` would additionally
+    walk around :func:`claim_retrieval_exhausted`, which exists to refuse that label.
+    """
+
+    token = require_reason(reason)
+    if token not in OPERATIONAL_TERMINATION_REASONS:
+        raise ValueError(f"a timeout is an operational fact, never {token!r}")
+    return token
+
+
 def claim_retrieval_exhausted(
     *, rungs_configured: int, rungs_completed: int, ladder_completed: bool
 ) -> str:
@@ -220,6 +235,20 @@ def resolve_leg_timeout(
         reason=str(reason).strip(),
         source=str(source).strip(),
     )
+
+
+def _ceiling(seconds: float) -> LegTimeout:
+    """A bare-number ceiling, recorded against the D-005 default.
+
+    ``--timeout 2700`` labelled ``overridden: false`` reads, to anyone scanning the
+    manifest, as "this leg ran at 3600", so the delta is recorded instead. An
+    *explained* override still comes from :func:`resolve_leg_timeout`; this records
+    that one happened, never why.
+    """
+
+    value = float(seconds)
+    return LegTimeout(seconds=value, default_seconds=LEG_TIMEOUT_SECONDS,
+                      overridden=value != LEG_TIMEOUT_SECONDS)
 
 
 def child_deadline_seconds(
@@ -343,9 +372,7 @@ class LegDeadline:
     ) -> None:
         self._clock = clock
         self.started = float(clock())
-        self.leg_timeout = leg_timeout or LegTimeout(
-            seconds=float(total_seconds), default_seconds=float(total_seconds)
-        )
+        self.leg_timeout = leg_timeout or _ceiling(total_seconds)
         self.total = max(0.0, float(self.leg_timeout.seconds))
         self.reserve = max(0.0, float(reserve_seconds))
         self._checkpoints = 0
@@ -489,7 +516,7 @@ def classify_interaction_timeout(detail: Any = "", *, explicit: str = "") -> str
     """
 
     if explicit:
-        return require_reason(explicit)
+        return require_operational_reason(explicit)
     text = detail if isinstance(detail, str) else ("" if detail is None else str(detail))
     return BUDGET_EXHAUSTED if BUDGET_SPENT_MARKER in text else OPERATION_TIMEOUT
 
@@ -523,9 +550,7 @@ def budget_record(
     unmodified ceiling.
     """
 
-    ceiling = leg_timeout if isinstance(leg_timeout, LegTimeout) else LegTimeout(
-        seconds=float(leg_timeout), default_seconds=float(leg_timeout)
-    )
+    ceiling = leg_timeout if isinstance(leg_timeout, LegTimeout) else _ceiling(leg_timeout)
     elapsed = float(elapsed_seconds)
     record = dict(ceiling.to_dict())
     record.update(

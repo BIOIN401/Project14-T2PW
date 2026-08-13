@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from t2pw.batch import runner  # noqa: E402
+from t2pw.batch import driver, runner  # noqa: E402
 from t2pw.pipeline import deadline as dl  # noqa: E402
 
 
@@ -163,6 +163,34 @@ def test_a_per_leg_override_must_be_explicit_and_is_recorded() -> None:
                               timeout=5400.0, tail="", leg_timeout=recorded)
     assert row["budget"]["leg_timeout_override_reason"] == "PMC12444477 rerun"
     assert row["termination_reason"] == dl.BUDGET_EXHAUSTED
+    # ``--timeout 2700`` is recorded against the D-005 default, never as "not an override".
+    bare = runner._timeout_row(slug="s", mode="strict", paper={}, seconds=2700.5,
+                               timeout=2700.0, tail="")["budget"]
+    assert bare["leg_timeout_seconds"] == 2700.0 and bare["leg_timeout_default_seconds"] == 3600.0
+    assert bare["leg_timeout_overridden"] is True
+    assert dl.LegDeadline(2700.0, clock=_ticking(0.0)).snapshot()["leg_timeout_overridden"] is True
+
+
+def test_a_timeout_may_name_only_an_operational_reason() -> None:
+    """A timeout cannot borrow a semantic or retrieval label, and refusing one must
+    not abandon the terminal row."""
+
+    assert dl.require_operational_reason("operation_timeout") == dl.OPERATION_TIMEOUT
+    for bad in ("scientifically_unrecoverable", "retrieval_exhausted", "no_new_claims"):
+        with pytest.raises(ValueError):
+            dl.require_operational_reason(bad)
+        with pytest.raises(ValueError):
+            runner._timeout_row(slug="s", mode="strict", paper={}, seconds=3600.4,
+                                timeout=3600.0, tail="", reason=bad)
+        outcome = driver.RunOutcome(paper_id="PMC1", mode="strict")
+        with pytest.raises(ValueError):
+            driver._finalize_timeout(outcome, message="m", detail="d", reason=bad)
+        # The leg really did time out: the terminal row survives the refusal.
+        assert outcome.status == "timeout" and outcome.failure_kind == "timeout"
+        assert outcome.message == "m" and outcome.detail == "d"
+    row = runner._timeout_row(slug="s", mode="strict", paper={}, seconds=1.0,
+                              timeout=3600.0, tail="", reason=dl.BUDGET_EXHAUSTED)
+    assert row["termination_reason"] == dl.BUDGET_EXHAUSTED and row["operational_failure"] is True
 
 
 def test_the_six_reasons_are_a_closed_never_conflated_vocabulary() -> None:

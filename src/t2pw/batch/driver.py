@@ -1576,13 +1576,6 @@ def _finalize_timeout(
 
     from t2pw.pipeline import deadline as leg_deadline
 
-    outcome.termination_reason = leg_deadline.classify_interaction_timeout(
-        detail, explicit=reason
-    )
-    outcome.termination_is_operational = leg_deadline.is_operational(
-        outcome.termination_reason
-    )
-
     _fail(
         outcome,
         status=_STATUS_TIMEOUT,
@@ -1591,6 +1584,10 @@ def _finalize_timeout(
         detail=detail,
         codes=codes,
     )
+    # Classified AFTER the row is written: a bad ``reason`` must fail loud, but it must
+    # not also abandon the terminal record. The leg really did time out.
+    outcome.termination_reason = leg_deadline.classify_interaction_timeout(detail, explicit=reason)
+    outcome.termination_is_operational = leg_deadline.is_operational(outcome.termination_reason)
 
 
 def _finalize_gate_failure(
