@@ -1515,7 +1515,34 @@ def _finalize_gate_failure(
     stage3_gate: Dict[str, Any],
     gate_fail: Dict[str, Any],
 ) -> None:
-    """Terminal path: the gate channel or the contract channel blocked the run."""
+    """Terminal path: the gate channel or the contract channel blocked the run.
+
+    Classifies the run as well as failing it. The two are different questions and
+    this path used to answer only the first: ``status="fail"`` says the leg did
+    not complete, and every downstream reader then had to re-derive "so is there
+    anything releasable?" from the absence of a ``pathway.pwml``. The
+    classification is attached as a first-class
+    :class:`~t2pw.pipeline.release_status.ReleaseStatus`, with
+    PRODUCT_CONTRACT 11's states unfolded: the pipeline DID execute, the strict
+    TECHNICAL gates did NOT pass, and semantic evaluation was NOT PERFORMED --
+    which is recorded as ``not_evaluated``, never as ``False``.
+
+    ``diagnostic_only`` here is a statement about SERIALIZATION, not about the
+    biology: the gate channel blocked export, so no PWML exists to review, and
+    the reason line says exactly that rather than implying "no defensible core".
+
+    It is NOT added to :meth:`RunOutcome.to_dict` -- that would edit ``RunOutcome``,
+    which is outside C-041's boundary -- so the manifest row is byte-identical and
+    the golden driver diff stays empty. Promoting it into the row belongs to the
+    card that owns the row and the artifact names (D-004 / C-053).
+    """
+
+    from t2pw.pipeline.release_status import classify_release_status
+
+    outcome.release_status = classify_release_status(
+        pipeline_executed=True,
+        strict_gates_passed=False,
+    )
 
     _fail(
         outcome,
