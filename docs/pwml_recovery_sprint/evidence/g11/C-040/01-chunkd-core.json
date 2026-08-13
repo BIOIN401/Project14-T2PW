@@ -1,0 +1,220 @@
+{
+  "label": "chunkd-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/chunk_d_gate.py",
+    "run",
+    "--tmp",
+    "C:/t2pwtmp/c040/d",
+    "--task",
+    "C-040",
+    "--only",
+    "core",
+    "--timeout",
+    "900",
+    "--node-timeout",
+    "600"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract",
+  "started_at": "2026-08-12T21:58:23+00:00",
+  "finished_at": "2026-08-12T21:58:29+00:00",
+  "duration_seconds": 6.460920699999406,
+  "timeout_seconds": 1200.0,
+  "root_pid": 202560,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 203616,
+      "name": "python.exe",
+      "ppid": 202560
+    },
+    {
+      "pid": 195836,
+      "name": "python.exe",
+      "ppid": 203616
+    },
+    {
+      "pid": 199748,
+      "name": "git.exe",
+      "ppid": 202600
+    },
+    {
+      "pid": 202600,
+      "name": "python.exe",
+      "ppid": 195836
+    },
+    {
+      "pid": 202672,
+      "name": "python.exe",
+      "ppid": 202600
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe",
+      "ppid": 202672
+    },
+    {
+      "pid": 178228,
+      "name": "python.exe",
+      "ppid": 203616
+    },
+    {
+      "pid": 186388,
+      "name": "python.exe",
+      "ppid": 178228
+    },
+    {
+      "pid": 202184,
+      "name": "python.exe",
+      "ppid": 203044
+    },
+    {
+      "pid": 203044,
+      "name": "python.exe",
+      "ppid": 186388
+    },
+    {
+      "pid": 200480,
+      "name": "python.exe",
+      "ppid": 203616
+    },
+    {
+      "pid": 201876,
+      "name": "python.exe",
+      "ppid": 200480
+    },
+    {
+      "pid": 198328,
+      "name": "python.exe",
+      "ppid": 203316
+    },
+    {
+      "pid": 203316,
+      "name": "python.exe",
+      "ppid": 201876
+    },
+    {
+      "pid": 198420,
+      "name": "python.exe",
+      "ppid": 203616
+    },
+    {
+      "pid": 203764,
+      "name": "python.exe",
+      "ppid": 198420
+    },
+    {
+      "pid": 197348,
+      "name": "git.exe",
+      "ppid": 203764
+    },
+    {
+      "pid": 203576,
+      "name": "python.exe",
+      "ppid": 203764
+    },
+    {
+      "pid": 203604,
+      "name": "python.exe",
+      "ppid": 203576
+    },
+    {
+      "pid": 201196,
+      "name": "python.exe",
+      "ppid": 202340
+    },
+    {
+      "pid": 202340,
+      "name": "python.exe",
+      "ppid": 203616
+    },
+    {
+      "pid": 183092,
+      "name": "git.exe",
+      "ppid": 201196
+    },
+    {
+      "pid": 200848,
+      "name": "python.exe",
+      "ppid": 203268
+    },
+    {
+      "pid": 203268,
+      "name": "python.exe",
+      "ppid": 201196
+    }
+  ],
+  "descendants_terminated": [
+    178228,
+    183092,
+    186388,
+    195836,
+    197348,
+    198328,
+    198420,
+    199748,
+    200480,
+    200848,
+    201196,
+    201876,
+    202184,
+    202340,
+    202600,
+    202672,
+    202788,
+    203044,
+    203268,
+    203316,
+    203576,
+    203604,
+    203616,
+    203764
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 187640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 187704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203480,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-040/01-chunkd-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c040-resolution-extract",
+    "repo_head": "e4eeef429468ef42cfdfd12295ea86447f0c674f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
