@@ -35,10 +35,20 @@ did before this module existed. Refusing them on an undeterminable budget would
 turn a run that works today into a run that stops, which is not a correction.
 
 A SKIP CAUSE IS NOT A TERMINATION REASON. :data:`SKIP_CAUSES` says why one rung
-did not start; the six D-005 termination reasons say why the *leg* stopped. They
+did not start; the seven termination reasons say why the *leg* stopped. They
 are recorded in different fields on purpose -- ``budget_refused`` and
 ``identical_prompt_same_model`` describe different events even when both end a
 run, and § 9 forbids conflating what the leg reports.
+
+That distinction is unchanged by D-024, which adds the seventh termination reason
+``attempt_cap_reached`` so that the one skip cause which genuinely *ends* the
+ladder can also say why the leg stopped -- it reported ``""`` before, leaving a
+downstream denominator with no classification at all. The new reason's string is
+the same literal as :data:`SKIP_ATTEMPT_CAP` **on purpose**, because both name one
+event; the two vocabularies stay independently closed either side of it.
+``require_skip_cause`` still refuses every termination reason and
+``require_reason`` still refuses every skip cause, with that single shared literal
+the only value both accept.
 """
 
 from __future__ import annotations
@@ -49,6 +59,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from t2pw.pipeline.deadline import (
+    ATTEMPT_CAP_REACHED,
     BUDGET_EXHAUSTED,
     IDENTICAL_EMPTY_RESPONSE,
     OPERATION_TIMEOUT,
@@ -65,6 +76,7 @@ __all__ = [
     # does not have to import the budget module to name what it can raise.
     "BudgetExhausted",
     "LegDeadline",
+    "ATTEMPT_CAP_REACHED",
     "BUDGET_EXHAUSTED",
     "IDENTICAL_EMPTY_RESPONSE",
     "OPERATION_TIMEOUT",
@@ -476,8 +488,15 @@ class ExtractionLadder:
             return decision
 
         if self.attempts_used >= self.max_total_attempts:
+            # D-024. The ceiling ends the ladder, so it names a termination reason
+            # as well as a skip cause -- reporting ``""`` here left the one stop
+            # that genuinely ends the leg unclassified. It is checked FIRST, but it
+            # is the WEAKEST of the reasons this method can produce: every later
+            # branch that can also fire (identical-prompt, budget refusal) is only
+            # reachable while attempts remain, so this cannot shadow them.
             return refuse(
                 SKIP_ATTEMPT_CAP,
+                reason=ATTEMPT_CAP_REACHED,
                 detail=(
                     f"{self.attempts_used} of {self.max_total_attempts} permitted model "
                     "attempts already issued"

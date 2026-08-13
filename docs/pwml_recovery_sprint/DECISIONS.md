@@ -863,6 +863,74 @@ delivered by C-020**.
 
 ---
 
+## D-024 — `attempt_cap_reached`, a seventh termination reason · 2026-08-13 · LOCKED
+
+**Extends D-005. D-005 is not reopened, amended or contradicted** — its six named reasons
+keep their exact meanings, their exact strings and their exact denominator rule. D-005 goes
+from six named termination reasons to **seven**.
+
+C-042 built the § 9 escalation ladder. When the ceiling of three model attempts is spent the
+ladder refuses the next rung with the skip cause `attempt_cap_reached` and — correctly, since
+none of the six fitted — **no termination reason at all**. `attempt_cap_reached` genuinely
+*ends* the ladder, so the one stop that reliably terminates a leg was the one stop that said
+nothing, and every downstream denominator saw `""`. C-042's writer declined to guess, which
+was right; guessing is what this entry replaces.
+
+**The reason.** `attempt_cap_reached`. Used when **all** of these hold:
+
+* the configured maximum number of attempts has been consumed;
+* the operation has not succeeded;
+* **no** deadline or timeout caused termination;
+* **no** explicit refusal caused termination;
+* **no** separate resource / token / budget exhaustion caused termination;
+* **no** stronger existing terminal reason truthfully describes the outcome.
+
+**Precedence, mandatory, in this order:**
+
+1. Successful completion keeps the success / completed reason.
+2. An explicit refusal keeps the applicable refusal reason.
+3. A real deadline or timeout keeps its deadline/timeout reason.
+4. A separately **measured** resource or token-budget exhaustion keeps its budget reason.
+5. When **only** the configured attempt count ended processing → `attempt_cap_reached`.
+
+**Never mislabel an attempt cap as timeout, refusal, success, or generic budget exhaustion.**
+Equally, never mislabel it as `retrieval_exhausted` or `no_new_claims`: D-005 permits
+`retrieval_exhausted` only when the configured ladder actually completed, and a leg cut off by
+the ceiling is precisely a ladder that did not. The implemented rank in
+`rag/loop_policy.TERMINATION_PRECEDENCE` is therefore below `budget_exhausted`,
+`operation_timeout`, `identical_empty_response` and `scientifically_unrecoverable`, and above
+`retrieval_exhausted` and `no_new_claims`.
+
+**It reaches the leg-level report.** The reason is set at two sites, not one. The ladder's
+`admit` names it on the `RungDecision` that refuses the rung, and `_run_json_stage`'s
+termination block names it on `PipelineFailure.terminal_reason` and on the
+`stage1_extraction_ladder_termination` boundary record — where a capped leg previously
+reported `""`. At the leg level it is the **last** branch, after `budget_exhausted` and
+`identical_empty_response`, and it is claimed on the ladder's **recorded cap refusal**, not
+on `attempts_remaining == 0`: the ceiling must actually have stopped a rung that wanted to
+run. A leg that merely spent its last attempt and then failed for another reason was not
+ended by the cap. `operation_timeout` is not in that chain and cannot be displaced by it:
+`_issue` records the timeout and re-raises, so a timed-out leg leaves by that exception and
+never reaches the block. Nor can a successful leg acquire the reason — both success returns
+precede the block.
+
+**`OPERATIONAL_TERMINATION_REASONS` is UNCHANGED** — it stays exactly
+`{budget_exhausted, operation_timeout}`. `attempt_cap_reached` is **not** added to it. D-005
+calls the cap *"a safety ceiling, not a promise"*, which is a different fact from a leg that
+ran out of clock. Whether the attempt cap should count in the pipeline-completion and
+end-to-end strict-success denominators is a **product decision that has not been made**;
+until it is, the denominator does not move.
+
+**One literal, two vocabularies.** The new termination reason uses the same string as the
+ladder's existing skip cause `extraction_ladder.SKIP_ATTEMPT_CAP`, because both name one
+event. The vocabularies stay separate and independently closed: `require_reason` still refuses
+every other skip cause, `require_skip_cause` still refuses every other termination reason,
+`SKIP_CAUSES` and `TERMINATION_REASONS` remain distinct, and *"a skip cause is not a
+termination reason"* remains true — a skip cause says why one **rung** did not start, a
+termination reason says why the **leg** stopped, and they are recorded in different fields.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |

@@ -1,0 +1,106 @@
+{
+  "label": "ext-focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t2pwtmp/c042a/runner.py",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c042a/ext",
+    "tests/test_attempt_cap_termination_reason.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p03d-attemptcap",
+  "started_at": "2026-08-13T21:49:10+00:00",
+  "finished_at": "2026-08-13T21:49:12+00:00",
+  "duration_seconds": 1.9105712000018684,
+  "timeout_seconds": 900.0,
+  "root_pid": 618240,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 618288,
+      "name": "python.exe",
+      "ppid": 618240
+    }
+  ],
+  "descendants_terminated": [
+    618288
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 591256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 591372,
+      "name": "python.exe"
+    },
+    {
+      "pid": 599576,
+      "name": "python.exe"
+    },
+    {
+      "pid": 604536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 608512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 608980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 609216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 612744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 614712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 615444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 617612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 617632,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-042a/09-ext-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p03d-attemptcap\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p03d-attemptcap",
+    "repo_head": "c347f1c329ec16c5f0885db6551033db526f3195",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

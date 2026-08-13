@@ -30,6 +30,7 @@ from t2pw.pipeline.extraction_diagnostics import (
     payload_hash,
 )
 from t2pw.pipeline.extraction_ladder import (
+    ATTEMPT_CAP_REACHED,
     BUDGET_EXHAUSTED,
     IDENTICAL_EMPTY_RESPONSE,
     OPERATION_TIMEOUT,
@@ -38,6 +39,7 @@ from t2pw.pipeline.extraction_ladder import (
     RUNG_JSON_REPAIR,
     RUNG_NORMAL,
     SCOPE_FULL_TEXT,
+    SKIP_ATTEMPT_CAP,
     ExtractionLadder,
     LegDeadline,
     alternate_model_env_var,
@@ -3924,13 +3926,26 @@ def _run_json_stage(
                     return parsed3, attempts
 
     # -----------------------------------------------------------------------
-    # Termination. The three reasons are produced by three separate causes and
+    # Termination. The four reasons are produced by four separate causes and
     # never stand in for one another: a refused budget is not "the model kept
     # returning nothing", and neither is an operation that overran (recorded in
     # ``_issue``). Budget wins over the identical-empty reason when both are
     # true, because § 9's budget_exhausted means precisely "another recovery
     # step might have helped; wall-clock did not allow it" -- which is what a
     # refused rung 3 is.
+    #
+    # D-024 adds the LAST branch, and last is the whole point. A spent ceiling is
+    # the weakest true description of a stop: it says only "we ran out of tries",
+    # so a refused budget and an inert strategy both outrank it and are tested
+    # holding simultaneously with it. It is claimed on the RECORDED REFUSAL, not
+    # on ``attempts_remaining == 0``: the ceiling has to have actually stopped a
+    # rung that wanted to run. A leg that merely happened to spend its last
+    # attempt and then failed for another reason was not ended by the cap, and
+    # this is the same guard as ``loop_policy``'s ``not ladder_completed`` --
+    # here "completed" means the ladder was never told it could not continue.
+    # ``operation_timeout`` cannot be displaced from here because it never
+    # arrives here: ``_issue`` records it and RE-RAISES, so a timed-out leg
+    # leaves by that exception and never reaches this block at all.
     # -----------------------------------------------------------------------
     reason = ""
     if budget_refusal is not None:
@@ -3939,6 +3954,13 @@ def _run_json_stage(
         ladder.inert_extraction_observed() or ladder.identical_empty_hash()
     ):
         reason = IDENTICAL_EMPTY_RESPONSE
+    elif ladder is not None and any(
+        row.get("skip_cause") == SKIP_ATTEMPT_CAP for row in ladder.skipped
+    ):
+        # Two names, one deliberately shared literal: the skip cause is why a
+        # RUNG did not start, the reason is why the LEG stopped. Kept as two
+        # symbols at the one site that converts between them.
+        reason = ATTEMPT_CAP_REACHED
 
     issued = ladder.attempts_used if ladder is not None else max_attempts
     if saw_empty_payload:
