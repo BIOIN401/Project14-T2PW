@@ -3566,6 +3566,29 @@ def run_post_pipeline_sbml_artifacts(
             }
             sbml_input_path = mapped_json
         final_export_payload = json.loads(sbml_input_path.read_text(encoding="utf-8"))
+        # DECISIONS.md D-015 (LOCKED): compound name and identity canonicalization
+        # is canonical biology and must finish BEFORE the freeze. It used to run
+        # only inside ``build_pwml_ir``, downstream of the hash, where
+        # PRODUCT_CONTRACT section 5 forbids an exporter to resolve biological
+        # content. This mutates ``final_export_payload`` IN PLACE -- the same
+        # object every consumer below already holds and the same one the freeze
+        # receives -- so nothing downstream can hold a pre-resolution view of it.
+        # Import is function-local for the same reason ``freeze_canonical_payload``
+        # keeps its own: module scope here is another card's surface.
+        from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
+
+        # The report is captured here rather than returned: every key of this
+        # function's result dict is built below the freeze seam, which this card
+        # does not own. The durable provenance is not in this variable anyway --
+        # it is in the payload, which now carries the resolution outcome
+        # (``raw_name``, ``synonyms``, ``db_status``) into ``final_mapped.json``.
+        # An ambiguous rename or a reference the rename would break raises
+        # ``PrefreezeResolutionError`` out of here, leaving the payload untouched.
+        prefreeze_resolution_report = run_prefreeze_resolution(
+            final_export_payload,
+            strict_db=bool(strict_db),
+        )
+        assert isinstance(prefreeze_resolution_report, dict)
         post_enrichment_runtime_schema_report = validate_runtime_payload_contract(
             final_export_payload,
             boundary="post_enrichment",
