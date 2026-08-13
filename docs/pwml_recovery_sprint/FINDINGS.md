@@ -291,3 +291,62 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 | F-034 | `src/t2pw/extraction/extract.py` | Dead demo code — 29 lines, one hardcoded glutathione paragraph, `run_demo()` under `__main__`, zero test references, imported only by the `src/extract.py` re-export shim. C-034's declared target |
 | F-035 | `bench/metrics.BLOCKER_SCOPE_LABELS` | Produces a 125-column line in `render._blockers`, over that module's own 100-column budget. Pre-existing |
 | F-036 | `driver.py :: RunOutcome` | C-041 and C-032 both attach classification as **undeclared instance attributes** to keep the golden diff empty. Sound and documented, but dataclass `__eq__`/`__repr__` ignore them, and `getattr` is required on every read. Must not survive past C-053, which owns the row |
+
+---
+
+## F-037 — the name gate refuses records that CONFIRM the identity
+
+- **Severity** **HIGH** · biological identity loss · **base behaviour, not caused by C-044**
+- **Discovered by** C-044's reviewer, while adjudicating C-044's `excluded` attribution;
+  registered by the lead orchestrator at that reviewer's explicit request, because it otherwise
+  lived only in a commit message and a code comment
+- **Path/symbol** `src/t2pw/mapping/map_ids.py:531-575` — `_name_gate_tokens`,
+  `_names_share_meaningful_token`, consumed by `_name_gate_verdict`
+- **Observed vs expected** The gate returns `no_shared_meaningful_token` for pairs that are the
+  **same chemical species under different naming conventions**, so a retrieved record that in
+  fact *confirms* the identity is treated as a failure to match and the identifier is stripped.
+  **Nine committed rows lose a correct KEGG identifier this way.**
+
+  | entity | identifier stripped | name the gate compared it against |
+  |---|---|---|
+  | `ferric iron` | KEGG **C14819** | `Fe3+` |
+  | `ferrous iron` | KEGG **C14818** | `Fe2+` |
+  | `citrate` | KEGG **C00158** | `Citric acid` |
+  | `2,3-dihydro-2,3-dihydroxybenzoate` | KEGG **C04171** | `(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate` |
+  | `2,3-dihydro-2,3-dihydroxybenzoate` | KEGG C19557 | `Treosulfan` *(a genuine non-match)* |
+
+- **Evidence** `docs/pwml_recovery_sprint/evidence/g11/C-044r/10-dump-excluded.json` — the full
+  nine-row dump, produced by an independent classifier run over all 18 committed
+  `final_mapped.json`. Re-derived unchanged at C-044's final tip.
+- **Current-card impact** **None on C-044, which improves the situation.** Before C-044 these
+  rows were attributed as refutations *by retrieved evidence* — the opposite of the truth.
+  C-044's corrected lineage records them as *"the match was refused without a record being
+  retrieved"*, naming the compared name, so an auditor can now find them. That is precisely the
+  trail `PRODUCT_CONTRACT` § 3 exists to leave.
+- **Owner** `unowned`. Fixing the gate is a behaviour change well outside "lineage writes only"
+  and needs its own card. Note `PRODUCT_CONTRACT` § 8's *"never accept an identifier because its
+  format is valid"* is **not** in tension with this: the failure here is **over-rejection**, not
+  over-acceptance.
+
+## F-038 — Pack 2 findings are recorded but not yet consolidated here
+
+- **Severity** control plane · **action required at Pack 2 closeout**
+- **Observed vs expected** Pack 2 produced twelve further findings plus one blocker analysis and
+  two orchestrator self-findings. They are recorded with full evidence in
+  `…\scratchpad\sprint-records\PACK2-FINDINGS-PENDING.md` and have **not** been folded into
+  this file, per H-009's batch-at-closeout policy.
+- **The load-bearing ones, so this file is not silent on them:**
+  - **P2-04 (HIGH)** — no production caller constructs a `LegDeadline`, so **C-042's rung 3
+    never fires in production**. Whether "no deadline object" should mean the § 9 documented
+    default budget rather than *indeterminate* is an open product question.
+  - **P2-06 (HIGH)** — `pwml/ir.py :: _entity_record` materializes `pathwhiz_id` post-freeze;
+    **C-051's scope must name it**, or its assert-only conversion leaves that path live.
+  - **P2-11 (HIGH, structural)** — `tests/test_streamlit_quarantine_boundary.py` is in **no
+    card's manifest** yet pins app-boundary behaviour that every freeze-lifecycle and
+    release-classification card is chartered to change. **Two Pack 2 cards collided with it for
+    unrelated reasons.** Needs explicit ownership.
+  - **P2-01 (MEDIUM)** — `Lineage` does **not** dedup (`lineage.py:18-19`), so the merged
+    C-036/C-037 writers are non-idempotent across re-runs.
+  - **P2-05 (MEDIUM)** — `id_source="db"` still issues LLM calls unless
+    `T2PW_LLM_PROTEIN_FALLBACK=0`; two existing tests treat `db` as offline without setting it.
+- **Owner** the next lead orchestrator, at Pack 2 closeout.
