@@ -357,7 +357,7 @@ def test_rows_only_an_enrichment_patch_changed_are_not_attributed_here(monkeypat
     assert report["enrichment"]["patches_proposed"] == 1
     species_row = resolved["entities"]["species"][0]
     assert species_row["domain"] == "Bacteria (verified)"
-    assert LINEAGE_KEY not in species_row
+    assert _gap_entries(species_row) == []
 
 
 def test_a_malformed_inbound_lineage_is_reported_not_raised(monkeypatch: Any) -> None:
