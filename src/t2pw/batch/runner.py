@@ -897,21 +897,68 @@ def _relocate_files(row: Dict[str, Any], slug: str, mode: str) -> Dict[str, Any]
     return row
 
 
-def _timeout_row(*, slug: str, mode: str, paper: Dict[str, Any], seconds: float, timeout: float, tail: str) -> Dict[str, Any]:
+def _timeout_row(
+    *,
+    slug: str,
+    mode: str,
+    paper: Dict[str, Any],
+    seconds: float,
+    timeout: float,
+    tail: str,
+    leg_timeout: Any = None,
+    reason: str = "",
+) -> Dict[str, Any]:
+    """The row for a child the parent had to kill, classified per D-005.
+
+    ``status`` and ``failure_kind`` stay ``timeout`` because every aggregator ranks
+    on them, but "timeout" alone cannot say whether the leg spent its whole
+    wall-clock budget (``budget_exhausted``) or a tighter bound fired while budget
+    remained (``operation_timeout``) -- different outcomes with different fixes. The
+    reason is recorded explicitly beside the elapsed and remaining budget that
+    produced it, and both are marked ``operational_failure``: a killed child has
+    said *nothing* about the biology in the paper, so no denominator may read this
+    row as a semantic failure, as scientific insufficiency, or as retrieval
+    exhaustion.
+
+    ``leg_timeout`` accepts a :class:`~t2pw.pipeline.deadline.LegTimeout` so an
+    explicit per-leg override travels into the manifest with its reason attached;
+    a plain number (or nothing, using the parent's kill ceiling) is recorded as
+    the unmodified ceiling.
+    """
+
+    from t2pw.pipeline import deadline as leg_deadline
+
+    ceiling = leg_timeout if leg_timeout is not None else float(timeout)
+    termination = (
+        leg_deadline.require_operational_reason(reason)
+        if reason
+        else leg_deadline.classify_child_kill(
+            elapsed_seconds=seconds,
+            leg_timeout_seconds=float(getattr(ceiling, "seconds", ceiling)),
+        )
+    )
+    budget = leg_deadline.budget_record(elapsed_seconds=seconds, leg_timeout=ceiling)
     return _identify(
         {
             "status": _STATUS_TIMEOUT,
             "stage": "unknown",
             "seconds": round(seconds, 2),
             "failure_kind": _STATUS_TIMEOUT,
+            "termination_reason": termination,
+            "operational_failure": leg_deadline.is_operational(termination),
+            "budget": budget,
             "message": (
                 f"the child process was still running after {timeout:.0f}s and was killed, "
-                "so this paper+mode produced nothing"
+                f"so this paper+mode produced nothing ({termination})"
             ),
             "detail": (
                 "The parent kills a stuck child rather than letting it eat the night. "
                 "Typical causes: an LLM request with no server-side timeout, a wedged "
                 "PathBank MySQL socket, or a Streamlit rerun that never returns.\n\n"
+                f"This is an OPERATIONAL outcome ({termination}), never a biological "
+                f"one: {budget['elapsed_seconds']:.0f}s of a "
+                f"{budget['leg_timeout_seconds']:.0f}s leg budget were spent and the leg "
+                "was cut off, so nothing about this paper was judged.\n\n"
                 + (tail or "(the child printed nothing before it was killed)")
             ),
             "issue_codes": [],
@@ -1137,14 +1184,35 @@ def _kill_tree(proc: Any) -> None:
         pass
 
 
-def launch_child(cmd: Sequence[str], timeout: float) -> ChildResult:
+def launch_child(cmd: Sequence[str], timeout: float, *, deadline: Any = None) -> ChildResult:
     """``subprocess.run(cmd, timeout=...)`` semantics, plus a process-tree kill.
 
     ``subprocess.run`` is not used directly for exactly one reason: on timeout it
     kills only the immediate child, and a hung pipeline run may have descendants
     holding the very socket that hung. So the process is started in its own group
     and :func:`_kill_tree` is used instead.
+
+    Two additions, both about the wait rather than the kill.
+
+    ``deadline`` -- a :class:`~t2pw.pipeline.deadline.LegDeadline` -- shortens the
+    wait to whatever is left of the leg's monotonic budget, so the parent can never
+    sit past its own deadline waiting for a child that already overran it. Absent,
+    the wait is exactly the timeout it was given, as before.
+
+    Cleanup now runs on **every** exit path. It ran on ``TimeoutExpired`` and
+    ``KeyboardInterrupt`` only, so any other exception out of ``communicate`` -- a
+    fault on the decoding drain, ``MemoryError``, a ``SystemExit`` from a signal
+    handler -- unwound to the caller with the child still alive, still holding the
+    socket that hung it; that is the gap the G11 wrapper records against this
+    function. The ``finally`` fires only on paths that neither completed nor already
+    killed, so no path kills twice and the owned-PID discipline is untouched:
+    :func:`_kill_tree` still terminates only the process this function started, and
+    is still the only thing that terminates anything.
     """
+
+    wait_for = max(1.0, float(timeout))
+    if deadline is not None:
+        wait_for = max(1.0, min(wait_for, float(deadline.remaining)))
 
     kwargs: Dict[str, Any] = {
         "stdout": subprocess.PIPE,
@@ -1163,10 +1231,13 @@ def launch_child(cmd: Sequence[str], timeout: float) -> ChildResult:
         kwargs["start_new_session"] = True
 
     proc = subprocess.Popen(list(cmd), **kwargs)  # noqa: S603 - argv is ours
+    settled = False
     try:
-        stdout, stderr = proc.communicate(timeout=max(1.0, float(timeout)))
+        stdout, stderr = proc.communicate(timeout=wait_for)
+        settled = True
     except subprocess.TimeoutExpired:
         _kill_tree(proc)
+        settled = True
         try:
             stdout, stderr = proc.communicate(timeout=_DRAIN_TIMEOUT)
         except Exception:  # noqa: BLE001 - pipes may never close; do not hang here
@@ -1176,7 +1247,13 @@ def launch_child(cmd: Sequence[str], timeout: float) -> ChildResult:
         # Ctrl+C reaches the parent only (the child is in its own group), so the
         # child must be taken down explicitly or it would outlive the batch.
         _kill_tree(proc)
+        settled = True
         raise
+    finally:
+        # Every remaining way out of communicate(): the child is still running and
+        # nothing above has killed it. Guaranteed cleanup, same owned PID.
+        if not settled:
+            _kill_tree(proc)
     return ChildResult(proc.returncode, stdout or "", stderr or "", False)
 
 
@@ -1190,7 +1267,18 @@ def _tail(result: ChildResult, *, limit: int = 4000) -> str:
 
 
 def child_command(script_path: Path, run_dir: Path, slug: str, mode: str, timeout: float) -> List[str]:
-    """The argv the parent uses to re-invoke this same CLI for one pair."""
+    """The argv the parent uses to re-invoke this same CLI for one pair.
+
+    The child's ``--timeout`` is D-005's child deadline: the parent's leg ceiling
+    less the 120 s parent/child grace, so 3480 s for the default 3600 s leg. The
+    subtraction now happens in exactly one place --
+    :func:`t2pw.pipeline.deadline.child_deadline_seconds` -- so the parent's kill,
+    the child's own budget and the finalization reserve cannot drift apart by
+    someone editing one of the three. The number emitted is unchanged, including
+    the 60 s floor that keeps a very short leg from handing the child nothing.
+    """
+
+    from t2pw.pipeline.deadline import child_deadline_seconds
 
     return [
         sys.executable,
@@ -1203,7 +1291,7 @@ def child_command(script_path: Path, run_dir: Path, slug: str, mode: str, timeou
         "--mode",
         mode,
         "--timeout",
-        f"{max(60.0, float(timeout) - _CHILD_GRACE):.0f}",
+        f"{child_deadline_seconds(float(timeout), grace=_CHILD_GRACE):.0f}",
     ]
 
 

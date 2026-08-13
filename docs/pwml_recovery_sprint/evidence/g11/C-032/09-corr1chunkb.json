@@ -1,0 +1,121 @@
+{
+  "label": "corr1chunkb",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,t2pw,pytest;print('t2pw:',t2pw.__file__);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c032/c1b",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module",
+  "started_at": "2026-08-13T16:06:11+00:00",
+  "finished_at": "2026-08-13T16:06:35+00:00",
+  "duration_seconds": 23.766489400004502,
+  "timeout_seconds": 1800.0,
+  "root_pid": 457576,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 455312,
+      "name": "python.exe",
+      "ppid": 457576
+    },
+    {
+      "pid": 456484,
+      "name": "python.exe",
+      "ppid": 455312
+    },
+    {
+      "pid": 452096,
+      "name": "python.exe",
+      "ppid": 455312
+    },
+    {
+      "pid": 435228,
+      "name": "python.exe",
+      "ppid": 452096
+    },
+    {
+      "pid": 436312,
+      "name": "python.exe",
+      "ppid": 455312
+    },
+    {
+      "pid": 451748,
+      "name": "python.exe",
+      "ppid": 436312
+    },
+    {
+      "pid": 437944,
+      "name": "python.exe",
+      "ppid": 452932
+    },
+    {
+      "pid": 452932,
+      "name": "python.exe",
+      "ppid": 455312
+    }
+  ],
+  "descendants_terminated": [
+    435228,
+    436312,
+    437944,
+    451748,
+    452096,
+    452932,
+    455312,
+    456484
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 353932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 453888,
+      "name": "python.exe"
+    },
+    {
+      "pid": 456864,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-032/09-corr1chunkb.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module",
+    "repo_head": "985355fde5de0b693be8d7f9cf38a5caedbbfeb4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

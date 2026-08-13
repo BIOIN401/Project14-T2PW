@@ -1,0 +1,202 @@
+{
+  "label": "corr1affected",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,t2pw,pytest;print('t2pw:',t2pw.__file__);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c032/c1a",
+    "tests/test_batch_run.py",
+    "tests/test_llm_client_request_timeout.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module",
+  "started_at": "2026-08-13T16:07:35+00:00",
+  "finished_at": "2026-08-13T16:07:54+00:00",
+  "duration_seconds": 18.5425469000038,
+  "timeout_seconds": 1800.0,
+  "root_pid": 456444,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 454564,
+      "name": "python.exe",
+      "ppid": 456444
+    },
+    {
+      "pid": 459556,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459612,
+      "name": "python.exe",
+      "ppid": 459556
+    },
+    {
+      "pid": 459660,
+      "name": "taskkill.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459712,
+      "name": "python.exe",
+      "ppid": 459728
+    },
+    {
+      "pid": 459728,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 455648,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459772,
+      "name": "python.exe",
+      "ppid": 455648
+    },
+    {
+      "pid": 458776,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 458864,
+      "name": "python.exe",
+      "ppid": 458776
+    },
+    {
+      "pid": 457768,
+      "name": "python.exe",
+      "ppid": 459100
+    },
+    {
+      "pid": 459100,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 443468,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 450056,
+      "name": "python.exe",
+      "ppid": 443468
+    },
+    {
+      "pid": 454960,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 456004,
+      "name": "python.exe",
+      "ppid": 454960
+    },
+    {
+      "pid": 459456,
+      "name": "python.exe",
+      "ppid": 459524
+    },
+    {
+      "pid": 459524,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459452,
+      "name": "python.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459620,
+      "name": "git.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 452716,
+      "name": "git.exe",
+      "ppid": 454564
+    },
+    {
+      "pid": 459312,
+      "name": "git.exe",
+      "ppid": 454564
+    }
+  ],
+  "descendants_terminated": [
+    443468,
+    450056,
+    452716,
+    454564,
+    454960,
+    455648,
+    456004,
+    457768,
+    458776,
+    458864,
+    459100,
+    459312,
+    459452,
+    459456,
+    459524,
+    459556,
+    459612,
+    459620,
+    459660,
+    459712,
+    459728,
+    459772
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 353932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 456148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 459176,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-032/13-corr1affected.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c032-deadline-module",
+    "repo_head": "985355fde5de0b693be8d7f9cf38a5caedbbfeb4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
