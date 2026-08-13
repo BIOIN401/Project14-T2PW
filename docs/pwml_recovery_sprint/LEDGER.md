@@ -190,24 +190,24 @@ under the D-6 precedent recorded below: *a satisfied dependency is still a true 
 
 | ID | Task | Status | Deps | Branch | Ownership boundary | Reviewer | Focused | Bench |
 |---|---|---|---|---|---|---|---|---|
-| C-030 | p04b hash wiring | `BLOCKED` | C-011, C-013 | `agent/p04b-hash-wiring` | `streamlit_app.py` :: `freeze_canonical_payload` | C-052 impl | D | — |
-| C-031 | p02 quarantine artifacts | `BLOCKED` | C-012 | `agent/p02-quarantine-artifacts` | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | M1 |
-| C-032 | p03b deadline + checkpoints | `BLOCKED` | C-012, C-014 | `agent/p03b-deadline-module` | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
-| C-033 | p10 identity hydration | `BLOCKED` | H-001 ✔, H-002 ✔ | `agent/p10-identity-hydration` | `src/t2pw/mapping/map_ids.py` :: 2 fns; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py` (**not** `src/map_ids.py`) | C-044 impl | C | M2 |
+| C-030 | p04b hash wiring | `ACCEPTED` merged `f3e9fb1`; APPROVE (exact) — rev2; rev1 stopped and escalated 4 blockers, uncommitted. A0-C1 discharged over the measured 49 rows | C-011, C-013 | `agent/p04b-hash-wiring` | `streamlit_app.py` :: `freeze_canonical_payload` | C-052 impl | D | — |
+| C-031 | p02 quarantine artifacts | `ACCEPTED` merged `cbf30f6`; APPROVE (exact) — 0 rounds; golden driver diff empty | C-012 | `agent/p02-quarantine-artifacts` | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | M1 |
+| C-032 | p03b deadline + checkpoints | `ACCEPTED` merged `1801298`; APPROVE (exact) after 1 correction round; budget 950→1100 pre-commit | C-012, C-014 | `agent/p03b-deadline-module` | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
+| C-033 | p10 identity hydration | `ACCEPTED` merged `7ff1211`; APPROVE (exact) after 1 correction round; budget 850→1300 pre-commit | H-001 ✔, H-002 ✔ | `agent/p10-identity-hydration` | `src/t2pw/mapping/map_ids.py` :: 2 fns; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py` (**not** `src/map_ids.py`) | C-044 impl | C | M2 |
 | C-034 | p21 lineage: extraction | `BLOCKED` | C-015 | `agent/p21-lineage-extract` | `extraction/extract.py` | rotate | A | — |
-| C-035 | p22 lineage: RAG | `BLOCKED` | C-015 | `agent/p22-lineage-rag` | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
-| C-036 | p23 lineage: audit | `BLOCKED` | C-015 | `agent/p23-lineage-audit` | `curation/apply_audit_patch.py` | rotate | A | — |
-| C-037 | p24 lineage: gap resolver | `BLOCKED` | C-015 | `agent/p24-lineage-gapres` | `curation/gap_resolver.py` | rotate | C | — |
-| C-038 | p25 lineage carrier | `BLOCKED` | C-015 | `agent/p25-lineage-carrier` | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance | — |
+| C-035 | p22 lineage: RAG | `ACCEPTED` merged `5ce3870`; APPROVE (exact) — 0 rounds; C-061 reserved fns byte-identical | C-015 | `agent/p22-lineage-rag` | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
+| C-036 | p23 lineage: audit | `ACCEPTED` merged `20be28d`; APPROVE (exact) — 0 rounds; authorized 2-line pinned-baseline move | C-015 | `agent/p23-lineage-audit` | `curation/apply_audit_patch.py` | rotate | A | — |
+| C-037 | p24 lineage: gap resolver | `ACCEPTED` merged `fbedfe6`; APPROVE (exact) after 1 correction round | C-015 | `agent/p24-lineage-gapres` | `curation/gap_resolver.py` | rotate | C | — |
+| C-038 | p25 lineage carrier | `ACCEPTED` merged `b2377d7`; APPROVE (exact) — 0 rounds | C-015 | `agent/p25-lineage-carrier` | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance | — |
 
 ## Wave C
 
 | ID | Task | Status | Deps | Branch | Ownership boundary | Reviewer | Focused | Bench |
 |---|---|---|---|---|---|---|---|---|
-| C-040 | p05a compound-resolution extract | `BLOCKED` | SPIKE-002 | `agent/p05a-resolution-extract` | NEW `pwml/compound_resolution.py`; `ir.py` :: 2 fns | C-051 impl | D | — |
-| C-041 | p08 release status + coverage split | `BLOCKED` | C-010, C-012 | `agent/p08-release-status` | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
+| C-040 | p05a compound-resolution extract | `ACCEPTED` merged `334ad88`; APPROVE (exact) — 0 rounds; qb discharged at pack checkpoint 23/23 | SPIKE-002 | `agent/p05a-resolution-extract` | NEW `pwml/compound_resolution.py`; `ir.py` :: 2 fns | C-051 impl | D | — |
+| C-041 | p08 release status + coverage split | `ACCEPTED` merged `b5bbf08`; APPROVE (exact) — 0 rounds; golden driver diff empty | C-010, C-012 | `agent/p08-release-status` | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
 | C-042 | p03c extraction escalation ladder | `BLOCKED` | C-032, C-038 | `agent/p03c-extraction-ladder` | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | M2 |
-| C-043 | p32 RAG loop controller | `BLOCKED` | C-016, C-021 | `agent/p32-rag-controller` | NEW `rag/controller.py` | C-055 impl | C | — |
+| C-043 | p32 RAG loop controller | `ACCEPTED` merged `3c04d4b`; APPROVE (exact) after 1 correction round | C-016, C-021 | `agent/p32-rag-controller` | NEW `rag/controller.py` | C-055 impl | C | — |
 | C-044 | p26 lineage: mapping | `BLOCKED` | C-015, C-033 | `agent/p26-lineage-mapping` | `src/t2pw/mapping/map_ids.py` (lineage writes; **not** `src/map_ids.py`) | C-033 impl | C | — |
 
 ## Wave D
