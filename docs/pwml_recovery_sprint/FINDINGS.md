@@ -107,10 +107,16 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 - **Evidence** C-041 supplies the classification that says otherwise; the blocking site is
   outside its ownership.
 - **Current-card impact** none — C-041 delivered its chartered contract
-- **Owner** **none.** `MASTER_PLAN` §9's C-041 ownership row and the dispatch instruction both
-  exclude `quarantine_and_close`; only `:230`'s prose rationale assumed otherwise. Editing it
-  would have been an `out_of_boundary` REJECT. **Needs a product-owner ruling on which card
-  closes it.**
+- **Owner** **`C-041a` — assigned by product-owner ruling 2026-08-13.** A narrow follow-up card,
+  not a reopening of C-041. Its production ownership is limited to the release/refusal seam
+  around `strict_quarantine.py :: quarantine_and_close`, including the live refusal near the
+  previously reported `:1959`. Purpose: complete D-002 end-to-end so a subthreshold but
+  structurally valid pathway becomes **`review_required` output rather than an unconditional
+  refusal**, preserving the product contract, with focused behavioural tests required.
+  *(Superseded reading, kept for audit: "none — needs a product-owner ruling on which card
+  closes it." `MASTER_PLAN` §9's C-041 ownership row and the dispatch instruction both excluded
+  `quarantine_and_close`; only `:230`'s prose rationale assumed otherwise, so editing it would
+  have been an `out_of_boundary` REJECT at the time.)*
 
 ## F-007 — `_apply_single_op` aliases the caller's patch ops
 

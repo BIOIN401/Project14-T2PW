@@ -376,8 +376,8 @@ row to these, and never edit a re-export shim:
 | C-031 | `agent/p02-quarantine-artifacts` | B | C-012 | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | — |
 | C-032 | `agent/p03b-deadline-module` | B | C-012, C-014 | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
 | C-033 | `agent/p10-identity-hydration` | B | — | `src/t2pw/mapping/map_ids.py` :: `verify_real_protein_identity`, `_enforce_shipped_identity_names`; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py`. **Not** `src/map_ids.py` — that is a 5-line re-export shim | C-044 impl | C | — |
-| C-034 | `agent/p21-lineage-extract` | B | C-015 | `extraction/extract.py` | rotate | A | — |
-| C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
+| C-034 | `agent/p21-lineage-extract` | B | C-015 | **RE-SCOPED 2026-08-13:** `pipeline/stage_one_boundary.py` :: `settle_stage_one` (lineage writes only). The former target `extraction/extract.py` is **dead demo code** — 29 lines, one hardcoded paragraph, `run_demo()` under `__main__`, reached only through the `src/extract.py` shim — and is now **excluded from this card**. Ownership stays disjoint from C-042 | rotate | A **+ `tests/test_stage_one_boundary.py` + `tests/test_early_failure_replay.py`** (neither is in any chunk) | — |
+| C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` — **except `parse_span_relation` and `validate_evidence_span`, which are C-061's** (corrected 2026-08-13; C-035 merged with both **byte-identical**, verified three times including in the merged tree, precisely to keep them free) | rotate | C | — |
 | C-036 | `agent/p23-lineage-audit` | B | C-015 | `curation/apply_audit_patch.py` | rotate | A | — |
 | C-037 | `agent/p24-lineage-gapres` | B | C-015 | `curation/gap_resolver.py` | rotate | C | — |
 | C-038 | `agent/p25-lineage-carrier` | B | C-015 | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance test | — |
@@ -396,8 +396,8 @@ row to these, and never edit a re-export shim:
 | C-056a | `agent/p42a-semantic-runtime` | D | C-017, C-041 | `pipeline/release_status.py` :: semantic input to **runtime `release_status`** | C-017 impl | B | — |
 | C-056b | `agent/p42b-semantic-bench` | D | C-056a, C-053 | `acceptance.py` :: `_build_denominators` | C-056a impl | B | — |
 | C-057 | `agent/p27-lineage-quarantine` | D | C-015, C-010, C-041 | `strict_quarantine.py` (lineage writes only) | C-041 impl | A, E | — |
-| C-060 | `agent/p51-false-id-repairs` | E | **BLOCKED** on R-003 | placeholder | — | — | — |
-| C-061 | `agent/p52-missing-reactions` | E | **BLOCKED** on R-004 | placeholder | — | — | — |
+| C-060 | `agent/p51-false-id-repairs` | E | R-003 ✔ | **SCOPE ACCEPTED 2026-08-13 (R-003 M1 only):** NEW `pipeline/entity_admission.py` — an assay-reagent admission gate — plus the minimal call site in `pipeline.py` :: `merge_additions`. **A0-C5: the hallucination gate runs first and independently of `cofactor_policy`** | — | — | — |
+| C-061 | `agent/p52-missing-reactions` | E | R-004 ✔ | **SCOPE ACCEPTED 2026-08-13 (R-004 B-2 only):** `rag/admission.py` :: `parse_span_relation`, `validate_evidence_span`. The stale C-035 claim over both symbols is corrected in this table; C-035 is **not** reopened | — | — | — |
 
 ### Requirements carried into specific prompts
 
