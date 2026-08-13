@@ -339,6 +339,69 @@ def test_new_a_row_that_never_ran_the_ladder_is_judged_on_its_name_gate() -> Non
 # ── NEW ACCEPTANCE — A4: the Fur shape stays fixed ──────────────────────────
 
 
+def test_new_a_lexical_gate_refusal_does_not_claim_a_contradiction() -> None:
+    """Real committed shape: 'ferric iron' -> KEGG C14819, refused because the
+    gate compared it against 'Fe3+' and found ``no_shared_meaningful_token``.
+
+    Nothing was retrieved that says C14819 is not ferric iron -- C14819 *is*
+    ferric iron. The removal happened, so the origin stays ``excluded``, but the
+    entry may not assert evidence nobody produced: no source, no ``direct``
+    support, and no claim that what the entity is not has been established.
+    """
+    row = {
+        "name": "ferric iron",
+        "mapped_ids": {},
+        "mapping_meta": {
+            "name_gate": {
+                "verdict": "reject",
+                "reason": "no_shared_meaningful_token",
+                "resolved_name": "Fe3+",
+                "compared_names": ["Fe3+"],
+            },
+            "rejected_mapped_ids": {"kegg": "C14819"},
+            "resolution": {"status": "novel", "issue": "implausible_name_match"},
+        },
+    }
+    map_ids._record_mapping_lineage({"compounds": [row]})
+    entry = _only(row)
+
+    assert entry.origin == "excluded"  # the removal is a fact
+    assert (entry.support, entry.sources) == ("unsupported", ())
+    assert "contradicts" not in entry.reason
+    assert "no_shared_meaningful_token" in entry.reason and "C14819" in entry.reason
+    assert "Fe3+" in entry.uncertainty
+    assert "not a refutation" in entry.uncertainty
+    assert "what it is not is established" not in entry.uncertainty
+
+
+def test_new_only_a_retrieved_refutation_may_name_a_source_and_claim_direct() -> None:
+    """The two removals are not merged: a ladder ``rejected`` verdict retrieved a
+    record that states the contradiction, so it alone names one."""
+    ladder = _mapping_lineage_facts_for(
+        {
+            "identity_verdict": {"verification_status": "rejected"},
+            "rejected_mapped_ids": {"uniprot": "P08235"},
+            "resolution": {"status": "novel"},
+        }
+    )
+    lexical = _mapping_lineage_facts_for(
+        {
+            "name_gate": {"verdict": "reject", "reason": "no_shared_meaningful_token"},
+            "rejected_mapped_ids": {"uniprot": "P08235"},
+            "resolution": {"status": "novel"},
+        }
+    )
+    assert ladder["origin"] == lexical["origin"] == "excluded"
+    assert (ladder["support"], bool(ladder["sources"])) == ("direct", True)
+    assert (lexical["support"], lexical["sources"]) == ("unsupported", ())
+
+
+def _mapping_lineage_facts_for(meta: Dict[str, Any]) -> Dict[str, Any]:
+    facts = map_ids._mapping_lineage_facts({"name": "x", "mapping_meta": meta})
+    assert facts is not None
+    return facts
+
+
 def test_new_the_fur_shape_preserves_the_accession_as_unresolved_not_excluded() -> None:
     """``runs_verify/2026-08-04_1306`` PMC12452463: ``Fur`` shipped
     ``uniprot:P0A9A9`` with ``identifier_resolution: "ok"`` and

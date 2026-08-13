@@ -7805,13 +7805,15 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     # Refutation. A protein that went through the ladder is judged on its
     # verification status alone; a row that never had one (compounds,
     # complexes) is judged on the name gate, the only thing that refutes it.
-    refuted = (
-        str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
-        if verdict
-        else str(_safe_dict(meta.get("name_gate")).get("verdict") or "") == "reject"
-    )
+    gate = _safe_dict(meta.get("name_gate"))
+    ladder_rejected = str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
+    gate_rejected = not verdict and str(gate.get("verdict") or "") == "reject"
     contradicting = _mapping_lineage_sources(meta.get("rejected_mapped_ids"), locator=locator)
-    if refuted and contradicting:
+
+    # A rung RETRIEVED evidence and it refutes the claim. Only here is there a
+    # record that states the contradiction, so only here may the entry name one
+    # and call its support ``direct``.
+    if ladder_rejected and contradicting:
         return {
             "origin": "excluded", "support": "direct", "sources": contradicting,
             "reason": (
@@ -7820,8 +7822,41 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             ),
             "review_required": True,
             "uncertainty": (
-                "the entity ships without a database identity: what it is not is "
-                "established, what it is is not"
+                "the entity ships without a database identity: the identifier it "
+                "carried was refuted by a retrieved record"
+            ),
+        }
+
+    # The name gate refused the match without any rung retrieving a refutation.
+    # The REMOVAL happened, so the origin is still ``excluded`` -- "could not be
+    # grounded" and "deliberately removed" are different facts (C-015). But the
+    # gate compares STRINGS: ``ferric iron`` against ``Fe3+`` fails
+    # ``no_shared_meaningful_token`` while KEGG C14819 in fact names it. Nothing
+    # was retrieved that states this identifier is wrong, so the entry names no
+    # source and claims no support -- ``excluded`` is not a SOURCED origin, so
+    # ``unsupported`` with no sources is exactly what an unevidenced removal
+    # looks like. The gate's own finding and the name it compared are recorded
+    # instead of a contradiction nobody established.
+    if gate_rejected:
+        compared = ", ".join(
+            str(value) for value in _safe_list(gate.get("compared_names"))[:3] if str(value or "").strip()
+        ) or str(gate.get("resolved_name") or "")
+        removed = ", ".join(
+            f"{key}={value}"
+            for key, value in sorted(_safe_dict(meta.get("rejected_mapped_ids")).items())
+        )
+        return {
+            "origin": "excluded", "support": "unsupported", "sources": (),
+            "reason": (
+                "the name-plausibility gate refused the match "
+                f"({gate.get('reason') or issue or 'name_gate_reject'}), so the identifier "
+                f"was removed ({removed or 'none recorded'})"
+            ),
+            "review_required": True,
+            "uncertainty": (
+                "no retrieved record contradicts this identifier: the gate compared this "
+                f"entity's name against {compared or 'no candidate name'} and found no "
+                "shared evidence. The removal is a lexical refusal, not a refutation"
             ),
         }
 
