@@ -938,3 +938,84 @@ termination reason says why the **leg** stopped, and they are recorded in differ
 | O-1 | `placeholder_backed_proteins` (21 in the pinned run): gold-set error class, or legitimate biology preservation? | any branch that touches protein export policy | It is a genuine disagreement between two intentional designs, not a defect. TRAP-3 forbids agents from resolving it. |
 
 **Closed:** O-2 → D-011 · O-3 → D-014.
+
+---
+
+## D-025 — Generated evidence is budgeted before dispatch, including what the gates allocate · 2026-08-13 · LOCKED
+
+**D-019 already required two budgets. It was not being satisfied.** Two Pack 3 cards proved the
+gap independently, and in both the writer was right and the charter was wrong.
+
+* **C-050a** was given `≤ 40` generated artifacts while the same charter *mandated* the
+  split-process Chunk D gate, which **self-allocates ~32 reports on its own** — leaving 8 for the
+  focused run, the G9 proof, three determinism runs, a discrimination run and SMOKE. It landed at
+  **41**. Its reviewer: *"the ceiling is internally inconsistent with the gate the same charter
+  requires."*
+* **C-041a** was given a hand-authored ceiling and **no generated-evidence budget at all**. Of its
+  10,080 evidence lines, **9,294 are the 77 mandatory `bounded_run.py` cleanup reports** whose
+  shape is fixed by a wrapper agents may not modify, and **50 of the 77 are auto-allocated by
+  `chunk_d_gate.run`** (25 per `qb` cohort).
+
+**Every charter, before dispatch, states three ceilings separately:**
+
+1. **hand-authored** additions-plus-deletions;
+2. **generated artifact count**;
+3. **generated artifact byte or line size**, where applicable.
+
+**The generated figure must be budgeted, not guessed.** It must provide for:
+
+* the fixed reports a Chunk D partition allocates for itself (**~32 per `qb` cohort**, ~6–8 for
+  `core`+`s8`);
+* one wrapper report per bounded job;
+* focused and merge-gate reports;
+* **at least one failing run** wherever a failure is plausible;
+* headroom for **one review correction**.
+
+**Budgets are ceilings, not targets. Genuine evidence is never deleted to satisfy a number.** A
+writer that would exceed a ceiling **stops before committing and reports**; deleting a superseded
+or failing report to come in under the line is a **reject**. Both Pack 3 writers correctly refused
+to do it, and C-050a committed its **failing** determinism run alongside the passing one — that is
+the required behaviour, not an overrun to be charged to the writer.
+
+**A charter that omits the generated figure is a dispatch error**, exactly as D-019 § 3 says of a
+missing manifest. Where it has already happened, the omission is disclosed at closeout — it is
+**not** cured retroactively and **not** described as compliance.
+
+---
+
+## D-026 — Tracked background execution is compliant when a bounded job exceeds the interactive limit · 2026-08-13 · LOCKED
+
+**This resolves a question three cards relitigated** (C-034, C-041a, C-050a), each self-declaring
+the same deviation and each having it adjudicated separately. `TEST_MATRIX` § 0 rule 1 is amended
+in the same commit as this entry.
+
+A Chunk D `qb` cohort is ~10.5 minutes across 23 AppTest processes and **exceeds the 10-minute
+interactive foreground cap by construction**. The rule's purpose was never the foreground shell —
+it was bounded lifetime, owned-PID-only cleanup, verified zero survivors, and a committed
+structured report.
+
+**A tracked background job is compliant when all of these hold:**
+
+* it is launched through the **same approved `bounded_run.py` wrapper**, unmodified;
+* its **task/process identifier and output path are recorded immediately**;
+* **only one heavy job runs at a time**;
+* the orchestrator **polls it rather than launching duplicates**;
+* **wrapper cleanup executes**;
+* **descendant counts and zero survivors are verified**;
+* the **final canonical JSON report is inspected**;
+* **no detached or unowned job remains**.
+
+**This does not authorize arbitrary background shells.** Detached processes, `nohup`, untracked
+jobs and `Start-Process` without bounded waiting remain forbidden. Cleanup still targets only
+PIDs the job created; `taskkill /IM python.exe` and `pkill python` remain forbidden; pre-existing
+processes are reported, never killed.
+
+**Prefer a single tracked bounded cohort** where splitting would change the gate's semantics or
+materially increase overhead. Use `--only` partitions **only where the gate is explicitly
+partition-safe** — `chunk_d_gate.py` proves its `177 = 150 + 4 + 23` partition on every
+invocation, so its partitions are safe by construction.
+
+**Retrospective effect:** the C-034, C-041a and C-050a deviations are compliant under this rule.
+Each was self-declared before review, ran through the unmodified wrapper inside the same Job
+Object under its own outer timeout, and verified zero survivors from a complete descendant census.
+No measurement in any of those cards depended on the foreground/background distinction.
