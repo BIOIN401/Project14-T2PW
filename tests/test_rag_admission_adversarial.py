@@ -28,6 +28,8 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
@@ -1140,3 +1142,107 @@ def test_every_permutation_of_the_evidence_gives_the_same_lineage() -> None:
         chain = _by_name(result.admission["accepted"])["child"]["chain"]
         lineages.add((chain["hop"], chain["shared_metabolite"], chain["parent_claim"]))
     assert len(lineages) == 1, lineages
+
+
+# ===========================================================================
+# 6. Multi-relation spans (C-061). One sentence, several stated reactions.
+# ===========================================================================
+#: PMC12421875's MenA/MenG sentence — two reactions, one statement, and the
+#: shape that made a verbatim claim disagree with its own evidence.
+_TWO_CLAUSE_SPAN = (
+    "Subsequently, MenA joins DHNA and prenyl diphosphate to produce "
+    "demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK ( Fig. 1A )."
+)
+
+
+def _span_check(inputs, outputs, enzymes=(), span=_TWO_CLAUSE_SPAN):
+    from t2pw.rag.admission import validate_evidence_span
+
+    return validate_evidence_span(
+        span, inputs=list(inputs), outputs=list(outputs), enzymes=list(enzymes)
+    )
+
+
+@pytest.mark.parametrize(
+    "inputs,outputs,enzymes,why",
+    [
+        (
+            ["DHNA", "prenyl diphosphate"],
+            ["demethylmenaquinone (DMK)"],
+            ["MenG"],
+            "clause one's chemistry under clause two's enzyme",
+        ),
+        (
+            ["DMK"],
+            ["MK"],
+            ["MenA"],
+            "clause two's chemistry under clause one's enzyme",
+        ),
+        (
+            ["DHNA", "prenyl diphosphate"],
+            ["MK"],
+            ["MenA"],
+            "first substrates stitched to the last product",
+        ),
+        (
+            ["demethylmenaquinone (DMK)"],
+            ["DHNA", "prenyl diphosphate"],
+            ["MenA"],
+            "clause one, backwards",
+        ),
+        (["MK"], ["DMK"], ["MenG"], "clause two, backwards"),
+        (
+            ["DHNA"],
+            ["demethylmenaquinone (DMK)"],
+            ["MenA"],
+            "clause one with a stated co-substrate dropped",
+        ),
+        (
+            # ATP here would be ADMITTED, and correctly: currency is exempt in
+            # the "candidate has extra" direction, because a transcriber
+            # legitimately writes the implicit cofactor of a step described in
+            # words. Chorismate is not currency, and the span never states it.
+            ["DHNA", "prenyl diphosphate", "chorismate"],
+            ["demethylmenaquinone (DMK)"],
+            ["MenA"],
+            "a non-currency substrate the span never states",
+        ),
+    ],
+)
+def test_a_sentence_stating_two_reactions_supports_neither_a_third(
+    inputs, outputs, enzymes, why
+) -> None:
+    """Reading BOTH relations must not make the pair support their mixtures.
+
+    This is the merge-gate-6 half of C-061. Widening the parser widens what the
+    span is read as SAYING; the agreement predicate is untouched, so each stated
+    relation is still judged on substrates, products, direction and catalyst at
+    once, and a claim that matches none of them outright is refused.
+    """
+    verdict = _span_check(inputs, outputs, enzymes)
+    assert not verdict.ok, (why, verdict.relation)
+    assert verdict.reasons, why
+
+
+def test_the_two_reactions_the_sentence_does_state_are_supported() -> None:
+    """The other half: the refusals above are not a gate that refuses everything."""
+    assert _span_check(
+        ["DHNA", "prenyl diphosphate"], ["demethylmenaquinone (DMK)"], ["MenA"]
+    ).ok
+    assert _span_check(["DMK"], ["MK"], ["MenG"]).ok
+
+
+def test_a_claim_stitched_across_two_sentences_is_still_refused() -> None:
+    """The pre-existing guarantee, re-checked against the wider parser.
+
+    ``split_statements`` refuses a multi-statement span before any parsing
+    happens, and enumerating every match position does not reach that check.
+    """
+    verdict = _span_check(
+        ["A"],
+        ["Y"],
+        ["Enz1"],
+        span="Enz1 catalyzes A to B. Enz2 catalyzes X to Y.",
+    )
+    assert not verdict.ok
+    assert any("evidence_span_is_not_one_statement" in r for r in verdict.reasons)

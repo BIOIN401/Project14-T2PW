@@ -74,6 +74,7 @@ if "openai" not in sys.modules:
 from t2pw.rag.admission import (  # noqa: E402
     actor_spellings,
     parse_span_relation,
+    parse_span_relations,
     validate_evidence_span,
 )
 
@@ -444,10 +445,14 @@ def test_recall_over_real_source_sentences_is_measured_and_pinned() -> None:
     metabolites, full, wrong, missed, unsupported = _classify()
 
     assert len(SUPPORTED) == 14
-    assert len(metabolites) == 9  # source-grounded metabolite-role recall
-    assert len(full) == 9  # source-grounded FULL-role recall
+    # C-061 moved these deliberately, by exactly one sentence: the MenA "joins X
+    # and Y to produce Z" condensation form, previously the first named false
+    # negative below. 9 -> 10 on both recalls, 5 -> 4 missed, and the two numbers
+    # that must not move did not: wrong and unsupported are still zero.
+    assert len(metabolites) == 10  # source-grounded metabolite-role recall
+    assert len(full) == 10  # source-grounded FULL-role recall
     assert len(wrong) == 0
-    assert len(missed) == 5
+    assert len(missed) == 4
     assert len(unsupported) == 0
 
     # Metabolite-role and full-role recall are equal here, which is the point of
@@ -462,10 +467,14 @@ def test_recall_over_real_source_sentences_is_measured_and_pinned() -> None:
 def test_the_known_false_negatives_are_named_not_hidden() -> None:
     """Name the shapes no template covers, so the gap is a work item not a mystery.
 
-    All four are real constructions from the checked-in papers:
+    The "joins X and Y to produce Z" condensation form used to head this list. It
+    was not a cosmetic gap: it is PMC12421875's MenA step, the paper's own
+    ``supported_reactions[2]``, and RAG retrieved it correctly and was refused
+    fifteen times. C-061 covers it (``actor_combines_to_make``), so the list is
+    one shorter and the recall numbers above are one higher.
 
-    * ``MenA joins DHNA and prenyl diphosphate to produce ...`` — a "joins X and
-      Y" condensation form;
+    The three that remain are real constructions from the checked-in papers:
+
     * ``LpxB then catalyzes the formation of ..., which is phosphorylated by LpxK
       to produce lipid IV A`` — the substrate of the second predicate is behind a
       relative pronoun; binding it would need antecedent resolution, and guessing
@@ -479,7 +488,6 @@ def test_the_known_false_negatives_are_named_not_hidden() -> None:
     _mets, _full, _wrong, missed, _unsupported = _classify()
     assert sorted(s[:26] for _pmc, s in missed) == [
         "LpxB then catalyzes the fo",
-        "Subsequently, MenA joins D",
         "condensation of glycine an",
         "decarboxylation of 2-oxogl",
         "the phospholipase PldA tha",
@@ -613,12 +621,38 @@ def test_a_statement_listing_three_reactions_never_yields_a_stitched_one() -> No
     assert relation.outputs == ["heptaprenyl pyrophosphate (HepPP)"]
     assert relation.catalysts == ["HepPPS"]
 
-    # The other two reactions are NOT recovered — a false negative, not a wrong
-    # answer. A claim for either is refused rather than silently mismatched.
-    verdict = validate_evidence_span(
-        sentence, inputs=["HepPP"], outputs=["DMK-7"], enzymes=["MenA"]
-    )
-    assert not verdict.ok
+    # C-061: the other two reactions are now recovered as SEPARATE relations,
+    # each with the catalyst its own clause names. They were previously false
+    # negatives — the sentence states them, and a claim quoting one was refused
+    # for disagreeing with a DIFFERENT clause of its own evidence. Recovering
+    # them is not stitching: the stitched readings below are still refused.
+    readings = {
+        (tuple(r.inputs), tuple(r.outputs), tuple(r.catalysts))
+        for r in parse_span_relations(sentence)
+    }
+    assert (("FPP",), ("heptaprenyl pyrophosphate (HepPP)",), ("HepPPS",)) in readings
+    assert (("HepPP",), ("DMK-7",), ("MenA",)) in readings
+    assert (("DMK-7",), ("MK-7",), ("UbiE",)) in readings
+
+    for reading in readings:
+        assert validate_evidence_span(
+            sentence,
+            inputs=list(reading[0]),
+            outputs=list(reading[1]),
+            enzymes=list(reading[2]),
+        ).ok
+
+    # Nothing stitched across the clause boundaries: not the first substrate to
+    # the last product, and not one clause's chemistry under another's enzyme.
+    for inputs, outputs, enzymes in (
+        (["FPP"], ["MK-7"], ["HepPPS"]),
+        (["FPP"], ["DMK-7"], ["MenA"]),
+        (["HepPP"], ["DMK-7"], ["UbiE"]),
+        (["HepPP"], ["MK-7"], ["MenA"]),
+    ):
+        assert not validate_evidence_span(
+            sentence, inputs=inputs, outputs=outputs, enzymes=enzymes
+        ).ok, (inputs, outputs, enzymes)
 
 
 def test_a_locant_comma_does_not_split_a_compound() -> None:
@@ -631,3 +665,53 @@ def test_a_locant_comma_does_not_split_a_compound() -> None:
     assert relation.inputs == ["2,3-oxidosqualene"]
     assert relation.outputs == ["lanosterol"]
     assert "LSS" in actor_spellings(relation.catalysts[0])
+
+
+# ---------------------------------------------------------------------------
+# The corpus labels clauses. Production hands over whole sentences.
+# ---------------------------------------------------------------------------
+def test_the_two_menaquinone_clauses_are_read_from_the_joined_sentence() -> None:
+    """The gap between this corpus and production, closed (C-061).
+
+    ``LABELLED`` carries the MenA clause and the MenG clause as two entries,
+    because that is how a labelled set is built. The paper writes them as ONE
+    sentence, and that is what the retriever hands the gate. Reading only the
+    first template match meant the MenG clause's reading was the only thing the
+    MenA claim could be checked against, so a claim quoting the sentence verbatim
+    was refused for disagreeing with its own evidence — fifteen times, once per
+    gap, on the committed PMC12421875 research leg.
+
+    The corpus entries stay clause-level on purpose: this test is the one that
+    asserts the joined form, so a future change that regresses either shape is
+    visible as itself.
+    """
+    joined = (
+        "Subsequently, MenA joins DHNA and prenyl diphosphate to produce "
+        "demethylmenaquinone (DMK), and MenG demethylates DMK to generate MK "
+        "( Fig. 1A )."
+    )
+    body = _norm(artifact_for("PMC12421875").read_text(encoding="utf-8", errors="replace"))
+    assert _norm(joined) in body
+
+    readings = {
+        (tuple(r.inputs), tuple(r.outputs), tuple(r.catalysts))
+        for r in parse_span_relations(joined)
+    }
+    assert (
+        ("DHNA", "prenyl diphosphate"),
+        ("demethylmenaquinone (DMK)",),
+        ("MenA",),
+    ) in readings
+    assert (("DMK",), ("MK",), ("MenG",)) in readings
+
+    # Each clause's claim is supported by the joined sentence, exactly as it is
+    # by the clause on its own.
+    assert validate_evidence_span(
+        joined,
+        inputs=["DHNA", "prenyl diphosphate"],
+        outputs=["demethylmenaquinone (DMK)"],
+        enzymes=["MenA"],
+    ).ok
+    assert validate_evidence_span(
+        joined, inputs=["DMK"], outputs=["MK"], enzymes=["MenG"]
+    ).ok
