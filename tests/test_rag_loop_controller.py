@@ -32,9 +32,9 @@ from t2pw.rag.controller import (
 )
 from t2pw.rag.graph_delta import (
     FALSE, NOT_EVALUATED, REENTRY_STAGES, RULE_ADMISSION_VERDICT, RULE_DUPLICATE_CLAIM,
-    RULE_EVIDENCE_RETENTION, RULE_GAP_ATTRIBUTION, RULE_GAP_NOT_DETECTED, RULE_PROVENANCE,
-    RULE_REJECTED_CLAIM, RULE_REMOVED_ELEMENT, RULES, TRUE, RoundRecord,
-    validate_graph_delta,
+    RULE_EVIDENCE_RETENTION, RULE_GAP_ATTRIBUTION, RULE_GAP_NOT_DETECTED,
+    RULE_MUTATED_ELEMENT, RULE_PROVENANCE, RULE_REJECTED_CLAIM, RULE_REMOVED_ELEMENT,
+    RULES, TRUE, RoundRecord, validate_graph_delta,
 )
 from t2pw.rag.loop_policy import (
     BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, OPERATION_TIMEOUT, RETRIEVAL_EXHAUSTED,
@@ -191,6 +191,35 @@ def test_a_stage_that_drops_a_pre_existing_row_is_refused_and_never_merged():
     assert RULE_REMOVED_ELEMENT in out.rounds[0].verdict.rules()
     assert out.rounds[0].accepted is False
     assert out.graph == base_graph()
+
+
+def test_a_stage_that_mutates_a_pre_existing_row_in_place_is_refused():
+    """NEW acceptance. Catches the composition-level fail-open: handing the validator the
+    LIVE graph as ``graph_before``. A round may return a payload that SHARES row objects
+    with its input; a stage then editing one in place mutates ``graph_before`` too, so
+    ``mutated_element``, the pre-existing-row ``evidence_retention`` check and the lineage
+    comparison all compare the change against itself and the round is admitted with zero
+    violations. That would disarm at composition exactly what H-008 merged to close."""
+    extra = row()
+    _, kwargs = ok([extra])
+
+    def aliasing(ctx):  # the additions envelope reuses the caller's own row objects
+        return RoundResult(graph={
+            "entities": ctx.graph["entities"],
+            "processes": {"reactions": list(ctx.graph["processes"]["reactions"])
+                          + [deepcopy(extra)]}}, **kwargs)
+
+    def rewrite(graph):  # a stage editing an established reaction in place
+        graph["processes"]["reactions"][0]["outputs"] = ["WRONG"]
+        return graph
+
+    out = run_rag_loop(base_graph(), stages=stages(gates=rewrite), round_runner=aliasing,
+                       deadline=1000.0, max_rounds=1, clock=lambda: 0.0)
+    assert RULE_MUTATED_ELEMENT in out.rounds[0].verdict.rules()
+    assert out.rounds[0].accepted is False
+    # The caller's own object was corrupted by its own stage; the pre-round checkpoint is
+    # the recovery path and is a deep copy, so it still holds the last good state.
+    assert out.checkpoints[0].graph == base_graph()
 
 
 # ------------------------------------------------------- checkpoint and the deadline

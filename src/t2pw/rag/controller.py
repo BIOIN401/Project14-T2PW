@@ -288,7 +288,13 @@ def run_rag_loop(graph: Any, *, stages: RoundStages, round_runner: RoundRunner,
                 reentered[stage] = False  # ran and failed; the rest stay not_evaluated
                 raise RoundAborted(stage, reentered, mark) from exc
             reentered[stage] = True
-        verdict = validate_graph_delta(graph, candidate, RoundRecord(
+        # ``mark.graph``, never the live ``graph``: a round may hand back a payload that
+        # SHARES row objects with its input, and a stage editing one in place would then
+        # mutate ``graph_before`` too -- leaving mutated_element, the pre-existing-row
+        # evidence_retention check and _lineage_loss comparing the change against itself.
+        # Composing the validator through an aliased "before" would disarm exactly the
+        # fail-open paths H-008 merged to close.
+        verdict = validate_graph_delta(mark.graph, candidate, RoundRecord(
             detected_gap_ids=frozenset(result.detected_gap_ids),
             claims=tuple(result.claims), seen_claims=started,
             rejected_claim_keys=rejected, reentered=reentered))
