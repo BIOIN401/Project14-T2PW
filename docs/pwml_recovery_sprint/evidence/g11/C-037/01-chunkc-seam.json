@@ -1,0 +1,86 @@
+{
+  "label": "c037-chunkc-seam",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,pytest,t2pw;print('T2PW_FILE:',t2pw.__file__);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c037/g11c",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_gap_resolver_lineage.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres",
+  "started_at": "2026-08-13T15:39:34+00:00",
+  "finished_at": "2026-08-13T15:39:37+00:00",
+  "duration_seconds": 3.1438065999973333,
+  "timeout_seconds": 600.0,
+  "root_pid": 443228,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 443240,
+      "name": "python.exe",
+      "ppid": 443228
+    }
+  ],
+  "descendants_terminated": [
+    443240
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 353932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 443036,
+      "name": "python.exe"
+    },
+    {
+      "pid": 443048,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-037/01-chunkc-seam.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres",
+    "repo_head": "b5bbf08abb200573bbd1dd08e93f41237b8678f3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

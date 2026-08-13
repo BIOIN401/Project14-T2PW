@@ -1,0 +1,141 @@
+{
+  "label": "c037-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,pytest,t2pw;print('T2PW_FILE:',t2pw.__file__);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c037/g11smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres",
+  "started_at": "2026-08-13T15:40:04+00:00",
+  "finished_at": "2026-08-13T15:40:32+00:00",
+  "duration_seconds": 27.431202099993243,
+  "timeout_seconds": 900.0,
+  "root_pid": 443208,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 443220,
+      "name": "python.exe",
+      "ppid": 443208
+    },
+    {
+      "pid": 17788,
+      "name": "python.exe",
+      "ppid": 443220
+    },
+    {
+      "pid": 442392,
+      "name": "python.exe",
+      "ppid": 17788
+    },
+    {
+      "pid": 443072,
+      "name": "python.exe",
+      "ppid": 443260
+    },
+    {
+      "pid": 443260,
+      "name": "python.exe",
+      "ppid": 443220
+    },
+    {
+      "pid": 440636,
+      "name": "python.exe",
+      "ppid": 442900
+    },
+    {
+      "pid": 442900,
+      "name": "python.exe",
+      "ppid": 443220
+    },
+    {
+      "pid": 412340,
+      "name": "python.exe",
+      "ppid": 443220
+    },
+    {
+      "pid": 378156,
+      "name": "python.exe",
+      "ppid": 412340
+    }
+  ],
+  "descendants_terminated": [
+    17788,
+    378156,
+    412340,
+    440636,
+    442392,
+    442900,
+    443072,
+    443220,
+    443260
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 353932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 430892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 435580,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-037/02-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c037-lineage-gapres",
+    "repo_head": "b5bbf08abb200573bbd1dd08e93f41237b8678f3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
