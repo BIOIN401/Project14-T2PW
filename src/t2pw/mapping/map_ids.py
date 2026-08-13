@@ -22,6 +22,7 @@ from t2pw.pipeline.entity_identity import (
     PATHBANK_UNKNOWN_PROTEIN_ID,
     PATHBANK_UNKNOWN_PROTEIN_NAME,
     PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    VERIFICATION_REJECTED,
     component_stoichiometry,
     compound_name_block_rule,
     has_protein_external_identity,
@@ -31,6 +32,13 @@ from t2pw.pipeline.entity_identity import (
     route_entity_for_mapping,
 )
 from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, ExportMode, is_research
+from t2pw.pipeline.lineage import (
+    LineageEntry,
+    LineageError,
+    LineageSource,
+    read as read_lineage,
+    record as record_lineage,
+)
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
     repair_entity_references,
@@ -7696,6 +7704,244 @@ def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = 
 _DIRECTLY_MAPPED_ENTITY_BUCKETS = frozenset({"compounds", "proteins", "protein_complexes"})
 
 
+# ── identifier-mapping provenance lineage (PRODUCT_CONTRACT § 3) ─────────────
+# This is the stage that turns a name into a database-grounded identity, so it
+# is the answer § 3 wants to "which stage put this identifier here?". The pass
+# below is DERIVED and terminal: it reads the resolution this mapper already
+# stamped on ``mapping_meta`` and writes ``provenance_lineage``. It resolves
+# nothing, opens no connection, consults no cache and changes no gate -- adding
+# an attribution must never change which identifier ships.
+
+#: This stage's name in ``lineage.STAGES``, which is never appended to or
+#: reordered here: ``_entry_key`` sorts by ``STAGES.index``.
+_MAPPING_LINEAGE_STAGE = "identifier_mapping"
+
+#: Stage 2 resolves names against databases and never reads the paper, so
+#: paper-explicitness is a question it does not evaluate -- and § 3's
+#: ``not_evaluated`` is never ``not_explicit``.
+_MAPPING_LINEAGE_PAPER_EXPLICIT = "not_evaluated"
+
+#: Identifier fields a resolved row carries outside ``mapped_ids``.
+_MAPPING_LINEAGE_SCALAR_ID_KEYS: Tuple[str, ...] = (
+    "pathbank_protein_id", "pathbank_compound_id", "pathbank_protein_complex_id",
+    "pathbank_complex_id", "pathbank_species_id", "taxonomy_id",
+)
+
+#: Resolution routes that reach a record by implication rather than by stating
+#: it: the record was found through a synonym, an alias or a fuzzy score, so it
+#: supports the identity ``indirect``ly. Everything else got there by
+#: identifier or exact name, which is ``direct``.
+_MAPPING_LINEAGE_INDIRECT_ROUTES: Tuple[str, ...] = ("fuzzy", "synonym", "alias")
+
+
+def _mapping_lineage_sources(ids: Any, *, locator: str) -> Tuple[LineageSource, ...]:
+    """One :class:`LineageSource` per identifier, each naming the record it points at.
+
+    ``source_id`` is a retrieved record's id, never a string that merely parses:
+    ``PRODUCT_CONTRACT`` § 8 forbids accepting an identifier because its format
+    is valid, and :class:`LineageSource` checks ``source_id`` only for
+    non-emptiness, so the discipline has to hold here. A sentinel ("Unknown",
+    "-", "n/a") names no record and yields no source, which is what makes a
+    sourceless ``database_grounded`` impossible to assemble by accident rather
+    than merely unlikely.
+    """
+    out: List[LineageSource] = []
+    for key, value in sorted(_safe_dict(ids).items(), key=lambda item: str(item[0])):
+        text = str(value or "").strip()
+        # A generic sentinel check despite the protein-shaped name: it rejects
+        # exactly the placeholder spellings, for any entity kind.
+        if not _is_real_protein_identifier(text):
+            continue
+        out.append(LineageSource(source_id=text, source_type=str(key), locator=locator))
+    return tuple(out)
+
+
+def _mapping_lineage_row_ids(row: Dict[str, Any], meta: Dict[str, Any]) -> Dict[str, Any]:
+    """Every identifier the row actually ships, from ``mapped_ids`` and the scalars."""
+    ids = {
+        key: value
+        for key, value in _safe_dict(row.get("mapped_ids")).items()
+        if str(value or "").strip()
+    }
+    for key in _MAPPING_LINEAGE_SCALAR_ID_KEYS:
+        value = row.get(key)
+        if not str(value or "").strip():
+            value = meta.get(key)
+        if str(value or "").strip():
+            ids.setdefault(key, value)
+    return ids
+
+
+def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """What this stage did to ``row``'s identity, as § 3 facts -- or ``None``.
+
+    ``None`` means this stage claims nothing: the row is in a bucket it does not
+    resolve identifiers for (``not_applicable``), or it never reached the
+    resolution stamp at all. Silence is the honest record there; an entry would
+    assert an attribution nobody made.
+
+    The branches are ordered by § 8, and the identity model it draws is kept
+    intact: ``verification_status`` is not collapsed into ``identity_status``,
+    and **only** a ``rejected`` verdict -- the one case § 8 permits identifiers
+    to be stripped in -- may read as ``excluded``. ``unavailable`` and
+    ``not_evaluated`` are lookup failures, and a lookup failure is not evidence
+    that an accession is false, so they read as ``unresolved`` and ask for
+    review. So does an ``Unknown``-backed placeholder: that row is legitimate
+    biology preservation (§ 13), it is described truthfully and nothing here
+    changes whether it ships.
+    """
+    meta = _safe_dict(row.get("mapping_meta"))
+    resolution = _safe_dict(meta.get("resolution"))
+    status = str(resolution.get("status") or "").strip()
+    if not status or status == "not_applicable":
+        return None
+    route = " ".join((
+        str(resolution.get("order_step") or ""), str(meta.get("chosen_rule") or ""),
+    )).strip()
+    locator = route or str(meta.get("provider") or meta.get("source") or "") or status
+    issue = str(resolution.get("issue") or resolution.get("failed_check") or "")
+    verdict = _safe_dict(meta.get("identity_verdict"))
+
+    # Refutation. A protein that went through the ladder is judged on its
+    # verification status alone; a row that never had one (compounds,
+    # complexes) is judged on the name gate, the only thing that refutes it.
+    refuted = (
+        str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
+        if verdict
+        else str(_safe_dict(meta.get("name_gate")).get("verdict") or "") == "reject"
+    )
+    contradicting = _mapping_lineage_sources(meta.get("rejected_mapped_ids"), locator=locator)
+    if refuted and contradicting:
+        return {
+            "origin": "excluded", "support": "direct", "sources": contradicting,
+            "reason": (
+                "the retrieved record contradicts this entity, so the identifier it "
+                f"names was refuted and removed ({issue or 'refuted_identity'})"
+            ),
+            "review_required": True,
+            "uncertainty": (
+                "the entity ships without a database identity: what it is not is "
+                "established, what it is is not"
+            ),
+        }
+
+    # § 8 ``unavailable`` / ``not_evaluated``: the accession is preserved as an
+    # unverified claim, not promoted and not erased.
+    claim = _safe_dict(meta.get("unverified_identity_claim"))
+    if claim:
+        named = ", ".join(
+            f"{key}={value}"
+            for key, value in sorted(_safe_dict(claim.get("identifiers")).items())
+        )
+        return {
+            "origin": "unresolved", "support": "unsupported", "sources": (),
+            "reason": (
+                "identity verification could not be completed "
+                f"({claim.get('verification_status') or 'unknown'})"
+            ),
+            "review_required": True,
+            "uncertainty": (
+                f"the submitted identifier is preserved as an unverified claim ({named}); "
+                "a lookup failure is not evidence that it is false"
+            ),
+        }
+
+    if str(meta.get("identity_status") or "") == IDENTITY_PLACEHOLDER or (
+        is_pathbank_unknown_protein(row)
+    ):
+        return {
+            "origin": "unresolved", "support": "unsupported", "sources": (),
+            "reason": "the actor ships on the PathBank Unknown-backed placeholder",
+            "review_required": True,
+            "uncertainty": (
+                "the biology is preserved but the identity is not established: the record "
+                "named is a placeholder, not this entity"
+            ),
+        }
+
+    sources = _mapping_lineage_sources(_mapping_lineage_row_ids(row, meta), locator=locator)
+    if status == "matched" and sources:
+        indirect = any(token in route.casefold() for token in _MAPPING_LINEAGE_INDIRECT_ROUTES)
+        return {
+            "origin": "database_grounded",
+            "support": "indirect" if indirect else "direct",
+            "sources": sources,
+            "reason": f"resolved against a database record via {locator}",
+            "review_required": False, "uncertainty": "",
+        }
+
+    # Everything left is a resolution this stage could not ground: ``novel``,
+    # ``ambiguous``, ``unresolved`` -- or a ``matched`` row carrying no
+    # retrieved record, which may not claim a database backing it cannot name.
+    return {
+        "origin": "unresolved", "support": "unsupported", "sources": (),
+        "reason": f"identifier resolution ended {status}"
+                  + (f" ({issue})" if issue else ""),
+        "review_required": True,
+        "uncertainty": "no database record was established for this entity",
+    }
+
+
+def _record_mapping_lineage(entities: Dict[str, Any]) -> Dict[str, int]:
+    """Attribute every named entity row's identity to this stage, in place.
+
+    Attribution is positional (:class:`LineageEntry` carries no entity id), so
+    the row written is the row that owns the identifier -- never a sibling and
+    never a resolver result. The rows here belong to ``map_payload``'s own
+    ``deepcopy`` of the caller's payload; the mapping cache stores resolver
+    results and never an entity row, and this pass runs after ``cache.save()``,
+    so a lineage write cannot reach the cache file.
+
+    The entry is built OUTSIDE the guarded block on purpose: a malformed entry
+    of this stage's own making -- a sourceless ``database_grounded``, say --
+    must raise through C-015's validator rather than be swallowed. What is
+    guarded is a malformed lineage that ARRIVED on the row, which is counted and
+    skipped: recording provenance may not change which identifiers this stage
+    ships, and a stage that died on a bad inbound record would change exactly
+    that. :func:`record_lineage` re-emits every entry it reads, so an earlier
+    stage's attribution survives.
+
+    **Idempotence is this writer's job.** C-015 keeps duplicates deliberately
+    ("dedup removes"), so ``record`` appends unconditionally and re-running the
+    mapper over an already-attributed payload would attribute it twice. The
+    guard is C-015's OWN content identity -- :class:`LineageEntry` is a frozen
+    dataclass whose equality covers exactly the fields ``_entry_key``
+    enumerates, with ``sources`` already canonically ordered by its
+    ``__post_init__`` -- so no private key, nonce, counter or timestamp is
+    invented here, and an entry that genuinely DIFFERS (a later pass with
+    another reason, or another record) is still recorded. ``map_payload`` runs
+    more than once over the same payload with gap resolution in between, and
+    those two passes may reach different verdicts; only an exactly equivalent
+    repeat is suppressed.
+    """
+    counts = {"attributed": 0, "unchanged": 0, "skipped": 0, "inbound_lineage_errors": 0}
+    for rows in entities.values():
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not isinstance(row, dict) or not _canonical_name(str(row.get("name") or "")):
+                continue
+            facts = _mapping_lineage_facts(row)
+            if facts is None:
+                counts["skipped"] += 1
+                continue
+            entry = LineageEntry(
+                stage=_MAPPING_LINEAGE_STAGE,
+                paper_explicit=_MAPPING_LINEAGE_PAPER_EXPLICIT,
+                **facts,
+            )
+            try:
+                if entry in read_lineage(row).entries:
+                    counts["unchanged"] += 1
+                    continue
+                record_lineage(row, entry)
+            except LineageError:
+                counts["inbound_lineage_errors"] += 1
+                continue
+            counts["attributed"] += 1
+    return counts
+
+
 def _stamp_named_entity_mapping_metadata(entities: Dict[str, Any]) -> Dict[str, int]:
     """Give every named entity an explicit Stage 2 resolution policy.
 
@@ -8560,6 +8806,14 @@ def map_payload(
     cache.save()
     if db is not None:
         db.close()
+
+    # PRODUCT_CONTRACT § 3 attribution for this stage, deliberately last and
+    # deliberately after ``cache.save()``: every mapping decision is already
+    # made, so this pass can only describe them, and no lineage write can reach
+    # the mapping cache file even through an alias nobody expected. The census
+    # it returns is intentionally NOT added to ``report`` -- this card changes
+    # no observable mapping output other than ``provenance_lineage`` itself.
+    _record_mapping_lineage(entities)
 
     proteins_total = len([p for p in proteins if isinstance(p, dict) and isinstance(p.get("name"), str) and p.get("name").strip()])
     compounds_total = len([c for c in compounds if isinstance(c, dict) and isinstance(c.get("name"), str) and c.get("name").strip()])
