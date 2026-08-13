@@ -4912,6 +4912,7 @@ def verify_real_protein_identity(
     source: str = "",
     resolved_name: str = "",
     result: Optional[Dict[str, Any]] = None,
+    evidence_source: Any = None,
 ) -> Dict[str, Any]:
     """Decide whether ``mapped_ids`` is a *verified real* identity for ``entity_name``.
 
@@ -4921,12 +4922,27 @@ def verify_real_protein_identity(
     Unknown-backed functional complex. The export keeps the biology; what it
     loses is the false claim that the accession was confirmed.
 
+    ``verification_status`` (D-003) says *why* an unverified verdict is
+    unverified, in three states that must never be collapsed into one another:
+    ``rejected`` (a rung refuted it), ``unavailable`` (a lookup could not be
+    completed) and ``not_evaluated`` (nothing was looked up, or the ladder had
+    nothing to judge on). A dead network reads as ``unavailable``; it may not
+    read as "this accession is false".
+
+    ``evidence_source`` hydrates rung 2 and nothing else. When the candidate
+    pool holds no row describing the shipped accession, the bounded cached
+    source (:mod:`t2pw.mapping.uniprot_evidence`) is asked for one before the
+    ladder gives up. **Rungs 3-6 are unchanged and judge the hydrated row
+    exactly as they judge a resolver row** -- this supplies evidence to the
+    gates, it does not relax them, and an accession with no record still fails.
+
     The rungs, in order, each recorded in ``checks``:
 
     1. ``identifier_resolution`` -- a non-sentinel UniProt/DrugBank/PathBank id.
     2. ``entity_type`` -- the entity name is not one the compound rules own
        (``coenzyme A``), a candidate row describing the *shipped* identifier
-       exists, and it is protein-shaped.
+       exists (from the pool, or hydrated by ``evidence_source``), and it is
+       protein-shaped.
     3. ``species`` -- ``ok`` (same taxon id, same binomial, or a strain
        qualification of it) or ``genus_level`` when the request was genus-level.
        ``unknown`` is missing evidence.
@@ -4941,6 +4957,19 @@ def verify_real_protein_identity(
        rival candidate that also passed 2-4 and names a *different* accession.
     """
 
+    # Imported at call time on purpose. This function and
+    # _enforce_shipped_identity_names are the only surface of map_ids.py this
+    # change owns, so the diff stays inside them; and uniprot_evidence defers
+    # its own enrich_entities import because enrich_entities imports HttpClient
+    # from this module (`enrich_entities.py:125`), which a module-level import
+    # chain would close into a cycle.
+    from t2pw.mapping.uniprot_evidence import evidence_candidate, identity_evidence_for
+    from t2pw.pipeline.entity_identity import (
+        VERIFICATION_NOT_EVALUATED,
+        VERIFICATION_REJECTED,
+        VERIFICATION_VERIFIED,
+    )
+
     payload_result = _safe_dict(result)
     verdict: Dict[str, Any] = {
         "verified": False,
@@ -4950,12 +4979,17 @@ def verify_real_protein_identity(
         "checks": {},
         "score": -1.0,
         "margin": -1.0,
+        # Starts at "nothing established". Only a rung that actually refutes the
+        # identity narrows it to ``rejected``; an absent record leaves it at
+        # ``not_evaluated`` and a failed lookup sets ``unavailable``.
+        "verification_status": VERIFICATION_NOT_EVALUATED,
     }
     checks: Dict[str, Any] = verdict["checks"]
 
     real_ids = _real_protein_ids(mapped_ids)
     checks["identifier_resolution"] = "ok" if real_ids else "no_real_identifier"
     if not real_ids:
+        # There is no claim here to refute -- nothing was submitted.
         verdict["reason"] = "no_real_identifier"
         return verdict
     verdict["identity"] = ", ".join(f"{key}:{value}" for key, value in sorted(real_ids.items()))
@@ -4964,6 +4998,7 @@ def verify_real_protein_identity(
     if blocked_rule:
         checks["entity_type"] = f"entity_name_is_a_compound:{blocked_rule}"
         verdict["reason"] = "entity_type_incompatible"
+        verdict["verification_status"] = VERIFICATION_REJECTED
         return verdict
 
     candidate = _candidate_for_shipped_ids(candidates, _safe_dict(mapped_ids), "protein")
@@ -4989,20 +5024,56 @@ def verify_real_protein_identity(
     verdict["judged_candidates"] = [
         row for row in _safe_list(candidates) if isinstance(row, dict)
     ][:8]
-    # Fail closed. Nothing describes the accession we are about to ship as this
-    # entity's identity, so there is no evidence to verify -- and "no evidence"
-    # is not a pass. The caller routes this to the Unknown-backed placeholder,
-    # so the actor still exports; what it may not do is claim a real mapping.
     if candidate is None:
+        # Nothing in the pool describes the accession we are about to ship. That
+        # is the ``Fur`` -> P0A9A9 shape of runs_verify/2026-08-04_1306: a
+        # CORRECT accession, judged against ten iron-sulfur proteins that were
+        # not it, discarded for want of a row that could speak to it.
+        #
+        # So fetch one first (D-003), from a bounded, cached, pre-freeze source.
+        # It hands back a candidate and decides nothing: every rung below reads
+        # the hydrated row exactly as it reads a resolver row, and a row that
+        # names another organism or another molecule is refused there as before.
+        evidence = identity_evidence_for(
+            real_ids.get("uniprot") or real_ids.get("drugbank") or "",
+            organism=organism,
+            source=evidence_source,
+        )
+        verdict["identity_evidence"] = {
+            key: value for key, value in evidence.items() if key != "candidate"
+        }
+        candidate = evidence_candidate(evidence)
+    if candidate is None:
+        # Still nothing. Fail closed, as before: "no evidence" is not a pass.
+        # The caller routes this to the Unknown-backed placeholder, so the actor
+        # still exports; what it may not do is claim a real mapping. The status
+        # is whatever the lookup reported -- ``unavailable`` or
+        # ``not_evaluated`` -- and it is never ``rejected``, because a pool that
+        # said nothing and a lookup that could not answer have refuted nothing.
         checks["candidate_evidence"] = "no_candidate_describes_the_shipped_identifier"
+        verdict["verification_status"] = str(
+            _safe_dict(verdict.get("identity_evidence")).get("status") or VERIFICATION_NOT_EVALUATED
+        )
         verdict["reason"] = _IDENTITY_EVIDENCE_MISSING
         return verdict
-    checks["candidate_evidence"] = "ok"
+    if "identity_evidence" in verdict:
+        checks["candidate_evidence"] = "identity_evidence_candidate"
+        verdict["identity_evidence_candidate"] = deepcopy(candidate)
+        verdict["judged_candidate"] = deepcopy(candidate)
+        # Rung 4 re-finds the row carrying the shipped accession from the whole
+        # list, and rung 6 scans the same list for rivals, so the hydrated row
+        # has to be in it. Prepended to a LOCAL list: the caller's ``candidates``
+        # is the resolver's own object and is not ours to grow.
+        candidates = [candidate] + [row for row in _safe_list(candidates) if isinstance(row, dict)]
+        verdict["judged_candidates"] = [deepcopy(candidate)] + verdict["judged_candidates"][:7]
+    else:
+        checks["candidate_evidence"] = "ok"
     is_pathbank_row = _to_positive_int(_safe_dict(candidate).get("pathbank_protein_id")) is not None
 
     if not _candidate_is_protein_shaped(candidate):
         checks["entity_type"] = "candidate_is_not_protein_shaped"
         verdict["reason"] = "entity_type_incompatible"
+        verdict["verification_status"] = VERIFICATION_REJECTED
         return verdict
     checks["entity_type"] = "ok"
 
@@ -5010,6 +5081,7 @@ def verify_real_protein_identity(
     checks["species"] = species
     if species == "mismatch":
         verdict["reason"] = "species_mismatch"
+        verdict["verification_status"] = VERIFICATION_REJECTED
         return verdict
     if species == "unknown":
         # One side is silent about the organism. A protein identity that cannot
@@ -5031,6 +5103,7 @@ def verify_real_protein_identity(
     checks["name"] = str(gate.get("verdict") or "")
     if gate.get("verdict") == "reject":
         verdict["reason"] = _NAME_GATE_ISSUE
+        verdict["verification_status"] = VERIFICATION_REJECTED
         return verdict
     if gate.get("verdict") != "keep":
         # ``skip`` means the gate found nothing to judge on -- no resolved name,
@@ -5054,6 +5127,7 @@ def verify_real_protein_identity(
     elif score < _REAL_PROTEIN_MIN_SCORE:
         checks["score"] = f"below_minimum:{score:.2f}<{_REAL_PROTEIN_MIN_SCORE}"
         verdict["reason"] = "score_below_minimum"
+        verdict["verification_status"] = VERIFICATION_REJECTED
         return verdict
     else:
         checks["score"] = "ok"
@@ -5087,6 +5161,7 @@ def verify_real_protein_identity(
         if margin < _REAL_PROTEIN_MIN_MARGIN:
             checks["margin"] = f"insufficient:{margin:.2f}<{_REAL_PROTEIN_MIN_MARGIN}"
             verdict["reason"] = "ambiguous_insufficient_margin"
+            verdict["verification_status"] = VERIFICATION_REJECTED
             return verdict
         checks["margin"] = "ok"
     else:
@@ -5094,6 +5169,7 @@ def verify_real_protein_identity(
 
     verdict["verified"] = True
     verdict["reason"] = "verified_real_protein"
+    verdict["verification_status"] = VERIFICATION_VERIFIED
     return verdict
 
 
@@ -5332,6 +5408,7 @@ def _enforce_shipped_identity_names(
     kind: str,
     entity_name: str,
     organism: str = "",
+    evidence_source: Any = None,
 ) -> Dict[str, Any]:
     """Make the entity row's identity and its audit trail agree, then gate it.
 
@@ -5350,7 +5427,24 @@ def _enforce_shipped_identity_names(
        against "Mineralocorticoid receptor" (Homo sapiens), which is what it is
        really shipping, instead of against the E. coli restriction enzyme it only
        claimed to ship.
+
+    ``evidence_source`` is handed straight to the ladder, which uses it only to
+    hydrate rung 2 (D-003). This is the site the ``Fur`` -> P0A9A9 strip of
+    runs_verify/2026-08-04_1306 happened at: an accession an earlier pass wrote
+    onto the row, judged against a pool that never contained it.
+
+    An identity the ladder could not verify is degraded here exactly as before
+    -- the identifiers come off the row and the actor routes to the
+    Unknown-backed placeholder. What is new is that a degradation caused by
+    ``unavailable`` / ``not_evaluated`` also preserves the submitted accession
+    under ``mapping_meta.unverified_identity_claim``: not promoted, not erased,
+    and explicitly not filed as a refutation.
     """
+    from t2pw.pipeline.entity_identity import (  # see verify_real_protein_identity
+        VERIFICATION_NOT_EVALUATED,
+        VERIFICATION_UNAVAILABLE,
+    )
+
     report: Dict[str, Any] = {"rejected": False, "removed_ids": {}, "gate": {}, "conflict": {}}
     meta = row.get("mapping_meta")
     if not isinstance(meta, dict):
@@ -5411,15 +5505,46 @@ def _enforce_shipped_identity_names(
             source=source_text,
             resolved_name=fallback_name,
             result=result,
+            evidence_source=evidence_source,
         )
         report["identity_verdict"] = verdict
         gate = _safe_dict(verdict.get("name_gate"))
         report["gate"] = gate
         meta["identity_verdict"] = verdict
+        verification_status = str(verdict.get("verification_status") or VERIFICATION_NOT_EVALUATED)
+        report["verification_status"] = verification_status
+        evidence = _safe_dict(verdict.get("identity_evidence"))
+        if evidence:
+            meta["identity_evidence"] = evidence
+        hydrated = _safe_dict(verdict.get("identity_evidence_candidate"))
+        if hydrated and candidate is None:
+            # The pool could not name what the row ships, so the audit trail
+            # still described somebody else. Name it after the record that was
+            # actually judged -- that is this function's first job.
+            hydrated_names = [value for value in _candidate_display_names(hydrated) if value.strip()]
+            if hydrated_names:
+                meta["resolved_name"] = hydrated_names[0]
         if verdict.get("verified"):
             report["identity_status"] = IDENTITY_VERIFIED
             meta["identity_status"] = IDENTITY_VERIFIED
             return report
+        if verification_status in (VERIFICATION_UNAVAILABLE, VERIFICATION_NOT_EVALUATED):
+            # D-003: preserve the submitted accession as an unverified claim.
+            # It still comes off ``mapped_ids`` below -- that would be promoting
+            # it -- and it is deliberately not filed only under
+            # ``rejected_mapped_ids``, which would read as a refutation nobody
+            # made. A reader can now tell "we could not check this" from "we
+            # checked this and it is wrong".
+            claim = {
+                "identifiers": dict(shipped),
+                "verification_status": verification_status,
+                "failed_check": str(verdict.get("reason") or ""),
+                "note": "submitted identifier; verification could not be completed",
+            }
+            if evidence:
+                claim["evidence"] = evidence
+            meta["unverified_identity_claim"] = claim
+            report["unverified_identity_claim"] = claim
         rejected_ids = dict(shipped)
         if candidate is not None:
             rejected_ids.update(
