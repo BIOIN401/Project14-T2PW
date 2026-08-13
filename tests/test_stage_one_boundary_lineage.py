@@ -45,6 +45,7 @@ from t2pw.pipeline.extraction_diagnostics import (  # noqa: E402
     payload_hash,
 )
 from t2pw.pipeline.lineage import LINEAGE_KEY, STAGES  # noqa: E402
+from t2pw.pipeline.localized_repair import SHELL_PROVENANCE  # noqa: E402
 from t2pw.pipeline.stage_one_boundary import settle_stage_one  # noqa: E402
 
 
@@ -168,6 +169,140 @@ def test_a1_every_inbound_entity_and_process_row_is_attributed_to_paper_extracti
     assert stated["paper_explicit"] == "explicit"
     assert stated["review_required"] is False
     assert stated["reason"]
+
+
+def _self_declared() -> Dict[str, Any]:
+    """Rows the extraction itself marked as not read off the page.
+
+    ``pwml_system.txt:109/:116/:401`` tells the model to CREATE a complex whose
+    subunit membership it could not read, and to mark it ``provenance:
+    "inferred"`` with ``confidence < 1.0``; a process row carries a free-text
+    ``inference`` note instead. Both markers reach this seam intact.
+    """
+
+    return {
+        "entities": {
+            "compounds": [{"name": "ATP"}, {"name": "ADP"}],
+            "protein_complexes": [
+                {"name": "ATP synthase", "provenance": "inferred", "confidence": 0.6}
+            ],
+            "proteins": [
+                {"name": "LpxA", "provenance": "extracted", "confidence": 1.0}
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "hydrolysis",
+                    "inputs": ["ATP"],
+                    "outputs": ["ADP"],
+                    "evidence": "ATP is hydrolysed to ADP.",
+                    "inference": "directionality inferred from context",
+                    "confidence": 0.7,
+                }
+            ]
+        },
+    }
+
+
+def _stated(row: Any) -> Dict[str, Any]:
+    """The row's single ``paper_extraction`` entry."""
+
+    entries = [e for e in _entries(row) if e["stage"] == "paper_extraction"]
+    assert len(entries) == 1, entries
+    return entries[0]
+
+
+def test_a1_a_row_the_extraction_marked_inferred_is_not_reported_as_paper_explicit() -> None:
+    """The prompt manufactures marked content; the lineage must not unmark it.
+
+    A ``protein_complexes`` row with ``confidence: 0.6`` and ``provenance:
+    "inferred"`` says, in the payload's own words, that the model reasoned it
+    rather than read it. ``PRODUCT_CONTRACT`` § 3 exists so an investigator
+    tracing a bad complex learns exactly that.
+    """
+
+    outcome = settle_stage_one(_self_declared(), chat_fn=_Provider())
+
+    assert outcome.ok and outcome.outcome == OUTCOME_OK
+    entry = _stated(outcome.payload["entities"]["protein_complexes"][0])
+    assert entry["paper_explicit"] == "not_evaluated"   # never "not_explicit"
+    assert entry["review_required"] is True
+    assert entry["uncertainty"]
+    # The § 2 origin table is fixed: HOW the model got there is not a reason to
+    # move the row out of the Stage-1 draw.
+    assert (entry["stage"], entry["origin"]) == ("paper_extraction", "paper_stated")
+
+
+def test_a1_a_process_row_carrying_an_inference_note_is_not_reported_as_paper_explicit() -> None:
+    outcome = settle_stage_one(_self_declared(), chat_fn=_Provider())
+
+    entry = _stated(outcome.payload["processes"]["reactions"][0])
+    assert entry["paper_explicit"] == "not_evaluated"
+    assert entry["review_required"] is True
+    assert entry["origin"] == "paper_stated"
+
+
+def test_a1_an_extracted_row_and_an_unmarked_row_are_still_reported_as_explicit() -> None:
+    """The downgrade is matched on specific values, not on "not extracted"."""
+
+    outcome = settle_stage_one(_self_declared(), chat_fn=_Provider())
+
+    for row in (
+        outcome.payload["entities"]["proteins"][0],      # provenance: "extracted"
+        outcome.payload["entities"]["compounds"][0],     # no marker at all
+    ):
+        entry = _stated(row)
+        assert entry["paper_explicit"] == "explicit"
+        assert entry["review_required"] is False
+
+
+@pytest.mark.parametrize(
+    "marker",
+    [
+        {"provenance": "enriched"},                       # from an API lookup
+        {"provenance": "INFERRED"},                       # case is not a loophole
+        {"rag_provenance": {"source_id": "PMC1"}},        # C-038's carrier
+    ],
+)
+def test_a1_every_not_read_marker_downgrades_the_paper_explicit_claim(
+    marker: Dict[str, Any]
+) -> None:
+    payload = _multi_bucket()
+    payload["entities"]["proteins"][0].update(marker)
+
+    outcome = settle_stage_one(payload, chat_fn=_Provider())
+
+    entry = _stated(outcome.payload["entities"]["proteins"][0])
+    assert entry["paper_explicit"] == "not_evaluated"
+    assert entry["review_required"] is True
+
+
+# ---------------------------------------------------------------------------
+# A2 -- a reconstructed shell is inferred, and is never also paper-stated.
+# ---------------------------------------------------------------------------
+def test_a2_an_inbound_row_carrying_the_shell_marker_is_never_called_paper_stated() -> None:
+    """The content-derived half of the partition, independent of the index half.
+
+    ``_row_census`` is exact against ``localized_repair`` as it stands, but that
+    module is not this card's to pin. A shell sitting BELOW the inbound count --
+    which is what a future dedupe, sort or drop in reconstruction would produce,
+    and what a resumed run that lost its lineage key already produces -- must
+    still not be reported as something the paper stated.
+    """
+
+    payload = _multi_bucket()
+    payload["entities"]["compounds"].insert(
+        0,
+        {"name": "ADP", "provenance": SHELL_PROVENANCE, "resolution_status": "unresolved"},
+    )
+
+    outcome = settle_stage_one(payload, chat_fn=_Provider())
+
+    compounds = outcome.payload["entities"]["compounds"]
+    assert compounds[0]["name"] == "ADP"
+    assert _pairs(compounds[0]) == []        # index 0, inbound, and no claim made
+    assert ("paper_extraction", "paper_stated") in _pairs(compounds[1])   # ATP still is
 
 
 # ---------------------------------------------------------------------------

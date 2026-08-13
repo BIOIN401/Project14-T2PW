@@ -60,6 +60,7 @@ from t2pw.pipeline.localized_repair import (
     REPAIR_INCOMPLETE,
     REPAIR_NOT_ATTEMPTED,
     REPAIR_OK,
+    SHELL_PROVENANCE,
     RowRepairResult,
     reconstruct_registry_shells,
     repair_invalid_rows,
@@ -179,6 +180,42 @@ _PAPER_STATED = lineage.LineageEntry(
     review_required=False,
 )
 
+#: The same row and the same origin when the row's OWN markers say the model did
+#: not read it off the page. ``origin`` STAYS ``paper_stated``: which Stage-1
+#: bucket a row came out of is not a claim about how the model arrived at it, and
+#: re-bucketing it is a product decision this card does not hold. What changes is
+#: the part that was false. ``paper_explicit`` drops to ``not_evaluated`` --
+#: never ``not_explicit``, because this stage did not read the paper either -- and
+#: the row is flagged for review, since a complex carrying ``confidence: 0.6``
+#: and ``provenance: "inferred"`` is precisely what § 3 exists to make findable.
+_PAPER_STATED_UNVERIFIED = lineage.LineageEntry(
+    stage="paper_extraction",
+    origin="paper_stated",
+    support="unsupported",
+    paper_explicit="not_evaluated",
+    reason="present in the Stage-1 extraction payload when it reached the "
+           "Stage-1 to Stage-2 boundary, marked by the extraction as not read "
+           "verbatim from the paper",
+    review_required=True,
+    uncertainty="the row's own provenance/inference marker says this content was "
+                "reasoned or looked up rather than stated; nothing here "
+                "established what the paper does say about it",
+)
+
+#: ``pwml_system.txt:116`` -- ``provenance`` values are ``"extracted"`` (verbatim
+#: from text), ``"enriched"`` (from an API lookup) and ``"inferred"``
+#: (LLM-reasoned). The last two are the model telling us it did not read the row
+#: off the page. Matched on those SPECIFIC values and never as
+#: ``provenance != "extracted"``: :data:`SHELL_PROVENANCE` is a ``provenance``
+#: value too, and a blanket negation would additionally sweep in every row that
+#: simply carries no marker at all.
+_PROVENANCE_NOT_READ: Tuple[str, ...] = ("inferred", "enriched")
+
+#: Row keys whose mere presence says the same thing. ``inference`` is the prompt's
+#: free-text note naming what was reasoned (``pwml_system.txt:109``, ``:401``);
+#: ``rag_provenance`` is C-038's carrier naming retrieved literature.
+_MARKS_NOT_READ: Tuple[str, ...] = ("inference", "rag_provenance")
+
 #: Rows ``reconstruct_registry_shells`` added. ``derived``, not ``direct``: a
 #: process row the payload already carried named this participant, so the
 #: registry row is bookkeeping over stated content -- but nothing here states
@@ -253,6 +290,31 @@ def _row_at(
     return row if isinstance(row, dict) else None
 
 
+def _paper_entry(row: Dict[str, Any]) -> lineage.LineageEntry:
+    """Which paper-extraction entry this row has earned.
+
+    The extraction prompt does not only return what it read: it instructs the
+    model to CREATE content it could not read and to mark it -- a complex whose
+    subunit membership is unknown gets ``confidence < 1.0`` and
+    ``provenance: "inferred"`` (``pwml_system.txt:109``, ``:116``, ``:401``) --
+    and those markers survive into this seam intact, because
+    ``pipeline._clean_entities`` copies entity rows key-for-key and the process
+    cleaners carry ``provenance``/``inference`` through. Reporting such a row as
+    ``paper_explicit="explicit"`` with no review flag writes the opposite of
+    what the row says about itself, in the one clause this card exists to serve.
+
+    ``rag_provenance`` is treated the same way and cannot arrive here today --
+    this boundary's only call site runs before any RAG -- so it costs nothing
+    now and is not a claim that has to be un-made when one does.
+    """
+
+    if str(row.get("provenance") or "").strip().casefold() in _PROVENANCE_NOT_READ:
+        return _PAPER_STATED_UNVERIFIED
+    if any(row.get(key) for key in _MARKS_NOT_READ):
+        return _PAPER_STATED_UNVERIFIED
+    return _PAPER_STATED
+
+
 def _record_once(
     row: Dict[str, Any],
     entry: lineage.LineageEntry,
@@ -320,8 +382,17 @@ def _attribute(
     for (section, bucket), count in inbound.items():
         for index in range(count):
             row = _row_at(working, section, bucket, index)
-            if row is not None:
-                _record_once(row, _PAPER_STATED, unless=_RECONSTRUCTED)
+            if row is None or row.get("provenance") == SHELL_PROVENANCE:
+                # The index partition is exact against localized_repair AS IT IS,
+                # but that module is not this card's to pin: were reconstruction
+                # ever to dedupe, sort or drop an entity row, a shell would land
+                # below the inbound count and be called paper-stated with no test
+                # failing anywhere. The shell's own marker is a content-derived
+                # second condition that does not depend on that module's shape,
+                # and unlike the lineage check below it holds on the FIRST settle
+                # and on a rebuild that dropped the lineage key.
+                continue
+            _record_once(row, _paper_entry(row), unless=_RECONSTRUCTED)
 
     for (section, bucket), count in reconstructed.items():
         if section != "entities":
