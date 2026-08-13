@@ -1551,8 +1551,37 @@ def _finalize_timeout(
     message: str,
     detail: str,
     codes: Optional[List[str]] = None,
+    reason: str = "",
 ) -> None:
-    """Terminal path: an interaction ran out of the leg's wall-clock budget."""
+    """Terminal path: an interaction ran out of the leg's wall-clock budget.
+
+    Classifies as well as fails. ``failure_kind="timeout"`` says only that the
+    clock was involved; D-005 needs *which* clock, because the leg spending its
+    entire budget (``budget_exhausted``) and one interaction overrunning its own
+    configured maximum (``operation_timeout``) are separate outcomes that must
+    never be conflated. :func:`_run_app` already distinguishes them -- it refuses
+    to start an interaction once the whole-run budget is gone and says so in
+    ``detail`` -- but that was thrown away here, so every timeout arrived
+    downstream as one undifferentiated kind. Both answers are operational, so the
+    leg can never be read as a semantic failure, as scientific insufficiency, or
+    as retrieval exhaustion: **a timeout is an operational fact, never a
+    biological verdict.**
+
+    ``reason`` lets a caller that already knows say so outright, which is how the
+    escalation ladder (C-042) will report a rung it could not afford. Nothing is
+    added to :meth:`RunOutcome.to_dict` -- that would edit ``RunOutcome``, outside
+    this card's boundary -- so the manifest row is byte-identical and the golden
+    driver diff stays empty.
+    """
+
+    from t2pw.pipeline import deadline as leg_deadline
+
+    outcome.termination_reason = leg_deadline.classify_interaction_timeout(
+        detail, explicit=reason
+    )
+    outcome.termination_is_operational = leg_deadline.is_operational(
+        outcome.termination_reason
+    )
 
     _fail(
         outcome,
