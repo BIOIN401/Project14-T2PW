@@ -1,0 +1,92 @@
+{
+  "label": "golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import t2pw,sys,pytest;print('T2PW_MODULE:',t2pw.__file__,flush=True);sys.exit(pytest.main(sys.argv[1:]))",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c031/golden",
+    "tests/test_batch_driver_seam_golden.py",
+    "-p",
+    "no:randomly"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c031-quarantine-artifacts",
+  "started_at": "2026-08-13T03:01:42+00:00",
+  "finished_at": "2026-08-13T03:01:48+00:00",
+  "duration_seconds": 5.449187099999108,
+  "timeout_seconds": 900.0,
+  "root_pid": 314844,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 314836,
+      "name": "python.exe",
+      "ppid": 314844
+    }
+  ],
+  "descendants_terminated": [
+    314836
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 299216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 310920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 312616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 312824,
+      "name": "python.exe"
+    },
+    {
+      "pid": 314508,
+      "name": "python.exe"
+    },
+    {
+      "pid": 314608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 314680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 314700,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c031-quarantine-artifacts/docs/pwml_recovery_sprint/evidence/g11/C-031/04-golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c031-quarantine-artifacts\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c031-quarantine-artifacts",
+    "repo_head": "b5bbf08abb200573bbd1dd08e93f41237b8678f3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

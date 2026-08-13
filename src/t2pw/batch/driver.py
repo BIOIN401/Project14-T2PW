@@ -1193,10 +1193,10 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
 
 
 def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any]) -> None:
-    """Persist the two artifacts an offline scientific audit cannot work without.
+    """Persist the artifacts an offline scientific audit cannot work without.
 
-    Both used to be reachable only on paths that a failing run never takes, which
-    made the two most consequential questions unanswerable after the fact:
+    Each used to be reachable only on paths that a failing run never takes, which
+    made the most consequential questions unanswerable after the fact:
 
     ``final_mapped.json`` -- was written **only** by :func:`_add_strict_artifacts`,
     i.e. only when a strict run got all the way to a PWML export. Every strict run
@@ -1215,8 +1215,35 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
     ``quarantined_locked_reactions``, which *is* persisted into the payload, and
     which is why locked-reaction reintroduction has always been auditable.
 
-    Both are best-effort: a run that never reached mapping legitimately has no
-    mapped payload, and RAG is optional. Absence stays a diagnosis, not a crash.
+    The QUARANTINE SET -- ``quarantine_report.json``,
+    ``removed_entity_report.json``, ``graph_closure_iterations.json`` and
+    ``coverage_summary.json`` -- never crossed this seam at all.
+    ``write_quarantine_artifacts`` produces all four into the app's working
+    ``outputs/`` directory, which the next pipeline run then clears, so
+    ``find runs runs_verify -name quarantine_report.json`` returned ZERO across
+    all 15 committed run directories and ``bench.acceptance``'s
+    ``_QUARANTINE_FILES`` lookup never once resolved. That is refusal evidence
+    destroyed at the batch boundary: a strict leg the boundary REFUSED stores its
+    PRE-quarantine fallback payload and no record of the refusal, so which
+    processes were dropped -- and which essential participant was undeclared --
+    is not a question that gets a wrong answer after the run, it is a question
+    that cannot be asked. Only two of the four are in session state at all; the
+    other two exist solely as files, and the ``{name: path}`` map the producer
+    returns is its designed hand-off, so the files are what is read.
+
+    Carried VERBATIM. This is somebody else's decision record: the driver is
+    writing evidence, not producing biology, and re-serializing the documents
+    here would make the batch a second author of a report whose ``decision_id``
+    binds it to one payload version under one set of rules.
+
+    The name comes from an allowlist and the path must carry that same name, for
+    the reason spelled out at :data:`_DIAGNOSTIC_ARTIFACT_NAMES`: a session-state
+    key is not a trusted source of run-directory filenames, and an unchecked path
+    would let an unrelated file's contents land under a name an auditor trusts.
+
+    All of it is best-effort: a run that never reached mapping legitimately has
+    no mapped payload, RAG is optional, and a run that never reached the boundary
+    has no decision to record. Absence stays a diagnosis, not a crash.
     """
 
     # THE canonical payload first: enriched, quarantined, and the object the
@@ -1236,6 +1263,40 @@ def _add_identity_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, A
     admission = _rag_admission(_ss(at, "rag_result"))
     if admission:
         out["rag_admission_report.json"] = _json_text(admission)
+
+    # The stamped artifact set first, because that is where every other artifact
+    # on this path comes from; the session key the boundary writes itself is the
+    # fallback, and it is the ONLY hand-off left for a run that took the decision
+    # and then died before the set was stamped -- which is precisely the run whose
+    # refusal record matters most.
+    produced = _safe_dict(artifacts.get("quarantine_artifacts")) or _safe_dict(
+        _ss(at, "quarantine_artifacts")
+    )
+    if produced:
+        # Imported here, not at module scope, so a leg that never reached the
+        # boundary is provably untouched by this block.
+        from t2pw.pipeline.strict_quarantine import (
+            CLOSURE_REPORT_FILENAME,
+            COVERAGE_REPORT_FILENAME,
+            QUARANTINE_REPORT_FILENAME,
+            REMOVED_ENTITY_REPORT_FILENAME,
+        )
+
+        for name in (
+            QUARANTINE_REPORT_FILENAME,
+            REMOVED_ENTITY_REPORT_FILENAME,
+            CLOSURE_REPORT_FILENAME,
+            COVERAGE_REPORT_FILENAME,
+        ):
+            source = _text(produced.get(name))
+            if not source or Path(source).name != name:
+                continue
+            try:
+                document = Path(source).read_text(encoding="utf-8")
+            except (OSError, ValueError):  # swept away, locked, or not utf-8
+                continue
+            if document:
+                out[name] = document
 
 
 def _rag_admission(rag_result: Any) -> Dict[str, Any]:
