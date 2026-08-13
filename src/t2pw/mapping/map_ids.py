@@ -7782,8 +7782,9 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
     The branches are ordered by § 8, and the identity model it draws is kept
     intact: ``verification_status`` is not collapsed into ``identity_status``,
-    and **only** a ``rejected`` verdict -- the one case § 8 permits identifiers
-    to be stripped in -- may read as ``excluded``. ``unavailable`` and
+    and only a REFUSAL -- the one case § 8 permits identifiers to be stripped
+    in -- may read as ``excluded``, sourced and ``direct`` only where a rung
+    actually retrieved the record it refutes on. ``unavailable`` and
     ``not_evaluated`` are lookup failures, and a lookup failure is not evidence
     that an accession is false, so they read as ``unresolved`` and ask for
     review. So does an ``Unknown``-backed placeholder: that row is legitimate
@@ -7803,11 +7804,25 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     verdict = _safe_dict(meta.get("identity_verdict"))
 
     # Refutation. A protein that went through the ladder is judged on its
-    # verification status alone; a row that never had one (compounds,
-    # complexes) is judged on the name gate, the only thing that refutes it.
+    # verification status; a row that never had one (compounds, complexes) is
+    # judged on the name gate. Either can refuse, and neither implies evidence.
     gate = _safe_dict(meta.get("name_gate"))
-    ladder_rejected = str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
-    gate_rejected = not verdict and str(gate.get("verdict") or "") == "reject"
+    # ``rejected`` alone is not proof a record was retrieved: the compound-name
+    # rule sets it at ``:5005`` BEFORE the candidate lookup at ``:5012``, so
+    # ``entity_type_incompatible`` refutes on the entity's own name and has no
+    # record to name. Rung 2's own result is what says evidence exists.
+    ladder_rejected = (
+        str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
+        and str(_safe_dict(verdict.get("checks")).get("candidate_evidence") or "")
+        in ("ok", "identity_evidence_candidate")
+    )
+    gate_rejected = not ladder_rejected and (
+        # a ladder that refused without retrieving, or -- where no ladder ran --
+        # the name gate. A ladder that did NOT refuse is never overruled by the
+        # gate: `unavailable` and `not_evaluated` preserve, they do not exclude.
+        str(verdict.get("verification_status") or "") == VERIFICATION_REJECTED
+        or (not verdict and str(gate.get("verdict") or "") == "reject")
+    )
     contradicting = _mapping_lineage_sources(meta.get("rejected_mapped_ids"), locator=locator)
 
     # A rung RETRIEVED evidence and it refutes the claim. Only here is there a
@@ -7848,13 +7863,13 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return {
             "origin": "excluded", "support": "unsupported", "sources": (),
             "reason": (
-                "the name-plausibility gate refused the match "
-                f"({gate.get('reason') or issue or 'name_gate_reject'}), so the identifier "
-                f"was removed ({removed or 'none recorded'})"
+                "the match was refused without a record being retrieved "
+                f"({gate.get('reason') or verdict.get('reason') or issue or 'name_gate_reject'}"
+                f"), so the identifier was removed ({removed or 'none recorded'})"
             ),
             "review_required": True,
             "uncertainty": (
-                "no retrieved record contradicts this identifier: the gate compared this "
+                "no retrieved record contradicts this identifier: the refusal judged this "
                 f"entity's name against {compared or 'no candidate name'} and found no "
                 "shared evidence. The removal is a lexical refusal, not a refutation"
             ),

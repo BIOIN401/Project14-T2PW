@@ -291,7 +291,10 @@ def test_new_a_rejected_verdict_is_excluded_and_names_the_contradicting_record()
         mapped_ids={},
         mapping_meta={
             "identity_status": "unresolved",
-            "identity_verdict": {"verification_status": "rejected"},
+            "identity_verdict": {
+                "verification_status": "rejected",
+                "checks": {"candidate_evidence": "identity_evidence_candidate"},
+            },
             "rejected_mapped_ids": {"uniprot": "P08235"},
             "resolution": {"status": "novel", "issue": "implausible_name_match"},
         },
@@ -379,7 +382,10 @@ def test_new_only_a_retrieved_refutation_may_name_a_source_and_claim_direct() ->
     record that states the contradiction, so it alone names one."""
     ladder = _mapping_lineage_facts_for(
         {
-            "identity_verdict": {"verification_status": "rejected"},
+            "identity_verdict": {
+                "verification_status": "rejected",
+                "checks": {"candidate_evidence": "identity_evidence_candidate"},
+            },
             "rejected_mapped_ids": {"uniprot": "P08235"},
             "resolution": {"status": "novel"},
         }
@@ -391,9 +397,27 @@ def test_new_only_a_retrieved_refutation_may_name_a_source_and_claim_direct() ->
             "resolution": {"status": "novel"},
         }
     )
-    assert ladder["origin"] == lexical["origin"] == "excluded"
+    # compound_name_block_rule sets rejected at :5005, BEFORE the candidate
+    # lookup at :5012, so this rung refutes on the entity's own name and has no
+    # record to name -- it must not borrow the sourced branch.
+    unevidenced = _mapping_lineage_facts_for(
+        {
+            "identity_verdict": {
+                "verification_status": "rejected",
+                "reason": "entity_type_incompatible:entity_name_is_a_compound",
+                "checks": {"entity_type": "entity_name_is_a_compound"},
+            },
+            "rejected_mapped_ids": {"uniprot": "P08235"},
+            "resolution": {"status": "novel"},
+        }
+    )
+    assert ladder["origin"] == lexical["origin"] == unevidenced["origin"] == "excluded"
     assert (ladder["support"], bool(ladder["sources"])) == ("direct", True)
     assert (lexical["support"], lexical["sources"]) == ("unsupported", ())
+    assert (unevidenced["support"], unevidenced["sources"]) == ("unsupported", ())
+    assert "retrieved record" not in unevidenced["uncertainty"].replace(
+        "no retrieved record", "")
+    assert "entity_type_incompatible" in unevidenced["reason"]
 
 
 def _mapping_lineage_facts_for(meta: Dict[str, Any]) -> Dict[str, Any]:
@@ -586,6 +610,12 @@ def test_new_no_lineage_reaches_the_mapping_cache_file(tmp_path: Path) -> None:
     env = {"T2PW_SPECIES_LLM": "0", "T2PW_SPECIES_NCBI": "0"}
     with patch.dict(os.environ, env), patch.object(
         map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: None)
+    ), patch.object(
+        # P2-05: without this the Phase-2 UniProt fallback reaches a live model.
+        # A contract-critical cache-poisoning proof may not depend on one
+        # answering: unbounded latency turns a real result into a G11 timeout,
+        # which is an infrastructure failure rather than a test outcome.
+        map_ids, "_ai_protein_synonym_lookup", return_value=[]
     ), patch.object(
         map_ids.HttpClient, "get", side_effect=_NoNetwork("network")
     ):
