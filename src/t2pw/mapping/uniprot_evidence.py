@@ -468,7 +468,18 @@ def identity_evidence_for(accession: Any, *, organism: str = "", source: Any = N
             VERIFICATION_UNAVAILABLE, accession=acc, detail=f"evidence_source_failed:{type(exc).__name__}"
         )
     if isinstance(record, dict):
-        return record
+        status = _text(record.get("status"))
+        if status in (EVIDENCE_OK, VERIFICATION_UNAVAILABLE, VERIFICATION_NOT_EVALUATED):
+            return record
+        # A source reports what it found; it may not report a refutation. Only a
+        # rung judging real content may say ``rejected``, so any other status is
+        # clamped rather than passed through -- an injected source must not be
+        # able to turn an absence of evidence into a biological verdict, which
+        # would also suppress the preserved claim D-003 requires.
+        clamped = dict(record)
+        clamped["status"] = VERIFICATION_NOT_EVALUATED
+        clamped["detail"] = f"non_conforming_source_status:{status or 'missing'}"
+        return clamped
     return evidence_record(
         VERIFICATION_NOT_EVALUATED, accession=acc, detail="evidence_source_returned_no_record"
     )

@@ -23,6 +23,8 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
@@ -34,6 +36,8 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     verify_real_protein_identity,
 )
 from t2pw.mapping.uniprot_evidence import (  # noqa: E402
+    ENV_CACHE_PATH,
+    ENV_FLAG,
     EVIDENCE_OK,
     EXACT_ACCESSION_MATCH_SCORE,
     UniProtIdentityEvidenceSource,
@@ -101,6 +105,23 @@ POOL_ROW = {
     "pathbank_protein_id": 5917, "name": "Succinate dehydrogenase iron-sulfur subunit",
     "gene_name": "sdhB", "uniprot": "P07014", "species_id": 3, "score": 0.65,
 }
+
+
+@pytest.fixture(autouse=True)
+def _no_ambient_evidence_source(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Immunise this whole file against ambient environment state.
+
+    ``identity_evidence_for`` falls through to
+    ``default_identity_evidence_source()`` when nothing is installed, and that
+    reads ``T2PW_IDENTITY_EVIDENCE``. Set to ``cache`` it changes what a test
+    observes; set to ``network`` it builds a real ``HttpClient``, issues a live
+    GET, and then ``cache.save()``s into ``T2PW_ENRICHMENT_CACHE`` -- whose
+    default is the 39 MB tracked ``data/enrichment_cache.json``. Every source in
+    this file is explicit, so the ambient one is removed for all of them.
+    """
+
+    monkeypatch.delenv(ENV_FLAG, raising=False)
+    monkeypatch.delenv(ENV_CACHE_PATH, raising=False)
 
 
 # ── doubles. None of them can reach a network. ─────────────────────────────
@@ -278,6 +299,33 @@ def test_the_four_verification_states_are_four_distinct_strings() -> None:
         VERIFICATION_UNAVAILABLE, VERIFICATION_NOT_EVALUATED,
     ]
     assert len(set(states)) == 4
+
+
+def test_a_source_that_reports_a_refutation_is_clamped_not_believed() -> None:
+    """NEW ACCEPTANCE. Only a rung may say ``rejected``; an injected source may not.
+
+    Passed through, a foreign ``rejected`` would become the ladder's
+    ``verification_status`` and suppress the preserved claim -- an absence of
+    evidence rewritten as a biological verdict, which is invariant 8.
+    """
+
+    class RogueSource:
+        def evidence_for(self, accession: str, *, organism: str = "") -> Dict[str, Any]:
+            return {"status": VERIFICATION_REJECTED, "accession": accession,
+                    "candidate": {"uniprot": accession, "protein_name": "Anything"}}
+
+    record = identity_evidence_for("P0A9A9", organism=ECOLI, source=RogueSource())
+    assert record["status"] == VERIFICATION_NOT_EVALUATED
+    assert record["detail"] == "non_conforming_source_status:rejected"
+    assert fur_ladder(RogueSource())["verification_status"] == VERIFICATION_NOT_EVALUATED
+
+    # The harm the clamp prevents: the claim is preserved, not suppressed.
+    row: Dict[str, Any] = {"name": "Fur", "mapped_ids": {"uniprot": "P0A9A9"}, "mapping_meta": {}}
+    _enforce_shipped_identity_names(
+        row, {"status": "unmapped", "candidates": []},
+        kind="protein", entity_name="Fur", organism=ECOLI, evidence_source=RogueSource(),
+    )
+    assert unverified_identity_claim(row)["verification_status"] == VERIFICATION_NOT_EVALUATED
 
 
 def test_an_unverifiable_accession_is_preserved_as_a_claim_and_not_promoted(tmp_path: Path) -> None:
