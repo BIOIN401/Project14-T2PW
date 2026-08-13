@@ -1180,10 +1180,43 @@ class SpanRelation:
 #: fraction of the backtracking.
 _WORD_START_RE = re.compile(r"\b\w")
 
+#: The hyphens a chemical name is spelled with. ``-`` plus the Unicode dash block,
+#: because extracted paper text carries both.
+_COMPOUND_HYPHENS = "-‐‑‒–—―"
+
+#: A word start that is BOUND INTO the token before it, and therefore is not the
+#: start of a species name at all. ``\b\w`` fires after every hyphen and after the
+#: locant comma of ``2,3-oxidosqualene``, so restarting there offers the templates
+#: ``oxoglutarate`` (from ``2-oxoglutarate``) and ``3-oxidosqualene`` as substrates
+#: — re-opening by the restart route the exact defect :data:`_SPECIES_SPLIT_RE`'s
+#: comment records, where splitting a locant produced the substrate ``2``.
+#:
+#: The comma case is decided by :data:`_SPECIES_SPLIT_RE`'s own rule and nothing
+#: else: that pattern separates species on ``,(?=\s|$)``, so a comma followed by a
+#: word character is a locant, never a connector. A word start is therefore
+#: excluded exactly when a hyphen or a locant comma sits between it and a word
+#: character.
+_TOKEN_INTERNAL_RESTART_RE = re.compile(rf"(?<=\w[{_COMPOUND_HYPHENS},])\w")
+
 #: A span states at most this many distinct relations. Truncation can only make
 #: the parser see FEWER readings, so it can only ever refuse more — it is not a
 #: path to a permissive default (clause A8).
 _MAX_SPAN_RELATIONS = 8
+
+
+def _restart_positions(body: str) -> List[int]:
+    """Every offset a template may be re-tried from, token-internal ones removed.
+
+    A template match that BEGINS inside a hyphenated or locant compound can only
+    ever report a truncated form of that compound, so such a start is not a
+    reading of the span — it is a spelling error the parser would be inventing.
+    Excluding it cannot cost a reading: ``pattern.search(body, pos)`` scans
+    FORWARD, so every match reachable from an excluded offset ``p`` is still
+    reachable from the nearest kept offset before ``p``, except a match that
+    starts within the compound itself — which is precisely what is being refused.
+    """
+    skip = {m.start() for m in _TOKEN_INTERNAL_RESTART_RE.finditer(body)}
+    return [0] + [m.start() for m in _WORD_START_RE.finditer(body) if m.start() not in skip]
 
 
 def _pattern_matches(
@@ -1197,11 +1230,14 @@ def _pattern_matches(
     later enumerates every start position instead, so a sentence stating two
     reactions yields both.
 
-    ``first_only=True`` restarts nowhere and reproduces ``pattern.search(body)``
-    exactly, which is what the single-relation shim needs.
+    Restarts that fall INSIDE a compound name are excluded
+    (:func:`_restart_positions`). ``first_only=True`` restarts nowhere at all and
+    reproduces ``pattern.search(body)`` exactly, which is what the single-relation
+    shim needs — position ``0`` is always kept, so the shim is bit-for-bit
+    unaffected by the exclusion.
     """
     seen: Set[Tuple[int, int]] = set()
-    for pos in [0] + [m.start() for m in _WORD_START_RE.finditer(body)]:
+    for pos in _restart_positions(body):
         match = pattern.search(body, pos)
         if match is None:
             # Starts ascend, so nothing later can match either.
@@ -1240,6 +1276,80 @@ def _relation_from_match(name: str, match: "re.Match", body: str) -> Optional[Sp
     )
 
 
+def _participant_set(names: Sequence[str]) -> Set[str]:
+    """A participant list as canonical spellings, currency INCLUDED.
+
+    Deliberately not :func:`_non_currency`: this set answers "which participants
+    does this reading say the span states", and a reading that states ATP states
+    ATP. Projecting currency away here would make ``ATP -> G6P`` and
+    ``glucose -> G6P`` look like the same reading of the same sentence.
+    """
+    return {_fold(_canonical(n)) for n in names if _text(n)}
+
+
+def _drop_participant_subsets(relations: List[SpanRelation]) -> List[SpanRelation]:
+    """Remove readings that are another reading with a stated participant deleted.
+
+    ``_pattern_matches`` restarts every template at every word start, and two
+    historical templates — ``is_converted_to`` and ``is_produced_from`` — open on
+    an unanchored participant group. A restart past a coordinator therefore
+    re-matches THE SAME reaction with one of its stated participants missing:
+    "Isochorismate and 2-oxoglutarate are converted to SEPHCHC by MenD" also
+    yields ``['2-oxoglutarate'] -> ['SEPHCHC']``. That is not a second reading of
+    the sentence; it is the first reading with chemistry deleted, and admitting a
+    claim against it contradicts the invariant
+    :func:`validate_evidence_span` states two functions above — *"it is never
+    exempt in the 'span has it, candidate dropped it' direction, because dropping
+    a real substrate changes the chemistry"*.
+
+    A reading is dropped only when another returned reading is strictly richer in
+    exactly one participant role and no poorer anywhere else:
+
+    * one side is a **strict** subset of the other reading's same side, and
+    * the opposite side is **equal**, and
+    * its catalysts are a subset of the other's — so a reading naming a catalyst
+      the richer one does not name is never deleted, and
+    * reversibility agrees.
+
+    Direction is deliberately absent from the rule: a reversal is not a subset of
+    anything, and :func:`_relation_verdict` already refuses it.
+
+    **Only ever removes.** No branch constructs, mutates, reorders or copies a
+    :class:`SpanRelation`; survivors are the input objects in the input order.
+
+    **Cannot empty a non-empty list.** Both surviving branches require
+    ``len(other.inputs') + len(other.outputs') > len(this.inputs') + len(this.outputs')``
+    on the canonical sets, so a reading of maximal participant count has no
+    possible eliminator and is always kept. Were that reasoning ever wrong the
+    caller still fails CLOSED — :func:`validate_evidence_span` refuses an empty
+    relation list; there is no permissive default anywhere on this path (A8).
+    """
+    if len(relations) < 2:
+        return relations
+    shapes = [
+        (
+            _participant_set(r.inputs),
+            _participant_set(r.outputs),
+            _participant_set(r.catalysts),
+            bool(r.reversible),
+        )
+        for r in relations
+    ]
+    kept: List[SpanRelation] = []
+    for index, relation in enumerate(relations):
+        ins, outs, cats, rev = shapes[index]
+        superseded = False
+        for other, (o_ins, o_outs, o_cats, o_rev) in enumerate(shapes):
+            if other == index or rev != o_rev or not cats <= o_cats:
+                continue
+            if (ins < o_ins and outs == o_outs) or (outs < o_outs and ins == o_ins):
+                superseded = True
+                break
+        if not superseded:
+            kept.append(relation)
+    return kept
+
+
 def parse_span_relations(span: str) -> List[SpanRelation]:
     """EVERY reaction a span states — substrates, products, direction, catalyst.
 
@@ -1264,9 +1374,14 @@ def parse_span_relations(span: str) -> List[SpanRelation]:
     claim could be checked against, so a claim quoting the sentence verbatim was
     refused as disagreeing with its own evidence.
 
-    Returned in template-priority order, then by position, duplicates collapsed.
-    The FIRST element is therefore whatever the single-match parser used to
-    return, which is what keeps :func:`parse_span_relation` unchanged.
+    Returned in template-priority order, then by position, duplicates collapsed,
+    and then filtered by :func:`_drop_participant_subsets` — a restart past a
+    coordinator re-matches the SAME reaction with a stated participant deleted,
+    and a reading with chemistry removed is not a reading of the span. The FIRST
+    surviving element is whatever the single-match parser used to return (the
+    leftmost match of the highest-priority template is maximal on both sides, so
+    it is never the one filtered), which is what keeps
+    :func:`parse_span_relation` unchanged.
 
     This widens what a span can be read as SAYING. It does not touch what counts
     as agreement: each returned relation is judged by the unchanged predicate in
@@ -1314,8 +1429,10 @@ def parse_span_relations(span: str) -> List[SpanRelation]:
             seen.add(key)
             out.append(relation)
             if len(out) >= _MAX_SPAN_RELATIONS:
-                return out
-    return out
+                break
+        if len(out) >= _MAX_SPAN_RELATIONS:
+            break
+    return _drop_participant_subsets(out)
 
 
 def parse_span_relation(span: str) -> Optional[SpanRelation]:

@@ -1246,3 +1246,120 @@ def test_a_claim_stitched_across_two_sentences_is_still_refused() -> None:
     )
     assert not verdict.ok
     assert any("evidence_span_is_not_one_statement" in r for r in verdict.reasons)
+
+
+# ===========================================================================
+# 7. Participant-dropping restarts (C-061a). REV-061's hole in section 6.
+# ===========================================================================
+# Trying every template at every word start also re-matches THE SAME reaction
+# with a stated participant deleted: ``is_converted_to`` and ``is_produced_from``
+# open on an unanchored participant group, so a restart past a coordinator reads
+# "Isochorismate and 2-oxoglutarate are converted to SEPHCHC" as
+# ``2-oxoglutarate -> SEPHCHC``. That contradicts the invariant
+# ``validate_evidence_span`` states in its own docstring — currency is "never
+# exempt in the 'span has it, candidate dropped it' direction, because dropping a
+# real substrate changes the chemistry" — and it is merge rule 6: a biological
+# gate weakened in the direction that increases PWML output.
+#
+# ``\b\w`` also restarts INSIDE a compound, offering ``oxoglutarate`` from
+# ``2-oxoglutarate`` and ``3-oxidosqualene`` from ``2,3-oxidosqualene`` — the very
+# defect ``_SPECIES_SPLIT_RE``'s comment records, reopened by another route.
+_MEND = "Isochorismate and 2-oxoglutarate are converted to SEPHCHC by MenD."
+_THREE = "A, B and C are converted to D by E."
+_SDH = "Fumarate and NADH are produced from succinate by Sdh."
+_HK = "Glucose and ATP are converted to glucose-6-phosphate by HK."
+_LOCANT = "2,3-oxidosqualene is converted to lanosterol by Erg7."
+
+
+@pytest.mark.parametrize(
+    "span,inputs,outputs,enzymes,why",
+    [
+        (_MEND, ["2-oxoglutarate"], ["SEPHCHC"], ["MenD"], "A1 first substrate deleted"),
+        (_MEND, ["Isochorismate"], ["SEPHCHC"], ["MenD"], "A5 last substrate deleted"),
+        (_THREE, ["B", "C"], ["D"], ["E"], "A1 a later substrate deleted"),
+        (_THREE, ["C"], ["D"], ["E"], "A1 two substrates deleted"),
+        (_SDH, ["succinate"], ["NADH"], ["Sdh"], "A1 a stated co-product deleted"),
+        (_HK, ["ATP"], ["glucose-6-phosphate"], ["HK"], "A1 empty non-currency lhs"),
+        (_MEND, ["oxoglutarate"], ["SEPHCHC"], ["MenD"], "A2 hyphen locant fragment"),
+        (_LOCANT, ["3-oxidosqualene"], ["lanosterol"], ["Erg7"], "A2 comma locant"),
+        (_LOCANT, ["oxidosqualene"], ["lanosterol"], ["Erg7"], "A2 comma locant, both cuts"),
+    ],
+)
+def test_a_reading_the_span_does_not_state_is_not_admitted(
+    span, inputs, outputs, enzymes, why
+) -> None:
+    """A restart may not delete a participant the sentence states.
+
+    ``_HK`` is the sharp one: ATP is currency, so the surviving reading's
+    non-currency substrate set is ``{glucose}`` and the claim's is EMPTY. Before
+    the correction the drop-reading made those two empty sets equal and the claim
+    was admitted against a reaction with no substrate at all.
+    """
+    verdict = _span_check(inputs, outputs, enzymes, span=span)
+    assert not verdict.ok, (why, verdict.relation)
+    assert verdict.reasons, why
+
+
+@pytest.mark.parametrize(
+    "span,inputs,outputs,enzymes",
+    [
+        (_MEND, ["Isochorismate", "2-oxoglutarate"], ["SEPHCHC"], ["MenD"]),
+        (_THREE, ["A", "B", "C"], ["D"], ["E"]),
+        (_SDH, ["succinate"], ["Fumarate", "NADH"], ["Sdh"]),
+        (_HK, ["Glucose", "ATP"], ["glucose-6-phosphate"], ["HK"]),
+        (_LOCANT, ["2,3-oxidosqualene"], ["lanosterol"], ["Erg7"]),
+    ],
+)
+def test_the_reading_each_span_does_state_survives_the_filter(
+    span, inputs, outputs, enzymes
+) -> None:
+    """The filter discriminates by SUBSET, and the reading it must keep is the
+    superset — the same shape as C-061's MenA reading. Getting the direction
+    backwards would delete exactly what the pair of cards exists to recover."""
+    assert _span_check(inputs, outputs, enzymes, span=span).ok
+
+
+def test_dropping_the_first_and_the_last_participant_behave_identically() -> None:
+    """A5. The asymmetry was the proof it was an artifact, not a reading."""
+    first = _span_check(["2-oxoglutarate"], ["SEPHCHC"], ["MenD"], span=_MEND)
+    last = _span_check(["Isochorismate"], ["SEPHCHC"], ["MenD"], span=_MEND)
+    assert (first.ok, last.ok) == (False, False)
+    assert first.reasons and last.reasons
+
+
+@pytest.mark.parametrize("span", [_MEND, _THREE, _SDH, _HK, _LOCANT, _TWO_CLAUSE_SPAN])
+def test_the_filter_only_ever_removes_and_never_empties(span) -> None:
+    """A6 and A8, structurally.
+
+    Survivors are the SAME objects in the SAME order — no branch constructs,
+    rewrites or reorders a relation — and a non-empty list stays non-empty,
+    because both drop conditions require a strictly larger participant count so
+    the largest reading has no possible eliminator. A span that did somehow lose
+    every reading would still fail CLOSED: ``validate_evidence_span`` refuses an
+    empty relation list rather than falling through to a default.
+    """
+    from t2pw.rag import admission
+
+    body = admission._text(span)
+    raw = [
+        relation
+        for name, pattern in admission._ALL_PROSE_PATTERNS
+        for match in admission._pattern_matches(pattern, body, first_only=False)
+        for relation in [admission._relation_from_match(name, match, body)]
+        if relation is not None
+    ]
+    kept = admission._drop_participant_subsets(raw)
+    assert raw, span
+    assert kept, "the filter emptied a non-empty reading list"
+    assert [id(r) for r in kept] == [id(r) for r in raw if any(r is k for k in kept)]
+
+
+def test_the_single_relation_shim_is_untouched_by_the_restart_exclusion() -> None:
+    """``parse_span_relation`` reproduces the historical leftmost match, and the
+    exclusion never removes offset 0, so the shim's answer cannot move."""
+    from t2pw.rag.admission import parse_span_relation
+
+    relation = parse_span_relation(_MEND)
+    assert relation is not None
+    assert relation.inputs == ["Isochorismate", "2-oxoglutarate"]
+    assert relation.outputs == ["SEPHCHC"]
