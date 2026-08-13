@@ -15,6 +15,12 @@ from t2pw.curation.apply_audit_patch import (
 )
 from t2pw.pipeline.reaction_preservation_validator import load_locked_reaction_manifest
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
+from t2pw.pipeline.lineage import (
+    LineageEntry,
+    LineageError,
+    LineageSource,
+    record as record_lineage,
+)
 try:
     from t2pw.llm.client import chat, chat_with_tools
 except ModuleNotFoundError as exc:  # pragma: no cover - exercised only when optional LLM deps are absent
@@ -75,6 +81,144 @@ def _to_float(value: Any, default: float = 0.0) -> float:
 
 def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", _normalize(value)).strip("_") or "state"
+
+
+#: The stage every entry written here names. A row this stage filled was NOT stated by
+#: the paper, so ``paper_stated`` is not available to it whatever it fills in; a
+#: consumer that cannot separate a gap-filled row from a paper-stated one cannot tell a
+#: re-derivation from a leak, which is the ambiguity these records close.
+_GAP_LINEAGE_STAGE = "gap_resolution"
+
+#: Gap resolution reads the payload, PathBank and the web APIs -- never the paper text --
+#: so the only honest answer it has to "did the paper state this?" is that it never
+#: looked. Collapsing that into ``not_explicit`` would assert a check this stage skipped.
+_GAP_LINEAGE_PAPER_EXPLICIT = "not_evaluated"
+
+
+def _record_gap_lineage(
+    row: Any,
+    *,
+    origin: str,
+    support: str,
+    reason: str,
+    sources: Tuple[LineageSource, ...] = (),
+    review_required: bool = False,
+    uncertainty: str = "",
+    errors: Optional[List[str]] = None,
+) -> bool:
+    """Attribute one gap-filled row to this stage, in place. Returns whether it wrote.
+
+    Attribution is positional (F-004: :class:`LineageEntry` carries no entity id), so
+    ``row`` must be the row that owns the change -- never a sibling, an index, or a
+    parallel structure. :func:`record_lineage` re-emits every entry already there, so an
+    earlier stage's attribution survives and is never overwritten.
+
+    A malformed lineage arriving on ``row`` is reported through ``errors``, not raised:
+    recording provenance must not change which gaps this stage resolves, and a stage
+    that died on a bad inbound record would change exactly that.
+    """
+    if not isinstance(row, dict):
+        return False
+    try:
+        record_lineage(
+            row,
+            LineageEntry(
+                stage=_GAP_LINEAGE_STAGE,
+                origin=origin,
+                support=support,
+                paper_explicit=_GAP_LINEAGE_PAPER_EXPLICIT,
+                reason=reason,
+                review_required=review_required,
+                uncertainty=uncertainty,
+                sources=sources,
+            ),
+        )
+    except LineageError as exc:
+        if errors is not None:
+            errors.append(str(exc))
+        return False
+    return True
+
+
+def _location_lineage_facts(
+    chosen_location: str,
+    candidates: List[Dict[str, Any]],
+    *,
+    kind: str,
+    name: str,
+) -> Dict[str, Any]:
+    """What actually backs ``chosen_location``, read off the candidate that was chosen.
+
+    A retrieved PathBank location record is a named source, so a row placed on it is
+    ``database_grounded``. Its support is ``indirect``: the record reports where this
+    entity is seen in OTHER pathways, which supports this pathway's placement only by
+    implication. The whole-cell fallback is backed by nothing -- it is this stage's own
+    inference, and it says so and asks for review rather than borrowing the evidence of
+    a candidate that was never selected.
+    """
+    chosen = _normalize(chosen_location)
+    match = next(
+        (
+            candidate
+            for candidate in candidates
+            if isinstance(candidate, dict)
+            and chosen
+            and _normalize(str(candidate.get("location") or "")) == chosen
+        ),
+        None,
+    )
+    source_name = _canonical(str(_safe_dict(match).get("source") or ""))
+    if match is None or not source_name or source_name == "default":
+        return {
+            "origin": "inferred",
+            "support": "unsupported",
+            "sources": (),
+            "review_required": True,
+            "uncertainty": (
+                "no location evidence was retrieved for this entity; the compartment is "
+                "this stage's default, not a reported one"
+            ),
+        }
+    locator = f"{kind}={name}"
+    evidence = _canonical(str(match.get("evidence") or ""))
+    return {
+        "origin": "database_grounded",
+        "support": "indirect",
+        "sources": (
+            LineageSource(
+                source_id=_canonical(chosen_location),
+                source_type=source_name,
+                locator=f"{locator}; {evidence}" if evidence else locator,
+            ),
+        ),
+        "review_required": False,
+        "uncertainty": "",
+    }
+
+
+def _mapped_id_lineage_sources(
+    mapped_ids: Dict[str, Any], selected: Dict[str, Any]
+) -> Tuple[LineageSource, ...]:
+    """One source per identifier committed, each pointing at the record it names.
+
+    An identifier that resolves to nothing names no record, so it yields no source --
+    and an origin that requires one then records nothing at all, rather than claiming a
+    database backing this stage cannot produce.
+    """
+    locator = _canonical(str(selected.get("provider") or "")) or _canonical(
+        str(selected.get("source") or "")
+    )
+    sources: List[LineageSource] = []
+    for key, value in sorted(mapped_ids.items(), key=lambda item: str(item[0])):
+        identifier = _canonical(str(value))
+        if not identifier:
+            continue
+        sources.append(
+            LineageSource(
+                source_id=identifier, source_type=_canonical(str(key)), locator=locator
+            )
+        )
+    return tuple(sources)
 
 
 def _species_confidence(row: Dict[str, Any]) -> float:
@@ -2685,6 +2829,7 @@ def resolve_gaps(
             "unresolved_issues": [],
         },
     }
+    lineage_errors: List[str] = []
     entities = _safe_dict(working.get("entities"))
     elem_locs = _safe_dict(working.setdefault("element_locations", {}))
     if not isinstance(elem_locs.get("compound_locations"), list):
@@ -2766,6 +2911,21 @@ def resolve_gaps(
                 missing_stoichiometry = _safe_list(component_resolution.get("missing_stoichiometry"))
                 if component_resolution.get("changed"):
                     report["summary"]["complex_components_structured"] += 1
+                    # The complex row owns its component list, so the attribution goes
+                    # there; a component carries no lineage of its own, and writing one
+                    # onto a component dict would also make this restructuring look like
+                    # a content change to _resolve_declared_complex_components.
+                    _record_gap_lineage(
+                        item,
+                        origin="inferred",
+                        support="derived",
+                        reason=(
+                            "gap resolution restructured this complex's declared components "
+                            f"and resolved {len(resolved_components)} of them against proteins "
+                            "already mapped in this payload"
+                        ),
+                        errors=lineage_errors,
+                    )
                 report["summary"]["complex_components_resolved"] += len(resolved_components)
                 op_exec["component_resolution"] = component_resolution
                 if resolved_components:
@@ -2813,6 +2973,17 @@ def resolve_gaps(
                     }
                 )
                 op_exec["organism_added"] = global_organism
+                _record_gap_lineage(
+                    item,
+                    origin="inferred",
+                    support="derived",
+                    reason=(
+                        f"gap resolution filled a missing species on this {kind} by "
+                        "deterministically carrying over the pathway's global organism "
+                        f"{global_organism!r}; the row itself stated none"
+                    ),
+                    errors=lineage_errors,
+                )
 
         # Stage 3A: ID query plan -> deterministic execution -> LLM selection
         if enable_id_resolution:
@@ -2916,6 +3087,25 @@ def resolve_gaps(
                                     "stage": "stage3",
                                 }
                             )
+                            id_sources = _mapped_id_lineage_sources(new_ids, selected)
+                            selected_source = _canonical(str(selected.get("source") or "")).lower()
+                            if id_sources:
+                                _record_gap_lineage(
+                                    item,
+                                    origin="database_grounded",
+                                    # A PathBank row IS this entity's record and states
+                                    # the identifier; an API name search returned a record
+                                    # whose identity match is the resolver's, so it
+                                    # supports the mapping only by implication.
+                                    support="direct" if selected_source == "db" else "indirect",
+                                    reason=(
+                                        f"gap resolution filled a missing identifier mapping for "
+                                        f"this {kind} from a {selected_source or 'lookup'} "
+                                        "candidate the paper never supplied"
+                                    ),
+                                    sources=id_sources,
+                                    errors=lineage_errors,
+                                )
         else:
             op_exec["id_resolution"] = {
                 "status": "skipped",
@@ -2972,7 +3162,41 @@ def resolve_gaps(
                 max_tokens=llm_max_tokens,
             )
             chosen_loc = _canonical(str(loc_decision.get("choice", ""))) or fallback_location
+            states_before = {
+                _canonical(str(state.get("name") or ""))
+                for state in _safe_list(working.get("biological_states"))
+                if isinstance(state, dict)
+            }
             state_name = _ensure_biological_state(working, chosen_loc, global_organism)
+            loc_lineage = _location_lineage_facts(
+                chosen_loc, loc_candidates, kind=kind, name=name
+            )
+            if state_name and state_name not in states_before:
+                # A biological state this stage synthesized is content the payload did
+                # not have. It is recorded on the state row it created -- the row that
+                # owns it -- and inherits the compartment decision's own uncertainty.
+                created_state = next(
+                    (
+                        state
+                        for state in _safe_list(working.get("biological_states"))
+                        if isinstance(state, dict)
+                        and _canonical(str(state.get("name") or "")) == state_name
+                    ),
+                    None,
+                )
+                _record_gap_lineage(
+                    created_state,
+                    origin="inferred",
+                    support="derived",
+                    reason=(
+                        "gap resolution synthesized this biological state to place "
+                        f"{kind} {name!r} at {chosen_loc!r}; no existing state matched "
+                        "that species and compartment"
+                    ),
+                    review_required=bool(loc_lineage["review_required"]),
+                    uncertainty=str(loc_lineage["uncertainty"]),
+                    errors=lineage_errors,
+                )
             op_exec["location_candidates"] = loc_candidates[:6]
             op_exec["rejected_location_candidates"] = rejected_location_candidates[:6]
             op_exec["organism_context"] = organism_context
@@ -3010,9 +3234,35 @@ def resolve_gaps(
                             "stage": "stage3",
                         }
                     )
+                    _record_gap_lineage(
+                        row,
+                        origin=str(loc_lineage["origin"]),
+                        support=str(loc_lineage["support"]),
+                        reason=(
+                            f"gap resolution placed {kind} {name!r} at {chosen_loc!r} to fill "
+                            "the biological state this existing location row left blank"
+                        ),
+                        sources=loc_lineage["sources"],
+                        review_required=bool(loc_lineage["review_required"]),
+                        uncertainty=str(loc_lineage["uncertainty"]),
+                        errors=lineage_errors,
+                    )
 
             if need_add_row and state_name:
                 new_row = {name_key: name, "biological_state": state_name}
+                _record_gap_lineage(
+                    new_row,
+                    origin=str(loc_lineage["origin"]),
+                    support=str(loc_lineage["support"]),
+                    reason=(
+                        f"gap resolution created this location row to place {kind} {name!r} "
+                        f"at {chosen_loc!r}; the payload linked it to no compartment at all"
+                    ),
+                    sources=loc_lineage["sources"],
+                    review_required=bool(loc_lineage["review_required"]),
+                    uncertainty=str(loc_lineage["uncertainty"]),
+                    errors=lineage_errors,
+                )
                 _safe_list(elem_locs.get(loc_key)).append(new_row)
                 report["summary"]["locations_added"] += 1
                 report["actions"].append(
@@ -3081,6 +3331,13 @@ def resolve_gaps(
             )
 
         if enrichment_patches:
+            # No lineage is written for this leg, deliberately. A patch names a JSON
+            # pointer, not a row, and several of them land on a field inside a component
+            # rather than on anything that owns an attribution; guessing which row a
+            # pointer belongs to is exactly the sibling misattribution F-004 warns about,
+            # and a row asserting provenance it does not have is worse than one with
+            # none. apply_patch_with_policy is the writer here and attributes what it
+            # rewrote; this stage does not restate that fact over the top of it.
             working, patch_apply_report = apply_patch_with_policy(
                 working,
                 enrichment_patches,
@@ -3110,6 +3367,11 @@ def resolve_gaps(
         db.close()
     else:
         report["db"] = {"available": False, "last_error": "db_not_used"}
+
+    # Reported, not raised, and not silent either: a dropped entry would read as "this
+    # content was original". The key appears only when something was actually rejected.
+    if lineage_errors:
+        report["lineage_errors"] = lineage_errors
 
     return working, report
 
