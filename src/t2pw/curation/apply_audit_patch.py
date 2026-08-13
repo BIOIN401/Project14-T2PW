@@ -8,6 +8,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pipeline import lineage
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 # The referential-integrity guard below MUST agree, name for name, with the Stage 3
@@ -1062,6 +1063,176 @@ def _referential_integrity_rejection(
     )
 
 
+# ---------------------------------------------------------------------------
+# Lineage emission.
+#
+# R-004 asked whether three reactions in a committed payload had been re-added
+# by the audit and could not tell. Nothing in final.audited.json, the applied
+# patch log or the apply report says which ROWS a patch produced: the logs record
+# ops, and "/processes/reactions/2" is not a row -- every later insert or removal
+# shifts that index, so a pointer read after the fact addresses a different
+# reaction than the one it was written about.
+#
+# lineage.LineageEntry carries no entity or reaction id, so attribution is
+# POSITIONAL: an entry is true of the row it sits on and of nothing else. That
+# fixes where a record may be written -- onto the row itself, never onto a
+# sibling, an index or a side table -- and it fixes what may be claimed: only
+# what this stage actually knows.
+#
+# What this stage knows is one fact, and the rule below is exactly that fact:
+# after an accepted op, a row whose content matches NO row that was in its
+# container immediately before the op is content that operation produced. Hence
+# a content diff over the container rather than a walk of the op's pointer. It
+# needs no index arithmetic, so index drift cannot misattribute it; it is
+# shape-agnostic, so a whole-row add, a wholesale array replace, an edit to a
+# field nested inside a row and the mapping_meta stamp _apply_single_op writes
+# all reduce to the same question; and it cannot claim a row the batch merely
+# passed through, because such a row is identical to its own pre-image.
+#
+# It under-claims in one direction, deliberately: an op adding a row that
+# duplicates one already present produces no new content, so nothing is
+# recorded. A row asserting provenance it does not have is worse than a row with
+# none, and silence is the honest reading of an ambiguous case.
+#
+# WHY NO SOURCE, AND WHY "unsupported": an op's ``evidence`` is free text from
+# the auditing model and ``provenance`` is a free label. Neither is a PMCID, DOI,
+# accession or file, and putting one in LineageSource.source_id would be
+# accepting an identifier for its shape. With no source, "direct" and "indirect"
+# are unavailable by construction, and "derived" would claim a deterministic
+# derivation from supported content that a model-proposed repair is not.
+#
+# WHY paper_explicit IS "not_evaluated": this stage never asks whether the paper
+# stated the content, only whether an op clears a confidence threshold and
+# survives the lock and referential-integrity guards. "not_explicit" would be a
+# finding it never made.
+#
+# WHY review_required IS False: the stage's verdict on this op is already
+# recorded -- it accepted it. Demanding review for every audit-touched row would
+# be a policy introduced as a side effect of instrumentation. The provisional
+# status is stated where it is a fact: in ``support`` and ``uncertainty``.
+#
+# NOTHING HERE MAY CHANGE A VERDICT. Attribution is computed read-only, the
+# records land after the op's own logging, and neither helper can raise into the
+# patch loop. On rollback ``working`` is replaced by a fresh copy of the source
+# payload, so a batch that changed nothing carries no records either.
+# ---------------------------------------------------------------------------
+
+_LINEAGE_UNCERTAINTY = (
+    "audit repair is a model-proposed change accepted on a confidence threshold; "
+    "this stage holds no resolvable source record for it"
+)
+
+_AUDIT_LINEAGE_ENTRIES: Dict[str, lineage.LineageEntry] = {
+    action: lineage.LineageEntry(
+        stage="audit_repair",
+        origin="audit_modified",
+        support="unsupported",
+        paper_explicit="not_evaluated",
+        reason=(
+            f"an accepted audit patch '{action}' operation produced this row's content; "
+            "it matched no row in this container immediately before the operation"
+        ),
+        review_required=False,
+        uncertainty=_LINEAGE_UNCERTAINTY,
+    )
+    for action in ("add", "replace", "remove")
+}
+
+
+def _row_fingerprint(row: Any) -> Optional[str]:
+    """A row's content as a comparable string, or None when it is not a row.
+
+    LINEAGE_KEY is excluded so a row recorded earlier in the same batch still
+    compares equal to its own pre-image. Including it would make every recorded
+    row look new to every later op in the batch and stack duplicate records.
+    """
+    if not isinstance(row, dict):
+        return None
+    content = {key: value for key, value in row.items() if key != lineage.LINEAGE_KEY}
+    try:
+        return json.dumps(content, sort_keys=True, ensure_ascii=False, default=str)
+    except (TypeError, ValueError):
+        return None
+
+
+def _row_container_paths(payload: Dict[str, Any], tokens: Sequence[str]) -> List[Tuple[str, ...]]:
+    """The row lists an op at ``tokens`` can rewrite.
+
+    Rows live in lists: entities.<bucket>, processes.<kind>, and the top-level
+    reactions[] that _iter_reactions() falls back to. Walking the pointer from
+    the root and stopping at the FIRST list is what makes the owner the ROW and
+    not one of its nested lists -- /processes/reactions/2/inputs/0 stops at
+    processes.reactions, so the reaction owns an edit to its own inputs, which is
+    the row a reader can attribute. A pointer that runs out on a dict (a
+    whole-subtree op such as "replace /entities") owns every list under it.
+    """
+    current: Any = payload
+    prefix: List[str] = []
+    for token in tokens:
+        if isinstance(current, list):
+            return [tuple(prefix)]
+        if not isinstance(current, dict) or token not in current:
+            return []
+        prefix.append(token)
+        current = current[token]
+    if isinstance(current, list):
+        return [tuple(prefix)]
+    if isinstance(current, dict):
+        return [tuple(prefix + [key]) for key, value in current.items() if isinstance(value, list)]
+    return []
+
+
+def _rows_at(payload: Any, path: Tuple[str, ...]) -> List[Any]:
+    current: Any = payload
+    for token in path:
+        current = _safe_dict(current).get(token)
+    return _safe_list(current)
+
+
+def _rows_written_by_op(
+    before_payload: Dict[str, Any],
+    after_payload: Dict[str, Any],
+    op: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """The rows IN ``after_payload`` whose content this op produced.
+
+    Read-only and total by construction: an audit trail entry is never a reason
+    to fail an op the policy already accepted, so anything unexpected here yields
+    "no attribution" rather than an exception into the patch loop.
+    """
+    try:
+        tokens = _decode_pointer(str(op.get("path", "")))
+        written: List[Dict[str, Any]] = []
+        for container in _row_container_paths(after_payload, tokens):
+            before_fingerprints = {
+                fingerprint
+                for fingerprint in (
+                    _row_fingerprint(row) for row in _rows_at(before_payload, container)
+                )
+                if fingerprint is not None
+            }
+            for row in _rows_at(after_payload, container):
+                fingerprint = _row_fingerprint(row)
+                if fingerprint is not None and fingerprint not in before_fingerprints:
+                    written.append(row)
+        return written
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("apply_patch_with_policy: lineage attribution skipped: %s", exc)
+        return []
+
+
+def _record_audit_lineage(rows: Sequence[Dict[str, Any]], action: str) -> None:
+    """Append this stage's attribution to each row it produced."""
+    entry = _AUDIT_LINEAGE_ENTRIES.get(action)
+    if entry is None:
+        return
+    for row in rows:
+        try:
+            lineage.record(row, entry)
+        except lineage.LineageError as exc:
+            logger.warning("apply_patch_with_policy: lineage not recorded: %s", exc)
+
+
 def committed_change_count(report: Any) -> int:
     """How many patch ops actually changed the payload the caller received.
 
@@ -1253,10 +1424,17 @@ def apply_patch_with_policy(
                 rejected.append(record)
                 rejected_log_records.append(_patch_log_record(stage, op, integrity_rejection))
                 continue
+            # Read-only, and computed against the pre-op payload while it is
+            # still addressable. The records themselves land last, after this
+            # op's own logging, so nothing that decides or reports on this op --
+            # including _locked_id_for_reaction below, which reads a value the
+            # payload may alias -- can observe them.
+            lineage_rows = _rows_written_by_op(working, next_working, op)
             working = next_working
             accepted.append(record)
             touched_lock_id = _locked_id_for_reaction(op.get("value"), lock_context) if lock_context is not None else ""
             applied_log_records.append(_patch_log_record(stage, op, "accepted", touched_lock_id))
+            _record_audit_lineage(lineage_rows, str(op.get("op", "")).lower())
         except Exception as exc:  # noqa: BLE001
             record["reason"] = f"Application failed: {exc}"
             rejected.append(record)

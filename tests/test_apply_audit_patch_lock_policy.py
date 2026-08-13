@@ -92,7 +92,7 @@ def test_apply_audit_patch_payload_returns_payload_and_report() -> None:
         ],
     )
 
-    assert result["payload"]["entities"]["compounds"][-1] == {"name": "AMP"}
+    assert result["payload"]["entities"]["compounds"][-1]["name"] == "AMP"
     assert result["report"]["summary"] == {"accepted_count": 1, "rejected_count": 0, "total": 1}
 
 
@@ -111,7 +111,7 @@ def test_locked_policy_accepts_missing_compound_addition() -> None:
     patched, report = apply_patch_with_policy(payload, patch, locked_manifest=_manifest(), stage="curator")
 
     assert report["summary"] == {"accepted_count": 1, "rejected_count": 0, "total": 1}
-    assert patched["entities"]["compounds"][-1] == {"name": "AMP"}
+    assert patched["entities"]["compounds"][-1]["name"] == "AMP"
     assert report["applied_patch_log"][0]["reason"] == "accepted"
     assert report["rejected_patch_log"] == []
 
