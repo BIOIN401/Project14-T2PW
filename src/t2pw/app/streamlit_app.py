@@ -2524,6 +2524,12 @@ def freeze_canonical_payload(
     annotations``, never evaluate the annotation and need no such class.
     """
 
+    # Function-local on purpose. The module-scope imports are another card's
+    # surface, and the AST harnesses exec this ``FunctionDef`` on its own with a
+    # hand-built globals dict -- so a module-level import would not be resolvable
+    # there, while this one is.
+    from t2pw.pipeline.canonical_hash import HASH_SCHEMA_VERSION
+
     canonical_export_payload: Dict[str, Any] = {}
     canonical_payload_hash = ""
     #: Which object the SBML build and ``final_mapped.json`` were made from.
@@ -2576,7 +2582,14 @@ def freeze_canonical_payload(
                 **final_stage3_gate_report,
             },
             phase=PHASE_FINAL_PRE_EXPORT,
+            # The payload as well as its digest: schema 2's two canonical
+            # projections are computed from the OBJECT, and this is the one
+            # place that holds the object the gate validated. ``payload_hash``
+            # still wins for ``payload_sha256``, so that binding is byte for
+            # byte what it was and every historical artifact still verifies.
+            payload=canonical_export_payload,
             payload_hash=canonical_payload_hash,
+            hash_schema=HASH_SCHEMA_VERSION,
         )
         canonical_json = tmp / "final.canonical.json"
         canonical_json.write_text(

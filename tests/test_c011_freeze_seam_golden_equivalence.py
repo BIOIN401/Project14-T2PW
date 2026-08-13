@@ -203,9 +203,49 @@ def _fixture_bytes() -> bytes:
     return FIXTURE.read_bytes().replace(b"\r\n", b"\n")
 
 
+#: C-030's DELIBERATE BASELINE MOVE (merge rule 4), stated here instead of being
+#: absorbed by a rewritten fixture. Wiring hash schema 2 through the seam's one
+#: ``stamp_report`` call adds these three keys to ``final_stage3_gate_report`` --
+#: and does nothing else: no key removed, no existing key's value changed,
+#: ``payload_sha256`` byte for byte what it was, and the four quarantine-refusal
+#: legs write no report at all, so they stay untouched. The fixture therefore
+#: remains the BEFORE document it is named for and still regenerates from the
+#: BASE blob below, while a FOURTH key, a changed value, a moved
+#: ``payload_sha256`` or a refusal leg that grew a report each fail right here.
+_C030_KEYS = ("canonical_graph_sha256", "canonical_payload_sha256", "hash_schema_version")
+_C030_LEGS = 35
+
+
+def _with_c030_hash_keys(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    """``before`` plus exactly C-030's delta, and only where the seam wrote one."""
+    document = copy.deepcopy(before)
+    moved = 0
+    for name, leg in document["legs"].items():
+        report = leg["final_stage3_gate_report"]
+        produced = after["legs"][name]["final_stage3_gate_report"]
+        if not report:
+            assert not produced, f"{name}: a refusal leg wrote a gate report"
+            continue
+        assert set(produced) - set(report) == set(_C030_KEYS), name
+        # Not merely "three new keys": schema 2's payload projection must agree
+        # with the digest the seam already published, and the graph projection
+        # must be a different digest -- one hash renamed twice would pass a
+        # key-name check and fail these.
+        assert produced["hash_schema_version"] == 2, name
+        assert produced["canonical_payload_sha256"] == report["payload_sha256"], name
+        assert produced["canonical_graph_sha256"] != report["payload_sha256"], name
+        report.update({key: produced[key] for key in _C030_KEYS})
+        moved += 1
+    assert moved == _C030_LEGS, moved
+    return document
+
+
 def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> None:
     after = _document(None)
-    assert _serialize(after) == _fixture_bytes()
+    before = json.loads(_fixture_bytes())
+    assert _serialize(before) == _fixture_bytes(), "the fixture is no longer its own bytes"
+    expected = _serialize(_with_c030_hash_keys(before, after))
+    assert _serialize(after) == expected
     declared = [e["path"] for e in json.loads(MANIFEST.read_text(encoding="utf-8"))["legs"]]
     assert sorted(after["legs"]) == sorted(declared) == sorted(set(declared))
     assert len(after["legs"]) == 39
@@ -217,7 +257,7 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
     for field in sorted(after["legs"][leg]):
         perturbed = copy.deepcopy(after)
         perturbed["legs"][leg][field] = "PERTURBED"
-        assert _serialize(perturbed) != _fixture_bytes(), field
+        assert _serialize(perturbed) != expected, field
 
 
 def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
