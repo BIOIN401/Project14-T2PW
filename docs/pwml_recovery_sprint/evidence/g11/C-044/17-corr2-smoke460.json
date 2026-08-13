@@ -1,0 +1,141 @@
+{
+  "label": "corr2-smoke460",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/33b2bddf-55d6-446d-ab2a-55da6d1ef804/scratchpad/run_pytest.py",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c044/smoke5",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p26-lineage-mapping",
+  "started_at": "2026-08-13T20:52:07+00:00",
+  "finished_at": "2026-08-13T20:52:35+00:00",
+  "duration_seconds": 27.474215299997013,
+  "timeout_seconds": 1200.0,
+  "root_pid": 578356,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 578056,
+      "name": "python.exe",
+      "ppid": 578356
+    },
+    {
+      "pid": 580676,
+      "name": "python.exe",
+      "ppid": 578056
+    },
+    {
+      "pid": 580696,
+      "name": "python.exe",
+      "ppid": 580676
+    },
+    {
+      "pid": 580716,
+      "name": "python.exe",
+      "ppid": 578056
+    },
+    {
+      "pid": 580740,
+      "name": "python.exe",
+      "ppid": 580716
+    },
+    {
+      "pid": 581064,
+      "name": "python.exe",
+      "ppid": 578056
+    },
+    {
+      "pid": 581084,
+      "name": "python.exe",
+      "ppid": 581064
+    },
+    {
+      "pid": 581120,
+      "name": "python.exe",
+      "ppid": 578056
+    },
+    {
+      "pid": 581140,
+      "name": "python.exe",
+      "ppid": 581120
+    }
+  ],
+  "descendants_terminated": [
+    578056,
+    580676,
+    580696,
+    580716,
+    580740,
+    581064,
+    581084,
+    581120,
+    581140
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 496716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 497892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580528,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-044/17-corr2-smoke460.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p26-lineage-mapping\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p26-lineage-mapping",
+    "repo_head": "c0dd92349b4c263a371fc18d409451bf1afc82c1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
