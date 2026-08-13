@@ -59,6 +59,14 @@ from t2pw.pipeline.entity_identity import (
     has_protein_external_identity,
     is_pathbank_unknown_protein,
 )
+from t2pw.pipeline.lineage import (
+    LINEAGE_KEY,
+    LineageEntry,
+    LineageError,
+    LineageSource,
+    read as read_lineage,
+    record as record_lineage,
+)
 from t2pw.pipeline.process_normalizer import BIOCHEMICAL_ALIAS_MAP
 from t2pw.pipeline.stage_contracts import validate_post_extraction
 from t2pw.rag.admission import (
@@ -81,6 +89,7 @@ from t2pw.rag.admission import (
     AdmissionPolicy,
     AdmissionReport,
     RagReactionCandidate,
+    admission_lineage_entry,
     admit_candidates,
     compare_organism,
     compare_requested_pathway,
@@ -265,6 +274,15 @@ class _Reaction:
     #: carried down from the chunk. Never the requested values.
     observed_organisms: List[str] = field(default_factory=list)
     observed_pathways: List[str] = field(default_factory=list)
+    #: Serialized :class:`~t2pw.pipeline.lineage.LineageEntry` records this
+    #: reaction carries into row emission (C-035): whatever a seed row already
+    #: held, plus the admission gate's verdict for a RAG import. Attribution is
+    #: POSITIONAL -- it belongs to the row this reaction becomes -- and
+    #: :func:`_reaction_row` builds that row from scratch, so without a carrier
+    #: here an inbound attribution would be silently erased at every synthesis.
+    #: A lineage is append-only, which is why :func:`_merge_into` unions this
+    #: rather than letting the surviving row keep only its own.
+    lineage: List[Dict[str, Any]] = field(default_factory=list)
 
     # --- derived helpers -------------------------------------------------
     def input_names(self) -> List[str]:
@@ -893,6 +911,13 @@ def _seed_reactions(
                 # in the "absent" case the core filter treats as KEEP.
                 scope_membership=scope.strip() if isinstance(scope, str) else "",
                 organism=_text(prov[0].get("organism")) if prov else "",
+                # Carried, never authored. Synthesis does not know how this seed
+                # row came to exist -- in research mode the "seed" of round N+1 is
+                # round N's payload, so a row here may already have been attributed
+                # by paper extraction, gap resolution or an audit. Stamping it
+                # ``paper_stated`` would be inventing an origin; dropping it would
+                # erase another stage's. It is re-emitted verbatim.
+                lineage=_row_lineage(row),
             )
         )
     return reactions, omitted
@@ -1019,6 +1044,15 @@ def _merge_into(target: _Reaction, other: _Reaction) -> None:
         list(target.gap_ids or ([target.gap_id] if target.gap_id else []))
         + list(other.gap_ids or ([other.gap_id] if other.gap_id else []))
     )
+    # Lineage UNIONS, for the same reason ``gap_ids`` does and the opposite reason
+    # to the fill-in fields above: it is append-only, so the surviving row may not
+    # keep only its own attribution. Two candidates admitted against two different
+    # gaps merge into one row that genuinely was admitted for both, and dropping
+    # the folded-in entry would make the second admission unattributable. Deduped
+    # by VALUE so folding an identical record twice does not restate it.
+    for entry in other.lineage:
+        if entry not in target.lineage:
+            target.lineage.append(entry)
 
 
 def _resolve_reactions(
@@ -1215,6 +1249,26 @@ def _build_entities(
         return name.casefold() if resolver is None else resolver(name)
 
     enzyme_names = {_entity_key(e) for rxn in reactions for e in rxn.enzymes}
+    # Entities this stage did NOT introduce (C-035): anything the seed payload
+    # already declared as an entity, plus anything a SEED reaction references.
+    # ``_build_entities`` runs over seed and RAG reactions alike, so a blanket
+    # ``rag_literature`` stamp would relabel the seed pathway's own chemistry as a
+    # cross-paper import -- which is inventing an origin. An entity in this set
+    # gets no entry from here; whichever stage did introduce it owns that. The
+    # match is name-keyed and can only ever SUPPRESS a record, so any imprecision
+    # errs toward recording nothing, which is the safe direction.
+    already_present = {
+        _entity_key(canonical_name(erow["name"]))
+        for erows in seed_entities.values()
+        for erow in _safe_list(erows)
+        if isinstance(erow, dict) and _text(erow.get("name"))
+    }
+    already_present |= {
+        _entity_key(name)
+        for rxn in reactions
+        if rxn.origin != "rag"
+        for name in rxn.participant_names() + list(rxn.enzymes)
+    }
     prov_by_name: Dict[str, List[Dict[str, Any]]] = {}
     display_by_name: Dict[str, str] = {}
     scores_by_name: Dict[str, List[float]] = {}
@@ -1257,6 +1311,23 @@ def _build_entities(
             continue
         row = {"name": display}
         _attach_provenance(row, prov, [], scores_by_name.get(key, []))
+        if prov and key not in already_present:
+            # ``derived``, not ``direct``: the passage states a REACTION, and this
+            # row is the deterministic projection of that reaction onto its
+            # participants. The weaker level is the accurate one. A cofactor row
+            # that reached here with no provenance at all gets nothing -- there is
+            # no record to name, and a sourceless ``rag_literature`` claim is
+            # exactly the assertion this stage is not entitled to make.
+            _write_lineage(
+                row,
+                _retrieval_entry(
+                    prov[0],
+                    f"{display!r} entered the payload only through RAG-imported "
+                    "reaction(s): it appears in no seed reaction and in no seed "
+                    "entity row",
+                    support="derived",
+                ),
+            )
         if is_protein and seed_complex is not None:
             # Keep the complex a complex, with the identity fields that make it
             # one. ``components`` is what carries the Unknown-protein fallback;
@@ -1369,7 +1440,102 @@ _ALLOWED_ROW_KEYS = frozenset(
         "scope_membership",
     }
     | set(RAG_ADDITIVE_KEYS)
+    # C-035. Widening the LITERAL set, never ``RAG_ADDITIVE_KEYS``: that tuple is
+    # an asserted contract pinned verbatim by ``tests/test_rag_foundation.py``, and
+    # lineage is not a RAG provenance carrier -- it is the cross-stage attribution
+    # ``rag/graph_delta.py`` already reads and already classifies as NON_BIOLOGICAL.
+    # This widens what a row may CARRY, not what any stage emits: every write below
+    # is conditional on evidence the stage actually holds.
+    | {LINEAGE_KEY}
 )
+
+
+# ---------------------------------------------------------------------------
+# Lineage (C-035) -- ATTRIBUTION ONLY.
+#
+# Emission is conditional on what this stage genuinely knows, never on what would
+# make a row look better attributed. A row this stage cannot attribute honestly
+# gets NO entry: inventing an origin is inventing biology, and a row asserting
+# provenance it does not have is worse than a row with none.
+#
+# Every write happens AFTER ``_attach_provenance`` has run on the row. That is not
+# stylistic -- ``_attach_provenance`` ends in ``assert set(row) <=
+# _ALLOWED_ROW_KEYS`` and also early-returns when a row has no provenance, so a
+# write placed before it would fire on exactly the rows that have evidence and stay
+# silent on the ones that do not.
+# ---------------------------------------------------------------------------
+def _row_lineage(row: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The attribution ``row`` already carries; ``[]`` when it carries none.
+
+    A malformed lineage is DROPPED, never raised. Synthesis is not the lineage
+    validator, and a payload that synthesized yesterday must not start crashing
+    because some earlier stage wrote a bad record -- that would be this instrument
+    changing what the pipeline produces. ``rag/graph_delta.py`` is the seam that
+    REPORTS a malformed lineage as a violation, which is where that belongs.
+    """
+    try:
+        return read_lineage(row).as_list()
+    except LineageError:
+        return []
+
+
+def _lineage_source(prov: Dict[str, Any]) -> Optional[LineageSource]:
+    """A POINTER to the paper/passage ``prov`` names, or ``None`` if it names none.
+
+    ``None`` is the honest answer for a provenance pointer with neither an id nor a
+    URI: a ``rag_literature`` origin has to identify its supporting record, and an
+    anonymous source would let the entry claim backing it cannot produce.
+    """
+    source_id = _text(prov.get("source_id"))
+    uri = _text(prov.get("source_uri"))
+    if not (source_id or uri):
+        return None
+    return LineageSource(
+        source_id=source_id,
+        source_type=_text(prov.get("source_type")) or "paper",
+        uri=uri,
+        locator=_text(prov.get("chunk_id")) or _text(prov.get("section")),
+    )
+
+
+def _retrieval_entry(
+    prov: Dict[str, Any], reason: str, *, support: str
+) -> Optional[LineageEntry]:
+    """A ``rag_retrieval`` entry backed by ``prov``, or ``None`` when unciteable.
+
+    ``paper_explicit`` is ``not_evaluated``: this stage transcribes what a RETRIEVED
+    passage states and never compares it against the supplied paper, so it may not
+    answer whether that paper stated it -- and ``not_evaluated`` is never
+    ``not_explicit``. ``review_required`` is ``False``: transcription found nothing
+    wrong, and a stage that flagged every row it touched would make the flag
+    meaningless. Only the PRIMARY provenance pointer is named, matching the primary
+    ``rag_provenance`` pointer ``_attach_provenance`` writes -- the corroborating
+    papers are already on the row in ``source_papers`` / ``source_refs``, and this
+    is a pointer to a record, not a second copy of it.
+    """
+    source = _lineage_source(prov)
+    if source is None:
+        return None
+    return LineageEntry(
+        stage="rag_retrieval",
+        origin="rag_literature",
+        support=support,
+        paper_explicit="not_evaluated",
+        reason=reason,
+        review_required=False,
+        sources=(source,),
+    )
+
+
+def _write_lineage(row: Dict[str, Any], *entries: Any) -> None:
+    """Append every non-``None`` entry to ``row``'s lineage, in place.
+
+    Goes through :func:`t2pw.pipeline.lineage.record`, which re-emits every entry
+    already present, so this can only ever ADD to an attribution.
+    """
+    for entry in entries:
+        if entry is not None:
+            record_lineage(row, entry)
 
 
 def _confidence(scores: List[float], prov_count: int) -> float:
@@ -1477,6 +1643,24 @@ def _reaction_row(reaction: _Reaction) -> Dict[str, Any]:
         gap_id=reaction.gap_id,
         gap_ids=reaction.gap_ids,
     )
+    # Attribution, AFTER ``_attach_provenance`` (see the lineage section). A RAG
+    # import gets a ``rag_retrieval`` entry; a SEED reaction gets none from this
+    # stage, because synthesis did not introduce it and does not know what did --
+    # it only re-emits what the seed row already carried. ``support`` is ``direct``
+    # when a span states the claim: the admission gate refuses an empty span, so an
+    # admitted row always has one, but it is checked rather than assumed.
+    retrieval = None
+    if reaction.origin == "rag" and reaction.provenance:
+        gaps = _dedupe_strs(
+            list(reaction.gap_ids or []) + [reaction.gap_id]
+        )
+        retrieval = _retrieval_entry(
+            reaction.provenance[0],
+            "transcribed from a passage retrieved for gap(s) "
+            + (", ".join(gaps) if gaps else "(none recorded)"),
+            support="direct" if _text(reaction.evidence_span) else "indirect",
+        )
+    _write_lineage(row, *reaction.lineage, retrieval)
     # Reaction rows legitimately carry inputs/outputs/enzymes on top of the
     # allowed additive/core keys.
     return row
@@ -1744,6 +1928,15 @@ def synthesize_with_report(
         # reversible.
         reaction.scope_membership = candidate.scope_membership
         reaction.reversible = bool(candidate.reversible)
+        # The gate's ATTRIBUTION travels with it too, and this is the only seam
+        # where it can: the candidate holds the verdict (which gap it was admitted
+        # against, the reasons, the hop, the organism/pathway comparisons) and the
+        # reaction is what becomes the payload row. Reconstructing this later from
+        # the row's ``scope_membership`` alone would lose every one of those facts.
+        # Reads the verdict, never makes one.
+        entry = admission_lineage_entry(candidate)
+        if entry is not None:
+            reaction.lineage.append(entry.as_dict())
         evidence_rxns.append(reaction)
 
     all_rxns = seed_rxns + evidence_rxns

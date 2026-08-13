@@ -51,6 +51,11 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
+# Module level, unlike the heavy siblings lazy-imported inside functions: lineage is a
+# LEAF (it imports nothing from ``t2pw``), so it adds no cost and cannot cycle --
+# ``rag.graph_delta`` already imports it beside ``rag.admission`` the same way.
+from t2pw.pipeline.lineage import LineageEntry, LineageSource
+
 __all__ = [
     "RagReactionCandidate",
     "AdmissionPolicy",
@@ -63,6 +68,7 @@ __all__ = [
     "screen_typed_resolution",
     "missing_reaction_side",
     "admit_candidates",
+    "admission_lineage_entry",
     "policy_from_config",
     "name_pattern",
     "states_name",
@@ -3028,6 +3034,128 @@ def _reject(candidate: RagReactionCandidate, reasons: Sequence[str]) -> None:
     candidate.scope_membership = SCOPE_REJECTED
     candidate.reasons = list(reasons)
     candidate.chain = {}
+
+
+# ---------------------------------------------------------------------------
+# Lineage (C-035) -- ATTRIBUTION ONLY.
+#
+# Nothing below participates in the verdict. It is a pure read of a decision
+# ``_accept`` / ``_reject`` already made, so recording it cannot change what is
+# admitted, rejected or exported. The gate keeps its decision surface
+# (``claim_identity`` / ``merge_key`` / ``AdmissionPolicy`` / ``_gap_type_verdict``)
+# exactly as it was.
+# ---------------------------------------------------------------------------
+def admission_lineage_entry(
+    candidate: RagReactionCandidate,
+) -> Optional[LineageEntry]:
+    """The gate's attribution for a candidate it ADMITTED -- or ``None``.
+
+    ``None`` for anything the gate did not accept, and for an accepted claim whose
+    paper cannot be named. A :data:`~t2pw.pipeline.lineage.SOURCED_ORIGINS` origin
+    must identify its supporting record, and a row asserting provenance it does not
+    have is worse than a row with none: an unciteable claim gets no entry rather
+    than an anonymous one.
+
+    Every field is read off the verdict, never inferred:
+
+    ``origin`` is ``rag_literature`` because the claim came from a retrieved
+    paper -- the gate admitted content, it did not author any. ``support`` is
+    ``direct``: a candidate only reaches ``accepted`` by passing
+    :func:`_screen_candidate` with zero reasons, and that runs
+    :func:`validate_evidence_span`, which refuses an empty span outright and
+    otherwise requires ONE bounded span to state the whole claim -- substrates,
+    products, direction and catalysts. So a named passage does state this fact,
+    which is what ``direct`` means. The span is checked anyway rather than assumed,
+    because "the caller only ever passes an accepted candidate" is a caller
+    contract, not a property of this function.
+
+    ``paper_explicit`` is ``not_evaluated``, and that is the point of the record.
+    This gate compares a claim to the REQUESTED pathway and organism; it never asks
+    whether the SUPPLIED paper stated it, so it may not answer that question.
+    ``not_evaluated`` is never ``not_explicit``. R-003 found a RAG-imported row
+    without a carrier to be indistinguishable between "paper-explicit" and
+    "predates instrumentation"; an entry that says which stage imported it, and
+    says in the same breath that paper-explicitness was not evaluated here,
+    separates the two.
+
+    ``reason`` names **which gap the claim was admitted against**, plus the
+    complete set it was retrieved for. R-004 established the verdict is keyed on
+    ``(gap_id, claim_identity())`` while at least one consumer compares on a key
+    that omits ``gap_id``, producing false "reintroduction" findings; a stored
+    per-row record of the gap is what makes such a dispute decidable rather than
+    arguable.
+
+    ``review_required`` is ``False``. The gate's verdict is *admit*, and a lineage
+    that contradicted it would be this record changing what ships -- exactly what
+    an attribution writer may not do. Real nuance the gate observed (a non-exact
+    organism match, a chained rather than direct admission) goes to ``uncertainty``,
+    which is documentation at every support level and gates nothing.
+    """
+    if candidate.status != STATUS_ACCEPTED:
+        return None
+    source = _admission_source(candidate)
+    if source is None:
+        return None
+
+    primary = _text(candidate.gap_id)
+    others = [g for g in candidate.gap_ids if _text(g) and _text(g) != primary]
+    verdict = _text(candidate.reasons[0]) if candidate.reasons else ""
+    reason = f"admission gate accepted this claim against gap {primary!r}"
+    if others:
+        reason += f" (also retrieved for {', '.join(sorted(others))})"
+    if verdict:
+        reason += f"; {verdict}"
+
+    notes: List[str] = []
+    if candidate.organism_match != ORGANISM_MATCH:
+        notes.append(
+            f"organism match is {candidate.organism_match!r} against requested "
+            f"{candidate.requested_organism!r}"
+        )
+    hop = int(candidate.chain.get("hop", 0) or 0)
+    if hop:
+        notes.append(
+            f"admitted at chain hop {hop}, not directly on the gap's own target"
+        )
+    if candidate.requested_pathway_match != PATHWAY_MATCH:
+        notes.append(
+            f"requested-pathway match is {candidate.requested_pathway_match!r}"
+        )
+
+    return LineageEntry(
+        stage="rag_admission",
+        origin="rag_literature",
+        support="direct" if _text(candidate.evidence_span) else "indirect",
+        paper_explicit="not_evaluated",
+        reason=reason,
+        review_required=False,
+        uncertainty="; ".join(notes),
+        sources=(source,),
+    )
+
+
+def _admission_source(candidate: RagReactionCandidate) -> Optional[LineageSource]:
+    """A POINTER to the paper and passage backing ``candidate``, or ``None``.
+
+    A pointer, never a copy: the passage itself already rides in the candidate's
+    ``evidence`` / ``evidence_span`` and on the emitted row, and this module's size
+    history is why that is not duplicated here. ``source_id`` is checked only for
+    non-emptiness -- accepting an identifier because its FORMAT looks right is a
+    standing invariant violation, so no shape test is applied to it.
+    """
+    source_id = candidate.source_id()
+    uri = _text(candidate.evidence.get("source_uri")) or _text(
+        candidate.source_paper.get("uri")
+    )
+    if not (source_id or uri):
+        return None
+    return LineageSource(
+        source_id=source_id,
+        source_type=_text(candidate.source_paper.get("source_type")) or "paper",
+        uri=uri,
+        locator=_text(candidate.evidence.get("chunk_id"))
+        or _text(candidate.evidence.get("section")),
+    )
 
 
 def _reason_code(reason: str) -> str:
