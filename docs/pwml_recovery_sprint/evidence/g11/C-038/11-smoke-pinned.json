@@ -1,0 +1,135 @@
+{
+  "label": "smoke-pinned",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "\nimport os, sys\nimport t2pw, t2pw.pipeline.pipeline as pp\nprint('PYTHONPATH           :', os.environ.get('PYTHONPATH'))\nprint('RESOLVED pipeline.py :', pp.__file__)\nprint('HAS _ROW_CARRIER_KEYS:', hasattr(pp,'_ROW_CARRIER_KEYS'))\nsys.stdout.flush()\nimport pytest\nfiles=['tests/test_reference_repair.py','tests/test_strict_quarantine.py','tests/test_strict_quarantine_contract_alignment.py','tests/test_strict_quarantine_locks_and_scope.py','tests/test_strict_quarantine_versioning.py','tests/test_empty_extraction_payload.py','tests/test_bench_goldset_and_semantic.py','tests/test_bench_acquisition_and_artifacts.py','tests/test_bench_controls.py','tests/test_completeness_audit.py','tests/test_batch_driver.py','tests/test_stage3_gate_report_lifecycle.py','tests/test_rag_admission_production_path.py','tests/test_rag_gap_admission.py','tests/test_rag_triage_orchestration.py','tests/test_rag_provenance_gates.py','tests/test_pipeline_reaction_rag_provenance.py','tests/test_research_mode_orchestration.py','tests/test_map_ids_name_gate.py','tests/test_db_candidate_species_evidence.py']\nraise SystemExit(pytest.main(['-q','--basetemp=C:/t2pwtmp/c038/ps']+files))\n"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier",
+  "started_at": "2026-08-13T02:52:54+00:00",
+  "finished_at": "2026-08-13T02:53:18+00:00",
+  "duration_seconds": 23.96554820000165,
+  "timeout_seconds": 900.0,
+  "root_pid": 305668,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 305240,
+      "name": "python.exe",
+      "ppid": 305668
+    },
+    {
+      "pid": 290656,
+      "name": "python.exe",
+      "ppid": 305240
+    },
+    {
+      "pid": 305672,
+      "name": "python.exe",
+      "ppid": 290656
+    },
+    {
+      "pid": 305724,
+      "name": "python.exe",
+      "ppid": 305240
+    },
+    {
+      "pid": 305728,
+      "name": "python.exe",
+      "ppid": 305724
+    },
+    {
+      "pid": 301024,
+      "name": "python.exe",
+      "ppid": 305240
+    },
+    {
+      "pid": 302376,
+      "name": "python.exe",
+      "ppid": 301024
+    },
+    {
+      "pid": 305568,
+      "name": "python.exe",
+      "ppid": 305616
+    },
+    {
+      "pid": 305616,
+      "name": "python.exe",
+      "ppid": 305240
+    }
+  ],
+  "descendants_terminated": [
+    290656,
+    301024,
+    302376,
+    305240,
+    305568,
+    305616,
+    305672,
+    305724,
+    305728
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 295408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 298668,
+      "name": "python.exe"
+    },
+    {
+      "pid": 300660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 301332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 301600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 305536,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-038\\11-smoke-pinned.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier",
+    "repo_head": "334eb18591b2954cf142d60616e3032b48b285fb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}

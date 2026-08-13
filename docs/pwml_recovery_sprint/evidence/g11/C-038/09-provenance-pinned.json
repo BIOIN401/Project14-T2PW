@@ -1,0 +1,87 @@
+{
+  "label": "provenance-pinned",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "\nimport os, sys\nimport t2pw, t2pw.pipeline.pipeline as pp\nprint('PYTHONPATH           :', os.environ.get('PYTHONPATH'))\nprint('RESOLVED pipeline.py :', pp.__file__)\nprint('HAS _ROW_CARRIER_KEYS:', hasattr(pp,'_ROW_CARRIER_KEYS'))\nsys.stdout.flush()\nimport pytest\nraise SystemExit(pytest.main(['-q','--basetemp=C:/t2pwtmp/c038/pp']+'''tests/test_pipeline_reaction_rag_provenance.py'''.split()))\n"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier",
+  "started_at": "2026-08-13T02:52:35+00:00",
+  "finished_at": "2026-08-13T02:52:36+00:00",
+  "duration_seconds": 1.2190196000010474,
+  "timeout_seconds": 900.0,
+  "root_pid": 304928,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 305016,
+      "name": "python.exe",
+      "ppid": 304928
+    }
+  ],
+  "descendants_terminated": [
+    305016
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 295408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 298668,
+      "name": "python.exe"
+    },
+    {
+      "pid": 300660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 301588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 301600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 301912,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304680,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-038\\09-provenance-pinned.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c038-lineage-carrier",
+    "repo_head": "334eb18591b2954cf142d60616e3032b48b285fb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
