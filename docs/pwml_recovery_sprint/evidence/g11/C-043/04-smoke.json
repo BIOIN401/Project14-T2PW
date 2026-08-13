@@ -1,0 +1,189 @@
+{
+  "label": "smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c043/f4",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c043-rag-controller",
+  "started_at": "2026-08-13T02:41:06+00:00",
+  "finished_at": "2026-08-13T02:41:34+00:00",
+  "duration_seconds": 27.83534750000399,
+  "timeout_seconds": 900.0,
+  "root_pid": 291212,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 291032,
+      "name": "python.exe",
+      "ppid": 291212
+    },
+    {
+      "pid": 283304,
+      "name": "python.exe",
+      "ppid": 290568
+    },
+    {
+      "pid": 290568,
+      "name": "python.exe",
+      "ppid": 291032
+    },
+    {
+      "pid": 277520,
+      "name": "python.exe",
+      "ppid": 291460
+    },
+    {
+      "pid": 291460,
+      "name": "python.exe",
+      "ppid": 291032
+    },
+    {
+      "pid": 292020,
+      "name": "python.exe",
+      "ppid": 291032
+    },
+    {
+      "pid": 292040,
+      "name": "python.exe",
+      "ppid": 292020
+    },
+    {
+      "pid": 292168,
+      "name": "python.exe",
+      "ppid": 291032
+    },
+    {
+      "pid": 292188,
+      "name": "python.exe",
+      "ppid": 292168
+    }
+  ],
+  "descendants_terminated": [
+    277520,
+    283304,
+    290568,
+    291032,
+    291460,
+    292020,
+    292040,
+    292168,
+    292188
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 216072,
+      "name": "python.exe"
+    },
+    {
+      "pid": 217048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 279708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 280424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 280716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 284180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 284712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 284916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 285680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 290644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 290760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 290972,
+      "name": "python.exe"
+    },
+    {
+      "pid": 291140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 291252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 291660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 291784,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-043/04-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c043-rag-controller\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c043-rag-controller",
+    "repo_head": "e4eeef429468ef42cfdfd12295ea86447f0c674f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
