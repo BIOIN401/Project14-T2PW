@@ -630,27 +630,64 @@ def test_the_stage_zero_context_reaches_the_coverage_artifact_unchanged() -> Non
 
 @pytest.mark.usefixtures("offline_mapping")
 def test_a_run_with_no_viable_core_is_refused_at_the_boundary() -> None:
-    """An unrelated survivor must not carry the run past the boundary."""
+    """An unrelated survivor must not carry the run to SUCCESS.
+
+    **MOVED BY C-041a (D-002 / PRODUCT_CONTRACT 7, both LOCKED).** The test name
+    is a pre-D-002 misnomer and is kept only so the Chunk D node id does not
+    move: what ``_payload_with_no_viable_core`` lacks is a viable *requested*
+    core, not a viable core. Measured on the payload rather than read off the
+    name -- ``citrate isomerisation`` survives as ``auxiliary_accepted``, the
+    reduced graph clears the strict Stage 3 gates AND the required-PWML
+    contract, and every strict invariant is clean. That is precisely D-002's
+    "biologically correct, internally connected fragment representable without
+    guessing", so the outcome is ``review_required`` PWML.
+
+    What the test was actually protecting is unchanged and is now asserted
+    directly instead of through a boolean: the unrelated survivor still cannot
+    produce success. ``strict_acceptance_eligible`` is False, so it can never
+    enter the strict denominator, and the shortfall is still named. At the base
+    SHA this was ``ok is False`` and the run ended with no PWML at all, which is
+    the "valid pathway core suppressed" that PRODUCT_CONTRACT 1 forbids.
+    """
 
     at = _run_post_pipeline(_payload_with_no_viable_core())
 
     assert _app_exceptions(at) == []
     report = at.session_state["quarantine_report"]
-    assert report["ok"] is False
+    assert report["ok"] is True
+    assert report["release"]["status"] == "review_required"
+    assert report["release"]["strict_acceptance_eligible"] is False
+    # The shortfall is still raised and still named -- it moved out of the
+    # blocking list, it did not disappear.
+    assert report["refusal_reasons"] == []
     assert any(
         reason.startswith("minimum_core:core_process_count_below_minimum")
-        for reason in report["refusal_reasons"]
+        for reason in report["review_reasons"]
     )
+    # And the surviving fragment really is the unrelated one: nothing was
+    # admitted to make coverage pass.
+    assert report["coverage"]["core_accepted_processes"] == 0
+    assert report["coverage"]["surviving_processes"] == 1
 
-    # Refinement review must NOT open, and the export path must stay closed.
-    assert at.session_state["refinement_gate_errors"]
-    assert at.session_state["refinement_working_json"] is None
-    assert any("Quarantine could not produce a viable" in str(e.value) for e in at.error)
+    # Refinement review now OPENS on the fragment, because there is a fragment to
+    # review. That is the behaviour change: the reviewer gets the graph plus the
+    # flag, instead of nothing.
+    assert not at.session_state["refinement_gate_errors"]
+    assert at.session_state["refinement_working_json"] is not None
+    assert not any("Quarantine could not produce a viable" in str(e.value) for e in at.error)
 
 
 @pytest.mark.usefixtures("offline_mapping")
 def test_the_refusal_still_writes_every_artifact() -> None:
-    """A refusal is a decision, and decisions are recorded."""
+    """A decision is recorded, whatever it decided.
+
+    **MOVED BY C-041a (D-002, LOCKED).** The claim -- the artifact set is written
+    and carries the coverage verdict -- is untouched, and every coverage
+    assertion below is byte for byte what it was. Only ``ok`` moved, because this
+    payload's shortfall is a shortfall in SIZE against the request and no longer
+    blocks: see ``test_a_run_with_no_viable_core_is_refused_at_the_boundary``
+    for the payload-level proof. Base SHA: ``ok is False``.
+    """
 
     _run_post_pipeline(_payload_with_no_viable_core())
 
@@ -658,7 +695,10 @@ def test_the_refusal_still_writes_every_artifact() -> None:
     assert coverage["minimum_core_satisfied"] is False
     assert coverage["core_accepted_processes"] == 0
     report = _artifact(QUARANTINE_REPORT_FILENAME)
-    assert report["ok"] is False
+    assert report["ok"] is True
+    assert report["release"]["status"] == "review_required"
+    assert report["release"]["strict_acceptance_eligible"] is False
+    assert any(r.startswith("minimum_core:") for r in report["review_reasons"])
     assert {row["name"] for row in report["quarantined"]} == {
         "gamma-glutamylcysteine synthesis",
         "glutathione synthesis",
@@ -871,13 +911,29 @@ def test_a_refinement_that_deletes_the_core_is_not_authorized_by_the_stale_decis
 
     result = _generate_pwml(at)
 
-    assert result["ok"] is False
+    # **MOVED BY C-041a (D-002, LOCKED) -- and the invariant under test did NOT
+    # move.** What this test protects is that the STORED decision does not
+    # authorize a payload it never judged, and that is carried entirely by
+    # ``quarantine_reused is False`` plus the ``admitted_payload_hash``
+    # difference below. Both are byte for byte what they were: the stale report
+    # is still refused as an authorization and the payload is still re-judged
+    # from scratch.
+    #
+    # What moved is the VERDICT of that fresh re-judgement. The refined payload
+    # is one surviving ``citrate isomerisation`` that clears the Stage 3 gates
+    # and the required-PWML contract with every strict invariant clean, so
+    # D-002 makes it review_required rather than a refusal. Base SHA: ``ok is
+    # False``. Coverage relief cannot reach the authorization question at all --
+    # that decision is taken before any coverage verdict exists.
     assert result["quarantine_reused"] is False
-    assert any(
-        reason.startswith("minimum_core:") for reason in result.get("refusal_reasons", [])
-    )
-    # A new decision was made, about the payload that actually reached the export.
     assert result["quarantine_report"]["admitted_payload_hash"] != admitted_hash
+    assert result["ok"] is True
+    assert result["quarantine_report"]["release"]["status"] == "review_required"
+    assert result["quarantine_report"]["release"]["strict_acceptance_eligible"] is False
+    assert any(
+        reason.startswith("minimum_core:")
+        for reason in result["quarantine_report"]["review_reasons"]
+    )
 
 
 @pytest.mark.usefixtures("offline_mapping")
@@ -1200,11 +1256,19 @@ def test_a_second_run_that_reaches_the_boundary_decides_for_itself() -> None:
     _second_post_pipeline_run(at, _payload_with_no_viable_core())
     second_report = at.session_state["quarantine_report"]
 
+    # **MOVED BY C-041a (D-002, LOCKED) -- and the invariant under test did NOT
+    # move.** "The second run decides for itself" is carried by the two hash
+    # assertions, which are byte for byte what they were: the second run judged
+    # a different payload and the on-disk artifact is that second decision, not
+    # the first. Only the second decision's VERDICT moved, for the same
+    # payload-level reason as above. Base SHA: ``ok is False``.
     assert second_report["admitted_payload_hash"] != first_hash
-    assert second_report["ok"] is False
     assert _artifact(QUARANTINE_REPORT_FILENAME)["admitted_payload_hash"] == (
         second_report["admitted_payload_hash"]
     )
+    assert second_report["ok"] is True
+    assert second_report["release"]["status"] == "review_required"
+    assert second_report["release"]["strict_acceptance_eligible"] is False
 
 
 def test_the_reset_is_wired_into_the_start_of_a_pipeline_run() -> None:

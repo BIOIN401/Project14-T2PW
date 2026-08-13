@@ -1,0 +1,360 @@
+{
+  "base": {
+    "cases": {
+      "closure_not_converged": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "closure_not_converged:0"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "degree_zero_export": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "degree_zero_export:1"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "empty_graph_diagnostic_only": {
+        "coverage_ratio": 0.0,
+        "coverage_reasons": [
+          "no_surviving_process",
+          "core_process_count_below_minimum:0<1"
+        ],
+        "ok": false,
+        "produced_a_graph": false,
+        "refusal_reasons": [
+          "minimum_core:no_surviving_process",
+          "minimum_core:core_process_count_below_minimum:0<1"
+        ],
+        "resulting_payload_hash": "sha256:a7a3e7d43b8e9b9e",
+        "would_have_refused": []
+      },
+      "entity_type_overlap": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "entity_type_overlap:1"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "locks_and_subthreshold": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.286<0.500",
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      },
+      "reference_case_subthreshold": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": []
+      },
+      "research_mode_subthreshold": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": true,
+        "produced_a_graph": true,
+        "refusal_reasons": [],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": [
+          "minimum_core:requested_core_coverage_below_minimum:0.167<0.500"
+        ]
+      },
+      "unaccounted_locked_reactions": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      },
+      "unexportable_and_subthreshold": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.286<0.500",
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      },
+      "unexportable_entity": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      }
+    },
+    "t2pw": "C:\\Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/33b2bddf-55d6-446d-ab2a-55da6d1ef804/scratchpad/base_export/src\\t2pw\\__init__.py"
+  },
+  "base_sha": "b2681215bc8b3d3f4b6afb3d9dffa259bfc5c0a7",
+  "card": "C-041a",
+  "delta": {
+    "locks_and_subthreshold": {
+      "base": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.286<0.500",
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      },
+      "tip": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      }
+    },
+    "reference_case_subthreshold": {
+      "base": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": []
+      },
+      "tip": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": true,
+        "produced_a_graph": true,
+        "refusal_reasons": [],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": []
+      }
+    },
+    "unexportable_and_subthreshold": {
+      "base": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "minimum_core:requested_core_coverage_below_minimum:0.286<0.500",
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      },
+      "tip": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      }
+    }
+  },
+  "moved_deliberately": [
+    "locks_and_subthreshold",
+    "reference_case_subthreshold",
+    "unexportable_and_subthreshold"
+  ],
+  "schema_version": 1,
+  "tip": {
+    "cases": {
+      "closure_not_converged": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "closure_not_converged:0"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "degree_zero_export": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "degree_zero_export:1"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "empty_graph_diagnostic_only": {
+        "coverage_ratio": 0.0,
+        "coverage_reasons": [
+          "no_surviving_process",
+          "core_process_count_below_minimum:0<1"
+        ],
+        "ok": false,
+        "produced_a_graph": false,
+        "refusal_reasons": [
+          "minimum_core:no_surviving_process",
+          "minimum_core:core_process_count_below_minimum:0<1"
+        ],
+        "resulting_payload_hash": "sha256:a7a3e7d43b8e9b9e",
+        "would_have_refused": []
+      },
+      "entity_type_overlap": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "entity_type_overlap:1"
+        ],
+        "resulting_payload_hash": "sha256:f3c2d1d97d563f89",
+        "would_have_refused": []
+      },
+      "locks_and_subthreshold": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      },
+      "reference_case_subthreshold": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": true,
+        "produced_a_graph": true,
+        "refusal_reasons": [],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": []
+      },
+      "research_mode_subthreshold": {
+        "coverage_ratio": 0.166667,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.167<0.500"
+        ],
+        "ok": true,
+        "produced_a_graph": true,
+        "refusal_reasons": [],
+        "resulting_payload_hash": "sha256:03edf7e3c84ca5ed",
+        "would_have_refused": [
+          "minimum_core:requested_core_coverage_below_minimum:0.167<0.500"
+        ]
+      },
+      "unaccounted_locked_reactions": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unaccounted_locked_reactions:3"
+        ],
+        "resulting_payload_hash": "sha256:be9669770a732a1d",
+        "would_have_refused": []
+      },
+      "unexportable_and_subthreshold": {
+        "coverage_ratio": 0.285714,
+        "coverage_reasons": [
+          "requested_core_coverage_below_minimum:0.286<0.500"
+        ],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      },
+      "unexportable_entity": {
+        "coverage_ratio": 1.0,
+        "coverage_reasons": [],
+        "ok": false,
+        "produced_a_graph": true,
+        "refusal_reasons": [
+          "unexportable_entity:1"
+        ],
+        "resulting_payload_hash": "sha256:333b846adc565817",
+        "would_have_refused": []
+      }
+    },
+    "t2pw": "C:\\Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p08a-d002-seam/src\\t2pw\\__init__.py"
+  },
+  "unchanged": [
+    "closure_not_converged",
+    "degree_zero_export",
+    "empty_graph_diagnostic_only",
+    "entity_type_overlap",
+    "research_mode_subthreshold",
+    "unaccounted_locked_reactions",
+    "unexportable_entity"
+  ],
+  "what": "G9 behavioural base proof for D-002 at the release/refusal seam. Observable-only projection: ok, refusal_reasons, produced graph hash, coverage reasons, research would_have_refused. No symbol is read, so symbol absence cannot be mistaken for proof."
+}

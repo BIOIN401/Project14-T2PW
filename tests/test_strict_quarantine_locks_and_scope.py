@@ -237,12 +237,19 @@ def test_an_unrelated_survivor_cannot_produce_success_once_the_context_arrives()
         deepcopy(payload), strict_db=True, pathway_context=STAGE_ZERO_CONTEXT
     )
     assert with_context.coverage["requested_core_declared"] is True
-    assert with_context.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). Base SHA: ``ok is False``. What the
+    # explicit hand-off closes is unchanged -- without the context the run is
+    # judged in the undeclared regime and passes outright; with it the shortfall
+    # is seen. What changed is what a seen shortfall does: it produces
+    # review_required PWML, which is not success, instead of no PWML at all.
+    assert with_context.ok is True
+    assert with_context.quarantine_report["release"]["status"] == "review_required"
+    assert with_context.quarantine_report["release"]["strict_acceptance_eligible"] is False
     assert with_context.coverage["core_accepted_processes"] == 0
     assert with_context.states()["citrate isomerisation"] == AUXILIARY_ACCEPTED
     assert any(
         reason.startswith("minimum_core:core_process_count_below_minimum")
-        for reason in with_context.refusal_reasons
+        for reason in with_context.quarantine_report["review_reasons"]
     )
 
 
@@ -266,7 +273,11 @@ def test_an_explicit_requested_core_outranks_both_context_and_payload() -> None:
 
     assert result.coverage["requested_core_terms"] == ["urea cycle"]
     assert result.coverage["requested_core_source"] == "explicit_argument"
-    assert result.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). Base SHA: ``ok is False``. Which input
+    # wins is what this test is about and is unchanged.
+    assert result.ok is True
+    assert result.quarantine_report["release"]["status"] == "review_required"
+    assert result.quarantine_report["release"]["strict_acceptance_eligible"] is False
 
 
 def test_the_payload_is_used_only_when_no_context_was_handed_over() -> None:
@@ -412,8 +423,13 @@ def test_a_declared_core_still_counts_only_core_accepted_processes() -> None:
     )
 
     assert result.coverage["requested_core_declared"] is True
-    assert result.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). Base SHA: ``ok is False``. The relaxation
+    # being scoped to the undeclared regime is what this test asserts and is
+    # unchanged: the declared regime still counts only core_accepted, still sees
+    # the shortfall, and still refuses to call it success.
+    assert result.ok is True
+    assert result.quarantine_report["release"]["strict_acceptance_eligible"] is False
     assert any(
         reason.startswith("minimum_core:core_process_count_below_minimum")
-        for reason in result.refusal_reasons
+        for reason in result.quarantine_report["review_reasons"]
     )
