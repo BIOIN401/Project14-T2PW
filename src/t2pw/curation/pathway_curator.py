@@ -12,11 +12,32 @@ The curator receives the post-audit JSON and a fresh reaction summary and:
 
 All changes are emitted as JSON-Pointer patches in the format that
 apply_audit_patch.apply_patch_with_policy already understands.
+
+Offline mode
+------------
+Setting ``T2PW_OFFLINE_CURATOR`` (:data:`OFFLINE_CURATOR_ENV_VAR`) to a truthy
+value -- ``1``, ``true``, ``yes``, ``on``, ``y``, ``t``, compared after
+``.strip().lower()`` -- turns :func:`run_pathway_curator` into an explicit,
+deterministic no-op: **zero** model calls, *output_path* written byte-for-byte
+from *input_path*, and the deliberate skip recorded under the report's
+``"skipped"`` key. Every other value -- unset, empty, ``0``, ``false``, ``off``
+-- leaves the default online behaviour completely unchanged. The switch is
+opt-in and one-way; it can only remove a model call, never add or alter one.
+
+It exists because this module holds the one ungated LLM call on the
+post-pipeline path, at temperature 0.2, whose accepted patches flow onward into
+the mapped payload. A reproducible run needs that call switched off *on purpose*
+and *visibly*, not by relying on a provider error being swallowed by the
+``except Exception`` below -- an accident that is silent, environment-dependent,
+and stops being a no-op the moment the provider starts answering. ``"skipped"``
+is deliberately not the ``"error"`` key: a reader must be able to tell "switched
+off on purpose" from "ran and proposed nothing" from "raised and was swallowed".
 """
 
 from __future__ import annotations
 
 import json
+import os
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -31,6 +52,32 @@ from t2pw.llm.client import chat_with_tools
 from t2pw.paths import PROMPTS_DIR
 from t2pw.pipeline.reaction_preservation_validator import load_locked_reaction_manifest
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
+
+
+# ---------------------------------------------------------------------------
+# Offline mode -- opt-in, explicit, deterministic (see the module docstring)
+# ---------------------------------------------------------------------------
+
+#: The one environment variable that disables the curator's model call.
+OFFLINE_CURATOR_ENV_VAR = "T2PW_OFFLINE_CURATOR"
+
+#: Accepted truthy spellings, matching the project's existing convention in
+#: ``t2pw.config._TRUE_TOKENS``. Compared after ``.strip().lower()``.
+OFFLINE_CURATOR_TRUE_TOKENS = frozenset({"1", "true", "yes", "on", "y", "t"})
+
+#: Value of ``report["skipped"]["reason"]`` -- stable and machine-readable, so a
+#: reader keys off this and never off prose.
+OFFLINE_CURATOR_SKIP_REASON = "offline_mode_env_flag"
+
+
+def curator_offline_mode_enabled() -> bool:
+    """True when :data:`OFFLINE_CURATOR_ENV_VAR` holds a truthy spelling.
+
+    Read at call time, never cached, so a caller can set and clear it around
+    one call.
+    """
+    return (os.getenv(OFFLINE_CURATOR_ENV_VAR) or "").strip().lower() in (
+        OFFLINE_CURATOR_TRUE_TOKENS)
 
 
 # ---------------------------------------------------------------------------
@@ -171,10 +218,38 @@ def run_pathway_curator(
     *output_path*, and write a report dict to *report_path*.
 
     Returns the report dict.
+
+    When :func:`curator_offline_mode_enabled` is true this returns early without
+    consulting a model; see "Offline mode" above. The three-part contract holds
+    either way -- *output_path* written, *report_path* written, report returned
+    -- because the caller reads all three and a skip that left them unwritten
+    would be a defect, not a skip.
     """
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Curator input JSON must be an object.")
+
+    if curator_offline_mode_enabled():
+        # Deliberate, deterministic no-op. Returning HERE is what makes the
+        # guarantee structural: ``chat_with_tools`` is below this line, and so is
+        # every per-call provider and model decision it makes, so neither can be
+        # reached. Nothing is proposed, applied, deduplicated or logged. The
+        # payload is copied BYTE-FOR-BYTE rather than re-serialized, so
+        # "unmutated" is checkable on the file itself and holds even for an input
+        # this module would not have formatted that way.
+        skipped_report: Dict[str, Any] = {
+            "summary": {"patches_proposed": 0, "patches_accepted": 0,
+                        "patches_rejected": 0},
+            "patches": [],
+            "apply_summary": {},
+            "skipped": {"intentional": True, "reason": OFFLINE_CURATOR_SKIP_REASON,
+                        "env_var": OFFLINE_CURATOR_ENV_VAR, "llm_calls": 0,
+                        "payload_mutated": False},
+        }
+        output_path.write_bytes(input_path.read_bytes())
+        report_path.write_text(json.dumps(skipped_report, indent=2, ensure_ascii=False),
+                               encoding="utf-8")
+        return skipped_report
 
     accumulated_patches: List[Dict[str, Any]] = []
 

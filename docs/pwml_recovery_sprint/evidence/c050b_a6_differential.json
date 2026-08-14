@@ -1,0 +1,53 @@
+{
+  "a6_default_path_identical": true,
+  "arms": {
+    "flag_on": {
+      "base_chat_calls": 1,
+      "base_trace_len": 13,
+      "control_flow_is_base_plus_guard_only": false,
+      "differing_fields": [
+        "call_kwargs",
+        "chat_calls",
+        "output_equals_input",
+        "output_sha256",
+        "report_sha256",
+        "returned_norm"
+      ],
+      "identical_artifacts": false,
+      "tip_chat_calls": 0,
+      "tip_trace_len": 2
+    },
+    "patches": {
+      "base_chat_calls": 1,
+      "base_trace_len": 199,
+      "control_flow_is_base_plus_guard_only": true,
+      "differing_fields": [],
+      "identical_artifacts": true,
+      "tip_chat_calls": 1,
+      "tip_trace_len": 200
+    },
+    "quiet": {
+      "base_chat_calls": 1,
+      "base_trace_len": 13,
+      "control_flow_is_base_plus_guard_only": true,
+      "differing_fields": [],
+      "identical_artifacts": true,
+      "tip_chat_calls": 1,
+      "tip_trace_len": 14
+    },
+    "raises": {
+      "base_chat_calls": 1,
+      "base_trace_len": 13,
+      "control_flow_is_base_plus_guard_only": true,
+      "differing_fields": [],
+      "identical_artifacts": true,
+      "tip_chat_calls": 1,
+      "tip_trace_len": 14
+    }
+  },
+  "base_curator_file": "C:\\t2pwtmp\\c050b\\base\\src\\t2pw\\curation\\pathway_curator.py",
+  "flag_honoured_at_tip": true,
+  "flag_inert_at_base": true,
+  "pass": true,
+  "tip_curator_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator\\src\\t2pw\\curation\\pathway_curator.py"
+}

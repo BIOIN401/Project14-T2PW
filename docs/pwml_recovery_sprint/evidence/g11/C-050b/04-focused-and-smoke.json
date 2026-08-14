@@ -1,0 +1,143 @@
+{
+  "label": "focused-and-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import subprocess,sys;P=sys.executable;R=\"import sys,os,t2pw,pytest;print(\\\"T2PW:\\\",t2pw.__file__,flush=True);sys.path[0]=os.getcwd();sys.exit(pytest.main(sys.argv[1:]))\";F=[\"tests/test_curator_offline_mode.py\",\"tests/test_curation_patch_transaction.py\",\"tests/test_streamlit_stage2_orchestration.py\"];S=\"tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py\".split();a=subprocess.run([P,\"-c\",R,\"-q\",\"--basetemp=C:/t2pwtmp/c050b/f3\"]+F).returncode;print(\"FOCUSED_RC\",a,flush=True);b=subprocess.run([P,\"-c\",R,\"-q\",\"--basetemp=C:/t2pwtmp/c050b/smoke\"]+S).returncode;print(\"SMOKE_RC\",b,flush=True);sys.exit(a or b)"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator",
+  "started_at": "2026-08-14T18:15:42+00:00",
+  "finished_at": "2026-08-14T18:16:18+00:00",
+  "duration_seconds": 35.04555640000035,
+  "timeout_seconds": 1800.0,
+  "root_pid": 944456,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 944468,
+      "name": "python.exe",
+      "ppid": 944456
+    },
+    {
+      "pid": 944488,
+      "name": "python.exe",
+      "ppid": 944468
+    },
+    {
+      "pid": 944500,
+      "name": "python.exe",
+      "ppid": 944488
+    },
+    {
+      "pid": 944680,
+      "name": "python.exe",
+      "ppid": 944468
+    },
+    {
+      "pid": 944692,
+      "name": "python.exe",
+      "ppid": 944680
+    },
+    {
+      "pid": 944944,
+      "name": "python.exe",
+      "ppid": 944692
+    },
+    {
+      "pid": 944964,
+      "name": "python.exe",
+      "ppid": 944944
+    },
+    {
+      "pid": 944984,
+      "name": "python.exe",
+      "ppid": 944692
+    },
+    {
+      "pid": 945004,
+      "name": "python.exe",
+      "ppid": 944984
+    },
+    {
+      "pid": 945040,
+      "name": "python.exe",
+      "ppid": 944692
+    },
+    {
+      "pid": 945060,
+      "name": "python.exe",
+      "ppid": 945040
+    },
+    {
+      "pid": 944280,
+      "name": "python.exe",
+      "ppid": 944312
+    },
+    {
+      "pid": 944312,
+      "name": "python.exe",
+      "ppid": 944692
+    }
+  ],
+  "descendants_terminated": [
+    944280,
+    944312,
+    944468,
+    944488,
+    944500,
+    944680,
+    944692,
+    944944,
+    944964,
+    944984,
+    945004,
+    945040,
+    945060
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 657984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 661168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 944148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 944168,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-050b/04-focused-and-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator",
+    "repo_head": "be7f4c26d4995744ae5b18e191b83b11c2b1eb0a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
