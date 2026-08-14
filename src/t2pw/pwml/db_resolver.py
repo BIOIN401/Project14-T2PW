@@ -423,15 +423,36 @@ class PathWhizCompoundResolver:
         )
 
 
-def apply_compound_db_resolution(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
+#: ``db_status`` for a row whose DB match was found but whose identity the
+#: caller's admission policy refused (D-028 rule 3). Deliberately NOT the
+#: literal ``"matched"``: ``pwml.writer._is_trusted_compound_record`` treats that
+#: exact string as a trust signal, and a refused row is not a trusted identity.
+IDENTITY_REFUSED_STATUS = "identity_refused_review_required"
+
+
+def apply_compound_db_resolution(
+    row: Dict[str, Any],
+    match: Dict[str, Any],
+    *,
+    admit_identity: bool = True,
+) -> Dict[str, Any]:
+    """Copy ``row``, always recording the verdict; stamp identity only if admitted.
+
+    ``admit_identity`` (keyword-only, default ``True`` = today's behaviour) is
+    the caller's D-028 decision. ``False`` takes the same early return an
+    unmatched result already takes, so a refusal is **record-only**: the row
+    keeps its extracted name and gains no identifier. D-028 rule 3 forbids a
+    partial apply -- hence one flag and one early return, not a field filter.
+    """
     out = dict(row)
     chosen = _safe_dict(match.get("chosen"))
+    matched = match.get("status") == "matched" and bool(chosen)
     out["raw_name"] = str(match.get("raw_name") or row.get("raw_name") or row.get("name") or "")
-    out["db_status"] = match.get("status")
+    out["db_status"] = IDENTITY_REFUSED_STATUS if (matched and not admit_identity) else match.get("status")
     out["db_match"] = match
     out["chosen_rule"] = match.get("chosen_rule")
     out["confidence"] = match.get("confidence", row.get("confidence"))
-    if match.get("status") != "matched" or not chosen:
+    if not matched or not admit_identity:
         return out
 
     out["db_id"] = chosen.get("id")

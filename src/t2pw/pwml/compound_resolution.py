@@ -45,6 +45,12 @@ The three-part adapter contract (SPIKE-002 §2)
    ``_canonicalize_compound_offline`` returns early once a row carries a resolved
    ``db_row`` name, so re-running either over resolved rows is stable.
 
+D-028 -- DB-match admission (C-040a). ``_resolve_compound_rows`` used to log a
+sub-threshold match as a *failure* and apply it anyway; :func:`_admit_db_identity`
+is now the single place that decision is made. Its call site is shared by the
+pre-freeze caller and ``ir.build_pwml_ir``, and D-028 governs both, so it is
+deliberately not special-cased by caller.
+
 The nine private helpers below are **verbatim copies** of ``ir.py:43-96``,
 ``:183-193`` and ``:244-260``; the originals are unmodified. Duplication is
 forced -- ``ir.py`` imports this module, so importing back would be a cycle --
@@ -57,7 +63,14 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
-from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
+from t2pw.pwml.db_resolver import (
+    PathWhizCompoundResolver,
+    apply_compound_db_resolution,
+    normalize_chebi_id,
+    normalize_hmdb_id,
+    normalize_kegg_id,
+    normalize_pubchem_cid,
+)
 from t2pw.pwml.name_index import PathwhizNameIndex
 
 
@@ -311,6 +324,140 @@ def _canonicalize_compound_offline(
         )
 
 
+# ---------------------------------------------------------------------------
+# D-028 -- which DB matches may rename a row and stamp identifiers on it.
+# ---------------------------------------------------------------------------
+
+#: The confidence at or above which ``db_resolver.resolve`` only ever reports an
+#: **identifier-backed** match. Already the literal ``0.85`` here; named because
+#: D-028 makes it decide whether a resolution is *applied*, not merely whether a
+#: failure is *logged* -- the defect this constant now closes.
+DB_MATCH_CONFIDENCE_FLOOR = 0.85
+
+#: **D-028 rule 1.** A fuzzy name match may never rename and never stamp
+#: identifiers. ``resolve`` admits one on a 0.0006 tie-break (measured: ``OPDA``
+#: -> ``Dinor-12-oxo-phytodienoate``, not a PathBank synonym of it), and
+#: `PRODUCT_CONTRACT` §1 forbids inventing identities on that evidence.
+RECORD_ONLY_MATCH_RULES = frozenset({"fuzzy_name"})
+
+#: **D-028 rule 2.** The exact name rules that may rename and stamp, subject to
+#: the short-abbreviation guard below.
+EXACT_NAME_MATCH_RULES = frozenset({"exact_name", "exact_short_name_or_synonym"})
+
+#: **D-028 rule 2**, the named constant the decision requires instead of a magic
+#: number. A queried name of at most this many characters *after* ``_norm`` --
+#: this module's existing normalization, unchanged -- is a short abbreviation,
+#: and an exact name/synonym hit on it is not by itself evidence of identity.
+#: Measured collisions: ``CL`` (2) -> "Chloride ion" but means cardiolipin;
+#: ``THF`` (3) -> "Tetrahydrofuran" in one-carbon metabolism; ``G3P`` (3) ->
+#: "3-Phosphoglyceric acid" but means glycerol-3-phosphate; ``PE`` (2) ->
+#: "O-Phosphoethanolamine" but means phosphatidylethanolamine. The gold set names
+#: the same failure class (``PMC13231680``/``PSA``). ``OPC-8:0`` normalizes to 7
+#: and stays admissible.
+SHORT_ABBREVIATION_MAX_CHARS = 4
+
+#: **D-028 rule 2.** Exact identifiers that may corroborate a short abbreviation,
+#: keyed as ``_compound_external_ids`` already returns them. ``drugbank`` is
+#: carried by that helper but is deliberately NOT here: D-028 lists four, and
+#: widening the set would be inventing policy.
+CORROBORATING_ID_KEYS = ("kegg", "chebi", "pubchem", "hmdb")
+
+#: **D-028 rule 2, corroboration is AGREEMENT, not presence.** Maps each
+#: corroborating namespace to the matched PathBank row's column and the shared
+#: normalizer both sides are compared through. Measured: ``PE`` carries
+#: ``mapped_ids.kegg = C00012``, which is absent from ``compounds.kegg_id`` --
+#: which is why no identifier rule matched it in the first place -- so under a
+#: presence test its mere existence corroborated a synonym hit on a different
+#: compound and admitted the confirmed-wrong ``PE -> O-Phosphoethanolamine``
+#: rename. An identifier that disagrees with the matched row, or that has no
+#: counterpart on it, corroborates nothing.
+_CORROBORATION_COLUMNS = {
+    "kegg": ("kegg_id", normalize_kegg_id),
+    "chebi": ("chebi_id", normalize_chebi_id),
+    "pubchem": ("pubchem_cid", normalize_pubchem_cid),
+    "hmdb": ("hmdb_id", normalize_hmdb_id),
+}
+
+
+def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
+    """Decide whether ``match`` may rename ``row`` and stamp identifiers on it.
+
+    Returns the decision **as a record**, never a bare bool: D-028 rule 4
+    requires a refusal to be recorded for review rather than silently dropped,
+    and this dict is what the caller files. It never raises -- a refused match
+    must not abort an export -- and never mutates ``row`` or ``match``.
+
+    The rule vocabulary is closed. ``resolve`` returns ``status == "matched"``
+    under exactly three families: identifier rules (all at or above
+    :data:`DB_MATCH_CONFIDENCE_FLOOR` by construction, ``pubchem_cid_exact``
+    lowest at 0.85), the two exact name rules (fixed at 0.70) and ``fuzzy_name``
+    (hard-capped at 0.65). Rules 1 and 2 cover the last two; the first is
+    admitted by the floor, which is what the floor was written to mean.
+
+    Anything below the floor matching no known rule fails **closed** -- not extra
+    policy: `PRODUCT_CONTRACT` §8 forbids accepting an identifier because its
+    shape is valid, and the module's own floor already called it untrustworthy.
+    """
+    rule = str(match.get("chosen_rule") or "")
+    confidence = float(match.get("confidence") or 0.0)
+    queried_name = _canonical(match.get("raw_name") or row.get("name"))
+    decision: Dict[str, Any] = {
+        "admitted": False,
+        "rule": rule,
+        "confidence": confidence,
+        "queried_name": queried_name,
+        "reason": "",
+    }
+
+    if match.get("status") != "matched" or not _safe_dict(match.get("chosen")):
+        decision["reason"] = "no_match_to_admit"
+        return decision
+
+    if rule in RECORD_ONLY_MATCH_RULES:
+        decision["reason"] = "fuzzy_name_match_never_admitted"
+        return decision
+
+    if rule in EXACT_NAME_MATCH_RULES:
+        normalized_length = len(_norm(queried_name))
+        decision["normalized_length"] = normalized_length
+        if normalized_length > SHORT_ABBREVIATION_MAX_CHARS:
+            decision["admitted"] = True
+            decision["reason"] = "exact_name_or_synonym_match"
+            return decision
+        chosen = _safe_dict(match.get("chosen"))
+        external_ids = _compound_external_ids(row)
+        corroborating: List[str] = []
+        disagreeing: List[str] = []
+        for key in CORROBORATING_ID_KEYS:
+            column, normalize = _CORROBORATION_COLUMNS[key]
+            ours = normalize(external_ids.get(key))
+            if not ours:
+                continue
+            theirs = normalize(chosen.get(column))
+            if theirs and ours.casefold() == theirs.casefold():
+                corroborating.append(key)
+            else:
+                disagreeing.append(key)
+        decision["corroborating_ids"] = corroborating
+        decision["disagreeing_ids"] = disagreeing
+        decision["admitted"] = bool(corroborating)
+        if corroborating:
+            decision["reason"] = "short_abbreviation_corroborated_by_exact_identifier"
+        elif disagreeing:
+            decision["reason"] = "short_abbreviation_identifier_disagrees_with_match"
+        else:
+            decision["reason"] = "short_abbreviation_without_corroborating_identifier"
+        return decision
+
+    if confidence >= DB_MATCH_CONFIDENCE_FLOOR:
+        decision["admitted"] = True
+        decision["reason"] = "identifier_match_at_or_above_confidence_floor"
+        return decision
+
+    decision["reason"] = "unrecognized_rule_below_confidence_floor"
+    return decision
+
+
 def _resolve_compound_rows(
     rows: List[Dict[str, Any]],
     *,
@@ -387,7 +534,14 @@ def _resolve_compound_rows(
             match = resolver.resolve(row)
 
         report["db_resolution"]["compounds"].append(match)
-        if match.get("status") == "matched" and float(match.get("confidence") or 0.0) >= 0.85:
+        # D-028. The gate now decides whether the resolution is APPLIED, not only
+        # whether a failure is logged: both arms below used to apply it anyway.
+        admission = _admit_db_identity(row, match)
+        high_confidence = (
+            match.get("status") == "matched"
+            and float(match.get("confidence") or 0.0) >= DB_MATCH_CONFIDENCE_FLOOR
+        )
+        if high_confidence and admission["admitted"]:
             resolved.append(apply_compound_db_resolution(row, match))
             continue
 
@@ -399,6 +553,11 @@ def _resolve_compound_rows(
             "chosen_rule": match.get("chosen_rule"),
             "confidence": match.get("confidence", 0.0),
             "candidates": match.get("candidates", []),
+            # D-028 rule 4: a refusal is recorded for review, never dropped and
+            # never raised. A refused row stays in `resolved` with its extracted
+            # name, so an incomplete-but-correct pathway survives as
+            # review_required (merge rule 7) instead of losing the compound.
+            "admission": admission,
         }
         report["unresolved"]["db_identities"].append(issue)
         _add_issue(
@@ -409,7 +568,9 @@ def _resolve_compound_rows(
             pointer=f"{pointer_prefix}/{idx}",
             **issue,
         )
-        resolved.append(apply_compound_db_resolution(row, match))
+        resolved.append(
+            apply_compound_db_resolution(row, match, admit_identity=admission["admitted"])
+        )
 
     for row in resolved:
         _canonicalize_compound_offline(
