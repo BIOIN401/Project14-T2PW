@@ -186,10 +186,25 @@ C-010's allowlist is unverifiable in an isolated worktree.
 # ONE call runs the whole gate: it proves the partition, runs the 150-test core in one
 # process, then each of the 27 AppTest node IDs ALONE in a fresh process, serially.
 # --task lets it allocate its own ~32 G11 reports; 32 paths do not fit on a CLI.
+#
+# *** T2PW_OFFLINE_CURATOR=1 IS MANDATORY ON EVERY DETERMINISTIC qb RUN. ***
+# Required from C-050b (merged 1383624). Without it, run_pathway_curator issues ONE
+# ungated LLM call per post-pipeline app run at temperature 0.2, whose accepted patches
+# are written back into audited_json and flow through mapping into final_mapped_db.
+# That is the MEASURED root cause of BL-003. And because .env is untracked, a worktree
+# silently gets LLM_PROVIDER=local (call 400s, exception swallowed, curator a no-op BY
+# ACCIDENT) while the primary checkout issues real BILLED remote calls -- so a green qb
+# cohort obtained in a worktree does NOT certify the same cohort in the primary.
+# Set it in the BOUNDED CHILD environment, not just your shell.
+T2PW_OFFLINE_CURATOR=1 \
 .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/bounded_run.py \
   --label chunkd --timeout 3000 --json <outer-report> -- \
   .venv/Scripts/python.exe -u docs/pwml_recovery_sprint/evidence/chunk_d_gate.py run \
   --tmp <short-tmp> --task <ID> --timeout 900 --node-timeout 600
+
+# The flag is opt-in and default-off: omitting it preserves production behaviour exactly.
+# An ACCEPTANCE run that deliberately exercises the live curator is separate, bounded work
+# requiring explicit cost authorization -- it is NOT a deterministic gate.
 #   --only core|s8|qb narrows EXECUTION; the partition proof always covers all three.
 #   --label-prefix attributes each run's artifacts when a matrix runs the gate repeatedly.
 #   --report-root writes them to the branch when the measured tree is an export.
