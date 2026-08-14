@@ -678,6 +678,8 @@ def run_stage_two_with_feedback_loop(
     Run Stage 2 one or more times, feeding graph-QA hints into later rounds.
     Returns merged additions, flattened per-chunk details, and per-round summaries.
     """
+    from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
+
     if is_ambiguous_multi_example_review_context(pathway_context):
         raise _ambiguous_review_scope_failure(pathway_context)
 
@@ -720,7 +722,18 @@ def run_stage_two_with_feedback_loop(
 
         all_outputs.append(output)
         merged_additions = merge_inference_outputs(all_outputs)
-        merged_payload = merge_additions(base_stage_one, merged_additions)
+        # ``pathway_context`` here is the Stage-0 DICT, and the C-060 gate's
+        # advisory phase gates on ``isinstance(context, PathwayContext)`` -- so
+        # forwarding the dict would type-check and do nothing. The factory builds
+        # the real frozen context from the one shared derivation. ``seed_text`` is
+        # deliberately NOT supplied: it is the ``_unlocatable`` rule's only input,
+        # and switching evidence-span removal on for every QA round of this loop
+        # is a pinned-baseline move, not wiring.
+        merged_payload = merge_additions(
+            base_stage_one,
+            merged_additions,
+            pathway_context=pathway_context_from_stage_zero(pathway_context),
+        )
         filter_unresolvable_reactions(merged_payload)
         signature = json.dumps(merged_additions, sort_keys=True)
 

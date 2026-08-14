@@ -4643,7 +4643,20 @@ if submit:
             st.stop()
 
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
-        final_payload = merge_additions(stage_one_in_scope, stage_two if isinstance(stage_two, dict) else {})
+        # The C-060 gate's advisory phase gates on isinstance(context,
+        # PathwayContext) and `pathway_context` here is the Stage-0 DICT, so
+        # forwarding it would type-check and do nothing. The factory builds the
+        # real frozen context from the one derivation maybe_run_rag also uses. An
+        # empty Stage 0 yields PathwayContext(""), which the gate already coerces
+        # a missing context to, so no new refusal path appears. `seed_text` is
+        # deliberately not supplied -- see the pipeline.py site for why.
+        from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
+
+        final_payload = merge_additions(
+            stage_one_in_scope,
+            stage_two if isinstance(stage_two, dict) else {},
+            pathway_context=pathway_context_from_stage_zero(pathway_context),
+        )
 
     # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather
     # than REPLACING it. A no-op with RAG off (rag_result is None): final_payload
@@ -4660,6 +4673,12 @@ if submit:
     # the existing default_compartment="cell" path) with RAG reactions slotted in.
     if rag_result is not None and rag_result.synthesized and rag_result.payload:
         from t2pw.rag.conform import conform_rag_additions_for_merge
+
+        # The RAG leg runs merge_additions a SECOND time, so the same request has
+        # to reach the gate on this pass too. Without it the rows RAG adds are
+        # screened with no context while the Stage-2 rows were screened with one,
+        # and the two passes would disagree about the same species.
+        from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
 
         seed_reaction_count = _count_reactions(final_payload)
         # The second argument is the MERGE BASE, and it must be `final_payload` --
@@ -4697,7 +4716,11 @@ if submit:
         # under runs/ that have a RAG side: 279 entity rows -> 220, zero reactions
         # lost, zero new process_normalizer.validate_registry_references errors.
         rag_envelope = conform_rag_additions_for_merge(rag_result.payload, final_payload)
-        merged = merge_additions(final_payload, rag_envelope)
+        merged = merge_additions(
+            final_payload,
+            rag_envelope,
+            pathway_context=pathway_context_from_stage_zero(pathway_context),
+        )
         # Preserve the locked-reaction quarantine the old replace-path performed:
         # merge_additions runs apply_post_merge_cleanup WITHOUT the manifest, so
         # run the manifest-aware cleanup on the merged result — a locked Stage-1
