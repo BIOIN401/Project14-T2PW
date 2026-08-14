@@ -1207,3 +1207,123 @@ its KEGG `C01226`, ChEBI `57411` and PubChem assert C18 12-OPDA — and PathBank
 OPDA at all**. The correct canonical target does not exist, so the only correct outcome for "OPDA"
 is no rename. PathBank is a vendor source, not the gold set; the contract's remedy for inconsistent
 vendor data is the confidence bar this decision restores.
+
+---
+
+## D-029 — An unreachable database is `review_required`, not death · 2026-08-14 · LOCKED
+
+Recorded because `REV-050c` deferred it as **DEF-2**: C-050's `prefreeze_resolution.py`
+introduces `_REVIEW_REQUIRED_REASONS = {"resolution_report_not_ok:db_unavailable"}`, which
+**reinterprets D-015 clause 6** ("fail visibly on ambiguous or dangling references"). A
+reinterpretation of a LOCKED decision belongs in this file before it merges, not in a module
+constant. The behaviour is ruled correct; only its provenance was missing.
+
+**The ruling.** When pre-freeze compound resolution cannot reach the PathBank database,
+`db_unavailable` is a **`review_required` outcome**. It **must not, by itself, raise a fatal
+exception** and must not abort the run.
+
+**Why.** Permanent **merge rule 7** requires incomplete-but-correct pathways to be preserved as
+`review_required` rather than dropped, and `PRODUCT_CONTRACT` §1 names a terminal blocker with no
+usable recovery as unacceptable. An unreachable database is an **infrastructure condition, not a
+defect in the graph**: the biology the operator supplied is unchanged and still correct, merely
+un-enriched. Killing the run discards correct work to punish a network failure.
+
+**Scope — narrow, and the distinction is the point.** D-015 clause 6 is **undisturbed for
+structural failures.** The four structural codes still raise, at the real entry point
+(`run_prefreeze_resolution` has no `try/except` around the call), and `REV-050c` verified this:
+
+* an **ambiguous** rename;
+* a **dangling** reference after propagation (`PREFREEZE_RENAME_NOT_PROPAGATED`);
+* a **row-count change** across resolution (`PREFREEZE_ROW_COUNT_CHANGED`);
+* a **connectivity-signature** change.
+
+Those are defects in the payload or in the resolver, and they must still fail visibly and loudly.
+`db_unavailable` is not one of them.
+
+**Fail-closed in the direction that matters.** An unreachable DB yields **fewer** admissions and
+**more** review flags — never a rename, never an identifier stamp, never an invented identity. It
+cannot increase PWML output, so it does not engage merge rule 6.
+
+**Consequence, and the debt this leaves.** A propagated flag is not an enforced one. C-050's
+`run_prefreeze_resolution` report — including this `review_required` — is currently **discarded**
+by its caller (`streamlit_app.py:3587-3591`). The seam that can persist and act on it is
+**C-052's** (finding: C-050 D1 / DEF-1, "`review_required` has no reader"). This decision rules
+what the outcome *is*; it does not claim the outcome is yet acted upon downstream.
+
+---
+
+## D-030 — C-050, C-045 and C-051 land as one atomic stack · 2026-08-14 · LOCKED
+
+**The finding that forces this.** `REV-050c` proved C-050's headline **A9** acceptance fails on
+the combined state: one residual post-freeze mutation,
+`db_status: 'matched_offline_name_index' → 'legacy_id_unverified'` on `Glycine` (category 5,
+identity materialization). The original `0/0/0/0/0` reading was **circular** — it held only
+because the un-corrected fixed-point loop happened to converge on exactly the
+`legacy_id_unverified` value the exporter re-derives. C-050's provenance correction, which is
+right and which was required, removes that coincidence and **exposes a real post-freeze identity
+mutation**. So the standing question is answered: **the exporter's second `_resolve_compound_rows`
+pass at `ir.py:911` is neither a zero delta nor idempotent by construction.**
+
+**The ruling.**
+
+1. **A9 is not weakened, restated, or scoped down.** All five post-freeze mutation categories must
+   read zero **at the landing boundary**. Merge rule 8 is **not waived**.
+2. C-050 alone **cannot** satisfy A9, because A9 can only read zero once the exporter's pass is
+   either idempotent (now disproven) or removed — and removing it is **C-051's** job.
+3. C-045 depends on C-050's `prefreeze_resolution.py` module; C-051 depends on the resulting
+   prefreeze sequence. The three are therefore **one stacked dependency cohort**, built in the
+   order `corrected C-050 → C-050d → C-045 → C-051`.
+4. **No intermediate card is merged into integration.** Each card's exact delta is reviewed
+   independently against its **declared direct parent**. After all are approved, the expensive
+   combined-state gates run **once** on the top C-051 tip, and the whole stack lands in **one
+   serial `--no-ff` composite merge**.
+5. The composite merge **preserves the individual card commits and their review evidence**. No
+   squash, no rebase, no cherry-pick, no flattening.
+
+**Why atomic rather than sequential.** Landing C-050 by itself would put integration into a state
+that **contains a known post-freeze biological mutation** — precisely what merge rule 8 forbids —
+for the whole interval until C-051 lands. The alternative considered and rejected was restating
+A9 to the four categories C-050 does discharge; that would have weakened a locked acceptance to
+accommodate a sequencing artefact. This decision is an explicitly authorized exception to
+one-card-at-a-time landing, granted **because** it is the option that never lets the violation
+exist in integration.
+
+**Shared-file proof standard.** Because the stacked cards legitimately share files, per **O-12**
+each card is compared against its **direct parent**; the other authorized cards must be the only
+additional changes; test-function counts are preserved where applicable; and every card's markers
+must survive. A byte-identical proof across legitimately shared stacked files is impossible and
+must not be demanded.
+
+### The node15 repair is C-050a's, not C-050's
+
+C-050 edited `tests/test_streamlit_quarantine_boundary.py :: test_research_mode_keeps_the_unmapped_
+candidate_and_does_not_block` — **node15**, which is **C-050a's owned test function**
+(`MASTER_PLAN` §3, hotspot 9). The hunk restored a `.get("final_mapped_db") or ...` fallback that
+C-050a deliberately removed, compared against a pre-enrichment artifact, and replaced whole-object
+equality with a five-field allowlist. **PACK3 RULING 1 pre-declared a partial-field weakening a
+reject.** The orchestrator authorized that edit in error and has withdrawn it.
+
+The hunk is removed in full. The residual failure is routed as **C-050d**, a **test-only** subcard
+under **C-050a's** ownership, which must preserve the original invariant — quarantine forwards the
+complete post-enrichment object unchanged, compared by **whole-object equality**, with a
+non-vacuous fixture. C-050d may not use a field allowlist, may not restore the `.get(...)`
+fallback, and may not use two aliases to the same in-place-mutated object as its pre/post
+comparand. If production work proves necessary, that card **stops and reports** rather than taking
+it.
+
+---
+
+## D-031 — D-028's DrugBank exclusion is ratified · 2026-08-14 · LOCKED
+
+**D-028 clause 4** limits short-abbreviation corroboration to **KEGG, ChEBI, PubChem and HMDB**
+and excludes **DrugBank** "unless separately ruled". Finding **P4-03** recorded that exclusion as
+correct but **awaiting ratification**. It is now ratified.
+
+**The exclusion stands.** It is **fail-closed**: withholding a namespace from the corroboration
+set can only produce **more refusals, never more admissions**, so it cannot weaken a biological
+gate or increase PWML output. Ratifying it costs nothing that a later measurement cannot restore.
+
+**How it may change.** Only by a later decision that **measures** DrugBank identifier agreement
+against PathBank rows on the committed corpus and demonstrates the namespace corroborates
+reliably. Until such a measurement exists, an agent may **not** add DrugBank to the corroborating
+set, and may not treat its absence as an oversight. **P4-03 is closed.**

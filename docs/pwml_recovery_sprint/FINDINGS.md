@@ -400,11 +400,21 @@ than reusing the author's tooling would have been.
 **Remedy:** commit the probes in a later evidence/closeout commit. The approved card tip is not to be
 disturbed for this.
 
+**Status 2026-08-14 — DEFERRED, still open, deliberately.** Reaffirmed during the C-050 stack
+takeover. The debt stands and is **not** discharged by this commit: the scripts are still
+uncommitted, and **`7d5a3916` and the merge `734c958` must not be modified to add them.** Rewriting
+an approved, independently reviewed and already-merged tip to improve its evidence is a worse
+failure than the debt itself. The remedy remains a **later, additive** evidence commit. Not a
+blocker for the C-050/C-045/C-051 stack.
+
 ---
 
-## P4-03 — D-028 corroborating namespaces exclude DrugBank (fail-closed, awaiting ratification)
+## P4-03 — D-028 corroborating namespaces exclude DrugBank (fail-closed) — **CLOSED, ratified by D-031**
 
-**Severity: INFORMATIONAL.** Owner: product owner.
+**Severity: INFORMATIONAL.** Owner: product owner. **Status 2026-08-14: RATIFIED and CLOSED — see
+D-031.** The exclusion stands; it may be revisited only by a later decision that *measures* DrugBank
+identifier agreement against PathBank rows on the committed corpus. Until then an agent may not add
+`drugbank` to the corroborating set and may not read its absence as an oversight.
 
 D-028 rule 4 limits corroborating namespaces to **KEGG, ChEBI, PubChem, HMDB**
 (`compound_resolution.py :: CORROBORATING_ID_KEYS`), excluding `drugbank`, which
