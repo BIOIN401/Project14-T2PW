@@ -317,6 +317,71 @@ def test_new_acceptance_a4_below_viability_is_review_required_not_dropped():
     assert "entities" in merged and "processes" in merged
 
 
+def test_new_acceptance_a4_the_ledger_survives_a_second_merge_without_doubling():
+    """REV-060 F-1. The RAG leg runs ``merge_additions`` twice and the second
+    call's BASE is the first call's output (``streamlit_app.py:4646`` then
+    ``:4700``). The first pass's removals must still be on the record afterwards,
+    and must not be duplicated by the round trip."""
+    ea = _gate()
+    first = merge_additions(_f1_payload(), {})
+    recorded = [(e["entity"], e["rule"], e["kind"]) for e in first[ea.LEDGER_KEY]["removed"]]
+    assert len(recorded) == 2, "the compound AND its orphaned edge are both audited"
+
+    second = merge_additions(first, {})
+
+    assert [
+        (e["entity"], e["rule"], e["kind"]) for e in second[ea.LEDGER_KEY]["removed"]
+    ] == recorded
+    assert second[ea.LEDGER_KEY]["counts"]["removed"] == 2
+
+
+def test_new_acceptance_a4_a_second_merge_appends_a_new_removal():
+    """A genuinely new removal at the second merge APPENDS to the inbound record."""
+    ea = _gate()
+    first = merge_additions(_f1_payload(), {})
+    second = merge_additions(
+        first, {"additions": {"entities": {"compounds": [{"name": "hematin"}]}}}
+    )
+
+    assert [e["entity"] for e in second[ea.LEDGER_KEY]["removed"]] == [
+        "hemin", "hemin", "hematin"
+    ]
+    assert second[ea.LEDGER_KEY]["counts"]["removed"] == 3
+
+
+def test_new_acceptance_a4_identity_is_content_derived_and_keeps_distinct_facts():
+    """S10's discipline. An identical entry is skipped; the same entity removed
+    under a different rule is a real second fact and is kept. Sticky review flag."""
+    ea = _gate()
+    same = _entry_like(ea, ea.RULE_REAGENT_DUPLICATE, "hemin", "heme")
+    other_rule = _entry_like(ea, ea.RULE_UNLOCATABLE_EVIDENCE, "hemin", "heme")
+    existing = {
+        "schema_version": ea.SCHEMA_VERSION, "removed": [same], "demoted": [],
+        "counts": {"removed": 1, "demoted": 0, "admitted": 0},
+        "review_required": True, "review_reasons": [ea.REASON_NO_SURVIVING_REACTION],
+    }
+    fresh = {
+        "schema_version": ea.SCHEMA_VERSION, "removed": [dict(same), other_rule],
+        "demoted": [], "counts": {"removed": 2, "demoted": 0, "admitted": 0},
+        "review_required": False, "review_reasons": [],
+    }
+
+    out = ea.carry_forward(existing, fresh)
+
+    assert out["removed"] == [same, other_rule]
+    assert out["counts"]["removed"] == 2
+    assert out["review_required"] is True
+    assert out["review_reasons"] == [ea.REASON_NO_SURVIVING_REACTION]
+    assert ea.carry_forward(None, fresh) is fresh
+
+
+def _entry_like(ea, rule, entity, evidence):
+    return {
+        "phase": ea.PHASE_HALLUCINATION, "rule": rule, "kind": "compound",
+        "entity": entity, "evidence": evidence,
+    }
+
+
 def test_new_acceptance_a4_a_clean_payload_is_not_flagged():
     ea = _gate()
     merged = merge_additions(_f34_base(), {}, pathway_context=ENTEROBACTIN)

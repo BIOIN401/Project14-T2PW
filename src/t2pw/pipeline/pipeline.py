@@ -47,6 +47,7 @@ from t2pw.pipeline.extraction_ladder import (
 )
 from t2pw.pipeline.entity_admission import (
     LEDGER_KEY as ENTITY_ADMISSION_LEDGER_KEY,
+    carry_forward as carry_forward_admission_ledger,
     screen_additions,
 )
 from t2pw.pipeline.localized_repair import MAX_JSON_REPAIR_ATTEMPTS, repair_json_text
@@ -1208,7 +1209,12 @@ def merge_additions(
         admission_report=rag_admission_report,
         context=pathway_context,
     )
-    merged[ENTITY_ADMISSION_LEDGER_KEY] = admission_ledger
+    # EXTEND, never replace. This function runs twice on a RAG leg and the second
+    # call's `base` is the first call's output, so an overwrite here would erase
+    # the first pass's removals from the record while leaving the rows gone.
+    merged[ENTITY_ADMISSION_LEDGER_KEY] = carry_forward_admission_ledger(
+        merged.get(ENTITY_ADMISSION_LEDGER_KEY), admission_ledger
+    )
     merged, _removed = apply_post_merge_cleanup(merged)
 
     return merged

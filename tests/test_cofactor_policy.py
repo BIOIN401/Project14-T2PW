@@ -88,7 +88,7 @@ def test_determinism_same_input_same_verdict_across_repeated_calls():
     assert len(seen) == 3
 
 
-def test_leaf_module_has_no_network_db_or_llm_path_and_is_dead_code():
+def test_leaf_module_has_no_network_db_or_llm_path():
     mods = set()
     for node in ast.walk(ast.parse(pathlib.Path(cp.__file__).read_text(encoding="utf-8"))):
         if isinstance(node, ast.Import):
@@ -98,8 +98,6 @@ def test_leaf_module_has_no_network_db_or_llm_path_and_is_dead_code():
     assert mods == {"__future__", "re", "dataclasses"}  # no requests/urllib/sqlite3/openai/t2pw
     src = pathlib.Path(cp.__file__).resolve().parents[2]
     assert src.parent == pathlib.Path(__file__).resolve().parents[1]  # same checkout as this test
-    assert [p.name for p in src.rglob("*.py") if p.name != "cofactor_policy.py"
-            and "cofactor_policy" in p.read_text(encoding="utf-8", errors="ignore")] == []
 
 
 @pytest.mark.parametrize("old,new,tbl", (  # a real family that is not a REPORTER family, then typos

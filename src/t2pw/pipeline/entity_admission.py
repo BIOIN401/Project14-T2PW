@@ -76,11 +76,17 @@ __all__ = [
     "RULE_REAGENT_DUPLICATE", "RULE_UNLOCATABLE_EVIDENCE", "RULE_ASSAY_COMPOSITE",
     "RULE_REFERENCES_REMOVED_ROW", "RULE_CURRENCY_NOT_SUBJECT", "RULE_REPORTER_NOT_MEMBER",
     "REASON_NO_SURVIVING_REACTION", "COFACTOR_OR_CURRENCY", "ASSAY_REPORTER",
-    "PathwayContext", "classify_entity", "screen_additions",
+    "PathwayContext", "classify_entity", "screen_additions", "carry_forward",
 ]
 
-#: Where :func:`pipeline.merge_additions` attaches the ledger. Not biological
-#: content: the canonical-graph projection is an allowlist and never sees it.
+#: Where :func:`pipeline.merge_additions` attaches the ledger. MEASURED, not
+#: assumed: the key survives ``map_ids.map_payload`` and ``quarantine_and_close``
+#: (both deep-copy) and sits inside the ``deepcopy`` that
+#: ``freeze_canonical_payload`` hashes, so it reaches ``final.canonical.json``
+#: and **participates in** ``canonical_payload_hash`` -- the hash differs with and
+#: without it. Attaching the ledger is chartered; altering that hash's composition
+#: is not. Excluding it from the projection is C-030 / C-052 territory, disclosed
+#: to the product owner and deliberately not done here.
 LEDGER_KEY = "entity_admission_report"
 SCHEMA_VERSION = 1
 
@@ -273,11 +279,64 @@ def _assay_composite(row: Any, siblings: List[Any]) -> str:
     return ""
 
 
+#: The fields that CONSTITUTE a ledger entry, and therefore its identity. There
+#: is no nonce, counter or timestamp here: identity is content-derived, exactly as
+#: PACK2-SHARED S10 requires of a lineage writer.
+_ENTRY_FIELDS: Tuple[str, ...] = ("phase", "rule", "kind", "entity", "evidence")
+
+
 def _entry(phase: str, rule: str, kind: str, entity: Any, evidence: Any) -> Dict[str, str]:
     return {
         "phase": phase, "rule": rule, "kind": kind,
         "entity": str(entity or ""), "evidence": str(evidence or ""),
     }
+
+
+def _entry_key(entry: Any) -> Tuple[str, ...]:
+    return tuple(str((entry or {}).get(field, "")) for field in _ENTRY_FIELDS)
+
+
+def carry_forward(existing: Any, fresh: Dict[str, Any]) -> Dict[str, Any]:
+    """Fold *fresh* into the ledger the payload already carries.
+
+    ``merge_additions`` runs more than once on a RAG leg: Stage 2 first, then
+    again with the conformed RAG envelope, whose merge BASE is the first merge's
+    own output. Overwriting the key there erased the first pass's removals from
+    the record while leaving the rows themselves gone -- a silent removal, which
+    A4 calls a reject.
+
+    Inbound entries are preserved and always come first; the ledger is never
+    replaced, only extended. A fresh entry is appended unless an entry with the
+    same content-derived identity is already present -- S10's discipline, and for
+    S10's reason: nothing downstream dedups for us. Identity is the FULL
+    constituting tuple, so the same entity removed under a different rule, in a
+    different phase, or on different evidence is a genuinely distinct second fact
+    and is kept. ``review_required`` is sticky: a pass that once emptied the
+    reaction set stays on the record even if a later pass adds reactions back.
+    """
+    if not isinstance(existing, dict):
+        return fresh
+    out: Dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION, "removed": [], "demoted": [],
+        "counts": {"removed": 0, "demoted": 0, "admitted": 0},
+        "review_required": bool(existing.get("review_required") or fresh.get("review_required")),
+        "review_reasons": [],
+    }
+    for bucket in ("removed", "demoted"):
+        seen: set = set()
+        for source in (existing.get(bucket), fresh.get(bucket)):
+            for entry in source if isinstance(source, list) else []:
+                key = _entry_key(entry)
+                if key in seen:
+                    continue
+                seen.add(key)
+                out[bucket].append(entry)
+        out["counts"][bucket] = len(out[bucket])
+    for source in (existing.get("review_reasons"), fresh.get("review_reasons")):
+        for reason in source if isinstance(source, list) else []:
+            if reason not in out["review_reasons"]:
+                out["review_reasons"].append(reason)
+    return out
 
 
 def _reaction_count(payload: Any) -> int:
