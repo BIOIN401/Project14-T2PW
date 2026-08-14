@@ -77,6 +77,7 @@ __all__ = [
     "RULE_REFERENCES_REMOVED_ROW", "RULE_CURRENCY_NOT_SUBJECT", "RULE_REPORTER_NOT_MEMBER",
     "REASON_NO_SURVIVING_REACTION", "COFACTOR_OR_CURRENCY", "ASSAY_REPORTER",
     "PathwayContext", "classify_entity", "screen_additions", "carry_forward",
+    "pathway_context_from_stage_zero",
 ]
 
 #: Where :func:`pipeline.merge_additions` attaches the ledger. MEASURED, not
@@ -146,6 +147,19 @@ _KIND_BY_BUCKET: Dict[str, str] = {
 }
 _STRIP_RE = re.compile(r"[^a-z0-9]")
 _SPACE_RE = re.compile(r"\s+")
+
+#: Typography a transcription can change without changing the citation: curly
+#: quotes and apostrophes, the dash family, the spaces PDF extraction emits. A
+#: FIXED character map, never a similarity measure -- two spans fold together
+#: only when they differ by these glyphs alone. No fuzzy matching, no synonym
+#: inference, no chemical-name equivalence: those would let the gate call a span
+#: it cannot find "close enough", the direction that admits fabricated evidence.
+_TYPOGRAPHIC = str.maketrans({
+    "‘": "'", "’": "'", "‚": "'", "‛": "'", "′": "'",
+    "“": '"', "”": '"', "„": '"', "‟": '"', "″": '"',
+    "‐": "-", "‑": "-", "‒": "-", "–": "-", "—": "-",
+    "―": "-", "−": "-", " ": " ", "​": "",  # nbsp, zero-width
+})
 
 
 def _norm(value: Any) -> str:
@@ -222,20 +236,35 @@ def _admitted_spans(report: Any) -> List[str]:
     return out
 
 
+def _locatable(value: str) -> str:
+    """``_squash`` plus :data:`_TYPOGRAPHIC` -- used ONLY to LOCATE a span.
+
+    Deliberately not ``_squash`` itself: ``_assay_marker`` folds against a
+    curated marker table and widening that would fire the assay-composite rule on
+    MORE rows, whereas widening this one can only fire the hallucination rule on
+    FEWER -- always away from removing a row, never toward it.
+    """
+    return _SPACE_RE.sub(" ", value.translate(_TYPOGRAPHIC)).strip()
+
+
 def _unlocatable(row: Any, seed: str, admitted: List[str]) -> str:
     """The span that condemns *row*, or ``""`` when the rule does not fire.
 
-    Fails open in both directions: no seed text, or no span long enough to
-    locate honestly, and the row is simply not evaluated.
+    Fails open in three directions: no seed text, no span long enough to locate
+    honestly, and a span that differs from the seed's only in the typography of
+    :data:`_TYPOGRAPHIC` -- and in each the row is simply not evaluated. A
+    curly apostrophe in a PDF quoted back with an ASCII one is a transcription
+    difference; treating it as a fabrication would remove correct biology.
     """
     if not seed:
         return ""
     candidates = [s for s in _spans(row) if len(s.strip()) >= _MIN_SPAN_CHARS]
     if not candidates:
         return ""
+    haystacks = [_locatable(seed)] + [_locatable(record) for record in admitted]
     for span in candidates:
-        squashed = _squash(span)
-        if squashed in seed or any(squashed in record for record in admitted):
+        folded = _locatable(_squash(span))
+        if any(folded in haystack for haystack in haystacks):
             return ""
     return candidates[0]
 
@@ -337,6 +366,37 @@ def carry_forward(existing: Any, fresh: Dict[str, Any]) -> Dict[str, Any]:
             if reason not in out["review_reasons"]:
                 out["review_reasons"].append(reason)
     return out
+
+
+def pathway_context_from_stage_zero(context: Any) -> PathwayContext:
+    """Build the gate's :class:`PathwayContext` from a Stage-0 context mapping.
+
+    WHY THIS EXISTS. :func:`_screen_advisory` gates on
+    ``isinstance(context, PathwayContext)``, and what every production caller of
+    ``pipeline.merge_additions`` holds is the Stage-0 **dict**. Forwarding that
+    dict type-checks, reaches the gate and is SILENTLY INERT. Callers must build
+    the real frozen dataclass, and all of them the same way -- so it is built
+    here and nowhere else.
+
+    The derivation is ``streamlit_app.maybe_run_rag``'s own
+    (``streamlit_app.py:468-473``), whose comment requires that the eligibility
+    screen, gap detection and this gate not re-derive the request differently.
+    ``tests/test_c060a_requested_pathway_wiring.py`` evaluates that function's two
+    assignments out of the app source and requires this factory to agree with
+    them field for field, so the two cannot drift apart unnoticed.
+
+    Total, and never a new refusal: no ``pathway_name`` yields
+    ``PathwayContext("")``, which is what :func:`_screen_advisory` already
+    coerces a missing context to, so a run whose Stage 0 came back empty behaves
+    exactly as it did unwired. An already-built context is returned unchanged.
+    """
+    if isinstance(context, PathwayContext):
+        return context
+    mapping = context if isinstance(context, dict) else {}
+    return PathwayContext(
+        str(mapping.get("pathway_name") or ""),
+        str(mapping.get("likely_organism") or mapping.get("organism") or ""),
+    )
 
 
 def _reaction_count(payload: Any) -> int:
