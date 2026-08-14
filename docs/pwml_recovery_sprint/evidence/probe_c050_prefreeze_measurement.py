@@ -200,7 +200,13 @@ def main(argv: List[str] | None = None) -> int:
     print(f"T2PW: {t2pw.__file__}")
     payload = _load_source_payload()
     if payload is None:
-        return 0
+        # A9: "UNDETERMINED is never a pass" -- and an absent input leg is the
+        # purest UNDETERMINED there is. Returning 0 here let a run that measured
+        # NOTHING report success through a different door than the verdict
+        # function guards, which is exactly the failure mode A9 names.
+        print(f"\nRESULT: UNDETERMINED -- {PASSING_LEG} carries no payload to measure")
+        print("C-050 ACCEPTANCE: FAILED -- nothing was measured; this is not a zero")
+        return 2
 
     if args.check_canonical_path:
         return _check_canonical_path(payload)

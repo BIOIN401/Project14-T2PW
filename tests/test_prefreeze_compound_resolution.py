@@ -23,6 +23,9 @@ from typing import Any, Dict, List, Optional
 import pytest
 
 from t2pw.pipeline.canonical_hash import canonical_graph_sha256, graph_projection
+from t2pw.pwml import compound_resolution
+from t2pw.pwml.compound_resolution import _resolve_compound_rows, ensure_resolution_report
+from t2pw.pwml.name_index import default_name_index
 from t2pw.pwml.prefreeze_resolution import (
     PrefreezeResolutionError,
     resolve_compounds_prefreeze,
@@ -332,9 +335,17 @@ def test_new_acceptance_a_compound_with_no_id_hit_gains_no_identity() -> None:
 
     row = payload["entities"]["compounds"][1]  # succinyl-CoA: no chebi, no index hit
     assert row["name"] == "succinyl-CoA"
+    # These four carry A7 on their own: with no id hit and no reachable DB, no
+    # identity is attached.
     assert "db_row" not in row
     assert "pathwhiz_id" not in row
     assert "pathbank_compound_id" not in row
+    # This one does NOT. ``unmatched`` here is the recorded consequence of
+    # ``_OfflineResolver`` reporting itself unavailable -- it is a property of
+    # the stub, not of the product, and on production wiring against a reachable
+    # PathBank DB this same row could legitimately record something else. What
+    # it does pin, post-B2, is that the status the FIRST pass recorded is the one
+    # that survives; before the fix the fixed-point loop overwrote it.
     assert row["db_status"] == "unmatched"
 
 
@@ -435,6 +446,311 @@ def test_new_acceptance_an_empty_or_compoundless_payload_is_left_alone() -> None
 # --------------------------------------------------------------------------
 # A11 -- hashing. C-030's projection is asserted, never modified.
 # --------------------------------------------------------------------------
+
+
+def test_new_acceptance_a_rename_propagates_into_element_locations() -> None:
+    """B1: ``element_locations`` is a name-keyed reference section too.
+
+    ``canonical._parse_json`` reads ``compound_locations[].compound`` as an entity
+    reference and ``compound`` is inside the graph-hash allowlist, so a location
+    left holding the pre-rename name dangles -- and the dangling name is hashed
+    into ``canonical_graph_sha256``. The walk used to visit ``processes`` only,
+    which also meant ``_assert_fully_propagated`` could not see its own output.
+    """
+
+    payload = _payload()
+    payload["element_locations"] = {
+        "compound_locations": [
+            {"compound": "gly", "biological_state": "cytosol"},
+            {"compound": "succinyl-CoA", "biological_state": "cytosol"},
+            {"entity": "gly", "biological_state": "mitochondrion"},
+        ],
+        "protein_locations": [{"protein": "ALAS2", "biological_state": "cytosol"}],
+    }
+    summary = _run(payload, _glycine_index())
+
+    locations = payload["element_locations"]["compound_locations"]
+    assert [row.get("compound") or row.get("entity") for row in locations] == [
+        "Glycine", "succinyl-CoA", "Glycine",
+    ]
+    # An entity of another kind is not touched by a compound rename.
+    assert payload["element_locations"]["protein_locations"][0]["protein"] == "ALAS2"
+
+    # Recorded with a pointer, like every other propagated reference.
+    pointers = {update["pointer"] for update in summary["references_updated"]}
+    assert "/element_locations/compound_locations/0/compound" in pointers
+    assert "/element_locations/compound_locations/2/entity" in pointers
+
+    # And the direct statement of the defect: nothing anywhere in the frozen
+    # sections still names a compound that no longer exists.
+    names = {row["name"] for row in payload["entities"]["compounds"]}
+    referenced = {row.get("compound") or row.get("entity") for row in locations}
+    assert referenced <= names, f"dangling location references: {referenced - names}"
+
+
+def test_new_acceptance_a_dangling_location_cannot_survive_the_commit() -> None:
+    """B1, from the other side: the module can now SEE a dangling location.
+
+    ``_assert_fully_propagated`` reads the world through the same generator as
+    the propagation, so it used to be structurally incapable of catching one.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _assert_fully_propagated, _iter_refs
+
+    payload = _payload()
+    payload["element_locations"] = {
+        "compound_locations": [{"compound": "gly", "biological_state": "cytosol"}]
+    }
+    _run(payload, _glycine_index())
+    _assert_fully_propagated(payload, {"gly": "Glycine"})  # does not raise
+
+    pointer = "/element_locations/compound_locations/0/compound"
+    payload["element_locations"]["compound_locations"][0]["compound"] = "gly"
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _assert_fully_propagated(payload, {"gly": "Glycine"})
+    assert excinfo.value.code == "PREFREEZE_RENAME_NOT_PROPAGATED"
+    assert excinfo.value.details["pointer"] == pointer
+    assert any(ref.pointer == pointer for ref in _iter_refs(payload))
+
+
+# --------------------------------------------------------------------------
+# B2 -- NEW ACCEPTANCE: the loop settles identity, it does not invent a decision.
+# --------------------------------------------------------------------------
+
+
+class _SubThresholdCompoundResolver:
+    """``PathWhizCompoundResolver``'s measured live answer for OPDA, without a DB.
+
+    ``status='matched'``, ``chosen_rule='fuzzy_name'``, ``confidence=0.65`` --
+    below C-040's own ``>= 0.85`` gate and applied anyway by the fall-through.
+    Whether it *should* apply is escalated separately (B3); this fake pins what
+    the payload RECORDS about it, which is this card's business.
+    """
+
+    OPDA_ROW = {"id": 104723, "name": "Dinor-12-oxo-phytodienoate"}
+
+    def __init__(self, db_resolver: Any) -> None:
+        self.db_resolver = db_resolver
+
+    def resolve(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        name = str(row.get("name") or "")
+        if name != "OPDA":
+            return {"status": "unmatched", "raw_name": name, "chosen": None,
+                    "candidates": [], "chosen_rule": "", "confidence": 0.0,
+                    "reason": "No PathWhiz DB match by IDs or name"}
+        return {"status": "matched", "raw_name": name, "chosen": dict(self.OPDA_ROW),
+                "candidates": [], "chosen_rule": "fuzzy_name", "confidence": 0.65}
+
+
+class _AvailableDbResolver:
+    last_error = ""
+
+    def available(self) -> bool:
+        return True
+
+
+def _opda_payload() -> Dict[str, Any]:
+    return {
+        "entities": {"compounds": [_compound("OPDA"), _compound("OPC-8:0")]},
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "OPDA", "biological_state": "cytosol"},
+                {"compound": "OPC-8:0", "biological_state": "cytosol"},
+            ]
+        },
+        "processes": {
+            "reactions": [
+                {"name": "peripheral OPDA reduction", "inputs": ["OPDA"], "outputs": ["OPC-8:0"]}
+            ]
+        },
+    }
+
+
+def _fuzzy(monkeypatch: pytest.MonkeyPatch, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Resolve ``payload`` against the sub-threshold OPDA answer, no DB needed."""
+
+    monkeypatch.setattr(compound_resolution, "PathWhizCompoundResolver", _SubThresholdCompoundResolver)
+    return resolve_compounds_prefreeze(
+        payload, db_resolver=_AvailableDbResolver(), strict_db=False, name_index=None)
+
+
+def test_new_acceptance_the_rule_that_chose_the_identity_survives_convergence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """B2: pass 2 may not restate pass 1's decision as the payload's own.
+
+    Before the fix, identical inputs:
+    ``passes=1 db_status='matched' chosen_rule='fuzzy_name' conf=0.65`` then
+    ``passes=2 db_status='legacy_id_unverified'
+    chosen_rule='legacy_pathwhiz_id_unverified' conf=0.85``. Pass 1 writes
+    ``pathwhiz_id``; pass 2 reads it back and records the reason
+    ``payload_pathwhiz_id``, so ``final_mapped.json`` would claim the id arrived
+    in the incoming payload, 0.20 above what the resolver reported, with the rule
+    that actually chose it erased.
+    """
+
+    payload = _opda_payload()
+    summary = _fuzzy(monkeypatch, payload)
+    row = payload["entities"]["compounds"][0]
+
+    assert summary["resolution_passes"] >= 2, "a single pass would not exercise the drift"
+    assert (row["db_status"], row["chosen_rule"], row["confidence"]) == (
+        "matched", "fuzzy_name", 0.65)
+    # The identity the loop settled on is still there -- only the account of who
+    # decided it was restored. B1 rides along: the location follows the rename.
+    assert row["name"] == "Dinor-12-oxo-phytodienoate"
+    assert row["pathwhiz_id"] == 104723
+    assert summary["rename_map"] == {"OPDA": "Dinor-12-oxo-phytodienoate"}
+    assert payload["element_locations"]["compound_locations"][0]["compound"] == (
+        "Dinor-12-oxo-phytodienoate")
+
+    # The invariant behind the symptom: one pass is what the exporter runs at
+    # base, so one pass is what the provenance must say. Computed rather than
+    # hard-coded, so it survives a change to C-040's rules.
+    single = _resolve_compound_rows(
+        _opda_payload()["entities"]["compounds"], db_resolver=_AvailableDbResolver(),
+        strict_db=False, report=ensure_resolution_report({}),
+        pointer_prefix="/entities/compounds", name_index=None)
+    fields = ("db_status", "chosen_rule", "confidence")
+    assert [{f: r.get(f) for f in fields} for r in payload["entities"]["compounds"]] == [
+        {f: r.get(f) for f in fields} for r in single]
+
+    # And a re-run must not re-decide either: a row arriving with a ``db_status``
+    # was decided by an earlier call, and this one has nothing to add to it.
+    frozen = deepcopy(payload)
+    _fuzzy(monkeypatch, payload)
+    assert payload == frozen
+
+
+def test_new_acceptance_a_repeat_pass_is_not_a_second_consultation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The report may not claim the resolver failed a row more often than it did.
+
+    Every pass appends one entry per row to ``db_resolution.compounds``,
+    ``unresolved.db_identities`` and the issue lists, so an unfixed three-pass
+    convergence over two rows records six consultations of a resolver that made
+    two decisions."""
+
+    payload = _opda_payload()
+    summary = _fuzzy(monkeypatch, payload)
+    report = summary["resolution_report"]
+
+    assert summary["resolution_passes"] >= 2
+    assert len(report["db_resolution"]["compounds"]) == 2
+    # Both rows are unresolved: OPC-8:0 outright, OPDA because 0.65 is below
+    # C-040's >= 0.85 gate -- the sub-threshold apply that C-040a owns under
+    # D-028 and that this card deliberately leaves alone. One entry each.
+    assert len(report["unresolved"]["db_identities"]) == 2
+    assert len(report.get("warnings") or []) == 2
+    assert [i["chosen_rule"] for i in report["unresolved"]["db_identities"]] == ["fuzzy_name", ""]
+
+
+# --------------------------------------------------------------------------
+# D5 -- NEW ACCEPTANCE: the wiring production actually uses.
+# --------------------------------------------------------------------------
+
+
+def test_new_acceptance_the_production_wiring_holds_its_invariants() -> None:
+    """``db_resolver=None`` and the real ``default_name_index()``.
+
+    Every other test here supplies ``_OfflineResolver`` and a stub index.
+    ``streamlit_app`` supplies neither: ``db_resolver=None`` makes
+    ``_resolve_compound_rows`` construct ``PathBankDbResolver.from_env()``. That
+    gap is why B1 and B2 were invisible to this suite.
+
+    The assertions hold on **both** a machine with a reachable PathBank DB and one
+    without -- that is the difference between the environments this branch has
+    been measured in, and a test that held on only one of them is exactly how a
+    vacuously clean measurement gets recorded as a result.
+    """
+
+    payload = _opda_payload()
+    payload["entities"]["compounds"].append(_compound("L-glutamate"))
+    payload["element_locations"]["compound_locations"].append(
+        {"compound": "L-glutamate", "biological_state": "cytosol"})
+    before_rows = deepcopy(payload["entities"]["compounds"])
+
+    summary = resolve_compounds_prefreeze(
+        payload, db_resolver=None, strict_db=False, name_index=default_name_index())
+    assert summary["applied"] is True
+
+    # 1. No dangling reference, whatever the DB decided to rename.
+    rows = payload["entities"]["compounds"]
+    reachable = {row["name"] for row in rows}
+    for row in rows:
+        reachable.update(str(value) for value in row.get("synonyms") or [])
+        reachable.add(str(row.get("raw_name") or ""))
+    for location in payload["element_locations"]["compound_locations"]:
+        assert location["compound"] in reachable, location
+    for name in payload["processes"]["reactions"][0]["inputs"]:
+        assert name in reachable, name
+
+    # 2. The recorded decision is a single pass's, not the loop's re-observation.
+    single = _resolve_compound_rows(
+        before_rows, db_resolver=None, strict_db=False,
+        report=ensure_resolution_report({}), pointer_prefix="/entities/compounds",
+        name_index=default_name_index())
+    fields = ("db_status", "chosen_rule", "confidence")
+    assert [{f: r.get(f) for f in fields} for r in rows] == [
+        {f: r.get(f) for f in fields} for r in single]
+
+    # 3. Say which environment produced the run, so a clean result can never be
+    #    read as clean-because-nothing-was-consulted.
+    assert "available" in summary["resolution_report"]["db_resolution"]
+
+
+# --------------------------------------------------------------------------
+# D2 -- NEW ACCEPTANCE: ``ok`` is a verdict, and strict means stop.
+# --------------------------------------------------------------------------
+
+
+def _unresolvable_payload() -> Dict[str, Any]:
+    return {
+        "entities": {"compounds": [_compound("a compound no database carries")]},
+        "processes": {"reactions": [{"name": "R", "inputs": ["a compound no database carries"]}]},
+    }
+
+
+def test_new_acceptance_a_failed_resolution_report_is_not_reported_as_ok() -> None:
+    """``report["ok"]`` used to be set True before anything ran and never fell, so
+    a nested report carrying ``ok=False`` and error-severity
+    ``compound_db_resolution_failed`` entries came back as a success -- the record
+    saying something the run did not establish."""
+
+    def _failed(payload: Any, **_kwargs: Any) -> Dict[str, Any]:
+        return {"applied": True, "resolution_report": {"ok": False}}
+
+    report = run_prefreeze_resolution({}, canonicalizers=(("compounds", _failed),))
+    assert report["ok"] is False
+    assert report["failures"] == {"compounds": "resolution_report_not_ok"}
+
+    # A skip that is not a clean no-op falsifies it too.
+    skipped = run_prefreeze_resolution([], db_resolver=_OfflineResolver(), name_index=None)
+    assert skipped["ok"] is False
+    assert skipped["failures"] == {"compounds": "payload_not_a_mapping"}
+
+    # A payload with nothing to canonicalize is still a clean run.
+    clean = run_prefreeze_resolution(
+        {"entities": {"compounds": []}}, db_resolver=_OfflineResolver())
+    assert clean["ok"] is True
+    assert clean["failures"] == {}
+
+
+def test_new_acceptance_strict_db_stops_on_a_failed_resolution_report() -> None:
+    """D-015 clause 6: a strict run may not claim a payload it could not resolve.
+    ``_resolve_compound_rows`` records its failures at severity ``error`` in
+    exactly that mode, so the report already knew; nothing read it."""
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        run_prefreeze_resolution(
+            _unresolvable_payload(), strict_db=True,
+            db_resolver=_OfflineResolver(), name_index=None)
+    assert excinfo.value.code == "PREFREEZE_RESOLUTION_NOT_OK"
+    # The reason names WHY, because "the resolver rejected the row" and "the
+    # resolver was never reachable" are adjudicated differently.
+    assert excinfo.value.details["failures"]["compounds"].startswith("resolution_report_not_ok")
+    assert excinfo.value.details["report"]["ok"] is False
 
 
 def test_canonical_graph_hash_moves_when_biology_moves_prefreeze() -> None:

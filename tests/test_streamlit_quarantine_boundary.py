@@ -247,6 +247,16 @@ STAGE_ZERO_CONTEXT = {
     "key_proteins": ["glutamate-cysteine ligase"],
 }
 
+#: The keys C-050's pre-freeze compound resolution adds to a compound row that
+#: carried none of them, on a payload with no external identifiers and no
+#: reachable PathBank DB -- i.e. every row in these fixtures. Named here so the
+#: documented baseline move is a value in the file rather than a comment: a
+#: pre-freeze stage that starts writing something else fails the test that
+#: reads it, instead of quietly widening the accepted delta.
+PREFREEZE_RESOLUTION_FIELDS = [
+    "chosen_rule", "confidence", "db_match", "db_status", "raw_name",
+]
+
 
 # ---------------------------------------------------------------------------
 # Real streamlit, whatever the rest of the suite did to sys.modules.
@@ -984,8 +994,45 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None
     # equal to the one it was handed. This is the assertion that fails if quarantine
     # ever edits a research payload -- reorders a list, drops an empty bucket,
     # normalizes a name -- while leaving the process count intact.
+    #
+    # DELIBERATE BASELINE MOVE -- C-050 / DECISIONS.md D-015 (LOCKED).
+    # ``final_mapped_db`` is the PRE-enrichment file on disk, and it used to be
+    # byte-equal to the candidate because the protein-annotation stub was the only
+    # stage between the mapped write and artifact publication. D-015 requires
+    # compound name and identity canonicalization to run BEFORE the freeze, so
+    # C-050 lawfully inserts a second stage there and the two artifacts can no
+    # longer be identical. The claim is split rather than dropped, and neither
+    # half is weaker than what it replaces:
+    #
+    #   * outside ``entities.compounds``, nothing may differ AT ALL -- that is the
+    #     original assertion, on the original object, unrelaxed; and
+    #   * inside it, the rows stay in the same order under the same names and may
+    #     gain only the fields the pre-freeze resolution records.
+    #
+    # It is not vacuous in either direction: quarantine editing a research payload
+    # still fails the first half, and a pre-freeze stage that silently stopped
+    # running -- or started renaming -- fails the second.
     mapped_in = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
-    assert candidate == mapped_in
+
+    def _without_compounds(payload: Dict[str, Any]) -> Dict[str, Any]:
+        stripped = deepcopy(payload)
+        (stripped.get("entities") or {}).pop("compounds", None)
+        return stripped
+
+    assert _without_compounds(candidate) == _without_compounds(mapped_in)
+
+    before_rows = mapped_in["entities"]["compounds"]
+    after_rows = candidate["entities"]["compounds"]
+    assert [row.get("name") for row in after_rows] == [row.get("name") for row in before_rows]
+    assert all(set(before) <= set(after) for before, after in zip(before_rows, after_rows))
+    added = sorted({
+        key
+        for before, after in zip(before_rows, after_rows)
+        for key in set(after) - set(before)
+    })
+    assert added == PREFREEZE_RESOLUTION_FIELDS, added
+    # Every row really went through resolution; an empty stamp would not do.
+    assert all(row["db_status"] for row in after_rows)
 
     # And the run is not blocked one step later either. The post-mapping Stage 3
     # revalidation fails on this payload -- the unmapped modifier is exactly what
