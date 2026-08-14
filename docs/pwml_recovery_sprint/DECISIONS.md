@@ -1122,3 +1122,88 @@ locations to work from.
 
 Any card quoting D-021's numbers must re-derive them by **AST symbol, not line range**
 (`PACK2-SHARED` § S9 trap 1: insertions above a function shift it).
+
+---
+
+## D-028 — DB match admission: no fuzzy rename, and short names need a corroborating identifier · 2026-08-14 · LOCKED
+
+**Adjudicated `product_contract_violation`** by an independent `pwml-bio-auditor`; ruled by the
+product owner. Implemented by **C-040a** (`agent/p40a-db-match-admission` @ `7d5a3916`).
+
+### The defect
+
+`compound_resolution.py` required `confidence >= 0.85` to accept a PathBank DB match. When that
+failed it logged `compound_db_resolution_failed` — and then **applied the resolution anyway**.
+`db_resolver.py :: apply_compound_db_resolution` checked only `status != "matched"` and never read
+confidence. **The gate decided whether to log a failure, not whether to apply.**
+
+Measured over the 124 distinct compound names in committed `runs/**/final_mapped.json`:
+**24 would be renamed and identifier-stamped, every one below the acceptance bar** — 3 via
+`fuzzy_name` @0.65 and 21 via `exact_short_name_or_synonym` @0.70. Confirmed-wrong cases included
+`OPDA → Dinor-12-oxo-phytodienoate` (**not a PathBank synonym at all** — exact-name and synonym
+lookups both return empty; the fuzzy tie-break passes by 0.0006), `THF → Tetrahydrofuran`,
+`CL → Chloride ion` (CL = cardiolipin), `G3P → 3-Phosphoglyceric acid` (G3P = glycerol-3-phosphate),
+`PE → O-Phosphoethanolamine` (PE = phosphatidylethanolamine),
+`glycerol-3-phosphate → Indoleglycerol phosphate`.
+
+The gold set already names this failure class: `PMC13231680`'s `forbidden_identifiers` entry for
+`PSA` — *"in most biomedical text PSA is prostate-specific antigen … Resolving it to a protein
+identifier is a failure."* Contract basis: **PRODUCT_CONTRACT §1** ("never invent … identities") and
+**§8** ("Never accept an identifier because its format is valid").
+
+### The ruling — "no fuzzy + abbreviation guard"
+
+1. **A `fuzzy_name` match may never rename and may never stamp identifiers.** Record only.
+2. **A unique exact normalized full-name or synonym match may rename and stamp**, *except* that a
+   name of **four characters or fewer** additionally requires **corroboration by a matching
+   identifier on the same DB row**.
+3. **Corroboration means AGREEMENT, not presence.** The row's identifier must **equal** the matched
+   PathBank row's same-namespace identifier. A disagreeing identifier, or one with no counterpart on
+   the matched row, corroborates nothing. *(Clarified during implementation: a presence-only reading
+   admitted `PE` — whose `mapped_ids.kegg = C00012` is absent from PathBank's `compounds.kegg_id` —
+   contradicting the kill-list this decision was ruled against.)*
+4. **Corroborating namespaces are limited to KEGG, ChEBI, PubChem and HMDB.** **DrugBank is excluded
+   and remains fail-closed unless separately ruled.** Exclusion is conservative: it can only produce
+   more refusals, never more admissions.
+5. **"Record only" means no rename AND no identifier stamp** — never a partial apply.
+6. **A refused match is recorded for review, never silently dropped and never raised.** Merge rule 7
+   preserves incomplete-but-correct pathways as `review_required`. Status:
+   `identity_refused_review_required`.
+7. **The `4` is a named module constant citing this decision** — `SHORT_ABBREVIATION_MAX_CHARS`.
+
+### Attribution and scope
+
+The defect is **pre-existing**: C-040 lifted it verbatim from `ir.py`, and it remained live
+post-freeze at `ir.py:911-918`. **C-050 does not create it** — C-050 widens its blast surface by
+moving false names into the canonical payload *before* the freeze, where they are hashed and reach
+`final_mapped.json` and the quarantine report. **The remedy is to fix the gate, not to revert
+C-050.** One fix governs both the pre-freeze and post-freeze surfaces; it is deliberately **not**
+special-cased by caller.
+
+`test_all_four_artifacts_are_written_and_retained` needs **no** test change: `original_process`
+should show post-canonicalization names, so it returns to green once this decision is implemented.
+
+### Measured effect (C-040a, independently reproduced by `REV-040a`)
+
+| | base | tip |
+|---|---|---|
+| name-only: admitted / refused | 56 / 0 | **36 / 20** |
+| real committed rows: refused | 0 | **5** |
+| real rows: substantive renames | 7 | **2** |
+| **new renames introduced** | — | **0** |
+| **refused rows gaining the match's stamps** | — | **0** |
+
+**Legitimate identity lost — 3 of 124 real rows**, stated rather than hidden: `NAD` (identifiers
+only; its name was already correct), `PLP → Pyridoxal 5'-phosphate`, `Zn²⁺ → Zinc`. All three carry
+`row_mapped_ids = {}`. Common cofactors are safe because **66/124 rows resolve by
+`pathbank_compound_id` at confidence 1.0 on the strong-id branch and never reach rule 2** — `ATP`
+among them. The precise safety claim is "an identifier that *hits* the DB"; an id-less abbreviation
+is refused by design.
+
+### Related vendor-data finding (recorded, no gold change)
+
+PathBank row 104723 is **internally inconsistent**: its *name* asserts the C16 dinor homolog while
+its KEGG `C01226`, ChEBI `57411` and PubChem assert C18 12-OPDA — and PathBank has **no row for C18
+OPDA at all**. The correct canonical target does not exist, so the only correct outcome for "OPDA"
+is no rename. PathBank is a vendor source, not the gold set; the contract's remedy for inconsistent
+vendor data is the confidence bar this decision restores.

@@ -350,3 +350,68 @@ expected · minimal reproducer or evidence · current-card impact · future owne
   - **P2-05 (MEDIUM)** — `id_source="db"` still issues LLM calls unless
     `T2PW_LLM_PROTEIN_FALLBACK=0`; two existing tests treat `db` as offline without setting it.
 - **Owner** the next lead orchestrator, at Pack 2 closeout.
+
+---
+
+## P4-01 — No `.env` in any worktree: PathBank-dependent measurements run there are vacuously clean
+
+**Severity: HIGH (evidence integrity).** Owner: unowned — a standing sprint constraint, not a code defect.
+
+`t2pw.config.PROJECT_ROOT` resolves to the **worktree**; worktrees have **no `.env`**; the eight
+`PATHBANK_DB_*` lines live only in the main checkout. Therefore `PathBankDbResolver.from_env()`
+returns **`None`** inside every worktree, and any PathBank-dependent measurement run there silently
+resolves to "no DB" — **green-looking and worthless**.
+
+**Observed vs expected.** Committed `evidence/g11/C-050/01-baseproof.json` is labelled `baseproof`,
+runs `--leg base`, and **exits 0** — no failure. An independent run of the identical command exits 1
+with the expected five-category table. Cause is DB reachability, not the code under test.
+
+**Consequences, recorded:**
+* **`C-050/01-baseproof.json` must never be cited as a base proof.** C-050's genuine G9 base proof is
+  `07-g9base.json` (rc=1, run from a base export). The artifact is **retained, not deleted** — the
+  honest record stays. No misconduct: failures were committed rather than hidden.
+* The `pwml-bio-auditor`'s OPDA measurement came from the **main checkout** and **cannot** be
+  reproduced from a worktree.
+
+**Standing rule.** A card whose evidence depends on PathBank must either (a) harvest **read-only from
+the main checkout** and decide **offline** against the harvested fixture, or (b) label its numbers as
+DB-unavailable. **Never edit, copy, or shuttle credentials out of `.env`.** C-040a demonstrates the
+compliant two-phase shape, and it produces *stronger* evidence than a live query because a reviewer
+without DB access can re-run the decision phase.
+
+**Aggravating factor.** `bounded_run.py`'s JSON report carries no child stdout and no
+`worktree dirty` field, so a committed artifact alone cannot show whether a failure was behavioural.
+This is why independent reproduction — not artifact citation — is the standard for a G9 base proof.
+
+---
+
+## P4-02 — C-040a's measurement scripts are uncommitted: reproducibility debt
+
+**Severity: LOW.** Owner: unowned. **Do not alter the approved C-040a tip `7d5a3916` merely to add them.**
+
+`c040a_probe.py` and `c040a_golden_delta.py` produced C-040a's committed evidence
+(`evidence/c040a_pathbank_verdicts.json`, `evidence/c040a_golden_delta.json`) but exist only in a
+session scratchpad. **The committed artifacts are therefore not reproducible from the repo alone.**
+
+Not blocking, and it did not weaken the review: `REV-040a` worked around it by writing its own
+independent Phase-2 replay and rebuilding the golden projection itself — arguably stronger evidence
+than reusing the author's tooling would have been.
+
+**Remedy:** commit the probes in a later evidence/closeout commit. The approved card tip is not to be
+disturbed for this.
+
+---
+
+## P4-03 — D-028 corroborating namespaces exclude DrugBank (fail-closed, awaiting ratification)
+
+**Severity: INFORMATIONAL.** Owner: product owner.
+
+D-028 rule 4 limits corroborating namespaces to **KEGG, ChEBI, PubChem, HMDB**
+(`compound_resolution.py :: CORROBORATING_ID_KEYS`), excluding `drugbank`, which
+`_compound_external_ids` also returns. The exclusion is **fail-closed** — it can only produce more
+refusals, never more admissions — so it is conservative and safe. It is now written into D-028 rule 4
+as an explicit exclusion, to be confirmed or widened by separate ruling.
+
+Related, same fail-closed direction: the `HMDB` (upper-only) and `pubchem` (raw) normalizers are
+stricter than the `chebi`/`kegg` ones, so they can cause false **disagreement** → refusal, never
+false admission.
