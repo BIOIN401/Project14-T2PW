@@ -372,9 +372,17 @@ def test_a_stale_decision_does_not_authorize_a_payload_whose_core_was_deleted() 
     rejudged = quarantine_and_close(
         refined, strict_db=True, pathway_context=STAGE_ZERO_CONTEXT
     )
-    assert rejudged.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). Base SHA: ``ok is False``. What this test
+    # is about -- a stale decision does not authorize a payload whose core was
+    # deleted -- is asserted by ``decision_matches`` above and is unchanged. The
+    # re-judgement of the reduced payload now says review_required rather than
+    # refusing outright, and still never says strict success.
+    assert rejudged.ok is True
+    assert rejudged.quarantine_report["release"]["status"] == "review_required"
+    assert rejudged.quarantine_report["release"]["strict_acceptance_eligible"] is False
     assert any(
-        reason.startswith("minimum_core:") for reason in rejudged.refusal_reasons
+        reason.startswith("minimum_core:")
+        for reason in rejudged.quarantine_report["review_reasons"]
     )
 
 

@@ -694,7 +694,21 @@ def test_unrelated_surviving_reactions_cannot_satisfy_minimum_core_coverage() ->
 
     assert _states(result)["citrate isomerisation"] == AUXILIARY_ACCEPTED
     assert result.payload["processes"]["reactions"] != []
-    assert result.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). At the base SHA this was ``ok is False``
+    # and the run ended with no PWML. The claim the test makes is unchanged and
+    # is now asserted directly rather than through a boolean: an unrelated
+    # survivor still cannot produce SUCCESS. It produces review_required PWML,
+    # which is explicitly not release_ready and never enters the strict
+    # denominator. Deleting the fragment instead is what PRODUCT_CONTRACT 1
+    # forbids.
+    assert result.ok is True
+    release = result.quarantine_report["release"]
+    assert release["status"] == "review_required"
+    assert release["strict_acceptance_eligible"] is False
+    assert any(
+        reason.startswith("minimum_core:")
+        for reason in result.quarantine_report["review_reasons"]
+    )
     assert result.coverage["coverage_ratio"] == 0.0
     assert result.coverage["core_accepted_processes"] == 0
     assert any(
@@ -717,7 +731,13 @@ def test_partial_core_coverage_below_the_floor_fails() -> None:
 
     assert result.coverage["matched_terms"] == ["L-glutamate"]
     assert result.coverage["coverage_ratio"] == pytest.approx(0.25)
-    assert result.ok is False
+    # MOVED BY C-041a (D-002, LOCKED): the threshold blocks release-ready status,
+    # not PWML production, so a shortfall is review_required rather than a
+    # refusal. Base SHA: ``ok is False``. The threshold value is unchanged and
+    # the reason is still raised and still recorded.
+    assert result.ok is True
+    assert result.quarantine_report["release"]["status"] == "review_required"
+    assert result.quarantine_report["release"]["strict_acceptance_eligible"] is False
     assert any(
         reason.startswith("requested_core_coverage_below_minimum")
         for reason in result.coverage["reasons"]
@@ -745,7 +765,12 @@ def test_an_explicit_requested_core_argument_overrides_the_payload() -> None:
 
     assert result.coverage["requested_core_terms"] == ["urea cycle", "ornithine"]
     assert result.coverage["unmatched_terms"] == ["urea cycle", "ornithine"]
-    assert result.ok is False
+    # MOVED BY C-041a (D-002, LOCKED). Base SHA: ``ok is False``. The explicit
+    # argument still outranks the payload -- that is what this test is about --
+    # and covering none of it is now review_required, never strict success.
+    assert result.ok is True
+    assert result.quarantine_report["release"]["status"] == "review_required"
+    assert result.quarantine_report["release"]["strict_acceptance_eligible"] is False
 
 
 def test_evaluate_core_coverage_counts_only_core_accepted_processes() -> None:
@@ -857,13 +882,16 @@ def test_all_four_artifacts_are_written_even_when_nothing_was_quarantined(tmp_pa
     for filename in written:
         document = json.loads((tmp_path / filename).read_text(encoding="utf-8"))
         # Every artifact is versioned. The quarantine report moved to 2 when it
-        # grew the payload hash that binds a decision to one payload version, and
-        # to 3 when it grew the decision-input hash that binds it to one set of
-        # rules as well.
+        # grew the payload hash that binds a decision to one payload version, to
+        # 3 when it grew the decision-input hash that binds it to one set of
+        # rules as well, and to 4 (C-041a) when a coverage shortfall stopped
+        # being a refusal and the report grew ``review_reasons`` and the
+        # ``release`` classification beside the ``ok`` it can no longer be read
+        # off. 3 -> 4 is additive: every schema-3 key kept its name and meaning.
         assert document["schema_version"] >= 1
 
     quarantine = json.loads((tmp_path / QUARANTINE_REPORT_FILENAME).read_text(encoding="utf-8"))
-    assert quarantine["schema_version"] == 3
+    assert quarantine["schema_version"] == 4
     assert quarantine["counts"][CORE_ACCEPTED] == 2
     assert quarantine["quarantined"] == []
 
