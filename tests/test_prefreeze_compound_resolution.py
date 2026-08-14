@@ -701,7 +701,7 @@ def test_new_acceptance_the_production_wiring_holds_its_invariants() -> None:
 
 
 # --------------------------------------------------------------------------
-# D2 -- NEW ACCEPTANCE: ``ok`` is a verdict, and strict means stop.
+# D2 -- NEW ACCEPTANCE: ``ok`` is a verdict; an unreachable DB is review, not death.
 # --------------------------------------------------------------------------
 
 
@@ -724,6 +724,8 @@ def test_new_acceptance_a_failed_resolution_report_is_not_reported_as_ok() -> No
     report = run_prefreeze_resolution({}, canonicalizers=(("compounds", _failed),))
     assert report["ok"] is False
     assert report["failures"] == {"compounds": "resolution_report_not_ok"}
+    # A resolver that WAS consulted and rejected the row is not review-deferred.
+    assert report["review_required"] == {}
 
     # A skip that is not a clean no-op falsifies it too.
     skipped = run_prefreeze_resolution([], db_resolver=_OfflineResolver(), name_index=None)
@@ -737,20 +739,40 @@ def test_new_acceptance_a_failed_resolution_report_is_not_reported_as_ok() -> No
     assert clean["failures"] == {}
 
 
-def test_new_acceptance_strict_db_stops_on_a_failed_resolution_report() -> None:
-    """D-015 clause 6: a strict run may not claim a payload it could not resolve.
-    ``_resolve_compound_rows`` records its failures at severity ``error`` in
-    exactly that mode, so the report already knew; nothing read it."""
+def test_new_acceptance_an_unreachable_db_is_review_required_not_fatal() -> None:
+    """An identity the DB was never reachable to establish is incomplete, not wrong.
 
+    ``_resolve_compound_rows`` records its failures at severity ``error`` under
+    ``strict_db``, so with no PathBank DB a defect-free payload arrives here with
+    ``ok=False``. Merge rule 7 keeps that as ``review_required``; stopping on it
+    would turn a database outage into a total export failure, and D-015 clause 6
+    is about ambiguous or dangling *references*, which this is not.
+    """
+
+    report = run_prefreeze_resolution(
+        _unresolvable_payload(), strict_db=True,
+        db_resolver=_OfflineResolver(), name_index=None)
+
+    assert report["ok"] is False, "it must still not claim success"
+    assert report["failures"] == {"compounds": "resolution_report_not_ok:db_unavailable"}
+    assert report["review_required"] == report["failures"]
+
+
+def test_new_acceptance_a_structural_failure_still_raises_under_the_same_call() -> None:
+    """The half of D-015 clause 6 that IS a stop, proven beside the half that is not.
+
+    Same entry point, same ``strict_db=True``: an ambiguous reference raises where
+    an unreachable database only reports, so the softer verdict above cannot be
+    read as this module having stopped failing visibly.
+    """
+
+    payload = _payload()
+    payload["entities"]["proteins"].append(_compound("gly"))
     with pytest.raises(PrefreezeResolutionError) as excinfo:
         run_prefreeze_resolution(
-            _unresolvable_payload(), strict_db=True,
-            db_resolver=_OfflineResolver(), name_index=None)
-    assert excinfo.value.code == "PREFREEZE_RESOLUTION_NOT_OK"
-    # The reason names WHY, because "the resolver rejected the row" and "the
-    # resolver was never reachable" are adjudicated differently.
-    assert excinfo.value.details["failures"]["compounds"].startswith("resolution_report_not_ok")
-    assert excinfo.value.details["report"]["ok"] is False
+            payload, strict_db=True,
+            db_resolver=_OfflineResolver(), name_index=_glycine_index())
+    assert excinfo.value.code == "AMBIGUOUS_REFERENCE"
 
 
 def test_canonical_graph_hash_moves_when_biology_moves_prefreeze() -> None:

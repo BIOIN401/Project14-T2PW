@@ -770,14 +770,23 @@ PREFREEZE_CANONICALIZERS: Tuple[Tuple[str, Callable[..., Dict[str, Any]]], ...] 
 #: A canonicalizer that ran on nothing is not a failure. Any other skip is.
 _BENIGN_SKIPS = frozenset({"no_compound_rows"})
 
+#: Verdicts that mean "identity was not established", not "the payload is wrong".
+#: An unreachable PathBank DB is an infrastructure condition, not a defect in the
+#: graph: merge rule 7 keeps incomplete-but-correct content as ``review_required``
+#: rather than dropping it, and raising here would turn a PathBank outage into a
+#: total export failure. D-015 clause 6's "fail visibly" is about **ambiguous or
+#: dangling references** -- structural defects -- and those still raise directly
+#: out of :func:`resolve_compounds_prefreeze`, untouched by this.
+_REVIEW_REQUIRED_REASONS = frozenset({"resolution_report_not_ok:db_unavailable"})
+
 
 def _canonicalizer_verdict(summary: Any) -> Tuple[bool, str]:
     """``(ok, reason)`` for one canonicalizer's summary. Reason is "" when ok.
 
     The reason separates a resolver that was consulted and rejected the row from
-    one that was never reachable. Both are failures -- a strict run cannot claim
-    a PathWhiz-canonical payload over either -- but they are adjudicated
-    differently, so the verdict says which.
+    one that was never reachable. Neither may be reported as a success, but only
+    the first is a statement about the payload -- so the verdict says which, and
+    :data:`_REVIEW_REQUIRED_REASONS` routes the second to review.
     """
 
     if not isinstance(summary, dict):
@@ -814,11 +823,20 @@ def run_prefreeze_resolution(
     now the conjunction of every canonicalizer's verdict; a non-benign skip or a
     failed resolution report names its reason under ``report["failures"]``.
 
-    Under ``strict_db=True`` that verdict is a **stop** (D-015 clause 6): a strict
-    run is the one claiming the payload is PathWhiz-canonical, and it may not
-    claim that over a resolution the resolver reported as failed. The
-    canonicalization itself completed and stays applied -- fully propagated,
-    never partly -- so the attached report describes the payload as it stands.
+    **It does not raise on that verdict**, and the distinction is the point.
+    Raising is reserved for the structural failures
+    :func:`resolve_compounds_prefreeze` already raises directly --
+    ``AMBIGUOUS_RENAME_SOURCE``, ``AMBIGUOUS_REFERENCE``,
+    ``PREFREEZE_CONNECTIVITY_BROKEN``, ``PREFREEZE_RENAME_NOT_PROPAGATED`` -- which
+    are D-015 clause 6's actual subject: a payload whose references cannot be
+    resolved unambiguously. An identity the PathBank DB was never reachable to
+    establish is **incomplete, not wrong**; merge rule 7 keeps that as
+    ``report["review_required"]`` rather than dropping the pathway, and stopping
+    on it would convert a database outage into a total export failure.
+
+    The report is the whole output: nothing here mutates the payload beyond what
+    the canonicalizers did, and every canonicalizer runs even if an earlier one
+    reported a failure, so the verdict describes the payload as it stands.
     """
 
     report: Dict[str, Any] = {
@@ -839,12 +857,8 @@ def run_prefreeze_resolution(
             failures[name] = reason
     report["ok"] = not failures
     report["failures"] = failures
-    if failures and strict_db:
-        raise PrefreezeResolutionError(
-            "PREFREEZE_RESOLUTION_NOT_OK",
-            "strict pre-freeze resolution reported "
-            + ", ".join(f"{name}: {reason}" for name, reason in sorted(failures.items())),
-            failures=dict(failures),
-            report=report,
-        )
+    report["review_required"] = {
+        name: reason for name, reason in failures.items()
+        if reason in _REVIEW_REQUIRED_REASONS
+    }
     return report

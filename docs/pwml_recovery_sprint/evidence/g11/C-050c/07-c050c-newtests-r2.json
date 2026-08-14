@@ -1,0 +1,87 @@
+{
+  "label": "c050c-newtests-r2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,t2pw,pytest;print('T2PW_FILE:',t2pw.__file__);sys.stdout.flush();sys.exit(pytest.main(['-q','--basetemp=C:/t/nt4','-p','no:randomly','tests/test_prefreeze_compound_resolution.py']))"
+  ],
+  "cwd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p05b-prefreeze",
+  "started_at": "2026-08-14T20:46:11+00:00",
+  "finished_at": "2026-08-14T20:46:12+00:00",
+  "duration_seconds": 0.691283999999996,
+  "timeout_seconds": 600.0,
+  "root_pid": 40944,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 41264,
+      "name": "python.exe",
+      "ppid": 40944
+    }
+  ],
+  "descendants_terminated": [
+    41264
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 13528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 35456,
+      "name": "python.exe"
+    },
+    {
+      "pid": 35500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 37876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 38076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 39764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 42672,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05b-prefreeze\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-050c\\07-c050c-newtests-r2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05b-prefreeze\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05b-prefreeze",
+    "repo_head": "e7f28e72623c78477d6b4545021df56ab3a58528",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
