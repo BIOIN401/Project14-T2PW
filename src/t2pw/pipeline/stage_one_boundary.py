@@ -41,8 +41,9 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from t2pw.pipeline import lineage
 from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, ExportMode
 from t2pw.pipeline.extraction_diagnostics import (
     BOUNDARY_STAGE1_EXTRACTION,
@@ -59,9 +60,11 @@ from t2pw.pipeline.localized_repair import (
     REPAIR_INCOMPLETE,
     REPAIR_NOT_ATTEMPTED,
     REPAIR_OK,
+    SHELL_PROVENANCE,
     RowRepairResult,
     reconstruct_registry_shells,
     repair_invalid_rows,
+    resolve_pointer,
 )
 from t2pw.pipeline.stage_contracts import (
     StageContractError,
@@ -146,6 +149,265 @@ def _contract_errors(report: Dict[str, Any]) -> List[Dict[str, Any]]:
     return [item for item in _safe_list(report.get("errors")) if isinstance(item, dict)]
 
 
+# ---------------------------------------------------------------------------
+# Lineage. This boundary is the only place that sees all three Stage-1 origins
+# at once -- what the model drew, what deterministic reconstruction added, and
+# what localized repair rewrote -- so it is where ``PRODUCT_CONTRACT`` § 3's
+# "attribute false content empirically to Stage 1" becomes recordable.
+#
+# Every write happens AFTER the exit's ``record_boundary`` call and touches no
+# key but ``lineage.LINEAGE_KEY``: the boundary record fingerprints the payload
+# the boundary JUDGED, and lineage played no part in that judgement. Writing it
+# first would move a diagnostic to describe a decision it did not influence.
+# ---------------------------------------------------------------------------
+
+#: The two payload sections holding attributable rows.
+_ROW_SECTIONS: Tuple[str, ...] = ("entities", "processes")
+
+#: Rows the caller handed us. No ``sources``: this seam receives a payload, not
+#: the paper it was drawn from, and has no PMCID/DOI/filename to name -- so
+#: ``support`` is ``unsupported``. ``direct`` would assert a named source that
+#: does not exist here, and minting one is exactly what ``SOURCED_ORIGINS``
+#: exists to forbid. The fact we DO have, that the paper stated it, rides
+#: ``paper_explicit``.
+_PAPER_STATED = lineage.LineageEntry(
+    stage="paper_extraction",
+    origin="paper_stated",
+    support="unsupported",
+    paper_explicit="explicit",
+    reason="present in the Stage-1 extraction payload when it reached the "
+           "Stage-1 to Stage-2 boundary",
+    review_required=False,
+)
+
+#: The same row and the same origin when the row's OWN markers say the model did
+#: not read it off the page. ``origin`` STAYS ``paper_stated``: which Stage-1
+#: bucket a row came out of is not a claim about how the model arrived at it, and
+#: re-bucketing it is a product decision this card does not hold. What changes is
+#: the part that was false. ``paper_explicit`` drops to ``not_evaluated`` --
+#: never ``not_explicit``, because this stage did not read the paper either -- and
+#: the row is flagged for review, since a complex carrying ``confidence: 0.6``
+#: and ``provenance: "inferred"`` is precisely what § 3 exists to make findable.
+_PAPER_STATED_UNVERIFIED = lineage.LineageEntry(
+    stage="paper_extraction",
+    origin="paper_stated",
+    support="unsupported",
+    paper_explicit="not_evaluated",
+    reason="present in the Stage-1 extraction payload when it reached the "
+           "Stage-1 to Stage-2 boundary, marked by the extraction as not read "
+           "verbatim from the paper",
+    review_required=True,
+    uncertainty="the row's own provenance/inference marker says this content was "
+                "reasoned or looked up rather than stated; nothing here "
+                "established what the paper does say about it",
+)
+
+#: ``pwml_system.txt:116`` -- ``provenance`` values are ``"extracted"`` (verbatim
+#: from text), ``"enriched"`` (from an API lookup) and ``"inferred"``
+#: (LLM-reasoned). The last two are the model telling us it did not read the row
+#: off the page. Matched on those SPECIFIC values and never as
+#: ``provenance != "extracted"``: :data:`SHELL_PROVENANCE` is a ``provenance``
+#: value too, and a blanket negation would additionally sweep in every row that
+#: simply carries no marker at all.
+_PROVENANCE_NOT_READ: Tuple[str, ...] = ("inferred", "enriched")
+
+#: Row keys whose mere presence says the same thing. ``inference`` is the prompt's
+#: free-text note naming what was reasoned (``pwml_system.txt:109``, ``:401``);
+#: ``rag_provenance`` is C-038's carrier naming retrieved literature.
+_MARKS_NOT_READ: Tuple[str, ...] = ("inference", "rag_provenance")
+
+#: Rows ``reconstruct_registry_shells`` added. ``derived``, not ``direct``: a
+#: process row the payload already carried named this participant, so the
+#: registry row is bookkeeping over stated content -- but nothing here states
+#: what the entity IS, which is why the shell is reviewable rather than clean.
+#: This stage read a name off a process row; whether the paper declared that
+#: participant as an entity is a question it never asked, hence
+#: ``not_evaluated`` -- which is never ``not_explicit``.
+_RECONSTRUCTED = lineage.LineageEntry(
+    stage="normalization",
+    origin="inferred",
+    support="derived",
+    paper_explicit="not_evaluated",
+    reason="registry shell reconstructed for a participant a process row named "
+           "but the entity registry did not carry",
+    review_required=True,
+    uncertainty="the shell carries no identifier; the entity stays unresolved "
+                "until something grounds it",
+)
+
+#: Rows ``repair_invalid_rows`` rewrote. ``unsupported``, not ``derived``: the
+#: replacement came from a model. ``preserves_original_values`` and
+#: ``evidence_supports`` CONSTRAIN that rewrite; they do not derive it.
+_REPAIRED = lineage.LineageEntry(
+    stage="audit_repair",
+    origin="audit_modified",
+    support="unsupported",
+    paper_explicit="not_evaluated",
+    reason="row rewritten by localized repair after the post-extraction "
+           "contract rejected it",
+    review_required=True,
+    uncertainty="the replacement row was model-produced; the contract accepts "
+                "it but nothing named a source for the change",
+)
+
+
+def _row_census(payload: Dict[str, Any]) -> Dict[Tuple[str, str], int]:
+    """``(section, bucket) -> row count``. A pure read; it mutates nothing.
+
+    Identity by INDEX is exact here where a name match would not be.
+    ``reconstruct_registry_shells`` only ever appends to an entity bucket and
+    ``repair_invalid_rows`` only ever overwrites a pointer that already
+    resolves (``localized_repair._assign_pointer`` refuses to create one), so
+    between two censuses no row is removed and none is reordered: an index
+    below the entry census is the row the caller supplied, and an index at or
+    above it is a row this stage added. The shell records themselves cannot
+    serve -- ``ReconstructionResult.shells`` clips names at 120 characters and
+    ``to_report`` truncates the list.
+    """
+
+    census: Dict[Tuple[str, str], int] = {}
+    for section in _ROW_SECTIONS:
+        for bucket, rows in _safe_dict(payload.get(section)).items():
+            if isinstance(rows, list):
+                census[(section, str(bucket))] = len(rows)
+    return census
+
+
+def _row_at(
+    payload: Dict[str, Any], section: str, bucket: str, index: int
+) -> Optional[Dict[str, Any]]:
+    """The row at that position, or ``None`` when it is not one we can annotate.
+
+    A bucket may hold bare strings; attaching lineage to one would mean turning
+    it into an object, which is a change to the payload's content and not this
+    card's to make. Such a row is skipped, not converted.
+    """
+
+    rows = _safe_dict(payload.get(section)).get(bucket)
+    if not isinstance(rows, list) or not 0 <= index < len(rows):
+        return None
+    row = rows[index]
+    return row if isinstance(row, dict) else None
+
+
+def _paper_entry(row: Dict[str, Any]) -> lineage.LineageEntry:
+    """Which paper-extraction entry this row has earned.
+
+    The extraction prompt does not only return what it read: it instructs the
+    model to CREATE content it could not read and to mark it -- a complex whose
+    subunit membership is unknown gets ``confidence < 1.0`` and
+    ``provenance: "inferred"`` (``pwml_system.txt:109``, ``:116``, ``:401``) --
+    and those markers survive into this seam intact, because
+    ``pipeline._clean_entities`` copies entity rows key-for-key and the process
+    cleaners carry ``provenance``/``inference`` through. Reporting such a row as
+    ``paper_explicit="explicit"`` with no review flag writes the opposite of
+    what the row says about itself, in the one clause this card exists to serve.
+
+    ``rag_provenance`` is treated the same way and cannot arrive here today --
+    this boundary's only call site runs before any RAG -- so it costs nothing
+    now and is not a claim that has to be un-made when one does.
+    """
+
+    if str(row.get("provenance") or "").strip().casefold() in _PROVENANCE_NOT_READ:
+        return _PAPER_STATED_UNVERIFIED
+    if any(row.get(key) for key in _MARKS_NOT_READ):
+        return _PAPER_STATED_UNVERIFIED
+    return _PAPER_STATED
+
+
+def _record_once(
+    row: Dict[str, Any],
+    entry: lineage.LineageEntry,
+    *,
+    unless: Optional[lineage.LineageEntry] = None,
+) -> None:
+    """Append ``entry`` to ``row``'s lineage unless it is already there.
+
+    Three properties, all of which have to live in the writer:
+
+    * **Idempotent.** ``Lineage`` deliberately KEEPS duplicates -- dedup
+      removes, and removal is what its append-only rule forbids. So a payload
+      settled twice (a resumed run, or a caller feeding an outcome back in)
+      would otherwise stack two identical "the paper stated this" facts. Every
+      entry this module writes is a module-level constant carrying no
+      timestamp, counter or pointer, so the same fact rebuilds to an EQUAL
+      entry and this test recognizes it. That is C-015's content-derived
+      identity, not a private key.
+    * **Additive.** ``lineage.record`` re-emits everything already stored, so a
+      row arriving with another stage's attribution keeps it.
+    * **Non-fatal.** A row carrying malformed stored lineage makes
+      ``lineage.read`` raise. Letting that escape would turn a boundary that
+      returns a usable payload into one that aborts the run -- a decision
+      change this card is not entitled to make -- so it is reported against the
+      row and attribution for that row is skipped.
+
+    ``unless`` suppresses the write when a different entry is present. It has
+    exactly one use: a shell THIS stage reconstructed on an earlier settle is,
+    on a later settle, a row "present in the input" -- and calling it
+    paper-stated would be false. The shell's own entry is the proof it was not.
+    """
+
+    try:
+        present = lineage.read(row).entries
+        if unless is not None and unless in present:
+            return
+        if entry not in present:
+            lineage.record(row, entry)
+    except lineage.LineageError as exc:
+        logger.warning(
+            "stage_one_boundary: leaving a row unattributed, its stored %s is "
+            "malformed: %s", lineage.LINEAGE_KEY, exc,
+        )
+
+
+def _attribute(
+    working: Dict[str, Any],
+    inbound: Dict[Tuple[str, str], int],
+    reconstructed: Dict[Tuple[str, str], int],
+    repair: Optional[RowRepairResult],
+) -> None:
+    """Write this stage's three attributions onto ``working``'s rows.
+
+    ``working`` is safe to write into and is the only object written: it is the
+    ``deepcopy`` :func:`settle_stage_one` takes of its argument, or a further
+    deepcopy of that made inside ``reconstruct_registry_shells`` /
+    ``repair_invalid_rows``. No row reachable from it is reachable from the
+    caller's ``payload``, so no lineage write can land on an object the caller
+    still holds.
+
+    A repaired row keeps whichever origin entry it already had: repair records
+    what repair did, it does not restate where the row came from.
+    """
+
+    for (section, bucket), count in inbound.items():
+        for index in range(count):
+            row = _row_at(working, section, bucket, index)
+            if row is None or row.get("provenance") == SHELL_PROVENANCE:
+                # The index partition is exact against localized_repair AS IT IS,
+                # but that module is not this card's to pin: were reconstruction
+                # ever to dedupe, sort or drop an entity row, a shell would land
+                # below the inbound count and be called paper-stated with no test
+                # failing anywhere. The shell's own marker is a content-derived
+                # second condition that does not depend on that module's shape,
+                # and unlike the lineage check below it holds on the FIRST settle
+                # and on a rebuild that dropped the lineage key.
+                continue
+            _record_once(row, _paper_entry(row), unless=_RECONSTRUCTED)
+
+    for (section, bucket), count in reconstructed.items():
+        if section != "entities":
+            continue
+        for index in range(inbound.get((section, bucket), 0), count):
+            row = _row_at(working, section, bucket, index)
+            if row is not None:
+                _record_once(row, _RECONSTRUCTED)
+
+    for pointer in (repair.repaired_pointers if repair is not None else []):
+        row = resolve_pointer(working, pointer)
+        if isinstance(row, dict):
+            _record_once(row, _REPAIRED)
+
+
 def settle_stage_one(
     payload: Dict[str, Any],
     *,
@@ -176,6 +438,7 @@ def settle_stage_one(
     """
 
     working = deepcopy(payload) if isinstance(payload, dict) else {}
+    inbound_rows = _row_census(working)  # lineage bookkeeping only; reads, never writes
     diagnostics = current_diagnostics()
     reconstruction_report: Dict[str, Any] = {}
 
@@ -184,6 +447,7 @@ def settle_stage_one(
         working = rebuilt.payload
         if rebuilt.changed:
             reconstruction_report = rebuilt.to_report()
+    reconstructed_rows = _row_census(working)
 
     report = _validate(working, mode)
     errors = _contract_errors(report)
@@ -201,6 +465,7 @@ def settle_stage_one(
             note="stage_one_boundary_settled",
             registry_shells_added=len(_safe_list(reconstruction_report.get("shells"))) or None,
         )
+        _attribute(working, inbound_rows, reconstructed_rows, None)
         return BoundaryOutcome(
             payload=working,
             ok=True,
@@ -236,6 +501,7 @@ def settle_stage_one(
             note="stage_one_boundary_settled_after_localized_repair",
             repaired_pointers=repair.repaired_pointers if repair else None,
         )
+        _attribute(working, inbound_rows, reconstructed_rows, repair)
         return BoundaryOutcome(
             payload=working,
             ok=True,
@@ -264,6 +530,7 @@ def settle_stage_one(
         reason,
         len(errors),
     )
+    _attribute(working, inbound_rows, reconstructed_rows, repair)
     return BoundaryOutcome(
         payload=working,
         ok=False,

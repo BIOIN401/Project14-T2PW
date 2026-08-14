@@ -20,7 +20,14 @@ that reserve does not fit, so the leg stops with its evidence written instead of
 being killed while writing it. Calls are priced by C-014's
 :func:`t2pw.llm.client.worst_case_call_seconds`, an upper bound on purpose.
 
-**Six termination reasons, never conflated.** ``budget_exhausted`` and
+**Seven termination reasons, never conflated.** Six are D-005's; the seventh,
+``attempt_cap_reached``, is D-024, which EXTENDS D-005 and does not reopen or
+contradict it: § 9's attempt ceiling genuinely ends a leg, and before D-024 no
+reason in this vocabulary could truthfully say so, so a capped leg reported ``""``.
+It is deliberately NOT in :data:`OPERATIONAL_TERMINATION_REASONS` -- D-005 calls
+the cap "a safety ceiling, not a promise", which is not the same fact as a leg
+that ran out of clock, and widening the strict-success denominator is a product
+decision that has not been made. ``budget_exhausted`` and
 ``operation_timeout`` are OPERATIONAL facts -- not ``no_new_claims``, not
 ``identical_empty_response``, not ``scientifically_unrecoverable``, and above all
 not ``retrieval_exhausted``, which :func:`claim_retrieval_exhausted` refuses to
@@ -66,7 +73,8 @@ MIN_CHILD_DEADLINE_SECONDS = 60.0
 DEFAULT_FINALIZATION_RESERVE_SECONDS = PARENT_CHILD_GRACE_SECONDS
 
 # ---------------------------------------------------------------------------
-# The six termination reasons. Never conflated, never invented.
+# The seven termination reasons -- D-005's six plus D-024's. Never conflated,
+# never invented.
 # ---------------------------------------------------------------------------
 #: The configured retrieval ladder ran to completion and found nothing further.
 RETRIEVAL_EXHAUSTED = "retrieval_exhausted"
@@ -80,6 +88,18 @@ OPERATION_TIMEOUT = "operation_timeout"
 IDENTICAL_EMPTY_RESPONSE = "identical_empty_response"
 #: The source does not support a defensible pathway. A scientific statement.
 SCIENTIFICALLY_UNRECOVERABLE = "scientifically_unrecoverable"
+#: D-024. The configured attempt ceiling was spent, the operation did not
+#: succeed, and nothing stronger is true: no deadline, no timeout, no explicit
+#: refusal, no separately MEASURED resource or token exhaustion. A safety ceiling
+#: that ended processing, and the only reason here that says so.
+#:
+#: Its string is deliberately the same literal as the ladder's
+#: ``extraction_ladder.SKIP_ATTEMPT_CAP`` skip cause, because both name the same
+#: event. The two VOCABULARIES stay separate: a skip cause says why one rung did
+#: not start, a termination reason says why the leg stopped, ``require_reason``
+#: and ``require_skip_cause`` remain independently closed, and this one shared
+#: literal is the only member either will accept from the other.
+ATTEMPT_CAP_REACHED = "attempt_cap_reached"
 
 TERMINATION_REASONS: Tuple[str, ...] = (
     RETRIEVAL_EXHAUSTED,
@@ -88,12 +108,15 @@ TERMINATION_REASONS: Tuple[str, ...] = (
     OPERATION_TIMEOUT,
     IDENTICAL_EMPTY_RESPONSE,
     SCIENTIFICALLY_UNRECOVERABLE,
+    ATTEMPT_CAP_REACHED,
 )
 
 #: D-005's denominator rule: these two count as failures of pipeline completion
 #: and of end-to-end strict success, and are never relabelled semantic failure,
 #: scientific insufficiency, or retrieval exhaustion. A closed set precisely so no
-#: caller can widen it.
+#: caller can widen it. D-024 explicitly does NOT add ``attempt_cap_reached``
+#: here: which reasons count in the strict-success denominator is a product
+#: decision that has not been made, and this set stays exactly two.
 OPERATIONAL_TERMINATION_REASONS = frozenset({BUDGET_EXHAUSTED, OPERATION_TIMEOUT})
 
 #: What ``driver._run_app`` says when a leg's whole wall clock is already spent
@@ -118,17 +141,22 @@ class BudgetExhausted(RuntimeError):
 
 
 def require_reason(reason: Any) -> str:
-    """Return ``reason`` if it is one of the six, else raise.
+    """Return ``reason`` if it is one of the seven, else raise.
 
     A closed vocabulary is what stops the conflation D-005 forbids: an invented or
     misspelled reason fails loudly here rather than reaching a denominator as an
-    unrecognised string some later reader buckets by hand.
+    unrecognised string some later reader buckets by hand. D-024 admits its
+    seventh reason by CONSTRUCTION -- membership of :data:`TERMINATION_REASONS`,
+    no special case -- and this function still refuses every skip cause the
+    extraction ladder can name except the one literal the two vocabularies share
+    on purpose.
     """
 
     token = str(reason or "").strip()
     if token not in TERMINATION_REASONS:
         raise ValueError(
-            f"{reason!r} is not one of D-005's six termination reasons: "
+            f"{reason!r} is not one of the seven termination reasons "
+            "(D-005's six, plus D-024's attempt_cap_reached): "
             + ", ".join(TERMINATION_REASONS)
         )
     return token
@@ -144,7 +172,8 @@ def require_operational_reason(reason: Any) -> str:
     """``reason``, if it is one of the two OPERATIONAL outcomes. Else raise.
 
     A timeout may name only ``budget_exhausted`` or ``operation_timeout``. Any of the
-    other four inverts D-005's denominator rule -- a stopped clock reported as a
+    other five -- D-024's ``attempt_cap_reached`` included, since a spent ceiling is
+    not a spent clock -- inverts D-005's denominator rule -- a stopped clock reported as a
     semantic or scientific verdict -- and ``retrieval_exhausted`` would additionally
     walk around :func:`claim_retrieval_exhausted`, which exists to refuse that label.
     """

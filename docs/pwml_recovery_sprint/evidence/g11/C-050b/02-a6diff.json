@@ -1,0 +1,103 @@
+{
+  "label": "a6diff",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "tests/test_curator_offline_mode.py",
+    "run",
+    "--base-src",
+    "C:/t2pwtmp/c050b/base/src",
+    "--tip-src",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p05d-offline-curator/src",
+    "--work",
+    "C:/t2pwtmp/c050b/diffwork",
+    "--out",
+    "docs/pwml_recovery_sprint/evidence/c050b_a6_differential.json"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator",
+  "started_at": "2026-08-14T18:10:38+00:00",
+  "finished_at": "2026-08-14T18:10:42+00:00",
+  "duration_seconds": 3.9644496999972034,
+  "timeout_seconds": 900.0,
+  "root_pid": 934608,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 932648,
+      "name": "python.exe",
+      "ppid": 934608
+    },
+    {
+      "pid": 929536,
+      "name": "python.exe",
+      "ppid": 932648
+    },
+    {
+      "pid": 939920,
+      "name": "python.exe",
+      "ppid": 929536
+    },
+    {
+      "pid": 941896,
+      "name": "python.exe",
+      "ppid": 932648
+    },
+    {
+      "pid": 941856,
+      "name": "python.exe",
+      "ppid": 941896
+    }
+  ],
+  "descendants_terminated": [
+    929536,
+    932648,
+    939920,
+    941856,
+    941896
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 657984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 661168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 941540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 941572,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-050b/02-a6diff.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05d-offline-curator",
+    "repo_head": "be7f4c26d4995744ae5b18e191b83b11c2b1eb0a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

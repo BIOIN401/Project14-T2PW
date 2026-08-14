@@ -107,10 +107,16 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 - **Evidence** C-041 supplies the classification that says otherwise; the blocking site is
   outside its ownership.
 - **Current-card impact** none — C-041 delivered its chartered contract
-- **Owner** **none.** `MASTER_PLAN` §9's C-041 ownership row and the dispatch instruction both
-  exclude `quarantine_and_close`; only `:230`'s prose rationale assumed otherwise. Editing it
-  would have been an `out_of_boundary` REJECT. **Needs a product-owner ruling on which card
-  closes it.**
+- **Owner** **`C-041a` — assigned by product-owner ruling 2026-08-13.** A narrow follow-up card,
+  not a reopening of C-041. Its production ownership is limited to the release/refusal seam
+  around `strict_quarantine.py :: quarantine_and_close`, including the live refusal near the
+  previously reported `:1959`. Purpose: complete D-002 end-to-end so a subthreshold but
+  structurally valid pathway becomes **`review_required` output rather than an unconditional
+  refusal**, preserving the product contract, with focused behavioural tests required.
+  *(Superseded reading, kept for audit: "none — needs a product-owner ruling on which card
+  closes it." `MASTER_PLAN` §9's C-041 ownership row and the dispatch instruction both excluded
+  `quarantine_and_close`; only `:230`'s prose rationale assumed otherwise, so editing it would
+  have been an `out_of_boundary` REJECT at the time.)*
 
 ## F-007 — `_apply_single_op` aliases the caller's patch ops
 
@@ -285,3 +291,127 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 | F-034 | `src/t2pw/extraction/extract.py` | Dead demo code — 29 lines, one hardcoded glutathione paragraph, `run_demo()` under `__main__`, zero test references, imported only by the `src/extract.py` re-export shim. C-034's declared target |
 | F-035 | `bench/metrics.BLOCKER_SCOPE_LABELS` | Produces a 125-column line in `render._blockers`, over that module's own 100-column budget. Pre-existing |
 | F-036 | `driver.py :: RunOutcome` | C-041 and C-032 both attach classification as **undeclared instance attributes** to keep the golden diff empty. Sound and documented, but dataclass `__eq__`/`__repr__` ignore them, and `getattr` is required on every read. Must not survive past C-053, which owns the row |
+
+---
+
+## F-037 — the name gate refuses records that CONFIRM the identity
+
+- **Severity** **HIGH** · biological identity loss · **base behaviour, not caused by C-044**
+- **Discovered by** C-044's reviewer, while adjudicating C-044's `excluded` attribution;
+  registered by the lead orchestrator at that reviewer's explicit request, because it otherwise
+  lived only in a commit message and a code comment
+- **Path/symbol** `src/t2pw/mapping/map_ids.py:531-575` — `_name_gate_tokens`,
+  `_names_share_meaningful_token`, consumed by `_name_gate_verdict`
+- **Observed vs expected** The gate returns `no_shared_meaningful_token` for pairs that are the
+  **same chemical species under different naming conventions**, so a retrieved record that in
+  fact *confirms* the identity is treated as a failure to match and the identifier is stripped.
+  **Nine committed rows lose a correct KEGG identifier this way.**
+
+  | entity | identifier stripped | name the gate compared it against |
+  |---|---|---|
+  | `ferric iron` | KEGG **C14819** | `Fe3+` |
+  | `ferrous iron` | KEGG **C14818** | `Fe2+` |
+  | `citrate` | KEGG **C00158** | `Citric acid` |
+  | `2,3-dihydro-2,3-dihydroxybenzoate` | KEGG **C04171** | `(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate` |
+  | `2,3-dihydro-2,3-dihydroxybenzoate` | KEGG C19557 | `Treosulfan` *(a genuine non-match)* |
+
+- **Evidence** `docs/pwml_recovery_sprint/evidence/g11/C-044r/10-dump-excluded.json` — the full
+  nine-row dump, produced by an independent classifier run over all 18 committed
+  `final_mapped.json`. Re-derived unchanged at C-044's final tip.
+- **Current-card impact** **None on C-044, which improves the situation.** Before C-044 these
+  rows were attributed as refutations *by retrieved evidence* — the opposite of the truth.
+  C-044's corrected lineage records them as *"the match was refused without a record being
+  retrieved"*, naming the compared name, so an auditor can now find them. That is precisely the
+  trail `PRODUCT_CONTRACT` § 3 exists to leave.
+- **Owner** `unowned`. Fixing the gate is a behaviour change well outside "lineage writes only"
+  and needs its own card. Note `PRODUCT_CONTRACT` § 8's *"never accept an identifier because its
+  format is valid"* is **not** in tension with this: the failure here is **over-rejection**, not
+  over-acceptance.
+
+## F-038 — Pack 2 findings are recorded but not yet consolidated here
+
+- **Severity** control plane · **action required at Pack 2 closeout**
+- **Observed vs expected** Pack 2 produced twelve further findings plus one blocker analysis and
+  two orchestrator self-findings. They are recorded with full evidence in
+  `…\scratchpad\sprint-records\PACK2-FINDINGS-PENDING.md` and have **not** been folded into
+  this file, per H-009's batch-at-closeout policy.
+- **The load-bearing ones, so this file is not silent on them:**
+  - **P2-04 (HIGH)** — no production caller constructs a `LegDeadline`, so **C-042's rung 3
+    never fires in production**. Whether "no deadline object" should mean the § 9 documented
+    default budget rather than *indeterminate* is an open product question.
+  - **P2-06 (HIGH)** — `pwml/ir.py :: _entity_record` materializes `pathwhiz_id` post-freeze;
+    **C-051's scope must name it**, or its assert-only conversion leaves that path live.
+  - **P2-11 (HIGH, structural)** — `tests/test_streamlit_quarantine_boundary.py` is in **no
+    card's manifest** yet pins app-boundary behaviour that every freeze-lifecycle and
+    release-classification card is chartered to change. **Two Pack 2 cards collided with it for
+    unrelated reasons.** Needs explicit ownership.
+  - **P2-01 (MEDIUM)** — `Lineage` does **not** dedup (`lineage.py:18-19`), so the merged
+    C-036/C-037 writers are non-idempotent across re-runs.
+  - **P2-05 (MEDIUM)** — `id_source="db"` still issues LLM calls unless
+    `T2PW_LLM_PROTEIN_FALLBACK=0`; two existing tests treat `db` as offline without setting it.
+- **Owner** the next lead orchestrator, at Pack 2 closeout.
+
+---
+
+## P4-01 — No `.env` in any worktree: PathBank-dependent measurements run there are vacuously clean
+
+**Severity: HIGH (evidence integrity).** Owner: unowned — a standing sprint constraint, not a code defect.
+
+`t2pw.config.PROJECT_ROOT` resolves to the **worktree**; worktrees have **no `.env`**; the eight
+`PATHBANK_DB_*` lines live only in the main checkout. Therefore `PathBankDbResolver.from_env()`
+returns **`None`** inside every worktree, and any PathBank-dependent measurement run there silently
+resolves to "no DB" — **green-looking and worthless**.
+
+**Observed vs expected.** Committed `evidence/g11/C-050/01-baseproof.json` is labelled `baseproof`,
+runs `--leg base`, and **exits 0** — no failure. An independent run of the identical command exits 1
+with the expected five-category table. Cause is DB reachability, not the code under test.
+
+**Consequences, recorded:**
+* **`C-050/01-baseproof.json` must never be cited as a base proof.** C-050's genuine G9 base proof is
+  `07-g9base.json` (rc=1, run from a base export). The artifact is **retained, not deleted** — the
+  honest record stays. No misconduct: failures were committed rather than hidden.
+* The `pwml-bio-auditor`'s OPDA measurement came from the **main checkout** and **cannot** be
+  reproduced from a worktree.
+
+**Standing rule.** A card whose evidence depends on PathBank must either (a) harvest **read-only from
+the main checkout** and decide **offline** against the harvested fixture, or (b) label its numbers as
+DB-unavailable. **Never edit, copy, or shuttle credentials out of `.env`.** C-040a demonstrates the
+compliant two-phase shape, and it produces *stronger* evidence than a live query because a reviewer
+without DB access can re-run the decision phase.
+
+**Aggravating factor.** `bounded_run.py`'s JSON report carries no child stdout and no
+`worktree dirty` field, so a committed artifact alone cannot show whether a failure was behavioural.
+This is why independent reproduction — not artifact citation — is the standard for a G9 base proof.
+
+---
+
+## P4-02 — C-040a's measurement scripts are uncommitted: reproducibility debt
+
+**Severity: LOW.** Owner: unowned. **Do not alter the approved C-040a tip `7d5a3916` merely to add them.**
+
+`c040a_probe.py` and `c040a_golden_delta.py` produced C-040a's committed evidence
+(`evidence/c040a_pathbank_verdicts.json`, `evidence/c040a_golden_delta.json`) but exist only in a
+session scratchpad. **The committed artifacts are therefore not reproducible from the repo alone.**
+
+Not blocking, and it did not weaken the review: `REV-040a` worked around it by writing its own
+independent Phase-2 replay and rebuilding the golden projection itself — arguably stronger evidence
+than reusing the author's tooling would have been.
+
+**Remedy:** commit the probes in a later evidence/closeout commit. The approved card tip is not to be
+disturbed for this.
+
+---
+
+## P4-03 — D-028 corroborating namespaces exclude DrugBank (fail-closed, awaiting ratification)
+
+**Severity: INFORMATIONAL.** Owner: product owner.
+
+D-028 rule 4 limits corroborating namespaces to **KEGG, ChEBI, PubChem, HMDB**
+(`compound_resolution.py :: CORROBORATING_ID_KEYS`), excluding `drugbank`, which
+`_compound_external_ids` also returns. The exclusion is **fail-closed** — it can only produce more
+refusals, never more admissions — so it is conservative and safe. It is now written into D-028 rule 4
+as an explicit exclusion, to be confirmed or widened by separate ruling.
+
+Related, same fail-closed direction: the `HMDB` (upper-only) and `pubchem` (raw) normalizers are
+stricter than the `chebi`/`kegg` ones, so they can cause false **disagreement** → refusal, never
+false admission.

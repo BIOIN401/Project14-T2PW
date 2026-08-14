@@ -20,10 +20,27 @@ hung it.
 
 ### The rules
 
-1. **Bounded foreground only.** Every test, benchmark, pipeline leg and LLM-backed
-   command runs through the bounded foreground-process wrapper whose path INIT-001
-   records. **Never** detached processes, `nohup`, untracked background jobs, or
+1. **Bounded, wrapped, tracked.** Every test, benchmark, pipeline leg and LLM-backed
+   command runs through the bounded-process wrapper whose path INIT-001 records.
+   **Never** detached processes, `nohup`, untracked background jobs, or
    `Start-Process` without bounded waiting and guaranteed cleanup.
+
+   **Foreground is the default. Tracked background is authorized when a bounded job is
+   expected to exceed the interactive limit** — see **D-026**, which settled this after
+   three cards (C-034, C-041a, C-050a) relitigated it independently. A `qb` cohort is
+   ~10.5 min across 23 AppTest processes and exceeds the 10-minute interactive cap by
+   construction.
+
+   A tracked background job is compliant **only** when all of these hold: same approved
+   `bounded_run.py`, unmodified · task/process id and output path recorded **immediately** ·
+   **one heavy job at a time** · the orchestrator **polls rather than launching duplicates** ·
+   wrapper cleanup executes · descendant counts and **zero survivors verified** · the final
+   canonical JSON report **inspected** · no detached or unowned job remains.
+
+   Prefer **one tracked bounded cohort** where splitting would change the gate's semantics or
+   materially increase overhead. Use `--only` partitions only where the gate is explicitly
+   partition-safe — `chunk_d_gate.py` proves its `177 = 150 + 4 + 23` partition on every
+   invocation, so its partitions qualify.
 
 2. **The wrapper must** record root PID, command, start time, working directory, timeout
    and ownership · place the command in an isolated process group (POSIX) or Job Object
@@ -169,10 +186,25 @@ C-010's allowlist is unverifiable in an isolated worktree.
 # ONE call runs the whole gate: it proves the partition, runs the 150-test core in one
 # process, then each of the 27 AppTest node IDs ALONE in a fresh process, serially.
 # --task lets it allocate its own ~32 G11 reports; 32 paths do not fit on a CLI.
+#
+# *** T2PW_OFFLINE_CURATOR=1 IS MANDATORY ON EVERY DETERMINISTIC qb RUN. ***
+# Required from C-050b (merged 1383624). Without it, run_pathway_curator issues ONE
+# ungated LLM call per post-pipeline app run at temperature 0.2, whose accepted patches
+# are written back into audited_json and flow through mapping into final_mapped_db.
+# That is the MEASURED root cause of BL-003. And because .env is untracked, a worktree
+# silently gets LLM_PROVIDER=local (call 400s, exception swallowed, curator a no-op BY
+# ACCIDENT) while the primary checkout issues real BILLED remote calls -- so a green qb
+# cohort obtained in a worktree does NOT certify the same cohort in the primary.
+# Set it in the BOUNDED CHILD environment, not just your shell.
+T2PW_OFFLINE_CURATOR=1 \
 .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/bounded_run.py \
   --label chunkd --timeout 3000 --json <outer-report> -- \
   .venv/Scripts/python.exe -u docs/pwml_recovery_sprint/evidence/chunk_d_gate.py run \
   --tmp <short-tmp> --task <ID> --timeout 900 --node-timeout 600
+
+# The flag is opt-in and default-off: omitting it preserves production behaviour exactly.
+# An ACCEPTANCE run that deliberately exercises the live curator is separate, bounded work
+# requiring explicit cost authorization -- it is NOT a deterministic gate.
 #   --only core|s8|qb narrows EXECUTION; the partition proof always covers all three.
 #   --label-prefix attributes each run's artifacts when a matrix runs the gate repeatedly.
 #   --report-root writes them to the branch when the measured tree is an export.

@@ -1,0 +1,86 @@
+{
+  "label": "tip-affected",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "--basetemp=C:/t/c60a4",
+    "-p",
+    "whichtree",
+    "-r",
+    "fE",
+    "tests/test_entity_admission.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_admission_adversarial.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_rag_conform_merge.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p60a-pathway-wiring",
+  "started_at": "2026-08-14T19:58:21+00:00",
+  "finished_at": "2026-08-14T19:58:31+00:00",
+  "duration_seconds": 9.879687700013164,
+  "timeout_seconds": 1500.0,
+  "root_pid": 994928,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 994656,
+      "name": "python.exe",
+      "ppid": 994928
+    }
+  ],
+  "descendants_terminated": [
+    994656
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 969164,
+      "name": "python.exe"
+    },
+    {
+      "pid": 985236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 986020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 994712,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-060a/04-tip-affected.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p60a-pathway-wiring\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p60a-pathway-wiring",
+    "repo_head": "f2f7599ef48f372c22123c1db219da6f2355a75e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

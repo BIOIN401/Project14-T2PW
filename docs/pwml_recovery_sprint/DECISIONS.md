@@ -863,6 +863,74 @@ delivered by C-020**.
 
 ---
 
+## D-024 — `attempt_cap_reached`, a seventh termination reason · 2026-08-13 · LOCKED
+
+**Extends D-005. D-005 is not reopened, amended or contradicted** — its six named reasons
+keep their exact meanings, their exact strings and their exact denominator rule. D-005 goes
+from six named termination reasons to **seven**.
+
+C-042 built the § 9 escalation ladder. When the ceiling of three model attempts is spent the
+ladder refuses the next rung with the skip cause `attempt_cap_reached` and — correctly, since
+none of the six fitted — **no termination reason at all**. `attempt_cap_reached` genuinely
+*ends* the ladder, so the one stop that reliably terminates a leg was the one stop that said
+nothing, and every downstream denominator saw `""`. C-042's writer declined to guess, which
+was right; guessing is what this entry replaces.
+
+**The reason.** `attempt_cap_reached`. Used when **all** of these hold:
+
+* the configured maximum number of attempts has been consumed;
+* the operation has not succeeded;
+* **no** deadline or timeout caused termination;
+* **no** explicit refusal caused termination;
+* **no** separate resource / token / budget exhaustion caused termination;
+* **no** stronger existing terminal reason truthfully describes the outcome.
+
+**Precedence, mandatory, in this order:**
+
+1. Successful completion keeps the success / completed reason.
+2. An explicit refusal keeps the applicable refusal reason.
+3. A real deadline or timeout keeps its deadline/timeout reason.
+4. A separately **measured** resource or token-budget exhaustion keeps its budget reason.
+5. When **only** the configured attempt count ended processing → `attempt_cap_reached`.
+
+**Never mislabel an attempt cap as timeout, refusal, success, or generic budget exhaustion.**
+Equally, never mislabel it as `retrieval_exhausted` or `no_new_claims`: D-005 permits
+`retrieval_exhausted` only when the configured ladder actually completed, and a leg cut off by
+the ceiling is precisely a ladder that did not. The implemented rank in
+`rag/loop_policy.TERMINATION_PRECEDENCE` is therefore below `budget_exhausted`,
+`operation_timeout`, `identical_empty_response` and `scientifically_unrecoverable`, and above
+`retrieval_exhausted` and `no_new_claims`.
+
+**It reaches the leg-level report.** The reason is set at two sites, not one. The ladder's
+`admit` names it on the `RungDecision` that refuses the rung, and `_run_json_stage`'s
+termination block names it on `PipelineFailure.terminal_reason` and on the
+`stage1_extraction_ladder_termination` boundary record — where a capped leg previously
+reported `""`. At the leg level it is the **last** branch, after `budget_exhausted` and
+`identical_empty_response`, and it is claimed on the ladder's **recorded cap refusal**, not
+on `attempts_remaining == 0`: the ceiling must actually have stopped a rung that wanted to
+run. A leg that merely spent its last attempt and then failed for another reason was not
+ended by the cap. `operation_timeout` is not in that chain and cannot be displaced by it:
+`_issue` records the timeout and re-raises, so a timed-out leg leaves by that exception and
+never reaches the block. Nor can a successful leg acquire the reason — both success returns
+precede the block.
+
+**`OPERATIONAL_TERMINATION_REASONS` is UNCHANGED** — it stays exactly
+`{budget_exhausted, operation_timeout}`. `attempt_cap_reached` is **not** added to it. D-005
+calls the cap *"a safety ceiling, not a promise"*, which is a different fact from a leg that
+ran out of clock. Whether the attempt cap should count in the pipeline-completion and
+end-to-end strict-success denominators is a **product decision that has not been made**;
+until it is, the denominator does not move.
+
+**One literal, two vocabularies.** The new termination reason uses the same string as the
+ladder's existing skip cause `extraction_ladder.SKIP_ATTEMPT_CAP`, because both name one
+event. The vocabularies stay separate and independently closed: `require_reason` still refuses
+every other skip cause, `require_skip_cause` still refuses every other termination reason,
+`SKIP_CAUSES` and `TERMINATION_REASONS` remain distinct, and *"a skip cause is not a
+termination reason"* remains true — a skip cause says why one **rung** did not start, a
+termination reason says why the **leg** stopped, and they are recorded in different fields.
+
+---
+
 ## Open — not yet decided
 
 | # | Question | Blocks | Why it cannot be answered from the repository |
@@ -870,3 +938,272 @@ delivered by C-020**.
 | O-1 | `placeholder_backed_proteins` (21 in the pinned run): gold-set error class, or legitimate biology preservation? | any branch that touches protein export policy | It is a genuine disagreement between two intentional designs, not a defect. TRAP-3 forbids agents from resolving it. |
 
 **Closed:** O-2 → D-011 · O-3 → D-014.
+
+---
+
+## D-025 — Generated evidence is budgeted before dispatch, including what the gates allocate · 2026-08-13 · LOCKED
+
+**D-019 already required two budgets. It was not being satisfied.** Two Pack 3 cards proved the
+gap independently, and in both the writer was right and the charter was wrong.
+
+* **C-050a** was given `≤ 40` generated artifacts while the same charter *mandated* the
+  split-process Chunk D gate, which **self-allocates ~32 reports on its own** — leaving 8 for the
+  focused run, the G9 proof, three determinism runs, a discrimination run and SMOKE. It landed at
+  **41**. Its reviewer: *"the ceiling is internally inconsistent with the gate the same charter
+  requires."*
+* **C-041a** was given a hand-authored ceiling and **no generated-evidence budget at all**. Of its
+  10,080 evidence lines, **9,294 are the 77 mandatory `bounded_run.py` cleanup reports** whose
+  shape is fixed by a wrapper agents may not modify, and **50 of the 77 are auto-allocated by
+  `chunk_d_gate.run`** (25 per `qb` cohort).
+
+**Every charter, before dispatch, states three ceilings separately:**
+
+1. **hand-authored** additions-plus-deletions;
+2. **generated artifact count**;
+3. **generated artifact byte or line size**, where applicable.
+
+**The generated figure must be budgeted, not guessed.** It must provide for:
+
+* the fixed reports a Chunk D partition allocates for itself (**~32 per `qb` cohort**, ~6–8 for
+  `core`+`s8`);
+* one wrapper report per bounded job;
+* focused and merge-gate reports;
+* **at least one failing run** wherever a failure is plausible;
+* headroom for **one review correction**.
+
+**Budgets are ceilings, not targets. Genuine evidence is never deleted to satisfy a number.** A
+writer that would exceed a ceiling **stops before committing and reports**; deleting a superseded
+or failing report to come in under the line is a **reject**. Both Pack 3 writers correctly refused
+to do it, and C-050a committed its **failing** determinism run alongside the passing one — that is
+the required behaviour, not an overrun to be charged to the writer.
+
+**A charter that omits the generated figure is a dispatch error**, exactly as D-019 § 3 says of a
+missing manifest. Where it has already happened, the omission is disclosed at closeout — it is
+**not** cured retroactively and **not** described as compliance.
+
+---
+
+## D-026 — Tracked background execution is compliant when a bounded job exceeds the interactive limit · 2026-08-13 · LOCKED
+
+**This resolves a question three cards relitigated** (C-034, C-041a, C-050a), each self-declaring
+the same deviation and each having it adjudicated separately. `TEST_MATRIX` § 0 rule 1 is amended
+in the same commit as this entry.
+
+A Chunk D `qb` cohort is ~10.5 minutes across 23 AppTest processes and **exceeds the 10-minute
+interactive foreground cap by construction**. The rule's purpose was never the foreground shell —
+it was bounded lifetime, owned-PID-only cleanup, verified zero survivors, and a committed
+structured report.
+
+**A tracked background job is compliant when all of these hold:**
+
+* it is launched through the **same approved `bounded_run.py` wrapper**, unmodified;
+* its **task/process identifier and output path are recorded immediately**;
+* **only one heavy job runs at a time**;
+* the orchestrator **polls it rather than launching duplicates**;
+* **wrapper cleanup executes**;
+* **descendant counts and zero survivors are verified**;
+* the **final canonical JSON report is inspected**;
+* **no detached or unowned job remains**.
+
+**This does not authorize arbitrary background shells.** Detached processes, `nohup`, untracked
+jobs and `Start-Process` without bounded waiting remain forbidden. Cleanup still targets only
+PIDs the job created; `taskkill /IM python.exe` and `pkill python` remain forbidden; pre-existing
+processes are reported, never killed.
+
+**Prefer a single tracked bounded cohort** where splitting would change the gate's semantics or
+materially increase overhead. Use `--only` partitions **only where the gate is explicitly
+partition-safe** — `chunk_d_gate.py` proves its `177 = 150 + 4 + 23` partition on every
+invocation, so its partitions are safe by construction.
+
+**Retrospective effect:** the C-034, C-041a and C-050a deviations are compliant under this rule.
+Each was self-declared before review, ran through the unmodified wrapper inside the same Job
+Object under its own outer timeout, and verified zero survivors from a complete descendant census.
+No measurement in any of those cards depended on the foreground/background distinction.
+
+---
+
+## D-027 — Conditional C-051 ownership of the post-freeze identity seam · 2026-08-14 · LOCKED
+
+**D-021 § 2 remains locked except for one narrowly defined conditional carve-out.**
+
+C-051 may **inspect** and, **only when proven necessary**, modify the `pathwhiz_id`
+materialization logic inside:
+
+```
+src/t2pw/pwml/ir.py :: _entity_record
+```
+
+**Why this authority exists.** Live-source measurement (P2-06, re-confirmed by AST on the
+integration tip) shows `_entity_record` materializes `pathwhiz_id` **after the freeze boundary**,
+while merely removing the `_resolve_compound_rows` call — all C-051 was chartered to do — may
+leave that later materialization **reachable**.
+
+**D-021's statement that `_entity_record` must remain untouched is amended only to the extent
+required to enforce the already-locked rule that identity may not be created or resolved after
+freeze.** Nothing else in D-021 § 2 moves.
+
+### Required sequence
+
+**C-051 remains blocked until C-050 and C-045 have merged.** C-045 and C-051 **must not run
+concurrently**: `_canonicalize_species_offline` is already called from **inside** `build_pwml_ir`,
+creating a shared live lifecycle seam.
+
+After C-050 and C-045 merge, but **before C-051 makes an implementation commit**:
+
+1. **Re-derive the relevant symbols by AST**, never by D-021's stale line numbers.
+2. **Trace `build_pwml_ir`, `_resolve_compound_rows`, `_canonicalize_species_offline` and
+   `_entity_record` on the actual combined tip.**
+3. **Measure whether `_entity_record` can still create, resolve, or newly materialize a
+   `pathwhiz_id` after the canonical payload has frozen.**
+4. **Exercise at least these four cases:**
+   * an entity **already carrying a valid pre-freeze `pathwhiz_id`**;
+   * an entity **lacking one at freeze**;
+   * an entity whose identity information **exists only in mapping metadata**;
+   * a **normal compound** passing through the **live production call chain**.
+
+### If the path is unreachable
+
+If combined-state evidence proves C-050 and C-045 **already foreclose** post-freeze
+materialization:
+
+* **do not modify `_entity_record`;**
+* **retain the D-021 lock;**
+* add or preserve a **focused guard proving the path is unreachable**;
+* record the measurement and **close P2-06 as discharged by reachability proof**.
+
+**A no-code result is a valid completion of this clause.**
+
+### If the path remains reachable
+
+If `_entity_record` can still **newly materialize** `pathwhiz_id` after freeze:
+
+* C-051 is authorized to modify **only the relevant `pathwhiz_id` block** inside `_entity_record`;
+* it **may forward or serialize** an identity **already established before freeze**;
+* it **must not resolve, infer, synthesize, hydrate, or newly materialize** identity after freeze;
+* a **missing pre-freeze identity must follow the existing missing-identity / review policy**
+  rather than silently inventing an identifier;
+* **do not refactor unrelated `_entity_record` behaviour**;
+* **do not broaden ownership to other identity fields** without a separately demonstrated
+  requirement.
+
+**Tests must prove:**
+
+* valid pre-freeze identity **survives unchanged**;
+* an absent identity **is not created after freeze**;
+* **mapping metadata cannot silently become a new post-freeze identity**;
+* **canonical/frozen hashes and decision inputs remain stable**;
+* **no correct identifier is accidentally dropped**;
+* **no PWML or biological semantics move** outside the intended identity-timing correction.
+
+### D-021 live symbol citations, re-derived by AST on the integration tip
+
+D-021's own line numbers are **stale** — C-040 moved four functions out of `ir.py` and later cards
+shifted the rest. **The historical evidence in D-021 is NOT rewritten**; these are the live
+locations to work from.
+
+| Symbol | D-021 cited | **AST-measured now** |
+|---|---|---|
+| `ir.py :: _entity_record` | `:437-449` | **`ir.py :438-450`** |
+| `ir.py :: _canonicalize_species_offline` | *(unnumbered)* | **`ir.py :617-701`** |
+| `ir.py :: _emit_canonicalization_preflight` | `:900-963` | **`ir.py :704-767`** |
+| `ir.py :: build_pwml_ir` | *(call site `:1106-1114`)* | **`ir.py :770-1811`; resolution call at `:911`** |
+| `_normalize_compound_external_ids` | `ir.py :530-555` | **moved → `compound_resolution.py :198-223`** |
+| `_compound_external_ids` | `ir.py :558-575` | **moved → `compound_resolution.py :226-243`** |
+| `_canonicalize_compound_offline` | `ir.py :578-621` | **moved → `compound_resolution.py :246-311`** |
+| `_resolve_compound_rows` | `ir.py :797-897` | **moved → `compound_resolution.py :314-421`** |
+
+**The three call sites sit in sequence inside `build_pwml_ir`**, which is why the seam is shared:
+
+```
+:844  _canonicalize_species_offline(...)   <- C-045 moves this pre-freeze
+:911  _resolve_compound_rows(...)          <- C-051 deletes this, asserts instead
+:921  _entity_record(...)                  <- materializes pathwhiz_id at ir.py:447
+```
+
+Any card quoting D-021's numbers must re-derive them by **AST symbol, not line range**
+(`PACK2-SHARED` § S9 trap 1: insertions above a function shift it).
+
+---
+
+## D-028 — DB match admission: no fuzzy rename, and short names need a corroborating identifier · 2026-08-14 · LOCKED
+
+**Adjudicated `product_contract_violation`** by an independent `pwml-bio-auditor`; ruled by the
+product owner. Implemented by **C-040a** (`agent/p40a-db-match-admission` @ `7d5a3916`).
+
+### The defect
+
+`compound_resolution.py` required `confidence >= 0.85` to accept a PathBank DB match. When that
+failed it logged `compound_db_resolution_failed` — and then **applied the resolution anyway**.
+`db_resolver.py :: apply_compound_db_resolution` checked only `status != "matched"` and never read
+confidence. **The gate decided whether to log a failure, not whether to apply.**
+
+Measured over the 124 distinct compound names in committed `runs/**/final_mapped.json`:
+**24 would be renamed and identifier-stamped, every one below the acceptance bar** — 3 via
+`fuzzy_name` @0.65 and 21 via `exact_short_name_or_synonym` @0.70. Confirmed-wrong cases included
+`OPDA → Dinor-12-oxo-phytodienoate` (**not a PathBank synonym at all** — exact-name and synonym
+lookups both return empty; the fuzzy tie-break passes by 0.0006), `THF → Tetrahydrofuran`,
+`CL → Chloride ion` (CL = cardiolipin), `G3P → 3-Phosphoglyceric acid` (G3P = glycerol-3-phosphate),
+`PE → O-Phosphoethanolamine` (PE = phosphatidylethanolamine),
+`glycerol-3-phosphate → Indoleglycerol phosphate`.
+
+The gold set already names this failure class: `PMC13231680`'s `forbidden_identifiers` entry for
+`PSA` — *"in most biomedical text PSA is prostate-specific antigen … Resolving it to a protein
+identifier is a failure."* Contract basis: **PRODUCT_CONTRACT §1** ("never invent … identities") and
+**§8** ("Never accept an identifier because its format is valid").
+
+### The ruling — "no fuzzy + abbreviation guard"
+
+1. **A `fuzzy_name` match may never rename and may never stamp identifiers.** Record only.
+2. **A unique exact normalized full-name or synonym match may rename and stamp**, *except* that a
+   name of **four characters or fewer** additionally requires **corroboration by a matching
+   identifier on the same DB row**.
+3. **Corroboration means AGREEMENT, not presence.** The row's identifier must **equal** the matched
+   PathBank row's same-namespace identifier. A disagreeing identifier, or one with no counterpart on
+   the matched row, corroborates nothing. *(Clarified during implementation: a presence-only reading
+   admitted `PE` — whose `mapped_ids.kegg = C00012` is absent from PathBank's `compounds.kegg_id` —
+   contradicting the kill-list this decision was ruled against.)*
+4. **Corroborating namespaces are limited to KEGG, ChEBI, PubChem and HMDB.** **DrugBank is excluded
+   and remains fail-closed unless separately ruled.** Exclusion is conservative: it can only produce
+   more refusals, never more admissions.
+5. **"Record only" means no rename AND no identifier stamp** — never a partial apply.
+6. **A refused match is recorded for review, never silently dropped and never raised.** Merge rule 7
+   preserves incomplete-but-correct pathways as `review_required`. Status:
+   `identity_refused_review_required`.
+7. **The `4` is a named module constant citing this decision** — `SHORT_ABBREVIATION_MAX_CHARS`.
+
+### Attribution and scope
+
+The defect is **pre-existing**: C-040 lifted it verbatim from `ir.py`, and it remained live
+post-freeze at `ir.py:911-918`. **C-050 does not create it** — C-050 widens its blast surface by
+moving false names into the canonical payload *before* the freeze, where they are hashed and reach
+`final_mapped.json` and the quarantine report. **The remedy is to fix the gate, not to revert
+C-050.** One fix governs both the pre-freeze and post-freeze surfaces; it is deliberately **not**
+special-cased by caller.
+
+`test_all_four_artifacts_are_written_and_retained` needs **no** test change: `original_process`
+should show post-canonicalization names, so it returns to green once this decision is implemented.
+
+### Measured effect (C-040a, independently reproduced by `REV-040a`)
+
+| | base | tip |
+|---|---|---|
+| name-only: admitted / refused | 56 / 0 | **36 / 20** |
+| real committed rows: refused | 0 | **5** |
+| real rows: substantive renames | 7 | **2** |
+| **new renames introduced** | — | **0** |
+| **refused rows gaining the match's stamps** | — | **0** |
+
+**Legitimate identity lost — 3 of 124 real rows**, stated rather than hidden: `NAD` (identifiers
+only; its name was already correct), `PLP → Pyridoxal 5'-phosphate`, `Zn²⁺ → Zinc`. All three carry
+`row_mapped_ids = {}`. Common cofactors are safe because **66/124 rows resolve by
+`pathbank_compound_id` at confidence 1.0 on the strong-id branch and never reach rule 2** — `ATP`
+among them. The precise safety claim is "an identifier that *hits* the DB"; an id-less abbreviation
+is refused by design.
+
+### Related vendor-data finding (recorded, no gold change)
+
+PathBank row 104723 is **internally inconsistent**: its *name* asserts the C16 dinor homolog while
+its KEGG `C01226`, ChEBI `57411` and PubChem assert C18 12-OPDA — and PathBank has **no row for C18
+OPDA at all**. The correct canonical target does not exist, so the only correct outcome for "OPDA"
+is no rename. PathBank is a vendor source, not the gold set; the contract's remedy for inconsistent
+vendor data is the confidence bar this decision restores.

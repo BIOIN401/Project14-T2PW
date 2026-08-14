@@ -1,7 +1,8 @@
 """RAG loop stopping policy — PRODUCT_CONTRACT.md §10 and DECISIONS.md D-005.
 
 POLICY ONLY: for a *supplied* loop state, "go round again, and if not, exactly why
-not?", answered with one of the six D-005 termination reasons. No loop, no I/O, no
+not?", answered with one of the seven termination reasons -- D-005's six plus D-024's
+``attempt_cap_reached``, which EXTENDS D-005 rather than reopening it. No loop, no I/O, no
 clock read (``now``/``deadline`` are inputs), so a controller drives it
 deterministically and it is testable without RAG. Leaf: no controller/pipeline/app.
 
@@ -19,8 +20,17 @@ normal and ranking loses nothing, since losers are reported in ``also_true``.
     D-005 names ``budget_exhausted`` as THE operational-failure denominator.
 3   ``identical_empty_response`` — an inert MECHANISM (D-005: never reissue that prompt to
     that model) says nothing about the state of the evidence base.
-4-6 ``scientifically_unrecoverable``, ``retrieval_exhausted``, ``no_new_claims`` — most
-    specific scientific verdict first, so a run never understates what it established.
+4   ``scientifically_unrecoverable`` — an explicit refusal, and the strongest verdict a
+    stopped loop can make about the evidence itself.
+5   ``attempt_cap_reached`` (D-024) — ranked BELOW every one of the four above, exactly as
+    D-024's precedence rules: a real deadline, a timeout, a measured budget exhaustion or
+    an explicit refusal each describe the stop better than "we ran out of tries". Ranked
+    ABOVE the two below it because both of those are claims that retrieval finished, and a
+    leg cut off by the cap did NOT finish: D-005 permits ``retrieval_exhausted`` "only when
+    the configured ladder actually completed", so reporting it — or ``no_new_claims`` — for
+    a capped leg is the conflation D-005 forbids by name.
+6-7 ``retrieval_exhausted``, ``no_new_claims`` — most specific scientific verdict first, so
+    a run never understates what it established.
 """
 
 from __future__ import annotations
@@ -35,10 +45,12 @@ BUDGET_EXHAUSTED = "budget_exhausted"
 OPERATION_TIMEOUT = "operation_timeout"
 IDENTICAL_EMPTY_RESPONSE = "identical_empty_response"
 SCIENTIFICALLY_UNRECOVERABLE = "scientifically_unrecoverable"
+ATTEMPT_CAP_REACHED = "attempt_cap_reached"
 
 TERMINATION_PRECEDENCE: Tuple[str, ...] = (
     BUDGET_EXHAUSTED, OPERATION_TIMEOUT, IDENTICAL_EMPTY_RESPONSE,
-    SCIENTIFICALLY_UNRECOVERABLE, RETRIEVAL_EXHAUSTED, NO_NEW_CLAIMS,
+    SCIENTIFICALLY_UNRECOVERABLE, ATTEMPT_CAP_REACHED, RETRIEVAL_EXHAUSTED,
+    NO_NEW_CLAIMS,
 )
 TERMINATION_REASONS: FrozenSet[str] = frozenset(TERMINATION_PRECEDENCE)
 
@@ -118,6 +130,10 @@ class LoopState:
     identical_empty_responses: int = 0
     evidence_sources_exhausted: bool = False
     defensible_core: bool = True
+    #: D-024. The configured attempt ceiling is spent and the operation did not
+    #: succeed. Supplied by the controller because the count lives in the ladder, not
+    #: here; ``False`` by default, so an unpopulated state never invents the reason.
+    attempt_cap_reached: bool = False
 
     @property
     def out_of_budget(self) -> bool:
@@ -139,7 +155,12 @@ class LoopDecision:
 
 
 def _conditions(state: LoopState) -> Dict[str, bool]:
-    """Which of the six reasons are TRUE for ``state``. Several may hold at once."""
+    """Which of the seven reasons are TRUE for ``state``. Several may hold at once.
+
+    EVERY member of :data:`TERMINATION_PRECEDENCE` gets a key here, because
+    :func:`decide` indexes this mapping by precedence member: a reason added to the
+    tuple without a key here would be a ``KeyError``, not a silent omission.
+    """
     exhausted = state.ladder_completed and state.new_admissible_claims <= 0
     return {
         # budget_exhausted asserts D-005's "another recovery step MIGHT HAVE HELPED": a
@@ -151,6 +172,12 @@ def _conditions(state: LoopState) -> Dict[str, bool]:
         IDENTICAL_EMPTY_RESPONSE: state.identical_empty_responses >= 2,
         SCIENTIFICALLY_UNRECOVERABLE: (
             state.evidence_sources_exhausted and not state.defensible_core),
+        # D-024. Guarded on ``not ladder_completed`` because the reason asserts the
+        # CAP is what ended processing: a ladder that ran to completion was ended by
+        # its own completion, and the honest reason for that is the more specific
+        # retrieval_exhausted below. The guard is what keeps the two mutually
+        # exclusive rather than leaving the ranking to decide a contradiction.
+        ATTEMPT_CAP_REACHED: state.attempt_cap_reached and not state.ladder_completed,
         RETRIEVAL_EXHAUSTED: exhausted,
         # The round-level observation while rungs remain; a completed ladder reports
         # the stronger, more specific reason above instead.

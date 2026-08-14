@@ -168,9 +168,37 @@ against a policy).
 | 6 | `strict_quarantine.py :: quarantine_and_close` | 310 | C-010, C-041 | C-041 branches from C-010's integration commit |
 | 7 | `acceptance.py :: _build_denominators` | 182 | C-053, C-054, C-056b | serialize |
 | 8 | `map_ids.py :: _enforce_shipped_identity_names` | 173 | C-033, C-044 | C-033 first |
+| **9** | **`tests/test_streamlit_quarantine_boundary.py`** (whole file) | — | **C-041a, C-050a**, and every future freeze-lifecycle / release-classification card | **test-function-level ownership, assigned 2026-08-13** — see below |
 
 `streamlit_app.py` is 6274 lines of which **2550 (41%) is module-level script body**
 unreachable by unit tests.
+
+### Hotspot 9 — `tests/test_streamlit_quarantine_boundary.py`, resolved 2026-08-13 (P2-11)
+
+This file was in **no card's manifest** while pinning app-boundary behaviour that the
+freeze-lifecycle and release-classification cards are chartered to change. Two Pack 2 cards
+collided with it independently, for unrelated reasons. Leaving it unowned meant every future
+lifecycle card would re-litigate it. **Ownership is now explicit and at test-function level:**
+
+| Owner | Owns exactly | Cause |
+|---|---|---|
+| **C-041a** | its four re-pinned `report["ok"]` assertions + `_payload_with_no_viable_core` | they pin **pre-D-002** boundary behaviour for runs **D-002 (LOCKED)** now requires to export as `review_required`. Moved under **merge rule 4**, with the hard guard that a payload with **no genuine surviving core** keeps `ok is False` |
+| **C-050a** | `test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` (node15) + minimum supporting fixture | its comparand `final_mapped_db` is **pre-enrichment**, so the assertion's span is wider than the invariant it states. Stale since **C-011** unified the payloads; exposed by the first non-no-op stage inserted into that span |
+
+**Standing rules for this file, binding on every future card:**
+
+1. **No card may add, remove, rename or reorder a test function here.** The Chunk D `qb` gate
+   addresses nodes **positionally**; moving one renumbers every node after it and invalidates
+   every prior classification.
+2. It is a **D-apptest** file, validated only through the 23-node `qb` gate (~10.5 min), and it
+   sits behind **BL-003**'s flapping. **Never read a red as expected** — classify under D-023
+   (deterministic · diff-reproducible · traceback-implicated) first.
+3. **Two cards owning disjoint functions here must not be merged blind of each other.**
+   Whichever lands second **re-runs `qb` against the combined state**, and neither may revert
+   the other's re-pin.
+4. A card correcting an assertion here must **preserve or strengthen** the invariant the
+   assertion states. Re-pointing a **stale comparand** is in scope; **weakening the comparison**
+   — a partial-field check, a subset check, a normalizing round-trip — is not.
 
 ---
 
@@ -376,19 +404,22 @@ row to these, and never edit a re-export shim:
 | C-031 | `agent/p02-quarantine-artifacts` | B | C-012 | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | — |
 | C-032 | `agent/p03b-deadline-module` | B | C-012, C-014 | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
 | C-033 | `agent/p10-identity-hydration` | B | — | `src/t2pw/mapping/map_ids.py` :: `verify_real_protein_identity`, `_enforce_shipped_identity_names`; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py`. **Not** `src/map_ids.py` — that is a 5-line re-export shim | C-044 impl | C | — |
-| C-034 | `agent/p21-lineage-extract` | B | C-015 | `extraction/extract.py` | rotate | A | — |
-| C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` | rotate | C | — |
+| C-034 | `agent/p21-lineage-extract` | B | C-015 | **RE-SCOPED 2026-08-13:** `pipeline/stage_one_boundary.py` :: `settle_stage_one` (lineage writes only). The former target `extraction/extract.py` is **dead demo code** — 29 lines, one hardcoded paragraph, `run_demo()` under `__main__`, reached only through the `src/extract.py` shim — and is now **excluded from this card**. Ownership stays disjoint from C-042 | rotate | A **+ `tests/test_stage_one_boundary.py` + `tests/test_early_failure_replay.py`** (neither is in any chunk) | — |
+| C-035 | `agent/p22-lineage-rag` | B | C-015 | `rag/synthesize.py`, `rag/admission.py` — **except `parse_span_relation` and `validate_evidence_span`, which are C-061's** (corrected 2026-08-13; C-035 merged with both **byte-identical**, verified three times including in the merged tree, precisely to keep them free) | rotate | C | — |
 | C-036 | `agent/p23-lineage-audit` | B | C-015 | `curation/apply_audit_patch.py` | rotate | A | — |
 | C-037 | `agent/p24-lineage-gapres` | B | C-015 | `curation/gap_resolver.py` | rotate | C | — |
 | C-038 | `agent/p25-lineage-carrier` | B | C-015 | `pipeline.py` :: `_carry_rag_provenance`, `_RAG_ROW_CARRIER_KEYS` | C-015 impl | A + provenance test | — |
 | C-040 | `agent/p05a-resolution-extract` | C | SPIKE-002 | NEW `pwml/compound_resolution.py`; `ir.py` :: `_resolve_compound_rows`, `_canonicalize_compound_offline` — **INCOMPLETE: this row names 2 of the 4 functions C-040 must move (`SPIKE-002-REPORT.md` §3). Do NOT dispatch against this row; `DECISIONS.md` D-021 §2 is C-040's authoritative symbol manifest** | C-051 impl | D | ✔ |
 | C-041 | `agent/p08-release-status` | C | C-010, C-012 | NEW `pipeline/release_status.py`; `strict_quarantine.py` :: `evaluate_core_coverage`; `_finalize_gate_failure`; `batch/report.py`; `bench/render.py` | C-010 impl | A, B | — |
+| C-041a | `agent/p08a-d002-release-seam` | C | C-041, F-006 / D-002 | The release/refusal seam around `strict_quarantine.py` :: `quarantine_and_close`. **Also owns, in `tests/test_streamlit_quarantine_boundary.py`, exactly its four re-pinned `report["ok"]` assertions and `_payload_with_no_viable_core`** — moved under merge rule 4 because **D-002 (LOCKED)** changes the behaviour they pin, with the hard guard that where a payload has **no genuine surviving core** the assertion **stays `ok is False`**. **Ceiling 1500 → 1900 by final product-owner pre-commit re-charter, 2026-08-13** (valid because no implementation commit existed). **Must not run concurrently with C-057** — both touch `strict_quarantine.py` | independent | A, D (`qb`) | — |
 | C-042 | `agent/p03c-extraction-ladder` | C | C-032, C-038 | `pipeline.py` :: `_run_json_stage`, `_build_extraction_prompt`; `extraction_diagnostics.py` | C-032 impl | A | — |
+| C-042a | `agent/p03d-attempt-cap-reason` | C | C-042 ✔ merged `8917349` | **NEW 2026-08-13, product-owner ruling (RULING 3).** A **seventh** termination reason `attempt_cap_reached`, under new decision **D-024**. Owns the minimum enum/schema, serialization and call site to represent it end-to-end: `pipeline/deadline.py` :: `TERMINATION_REASONS` / `require_reason`; `rag/loop_policy.py` :: `TERMINATION_PRECEDENCE`; `pipeline/extraction_ladder.py` :: the attempt-cap refusal at `:478-483` and the `termination_reason` serialization. **`OPERATIONAL_TERMINATION_REASONS` is UNCHANGED** — widening the strict-success denominator is a product decision not made. **C-042 is NOT reopened, amended or re-reviewed** | independent | C | — |
 | C-043 | `agent/p32-rag-controller` | C | C-016, C-021 | NEW `rag/controller.py` (unwired) | C-055 impl | C | — |
 | C-044 | `agent/p26-lineage-mapping` | C | C-015, C-033 | `src/t2pw/mapping/map_ids.py` (lineage writes only). **Not** `src/map_ids.py` — re-export shim | C-033 impl | C | — |
 | C-045 | — **planning only, no branch** | C | — | `ir.py` :: `_canonicalize_species_offline` — **sole owner** (D-016). Species/organism canonicalization is a **pre-freeze semantic unit**: it must execute **before** the canonical freeze, and must preserve or record organism/species provenance. It does **not** absorb compound canonicalization, which remains C-040's. **PLANNING ONLY — unimplemented, undispatched, not dispatchable**; this entry establishes no card, dependency, reviewer, test chunk, branch or implementation budget | — | — | — |
 | C-050 | `agent/p05b-prefreeze-call` | D | C-040, C-030 | `streamlit_app.py` :: enrichment block **above** the seam | C-052 impl | D | ✔ |
-| C-051 | `agent/p05c-ir-assert-only` | D | C-040, C-050 | `ir.py` :: `build_pwml_ir` | C-040 impl | D | ✔ |
+| C-050a | `agent/p05c-node15-comparand` | D | — | **NEW 2026-08-13, product-owner ruling (RULING 1). TEST-ONLY; no production code authorized.** `tests/test_streamlit_quarantine_boundary.py` :: `test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` — the node15 quarantine-boundary comparand — plus the minimum directly supporting fixture code. Re-points `mapped_in` from the **pre-enrichment** `final_mapped_db` to the **post-enrichment** artifact quarantine is actually handed (`final_mapped_enriched`, already published at `streamlit_app.py:3725`). Closes **P2-11 / B-P2-1**. **Merges BEFORE C-050.** ⚠ branch prefix `p05c` is shared with C-051's planned `agent/p05c-ir-assert-only` — **different cards, different branches, do not confuse them** | independent | D (`qb`) | ✔ |
+| C-051 | `agent/p05c-ir-assert-only` | D | C-040, C-050 | `ir.py` :: `build_pwml_ir`. **Its charter MUST also name `ir.py` :: `_entity_record` (P2-06):** `pathwhiz_id` / `pathbank_compound_id` are materialized there, **not** in `_resolve_compound_rows`, so deleting the in-IR resolution call alone would leave a post-freeze materialization path live | C-040 impl | D | ✔ |
 | C-052 | `agent/p06b-freeze-enforce` | D | C-030, C-050, C-020 | `streamlit_app.py` :: `freeze_canonical_payload`, `run_pwml_export`, SBML binding | C-030 impl | D | ✔ |
 | C-053 | `agent/p09-pwml-naming` | D | C-041 | `driver.py` :: `_finalize_pwml_export`; `runner.py` `:116`/`:856`; `acceptance.py` `:81-100`, `:490-500` | C-031 impl | B | — |
 | C-054 | `agent/p16-goldset-required` | D | C-041 | `bench/goldset.py` | C-056b impl | B | — |
@@ -396,8 +427,8 @@ row to these, and never edit a re-export shim:
 | C-056a | `agent/p42a-semantic-runtime` | D | C-017, C-041 | `pipeline/release_status.py` :: semantic input to **runtime `release_status`** | C-017 impl | B | — |
 | C-056b | `agent/p42b-semantic-bench` | D | C-056a, C-053 | `acceptance.py` :: `_build_denominators` | C-056a impl | B | — |
 | C-057 | `agent/p27-lineage-quarantine` | D | C-015, C-010, C-041 | `strict_quarantine.py` (lineage writes only) | C-041 impl | A, E | — |
-| C-060 | `agent/p51-false-id-repairs` | E | **BLOCKED** on R-003 | placeholder | — | — | — |
-| C-061 | `agent/p52-missing-reactions` | E | **BLOCKED** on R-004 | placeholder | — | — | — |
+| C-060 | `agent/p51-false-id-repairs` | E | R-003 ✔ | **SCOPE ACCEPTED 2026-08-13 (R-003 M1 only):** NEW `pipeline/entity_admission.py` — an assay-reagent admission gate — plus the minimal call site in `pipeline.py` :: `merge_additions`. **A0-C5: the hallucination gate runs first and independently of `cofactor_policy`** | — | — | — |
+| C-061 | `agent/p52-missing-reactions` | E | R-004 ✔ | **SCOPE ACCEPTED 2026-08-13 (R-004 B-2 only):** `rag/admission.py` :: `parse_span_relation`, `validate_evidence_span`. The stale C-035 claim over both symbols is corrected in this table; C-035 is **not** reopened | — | — | — |
 
 ### Requirements carried into specific prompts
 

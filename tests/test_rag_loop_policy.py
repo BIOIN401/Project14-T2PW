@@ -8,9 +8,10 @@ import inspect
 import pytest
 
 from t2pw.rag.loop_policy import (
-    BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, NO_NEW_CLAIMS, OPERATION_TIMEOUT,
-    RETRIEVAL_EXHAUSTED, SCIENTIFICALLY_UNRECOVERABLE, TERMINATION_PRECEDENCE,
-    TERMINATION_REASONS, LoopState, SeenClaims, claim_identity_key, decide,
+    ATTEMPT_CAP_REACHED, BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, NO_NEW_CLAIMS,
+    OPERATION_TIMEOUT, RETRIEVAL_EXHAUSTED, SCIENTIFICALLY_UNRECOVERABLE,
+    TERMINATION_PRECEDENCE, TERMINATION_REASONS, LoopState, SeenClaims,
+    claim_identity_key, decide,
 )
 
 #: A healthy mid-loop state: budget left, the round completed, the graph grew.
@@ -26,6 +27,9 @@ ONLY = {  # per reason, the overrides that make exactly that one reason true
     RETRIEVAL_EXHAUSTED: dict(ladder_completed=True, new_admissible_claims=0,
                               graph_delta=0),
     NO_NEW_CLAIMS: dict(new_admissible_claims=0, graph_delta=0),
+    # D-024: budget left, the round produced claims, the ladder did not complete —
+    # so the ONLY thing that stopped this loop is the spent attempt ceiling.
+    ATTEMPT_CAP_REACHED: dict(attempt_cap_reached=True),
 }
 
 
@@ -39,7 +43,9 @@ def claim(reactant: str, name: str = "step", gap: str = "gap-1") -> dict:
 
 @pytest.mark.parametrize("reason", TERMINATION_PRECEDENCE)
 def test_each_reason_is_produced_by_a_state_that_yields_only_it(reason):
-    assert len(TERMINATION_REASONS) == len(TERMINATION_PRECEDENCE) == 6  # all distinct
+    # BASELINE MOVE, C-042a / D-024: 6 -> 7. Exact delta: ``attempt_cap_reached``
+    # added, nothing removed or renamed. Still one precedence slot per reason.
+    assert len(TERMINATION_REASONS) == len(TERMINATION_PRECEDENCE) == 7  # all distinct
     decision = decide(state(**ONLY[reason]))
     assert (decision.should_continue, decision.reason, decision.also_true) == (
         False, reason, ())

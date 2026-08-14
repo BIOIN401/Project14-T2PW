@@ -1,0 +1,1015 @@
+{
+  "bare_names": {
+    "payload": {
+      "entities": {
+        "compounds": [
+          {
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "providers": [
+                "PathBankDB"
+              ],
+              "query": {
+                "name": "2,3-dihydroxybenzoate"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "route": "compound",
+              "route_reason": "default_compound_route",
+              "source": "db"
+            },
+            "name": "2,3-dihydroxybenzoate"
+          },
+          {
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "providers": [
+                "PathBankDB"
+              ],
+              "query": {
+                "name": "ATP"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "route": "compound",
+              "route_reason": "default_compound_route",
+              "source": "db"
+            },
+            "name": "  ATP "
+          }
+        ],
+        "protein_complexes": [],
+        "proteins": [
+          {
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "provider": "PathBankDB",
+              "query": {
+                "name": "EntA",
+                "organism": "Escherichia coli"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "reviewed": false,
+              "source": "db",
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Escherichia coli",
+                "reason": "db_unavailable",
+                "source": "explicit_entity_species",
+                "status": "novel"
+              }
+            },
+            "name": "EntA",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "species_ref": {
+              "confidence": 0.0,
+              "name": "Escherichia coli",
+              "reason": "db_unavailable",
+              "source": "explicit_entity_species",
+              "status": "novel"
+            }
+          }
+        ],
+        "species": [
+          {
+            "mapping_meta": {
+              "resolution": {
+                "issue": "db_unavailable",
+                "order_step": "explicit_entity_species",
+                "status": "novel"
+              },
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Escherichia coli",
+                "reason": "db_unavailable",
+                "source": "explicit_entity_species",
+                "status": "novel"
+              }
+            },
+            "name": "Escherichia coli"
+          }
+        ]
+      },
+      "processes": {
+        "reactions": []
+      },
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 1,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      },
+      "topic": null
+    },
+    "report": {
+      "entities": [
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "protein",
+          "json_pointer": "/entities/proteins/0",
+          "location": "",
+          "name": "EntA",
+          "organism": "Escherichia coli",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "compound",
+          "json_pointer": "/entities/compounds/0",
+          "location": "",
+          "name": "2,3-dihydroxybenzoate",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "compound",
+          "json_pointer": "/entities/compounds/1",
+          "location": "",
+          "name": "ATP",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "source": "db",
+          "status": "unmapped"
+        }
+      ],
+      "enzyme_complex_conversion": {
+        "actions": [],
+        "summary": {
+          "complex_missing_components_unknown_fallbacks": 0,
+          "reaction_enzyme_complexes_db_matched": 0,
+          "reaction_enzyme_complexes_novel": 0,
+          "reaction_enzyme_complexes_skipped_invalid_component": 0,
+          "reaction_enzyme_complexes_unresolved": 0,
+          "reaction_enzyme_proteins_dropped_no_external_id": 0,
+          "reaction_enzyme_unknown_fallbacks": 0,
+          "reaction_protein_enzymes_rewritten_to_complexes": 0,
+          "transporter_unknown_fallbacks": 0,
+          "unknown_fallback_complexes_created": 0,
+          "unknown_fallback_complexes_reused": 0,
+          "unknown_fallbacks_skipped_no_role_evidence": 0,
+          "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+          "unknown_fallbacks_skipped_real_mapping": 0,
+          "unknown_fallbacks_skipped_unusable_name": 0,
+          "unknown_sentinel_proteins_added": 0,
+          "unknown_sentinel_proteins_reused": 0,
+          "unsupported_process_claims_quarantined": 0
+        }
+      },
+      "mapping_metadata_policy": {
+        "directly_mapped_rows": 3,
+        "named_rows": 4,
+        "not_applicable_rows": 0,
+        "species_rows": 1,
+        "unresolved_rows": 0
+      },
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 1,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      },
+      "species": {
+        "hydrated": 1,
+        "matched": 0,
+        "novel": 1,
+        "rows": [
+          {
+            "entity_type": "protein",
+            "json_pointer": "/entities/proteins/0",
+            "name": "EntA",
+            "pathbank_species_id": null,
+            "source": "explicit_entity_species",
+            "species": "Escherichia coli",
+            "status": "novel",
+            "taxonomy_id": ""
+          }
+        ],
+        "taxonomy_backfill": {
+          "checked": 1,
+          "enabled": false,
+          "resolved": 0,
+          "unresolved": [
+            "Escherichia coli"
+          ]
+        },
+        "unresolved": 0
+      },
+      "summary": {
+        "ambiguous_real_candidates_rejected": 0,
+        "bare_unresolved_proteins_remaining": 1,
+        "best_effort_mappings": 0,
+        "complex_missing_components_unknown_fallbacks": 0,
+        "complexes_skipped": 0,
+        "compounds_ambiguous": 0,
+        "compounds_mapped": 0,
+        "compounds_mapped_by_api": 0,
+        "compounds_mapped_by_db": 0,
+        "compounds_mapped_pct": 0.0,
+        "compounds_rerouted_to_protein": 0,
+        "compounds_skipped_as_complex": 0,
+        "compounds_total": 2,
+        "db_available": false,
+        "db_last_error": "",
+        "entities_ambiguous": 0,
+        "entities_mapped": 0,
+        "entities_unmapped": 3,
+        "false_protein_promotions_blocked": 0,
+        "generated_wrappers_created": 0,
+        "id_source_mode": "db",
+        "low_confidence_mappings": 0,
+        "name_gate_rejections": 0,
+        "protein_complexes_ambiguous": 0,
+        "protein_complexes_gap_issues": 0,
+        "protein_complexes_mapped": 0,
+        "protein_complexes_novel": 0,
+        "protein_complexes_skipped": 0,
+        "protein_complexes_total": 0,
+        "proteins_ambiguous": 0,
+        "proteins_mapped": 0,
+        "proteins_mapped_by_api": 0,
+        "proteins_mapped_by_db": 0,
+        "proteins_mapped_pct": 0.0,
+        "proteins_total": 1,
+        "reaction_enzyme_complexes_db_matched": 0,
+        "reaction_enzyme_complexes_novel": 0,
+        "reaction_enzyme_complexes_skipped_invalid_component": 0,
+        "reaction_enzyme_complexes_unresolved": 0,
+        "reaction_enzyme_proteins_dropped_no_external_id": 0,
+        "reaction_enzyme_unknown_fallbacks": 0,
+        "reaction_protein_enzymes_rewritten_to_complexes": 0,
+        "species_hydrated": 1,
+        "species_matched": 0,
+        "species_novel": 1,
+        "structural_cleanup_enabled": true,
+        "transporter_unknown_fallbacks": 0,
+        "unknown_backed_functional_complexes": 0,
+        "unknown_fallback_complexes_created": 0,
+        "unknown_fallback_complexes_reused": 0,
+        "unknown_fallbacks_skipped_no_role_evidence": 0,
+        "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+        "unknown_fallbacks_skipped_real_mapping": 0,
+        "unknown_fallbacks_skipped_unusable_name": 0,
+        "unknown_sentinel_proteins_added": 0,
+        "unknown_sentinel_proteins_reused": 0,
+        "unsupported_process_claims_quarantined": 0,
+        "unused_proteins_quarantined": 0,
+        "verified_real_proteins": 0
+      }
+    }
+  },
+  "carried_ids": {
+    "payload": {
+      "entities": {
+        "cell_types": [
+          {
+            "mapping_meta": {
+              "resolution": {
+                "issue": "entity_bucket_not_mapped",
+                "order_step": "not_applicable",
+                "status": "not_applicable"
+              }
+            },
+            "name": "hepatocyte"
+          }
+        ],
+        "compounds": [
+          {
+            "mapped_ids": {
+              "chebi": "CHEBI:15846",
+              "kegg": "C00003"
+            },
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "providers": [
+                "PathBankDB"
+              ],
+              "query": {
+                "name": "PhoP"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "route": "compound",
+              "route_reason": "default_compound_route",
+              "source": "db"
+            },
+            "name": "PhoP"
+          },
+          {
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "providers": [
+                "PathBankDB"
+              ],
+              "query": {
+                "name": "enterobactin"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "route": "compound",
+              "route_reason": "default_compound_route",
+              "source": "db"
+            },
+            "name": "enterobactin",
+            "synonyms": [
+              "ent"
+            ]
+          }
+        ],
+        "protein_complexes": [],
+        "proteins": [
+          {
+            "mapped_ids": {},
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "identity_evidence": {
+                "accession": "P0A9A9",
+                "detail": "no_identity_evidence_source",
+                "lookup": "",
+                "status": "not_evaluated"
+              },
+              "identity_status": "unresolved",
+              "identity_verdict": {
+                "checks": {
+                  "candidate_evidence": "no_candidate_describes_the_shipped_identifier",
+                  "identifier_resolution": "ok"
+                },
+                "entity_name": "Fur",
+                "identity": "uniprot:P0A9A9",
+                "identity_evidence": {
+                  "accession": "P0A9A9",
+                  "detail": "no_identity_evidence_source",
+                  "lookup": "",
+                  "status": "not_evaluated"
+                },
+                "judged_candidate": {},
+                "judged_candidates": [],
+                "margin": -1.0,
+                "organism": "Escherichia coli",
+                "reason": "identity_evidence_missing",
+                "score": -1.0,
+                "verification_status": "not_evaluated",
+                "verified": false
+              },
+              "name_gate": {},
+              "provider": "PathBankDB",
+              "query": {
+                "name": "Fur",
+                "organism": "Escherichia coli"
+              },
+              "rejected_mapped_ids": {
+                "uniprot": "P0A9A9"
+              },
+              "resolution": {
+                "failed_check": "identity_evidence_missing",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "status": "novel"
+              },
+              "reviewed": false,
+              "source": "db",
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Escherichia coli",
+                "reason": "db_unavailable",
+                "source": "explicit_entity_species",
+                "status": "novel"
+              },
+              "unverified_identity_claim": {
+                "evidence": {
+                  "accession": "P0A9A9",
+                  "detail": "no_identity_evidence_source",
+                  "lookup": "",
+                  "status": "not_evaluated"
+                },
+                "failed_check": "identity_evidence_missing",
+                "identifiers": {
+                  "uniprot": "P0A9A9"
+                },
+                "note": "submitted identifier; verification could not be completed",
+                "verification_status": "not_evaluated"
+              }
+            },
+            "name": "  Fur  ",
+            "organism": "Escherichia coli",
+            "species": "Escherichia coli",
+            "species_name": "Escherichia coli",
+            "species_ref": {
+              "confidence": 0.0,
+              "name": "Escherichia coli",
+              "reason": "db_unavailable",
+              "source": "explicit_entity_species",
+              "status": "novel"
+            }
+          },
+          {
+            "mapped_ids": {},
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "",
+              "confidence": 0.0,
+              "provider": "PathBankDB",
+              "query": {
+                "name": "EntB",
+                "organism": "Unknown species"
+              },
+              "resolution": {
+                "issue": "db_unavailable",
+                "status": "unresolved"
+              },
+              "reviewed": false,
+              "source": "db",
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Unknown species",
+                "reason": "no_species_source",
+                "source": "novel_species",
+                "status": "novel"
+              }
+            },
+            "name": "EntB",
+            "notes": null,
+            "organism": "Unknown species",
+            "species": "Unknown species",
+            "species_name": "Unknown species",
+            "species_ref": {
+              "confidence": 0.0,
+              "name": "Unknown species",
+              "reason": "no_species_source",
+              "source": "novel_species",
+              "status": "novel"
+            }
+          },
+          {
+            "mapped_ids": {
+              "pathbank_protein_id": 0
+            },
+            "mapping_meta": {
+              "candidates": [],
+              "chosen_rule": "novel_protein",
+              "confidence": 0.0,
+              "identity_status": "unresolved",
+              "identity_verdict": {
+                "checks": {
+                  "identifier_resolution": "no_real_identifier"
+                },
+                "entity_name": "Unknown",
+                "margin": -1.0,
+                "organism": "Unknown species",
+                "reason": "no_real_identifier",
+                "score": -1.0,
+                "verification_status": "not_evaluated",
+                "verified": false
+              },
+              "name_gate": {},
+              "provider": "PathBankDB",
+              "query": {
+                "name": "Unknown",
+                "organism": "Unknown species"
+              },
+              "rejected_mapped_ids": {
+                "uniprot": "Unknown"
+              },
+              "resolution": {
+                "failed_check": "no_real_identifier",
+                "issue": "implausible_name_match",
+                "order_step": "name_plausibility_gate",
+                "status": "novel"
+              },
+              "reviewed": false,
+              "source": "db",
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Unknown species",
+                "reason": "no_species_source",
+                "source": "novel_species",
+                "status": "novel"
+              },
+              "unverified_identity_claim": {
+                "failed_check": "no_real_identifier",
+                "identifiers": {
+                  "uniprot": "Unknown"
+                },
+                "note": "submitted identifier; verification could not be completed",
+                "verification_status": "not_evaluated"
+              }
+            },
+            "name": "Unknown",
+            "organism": "Unknown species",
+            "species": "Unknown species",
+            "species_name": "Unknown species",
+            "species_ref": {
+              "confidence": 0.0,
+              "name": "Unknown species",
+              "reason": "no_species_source",
+              "source": "novel_species",
+              "status": "novel"
+            }
+          }
+        ],
+        "species": [
+          {
+            "mapping_meta": {
+              "resolution": {
+                "issue": "db_unavailable",
+                "order_step": "explicit_entity_species",
+                "status": "novel"
+              },
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Escherichia coli",
+                "reason": "db_unavailable",
+                "source": "explicit_entity_species",
+                "status": "novel"
+              }
+            },
+            "name": "Escherichia coli"
+          },
+          {
+            "mapping_meta": {
+              "resolution": {
+                "issue": "no_species_source",
+                "order_step": "novel_species",
+                "status": "novel"
+              },
+              "species_resolution": {
+                "confidence": 0.0,
+                "name": "Unknown species",
+                "reason": "no_species_source",
+                "source": "novel_species",
+                "status": "novel"
+              }
+            },
+            "name": "Unknown species"
+          }
+        ]
+      },
+      "processes": {
+        "interactions": [],
+        "reactions": [],
+        "transports": []
+      },
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 3,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      },
+      "topic": "enterobactin — biosynthesis"
+    },
+    "report": {
+      "entities": [
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "entity_type": "protein",
+          "json_pointer": "/entities/proteins/0",
+          "location": "",
+          "name": "Fur",
+          "organism": "Escherichia coli",
+          "provider": "PathBankDB",
+          "reason": "implausible_name_match",
+          "resolution_issue": "implausible_name_match",
+          "resolution_status": "novel",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "protein",
+          "json_pointer": "/entities/proteins/1",
+          "location": "",
+          "name": "EntB",
+          "organism": "Unknown species",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "entity_type": "protein",
+          "json_pointer": "/entities/proteins/2",
+          "location": "",
+          "name": "Unknown",
+          "organism": "Unknown species",
+          "provider": "PathBankDB",
+          "reason": "implausible_name_match",
+          "resolution_issue": "implausible_name_match",
+          "resolution_status": "novel",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "compound",
+          "json_pointer": "/entities/compounds/0",
+          "location": "",
+          "name": "PhoP",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "source": "db",
+          "status": "unmapped"
+        },
+        {
+          "best_effort": false,
+          "candidate_count": 0,
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "entity_type": "compound",
+          "json_pointer": "/entities/compounds/1",
+          "location": "",
+          "name": "enterobactin",
+          "provider": "PathBankDB",
+          "reason": "db_unavailable:db_not_configured",
+          "resolution_issue": "db_unavailable",
+          "resolution_status": "unresolved",
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "source": "db",
+          "status": "unmapped"
+        }
+      ],
+      "enzyme_complex_conversion": {
+        "actions": [],
+        "summary": {
+          "complex_missing_components_unknown_fallbacks": 0,
+          "reaction_enzyme_complexes_db_matched": 0,
+          "reaction_enzyme_complexes_novel": 0,
+          "reaction_enzyme_complexes_skipped_invalid_component": 0,
+          "reaction_enzyme_complexes_unresolved": 0,
+          "reaction_enzyme_proteins_dropped_no_external_id": 0,
+          "reaction_enzyme_unknown_fallbacks": 0,
+          "reaction_protein_enzymes_rewritten_to_complexes": 0,
+          "transporter_unknown_fallbacks": 0,
+          "unknown_fallback_complexes_created": 0,
+          "unknown_fallback_complexes_reused": 0,
+          "unknown_fallbacks_skipped_no_role_evidence": 0,
+          "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+          "unknown_fallbacks_skipped_real_mapping": 0,
+          "unknown_fallbacks_skipped_unusable_name": 0,
+          "unknown_sentinel_proteins_added": 0,
+          "unknown_sentinel_proteins_reused": 0,
+          "unsupported_process_claims_quarantined": 0
+        }
+      },
+      "mapping_metadata_policy": {
+        "directly_mapped_rows": 5,
+        "named_rows": 8,
+        "not_applicable_rows": 1,
+        "species_rows": 2,
+        "unresolved_rows": 0
+      },
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 3,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      },
+      "species": {
+        "hydrated": 3,
+        "matched": 0,
+        "novel": 3,
+        "rows": [
+          {
+            "entity_type": "protein",
+            "json_pointer": "/entities/proteins/0",
+            "name": "Fur",
+            "pathbank_species_id": null,
+            "source": "explicit_entity_species",
+            "species": "Escherichia coli",
+            "status": "novel",
+            "taxonomy_id": ""
+          },
+          {
+            "entity_type": "protein",
+            "json_pointer": "/entities/proteins/1",
+            "name": "EntB",
+            "pathbank_species_id": null,
+            "source": "novel_species",
+            "species": "Unknown species",
+            "status": "novel",
+            "taxonomy_id": ""
+          },
+          {
+            "entity_type": "protein",
+            "json_pointer": "/entities/proteins/2",
+            "name": "Unknown",
+            "pathbank_species_id": null,
+            "source": "novel_species",
+            "species": "Unknown species",
+            "status": "novel",
+            "taxonomy_id": ""
+          }
+        ],
+        "taxonomy_backfill": {
+          "checked": 2,
+          "enabled": false,
+          "resolved": 0,
+          "unresolved": [
+            "Escherichia coli",
+            "Unknown species"
+          ]
+        },
+        "unresolved": 0
+      },
+      "summary": {
+        "ambiguous_real_candidates_rejected": 0,
+        "bare_unresolved_proteins_remaining": 3,
+        "best_effort_mappings": 0,
+        "complex_missing_components_unknown_fallbacks": 0,
+        "complexes_skipped": 0,
+        "compounds_ambiguous": 0,
+        "compounds_mapped": 0,
+        "compounds_mapped_by_api": 0,
+        "compounds_mapped_by_db": 0,
+        "compounds_mapped_pct": 0.0,
+        "compounds_rerouted_to_protein": 0,
+        "compounds_skipped_as_complex": 0,
+        "compounds_total": 2,
+        "db_available": false,
+        "db_last_error": "",
+        "entities_ambiguous": 0,
+        "entities_mapped": 0,
+        "entities_unmapped": 5,
+        "false_protein_promotions_blocked": 0,
+        "generated_wrappers_created": 0,
+        "id_source_mode": "db",
+        "low_confidence_mappings": 0,
+        "name_gate_rejections": 2,
+        "protein_complexes_ambiguous": 0,
+        "protein_complexes_gap_issues": 0,
+        "protein_complexes_mapped": 0,
+        "protein_complexes_novel": 0,
+        "protein_complexes_skipped": 0,
+        "protein_complexes_total": 0,
+        "proteins_ambiguous": 0,
+        "proteins_mapped": 0,
+        "proteins_mapped_by_api": 0,
+        "proteins_mapped_by_db": 0,
+        "proteins_mapped_pct": 0.0,
+        "proteins_total": 3,
+        "reaction_enzyme_complexes_db_matched": 0,
+        "reaction_enzyme_complexes_novel": 0,
+        "reaction_enzyme_complexes_skipped_invalid_component": 0,
+        "reaction_enzyme_complexes_unresolved": 0,
+        "reaction_enzyme_proteins_dropped_no_external_id": 0,
+        "reaction_enzyme_unknown_fallbacks": 0,
+        "reaction_protein_enzymes_rewritten_to_complexes": 0,
+        "species_hydrated": 3,
+        "species_matched": 0,
+        "species_novel": 3,
+        "structural_cleanup_enabled": true,
+        "transporter_unknown_fallbacks": 0,
+        "unknown_backed_functional_complexes": 0,
+        "unknown_fallback_complexes_created": 0,
+        "unknown_fallback_complexes_reused": 0,
+        "unknown_fallbacks_skipped_no_role_evidence": 0,
+        "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+        "unknown_fallbacks_skipped_real_mapping": 0,
+        "unknown_fallbacks_skipped_unusable_name": 0,
+        "unknown_sentinel_proteins_added": 0,
+        "unknown_sentinel_proteins_reused": 0,
+        "unsupported_process_claims_quarantined": 0,
+        "unused_proteins_quarantined": 0,
+        "verified_real_proteins": 0
+      }
+    }
+  },
+  "empty": {
+    "payload": {
+      "entities": {
+        "protein_complexes": [],
+        "proteins": []
+      },
+      "processes": {},
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 0,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      }
+    },
+    "report": {
+      "entities": [],
+      "enzyme_complex_conversion": {
+        "actions": [],
+        "summary": {
+          "complex_missing_components_unknown_fallbacks": 0,
+          "reaction_enzyme_complexes_db_matched": 0,
+          "reaction_enzyme_complexes_novel": 0,
+          "reaction_enzyme_complexes_skipped_invalid_component": 0,
+          "reaction_enzyme_complexes_unresolved": 0,
+          "reaction_enzyme_proteins_dropped_no_external_id": 0,
+          "reaction_enzyme_unknown_fallbacks": 0,
+          "reaction_protein_enzymes_rewritten_to_complexes": 0,
+          "transporter_unknown_fallbacks": 0,
+          "unknown_fallback_complexes_created": 0,
+          "unknown_fallback_complexes_reused": 0,
+          "unknown_fallbacks_skipped_no_role_evidence": 0,
+          "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+          "unknown_fallbacks_skipped_real_mapping": 0,
+          "unknown_fallbacks_skipped_unusable_name": 0,
+          "unknown_sentinel_proteins_added": 0,
+          "unknown_sentinel_proteins_reused": 0,
+          "unsupported_process_claims_quarantined": 0
+        }
+      },
+      "mapping_metadata_policy": {
+        "directly_mapped_rows": 0,
+        "named_rows": 0,
+        "not_applicable_rows": 0,
+        "species_rows": 0,
+        "unresolved_rows": 0
+      },
+      "protein_export_policy": {
+        "minimum_margin": 0.1,
+        "minimum_score": 0.5,
+        "stage": "post_mapping",
+        "summary": {
+          "ambiguous_real_candidates_rejected": 0,
+          "bare_unresolved_proteins_remaining": 0,
+          "false_protein_promotions_blocked": 0,
+          "unknown_backed_functional_complexes": 0,
+          "unused_proteins_quarantined": 0,
+          "verified_real_proteins": 0
+        }
+      },
+      "species": {
+        "hydrated": 0,
+        "matched": 0,
+        "novel": 0,
+        "rows": [],
+        "taxonomy_backfill": {
+          "checked": 0,
+          "enabled": false,
+          "resolved": 0,
+          "unresolved": []
+        },
+        "unresolved": 0
+      },
+      "summary": {
+        "ambiguous_real_candidates_rejected": 0,
+        "bare_unresolved_proteins_remaining": 0,
+        "best_effort_mappings": 0,
+        "complex_missing_components_unknown_fallbacks": 0,
+        "complexes_skipped": 0,
+        "compounds_ambiguous": 0,
+        "compounds_mapped": 0,
+        "compounds_mapped_by_api": 0,
+        "compounds_mapped_by_db": 0,
+        "compounds_mapped_pct": 0.0,
+        "compounds_rerouted_to_protein": 0,
+        "compounds_skipped_as_complex": 0,
+        "compounds_total": 0,
+        "db_available": false,
+        "db_last_error": "",
+        "entities_ambiguous": 0,
+        "entities_mapped": 0,
+        "entities_unmapped": 0,
+        "false_protein_promotions_blocked": 0,
+        "generated_wrappers_created": 0,
+        "id_source_mode": "db",
+        "low_confidence_mappings": 0,
+        "name_gate_rejections": 0,
+        "protein_complexes_ambiguous": 0,
+        "protein_complexes_gap_issues": 0,
+        "protein_complexes_mapped": 0,
+        "protein_complexes_novel": 0,
+        "protein_complexes_skipped": 0,
+        "protein_complexes_total": 0,
+        "proteins_ambiguous": 0,
+        "proteins_mapped": 0,
+        "proteins_mapped_by_api": 0,
+        "proteins_mapped_by_db": 0,
+        "proteins_mapped_pct": 0.0,
+        "proteins_total": 0,
+        "reaction_enzyme_complexes_db_matched": 0,
+        "reaction_enzyme_complexes_novel": 0,
+        "reaction_enzyme_complexes_skipped_invalid_component": 0,
+        "reaction_enzyme_complexes_unresolved": 0,
+        "reaction_enzyme_proteins_dropped_no_external_id": 0,
+        "reaction_enzyme_unknown_fallbacks": 0,
+        "reaction_protein_enzymes_rewritten_to_complexes": 0,
+        "species_hydrated": 0,
+        "species_matched": 0,
+        "species_novel": 0,
+        "structural_cleanup_enabled": true,
+        "transporter_unknown_fallbacks": 0,
+        "unknown_backed_functional_complexes": 0,
+        "unknown_fallback_complexes_created": 0,
+        "unknown_fallback_complexes_reused": 0,
+        "unknown_fallbacks_skipped_no_role_evidence": 0,
+        "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+        "unknown_fallbacks_skipped_real_mapping": 0,
+        "unknown_fallbacks_skipped_unusable_name": 0,
+        "unknown_sentinel_proteins_added": 0,
+        "unknown_sentinel_proteins_reused": 0,
+        "unsupported_process_claims_quarantined": 0,
+        "unused_proteins_quarantined": 0,
+        "verified_real_proteins": 0
+      }
+    }
+  }
+}

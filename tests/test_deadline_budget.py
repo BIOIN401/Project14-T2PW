@@ -193,13 +193,22 @@ def test_a_timeout_may_name_only_an_operational_reason() -> None:
     assert row["termination_reason"] == dl.BUDGET_EXHAUSTED and row["operational_failure"] is True
 
 
-def test_the_six_reasons_are_a_closed_never_conflated_vocabulary() -> None:
-    """New acceptance: exactly six, and only two of them are operational."""
+def test_the_seven_reasons_are_a_closed_never_conflated_vocabulary() -> None:
+    """Exactly seven, and STILL only two of them are operational.
 
-    assert len(dl.TERMINATION_REASONS) == len(set(dl.TERMINATION_REASONS)) == 6
+    BASELINE MOVE, C-042a / D-024, merge rule 4. This pinned 6 and the six D-005
+    strings; it now pins 7 and those same six PLUS ``attempt_cap_reached``. Exact
+    delta: +1 member, no member removed, no member renamed. The
+    ``OPERATIONAL_TERMINATION_REASONS`` assertion below is deliberately UNCHANGED --
+    D-024 does not widen the strict-success denominator, and that line is what
+    proves the two moves stayed independent.
+    """
+
+    assert len(dl.TERMINATION_REASONS) == len(set(dl.TERMINATION_REASONS)) == 7
     assert set(dl.TERMINATION_REASONS) == {
         "retrieval_exhausted", "no_new_claims", "budget_exhausted",
         "operation_timeout", "identical_empty_response", "scientifically_unrecoverable",
+        "attempt_cap_reached",
     }
     assert dl.OPERATIONAL_TERMINATION_REASONS == {"budget_exhausted", "operation_timeout"}
     for reason in dl.TERMINATION_REASONS:
@@ -245,7 +254,22 @@ def test_launch_child_never_waits_past_the_leg_deadline(monkeypatch: Any) -> Non
 
 
 def test_the_extraction_escalation_ladder_is_not_implemented_here() -> None:
-    """New acceptance: C-032 builds the budget, C-042 spends it. D-005's order."""
+    """New acceptance: C-032 builds the budget, C-042 spends it. D-005's order.
+
+    BASELINE MOVE, C-042a / D-024, merge rule 4. Exact delta: one name,
+    ``ATTEMPT_CAP_REACHED``, is exempted by an explicit allowlist. It is a
+    termination-reason STRING CONSTANT in D-005's closed vocabulary, not ladder
+    machinery; the ladder still lives entirely in ``extraction_ladder`` and this
+    module still counts nothing, retries nothing and holds no ceiling. The guard
+    keeps its full force against everything else -- ``MAX_TOTAL_ATTEMPTS``,
+    ``attempts_used``, ``attempts_remaining``, any ``*retry*`` -- because the
+    exemption is one exact name and not a relaxed pattern. Asserted below rather
+    than merely subtracted, so the exemption cannot silently cover a second name.
+    """
 
     names = [name for name in dir(dl) if not name.startswith("_")]
-    assert not [n for n in names if "retry" in n.lower() or "attempt" in n.lower()]
+    matched = [n for n in names if "retry" in n.lower() or "attempt" in n.lower()]
+    assert matched == ["ATTEMPT_CAP_REACHED"]
+    assert dl.ATTEMPT_CAP_REACHED == "attempt_cap_reached"   # a string, not a counter
+    assert not any(callable(getattr(dl, n)) for n in matched)
+    assert not hasattr(dl, "MAX_TOTAL_ATTEMPTS")

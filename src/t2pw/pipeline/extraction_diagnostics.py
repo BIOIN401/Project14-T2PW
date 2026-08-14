@@ -79,6 +79,8 @@ __all__ = [
     "BOUNDARY_STAGE1_EXTRACTION",
     "BOUNDARY_STAGE1_JSON_REPAIR",
     "BOUNDARY_STAGE1_ROW_REPAIR",
+    "BOUNDARY_STAGE1_LADDER_CHECKPOINT",
+    "BOUNDARY_STAGE1_LADDER_TERMINATION",
     "BOUNDARY_STAGE2_INFERENCE",
     "OUTCOME_OK",
     "OUTCOME_EMPTY_COMPLETION",
@@ -143,6 +145,16 @@ BOUNDARY_STAGE1_EXTRACTION = "stage1_extraction"
 BOUNDARY_STAGE1_JSON_REPAIR = "stage1_json_repair"
 BOUNDARY_STAGE1_ROW_REPAIR = "stage1_row_repair"
 BOUNDARY_STAGE2_INFERENCE = "stage2_inference"
+#: C-042. Two rows the § 9 escalation ladder writes, kept on their own boundary
+#: names rather than folded into ``stage1_extraction``. A checkpoint row is not a
+#: model call and a termination row is not an attempt, so counting either as an
+#: extraction boundary would change what every existing reader of
+#: ``extraction_boundary_report.json`` sees on a run that behaves exactly as it
+#: always did. Readers that filter by boundary name -- which is all of them --
+#: are unaffected, and these rows appear only when a leg deadline is in scope or
+#: the ladder actually stopped a run.
+BOUNDARY_STAGE1_LADDER_CHECKPOINT = "stage1_extraction_ladder_checkpoint"
+BOUNDARY_STAGE1_LADDER_TERMINATION = "stage1_extraction_ladder_termination"
 
 
 # ---------------------------------------------------------------------------

@@ -247,16 +247,6 @@ STAGE_ZERO_CONTEXT = {
     "key_proteins": ["glutamate-cysteine ligase"],
 }
 
-#: The keys C-050's pre-freeze compound resolution adds to a compound row that
-#: carried none of them, on a payload with no external identifiers and no
-#: reachable PathBank DB -- i.e. every row in these fixtures. Named here so the
-#: documented baseline move is a value in the file rather than a comment: a
-#: pre-freeze stage that starts writing something else fails the test that
-#: reads it, instead of quietly widening the accepted delta.
-PREFREEZE_RESOLUTION_FIELDS = [
-    "chosen_rule", "confidence", "db_match", "db_status", "raw_name",
-]
-
 
 # ---------------------------------------------------------------------------
 # Real streamlit, whatever the rest of the suite did to sys.modules.
@@ -640,27 +630,64 @@ def test_the_stage_zero_context_reaches_the_coverage_artifact_unchanged() -> Non
 
 @pytest.mark.usefixtures("offline_mapping")
 def test_a_run_with_no_viable_core_is_refused_at_the_boundary() -> None:
-    """An unrelated survivor must not carry the run past the boundary."""
+    """An unrelated survivor must not carry the run to SUCCESS.
+
+    **MOVED BY C-041a (D-002 / PRODUCT_CONTRACT 7, both LOCKED).** The test name
+    is a pre-D-002 misnomer and is kept only so the Chunk D node id does not
+    move: what ``_payload_with_no_viable_core`` lacks is a viable *requested*
+    core, not a viable core. Measured on the payload rather than read off the
+    name -- ``citrate isomerisation`` survives as ``auxiliary_accepted``, the
+    reduced graph clears the strict Stage 3 gates AND the required-PWML
+    contract, and every strict invariant is clean. That is precisely D-002's
+    "biologically correct, internally connected fragment representable without
+    guessing", so the outcome is ``review_required`` PWML.
+
+    What the test was actually protecting is unchanged and is now asserted
+    directly instead of through a boolean: the unrelated survivor still cannot
+    produce success. ``strict_acceptance_eligible`` is False, so it can never
+    enter the strict denominator, and the shortfall is still named. At the base
+    SHA this was ``ok is False`` and the run ended with no PWML at all, which is
+    the "valid pathway core suppressed" that PRODUCT_CONTRACT 1 forbids.
+    """
 
     at = _run_post_pipeline(_payload_with_no_viable_core())
 
     assert _app_exceptions(at) == []
     report = at.session_state["quarantine_report"]
-    assert report["ok"] is False
+    assert report["ok"] is True
+    assert report["release"]["status"] == "review_required"
+    assert report["release"]["strict_acceptance_eligible"] is False
+    # The shortfall is still raised and still named -- it moved out of the
+    # blocking list, it did not disappear.
+    assert report["refusal_reasons"] == []
     assert any(
         reason.startswith("minimum_core:core_process_count_below_minimum")
-        for reason in report["refusal_reasons"]
+        for reason in report["review_reasons"]
     )
+    # And the surviving fragment really is the unrelated one: nothing was
+    # admitted to make coverage pass.
+    assert report["coverage"]["core_accepted_processes"] == 0
+    assert report["coverage"]["surviving_processes"] == 1
 
-    # Refinement review must NOT open, and the export path must stay closed.
-    assert at.session_state["refinement_gate_errors"]
-    assert at.session_state["refinement_working_json"] is None
-    assert any("Quarantine could not produce a viable" in str(e.value) for e in at.error)
+    # Refinement review now OPENS on the fragment, because there is a fragment to
+    # review. That is the behaviour change: the reviewer gets the graph plus the
+    # flag, instead of nothing.
+    assert not at.session_state["refinement_gate_errors"]
+    assert at.session_state["refinement_working_json"] is not None
+    assert not any("Quarantine could not produce a viable" in str(e.value) for e in at.error)
 
 
 @pytest.mark.usefixtures("offline_mapping")
 def test_the_refusal_still_writes_every_artifact() -> None:
-    """A refusal is a decision, and decisions are recorded."""
+    """A decision is recorded, whatever it decided.
+
+    **MOVED BY C-041a (D-002, LOCKED).** The claim -- the artifact set is written
+    and carries the coverage verdict -- is untouched, and every coverage
+    assertion below is byte for byte what it was. Only ``ok`` moved, because this
+    payload's shortfall is a shortfall in SIZE against the request and no longer
+    blocks: see ``test_a_run_with_no_viable_core_is_refused_at_the_boundary``
+    for the payload-level proof. Base SHA: ``ok is False``.
+    """
 
     _run_post_pipeline(_payload_with_no_viable_core())
 
@@ -668,7 +695,10 @@ def test_the_refusal_still_writes_every_artifact() -> None:
     assert coverage["minimum_core_satisfied"] is False
     assert coverage["core_accepted_processes"] == 0
     report = _artifact(QUARANTINE_REPORT_FILENAME)
-    assert report["ok"] is False
+    assert report["ok"] is True
+    assert report["release"]["status"] == "review_required"
+    assert report["release"]["strict_acceptance_eligible"] is False
+    assert any(r.startswith("minimum_core:") for r in report["review_reasons"])
     assert {row["name"] for row in report["quarantined"]} == {
         "gamma-glutamylcysteine synthesis",
         "glutathione synthesis",
@@ -881,13 +911,29 @@ def test_a_refinement_that_deletes_the_core_is_not_authorized_by_the_stale_decis
 
     result = _generate_pwml(at)
 
-    assert result["ok"] is False
+    # **MOVED BY C-041a (D-002, LOCKED) -- and the invariant under test did NOT
+    # move.** What this test protects is that the STORED decision does not
+    # authorize a payload it never judged, and that is carried entirely by
+    # ``quarantine_reused is False`` plus the ``admitted_payload_hash``
+    # difference below. Both are byte for byte what they were: the stale report
+    # is still refused as an authorization and the payload is still re-judged
+    # from scratch.
+    #
+    # What moved is the VERDICT of that fresh re-judgement. The refined payload
+    # is one surviving ``citrate isomerisation`` that clears the Stage 3 gates
+    # and the required-PWML contract with every strict invariant clean, so
+    # D-002 makes it review_required rather than a refusal. Base SHA: ``ok is
+    # False``. Coverage relief cannot reach the authorization question at all --
+    # that decision is taken before any coverage verdict exists.
     assert result["quarantine_reused"] is False
-    assert any(
-        reason.startswith("minimum_core:") for reason in result.get("refusal_reasons", [])
-    )
-    # A new decision was made, about the payload that actually reached the export.
     assert result["quarantine_report"]["admitted_payload_hash"] != admitted_hash
+    assert result["ok"] is True
+    assert result["quarantine_report"]["release"]["status"] == "review_required"
+    assert result["quarantine_report"]["release"]["strict_acceptance_eligible"] is False
+    assert any(
+        reason.startswith("minimum_core:")
+        for reason in result["quarantine_report"]["review_reasons"]
+    )
 
 
 @pytest.mark.usefixtures("offline_mapping")
@@ -961,7 +1007,9 @@ def _run_post_pipeline_research(payload: Dict[str, Any]):
 
 
 @pytest.mark.usefixtures("offline_mapping")
-def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None:
+def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """A research run must come out with the pathway it went in with.
 
     The peripheral process here is unmapped, which is the normal state of a
@@ -970,6 +1018,52 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None
     that on the identical payload -- and a research run must not, because
     research mode's whole contract is that findings annotate rather than block.
     """
+
+    # Enrichment runs BETWEEN mapping and the quarantine boundary, and the shared
+    # ``offline_mapping`` stub makes it a byte-for-byte copy. That collapses the
+    # pre-enrichment artifact (``final_mapped_db``) onto the post-enrichment one
+    # (``final_mapped_enriched``), so a comparison against either looks correct
+    # and the boundary assertion below would pin nothing about quarantine -- it
+    # would silently span every stage from mapping onwards. This override is
+    # local to this test, so no other node in this file sees it, and it does what
+    # the real Stage 7 does to an already-identified protein: attach the optional
+    # UniProt annotation under ``enrichment`` (see
+    # ``enrich_entities._enrich_payload_inner``) and nothing else. Fixed content,
+    # no clock and no network, so it is deterministic; it adds no reaction,
+    # removes none, renames nothing and touches no unidentified protein, so it is
+    # biologically inert -- and the two artifacts are now genuinely different
+    # objects, which is what makes the assertion below non-vacuous.
+    import t2pw.mapping.enrich_entities as enrich_entities  # noqa: PLC0415
+
+    def _enrichment_that_annotates(
+        input_path: Any,
+        output_path: Any,
+        report_path: Any,
+        **_kwargs: Any,
+    ) -> Dict[str, Any]:
+        enriched = json.loads(Path(input_path).read_text(encoding="utf-8"))
+        for row in (enriched.get("entities") or {}).get("proteins") or []:
+            if not isinstance(row, dict):
+                continue
+            # Exactly the real stage's own guard: a protein with no accession is
+            # not enriched, so the unidentified modifier this payload exists to
+            # exercise is left untouched.
+            accession = str((row.get("mapped_ids") or {}).get("uniprot") or "")
+            if not accession:
+                continue
+            row.setdefault("enrichment", {}).setdefault("protein", {})["uniprot"] = {
+                "status": "ok",
+                "uniprot_id": accession,
+                "provenance": {"source": "test_fixture", "query": accession},
+            }
+        report = {"summary": {"enrichment_annotated_for_test": True}}
+        Path(output_path).write_text(
+            json.dumps(enriched, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
+        return report
+
+    monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
 
     at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
 
@@ -989,50 +1083,41 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block() -> None
         "glutathione synthesis",
         "peripheral OPDA reduction",
     ]
+    # The two artifacts really are different objects here, so the equality below
+    # is a statement about quarantine and not an accident of a no-op stage. If
+    # enrichment ever reverts to a pass-through, this fails loudly rather than
+    # letting the boundary assertion go quietly vacuous again.
+    assert artifacts["final_mapped_db"] != artifacts["final_mapped_enriched"], (
+        "enrichment produced no difference, so the boundary assertion below would "
+        "hold for the pre-enrichment artifact too and pin nothing"
+    )
+    # ...and the difference is annotation only: strip the enrichment block the
+    # stage added and the two artifacts are identical again. This is the proof
+    # that the arranged difference changes no biology; it is deliberately NOT
+    # part of the boundary comparison, which stays whole-object below.
+    _without_annotation = deepcopy(artifacts["final_mapped_enriched"])
+    for _row in _without_annotation["entities"]["proteins"]:
+        _row.pop("enrichment", None)
+    assert _without_annotation == artifacts["final_mapped_db"]
+
     # Byte for byte, not merely "the same processes": research quarantine forwards
-    # the mapped candidate unchanged, so the payload the boundary passed on must be
-    # equal to the one it was handed. This is the assertion that fails if quarantine
-    # ever edits a research payload -- reorders a list, drops an empty bucket,
-    # normalizes a name -- while leaving the process count intact.
+    # the candidate it was handed unchanged, so the payload the boundary passed on
+    # must be equal to the one it received. This is the assertion that fails if
+    # quarantine ever edits a research payload -- reorders a list, drops an empty
+    # bucket, normalizes a name -- while leaving the process count intact.
     #
-    # DELIBERATE BASELINE MOVE -- C-050 / DECISIONS.md D-015 (LOCKED).
-    # ``final_mapped_db`` is the PRE-enrichment file on disk, and it used to be
-    # byte-equal to the candidate because the protein-annotation stub was the only
-    # stage between the mapped write and artifact publication. D-015 requires
-    # compound name and identity canonicalization to run BEFORE the freeze, so
-    # C-050 lawfully inserts a second stage there and the two artifacts can no
-    # longer be identical. The claim is split rather than dropped, and neither
-    # half is weaker than what it replaces:
-    #
-    #   * outside ``entities.compounds``, nothing may differ AT ALL -- that is the
-    #     original assertion, on the original object, unrelaxed; and
-    #   * inside it, the rows stay in the same order under the same names and may
-    #     gain only the fields the pre-freeze resolution records.
-    #
-    # It is not vacuous in either direction: quarantine editing a research payload
-    # still fails the first half, and a pre-freeze stage that silently stopped
-    # running -- or started renaming -- fails the second.
-    mapped_in = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
-
-    def _without_compounds(payload: Dict[str, Any]) -> Dict[str, Any]:
-        stripped = deepcopy(payload)
-        (stripped.get("entities") or {}).pop("compounds", None)
-        return stripped
-
-    assert _without_compounds(candidate) == _without_compounds(mapped_in)
-
-    before_rows = mapped_in["entities"]["compounds"]
-    after_rows = candidate["entities"]["compounds"]
-    assert [row.get("name") for row in after_rows] == [row.get("name") for row in before_rows]
-    assert all(set(before) <= set(after) for before, after in zip(before_rows, after_rows))
-    added = sorted({
-        key
-        for before, after in zip(before_rows, after_rows)
-        for key in set(after) - set(before)
-    })
-    assert added == PREFREEZE_RESOLUTION_FIELDS, added
-    # Every row really went through resolution; an empty stamp would not do.
-    assert all(row["db_status"] for row in after_rows)
+    # The comparand is ``final_mapped_enriched`` because that key IS
+    # ``final_export_payload``, the exact object handed to
+    # ``freeze_canonical_payload`` (streamlit_app.py: the freeze call, and the
+    # artifact published under this key). ``final_mapped_db`` is the PRE-enrichment
+    # remap output, one stage too early, so comparing against it silently covers
+    # enrichment as well as quarantine; ``final_mapped`` and ``final_export_input``
+    # are both ``canonical_export_payload or final_export_payload`` and collapse to
+    # the post-quarantine object itself, which would compare the payload to itself.
+    # Indexed, not ``.get``: a missing key must fail loudly rather than fall back
+    # to a comparand that pins less.
+    mapped_in = artifacts["final_mapped_enriched"]
+    assert candidate == mapped_in
 
     # And the run is not blocked one step later either. The post-mapping Stage 3
     # revalidation fails on this payload -- the unmapped modifier is exactly what
@@ -1247,11 +1332,19 @@ def test_a_second_run_that_reaches_the_boundary_decides_for_itself() -> None:
     _second_post_pipeline_run(at, _payload_with_no_viable_core())
     second_report = at.session_state["quarantine_report"]
 
+    # **MOVED BY C-041a (D-002, LOCKED) -- and the invariant under test did NOT
+    # move.** "The second run decides for itself" is carried by the two hash
+    # assertions, which are byte for byte what they were: the second run judged
+    # a different payload and the on-disk artifact is that second decision, not
+    # the first. Only the second decision's VERDICT moved, for the same
+    # payload-level reason as above. Base SHA: ``ok is False``.
     assert second_report["admitted_payload_hash"] != first_hash
-    assert second_report["ok"] is False
     assert _artifact(QUARANTINE_REPORT_FILENAME)["admitted_payload_hash"] == (
         second_report["admitted_payload_hash"]
     )
+    assert second_report["ok"] is True
+    assert second_report["release"]["status"] == "review_required"
+    assert second_report["release"]["strict_acceptance_eligible"] is False
 
 
 def test_the_reset_is_wired_into_the_start_of_a_pipeline_run() -> None:

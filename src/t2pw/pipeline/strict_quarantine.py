@@ -1830,6 +1830,20 @@ def quarantine_and_close(
     ``strict_db=False`` drops the protein-identity requirement, matching
     ``validate_required_pwml_contract``'s own switch, so a DB-less run does not
     quarantine every enzyme in the pathway.
+
+    **A coverage shortfall is not a refusal** (D-002, PRODUCT_CONTRACT 7, both
+    LOCKED). ``ok`` used to be "no reason of any kind fired", which made a
+    surviving core that was merely *smaller than the request* end the run with no
+    PWML at all -- the "valid pathway core suppressed because optional peripheral
+    material is unresolved" that PRODUCT_CONTRACT 1 lists as an unacceptable
+    terminal blocker. It now means "this graph may be frozen": the five
+    structural reasons still refuse exactly as before, and a subthreshold graph
+    that is structurally valid, internally connected and serializable without
+    guessing is classified ``review_required`` on ``quarantine_report["release"]``
+    -- exported, flagged, never counted as strict success -- with the shortfall
+    recorded under ``review_reasons``. An EMPTY graph is not a shortfall and is
+    still refused. Nothing here admits content or raises coverage; the threshold
+    value is untouched and no argument can move it.
     """
 
     working: Dict[str, Any] = deepcopy(dict(payload))
@@ -1955,21 +1969,124 @@ def quarantine_and_close(
     # refused for empty coverage and a run refused for a stranded lock need
     # different fixes, and a caller that renders only "issues: 3" tells the
     # reviewer nothing about which.
-    refusal_reasons: List[str] = []
-    if not coverage.get("minimum_core_satisfied"):
-        refusal_reasons.extend(
-            f"minimum_core:{reason}" for reason in _safe_list(coverage.get("reasons"))
-        )
+    #
+    # D-002 and PRODUCT_CONTRACT 7 (both LOCKED) split these six into two kinds,
+    # and this is the only place the split is drawn.
+    #
+    # Five of them say the graph is WRONG or UNSERIALIZABLE: a type
+    # contradiction, an export with no connectivity, an entity that cannot be
+    # written without inventing it, a stranded lock, a closure that never
+    # settled. Every one of those still refuses, unchanged and untouched.
+    #
+    # The sixth says only that the surviving core is SMALLER than the request. A
+    # shortfall in SIZE is not a defect in CORRECTNESS, and the locked decision
+    # is that "the threshold blocks release-ready status, not PWML production" --
+    # so a subthreshold but structurally valid, internally connected,
+    # serializable-without-guessing graph stops being refused here and is
+    # recorded as a REVIEW reason instead. Nothing is admitted to make that
+    # happen: ``working``, ``admissions`` and ``coverage`` are all already final
+    # above this line and no code below touches them, so the exported graph for
+    # any payload is byte for byte the graph the strict rules produced. The
+    # threshold value does not move and nothing here can move it.
+    #
+    # The one coverage reason that still REFUSES is the one that is not a
+    # shortfall at all: nothing survived. An empty graph has no defensible
+    # connected core to review, so it stays diagnostic_only -- exactly the
+    # distinction ``release_status.py`` already draws between
+    # ``COVERAGE_REASON_EMPTY`` and ``COVERAGE_REASON_BELOW_MINIMUM``. That test
+    # is consumed from there (``has_surviving_core``) rather than re-derived, so
+    # this seam and the classifier can never disagree about what "defensible"
+    # means.
+    #
+    # Function-local for the same reason ``evaluate_core_coverage``'s is: this
+    # module is imported by the pipeline at large and the classification
+    # vocabulary is needed at this seam only.
+    from t2pw.pipeline.release_status import classify_release_status, coverage_verdict
+
+    coverage_reasons = [
+        f"minimum_core:{reason}" for reason in _safe_list(coverage.get("reasons"))
+    ]
+    structural_reasons: List[str] = []
     if overlaps:
-        refusal_reasons.append(f"entity_type_overlap:{len(overlaps)}")
+        structural_reasons.append(f"entity_type_overlap:{len(overlaps)}")
     if degree_zero:
-        refusal_reasons.append(f"degree_zero_export:{len(degree_zero)}")
+        structural_reasons.append(f"degree_zero_export:{len(degree_zero)}")
     if unexportable:
-        refusal_reasons.append(f"unexportable_entity:{len(unexportable)}")
+        structural_reasons.append(f"unexportable_entity:{len(unexportable)}")
     if unaccounted_locks:
-        refusal_reasons.append(f"unaccounted_locked_reactions:{unaccounted_locks}")
+        structural_reasons.append(f"unaccounted_locked_reactions:{unaccounted_locks}")
     if not converged:
-        refusal_reasons.append(f"closure_not_converged:{int(max_iterations)}")
+        structural_reasons.append(f"closure_not_converged:{int(max_iterations)}")
+
+    verdict = coverage_verdict(coverage)
+    defensible_core = bool(verdict is not None and verdict.has_surviving_core)
+    # ``refusal_reasons`` keeps meaning exactly what its name and its docstring
+    # say -- why this REFUSED -- so ``ok`` and it stay in exact agreement. A
+    # reason that no longer blocks is therefore not silently left in it: it moves
+    # to ``review_reasons``, same string, same class prefix, recorded either way.
+    review_reasons: List[str] = coverage_reasons if defensible_core else []
+    refusal_reasons: List[str] = (
+        [] if defensible_core else list(coverage_reasons)
+    ) + structural_reasons
+    # What the STRICT rules would have refused before D-002 was applied, in the
+    # pre-D-002 order. Research mode reports exactly this and is otherwise
+    # untouched by any of the above.
+    would_have_refused: List[str] = coverage_reasons + structural_reasons
+
+    # D-002's required record, built through C-041's factory rather than beside
+    # it: the invariant ``strict_acceptance_eligible == (status ==
+    # release_ready)`` lives only in that factory (FINDINGS M-8), so going
+    # through it is the only way this seam cannot contradict it. ``unexportable``
+    # is passed as the SERIALIZATION input rather than folded into the technical
+    # gates because that is precisely what it means -- the entity cannot be
+    # written without inventing it -- and it makes the recorded reason say so.
+    quarantined_reason_counts: Dict[str, int] = {}
+    for record in admissions:
+        if record.get("state") in QUARANTINE_STATES:
+            key = str(record.get("state") or "quarantined")
+            quarantined_reason_counts[key] = quarantined_reason_counts.get(key, 0) + 1
+    # What retrieval this seam can actually SEE. No retrieval-round counter
+    # reaches here -- the gap and audit round counts live in
+    # ``extraction_diagnostics`` and are never written onto the payload -- so
+    # what is recorded is the retrieval provenance carried by the surviving rows,
+    # and it is labelled by its source so a reader can never read it as a round
+    # count.
+    retrieval_rows = 0
+    for _group in ("entities", "processes"):
+        for _rows in _safe_dict(working.get(_group)).values():
+            for _row in _safe_list(_rows):
+                if isinstance(_row, dict) and _row.get("rag_provenance"):
+                    retrieval_rows += 1
+    unmatched = _safe_list(coverage.get("unmatched_terms"))
+    expansion_blocked_parts: List[str] = []
+    if unmatched:
+        expansion_blocked_parts.append(
+            f"{len(unmatched)} requested-core anchor(s) matched no admitted process: "
+            + ", ".join(str(term) for term in unmatched[:12])
+        )
+    if quarantined_reason_counts:
+        expansion_blocked_parts.append(
+            "candidate processes withheld by strict admission ("
+            + ", ".join(
+                f"{state}:{count}"
+                for state, count in sorted(quarantined_reason_counts.items())
+            )
+            + "); admitting them would require unsupported biology"
+        )
+    if not expansion_blocked_parts:
+        expansion_blocked_parts.append(
+            "no further supported content remained at the freeze seam"
+        )
+    release = classify_release_status(
+        coverage,
+        pipeline_executed=True,
+        strict_gates_passed=(
+            not overlaps and not degree_zero and not unaccounted_locks and converged
+        ),
+        serializable_without_invention=not unexportable,
+        retrieval_attempts=retrieval_rows,
+        expansion_blocked_reason="; ".join(expansion_blocked_parts),
+    )
 
     # ── Research mode: decide, then apply nothing ────────────────────────────
     # Everything above ran, so the flags are real findings against the real
@@ -2031,7 +2148,11 @@ def quarantine_and_close(
         max_iterations=max_iterations,
     )
     quarantine_report = {
-        "schema_version": 3,
+        # 4: a coverage shortfall stopped being a refusal (D-002) and the report
+        # grew ``review_reasons`` and the ``release`` classification beside the
+        # ``ok`` it can no longer be read off. Additive: every schema-3 key keeps
+        # its name, its type and its meaning.
+        "schema_version": 4,
         "stage": "pre_export_strict_quarantine",
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),
@@ -2057,6 +2178,27 @@ def quarantine_and_close(
         "accepted": accepted_records,
         "strict_invariants": invariants,
         "refusal_reasons": [] if research else refusal_reasons,
+        # Recorded, never blocking. Empty in research mode for the same reason
+        # ``refusal_reasons`` is: research applies nothing, and its findings live
+        # under ``research_mode`` where they cannot be read as a verdict.
+        "review_reasons": [] if research else review_reasons,
+        # The D-002 classification, so no consumer has to re-derive "is there
+        # anything releasable?" from ``ok``, from an exit status or from a
+        # filename. ``ok`` says whether the graph may be frozen; this says what
+        # the run IS -- and ``strict_acceptance_eligible`` is False for every
+        # review_required run, so a below-threshold export can never be counted
+        # as strict success (TRAP-1 / PRODUCT_CONTRACT 13).
+        "release": {
+            **release.to_dict(),
+            # Research decides and applies nothing, so there this is a FINDING,
+            # exactly like ``research_mode.would_have_refused`` -- not a verdict
+            # anything acted on.
+            "applied": not research,
+            "review_reasons": list(review_reasons),
+            # Named by its source. This is NOT a retrieval-round counter; see
+            # where it is computed.
+            "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance",
+        },
         "locked_reactions": lock_accounting,
         "coverage": coverage,
         "closure": {
@@ -2072,7 +2214,11 @@ def quarantine_and_close(
             "applied": False,
             "review_flags": research_flags,
             "would_have_quarantined": len(research_flags),
-            "would_have_refused": refusal_reasons,
+            # The pre-D-002 strict list, in the pre-D-002 order. Research mode's
+            # observable contract is unchanged by this card: it reports what the
+            # strict rules would have refused, including the coverage shortfall
+            # that no longer refuses a strict run.
+            "would_have_refused": would_have_refused,
         }
 
     removed_entity_report = {

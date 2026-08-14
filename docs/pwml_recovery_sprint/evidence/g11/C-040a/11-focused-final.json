@@ -1,0 +1,82 @@
+{
+  "label": "focused-final",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_compound_db_match_admission.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_pwml_db_resolver.py",
+    "tests/test_db_resolver_primitives.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_compound_templates.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt40a5",
+    "-q",
+    "--tb=no"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p40a-db-admission",
+  "started_at": "2026-08-14T20:58:16+00:00",
+  "finished_at": "2026-08-14T20:58:18+00:00",
+  "duration_seconds": 1.5563563999999133,
+  "timeout_seconds": 900.0,
+  "root_pid": 47588,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 45712,
+      "name": "python.exe",
+      "ppid": 47588
+    }
+  ],
+  "descendants_terminated": [
+    45712
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 35456,
+      "name": "python.exe"
+    },
+    {
+      "pid": 35500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46144,
+      "name": "python.exe"
+    },
+    {
+      "pid": 47648,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-040a/11-focused-final.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p40a-db-admission\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p40a-db-admission",
+    "repo_head": "f2f7599ef48f372c22123c1db219da6f2355a75e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
