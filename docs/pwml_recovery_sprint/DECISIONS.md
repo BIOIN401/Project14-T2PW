@@ -1019,3 +1019,106 @@ invocation, so its partitions are safe by construction.
 Each was self-declared before review, ran through the unmodified wrapper inside the same Job
 Object under its own outer timeout, and verified zero survivors from a complete descendant census.
 No measurement in any of those cards depended on the foreground/background distinction.
+
+---
+
+## D-027 — Conditional C-051 ownership of the post-freeze identity seam · 2026-08-14 · LOCKED
+
+**D-021 § 2 remains locked except for one narrowly defined conditional carve-out.**
+
+C-051 may **inspect** and, **only when proven necessary**, modify the `pathwhiz_id`
+materialization logic inside:
+
+```
+src/t2pw/pwml/ir.py :: _entity_record
+```
+
+**Why this authority exists.** Live-source measurement (P2-06, re-confirmed by AST on the
+integration tip) shows `_entity_record` materializes `pathwhiz_id` **after the freeze boundary**,
+while merely removing the `_resolve_compound_rows` call — all C-051 was chartered to do — may
+leave that later materialization **reachable**.
+
+**D-021's statement that `_entity_record` must remain untouched is amended only to the extent
+required to enforce the already-locked rule that identity may not be created or resolved after
+freeze.** Nothing else in D-021 § 2 moves.
+
+### Required sequence
+
+**C-051 remains blocked until C-050 and C-045 have merged.** C-045 and C-051 **must not run
+concurrently**: `_canonicalize_species_offline` is already called from **inside** `build_pwml_ir`,
+creating a shared live lifecycle seam.
+
+After C-050 and C-045 merge, but **before C-051 makes an implementation commit**:
+
+1. **Re-derive the relevant symbols by AST**, never by D-021's stale line numbers.
+2. **Trace `build_pwml_ir`, `_resolve_compound_rows`, `_canonicalize_species_offline` and
+   `_entity_record` on the actual combined tip.**
+3. **Measure whether `_entity_record` can still create, resolve, or newly materialize a
+   `pathwhiz_id` after the canonical payload has frozen.**
+4. **Exercise at least these four cases:**
+   * an entity **already carrying a valid pre-freeze `pathwhiz_id`**;
+   * an entity **lacking one at freeze**;
+   * an entity whose identity information **exists only in mapping metadata**;
+   * a **normal compound** passing through the **live production call chain**.
+
+### If the path is unreachable
+
+If combined-state evidence proves C-050 and C-045 **already foreclose** post-freeze
+materialization:
+
+* **do not modify `_entity_record`;**
+* **retain the D-021 lock;**
+* add or preserve a **focused guard proving the path is unreachable**;
+* record the measurement and **close P2-06 as discharged by reachability proof**.
+
+**A no-code result is a valid completion of this clause.**
+
+### If the path remains reachable
+
+If `_entity_record` can still **newly materialize** `pathwhiz_id` after freeze:
+
+* C-051 is authorized to modify **only the relevant `pathwhiz_id` block** inside `_entity_record`;
+* it **may forward or serialize** an identity **already established before freeze**;
+* it **must not resolve, infer, synthesize, hydrate, or newly materialize** identity after freeze;
+* a **missing pre-freeze identity must follow the existing missing-identity / review policy**
+  rather than silently inventing an identifier;
+* **do not refactor unrelated `_entity_record` behaviour**;
+* **do not broaden ownership to other identity fields** without a separately demonstrated
+  requirement.
+
+**Tests must prove:**
+
+* valid pre-freeze identity **survives unchanged**;
+* an absent identity **is not created after freeze**;
+* **mapping metadata cannot silently become a new post-freeze identity**;
+* **canonical/frozen hashes and decision inputs remain stable**;
+* **no correct identifier is accidentally dropped**;
+* **no PWML or biological semantics move** outside the intended identity-timing correction.
+
+### D-021 live symbol citations, re-derived by AST on the integration tip
+
+D-021's own line numbers are **stale** — C-040 moved four functions out of `ir.py` and later cards
+shifted the rest. **The historical evidence in D-021 is NOT rewritten**; these are the live
+locations to work from.
+
+| Symbol | D-021 cited | **AST-measured now** |
+|---|---|---|
+| `ir.py :: _entity_record` | `:437-449` | **`ir.py :438-450`** |
+| `ir.py :: _canonicalize_species_offline` | *(unnumbered)* | **`ir.py :617-701`** |
+| `ir.py :: _emit_canonicalization_preflight` | `:900-963` | **`ir.py :704-767`** |
+| `ir.py :: build_pwml_ir` | *(call site `:1106-1114`)* | **`ir.py :770-1811`; resolution call at `:911`** |
+| `_normalize_compound_external_ids` | `ir.py :530-555` | **moved → `compound_resolution.py :198-223`** |
+| `_compound_external_ids` | `ir.py :558-575` | **moved → `compound_resolution.py :226-243`** |
+| `_canonicalize_compound_offline` | `ir.py :578-621` | **moved → `compound_resolution.py :246-311`** |
+| `_resolve_compound_rows` | `ir.py :797-897` | **moved → `compound_resolution.py :314-421`** |
+
+**The three call sites sit in sequence inside `build_pwml_ir`**, which is why the seam is shared:
+
+```
+:844  _canonicalize_species_offline(...)   <- C-045 moves this pre-freeze
+:911  _resolve_compound_rows(...)          <- C-051 deletes this, asserts instead
+:921  _entity_record(...)                  <- materializes pathwhiz_id at ir.py:447
+```
+
+Any card quoting D-021's numbers must re-derive them by **AST symbol, not line range**
+(`PACK2-SHARED` § S9 trap 1: insertions above a function shift it).
