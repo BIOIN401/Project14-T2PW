@@ -1,0 +1,153 @@
+{
+  "label": "smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/327cc8d2-6791-4d52-aba3-6d01734aa2b5/scratchpad/runpytest.py",
+    "-q",
+    "--basetemp=C:/t2pwtmp/rev061/smoke",
+    "-p",
+    "no:cacheprovider",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_reference_repair.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_strict_quarantine.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_strict_quarantine_contract_alignment.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_strict_quarantine_locks_and_scope.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_strict_quarantine_versioning.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_empty_extraction_payload.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_bench_goldset_and_semantic.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_bench_acquisition_and_artifacts.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_bench_controls.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_completeness_audit.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_batch_driver.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_stage3_gate_report_lifecycle.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_rag_admission_production_path.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_rag_gap_admission.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_rag_triage_orchestration.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_rag_provenance_gates.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_pipeline_reaction_rag_provenance.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_research_mode_orchestration.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_map_ids_name_gate.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p52-missing-reactions/tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-13T22:00:05+00:00",
+  "finished_at": "2026-08-13T22:00:34+00:00",
+  "duration_seconds": 28.955350600008387,
+  "timeout_seconds": 1800.0,
+  "root_pid": 627456,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 609296,
+      "name": "python.exe",
+      "ppid": 627456
+    },
+    {
+      "pid": 621376,
+      "name": "python.exe",
+      "ppid": 609296
+    },
+    {
+      "pid": 630604,
+      "name": "python.exe",
+      "ppid": 609296
+    },
+    {
+      "pid": 627992,
+      "name": "python.exe",
+      "ppid": 630604
+    },
+    {
+      "pid": 576372,
+      "name": "python.exe",
+      "ppid": 622712
+    },
+    {
+      "pid": 622712,
+      "name": "python.exe",
+      "ppid": 609296
+    },
+    {
+      "pid": 612264,
+      "name": "python.exe",
+      "ppid": 629956
+    },
+    {
+      "pid": 629956,
+      "name": "python.exe",
+      "ppid": 609296
+    }
+  ],
+  "descendants_terminated": [
+    576372,
+    609296,
+    612264,
+    621376,
+    622712,
+    627992,
+    629956,
+    630604
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 591256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 591372,
+      "name": "python.exe"
+    },
+    {
+      "pid": 624468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 628840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 629220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 630640,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-061\\12-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3197171a33b68c5841cdc4180101e5913e228bd5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
