@@ -45,6 +45,10 @@ from t2pw.pipeline.extraction_ladder import (
     alternate_model_env_var,
     is_operation_timeout,
 )
+from t2pw.pipeline.entity_admission import (
+    LEDGER_KEY as ENTITY_ADMISSION_LEDGER_KEY,
+    screen_additions,
+)
 from t2pw.pipeline.localized_repair import MAX_JSON_REPAIR_ATTEMPTS, repair_json_text
 from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi_example_review_context
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
@@ -1132,10 +1136,31 @@ def apply_post_merge_cleanup(
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
+    *,
+    seed_text: str = "",
+    rag_admission_report: Optional[Dict[str, Any]] = None,
+    pathway_context: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """
     Merge Stage-2 additions into a deep copy of the Stage-1 JSON.
     Deduplication is signature-based (JSON string) to avoid exact duplicates.
+
+    The merged payload is then screened by the C-060 entity-admission gate
+    (``pipeline/entity_admission.py``), which only ever REMOVES or DEMOTES: an
+    assay reagent duplicating a species already present, a synthesized
+    assay-composite reaction, and a row whose evidence span is locatable neither
+    in the seed paper text nor in an ADMITTED RAG record. The gate's ledger is
+    attached at ``ENTITY_ADMISSION_LEDGER_KEY`` so every removal is auditable and
+    a pathway that shrinks below viability is flagged rather than dropped.
+
+    It runs here — pre-freeze, at the Stage-2 merge, ahead of
+    ``apply_post_merge_cleanup`` — so no exporter is repairing biology after the
+    canonical graph is frozen (merge rule 8).
+
+    The three keyword arguments are the gate's evidence base, and each is inert
+    when absent: without ``seed_text`` the hallucination rule is not evaluated
+    (and "not evaluated" is never "false"), and without ``pathway_context`` the
+    advisory phase abstains. Existing callers are unaffected.
     """
     merged = deepcopy(base)
     inference_additions = clean_inference_output(inference_additions or {})
@@ -1177,6 +1202,13 @@ def merge_additions(
             _extend_unique(merged["element_locations"][key], items)
 
     _inject_name_based_modifiers(merged)
+    merged, admission_ledger = screen_additions(
+        merged,
+        seed_text=seed_text,
+        admission_report=rag_admission_report,
+        context=pathway_context,
+    )
+    merged[ENTITY_ADMISSION_LEDGER_KEY] = admission_ledger
     merged, _removed = apply_post_merge_cleanup(merged)
 
     return merged
