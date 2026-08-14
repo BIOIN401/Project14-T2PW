@@ -513,6 +513,72 @@ def test_new_acceptance_a_dangling_location_cannot_survive_the_commit() -> None:
     assert any(ref.pointer == pointer for ref in _iter_refs(payload))
 
 
+def test_new_acceptance_a_compound_rename_cannot_rewrite_another_kind_s_location() -> None:
+    """DEF-3: ``_propagate`` matches on the name string alone. Is that a hazard?
+
+    ``_iter_refs`` walks all four ``element_locations`` buckets and ``_propagate``
+    rewrites purely by name, so on the face of it a compound rename ``X -> Y``
+    also rewrites a protein, nucleic-acid or element-collection location row named
+    ``X``. **Measured: it cannot, whenever that row names a different entity.**
+    Two independent mechanisms already foreclose it, and neither is new here:
+
+    1. the other kind carries ``X`` in a primary alias field --
+       ``_reject_ambiguous_renames`` finds it as a rogue owner in
+       ``_alias_index``'s primary index and raises ``AMBIGUOUS_REFERENCE`` before
+       anything is written;
+    2. it carries ``X`` only as a synonym -- the primary index does not see it,
+       but ``_connectivity_signature`` resolves location refs through the synonym
+       index, so the ref moves from ``<<compounds#0|proteins#1>>`` to
+       ``<<compounds#0>>`` and ``PREFREEZE_CONNECTIVITY_BROKEN`` raises.
+
+    The residual case, recorded rather than hidden (arm 3): when **no** entity but
+    the compound answers to ``X``, the row is rewritten -- and that is correct, not
+    corruption. Name resolution is kind-blind in ``canonical`` and ``ir`` too, so
+    the row resolved to this compound before the rename and resolves to the same
+    compound after; skipping it would leave a name no entity carries, which
+    ``_assert_fully_propagated`` raises on by design. Pinning it here means a
+    future kind filter cannot introduce that failure silently.
+    """
+
+    kinds = {
+        "protein_locations": ("proteins", "protein"),
+        "nucleic_acid_locations": ("nucleic_acids", "nucleic_acid"),
+        "element_collection_locations": ("element_collections", "element_collection"),
+    }
+
+    def _staged() -> Dict[str, Any]:
+        payload = _payload()
+        payload["element_locations"] = {
+            "compound_locations": [{"compound": "gly", "biological_state": "cytosol"}],
+            **{bucket: [{field: "gly", "biological_state": "cytosol"}]
+               for bucket, (_, field) in kinds.items()},
+        }
+        return payload
+
+    for bucket, (entity_bucket, field) in kinds.items():
+        payload = _staged()
+        payload["entities"].setdefault(entity_bucket, []).append(_compound("gly"))
+        original = deepcopy(payload)
+        with pytest.raises(PrefreezeResolutionError) as excinfo:
+            _run(payload, _glycine_index())
+        assert excinfo.value.code == "AMBIGUOUS_REFERENCE", bucket
+        assert payload == original, bucket
+        assert payload["element_locations"][bucket][0][field] == "gly", bucket
+
+    payload = _staged()
+    payload["entities"]["proteins"].append(_compound("Glycine receptor", synonyms=["gly"]))
+    original = deepcopy(payload)
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _glycine_index())
+    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert payload == original
+
+    payload = _staged()
+    assert _run(payload, _glycine_index())["applied"] is True
+    for bucket, (_, field) in kinds.items():
+        assert payload["element_locations"][bucket][0][field] == "Glycine", bucket
+
+
 # --------------------------------------------------------------------------
 # B2 -- NEW ACCEPTANCE: the loop settles identity, it does not invent a decision.
 # --------------------------------------------------------------------------
@@ -577,36 +643,42 @@ def _fuzzy(monkeypatch: pytest.MonkeyPatch, payload: Dict[str, Any]) -> Dict[str
 def test_new_acceptance_the_rule_that_chose_the_identity_survives_convergence(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """B2: pass 2 may not restate pass 1's decision as the payload's own.
+    """C-040a's refusal is now the observed behaviour; this case pins the refusal.
 
-    Before the fix, identical inputs:
-    ``passes=1 db_status='matched' chosen_rule='fuzzy_name' conf=0.65`` then
-    ``passes=2 db_status='legacy_id_unverified'
-    chosen_rule='legacy_pathwhiz_id_unverified' conf=0.85``. Pass 1 writes
-    ``pathwhiz_id``; pass 2 reads it back and records the reason
-    ``payload_pathwhiz_id``, so ``final_mapped.json`` would claim the id arrived
-    in the incoming payload, 0.20 above what the resolver reported, with the rule
-    that actually chose it erased.
+    **This fixture no longer demonstrates provenance drift, and is not offered as
+    if it did.** It was written when a sub-threshold ``fuzzy_name`` hit was applied
+    anyway: pass 1 stamped a ``pathwhiz_id``, pass 2 read it back through the
+    legacy-id branch and restated the decision as ``legacy_id_unverified`` at 0.85
+    with the rule that chose it erased. **C-040a** (D-028 rule 1) now refuses a
+    fuzzy match outright -- nothing is renamed, no identifier is stamped, and pass
+    2 has nothing to read back -- so this row now observes the same values with and
+    without the provenance mechanism. The discriminating case moved to the
+    offline-index path, which D-028's admission does not gate; it is the test
+    directly below.
+
+    What this pins instead is D-028's refusal arriving intact at the pre-freeze
+    caller. It is deliberately NOT "repaired" by lowering a threshold, raising a
+    confidence or reshaping the fixture until the match is admitted again: that
+    would weaken a biological gate to obtain a green test.
     """
 
     payload = _opda_payload()
     summary = _fuzzy(monkeypatch, payload)
     row = payload["entities"]["compounds"][0]
 
-    assert summary["resolution_passes"] >= 2, "a single pass would not exercise the drift"
+    assert summary["resolution_passes"] >= 2
     assert (row["db_status"], row["chosen_rule"], row["confidence"]) == (
-        "matched", "fuzzy_name", 0.65)
-    # The identity the loop settled on is still there -- only the account of who
-    # decided it was restored. B1 rides along: the location follows the rename.
-    assert row["name"] == "Dinor-12-oxo-phytodienoate"
-    assert row["pathwhiz_id"] == 104723
-    assert summary["rename_map"] == {"OPDA": "Dinor-12-oxo-phytodienoate"}
-    assert payload["element_locations"]["compound_locations"][0]["compound"] == (
-        "Dinor-12-oxo-phytodienoate")
+        "identity_refused_review_required", "fuzzy_name", 0.65)
+    # D-028 rule 5: record-only is no rename AND no identifier stamp, never a
+    # partial apply -- so the location keeps the extracted name too.
+    assert row["name"] == "OPDA"
+    assert "pathwhiz_id" not in row
+    assert summary["rename_map"] == {}
+    assert payload["element_locations"]["compound_locations"][0]["compound"] == "OPDA"
 
-    # The invariant behind the symptom: one pass is what the exporter runs at
-    # base, so one pass is what the provenance must say. Computed rather than
-    # hard-coded, so it survives a change to C-040's rules.
+    # The invariant is still asserted -- it just no longer discriminates here.
+    # One pass is what the exporter runs, so one pass is what the provenance must
+    # say. Computed rather than hard-coded, so it survives a change to the rules.
     single = _resolve_compound_rows(
         _opda_payload()["entities"]["compounds"], db_resolver=_AvailableDbResolver(),
         strict_db=False, report=ensure_resolution_report({}),
@@ -620,6 +692,49 @@ def test_new_acceptance_the_rule_that_chose_the_identity_survives_convergence(
     frozen = deepcopy(payload)
     _fuzzy(monkeypatch, payload)
     assert payload == frozen
+
+
+def test_new_acceptance_the_offline_index_decision_survives_convergence() -> None:
+    """B-4 replacement: the discriminating provenance case, on the ungated path.
+
+    The offline name-index path is not subject to D-028's DB-match admission, so
+    the drift the snapshot/restore mechanism exists to prevent is still observable
+    there -- in the other direction. Pass 1 records
+    ``matched_offline_name_index``; pass 2 finds no ``pathwhiz_id`` to read back,
+    re-consults an unavailable resolver and overwrites the status with
+    ``unmatched``, while ``_canonicalize_compound_offline`` returns early on the
+    ``db_row`` pass 1 attached and so cannot restore it.
+
+    **Behavioural G9 contrast, measured, everything but the module held at the
+    tip:** pre-correction (``768be75``, before ``e7f28e7`` added
+    ``_snapshot_provenance``/``_authoritative_provenance``/``_restore_provenance``)
+    this same row ends ``unmatched``; here it ends
+    ``matched_offline_name_index``. Reproduce with
+    ``evidence/probe_c050e_offline_provenance.py``; result committed as
+    ``evidence/c050e_offline_provenance.json``.
+    """
+
+    payload = _payload()
+    summary = _run(payload, _glycine_index())
+    row = payload["entities"]["compounds"][0]
+
+    assert summary["resolution_passes"] >= 2, "one pass would not exercise the drift"
+    assert row["db_status"] == "matched_offline_name_index"
+    # The identity the loop settled on is untouched: only the account of who
+    # decided it is restored.
+    assert row["name"] == "Glycine"
+    assert summary["rename_map"] == {"gly": "Glycine"}
+
+    # Computed, not hard-coded: what one pass recorded is what the converged
+    # operation must record. This is the assertion the pre-correction module
+    # fails, and it covers the unmatched row beside the matched one.
+    single = _resolve_compound_rows(
+        _payload()["entities"]["compounds"], db_resolver=_OfflineResolver(),
+        strict_db=False, report=ensure_resolution_report({}),
+        pointer_prefix="/entities/compounds", name_index=_glycine_index())
+    fields = ("db_status", "chosen_rule", "confidence")
+    assert [{f: r.get(f) for f in fields} for r in payload["entities"]["compounds"]] == [
+        {f: r.get(f) for f in fields} for r in single]
 
 
 def test_new_acceptance_a_repeat_pass_is_not_a_second_consultation(
