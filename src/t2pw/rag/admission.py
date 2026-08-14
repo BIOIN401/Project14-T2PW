@@ -49,7 +49,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
 
 # Module level, unlike the heavy siblings lazy-imported inside functions: lineage is a
 # LEAF (it imports nothing from ``t2pw``), so it adds no cost and cannot cycle --
@@ -73,6 +73,7 @@ __all__ = [
     "name_pattern",
     "states_name",
     "parse_span_relation",
+    "parse_span_relations",
     "SpanRelation",
     "split_statements",
     "locate_span",
@@ -649,6 +650,50 @@ _PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     ),
 )
 
+#: Bond-forming verbs that take TWO OR MORE substrates and state their product
+#: explicitly. Deliberately a closed lexicon of condensation verbs rather than a
+#: morphological rule: the ``-ates`` family is already covered by
+#: ``enzyme_verb_to``, and its suffix restriction exists because an open rule read
+#: the NOUN "phospholipase" as a verb. Naming the verbs keeps that impossible.
+#:
+#: ``transfer`` is excluded on purpose. "transfers a methyl group to DMK" names a
+#: DESTINATION, not a product, and reading it as one would invent chemistry.
+_SYNTHESIS_VERB = (
+    r"(?:join|condense|combine|couple|link|attach|ligate|fuse|conjugate|add)"
+    r"(?:s|es|ed)?"
+)
+
+#: Templates added by C-061, kept OUT of :data:`_PROSE_PATTERNS` so that constant
+#: stays byte-identical, and tried LAST for the same reason the actor-free forms
+#: are last: a template only ever runs on a construction no earlier one claimed.
+#:
+#: One entry. "Subsequently, MenA joins DHNA and prenyl diphosphate to produce
+#: demethylmenaquinone (DMK)" is a paper-explicit, two-substrate reaction with its
+#: catalyst bound by the sentence's own subject, and NO existing template reads it
+#: at any position — measured, not assumed. The claim quoting it verbatim was
+#: therefore refused as disagreeing with its own evidence.
+#:
+#: The explicit ``to <produce|yield|form|give|generate>`` is load-bearing: it is
+#: what makes the phrase after it a PRODUCT rather than a destination, a cofactor
+#: or a location, so the template asserts a role the sentence actually assigns.
+_EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
+    (
+        # "MenA joins DHNA and prenyl diphosphate to produce DMK"
+        "actor_combines_to_make",
+        re.compile(
+            rf"(?P<enz>{_ACTOR})\s+{_SYNTHESIS_VERB}\s+(?P<lhs>{_ENTITY})\s+to\s+"
+            rf"{_MAKE}(?P<rhs>{_ENTITY}){_TAIL}",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
+#: What the parser actually walks. Priority order is preserved exactly: every
+#: historical template is tried, in its historical order, before any new one.
+_ALL_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
+    _PROSE_PATTERNS + _EXTRA_PROSE_PATTERNS
+)
+
 #: Clause connectors. Text before one of these on the substrate side, or after one
 #: on the product side, belongs to a different clause and is dropped — this is what
 #: keeps "Enz1 inhibits X, while A is converted to B" from reading ``Enz1 inhibits
@@ -693,6 +738,23 @@ _PHRASE_TAILS = (
     " between ",
     " according ",
     " as ",
+)
+#: A figure/table callout is a CITATION, not part of the species name it follows.
+#: "MenG demethylates DMK to generate MK ( Fig. 1A )" names the product MK; the
+#: product-side phrase runs to the statement terminator, and the terminator here
+#: is the period inside "Fig.", so the phrase arrived as ``MK ( Fig`` and was
+#: short enough (four tokens) to pass :func:`_species_segment` as a name. The
+#: candidate then disagreed with its own evidence over a compound the span never
+#: mentioned. Trimmed here, in the one place both sides already normalize, so the
+#: callout is dropped identically wherever it appears.
+#:
+#: Only the callout is removed. A parenthetical ALIAS — "demethylmenaquinone
+#: (DMK)" — is the paper naming one compound twice and is left intact, which is
+#: why this matches the citation keywords rather than "any parenthesis".
+_FIGURE_CALLOUT_RE = re.compile(
+    r"[\(\[]?\s*\b(?:extended\s+data\s+)?"
+    r"(?:fig|figs|figure|figures|table|tables|scheme|schemes|panel|panels)\b\.?",
+    re.IGNORECASE,
 )
 _LEADING_ARTICLES = ("the ", "a ", "an ", "its ", "their ")
 #: A comma only separates two species when it is followed by whitespace. A comma
@@ -963,6 +1025,10 @@ def _trim_phrase(text: str, *, side: str) -> str:
         if idx > 0:
             body = body[:idx]
             lowered = body.casefold()
+    callout = _FIGURE_CALLOUT_RE.search(body)
+    if callout is not None and callout.start() > 0:
+        body = body[: callout.start()]
+        lowered = body.casefold()
     body = _NOMINALIZATION_RE.sub("", body.strip())
     return body.strip()
 
@@ -1106,21 +1172,281 @@ class SpanRelation:
     pattern: str = ""
 
 
-def parse_span_relation(span: str) -> Optional[SpanRelation]:
-    """Extract the reaction a span states — substrates, products, direction, catalyst.
+#: Every start offset a template may be tried from. A template is anchored either
+#: on an actor (``[A-Za-z]``), on a verb keyword, or on ``_ENTITY`` — and an
+#: ``_ENTITY`` match that begins on whitespace or punctuation trims to the same
+#: phrase as the one beginning at the following word. Enumerating word starts
+#: therefore yields the same RELATION set as enumerating every character, at a
+#: fraction of the backtracking.
+_WORD_START_RE = re.compile(r"\b\w")
+
+#: The hyphens a chemical name is spelled with. ``-`` plus the Unicode dash block,
+#: because extracted paper text carries both.
+_COMPOUND_HYPHENS = "-‐‑‒–—―"
+
+#: A word start that is BOUND INTO the token before it, and therefore is not the
+#: start of a species name at all. ``\b\w`` fires after every hyphen and after the
+#: locant comma of ``2,3-oxidosqualene``, so restarting there offers the templates
+#: ``oxoglutarate`` (from ``2-oxoglutarate``) and ``3-oxidosqualene`` as substrates
+#: — re-opening by the restart route the exact defect :data:`_SPECIES_SPLIT_RE`'s
+#: comment records, where splitting a locant produced the substrate ``2``.
+#:
+#: The comma case is decided by :data:`_SPECIES_SPLIT_RE`'s own rule and nothing
+#: else: that pattern separates species on ``,(?=\s|$)``, so a comma followed by a
+#: word character is a locant, never a connector. A word start is therefore
+#: excluded exactly when a hyphen or a locant comma sits between it and a word
+#: character.
+_TOKEN_INTERNAL_RESTART_RE = re.compile(rf"(?<=\w[{_COMPOUND_HYPHENS},])\w")
+
+#: A span states at most this many distinct relations. Truncation can only make
+#: the parser see FEWER readings, so it can only ever refuse more — it is not a
+#: path to a permissive default (clause A8).
+_MAX_SPAN_RELATIONS = 8
+
+
+def _restart_positions(body: str) -> List[int]:
+    """Every offset a template may be re-tried from, token-internal ones removed.
+
+    A template match that BEGINS inside a hyphenated or locant compound can only
+    ever report a truncated form of that compound, so such a start is not a
+    reading of the span — it is a spelling error the parser would be inventing.
+    Excluding it cannot cost a reading: ``pattern.search(body, pos)`` scans
+    FORWARD, so every match reachable from an excluded offset ``p`` is still
+    reachable from the nearest kept offset before ``p``, except a match that
+    starts within the compound itself — which is precisely what is being refused.
+    """
+    skip = {m.start() for m in _TOKEN_INTERNAL_RESTART_RE.finditer(body)}
+    return [0] + [m.start() for m in _WORD_START_RE.finditer(body) if m.start() not in skip]
+
+
+def _pattern_matches(
+    pattern: "re.Pattern", body: str, *, first_only: bool
+) -> Iterator["re.Match"]:
+    """Every distinct match of ``pattern`` in ``body``, leftmost start first.
+
+    ``re.finditer`` is deliberately NOT used: it resumes at the END of each match,
+    and these templates run to the statement terminator, so it reports exactly one
+    match per pattern — which is the whole defect. Restarting the search one word
+    later enumerates every start position instead, so a sentence stating two
+    reactions yields both.
+
+    Restarts that fall INSIDE a compound name are excluded
+    (:func:`_restart_positions`). ``first_only=True`` restarts nowhere at all and
+    reproduces ``pattern.search(body)`` exactly, which is what the single-relation
+    shim needs — position ``0`` is always kept, so the shim is bit-for-bit
+    unaffected by the exclusion.
+    """
+    seen: Set[Tuple[int, int]] = set()
+    for pos in _restart_positions(body):
+        match = pattern.search(body, pos)
+        if match is None:
+            # Starts ascend, so nothing later can match either.
+            return
+        if match.span() in seen:
+            continue
+        seen.add(match.span())
+        yield match
+        if first_only:
+            return
+
+
+def _relation_from_match(name: str, match: "re.Match", body: str) -> Optional[SpanRelation]:
+    """One template match as a :class:`SpanRelation`, or ``None`` if unreadable.
+
+    Byte-for-byte the acceptance logic the single-match loop used to inline: the
+    same relative-clause abandonment, the same trimming, the same refusal to
+    invent a species. Extracted so that every enumerated match is judged by
+    exactly the same rules as the first one used to be.
+    """
+    groups = match.groupdict()
+    if _RELATIVE_CLAUSE_RE.search(groups.get("lhs") or ""):
+        # The "to" this template used sits on the far side of a relative
+        # clause, so it belongs to a different predicate. Abandon the match.
+        return None
+    inputs = _split_species(_trim_phrase(groups.get("lhs") or "", side="lhs"))
+    outputs = _split_species(groups.get("rhs") or "", stop_at_break=True)
+    if not inputs or not outputs:
+        return None
+    return SpanRelation(
+        inputs=inputs,
+        outputs=outputs,
+        catalysts=_clean_actor(groups.get("enz")),
+        reversible=bool(_REVERSIBLE_WORD_RE.search(body)),
+        pattern=name,
+    )
+
+
+def _participant_set(names: Sequence[str]) -> Set[str]:
+    """A participant list as canonical spellings, currency INCLUDED.
+
+    Deliberately not :func:`_non_currency`: this set answers "which participants
+    does this reading say the span states", and a reading that states ATP states
+    ATP. Projecting currency away here would make ``ATP -> G6P`` and
+    ``glucose -> G6P`` look like the same reading of the same sentence.
+    """
+    return {_fold(_canonical(n)) for n in names if _text(n)}
+
+
+def _drop_participant_subsets(relations: List[SpanRelation]) -> List[SpanRelation]:
+    """Remove readings that are another reading with a stated participant deleted.
+
+    ``_pattern_matches`` restarts every template at every word start, and two
+    historical templates — ``is_converted_to`` and ``is_produced_from`` — open on
+    an unanchored participant group. A restart past a coordinator therefore
+    re-matches THE SAME reaction with one of its stated participants missing:
+    "Isochorismate and 2-oxoglutarate are converted to SEPHCHC by MenD" also
+    yields ``['2-oxoglutarate'] -> ['SEPHCHC']``. That is not a second reading of
+    the sentence; it is the first reading with chemistry deleted, and admitting a
+    claim against it contradicts the invariant
+    :func:`validate_evidence_span` states two functions above — *"it is never
+    exempt in the 'span has it, candidate dropped it' direction, because dropping
+    a real substrate changes the chemistry"*.
+
+    A reading is dropped only when another returned reading is strictly richer in
+    exactly one participant role and no poorer anywhere else:
+
+    * one side is a **strict** subset of the other reading's same side, and
+    * the opposite side is **equal**, and
+    * its catalysts are a subset of the other's — so a reading naming a catalyst
+      the richer one does not name is never deleted, and
+    * reversibility agrees.
+
+    Direction is deliberately absent from the rule: a reversal is not a subset of
+    anything, and :func:`_relation_verdict` already refuses it.
+
+    **Only ever removes.** No branch constructs, mutates, reorders or copies a
+    :class:`SpanRelation`; survivors are the input objects in the input order.
+
+    **Cannot empty a non-empty list.** Both surviving branches require
+    ``len(other.inputs') + len(other.outputs') > len(this.inputs') + len(this.outputs')``
+    on the canonical sets, so a reading of maximal participant count has no
+    possible eliminator and is always kept. Were that reasoning ever wrong the
+    caller still fails CLOSED — :func:`validate_evidence_span` refuses an empty
+    relation list; there is no permissive default anywhere on this path (A8).
+    """
+    if len(relations) < 2:
+        return relations
+    shapes = [
+        (
+            _participant_set(r.inputs),
+            _participant_set(r.outputs),
+            _participant_set(r.catalysts),
+            bool(r.reversible),
+        )
+        for r in relations
+    ]
+    kept: List[SpanRelation] = []
+    for index, relation in enumerate(relations):
+        ins, outs, cats, rev = shapes[index]
+        superseded = False
+        for other, (o_ins, o_outs, o_cats, o_rev) in enumerate(shapes):
+            if other == index or rev != o_rev or not cats <= o_cats:
+                continue
+            if (ins < o_ins and outs == o_outs) or (outs < o_outs and ins == o_ins):
+                superseded = True
+                break
+        if not superseded:
+            kept.append(relation)
+    return kept
+
+
+def parse_span_relations(span: str) -> List[SpanRelation]:
+    """EVERY reaction a span states — substrates, products, direction, catalyst.
 
     Two paths, both deterministic:
 
     * **arrow** — the span is re-parsed with the very parser that produced the
       arrow-path candidates (``synthesize._parse_reaction_line``), so the span's
-      own reading of itself is what the candidate is checked against;
-    * **prose** — the ordered templates in :data:`_PROSE_PATTERNS`, each of which
-      assigns roles explicitly. Nothing is inferred from co-occurrence: a sentence
-      that names the right compounds and a relation cue but matches no template
-      yields ``None``, and the caller refuses the claim rather than guessing which
-      name was the substrate.
+      own reading of itself is what the candidate is checked against. An arrow
+      span short-circuits, exactly as it always has: its own parser already read
+      the whole line, and letting the prose templates add readings on top of it
+      would widen admission for a shape that never had the defect;
+    * **prose** — the ordered templates in :data:`_ALL_PROSE_PATTERNS`, each of
+      which assigns roles explicitly, tried at **every** start position. Nothing
+      is inferred from co-occurrence: a sentence that names the right compounds
+      and a relation cue but matches no template yields ``[]``, and the caller
+      refuses the claim rather than guessing which name was the substrate.
 
-    Returns ``None`` when no relationship with assignable roles is stated.
+    Why every position. A single sentence routinely states a whole segment of a
+    pathway — "MenA joins DHNA and prenyl diphosphate to produce DMK, and MenG
+    demethylates DMK to generate MK" states two reactions. Reading only the first
+    match meant the second clause's reading was the ONLY thing the first clause's
+    claim could be checked against, so a claim quoting the sentence verbatim was
+    refused as disagreeing with its own evidence.
+
+    Returned in template-priority order, then by position, duplicates collapsed,
+    and then filtered by :func:`_drop_participant_subsets` — a restart past a
+    coordinator re-matches the SAME reaction with a stated participant deleted,
+    and a reading with chemistry removed is not a reading of the span. The FIRST
+    surviving element is whatever the single-match parser used to return (the
+    leftmost match of the highest-priority template is maximal on both sides, so
+    it is never the one filtered), which is what keeps
+    :func:`parse_span_relation` unchanged.
+
+    This widens what a span can be read as SAYING. It does not touch what counts
+    as agreement: each returned relation is judged by the unchanged predicate in
+    :func:`validate_evidence_span`, and a claim is admitted only if some single
+    relation agrees with it on substrates, products, direction and catalyst at
+    once.
+    """
+    body = _text(span)
+    if not body:
+        return []
+
+    if _ARROW_RE.search(body):
+        try:
+            from t2pw.rag.synthesize import _parse_reaction_line
+
+            parsed = _parse_reaction_line(body)
+        except Exception:  # pragma: no cover - defensive; synthesize is a sibling
+            parsed = None
+        if parsed:
+            return [
+                SpanRelation(
+                    inputs=[p.name for p in parsed["inputs"]],
+                    outputs=[p.name for p in parsed["outputs"]],
+                    catalysts=list(parsed["enzymes"]),
+                    reversible=bool(parsed["reversible"]),
+                    pattern="arrow",
+                )
+            ]
+
+    out: List[SpanRelation] = []
+    seen: Set[Tuple[Any, ...]] = set()
+    for name, pattern in _ALL_PROSE_PATTERNS:
+        for match in _pattern_matches(pattern, body, first_only=False):
+            relation = _relation_from_match(name, match, body)
+            if relation is None:
+                continue
+            key = (
+                tuple(relation.inputs),
+                tuple(relation.outputs),
+                tuple(relation.catalysts),
+                relation.reversible,
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(relation)
+            if len(out) >= _MAX_SPAN_RELATIONS:
+                break
+        if len(out) >= _MAX_SPAN_RELATIONS:
+            break
+    return _drop_participant_subsets(out)
+
+
+def parse_span_relation(span: str) -> Optional[SpanRelation]:
+    """The single relation the span-relation parser used to return, unchanged.
+
+    Kept for every existing caller (``_precursor_resolution`` here, and the
+    relation-recall corpus) whose contract is "one relation or ``None``". It walks
+    the templates in priority order and takes the first template whose LEFTMOST
+    match is readable — the historical algorithm, reproduced by
+    ``first_only=True`` rather than re-implemented.
+
+    Prefer :func:`parse_span_relations` in new code: a span that states two
+    reactions cannot be represented by this signature at all, and picking one of
+    them silently is what made a verbatim claim disagree with its own evidence.
     """
     body = _text(span)
     if not body:
@@ -1142,26 +1468,16 @@ def parse_span_relation(span: str) -> Optional[SpanRelation]:
                 pattern="arrow",
             )
 
-    for name, pattern in _PROSE_PATTERNS:
-        match = pattern.search(body)
-        if not match:
-            continue
-        groups = match.groupdict()
-        if _RELATIVE_CLAUSE_RE.search(groups.get("lhs") or ""):
-            # The "to" this template used sits on the far side of a relative
-            # clause, so it belongs to a different predicate. Abandon the match.
-            continue
-        inputs = _split_species(_trim_phrase(groups.get("lhs") or "", side="lhs"))
-        outputs = _split_species(groups.get("rhs") or "", stop_at_break=True)
-        if not inputs or not outputs:
-            continue
-        return SpanRelation(
-            inputs=inputs,
-            outputs=outputs,
-            catalysts=_clean_actor(groups.get("enz")),
-            reversible=bool(_REVERSIBLE_WORD_RE.search(body)),
-            pattern=name,
-        )
+    for name, pattern in _ALL_PROSE_PATTERNS:
+        for match in _pattern_matches(pattern, body, first_only=True):
+            relation = _relation_from_match(name, match, body)
+            if relation is None:
+                # The leftmost match of this template is unreadable. The historical
+                # loop moved to the NEXT TEMPLATE here rather than to the next
+                # position, and that is preserved: this shim exists to be
+                # identical, not to be better.
+                continue
+            return relation
     return None
 
 
@@ -1218,6 +1534,16 @@ def validate_evidence_span(
 
     A span whose roles cannot be assigned at all is refused and recorded
     (:data:`REASON_ROLES_UNASSIGNABLE`) rather than being guessed at.
+
+    A span may state MORE THAN ONE reaction — "MenA joins DHNA and prenyl
+    diphosphate to produce DMK, and MenG demethylates DMK to generate MK" states
+    two, and both are paper-explicit. Each stated relation is judged separately by
+    the criteria above and the claim is admitted if ANY ONE of them agrees with it
+    outright. What is widened is what the span can be read as SAYING; what counts
+    as agreement is untouched, so a claim still cannot be assembled from parts of
+    two different relations: taking MenA's chemistry with MenG's name is refused
+    by the relation that has the chemistry, and taking either reaction backwards
+    is still refused for direction.
     """
     body = _text(span)
     reasons: List[str] = []
@@ -1236,8 +1562,8 @@ def validate_evidence_span(
     if reasons:
         return SpanVerdict(False, reasons)
 
-    relation = parse_span_relation(body)
-    if relation is None:
+    relations = parse_span_relations(body)
+    if not relations:
         if _RELATION_CUE_RE.search(body):
             return SpanVerdict(
                 False,
@@ -1257,20 +1583,81 @@ def validate_evidence_span(
 
     claim_in = _non_currency(inputs)
     claim_out = _non_currency(outputs)
+
+    # Every relation the span states is a candidate support. The claim is admitted
+    # when ONE of them agrees with it outright; it is refused when none does. The
+    # agreement test itself is unchanged and is applied per relation, so a span
+    # stating two reactions can support either of them and still supports neither
+    # a third reaction nor a crossover between its own two.
+    best: Optional[Tuple[Tuple[int, int], List[str], SpanRelation, Optional[bool]]] = None
+    for relation in relations:
+        rel_reasons, normalized = _relation_verdict(
+            relation,
+            claim_in=claim_in,
+            claim_out=claim_out,
+            enzymes=enzymes,
+            reversible=reversible,
+        )
+        if not rel_reasons:
+            return SpanVerdict(True, [], relation, normalized)
+        rank = _refusal_rank(rel_reasons)
+        if best is None or rank < best[0]:
+            best = (rank, rel_reasons, relation, normalized)
+
+    # Every stated relation refused the claim. Report the nearest miss — for a span
+    # stating one relation that is the same relation, the same reasons and the same
+    # wording as before, which is what keeps existing refusals byte-identical.
+    assert best is not None  # relations is non-empty and each refusal has a reason
+    return SpanVerdict(False, best[1], best[2], best[3])
+
+
+def _refusal_rank(reasons: Sequence[str]) -> Tuple[int, int]:
+    """How near a miss a refusal is — lower is nearer, ties broken by span order.
+
+    Fewest reasons first, then chemistry before catalysis. A span stating two
+    reactions produces one refusal per relation, and the reported one should be
+    the reading the claim came closest to: for a catalyst crossover ("the span
+    does say A + B -> C, but MenG is not the enzyme it attaches to that one") the
+    useful report is the unsupported-catalyst refusal against the relation whose
+    chemistry matched, not a substrate mismatch against the other clause.
+    """
+    chemistry = any(
+        reason.startswith((REASON_RELATION_DISAGREES, REASON_DIRECTION_DISAGREES))
+        for reason in reasons
+    )
+    return (len(reasons), 1 if chemistry else 0)
+
+
+def _relation_verdict(
+    relation: SpanRelation,
+    *,
+    claim_in: Set[str],
+    claim_out: Set[str],
+    enzymes: Sequence[str],
+    reversible: bool,
+) -> Tuple[List[str], Optional[bool]]:
+    """Judge the claim against ONE stated relation. The predicate, unchanged.
+
+    Extracted verbatim from the single-relation body so that widening the parser
+    could not quietly widen the test: substrates and products still have to be
+    set-equal on non-currency names, direction still has to agree unless the span
+    states reversibility, and every claimed catalyst still has to be the catalyst
+    THIS relation attaches. Nothing here consults the other relations.
+    """
+    reasons: List[str] = []
     span_in = _non_currency(relation.inputs)
     span_out = _non_currency(relation.outputs)
 
     swapped = claim_in == span_out and claim_out == span_in and claim_in != claim_out
     if swapped:
         if not relation.reversible:
-            return SpanVerdict(
-                False,
+            return (
                 [
                     f"{REASON_DIRECTION_DISAGREES}: the span states "
                     f"{sorted(span_in)} -> {sorted(span_out)}, the claim states the "
                     "reverse, and the span does not state reversibility"
                 ],
-                relation,
+                None,
             )
     else:
         missing_in = span_in - claim_in
@@ -1316,7 +1703,7 @@ def validate_evidence_span(
             "is not the catalyst the span attaches to this reaction"
         )
 
-    return SpanVerdict(not reasons, reasons, relation, normalized)
+    return reasons, normalized
 
 
 # ---------------------------------------------------------------------------

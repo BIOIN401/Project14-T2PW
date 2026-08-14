@@ -1,0 +1,173 @@
+{
+  "label": "smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/327cc8d2-6791-4d52-aba3-6d01734aa2b5/scratchpad/runtests.py",
+    "-q",
+    "--basetemp=C:/t2pwtmp/c061/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p52-missing-reactions",
+  "started_at": "2026-08-13T21:45:15+00:00",
+  "finished_at": "2026-08-13T21:45:44+00:00",
+  "duration_seconds": 28.93193409999367,
+  "timeout_seconds": 1200.0,
+  "root_pid": 613544,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 613572,
+      "name": "python.exe",
+      "ppid": 613544
+    },
+    {
+      "pid": 614172,
+      "name": "python.exe",
+      "ppid": 613572
+    },
+    {
+      "pid": 614392,
+      "name": "python.exe",
+      "ppid": 614172
+    },
+    {
+      "pid": 614092,
+      "name": "python.exe",
+      "ppid": 613572
+    },
+    {
+      "pid": 614144,
+      "name": "python.exe",
+      "ppid": 614092
+    },
+    {
+      "pid": 613468,
+      "name": "python.exe",
+      "ppid": 613572
+    },
+    {
+      "pid": 613492,
+      "name": "python.exe",
+      "ppid": 613468
+    },
+    {
+      "pid": 613588,
+      "name": "python.exe",
+      "ppid": 613572
+    },
+    {
+      "pid": 613624,
+      "name": "python.exe",
+      "ppid": 613588
+    }
+  ],
+  "descendants_terminated": [
+    613468,
+    613492,
+    613572,
+    613588,
+    613624,
+    614092,
+    614144,
+    614172,
+    614392
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 591256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 591372,
+      "name": "python.exe"
+    },
+    {
+      "pid": 604536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 608512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 608980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 609216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 612524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 612596,
+      "name": "python.exe"
+    },
+    {
+      "pid": 612648,
+      "name": "python.exe"
+    },
+    {
+      "pid": 612668,
+      "name": "python.exe"
+    },
+    {
+      "pid": 614340,
+      "name": "python.exe"
+    },
+    {
+      "pid": 614384,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p52-missing-reactions\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-061\\10-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p52-missing-reactions\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p52-missing-reactions",
+    "repo_head": "472293c9265fcc45d4af9f87f7ae25707af11f24",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
