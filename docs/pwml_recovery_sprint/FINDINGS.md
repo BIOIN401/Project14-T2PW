@@ -514,3 +514,77 @@ what `_propagate` can reach and **no test names it**. REV-050e measured the conc
 (`{protein: "ALAS2", name: "gly"}`): the `name` is rewritten but the result is **inert** — canonical
 `entity_locations` is unchanged (`protein|alas2` on both sides) and neither consumer reads `name`.
 No action; revisit only if a consumer starts reading it.
+
+---
+
+## P5-05 — the pre-freeze stage's CALL SITE is pinned by no test: D-015 is unenforced end-to-end
+
+**Severity: MEDIUM.** Found by **REV-050d** (F-1), measured live. **Not** C-050d-caused.
+**Suggested owner: C-051** (which reorders this seam) or the composite landing.
+
+`streamlit_app.py:3587` invokes `run_prefreeze_resolution`. **Neutralizing that call changes no test
+result anywhere in the tree.** REV-050d measured it by monkeypatching
+`t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution` to a no-op and confirming the patch was in
+force (`stage_calls = 1`):
+
+* **node15 stays green**;
+* the whole `qb` file stays green;
+* **all 24 tests in `tests/test_prefreeze_compound_resolution.py` stay green** — every one of them
+  calls `resolve_compounds_prefreeze` / `run_prefreeze_resolution` **directly**, so none exercises
+  the production wiring;
+* the string `prefreeze` appears in **no other test file**, and no test drives the app or the batch
+  driver and then asserts a prefreeze field on a produced artifact.
+
+**Consequence.** **D-015's requirement that canonicalization occur *before the freeze* is not
+enforced end-to-end by anything.** The stage could be removed, reordered after the freeze, or
+silently short-circuited in production and the entire suite would stay green. This is the same class
+of defect as **C-060a's** (a correct capability that no production caller reached) and **D-028's**
+(a gate that decided whether to *log*, not whether to *apply*) — a capability whose wiring is
+unverified.
+
+**Not a blocker for the stack**, but it should not survive the stack's landing unexamined: C-051
+rewrites this seam and is the natural owner of a pin that the call happens, and happens pre-freeze.
+
+---
+
+## P5-06 — node15's harmlessness proof forbids a legitimate pre-freeze RENAME
+
+**Severity: LOW-MEDIUM.** Found by **REV-050d** (F-2). **Charter-caused, not writer-caused** — the
+shape was named in C-050d's own charter (Option B, "identical entity names"). **Owner: C-045
+dispatch**, and the composite landing.
+
+C-050d's semantic harmlessness proof
+(`tests/test_streamlit_quarantine_boundary.py:1108-1118`) asserts `metadata`, `processes`,
+`biological_states` and `element_locations` are **whole-object equal**, and that entity **name lists
+are identical**. That forbids a pre-freeze stage from **renaming an entity** or **adding any key** to
+those four sections — **both of which D-015 and D-016 explicitly authorize.**
+
+Measured by REV-050d: a legitimate propagated `OPDA → Dinor-12-oxo-phytodienoate` rename **fires at
+`:1109`**; a hypothetical `metadata["organism_taxonomy_id"]` addition fires at the same line.
+
+**Why it is not a defect today.** No worktree has `.env` (**P4-01**), so PathBank is unreachable and
+C-050's stage records `db_status:"unmatched"` / `db_match.reason:"db_not_configured"` on all 7 rows
+and **renames nothing**. The proof is verified against exactly that state, and the failure direction
+is **fail-closed** — a rename makes node15 fail **loudly**, never silently weaker.
+
+**Two live forward risks, both recorded before they bite:**
+
+1. **C-045.** Species canonicalization renames from the **offline name index** and from
+   **deterministic strain normalization** — neither needs a database. **C-045 will turn node15 red.**
+   Its charter now says so explicitly, and instructs it to **stop and report** rather than weaken
+   node15, which is **C-050a's** owned function. The fixture repair is then a separate C-050a-owned
+   subcard, exactly as C-050d was routed.
+2. **The composite landing.** That cohort runs in the **primary checkout, which does have `.env`**,
+   so PathBank is reachable and a legitimate **compound** rename could fire node15 there even
+   without C-045. Anticipate it; classify it as this finding rather than as a stack defect.
+
+## P5-07 — `protein_export_policy` is pinned by nothing in node15
+
+**Severity: LOW.** Found by REV-050d (F-3). Card-caused, no behavioural consequence.
+`tests/test_streamlit_quarantine_boundary.py:1108` enumerates 4 of the 5 non-`entities` top-level
+keys; `protein_export_policy` is present in both artifacts and measured equal, but is now covered by
+no assertion, where the base whole-object comparison covered it. It is a counter block stamped by
+`map_ids.py` / `process_normalizer.py` and consumed by **no** PWML or SBML code (grep of
+`src/t2pw/pwml/` and `src/t2pw/sbml/`: no hits), so the "nothing PWML or SBML consumes altered"
+requirement is not breached. **Cheap future hardening:** iterate all top-level keys except `entities`
+instead of a fixed tuple. Not worth a correction round.
