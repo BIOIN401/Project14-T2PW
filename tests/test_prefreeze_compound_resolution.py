@@ -905,3 +905,120 @@ def test_canonical_graph_hash_moves_when_biology_moves_prefreeze() -> None:
     compound = projection["entities"]["compounds"][0]
     assert "db_match" not in compound
     assert compound["name"] == "Glycine"
+
+
+# --------------------------------------------------------------------------
+# C-050f -- the rewrite rule and the audit rule are the same rule.
+# CORRECTION of pre-existing behaviour (G9); the base-vs-tip measurement is
+# ``evidence/probe_c050f_propagation_match_rule.py`` (base a81b1d65) and these
+# are the durable guards. ``PREFREEZE_RENAME_MAP_COLLISION`` is the one **new**
+# capability, labelled as such, so it carries no base failure.
+# --------------------------------------------------------------------------
+
+
+def _variant_payload(entity: str, chebi: str, reference: str) -> Dict[str, Any]:
+    return {
+        "entities": {"compounds": [_compound(entity, chebi)]},
+        "processes": {"reactions": [{"name": "R1", "inputs": [reference], "outputs": []}]},
+    }
+
+
+@pytest.mark.parametrize(
+    "entity,chebi,reference,expected",
+    [
+        ("gly", "15428", "gly", "Glycine"),                                  # control
+        ("gly", "15428", "GLY", "Glycine"),                                  # case
+        ("gly", "15428", "Gly", "Glycine"),                                  # case
+        ("succinyl-CoA", "15380", "succinyl CoA", "Succinyl coenzyme A"),    # punctuation
+        ("glycine", "15428", "glycine", "Glycine"),                          # pure case change
+        ("glycine", "15428", "GLYCINE", "Glycine"),                          # ... its variant
+    ],
+)
+def test_c050f_a_variant_reference_is_rewritten_not_aborted_on(
+    entity: str, chebi: str, reference: str, expected: str,
+) -> None:
+    """A1/A2: every spelling that resolves to the renamed entity is propagated.
+
+    None of these is dangling -- each resolves, by the same ``_norm`` rule
+    ``_alias_index`` and ``ir.resolve_entity`` use, to the very entity being
+    renamed -- so ``PRODUCT_CONTRACT`` section 1 forbids aborting an export on
+    it. Asserting on the **live** payload covers the committed pass too, and the
+    rename map pins that widening the match did not widen the rename (A5).
+    """
+
+    payload = _variant_payload(entity, f"CHEBI:{chebi}", reference)
+    index = _StubNameIndex({chebi: {"id": 78, "name": expected, "matched_on": "chebi"}})
+
+    report = run_prefreeze_resolution(
+        payload, db_resolver=_OfflineResolver(), strict_db=False, name_index=index)
+
+    assert payload["processes"]["reactions"][0]["inputs"] == [expected]
+    assert payload["entities"]["compounds"][0]["name"] == expected
+    assert report["compounds"]["rename_map"] == {entity: expected}
+
+
+def test_c050f_a_genuinely_stale_reference_still_raises() -> None:
+    """A3: the rewriter widened; the audit did not narrow. D-015 clause 6 holds.
+
+    Each stale spelling names something no entity carries once the row is
+    ``Glycine``, so each stays fatal. The third is the one the base could not see
+    at all: after a pure case change the audit skipped the rename entirely.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _assert_fully_propagated
+
+    for entity, stale, rename in (
+        ("gly", "gly", {"gly": "Glycine"}),
+        ("gly", "GLY", {"gly": "Glycine"}),
+        ("glycine", "GLYCINE", {"glycine": "Glycine"}),
+    ):
+        payload = _variant_payload(entity, "CHEBI:15428", entity)
+        _run(payload, _glycine_index())
+        _assert_fully_propagated(payload, rename)  # the propagated payload is fine
+
+        payload["processes"]["reactions"][0]["inputs"][0] = stale
+        with pytest.raises(PrefreezeResolutionError) as excinfo:
+            _assert_fully_propagated(payload, rename)
+        assert excinfo.value.code == "PREFREEZE_RENAME_NOT_PROPAGATED", stale
+        assert excinfo.value.details["pointer"] == "/processes/reactions/0/inputs/0"
+
+
+def test_c050f_a_rename_map_colliding_under_norm_is_refused_not_guessed() -> None:
+    """NEW acceptance (3b): one rename source must not silently shadow another.
+
+    ``gly`` and ``Gly`` are one key to everything that reads the frozen payload,
+    so a reference spelled either way cannot be rewritten to two targets.
+    Fail-closed, like ``_reject_ambiguous_renames`` -- which already refuses this
+    through the real entry point one stage earlier, so the guard protects the
+    next caller of ``_propagate`` (C-045's species map), not a hole in this one.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _propagate
+
+    payload = _variant_payload("gly", "CHEBI:15428", "gly")
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _propagate(payload, {"gly": "Glycine", "Gly": "Glycinate"})
+    assert excinfo.value.code == "PREFREEZE_RENAME_MAP_COLLISION"
+    assert payload["processes"]["reactions"][0]["inputs"] == ["gly"], "nothing was written"
+
+    # Two spellings of one source agreeing on one target is not a collision.
+    payload = _variant_payload("gly", "CHEBI:15428", "GLY")
+    _propagate(payload, {"gly": "Glycine", "Gly": "Glycine"})
+    assert payload["processes"]["reactions"][0]["inputs"] == ["Glycine"]
+
+
+def test_c050f_a_widened_match_still_stops_at_a_cross_kind_collision() -> None:
+    """A4: C-050e's synonym-only gate, reached by a VARIANT spelling for the first
+    time. At the base this aborted on the un-rewritten ``GLY`` and never got
+    there; reaching ``PREFREEZE_CONNECTIVITY_BROKEN`` proves the variant was
+    rewritten and that the gate behind propagation is not weakened.
+    """
+
+    payload = _variant_payload("gly", "CHEBI:15428", "GLY")
+    payload["entities"]["proteins"] = [_compound("Glycine receptor", synonyms=["GLY"])]
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _glycine_index())
+    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert payload == original

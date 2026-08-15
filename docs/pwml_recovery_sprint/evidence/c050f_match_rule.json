@@ -1,0 +1,110 @@
+{
+  "base_sha": "a81b1d65dfd35415f8ae94f91093980f316acf97",
+  "expected": {
+    "audit_clean": {
+      "base": "ok:no-raise",
+      "tip": "ok:no-raise"
+    },
+    "audit_stale_case_change": {
+      "base": "ok:no-raise",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "audit_stale_exact": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "audit_stale_variant": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "case_change_exact": {
+      "base": "ok:Glycine",
+      "tip": "ok:Glycine"
+    },
+    "case_change_variant": {
+      "base": "ok:GLYCINE",
+      "tip": "ok:Glycine"
+    },
+    "control_gly": {
+      "base": "ok:Glycine",
+      "tip": "ok:Glycine"
+    },
+    "punct_succinyl_CoA": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Succinyl coenzyme A"
+    },
+    "title_Gly": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Glycine"
+    },
+    "unrelated_dangling": {
+      "base": "ok:Serine",
+      "tip": "ok:Serine"
+    },
+    "upper_GLY": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Glycine"
+    }
+  },
+  "mismatches": {},
+  "observed": {
+    "audit_clean": {
+      "base": "ok:no-raise",
+      "tip": "ok:no-raise"
+    },
+    "audit_stale_case_change": {
+      "base": "ok:no-raise",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "audit_stale_exact": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "audit_stale_variant": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "PREFREEZE_RENAME_NOT_PROPAGATED"
+    },
+    "case_change_exact": {
+      "base": "ok:Glycine",
+      "tip": "ok:Glycine"
+    },
+    "case_change_variant": {
+      "base": "ok:GLYCINE",
+      "tip": "ok:Glycine"
+    },
+    "control_gly": {
+      "base": "ok:Glycine",
+      "tip": "ok:Glycine"
+    },
+    "punct_succinyl_CoA": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Succinyl coenzyme A"
+    },
+    "title_Gly": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Glycine"
+    },
+    "unrelated_dangling": {
+      "base": "ok:Serine",
+      "tip": "ok:Serine"
+    },
+    "upper_GLY": {
+      "base": "PREFREEZE_RENAME_NOT_PROPAGATED",
+      "tip": "ok:Glycine"
+    }
+  },
+  "probe": "C-050f-propagation-match-rule",
+  "rename_map_base": {
+    "case_change_exact": "{\"glycine\": \"Glycine\"}",
+    "case_change_variant": "{\"glycine\": \"Glycine\"}",
+    "control_gly": "{\"gly\": \"Glycine\"}",
+    "punct_succinyl_CoA": "{\"succinyl-CoA\": \"Succinyl coenzyme A\"}",
+    "title_Gly": "{\"gly\": \"Glycine\"}",
+    "unrelated_dangling": "{\"gly\": \"Glycine\"}",
+    "upper_GLY": "{\"gly\": \"Glycine\"}"
+  },
+  "rename_map_drift": {},
+  "rename_map_identical": true,
+  "result": "MEASURED",
+  "t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p05f-match-rule\\src\\t2pw\\__init__.py"
+}
