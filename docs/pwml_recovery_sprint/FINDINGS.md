@@ -425,3 +425,92 @@ as an explicit exclusion, to be confirmed or widened by separate ruling.
 Related, same fail-closed direction: the `HMDB` (upper-only) and `pubchem` (raw) normalizers are
 stricter than the `chebi`/`kegg` ones, so they can cause false **disagreement** → refusal, never
 false admission.
+
+---
+
+## P5-01 — `_propagate` rewrites by `_canonical` while `_assert_fully_propagated` audits by `_norm`
+
+**Severity: HIGH.** Found by **REV-050e** (finding F-2), measured through the real entry point.
+**Independently confirmed by the orchestrator by reading both call sites.** **Not** C-050e-caused.
+**Owner: C-050f**, sequenced after C-050d and **before C-045**.
+
+`src/t2pw/pwml/prefreeze_resolution.py` matches entity references with two different rules:
+
+* `_propagate` (`:721-734`) rewrites on `_canonical` (`:78-79`) — whitespace-collapse only,
+  **case- and punctuation-preserving**;
+* `_assert_fully_propagated` (`:737-750`) audits on `_norm` (`:82-84`) — `_canonical` **plus**
+  casefold **plus** punctuation-strip.
+
+**The detection set is strictly wider than the rewrite set.** A reference that matches a rename key
+under `_norm` but not under `_canonical` is therefore **never rewritten** and then **always detected
+as stale**, producing a hard `PREFREEZE_RENAME_NOT_PROPAGATED` on a reference that is **not
+genuinely dangling** — it resolves to the very entity being renamed. Measured through
+`run_prefreeze_resolution`:
+
+```
+inputs=['gly']           -> ok=True,  ref rewritten to 'Glycine'
+inputs=['GLY']           -> RAISED PREFREEZE_RENAME_NOT_PROPAGATED
+inputs=['Gly']           -> RAISED PREFREEZE_RENAME_NOT_PROPAGATED
+inputs=['succinyl CoA']  -> RAISED PREFREEZE_RENAME_NOT_PROPAGATED   (entity is 'succinyl-CoA')
+```
+
+**A second, quieter half.** The auditor's guard `if _norm(old) != _norm(new)` (`:740`) excludes
+**pure case-change renames from the audit entirely**. For `{"glycine": "Glycine"}` — which the real
+A9 payload already performs — a `glycine` reference is **neither rewritten nor flagged**, leaving a
+participant reference that disagrees with its own entity row. Same asymmetry, opposite symptom. A
+fix that repairs only the abort is incomplete.
+
+**Why it is HIGH rather than a style issue.** `PRODUCT_CONTRACT` §1 names a terminal blocker with no
+usable recovery unacceptable; merge rule 7 preserves incomplete-but-correct pathways rather than
+killing them; and **D-015 clause 6's "fail visibly on dangling references" does not authorize a
+false positive.** The abort discards an entire correct export because a name was spelled `GLY`.
+
+**Why it must land before C-045.** C-045 renames **species** through this same `_propagate`, and its
+*deterministic strain normalization* produces exactly the substantive-rename class
+(`_norm(old) != _norm(new)`) that triggers the abort — on names far more prone to case and
+punctuation variance than compounds (`E. coli` / `E coli`, strain qualifiers). Landing C-045 first
+would turn a latent abort into a likely one and entangle two causes in any future bisect.
+
+**Scope note.** This is pre-existing relative to C-050e's base, but **`prefreeze_resolution.py` does
+not exist in integration at all** — the module arrives with this stack. So this is a defect the
+stack would *introduce*, which is why it is fixed inside the stack rather than deferred after it.
+
+**Fix direction (indicated, to be earned by measurement in C-050f):** widen the **rewriter** to
+`_norm`, do **not** narrow the auditor. Narrowing would leave genuinely stale case-variant
+references undetected in the frozen payload — which *is* the dangling case D-015 clause 6 exists
+for. Widening must then prove: rename-map `_norm` collisions are refused explicitly rather than
+silently last-wins; C-050e's DEF-3 residual is unchanged; `AMBIGUOUS_REFERENCE` and
+`PREFREEZE_CONNECTIVITY_BROKEN` still fire; and the fixed-point loop still converges idempotently.
+
+---
+
+## P5-02 — C-050e's arm-2 mechanism note is over-specific
+
+**Severity: LOW.** Found by REV-050e (F-1). Card-caused, docstring only, no behavioural consequence.
+`tests/test_prefreeze_compound_resolution.py:529-532` attributes the arm-2 raise to
+`_connectivity_signature` resolving *location* refs. Measured: with the signature restricted to
+`processes` only, arm 2 **still** raises, because the process refs carry the same name. The named
+mechanism is correct — disabling `_connectivity_signature` entirely makes arm 2 pass and the row get
+rewritten — only the emphasis on the `element_locations` projection is too narrow. **Not worth a
+correction round.** Fold into any future edit of that docstring.
+
+## P5-03 — two C-050e G11 reports reference uncommitted helper scripts
+
+**Severity: INFORMATIONAL.** Found by REV-050e (F-3). `C-050e/01`, `03`, `04`, `05` reference
+`run_pytest.py` and `explore_crosskind.py` in the author's session scratchpad, so those reports are
+not replayable from the repo alone — the same class as **P4-02**. REV-050e reproduced their
+substance independently, and the sprint's own § S2 idiom is an uncommitted runner script, so this is
+consistent with practice. The card's substantive probe
+(`evidence/probe_c050e_offline_provenance.py`) **is** committed and **is** replayable.
+
+## P5-04 — `_LOCATION_MEMBER_FIELDS` treats a location row's `name` as an entity name
+
+**Severity: INFORMATIONAL.** Raised by C-050e's implementer, deferred, unowned.
+`prefreeze_resolution.py:167-172` lists `"name"` as an entity-reference field for all four
+`element_locations` buckets, so a location row's own `name` is walked as though it were an entity
+name rather than a location label. This is consistent with `canonical._parse_json`'s
+`(kind, "entity", "name")` reader, so it is **probably intended**. Recorded only because it broadens
+what `_propagate` can reach and **no test names it**. REV-050e measured the concrete case
+(`{protein: "ALAS2", name: "gly"}`): the `name` is rewritten but the result is **inert** — canonical
+`entity_locations` is unchanged (`protein|alas2` on both sides) and neither consumer reads `name`.
+No action; revisit only if a consumer starts reading it.
