@@ -16,9 +16,14 @@ an offline stub name index and a resolver reporting itself unavailable: no DB, n
 network, so nothing here is vacuous under P4-01. ``base`` is the module blob at
 :data:`BASE_SHA` loaded under a private name, so it imports the tip's
 ``compound_resolution`` -- everything except the module under test is held at the
-tip. The rename map each case produced is captured alongside (A5). The **new**
-``PREFREEZE_RENAME_MAP_COLLISION`` guard is labelled as new and has no base leg;
-its acceptance test is in ``tests/test_prefreeze_compound_resolution.py``.
+tip. The rename map each case produced is captured alongside (A5).
+
+Correction round 1 adds two arms. ``empty_norm_*`` is REV-050f **B-1**: ``_norm``
+keeps only ``[a-z0-9:+ ]``, so ``---`` and Greek alpha normalize to ``""``, and
+round 1 discarded such keys from the rewriter and the audit at once -- the row
+was renamed and the reference left behind, silent where the base was loud.
+``collision_*`` is **F-2**: ``PREFREEZE_RENAME_MAP_COLLISION`` is a **reachable**
+new terminal code, not a guard for future callers as round 1 claimed.
 """
 
 from __future__ import annotations
@@ -59,6 +64,27 @@ PROPAGATION: Tuple[Tuple[str, str, str, str, str, str], ...] = (
     ("case_change_exact", "glycine", "15428", "glycine", "ok:Glycine", "ok:Glycine"),
     ("case_change_variant", "glycine", "15428", "GLYCINE", "ok:GLYCINE", "ok:Glycine"),
     ("unrelated_dangling", "gly", "15428", "Serine", "ok:Serine", "ok:Serine"),
+    # B-1: names normalizing to "". Base rewrites them by _canonical then refuses
+    # the payload; round 1 returned 'ok:---' -- silent and dangling.
+    ("empty_norm_dashes", "---", "15428", "---",
+     "PREFREEZE_CONNECTIVITY_BROKEN", "PREFREEZE_CONNECTIVITY_BROKEN"),
+    ("empty_norm_alpha", "α", "15428", "α",
+     "PREFREEZE_CONNECTIVITY_BROKEN", "PREFREEZE_CONNECTIVITY_BROKEN"),
+    # F-1: the ONE class narrowed -- base's "" bucket made renaming '---' fatal
+    ("empty_norm_unrelated_ref", "---", "15428", "α",
+     "PREFREEZE_RENAME_NOT_PROPAGATED", "ok:α"),
+)
+
+#: F-2 -- ``(case, rows, base outcome, tip outcome)``. ``_reject_ambiguous_renames``
+#: groups by ``_norm(new)``, so it does NOT fire when two colliding sources target
+#: names differing only in case: the base applies the rename and leaves two
+#: references to one name downstream, which charter §3b says must be refused. The
+#: second row is the over-fire control -- one shared target is not a collision.
+COLLISION: Tuple[Tuple[str, Tuple[Tuple[str, str], ...], str, str], ...] = (
+    ("collision_case_only_targets", (("gly", "15428"), ("Gly", "9999")),
+     "ok:applied", "PREFREEZE_RENAME_MAP_COLLISION"),
+    ("collision_same_target", (("gly", "15428"), ("Gly", "15428")),
+     "ok:applied", "ok:applied"),
 )
 
 #: A3 -- ``(case, entity, stale spelling, rename map, base outcome, tip outcome)``.
@@ -91,6 +117,8 @@ class _StubNameIndex:
     _BY_CHEBI = {
         "15428": {"id": 78, "name": "Glycine", "matched_on": "chebi"},
         "15380": {"id": 79, "name": "Succinyl coenzyme A", "matched_on": "chebi"},
+        # Differs from 15428 only in case -- the F-2 collision needs exactly that.
+        "9999": {"id": 80, "name": "glycine", "matched_on": "chebi"},
     }
 
     def compound_canonical(self, **ids: Any) -> Optional[Dict[str, Any]]:
@@ -155,6 +183,19 @@ def _observe(module: Any) -> Tuple[Dict[str, str], Dict[str, str]]:
         except module.PrefreezeResolutionError as exc:
             outcomes[case] = str(exc.code)
 
+    for case, rows, _, _ in COLLISION:
+        payload = _payload(rows[0][0], rows[0][1], rows[0][0])
+        for name, chebi in rows[1:]:
+            payload["entities"]["compounds"].append(
+                {"name": name, "chebi_id": f"CHEBI:{chebi}",
+                 "mapping_meta": {"query": {"name": name}}})
+            payload["processes"]["reactions"][0]["inputs"].append(name)
+        try:
+            _run(module, payload)
+            outcomes[case] = "ok:applied"
+        except module.PrefreezeResolutionError as exc:
+            outcomes[case] = str(exc.code)
+
     return outcomes, maps
 
 
@@ -180,7 +221,7 @@ def main() -> int:
     tip_outcomes, tip_maps = _observe(tip)
 
     expected = {row[0]: {"base": row[-2], "tip": row[-1]}
-                for arm in (PROPAGATION, AUDIT) for row in arm}
+                for arm in (PROPAGATION, AUDIT, COLLISION) for row in arm}
     observed = {case: {"base": base_outcomes.get(case), "tip": tip_outcomes.get(case)}
                 for case in expected}
     mismatches = {case: {"expected": want, "observed": observed[case]}
@@ -204,7 +245,8 @@ def main() -> int:
     RESULT_PATH.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"T2PW: {t2pw.__file__}")
     for case, seen in observed.items():
-        print(f"  {case:24s} base={seen['base']!r:42s} tip={seen['tip']!r}")
+        # ascii(): a name may be non-ASCII and the Windows console is cp1252.
+        print(f"  {case:26s} base={ascii(seen['base']):44s} tip={ascii(seen['tip'])}")
     print(f"RESULT: {result['result']}  mismatches={len(mismatches)}  "
           f"rename_map_identical={result['rename_map_identical']}  -> {RESULT_PATH.name}")
     return 0 if ok else 1

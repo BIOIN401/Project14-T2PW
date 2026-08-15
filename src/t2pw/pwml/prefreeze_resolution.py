@@ -713,28 +713,52 @@ def _preserve_original_names(
     summary["aliases_preserved"] = preserved
 
 
-def _rename_targets(rename_map: Dict[str, str]) -> Dict[str, str]:
-    """``_norm(old) -> new``, refusing a map whose keys collide under ``_norm``.
+def _match_key(value: Any) -> str:
+    """The one key a reference and a rename source match on, in both directions.
 
-    Two keys that differ only in case or punctuation are the **same** reference to
-    everything that reads the result -- ``_alias_index`` here,
-    ``canonical._Graph.resolve`` and ``ir.resolve_entity`` downstream are all
-    ``_norm``-keyed -- so a silent last-wins would rewrite references meant for the
-    other one. Like :func:`_reject_ambiguous_renames`, this refuses instead.
+    ``_norm`` wherever it says anything, ``_canonical`` behind a sentinel
+    wherever it does not. ``_norm`` keeps only ``[a-z0-9:+ ]``, so a name written
+    **entirely** in other characters -- ``---``, ``??``, Greek, CJK -- normalizes
+    to ``""``. Bucketing those under ``""`` merges names that are not the same
+    name; *discarding* them leaves them neither rewritten nor audited, so the row
+    is renamed, its reference left behind, and the frozen payload carries a
+    reference resolving to nothing on reload (``PRODUCT_CONTRACT`` §5, D-015
+    clause 3). The sentinel keeps them matchable *and* distinct, and cannot
+    collide with a ``_norm`` result.
+
+    **Both** :func:`_rename_targets` and :func:`_assert_fully_propagated` key on
+    this, so the rewrite set and the detection set are one set by construction --
+    this card's thesis, broken by the original defect in one direction and by
+    C-050f round 1 in the other.
+    """
+
+    return _norm(value) or "\x00" + _canonical(value)
+
+
+def _rename_targets(rename_map: Dict[str, str]) -> Dict[str, str]:
+    """``_match_key(old) -> new``, refusing a map whose sources collide.
+
+    Two sources sharing a match key are the **same** reference to everything that
+    reads the result -- ``_alias_index`` here, ``canonical._Graph.resolve`` and
+    ``ir.resolve_entity`` downstream -- so a silent last-wins would rewrite
+    references meant for the other one. Like :func:`_reject_ambiguous_renames`,
+    this refuses instead -- and it is **reachable**, because that function groups
+    by ``_norm(new)`` and so misses targets differing only in case (F-2).
     """
 
     targets: Dict[str, str] = {}
     for old, new in rename_map.items():
-        key = _norm(old)
-        if not key:
+        if not _canonical(old):
             continue
+        key = _match_key(old)
         previous = targets.get(key)
         if previous is not None and _canonical(previous) != _canonical(new):
             raise PrefreezeResolutionError(
                 "PREFREEZE_RENAME_MAP_COLLISION",
-                f"rename sources normalizing to {key!r} target both {previous!r} and "
-                f"{new!r}; a reference matching both cannot be rewritten unambiguously",
-                key=key, targets=sorted({previous, new}),
+                f"rename sources matching on {key.lstrip(chr(0))!r} target both "
+                f"{previous!r} and {new!r}; a reference matching both cannot be "
+                "rewritten unambiguously",
+                key=key.lstrip(chr(0)), targets=sorted({previous, new}),
             )
         targets[key] = new
     return targets
@@ -747,7 +771,7 @@ def _propagate(
 ) -> List[Tuple[str, str, str]]:
     """Rewrite every participant reference named by the map. Returns the updates.
 
-    **Matched by ``_norm``, not ``_canonical``.** :func:`_assert_fully_propagated`
+    **Matched by :func:`_match_key`, not ``_canonical``.** The audit that follows
     has always detected staleness by ``_norm``, so a rewriter keyed on
     ``_canonical`` made the detection set *strictly wider* than the rewrite set:
     a reference spelled ``GLY`` for a compound renamed from ``gly`` was never
@@ -769,7 +793,7 @@ def _propagate(
         return updates
     for ref in _iter_refs(payload):
         current = ref.get()
-        target = targets.get(_norm(current))
+        target = targets.get(_match_key(current))
         if target is None or target == current:
             continue
         if undo is not None:
@@ -782,24 +806,31 @@ def _propagate(
 def _assert_fully_propagated(payload: Dict[str, Any], rename_map: Dict[str, str]) -> None:
     """No reference may still normalize to a name that was renamed away.
 
-    A reference is stale when it normalizes onto a rename source but is **not
-    spelled as that source's target**. The previous form skipped every rename
-    whose ``_norm`` did not move -- i.e. every pure case change -- so a
-    ``GLYCINE`` reference left behind by ``glycine -> Glycine`` was neither
-    rewritten nor flagged.
+    A reference is stale when it matches a rename source under
+    :func:`_match_key` and is **not spelled as that source's target**. Keying on
+    ``_match_key`` makes this set identical to :func:`_propagate`'s rewrite set,
+    so nothing can be rewritten without being auditable, or matched by the audit
+    without being rewritable.
 
-    This is a strict **superset**, never a narrowing: where
-    ``_norm(old) != _norm(new)`` the two agree exactly, because a reference
-    normalizing onto ``old`` cannot then be spelled as ``new``. D-015 clause 6
+    This **adds** the pure case changes the old ``_norm(old) != _norm(new)``
+    guard skipped. It is **not** the strict superset round 1 claimed: it
+    **removes exactly one class, deliberately.** The old form bucketed every
+    empty-``_norm`` name under ``""``, so renaming ``---`` made an *unrelated*
+    Greek-alpha reference fatal in a message naming ``---`` -- a false positive
+    on a reference the rename never touched. Such a reference is dangling on its
+    own account and is invisible here exactly as ``Serine`` is, which is the
+    standing deferred finding rather than this function's subject. The renamed
+    name itself is still matched, rewritten and audited (B-1), and D-015 clause 6
     keeps every genuinely stale reference fatal.
     """
 
-    stale_norms = {_norm(old): (old, new) for old, new in rename_map.items() if _norm(old)}
-    if not stale_norms:
+    stale = {_match_key(old): (old, new)
+             for old, new in rename_map.items() if _canonical(old)}
+    if not stale:
         return
     for ref in _iter_refs(payload):
         current = ref.get()
-        hit = stale_norms.get(_norm(current))
+        hit = stale.get(_match_key(current))
         if hit is not None and _canonical(current) != _canonical(hit[1]):
             raise PrefreezeResolutionError(
                 "PREFREEZE_RENAME_NOT_PROPAGATED",

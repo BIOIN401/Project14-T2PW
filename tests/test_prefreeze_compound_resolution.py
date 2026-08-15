@@ -1022,3 +1022,48 @@ def test_c050f_a_widened_match_still_stops_at_a_cross_kind_collision() -> None:
         _run(payload, _glycine_index())
     assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
     assert payload == original
+
+
+@pytest.mark.parametrize("name", ["---", "α", "-", "??"])
+def test_c050f_an_empty_norm_rename_source_is_matched_not_discarded(name: str) -> None:
+    """B-1 (REV-050f): a name normalizing to "" must not fall out of BOTH sets.
+
+    ``_norm`` keeps only ``[a-z0-9:+ ]``, so these normalize to ``""``. Round 1
+    discarded such keys from the rewriter and the audit at once, so the row was
+    renamed while its reference was left behind: ``applied: True`` with a
+    reference resolving to nothing on reload (``PRODUCT_CONTRACT`` section 5,
+    non-atomic under D-015 clause 3). Two assertions, because neither alone
+    catches the round-1 shape: the reference is **matched and rewritten**, and
+    end to end the payload is still **refused**.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _propagate
+
+    direct = _variant_payload(name, "CHEBI:15428", name)
+    assert _propagate(direct, {name: "Glycine"}), "the reference was not matched"
+    assert direct["processes"]["reactions"][0]["inputs"] == ["Glycine"]
+
+    payload = _variant_payload(name, "CHEBI:15428", name)
+    original = deepcopy(payload)
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _glycine_index())
+    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert payload == original, "nothing may be committed on a refusal"
+
+
+def test_c050f_the_rewrite_set_and_the_detection_set_are_one_set() -> None:
+    """The invariant B-1 broke, asserted directly rather than by example.
+
+    Both key on ``_match_key``, so this compares the two key sets over a map
+    spanning both classes: ordinary names, a pure case change, and two that
+    normalize to ``""``.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _canonical, _match_key, _rename_targets
+
+    rename = {"gly": "Glycine", "glycine": "Glycine", "---": "Serine", "α": "Alanine"}
+    rewrite_keys = set(_rename_targets(rename))
+    detect_keys = {_match_key(old) for old in rename if _canonical(old)}
+
+    assert rewrite_keys == detect_keys
+    assert len(rewrite_keys) == 4, "the empty-_norm names must not share one bucket"
