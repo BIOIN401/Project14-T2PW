@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pytest
@@ -186,7 +187,13 @@ def test_new_acceptance_every_participant_reference_is_propagated() -> None:
 
 
 def test_new_acceptance_propagation_is_all_or_nothing() -> None:
-    """A6: a failure must not leave a half-propagated payload behind."""
+    """A6: a failure must not leave a half-propagated payload behind.
+
+    **C-050h moved the code here, deliberately**; the subject is unchanged. A
+    second row already answers to the rename target, so the rename would put two
+    rows on one canonical name, until now reported as the diff-string
+    ``PREFREEZE_CONNECTIVITY_BROKEN`` rather than as a cause.
+    """
 
     payload = _payload()
     # A second compound already answers to the rename target, so redirecting
@@ -197,7 +204,7 @@ def test_new_acceptance_propagation_is_all_or_nothing() -> None:
     with pytest.raises(PrefreezeResolutionError) as excinfo:
         _run(payload, _glycine_index())
 
-    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert excinfo.value.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
     assert payload == original, "the payload was mutated despite a named failure"
 
 
@@ -1175,6 +1182,10 @@ def test_c050g_new_acceptance_the_collapsed_spellings_are_recorded() -> None:
     Recorded in the shape the module already uses for such facts --
     ``aliases_preserved``, ``identity_projected``: a list of flat dicts on the
     compound summary. No new report schema.
+
+    **Unchanged by C-050h, deliberately**: neither row is referenced, so no
+    connectivity is ambiguous and C-050h does not fire. See
+    ``..._an_unreferenced_created_duplicate_is_not_refused`` for that boundary.
     """
 
     payload = {
@@ -1226,6 +1237,12 @@ def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> No
     **false** diagnosis with a **true** one, not to produce PWML. That is the
     ratified position, and this test is where a future reader meets it rather
     than rediscovering it from a digest that moved.
+
+    **C-050h finished the sentence.** The refusal is unchanged and still
+    ratified (D-034 clause 1); the diagnosis is now
+    ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``, naming the rows and spellings. The
+    "separate card" this docstring anticipated is C-050h, which D-036 clause 2
+    scopes to the refusal half only.
     """
 
     payload = {
@@ -1244,7 +1261,7 @@ def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> No
     with pytest.raises(PrefreezeResolutionError) as excinfo:
         _run(payload, index)
 
-    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert excinfo.value.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
     assert payload == original, "nothing may be committed on a refusal"
 
 
@@ -1260,8 +1277,363 @@ def test_c050g_new_acceptance_a_collision_with_an_untouched_row_is_invisible_her
 
     This is the shape that stops ``PMC12444477…/strict`` at production defaults.
     Recorded, not fixed: naming that condition is outside this card's boundary.
+
+    **Still true after C-050h, deliberately**: it supplies its own detection
+    rather than widening this guard, so ``_reject_ambiguous_renames`` stays
+    structurally blind exactly as D-034 clause 5 records, and this pins it.
     """
 
     before = ["glycerol-3-phosphate", "sn-glycerol 3-phosphate"]
     after = ["glycerol-3-phosphate", "Glycerol 3-phosphate"]
     assert _guard({"sn-glycerol 3-phosphate": "Glycerol 3-phosphate"}, before, after) is None
+
+
+# --------------------------------------------------------------------------
+# C-050h -- duplicate canonical rows get a NAMED refusal (D-035 clause 6,
+# D-036 clause 1). The consolidation engine (D-035 clauses 2-5) is NOT built;
+# D-036 clause 2 defers it, no committed group clearing D-035 clause 3.
+#
+# G9, per sub-change. **CORRECTION**: where a created duplicate group is visible
+# in the connectivity signature the stop code moves
+# ``PREFREEZE_CONNECTIVITY_BROKEN`` -> ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``, so
+# every CORRECTION test FAILS at base b5fb82aa on the code string; nothing rests
+# on a symbol being absent. **NEW ACCEPTANCE**: by-name tests for four structural
+# codes that had none, and two over-fire controls. **Nothing here newly refuses a
+# payload that exported at base** -- the only behaviour that moves is the NAME of
+# a refusal already happening, three (leg, configuration) pairs on one leg over
+# the whole committed corpus, in ``test_compound_resolution_extraction``'s golden.
+# --------------------------------------------------------------------------
+
+DUPLICATE_ROWS = "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
+
+#: The D-034 leg, committed. Rows 20 / 36 / 38 are three spellings the offline
+#: index sends to one canonical name, and row 20 is not in the rename map -- the
+#: shape D-034 clause 5 records ``_reject_ambiguous_renames`` as blind to.
+D034_LEG = (
+    Path(__file__).resolve().parents[1]
+    / "runs/2026-07-28_0919/papers"
+    / "PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json"
+)
+
+
+def _g3p_payload(*, referenced: bool) -> Dict[str, Any]:
+    """The D-034 leg's shape, minimally: row 0 keeps ``glycerol-3-phosphate`` and
+    row 1 canonicalizes onto its ``_norm``, so the survivor is a row no rename
+    touches and neither half of the old guard can see."""
+
+    return {
+        "entities": {"compounds": [
+            _compound("glycerol-3-phosphate"),
+            _compound("sn-glycerol 3-phosphate", "CHEBI:15428",
+                      mapped_ids={"kegg": "C00093"}),
+        ]},
+        "processes": {"reactions": [{
+            "name": "R1",
+            "inputs": ["glycerol-3-phosphate"] if referenced else [],
+            "outputs": [],
+        }]},
+    }
+
+
+def _g3p_index() -> _StubNameIndex:
+    return _StubNameIndex(
+        {"15428": {"id": 78, "name": "Glycerol 3-phosphate", "matched_on": "chebi"}})
+
+
+def _lipid_a_payload() -> Dict[str, Any]:
+    # D-035 clause 7's reference pair, sent to one target by a canned resolver.
+    return {
+        "entities": {"compounds": [
+            _compound("PEtN-lipid A", "CHEBI:1", mapped_ids={"kegg": "C21995"}),
+            _compound("modified Lipid A", "CHEBI:2", mapped_ids={"kegg": "C22003"}),
+        ]},
+        "processes": {"reactions": [
+            {"name": "R1", "inputs": ["PEtN-lipid A"], "outputs": ["modified Lipid A"]},
+        ]},
+    }
+
+
+def _lipid_a_index() -> _StubNameIndex:
+    return _StubNameIndex({
+        "1": {"id": 78, "name": "Lipid A", "matched_on": "chebi"},
+        "2": {"id": 78, "name": "Lipid A", "matched_on": "chebi"},
+    })
+
+
+def test_c050h_correction_the_code_is_named_and_names_the_rows_and_spellings() -> None:
+    """CORRECTION -- fails at b5fb82aa, which raises ``PREFREEZE_CONNECTIVITY_BROKEN``.
+
+    The refusal is neither new nor lifted (D-034 clause 1, ratified); what changes
+    is that the operator is told *what* refused. The old diagnosis carried
+    ``first_divergence`` -- two resolved-signature strings around the first
+    differing byte -- from which no reviewer can read which rows collided, with
+    which spellings, or what accessions they carry (D-035 clause 6).
+    """
+
+    payload = _g3p_payload(referenced=True)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _g3p_index())
+
+    assert excinfo.value.code == DUPLICATE_ROWS
+    details = excinfo.value.details
+    assert details["canonical_key"] == "glycerol 3 phosphate"
+    assert details["reason"] == "equivalence_not_proven"
+    assert details["canonicalized_rows"] == [1]
+    assert details["rows"] == [
+        {"row": 0, "name_before": "glycerol-3-phosphate",
+         "name_after": "glycerol-3-phosphate", "canonicalized": False,
+         "identifiers": {}},
+        # ``mapped_ids`` and the top-level identifier fields both surface: the
+        # accession that would settle whether these are one molecule can be in
+        # either place.
+        {"row": 1, "name_before": "sn-glycerol 3-phosphate",
+         "name_after": "Glycerol 3-phosphate", "canonicalized": True,
+         "identifiers": {"kegg": "C00093", "chebi_id": "CHEBI:15428"}},
+    ]
+
+
+def test_c050h_correction_the_graph_is_intact_and_no_pwml_is_emitted() -> None:
+    """CORRECTION. Deliverable clauses 1 and 2, asserted together.
+
+    ``run_prefreeze_resolution``, the whole-stage entry point both production
+    export paths call, **raises** rather than returning a report, so no caller
+    carries an ambiguous payload on to ``freeze_canonical_payload`` or
+    ``build_pwml_ir``; and the payload is byte-identical afterwards.
+    """
+
+    payload = _g3p_payload(referenced=True)
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        run_prefreeze_resolution(
+            payload, strict_db=False, db_resolver=_OfflineResolver(),
+            name_index=_g3p_index(),
+        )
+
+    assert excinfo.value.code == DUPLICATE_ROWS
+    assert payload == original, "nothing may be committed on a refusal"
+
+
+def test_c050h_correction_the_refusal_is_idempotent() -> None:
+    """CORRECTION. A refusal leaving the payload in a state where the second
+    attempt reported something else would make the diagnosis unreproducible."""
+
+    payload = _g3p_payload(referenced=True)
+    codes = []
+    for _ in range(2):
+        with pytest.raises(PrefreezeResolutionError) as excinfo:
+            _run(payload, _g3p_index())
+        codes.append(excinfo.value.code)
+
+    assert codes == [DUPLICATE_ROWS, DUPLICATE_ROWS]
+
+
+def test_c050h_correction_the_d034_leg_still_refuses_on_committed_data() -> None:
+    """CORRECTION, on the real committed leg rather than a fixture.
+
+    D-034 clause 1 ratified this refusal and D-036 did not lift it: the census
+    measured the ``glycerol-3-phosphate`` group as NOT clearing D-035 clause 3
+    (KEGG ``C03189`` against ``C00093``, sub-test 3b), so the leg must still
+    produce no PWML and only the diagnosis improves. The identifiers decide
+    nothing -- they let a reviewer see that rows 20 and 36 disagree.
+    """
+
+    payload = json.loads(D034_LEG.read_text(encoding="utf-8"))
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        run_prefreeze_resolution(
+            payload, strict_db=True, db_resolver=_OfflineResolver(),
+            name_index=default_name_index(),
+        )
+
+    assert excinfo.value.code == DUPLICATE_ROWS
+    assert payload == original
+    details = excinfo.value.details
+    assert details["canonical_key"] == "glycerol 3 phosphate"
+    assert [item["row"] for item in details["rows"]] == [20, 36, 38]
+    assert [item["name_before"] for item in details["rows"]] == [
+        "glycerol-3-phosphate", "sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"]
+    assert details["canonicalized_rows"] == [36, 38]
+    assert details["rows"][0]["identifiers"]["kegg"] == "C03189"
+    assert details["rows"][1]["identifiers"]["kegg"] == "C00093"
+
+
+def test_c050h_new_acceptance_a_genuinely_distinct_pair_still_refuses() -> None:
+    """NEW ACCEPTANCE -- D-035 clause 7's reference shape, and the attack surface.
+
+    ``PEtN-lipid A`` and ``modified Lipid A`` (KEGG ``C21995`` / ``C22003``) never
+    coalesce, and never reach the new code: two rename **sources** sharing a target
+    is ``_reject_ambiguous_renames``' case, and the new check runs after it so
+    ``AMBIGUOUS_RENAME_TARGET`` keeps its name where it already fires. This card
+    compares no identifiers to decide anything, so no input exists on which a
+    distinct pair could be argued into a merge (**F-043**).
+    """
+
+    payload = _lipid_a_payload()
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _lipid_a_index())
+
+    assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
+    assert payload == original
+
+
+def test_c050h_new_acceptance_ambiguous_rename_target_cannot_reach_an_export() -> None:
+    """NEW ACCEPTANCE -- D-035 clause 8, stated behaviourally.
+
+    The clause permits converting ``AMBIGUOUS_RENAME_TARGET`` into a structured
+    review-required result; this card does **not**, and this test is what fails if
+    a later one does it without re-reading the clause. The stage entry point
+    raises, so no caller gets a report to mistake for a completed export.
+    """
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        run_prefreeze_resolution(
+            _lipid_a_payload(), strict_db=False, db_resolver=_OfflineResolver(),
+            name_index=_lipid_a_index(),
+        )
+
+    assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
+
+
+def test_c050h_new_acceptance_a_pre_existing_duplicate_group_is_not_refused_here() -> None:
+    """NEW ACCEPTANCE, and the first over-fire control.
+
+    ``lipid IV_A`` and ``lipid IV A`` share a ``_norm`` name before anything
+    canonicalizes, so this stage created nothing and has nothing to refuse: the
+    group is **F-039**'s (``ir._dedupe_named_rows``, post-freeze, first-wins,
+    C-050i). Firing here would refuse legs on a defect this card does not own.
+    """
+
+    payload = {
+        "entities": {"compounds": [
+            _compound("lipid IV_A"), _compound("lipid IV A"), _compound("gly", "CHEBI:15428"),
+        ]},
+        "processes": {"reactions": [
+            {"name": "R1", "inputs": ["lipid IV_A", "gly"], "outputs": []},
+        ]},
+    }
+
+    summary = _run(payload, _glycine_index())
+
+    assert summary["applied"] is True
+    assert [row["name"] for row in payload["entities"]["compounds"]] == [
+        "lipid IV_A", "lipid IV A", "Glycine"]
+
+
+def test_c050h_new_acceptance_an_unreferenced_created_duplicate_is_not_refused() -> None:
+    """NEW ACCEPTANCE, the second over-fire control, and an honest open gap.
+
+    Identical to the refusing fixture except that nothing references the colliding
+    name. It exports, exactly as at b5fb82aa -- the connectivity signature does not
+    move, so this is not the condition D-036 clause 1 chartered a name for -- and
+    ``ir._dedupe_named_rows`` then coalesces the rows first-wins after the freeze:
+    **F-039**, live, **C-050i's**, which D-036's "third option" declined to fold in
+    here. An earlier round of this card did refuse here and was withdrawn on
+    measurement: it newly refused two parametrizations of
+    ``test_prefreeze_third_export_seam`` A3, whose ``mixed`` population is
+    ``Glycine`` beside ``gly`` and whose subject is DB reachability. Refusing a
+    payload D-036 did not rule on, inside another card's fixture, is wider than
+    this card is chartered for.
+    """
+
+    payload = _g3p_payload(referenced=False)
+
+    summary = _run(payload, _g3p_index())
+
+    assert summary["applied"] is True
+    assert [row["name"] for row in payload["entities"]["compounds"]] == [
+        "glycerol-3-phosphate", "Glycerol 3-phosphate"]
+
+
+# --------------------------------------------------------------------------
+# NEW ACCEPTANCE -- the four structural codes that had no by-name test anywhere
+# in the suite before this card. Each asserts the code a real caller would see
+# and that the payload survived, which is the property the codes exist to give.
+# --------------------------------------------------------------------------
+
+
+def test_c050h_new_acceptance_ambiguous_rename_source_by_name() -> None:
+    """One spelling, two canonical answers. The rename map cannot be built."""
+
+    payload = {
+        "entities": {"compounds": [_compound("gly", "CHEBI:1"), _compound("gly", "CHEBI:2")]},
+        "processes": {"reactions": [{"name": "R1", "inputs": ["gly"], "outputs": []}]},
+    }
+    original = deepcopy(payload)
+    index = _StubNameIndex({
+        "1": {"id": 78, "name": "Glycine", "matched_on": "chebi"},
+        "2": {"id": 79, "name": "Serine", "matched_on": "chebi"},
+    })
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, index)
+
+    assert excinfo.value.code == "AMBIGUOUS_RENAME_SOURCE"
+    assert excinfo.value.details["name"] == "gly"
+    assert payload == original
+
+
+def _one_row_forever(rows: List[Dict[str, Any]], **_kwargs: Any) -> List[Dict[str, Any]]:
+    # Idempotent and short: converges, on the wrong number of rows.
+    return [deepcopy(rows[0])]
+
+
+def _never_settles(rows: List[Dict[str, Any]], _tick: Any = iter(range(1000)),
+                   **_kwargs: Any) -> List[Dict[str, Any]]:
+    # Different every pass, so the fixed-point hunt runs out of passes.
+    return [{**deepcopy(row), "confidence": next(_tick)} for row in rows]
+
+
+@pytest.mark.parametrize("stub,code,detail", [
+    (_one_row_forever, "PREFREEZE_ROW_COUNT_CHANGED", {"expected": 2, "actual": 1}),
+    (_never_settles, "PREFREEZE_RESOLUTION_UNSTABLE", {"passes": 4}),
+])
+def test_c050h_new_acceptance_the_resolution_seam_codes_by_name(
+    monkeypatch: Any, stub: Any, code: str, detail: Dict[str, Any],
+) -> None:
+    """D-015 clause 5 (row count) and the fixed-point bound, driven through the
+    module's own seam because no payload reaches either -- which is exactly why
+    neither had a by-name test."""
+
+    from t2pw.pwml import prefreeze_resolution
+
+    monkeypatch.setattr(prefreeze_resolution, "_resolve_compound_rows", stub)
+    payload = _payload()
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _glycine_index())
+
+    assert excinfo.value.code == code
+    assert {key: excinfo.value.details[key] for key in detail} == detail
+    assert payload == original
+
+
+def test_c050h_new_acceptance_prefreeze_commit_diverged_by_name(monkeypatch: Any) -> None:
+    """The undo log, exercised. Stage 4 re-reads the LIVE payload's connectivity,
+    compares it with the staged payload it approved, and rolls the rewrite back if
+    they disagree. Reached by perturbing the third signature reading -- the live
+    one, the only call the staged validation cannot see."""
+
+    from t2pw.pwml import prefreeze_resolution
+
+    real = prefreeze_resolution._connectivity_signature
+    calls = iter(range(1000))
+
+    def _perturb_the_live_reading(payload: Dict[str, Any], index: Any) -> str:
+        return real(payload, index) + ("#divergent" if next(calls) == 2 else "")
+
+    monkeypatch.setattr(
+        prefreeze_resolution, "_connectivity_signature", _perturb_the_live_reading)
+    payload = _payload()
+    original = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, _glycine_index())
+
+    assert excinfo.value.code == "PREFREEZE_COMMIT_DIVERGED"
+    assert payload == original, "the undo log did not restore the live payload"

@@ -422,6 +422,11 @@ def resolve_compounds_prefreeze(
 
     if rename_map:
         _reject_ambiguous_renames(rename_map, before_names, after_names, primary_before, summary)
+    # Called unconditionally, and AFTER the guard above: a canonicalization that
+    # gives a name to a row that had none needs no rename-map entry to create a
+    # duplicate, and ``AMBIGUOUS_RENAME_TARGET`` must keep its own name where it
+    # already fires (D-035 clause 8).
+    _reject_duplicate_canonical_rows(payload, rename_map, before_names, after_names, rows)
 
     # ---- stage 3: propagate on a staged copy of the whole payload ----------
     staged_payload = deepcopy(payload)
@@ -788,6 +793,115 @@ def _reject_ambiguous_renames(
                 f"unambiguously redirected to {new!r}",
                 name=old, target=new, conflicting_entities=sorted(rogue),
             )
+
+
+#: Identifier keys copied into the duplicate-row diagnostic. **Diagnostic only,
+#: never a decision input** -- comparing them would be the engine D-036 clause 2
+#: defers. Carried because D-035 clause 6 requires "enough diagnostic information
+#: for review", and read from the **pre-resolution** rows per F-043: a resolver
+#: can stamp one stub id onto two distinct compounds.
+_DUPLICATE_ROW_ID_KEYS: Tuple[str, ...] = (
+    "pathbank_compound_id", "pw_compound_id", "pathwhiz_id",
+    "kegg_id", "chebi_id", "hmdb_id", "pubchem_cid",
+)
+
+
+def _reject_duplicate_canonical_rows(
+    payload: Dict[str, Any],
+    rename_map: Dict[str, str],
+    before_names: Sequence[str],
+    after_names: Sequence[str],
+    rows: Sequence[Any],
+) -> None:
+    """D-035 clause 6 / D-036 clause 1 -- the refusal path, named.
+
+    Refuses when canonicalization leaves **two or more compound rows sharing one
+    ``_norm`` name**, at least one of them did not already have that name, and a
+    participant reference lands on that name.
+
+    ``_norm`` defines the group and nothing else does (**F-040 as corrected**):
+    ``entity_by_name`` (``ir.py:1105-1117``) and ``resolve_entity``
+    (``ir.py:1371``) key on it, so it alone decides which row a reference in the
+    frozen payload reaches. ``._norm`` here is a byte-identical duplicate of
+    ``ir._norm``, deliberately, so the two do not compete;
+    ``process_normalizer._normalize`` / ``._norm_text`` disagree with both and are
+    incomparable rather than coarser.
+
+    **Detection is this function's own** (D-034 clause 5).
+    :func:`_reject_ambiguous_renames` groups only over ``rename_map`` *sources*,
+    so it is structurally blind to a target landing on a row that is not itself
+    renamed; it is neither modified here nor relied on.
+
+    **What it deliberately does not do.**
+
+    * It does **not** consolidate: D-035 clauses 2-5 are deferred by **D-036
+      clause 2**, no committed group clearing clause 3.
+    * It does **not** compare identifiers to decide. Identifier equality is a
+      measurably unsafe trigger (**F-043**: ``PG`` / ``PG phosphate`` / ``(PGP)``
+      all carry ``pathbank_compound_id`` 193, which is UDP-glucose).
+    * It does **not** fire on a collision the payload already carried, nor on a
+      created group **no reference reaches**. D-035 clause 6's subject is "PWML
+      with ambiguous connectivity" and D-036 clause 1 charters a *name* for the
+      condition that was already refusing. Both excluded shapes export today and
+      are then coalesced first-wins by ``ir._dedupe_named_rows`` -- **F-039**,
+      routed as **C-050i**, which D-036's "third option" declined to fold in
+      here. Measured cost of that boundary: without it, two parametrizations of
+      ``test_prefreeze_third_export_seam`` A3 newly refuse.
+    * An empty ``_norm`` is not a group -- bucketing names written entirely
+      outside ``[a-z0-9:+ ]`` together would merge names that are not the same
+      name, as :func:`_match_key` already records.
+
+    Fail-closed and total: only the staged copy has been resolved by this point,
+    so the payload is untouched and no PWML comes out of an ambiguous one.
+    """
+
+    groups: Dict[str, List[int]] = {}
+    for index, after in enumerate(after_names):
+        key = _norm(after)
+        if key:
+            groups.setdefault(key, []).append(index)
+
+    # Where every reference WILL point once the rename is applied, via the same
+    # ``_rename_targets`` / ``_match_key`` pair ``_propagate`` rewrites with.
+    targets = _rename_targets(rename_map)
+    referenced = {
+        _norm(targets.get(_match_key(current), current))
+        for current in (ref.get() for ref in _iter_refs(payload))
+    }
+
+    for key, members in sorted(groups.items()):
+        if len(members) < 2 or key not in referenced:
+            continue
+        arrived = [index for index in members if _norm(before_names[index]) != key]
+        if not arrived:
+            continue
+        detail = []
+        for index in members:
+            row = _safe_dict(rows[index] if index < len(rows) else None)
+            # ``mapped_ids`` first, then the top-level projection, which wins on
+            # the one key both carry. The D-034 leg's decisive KEGG disagreement,
+            # ``C03189`` against ``C00093``, is in ``mapped_ids`` and nowhere else.
+            merged = {**_safe_dict(row.get("mapped_ids")),
+                      **{f: row[f] for f in _DUPLICATE_ROW_ID_KEYS if f in row}}
+            identifiers = {f: v for f, v in merged.items() if v not in (None, "")}
+            detail.append({
+                "row": index,
+                "name_before": before_names[index],
+                "name_after": after_names[index],
+                "canonicalized": index in arrived,
+                "identifiers": identifiers,
+            })
+        raise PrefreezeResolutionError(
+            "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
+            f"canonicalization puts {len(members)} compound rows on the single "
+            f"canonical name {key!r} ({[item['name_before'] for item in detail]}); "
+            "consolidating them would require proof that they are the same "
+            "biological entity, which this stage does not perform",
+            canonical_key=key,
+            reason="equivalence_not_proven",
+            rows=detail,
+            canonicalized_rows=list(arrived),
+        )
 
 
 def _preserve_original_names(
@@ -1346,6 +1460,7 @@ def run_prefreeze_resolution(
     Raising is reserved for the structural failures
     :func:`resolve_compounds_prefreeze` already raises directly --
     ``AMBIGUOUS_RENAME_SOURCE``, ``AMBIGUOUS_REFERENCE``,
+    ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``,
     ``PREFREEZE_CONNECTIVITY_BROKEN``, ``PREFREEZE_RENAME_NOT_PROPAGATED`` -- which
     are D-015 clause 6's actual subject: a payload whose references cannot be
     resolved unambiguously. An identity the PathBank DB was never reachable to
