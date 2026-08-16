@@ -681,8 +681,21 @@ def _canonicalize_species_offline(
             # and ``_db_id`` reads the PathBank id through ``_first_nonempty``,
             # which also looks inside ``mapping_meta``/``mapped_ids``. A raw
             # payload row has had neither done to it yet.
+            #
+            # F-6, recorded not fixed: this ``or`` gives ``taxonomy_id``
+            # precedence, while ``_component_record`` assigns both spellings in
+            # list order and so lets ``taxonomy-id`` win on a row carrying both.
+            # It selects which id is *reported*, never whether a rename applies,
+            # and no committed payload carries both spellings.
             taxonomy_id=record.get("taxonomy_id") or record.get("taxonomy-id"),
             pathbank_species_id=_first_nonempty(record, SPECIES_DB_KEYS),
+            # F-5, recorded not fixed: ``name`` is accepted and ignored by
+            # ``PathwhizNameIndex.species_canonical`` (reserved for a future
+            # name-based lookup). The pre-freeze equivalence argument for rows
+            # hydrated from ``biological_states`` -- they carry only a name, so
+            # they always classified ``novel`` -- rests on that. Should the index
+            # ever answer on ``name``, those rows become renameable and the
+            # equivalence needs re-measuring.
             name=record.get("name"),
         )
         canonical = _canonical(hit.get("name")) if hit else ""

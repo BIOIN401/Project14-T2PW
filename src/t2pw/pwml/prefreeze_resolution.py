@@ -895,6 +895,48 @@ def _reject_ambiguous_species_renames(
                 target=target, sources=sorted(sources),
             )
 
+    # ...and a target some OTHER species row already answers to and keeps. The
+    # loop above only compares rename sources with each other, so a rename onto
+    # an existing, unrenamed row falls between its two branches -- and for
+    # species nothing else catches it. ``_LOCATION_MEMBER_FIELDS`` has no species
+    # bucket, so ``_iter_refs``, ``_propagate``, ``_assert_fully_propagated`` and
+    # ``_connectivity_signature`` are all blind to species rows, and the
+    # row-count check sees 2 == 2 because the loss happens later, in the
+    # exporter's ``_dedupe_named_rows``. The compound stage fails closed on the
+    # identical shape only because compounds are *participants*, so the rename
+    # breaks a reference and ``PREFREEZE_CONNECTIVITY_BROKEN`` fires; species are
+    # not participants, so the refusal has to be stated.
+    #
+    # Left unrefused, ``build_pwml_ir`` deduplicates the two now-identically
+    # named rows and the second organism is **deleted**, leaving a row that
+    # carries the surviving name with the *other* row's ``taxonomy_id`` -- a
+    # wrong organism identity, not a lossy one (``PRODUCT_CONTRACT`` §2, §5), and
+    # the operator-facing at-risk list shrinks at the moment of the loss. Merge
+    # rule 7 keeps incomplete-but-correct content as ``review_required``; it does
+    # not license silently dropping an organism.
+    #
+    # Deliberately narrow, so it cannot over-fire on the cases the ladder is
+    # *for*: a target inside the source's own ``_norm`` group is a spelling
+    # change that merges nothing, and a row that vacates the target name under
+    # its own rename is no longer there to collide with.
+    for old, new in sorted(rename_map.items()):
+        target = _norm(new)
+        if target == _norm(old):
+            continue
+        occupied = sorted({
+            before_names[index] for index in range(len(before_names))
+            if before_names[index]
+            and _norm(before_names[index]) == target
+            and _norm(after_names[index]) == target
+        })
+        if occupied:
+            raise PrefreezeResolutionError(
+                "AMBIGUOUS_RENAME_TARGET",
+                f"renaming {old!r} to {new!r} would merge it into {occupied}, which "
+                "another species row already answers to and keeps",
+                target=new, sources=sorted({old, *occupied}),
+            )
+
     compatible: Dict[str, set] = {}
     for index, before in enumerate(before_names):
         if before:

@@ -268,6 +268,58 @@ def _freeze(payload: Dict[str, Any], tmp: Path) -> Dict[str, Any]:
     return frozen
 
 
+def _b1() -> int:
+    """REV-045 B-1, both legs: renaming onto an organism another row keeps.
+
+    At base the ladder runs after ``_dedupe_named_rows``, so dedupe never sees
+    the renamed name and both organisms survive. At the pre-correction tip the
+    rename lands first, dedupe collapses the two rows and the second organism is
+    deleted -- with the survivor carrying the *strain's* taxonomy id. Corrected,
+    the stage refuses instead. Exit 1 on any leg that loses an organism.
+    """
+
+    payload = _g9_payload()
+    payload["entities"]["species"] = [
+        dict(G9_SPECIES), {"name": G9_EXPECTED, "taxonomy_id": "1358"},
+    ]
+    refused = ""
+    try:
+        prepared = _prefreeze(payload)
+    except Exception as exc:  # PrefreezeResolutionError at the corrected tip
+        refused = f"{type(exc).__name__}: {getattr(exc, 'code', '')}"
+        prepared = None
+        print(f"  refused: {refused} -- {exc}")
+
+    if prepared is not None:
+        with tempfile.TemporaryDirectory(prefix="c045b1") as raw:
+            frozen = _freeze(prepared, Path(raw))
+        ir, report = ir_module.build_pwml_ir(
+            deepcopy(frozen),
+            pathway_name=str(PATHWAY_CONTEXT["pathway_name"]),
+            pathway_subject=str(PATHWAY_CONTEXT["pathway_subject"]),
+            strict_db=False,
+        )
+        rows = [row for row in ir.get("species") or [] if row.get("taxonomy_id")]
+        observed = {
+            "ir_species": [(r.get("name"), r.get("taxonomy_id")) for r in rows],
+            "preflight_species": (report.get("preflight") or {}).get("species", []),
+        }
+        print(json.dumps(observed, sort_keys=True, indent=1))
+        taxa = {r.get("taxonomy_id") for r in rows}
+        if {"1091041", "1358"} <= taxa:
+            print("\nB-1: both organisms survive (base behaviour: the rename ran "
+                  "after _dedupe_named_rows).")
+            print("B-1: BASE-SHAPE")
+            return 1
+        print(f"\nB-1: an organism was LOST -- surviving taxa {sorted(taxa)}; the "
+              "renamed row was merged into the other one by the exporter.")
+        print("B-1: FAILED")
+        return 1
+    print("\nB-1: PASSED -- the merge is refused before the freeze, the payload is "
+          "left untouched, and no organism is lost.")
+    return 0
+
+
 def _g9() -> int:
     payload = _g9_payload()
 
@@ -317,7 +369,8 @@ def _g9() -> int:
 
 def main(argv: List[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("census", "standalone", "trace", "g9"), required=True)
+    parser.add_argument(
+        "--mode", choices=("census", "standalone", "trace", "g9", "b1"), required=True)
     parser.add_argument(
         "--corpus-root", default=None,
         help="checkout to read the committed payloads from; defaults to this "
@@ -331,7 +384,8 @@ def main(argv: List[str] | None = None) -> int:
     print(f"T2PW: {t2pw.__file__}")
     print(f"CORPUS_ROOT: {CORPUS_ROOT}")
     return {
-        "census": _census, "standalone": _standalone, "trace": _trace, "g9": _g9,
+        "census": _census, "standalone": _standalone, "trace": _trace,
+        "g9": _g9, "b1": _b1,
     }[args.mode]()
 
 

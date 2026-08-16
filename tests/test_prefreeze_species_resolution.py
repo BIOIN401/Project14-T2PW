@@ -267,6 +267,83 @@ def test_new_acceptance_two_strains_of_one_species_are_refused_not_merged() -> N
     assert payload == before
 
 
+def test_new_acceptance_a_rename_onto_an_existing_organism_is_refused() -> None:
+    """REV-045 B-1. Renaming onto a name a **different** species row keeps is a
+    merge, and for species nothing else catches it.
+
+    ``_LOCATION_MEMBER_FIELDS`` has no species bucket, so ``_iter_refs``,
+    ``_propagate``, ``_assert_fully_propagated`` and ``_connectivity_signature``
+    are all blind to species rows; the row-count check sees 2 == 2 because the
+    loss happens later. The compound stage fails closed on this exact shape only
+    because compounds are participants.
+
+    **Base delta, disclosed:** at ``0ec64d2c`` the ladder ran *after*
+    ``_dedupe_named_rows``, so dedupe never saw the renamed name and **both**
+    rows survived -- the IR carried taxonomy ``1091041`` and ``1358``, and the
+    preflight listed the organism twice. Unrefused at tip, dedupe collapses them
+    and taxonomy ``1358`` is **deleted**, leaving a row named ``Lactococcus
+    lactis`` carrying the strain's id ``1091041``: a wrong organism identity, not
+    a lossy one.
+    """
+
+    payload = _payload(
+        {"name": STRAIN, "taxonomy_id": "1091041"},
+        {"name": BINOMIAL, "taxonomy_id": "1358"},
+    )
+    before = deepcopy(payload)
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _resolve(payload)
+    assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
+    assert excinfo.value.details["sources"] == sorted({STRAIN, BINOMIAL})
+    assert payload == before, "the payload must be untouched on a refusal"
+
+
+def test_new_acceptance_the_existing_row_guard_does_not_over_fire() -> None:
+    """The control for the guard above: it must refuse a merge and nothing else.
+
+    A refusal on a path every species payload crosses is how a card turns a
+    working export into a dead one, so the two shapes that look like the merge
+    and are not are pinned here.
+
+    1. **A group renaming to one target.** ``_norm``-duplicates legitimately land
+       on the same name -- that is the leader/follower rule -- and the occupant
+       of the target is the leader itself, not a distinct organism.
+    2. **A target inside the source's own ``_norm`` group.** A pure spelling
+       change merges nothing, so it is skipped before the occupancy scan. The
+       ladder cannot currently emit one (both rungs guard on ``_norm``), so it is
+       exercised at the guard directly rather than through a payload that cannot
+       exist.
+    3. **A row that vacates the target.** If the occupant is itself renamed away,
+       there is nothing left to collide with.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _alias_index, _reject_ambiguous_species_renames
+
+    # 1 -- the leader/follower group still succeeds, and emits one organism.
+    payload = _payload(
+        {"name": STRAIN, "taxonomy_id": "1091041"},
+        {"name": STRAIN.upper(), "taxonomy_id": "1091041"},
+    )
+    summary = _resolve(payload)
+    assert set(summary["rename_map"].values()) == {BINOMIAL}
+    ir, _ = _build(payload)
+    assert [row["name"] for row in ir["species"]] == [BINOMIAL]
+
+    primary, _ = _alias_index(_payload({"name": STRAIN, "taxonomy_id": "1091041"}))
+    # 2 -- target inside the source's own group: accepted.
+    _reject_ambiguous_species_renames(
+        {STRAIN: STRAIN.upper()}, [STRAIN], [STRAIN.upper()], primary,
+    )
+    # 3 -- the occupant vacates the name, so nothing collides.
+    _reject_ambiguous_species_renames(
+        {STRAIN: BINOMIAL, BINOMIAL: "Lactococcus cremoris"},
+        [STRAIN, BINOMIAL],
+        [BINOMIAL, "Lactococcus cremoris"],
+        {},
+    )
+
+
 def test_new_acceptance_the_stage_is_idempotent() -> None:
     """Running it twice must not re-decide, re-log, or re-rename.
 
