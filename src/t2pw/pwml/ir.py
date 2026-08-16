@@ -22,6 +22,70 @@ logger = logging.getLogger(__name__)
 # offline canonicalization, distinct from "not provided -> load the default".
 _NAME_INDEX_UNSET = object()
 
+#: The field a compound row carries once compound resolution has ruled on it.
+#: Written on **every** row by the resolution machinery -- ``matched``,
+#: ``unmatched``, ``legacy_id_unverified``, ``identity_refused_review_required``
+#: or ``matched_offline_name_index`` -- so its presence is the verdict and its
+#: absence means no resolution ever ran on the row.
+COMPOUND_RESOLUTION_VERDICT_FIELD = "db_status"
+
+#: Where the pre-freeze sequence records, **on the payload**, whether a live
+#: PathBank resolution DB was actually consulted before the freeze.
+#:
+#: ``_emit_canonicalization_preflight`` decides whether to warn from
+#: ``report["db_resolution"]["available"]``, and D-032 clause 6 (LOCKED) rules
+#: ``preflight`` product-visible export content rather than a diagnostic. The
+#: value is produced at ``compound_resolution.py:485``, from
+#: ``db_resolver.available()`` after a ``None`` resolver has been replaced by
+#: ``PathBankDbResolver.from_env()`` -- so reproducing it here would be the
+#: exporter probing an external service after the freeze, which D-015 forbids
+#: outright. It is **carried**, never inferred.
+#:
+#: Nor is it inferable from the rows. On an all-legacy population every row
+#: carries a ``pathbank_compound_id``, so ``compound_resolution.py:504`` takes
+#: the legacy branch and ``continue``s before the resolver is consulted: the
+#: resolved rows are byte-identical while ``available`` differs.
+#:
+#: The payload is the carrier for the same reason
+#: :data:`SPECIES_CANONICALIZATION_FIELD` is -- it is the one object every
+#: export entry point hands to :func:`build_pwml_ir`, and it survives the
+#: freeze, the JSON round trip and ``deepcopy`` intact. It is provenance, not
+#: biology: the name is not in ``canonical_hash.GRAPH_FIELDS`` or
+#: ``GRAPH_SECTIONS``, so the graph hash never sees it, and nothing projects it
+#: into the IR, so the emitted PWML is unchanged.
+PREFREEZE_DB_RESOLUTION_FIELD = "prefreeze_db_resolution"
+
+
+class UnresolvedCompoundRowError(RuntimeError):
+    """A compound row reached the exporter carrying no resolution verdict.
+
+    D-015 (LOCKED) puts compound identity resolution **before** the canonical
+    freeze and ``PRODUCT_CONTRACT`` §5 forbids an exporter to "add, remove,
+    resolve or reinterpret biological content after the canonical graph is
+    frozen". So the exporter refuses such a row loudly rather than resolving it
+    late: no defaulted verdict, no warn-and-continue, no silent drop.
+    """
+
+    code = "PWML_IR_COMPOUND_VERDICT_MISSING"
+
+    def __init__(self, rows: Sequence[Dict[str, Any]], *, pointer_prefix: str) -> None:
+        self.rows = [dict(row) for row in rows]
+        self.pointer_prefix = pointer_prefix
+        self.names = [_canonical(row.get("name")) for row in self.rows]
+        self.keys = [str(row.get("key") or "") for row in self.rows]
+        located = ", ".join(
+            f"{name or '<unnamed>'} (key={key or '<none>'})"
+            for name, key in zip(self.names, self.keys)
+        )
+        super().__init__(
+            f"{self.code}: {len(self.rows)} compound row(s) at {pointer_prefix} carry no "
+            f"'{COMPOUND_RESOLUTION_VERDICT_FIELD}' resolution verdict, so compound "
+            f"resolution never ran on them before the canonical payload was frozen. The "
+            f"PWML exporter does not resolve identity after the freeze (D-015, "
+            f"PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution."
+            f"run_prefreeze_resolution on the payload first. Offending rows: {located}"
+        )
+
 
 ENTITY_BUCKETS = {
     "compound": "compounds",
@@ -613,6 +677,25 @@ _SPECIES_CREATE_DEFAULT_CANON_NORMS = frozenset(
     if _norm(entry.get("name"))
 )
 
+#: Where the pre-freeze species stage records **what it decided**, on the payload
+#: row it decided about. ``DECISIONS.md`` **D-016 (LOCKED)** moves
+#: :func:`_canonicalize_species_offline` upstream of the freeze, so the status it
+#: returns is no longer produced inside ``build_pwml_ir`` and cannot be read off
+#: the call stack there any more. It travels on the row instead, which is the
+#: only carrier that survives ``_hydrate_component_rows_from_biological_states``,
+#: ``_apply_create_defaults`` and ``_dedupe_named_rows`` intact.
+#:
+#: It is provenance, not biology: the name is **not** in
+#: ``canonical_hash.GRAPH_FIELDS``, so it is stripped from the graph hash, and
+#: ``_component_record`` does not copy it, so the emitted IR shape is unchanged --
+#: which is what the docstring below has always promised about this function.
+SPECIES_CANONICALIZATION_FIELD = "species_canonicalization"
+
+#: The db-identity keys ``build_pwml_ir``'s species ``component_spec`` names.
+#: Kept beside the reader so the pre-freeze caller and ``_component_record``
+#: project the same id from the same row.
+SPECIES_DB_KEYS: Tuple[str, ...] = ("pathbank_species_id", "pw_species_id", "pathwhiz_id")
+
 
 def _canonicalize_species_offline(
     record: Dict[str, Any],
@@ -640,16 +723,43 @@ def _canonicalize_species_offline(
     default), ``"deterministic"`` (taxonomy-identified but only normalized -- may
     still collide on import), or ``"novel"`` (no taxonomy id, left untouched). The
     record itself is never tagged, so its emitted shape is unchanged.
+
+    **Where this runs (D-016, LOCKED).** It used to be called from inside
+    ``build_pwml_ir``, on the output of :func:`_component_record` -- i.e. by the
+    exporter, on a payload the freeze had already hashed, which
+    ``PRODUCT_CONTRACT`` §5 and permanent merge rule 8 forbid. Its one caller is
+    now :func:`t2pw.pwml.prefreeze_resolution.resolve_species_prefreeze`, which
+    hands it the **payload** row instead. The ladder below is unchanged; only the
+    two identity reads were widened, so that a payload row and the
+    ``_component_record`` projection of that same row resolve to the same
+    taxonomy id and the same PathBank id. Both widenings are inert on a
+    ``_component_record``, which carries neither an alternate spelling nor a
+    ``mapping_meta``.
     """
     canon = report.setdefault("name_canonicalization", {}).setdefault("species", [])
 
     # (2) offline index by taxonomy / pathbank id -- authoritative when present.
     if name_index is not None:
         hit = name_index.species_canonical(
-            taxonomy_id=record.get("taxonomy_id"),
-            pathbank_species_id=record.get("pathbank_species_id")
-            or record.get("pw_species_id")
-            or record.get("pathwhiz_id"),
+            # ``_component_record`` folds ``taxonomy-id`` onto ``taxonomy_id``
+            # and ``_db_id`` reads the PathBank id through ``_first_nonempty``,
+            # which also looks inside ``mapping_meta``/``mapped_ids``. A raw
+            # payload row has had neither done to it yet.
+            #
+            # F-6, recorded not fixed: this ``or`` gives ``taxonomy_id``
+            # precedence, while ``_component_record`` assigns both spellings in
+            # list order and so lets ``taxonomy-id`` win on a row carrying both.
+            # It selects which id is *reported*, never whether a rename applies,
+            # and no committed payload carries both spellings.
+            taxonomy_id=record.get("taxonomy_id") or record.get("taxonomy-id"),
+            pathbank_species_id=_first_nonempty(record, SPECIES_DB_KEYS),
+            # F-5, recorded not fixed: ``name`` is accepted and ignored by
+            # ``PathwhizNameIndex.species_canonical`` (reserved for a future
+            # name-based lookup). The pre-freeze equivalence argument for rows
+            # hydrated from ``biological_states`` -- they carry only a name, so
+            # they always classified ``novel`` -- rests on that. Should the index
+            # ever answer on ``name``, those rows become renameable and the
+            # equivalence needs re-measuring.
             name=record.get("name"),
         )
         canonical = _canonical(hit.get("name")) if hit else ""
@@ -674,7 +784,7 @@ def _canonicalize_species_offline(
             return "canonical"
 
     # (4) deterministic normalization for taxonomy-identified species only.
-    taxonomy_id = _canonical(record.get("taxonomy_id"))
+    taxonomy_id = _canonical(record.get("taxonomy_id") or record.get("taxonomy-id"))
     if not taxonomy_id:
         return "novel"  # truly novel / unidentified -> keep extraction name verbatim
     extraction_name = _canonical(record.get("name"))
@@ -784,6 +894,19 @@ def build_pwml_ir(
         _add_issue(report, "error", "invalid_payload", "PWML IR input payload must be an object.")
         return ir, report
 
+    # The pre-freeze stage's verdict on DB reachability, carried on the payload
+    # (:data:`PREFREEZE_DB_RESOLUTION_FIELD`) and read here. Read-only, and only
+    # when the marker is actually there: a payload no pre-freeze stage ever
+    # touched keeps exactly the ``db_resolution`` shape ``_new_report`` gives it,
+    # so nothing this exporter already emits moves.
+    carried_db_resolution = _safe_dict(payload.get(PREFREEZE_DB_RESOLUTION_FIELD))
+    if isinstance(carried_db_resolution.get("available"), bool):
+        report["db_resolution"]["available"] = carried_db_resolution["available"]
+    # An absent reason is defaulted below to ``"db_not_configured"`` -- false of
+    # a DB that was configured and down. Carried for the same reason.
+    if str(carried_db_resolution.get("reason") or "").strip():
+        report["db_resolution"]["reason"] = str(carried_db_resolution["reason"])
+
     resolved_name_index = default_name_index() if name_index is _NAME_INDEX_UNSET else name_index
 
     ir = _empty_ir(pathway_name, pathway_subject, width, height)
@@ -839,12 +962,34 @@ def build_pwml_ir(
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
         if source_key == "species":
+            # D-016 (LOCKED): the canonicalization itself now happens BEFORE the
+            # freeze, in ``prefreeze_resolution.resolve_species_prefreeze``. What
+            # is left here is a **reader**, not a second pass: it replays the
+            # decision the pre-freeze stage recorded on the row so that this
+            # report keeps carrying exactly what it carried before -- the
+            # ``name_canonicalization["species"]`` log, in row order, and the
+            # ``_species_at_risk`` set ``_emit_canonicalization_preflight``
+            # consumes below. Nothing is re-derived and no name is rewritten
+            # here; a row with no marker (one hydrated from a biological state,
+            # which the ladder always classified ``novel``) contributes nothing,
+            # exactly as before.
             species_at_risk: List[str] = []
-            for record in ir[ir_key]:
-                status = _canonicalize_species_offline(
-                    record, name_index=resolved_name_index, report=report
-                )
-                if status == "deterministic":
+            if ir[ir_key]:
+                # The ladder created this key on its first call, so it was
+                # present -- as ``{"species": []}`` -- for every payload that had
+                # a species row at all, whether or not anything was renamed.
+                # ``pwml_ir_report.json`` is a committed artifact and C-040's
+                # golden hashes this report, so the empty case is part of the
+                # shape, not an accident of it.
+                report.setdefault("name_canonicalization", {}).setdefault("species", [])
+            for row, record in zip(rows, ir[ir_key]):
+                marker = _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD))
+                entry = marker.get("entry")
+                if isinstance(entry, dict):
+                    report.setdefault("name_canonicalization", {}).setdefault(
+                        "species", []
+                    ).append(entry)
+                if marker.get("status") == "deterministic":
                     species_at_risk.append(_canonical(record.get("name")))
             report["_species_at_risk"] = species_at_risk
         by_name: Dict[str, Dict[str, Any]] = {}
@@ -908,14 +1053,32 @@ def build_pwml_ir(
             pointer_prefix=f"/entities/{source_key}",
         )
         if source_key == "compounds":
-            rows = _resolve_compound_rows(
-                rows,
-                db_resolver=db_resolver,
-                strict_db=strict_db,
-                report=report,
-                pointer_prefix=f"/entities/{source_key}",
-                name_index=resolved_name_index,
-            )
+            # D-021 (LOCKED) section 1: "C-051 -- assert only. Delete the
+            # now-redundant in-IR resolution call and replace it with a
+            # fail-closed assertion that every compound row already carries a
+            # resolution verdict. C-051 resolves nothing and repairs nothing."
+            #
+            # The deleted call was ``_resolve_compound_rows(...)``: the exporter
+            # resolving compound identity AFTER the canonical graph was frozen,
+            # which permanent merge rule 8 and ``PRODUCT_CONTRACT`` section 5
+            # forbid. D-015 (LOCKED) put that work in
+            # ``prefreeze_resolution.resolve_compounds_prefreeze``, and D-032
+            # (LOCKED) wired the pre-freeze sequence at BOTH production export
+            # entry points -- ``streamlit_app`` and
+            # ``writer.run_pwml_pipeline_export`` -- so by the time the IR is
+            # built the verdict is always already on the row.
+            #
+            # Nothing here constructs, resolves, renames or repairs a row: the
+            # only outcomes are "carry on unchanged" and "refuse loudly".
+            unresolved_rows = [
+                row
+                for row in rows
+                if not str(row.get(COMPOUND_RESOLUTION_VERDICT_FIELD) or "").strip()
+            ]
+            if unresolved_rows:
+                raise UnresolvedCompoundRowError(
+                    unresolved_rows, pointer_prefix=f"/entities/{source_key}"
+                )
         bucket = ENTITY_BUCKETS[entity_type]
         for row in rows:
             rec = _entity_record(row, row["key"], db_keys, db_field)

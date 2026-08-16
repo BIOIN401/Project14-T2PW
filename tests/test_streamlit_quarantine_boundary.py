@@ -1091,14 +1091,45 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
         "enrichment produced no difference, so the boundary assertion below would "
         "hold for the pre-enrichment artifact too and pin nothing"
     )
-    # ...and the difference is annotation only: strip the enrichment block the
-    # stage added and the two artifacts are identical again. This is the proof
-    # that the arranged difference changes no biology; it is deliberately NOT
-    # part of the boundary comparison, which stays whole-object below.
-    _without_annotation = deepcopy(artifacts["final_mapped_enriched"])
-    for _row in _without_annotation["entities"]["proteins"]:
-        _row.pop("enrichment", None)
-    assert _without_annotation == artifacts["final_mapped_db"]
+    # ...and the difference changes no biology. TWO stages now stand between the
+    # pre-enrichment artifact and the boundary -- Stage 7 enrichment above, and
+    # the pre-freeze compound resolution D-015 requires -- so stripping one
+    # stage's annotation no longer restores equality, and an allowlist of the
+    # fields either stage may add would silently widen the day a third arrives.
+    # What is asserted instead is what a pre-freeze stage may not DISTURB: the
+    # process graph, the locations, the states and the pathway context arrive
+    # whole-object identical, and on the entity rows the stages may only ADD --
+    # every key the pre-enrichment artifact already carried survives with the
+    # same value. A rename, a dropped identifier, a reordered, added or removed
+    # row, or any edit to a reaction fails this. It is deliberately NOT part of
+    # the boundary comparison, which stays whole-object below.
+    _before = artifacts["final_mapped_db"]
+    _after = artifacts["final_mapped_enriched"]
+    for _section in ("metadata", "processes", "biological_states", "element_locations"):
+        assert _before[_section] == _after[_section], f"{_section} moved pre-freeze"
+    assert sorted(_before["entities"]) == sorted(_after["entities"])
+    for _bucket, _rows in _before["entities"].items():
+        _rows_after = _after["entities"][_bucket]
+        if not isinstance(_rows, list):
+            assert _rows == _rows_after, _bucket
+            continue
+        assert [_r.get("name") for _r in _rows] == [
+            _r.get("name") for _r in _rows_after
+        ], f"{_bucket} was renamed, reordered, added to or removed from"
+        for _row, _row_after in zip(_rows, _rows_after):
+            assert _row.items() <= _row_after.items(), (_bucket, _row.get("name"))
+    # ...and the arranged difference is still ENRICHMENT's, not only the
+    # pre-freeze stage's. Without this the inequality above would keep holding
+    # on the compound rows alone if enrichment reverted to a pass-through, and
+    # C-050a's arrangement would go quietly vacuous again. Exactly the two
+    # already-identified proteins carry the annotation; the unidentified
+    # modifier this payload exists to exercise is untouched, which is what makes
+    # the arranged difference biologically inert.
+    assert not any("enrichment" in _r for _r in _before["entities"]["proteins"])
+    assert [_r["name"] for _r in _after["entities"]["proteins"] if "enrichment" in _r] == [
+        "glutamate-cysteine ligase",
+        "glutathione synthetase",
+    ]
 
     # Byte for byte, not merely "the same processes": research quarantine forwards
     # the candidate it was handed unchanged, so the payload the boundary passed on

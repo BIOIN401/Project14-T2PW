@@ -9,24 +9,27 @@ absence is not behavioural proof.
 
 The load-bearing assertion is the opposite of a regression proof:
 ``test_build_pwml_ir_matches_the_pre_extraction_golden`` asserts that **nothing**
-changed. Its digests were derived from a sweep captured at the dispatch base
-``e4eeef429468ef42cfdfd12295ea86447f0c674f`` *before* the extraction, so it pins
-pre-extraction behaviour and will fail if the move was not pure.
+changed beyond a documented delta. Its digests no longer come from the raw sweep
+at the dispatch base ``e4eeef429468ef42cfdfd12295ea86447f0c674f``; they come from
+a **pre-freeze-routed** sweep at the C-051 stack tip.
 
-That pin is deliberate and it is expected to be moved -- once, deliberately, with
-a documented delta -- by C-051, which deletes the in-IR resolution call. It must
-never be moved to make an accidental drift go green.
+That pin has been moved twice, each time deliberately and with a documented
+delta: by C-045a (D-016 put species canonicalization before the freeze) and by
+C-051b (C-051 made ``build_pwml_ir`` refuse unresolved compound rows, so the
+sweep must route through ``run_prefreeze_resolution``). Both deltas are recorded
+above ``GOLDEN``. It must never be moved to make an accidental drift go green.
 """
 
 from __future__ import annotations
 
 import ast
+import copy
 import hashlib
 import inspect
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import pytest
 
@@ -39,6 +42,10 @@ from t2pw.pwml import compound_resolution as cr  # noqa: E402
 from t2pw.pwml import ir as ir_mod  # noqa: E402
 from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index  # noqa: E402
+from t2pw.pwml.prefreeze_resolution import (  # noqa: E402
+    PrefreezeResolutionError,
+    run_prefreeze_resolution,
+)
 
 #: The nine helpers copied verbatim from ir.py:43-96, :183-193, :244-260.
 LEAF_HELPERS = (
@@ -318,40 +325,172 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 
 #: sha256 per committed leg fixture over build_pwml_ir's (ir, report) tuple
 #: under all five configurations below, hashed both key-sorted and in insertion
-#: order. DERIVED FROM A SWEEP AT BASE e4eeef42, BEFORE the extraction.
+#: order. MOVED ONCE, DELIBERATELY, by C-045a on 2026-08-15 under permanent merge
+#: rule 4 -- not a behavioural correction. D-016 (LOCKED) put the species
+#: canonicalization before the freeze, so a *standalone* build_pwml_ir -- which is
+#: what this pins -- cannot know a species was only deterministically normalized
+#: and stops publishing report["preflight"]["species"] and its collision warning.
+#: The measured delta, the negative that nothing under ``ir`` moved, and the proof
+#: that the production path preserves the preflight unchanged are
+#: evidence/c045a_{standalone,production}_delta.json; every digest below
+#: regenerates via evidence/c045a_golden_rebaseline.py --mode digest.
+#:
+#: WHAT THIS DOES AND DOES NOT COVER -- corrected by C-045b, 2026-08-15. The
+#: sentence above used to read "and no longer the production path". That was
+#: false when it was written: at C-045a's tip only Streamlit ran the pre-freeze
+#: sequence, and the CLI entry point (README.md:40 -> scripts/run_pwml.py ->
+#: writer.run_pwml_pipeline_export) still reached build_pwml_ir with a payload no
+#: pre-freeze stage had touched -- so this configuration WAS a production path,
+#: and it exported the un-normalized organism name. C-045b wired the seam into
+#: run_pwml_pipeline_export, which is what makes the claim true. Accurately, now:
+#: this golden pins build_pwml_ir called WITHOUT the pre-freeze sequence, which is
+#: no longer how either production entry point reaches it; both entry points are
+#: covered behaviourally instead -- Streamlit by
+#: tests/test_streamlit_quarantine_boundary.py, the CLI by
+#: tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_
+#: keeps_its_provenance and ::test_cli_export_runs_every_registered_prefreeze_
+#: canonicalizer. The 32 digests below are unchanged by C-045b and were
+#: independently reproduced at both SHAs by REV-045a.
+#:
+#: MOVED A SECOND AND FINAL TIME by C-051b on 2026-08-16, again under permanent
+#: merge rule 4 and again NOT a behavioural correction. C-051 made
+#: ``build_pwml_ir`` refuse a compound row that carries no resolution verdict, so
+#: the configuration the paragraph above describes -- ``build_pwml_ir`` on a raw
+#: leg fixture -- no longer produces a digest at all: it raises
+#: ``UnresolvedCompoundRowError`` on all 160 (leg, configuration) pairs, measured.
+#: ``_leg_digest`` therefore routes each configuration through
+#: ``run_prefreeze_resolution`` first, which is what both production entry points
+#: do. The move was decomposed rather than asserted, at
+#: evidence/c051b_golden_move_attribution.json:
+#:
+#:   A raw @328862a -> B pre-freeze @328862a  the ROUTING plus the per-config
+#:                                            payload isolation it forces, at
+#:                                            pre-C-051 code
+#:   B            -> C pre-freeze @tip        the C-051 stack's CODE alone
+#:   A            -> C                        the whole move; every digest below
+#:
+#: REV-051b split A->B further: isolation alone moves ``db_match/reason`` on 23
+#: pairs and routing alone moves it back exactly, so A->B is FOUR IR paths of
+#: which one cancels and the bucket correctly reports three. No digest is
+#: affected -- A->C is the two ``synonyms`` paths only.
+#:
+#: P1: under a hash-verified export of 328862a -- the last SHA before C-051, where
+#: this file is byte-identical to its C-045a state -- the superseded 32 digests
+#: reproduced 32/32, so the delta below is the whole delta.
+#: P3, the explicit negative, measured over the 156 pairs that produce IR on both
+#: sides: A->C moves exactly TWO paths under ``ir``, ``entities/compounds[]/
+#: synonyms`` and its length, on 12 pairs across 4 legs -- the original supported
+#: name preserved as a synonym, which D-015 clause 5 requires and which the
+#: standalone configuration never did. The compound verdict field ``db_status``
+#: moves A->B on 54 pairs and moves BACK to its A value B->C, net zero: the
+#: exporter's post-freeze second resolution pass had been overwriting the
+#: pre-freeze verdict, and deleting it restores it. Nothing else under ``ir``
+#: moves on any leg or configuration. The remaining delta is all under the
+#: report, where the exporter no longer publishes a resolution it no longer
+#: performs. Regenerate with evidence/c045a_golden_rebaseline.py --mode digest.
+#:
+#: MOVED A THIRD TIME by C-050g on 2026-08-16, on ONE leg only. C-050g repaired
+#: the source-collision comparison in ``_reject_ambiguous_renames``, which
+#: changes the code that stops ``PMC12444477…/strict`` under three of the five
+#: configurations -- and ``_leg_digest`` hashes the stop code in, so that leg's
+#: digest moves with it. Re-derived with --mode digest at the tip: **1 digest
+#: moved, 31 byte-identical, 0 stops removed, 3 codes substituted.** See
+#: GOLDEN_PREFREEZE_STOPS below for why the code changed and why that leg still
+#: does not export.
 GOLDEN = {
-    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "f7b90d9c316551e7ea5a4926e44ccf56bc06526c0f16bf3430f00681ab37464f",
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "4776eaf3fa304f427be50f01d1647c18d2cc129ecbb1e57b475a109cdf2e9b4f",
-    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "636e7a9cca659cca4e365404ff1d27ae29776660bcf7e2fff84134e4be6f9529",
-    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "66469f59bc720627eeb9acd5b2a9d1d67db2ef201a8c1fe5684c94260c499917",
-    "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "9d9adcad5a124045750c99b6a37562e3d402cef8c84b627753563330961aaff4",
-    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "b355d20d744eba2d4e3efe0b909480926893440a4071f6be6317702f6deae3be",
-    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "76f9186a80caf753b644693348a0532af8cbc986b0888847d9accba4908df90b",
-    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "55337f73f621ec067d328a7beabc563d53cb2339d74a02dda3462d770d1ff0ad",
-    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "df5d14202ec1109d98bf5e210338b096bd96c09c12a361fdcda419c1592d9d2d",
-    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "37ecb1279d0635128b608707b29df8c01b2c792e58d0c9658a85fc5be3f2c877",
-    "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": "0aae3942f7a384106549ca7dc5c8f47d70853477925d53d6d155d15474eff360",
-    "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": "ed0efe5ef1002bf5e3ec7c25dd07a2b75c7ac421bb36821dd121739a768d9801",
-    "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": "e439b998b658df3507169db4b393ea43084eefaecef77075958b4b61abde5f7b",
-    "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": "15a1cc3b2454d03a76ed98ef3c1e7d135540ac806d1c0da6a9629b201c8422bd",
-    "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": "84b5f7d96333ad19f29112fe20bf90876b166d6be063e9bf54b964bc8359fe70",
-    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "754736facd1d7745d7dbf074ff0d1fc528c742830560e9ad9dd3fcacc73f4ba7",
-    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "f4c7e27b60df966d43b0a5cf66b1ce8602f6253de65de19658ebe98451115d01",
-    "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "020e3af1b35eab20911e31128040cacc49600b579bc63a095b572ecf4f902043",
-    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "14034d1ebca67cc28b572b3eead411b10db00fbe4e3ede9e5c9698aab9ff0c09",
-    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "fbd84dbe7222b2a007c89cc15e6823ae69e3dcafa07ebf6820411e9f52d03a82",
-    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "ce6b5f23bf6b6fcbf7b23ae8971f9f36468b61ee8e6ebcdb69ca0f6743a5ebde",
-    "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "281875fc54583cb78e83c3a97510a04fb365300e40dd7aaaff901032aa817384",
-    "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "f13b25e1d30f8c86bca8ff40ff8ca704b81294e4ac09f7c6611868dfde1af328",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "cf6eb786ae0180e26f547e930d50ce8ef3455cb495659191b5ab88a93e762618",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "7f23596a8d47bfc9fb75cb81a357df4d9d5102c195be61172b43a87747379a89",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "b62db93e3206d2e17d751cf53c1115f640eb6407a5eb89a2108c6ae4d8e095fc",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "fb3c0a4787b5b3d298f222485e19d454d706a3b4bafa6075e4a9b6282f9059ce",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "7b61228e9c9ea71846b7fa7e6fe7bc9da276c5199129a57e2b26b8e24e05b6ab",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "0393db5ef8c9f6065a85067fdcc6ec143b018a90b5d137dd8229de6ebbd637dc",
-    "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "5c72760a9e6d300eae50ea7c87c892f07c82db114f2e35fad59b14d18656a556",
-    "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "ee59deb6df99861940633713185849c5e2db3631a1f7d93d77426bb5696bfac1",
-    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "ddc900f9731d69a03f197b083a38a2bc3b4c05d77d7534f827fa498df13da9f1",
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "f0dd12d5171ddb81fcb279efd4221166396c9196c58164e11e9a585e327553ad",
+    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "7954a4c9ae7a2905923b97194e620e1440888f83c4152c023ac7625a381b9e01",
+    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "f1a6a4d381e97d31cd09bbf037ed67da0e4a3fe45456906135cab736fb35603b",
+    "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "bdcb0fb81a19b8c2f956a959e20fb747d60ebd87aed9ff4bb540d041c66cfa80",
+    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "3c5f9303b234c08d09e670f9d62de3ca580ba34ffe98a84fda321f22a2b808c8",
+    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "11718a90bd71b6ed8933186966781e3027043494366cef45ffc809d4a5afcd90",
+    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "583c6a72e13ad69c5f8824254fb23e6fb58896680e66cff37c4fdbc040f2513d",
+    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "6c012487141ec0c84966852403cb09c17d63bccb57a7491e9a9e5c5a5cd0537c",
+    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "b67d9b705ce2823c1287bfdec1ed23c22151a8efdf72b9225c38a6a1aeabe2ed",
+    "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": "5ddfb6c4d04653c58f0332aaeb60d88496c4fce62de27acba8edea1e44c468e0",
+    "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": "8f58319162589c80244cf7f4bff45e9f46f66ffe83b8776136fa727eaec2591a",
+    "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": "9a5eabdc11cc18df0e709f6527a9a676a0a8b31c57f2f6efa82803b93a80c5d5",
+    "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": "0b1f6a9b3e4281c83c746e6082669a12587a155aa95e67d76ecf2e95c4c85598",
+    "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": "68728359df34dbf5a30ebd4dad8421fef71ee4b1635e68e087411f82a16b2802",
+    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "5c2b04f8b372a648337c1c5b12d72ab5a4ceb64ee86dac40612a12380c2096c8",
+    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "2432316a575c173c98ccc9abb287906bff650051b5047626059dd49fb5baf549",
+    "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "c7dfe651a28eaea3729e1b38da4968c4ed8f09195aac4373397f50011896ff30",
+    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "4213f64f6f5dd6d9e0fd09b69b4e319138618b5b9fa98e259741930096ff3fce",
+    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "dd9a2f5cea146384ea45dab5667c6cdf4afaa49a0f5b59244a84c34e86e8778b",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "f1f6ff4d9a235149274a1a2cec0bd51777176973f157f3761f2e5f7fd26a6615",
+    "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "f9ac6acd6b8a9728d1cc9995594d861b7f70e4f867bcba7da3bbcb50a3b4365f",
+    "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "3fa1cd47e28be8b29a3e4fc5909db94fa4daa33bb8f6c7943506ca8b535707e8",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "33112778ffac13bc18c97f4333a1b9b23b0a5d7bd44247609ee42540ddb9ea11",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "7ac1c6bbfbdf9ba0c1e6b91b1e697ad373b4cdd67b5cd89eb347931405355174",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "a2540f701344d92753f59b2bbcfb6122bd8c34684c427d8c2c23f5395d5f7401",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "e28efcf175ab89293e987502ab88e6513c9d530a6c078378befd55cb9d1a7d24",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "a75cb748ed26640f91db16508e1d081e0ed2207850097932fb2cc4f673de9e68",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "5e40a7cab6ee37d6d3ad265f3cb079906f041e2f7266d46d85a4973fb0fb600e",
+    "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "2c8897c47475836b45a581258a211a6b039217b73795b6aed68b1f0085c8ad1e",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "5ca749ae322a5e0b1998b934a945d3a0e41ca61a921197be66eaa9085d32dd38",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "32ab0313dffd1e0b295a92256e46d0f50024d88ca7c33aa8c9b13990b171a3a6",
+}
+
+#: The (leg, configuration) pairs whose pre-freeze stage STOPS, by code.
+#:
+#: A stop is a **result of that configuration, not a failure and not a digest**.
+#: D-015 clause 6 requires the pre-freeze stage to "fail visibly on ambiguous or
+#: dangling references". Refusing is the system working, so these are recorded
+#: rather than skipped, deselected, xfailed or swallowed: a change that silently
+#: stopped raising, or that raised a different code, or that started raising on a
+#: fifth pair, fails ``test_build_pwml_ir_matches_the_pre_extraction_golden``.
+#:
+#: C-051b measured all four raising identically at 328862a and at its tip, and
+#: REV-045a had observed the same four. Both readings recorded them as one
+#: phenomenon. **C-050g measured them individually and they are TWO, with
+#: different causes and different correct outcomes.**
+#:
+#: PMC13278307 · C_canned -- ``AMBIGUOUS_RENAME_TARGET``, UNCHANGED and CORRECT.
+#: The sources are ``PEtN-lipid A`` and ``modified Lipid A``, two genuinely
+#: distinct compounds the canned resolver sends to one target. Applying that
+#: rename would merge them, which is inventing biology, so the guard must keep
+#: raising here -- and it does. Note this pair stops ONLY under the canned
+#: resolver; at production defaults the leg resolves and exports at both SHAs.
+#:
+#: PMC12444477 · A, C, D -- code SUBSTITUTED by C-050g, ``AMBIGUOUS_RENAME_TARGET``
+#: -> ``PREFREEZE_CONNECTIVITY_BROKEN``. The old code was a FALSE diagnosis. Its
+#: two sources were ``sn -glycerol 3-phosphate`` and ``sn-glycerol 3-phosphate``:
+#: one molecule, two spellings, which ``_norm`` read as two only because its
+#: ``[^a-z0-9:+ ]+ -> " "`` substitution re-introduced a double space after
+#: ``_canonical`` had already collapsed whitespace. C-050g collapses that at the
+#: comparison, so the guard correctly stops firing.
+#:
+#: **The leg still does not export, and that is a ratified position, not an
+#: unfinished fix.** Measured at production defaults, both ``strict_db`` modes:
+#: the rename target ``Glycerol 3-phosphate`` normalizes to
+#: ``glycerol 3 phosphate``, which is ALSO the ``_norm`` of compound row #20,
+#: ``glycerol-3-phosphate`` -- a row that is **not in the rename map**.
+#: ``_reject_ambiguous_renames`` groups only over rename-map sources, so neither
+#: half of it can see that collision; the rename proceeds, rows 20/36/38 end up
+#: sharing one name, a participant reference that resolved to ``compounds#20``
+#: starts resolving to ``compounds#20|compounds#36|compounds#38``, and the
+#: connectivity signature check stops the run. That refusal is CORRECT under
+#: today's rules: D-015 clause 5 requires participant connectivity to be
+#: preserved, and the payload holds four spellings of this one molecule (#20,
+#: #36, #37, #38). Merging duplicate ROWS is a policy this codebase does not have
+#: -- pre-freeze may not (``PREFREEZE_ROW_COUNT_CHANGED``) and post-freeze may not
+#: (permanent merge rule 8) -- and it is routed as a separate card. The
+#: no-PWML outcome is an accepted ``PRODUCT_CONTRACT`` §1 cost until then.
+#:
+#: The pre-existing collision ``lipid iv a`` (rows 5 and 23) does NOT stop the
+#: run: it is identical before and after the rename, so the signature does not
+#: move. It is why 44 committed rows became 43 IR compounds at the integration
+#: base -- the post-freeze exporter merged that pair silently.
+GOLDEN_PREFREEZE_STOPS: Dict[str, Dict[str, str]] = {
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+        "A_dbdown_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
+        "C_canned_defaultindex_lenient": "PREFREEZE_CONNECTIVITY_BROKEN",
+        "D_emptydb_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
+    },
+    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
+        "C_canned_defaultindex_lenient": "AMBIGUOUS_RENAME_TARGET",
+    },
 }
 
 
@@ -409,30 +548,76 @@ def _nonjson(obj: Any) -> Dict[str, str]:
     return {"__nonjson__": type(obj).__name__, "repr": repr(obj)}
 
 
-def _leg_digest(payload: Dict[str, Any]) -> str:
+def _leg_digest(payload: Dict[str, Any]) -> Tuple[str, Dict[str, str]]:
+    """Digest ``build_pwml_ir`` over the five configurations, pre-freeze first.
+
+    Returns ``(digest, stops)``. ``stops`` maps a configuration name to the
+    :class:`PrefreezeResolutionError` code that stopped it -- see
+    ``GOLDEN_PREFREEZE_STOPS``.
+
+    The pre-freeze call is not decoration: since C-051 ``build_pwml_ir``
+    refuses a compound row that carries no resolution verdict, so a raw leg
+    fixture no longer reaches a digest at all. Routing through
+    ``run_prefreeze_resolution`` is what production does at both export entry
+    points, and it is the same re-pointing C-051 applied to the other refused
+    test nodes.
+
+    **Each configuration gets its own deep copy of the fixture, and its own
+    resolver and index.** The pre-freeze stage rewrites the payload in place --
+    renames, aliases, the verdict field, the ``prefreeze_db_resolution``
+    carrier -- so sharing one payload object across the five, as this function
+    did while the sweep was read-only, would feed each configuration the
+    previous one's renames and measure a sequence rather than five
+    configurations.
+    """
     digest = hashlib.sha256()
+    stops: Dict[str, str] = {}
     for name, kwargs in _configs():
-        built = build_pwml_ir(payload, **kwargs)
         digest.update(name.encode())
+        staged = copy.deepcopy(payload)
+        try:
+            run_prefreeze_resolution(
+                staged,
+                strict_db=kwargs["strict_db"],
+                db_resolver=kwargs["db_resolver"],
+                name_index=kwargs["name_index"],
+            )
+        except PrefreezeResolutionError as stop:
+            # D-015 clause 6 -- "fail visibly on ambiguous or dangling
+            # references" -- is a RESULT of this configuration, not a failure of
+            # the golden and not a digest. It is hashed in by code as well as
+            # asserted below, so a change that silently stopped raising would
+            # move the digest too and could not pass by matching one of them.
+            stops[name] = stop.code
+            digest.update(f"#prefreeze_stop:{stop.code}".encode())
+            continue
+        built = build_pwml_ir(staged, **kwargs)
         for sort_keys in (True, False):
             blob = json.dumps(list(built), sort_keys=sort_keys, indent=1, default=_nonjson)
             digest.update(hashlib.sha256(blob.encode()).hexdigest().encode())
-    return digest.hexdigest()
+    return digest.hexdigest(), stops
 
 
 def test_build_pwml_ir_matches_the_pre_extraction_golden() -> None:
     """NEW ACCEPTANCE, and C-040's primary acceptance criterion.
 
-    Asserts that NOTHING changed: build_pwml_ir's output is byte-identical to
-    the pre-extraction sweep on every committed leg fixture. A non-empty diff
-    here means the move was not pure.
+    Asserts that nothing changed that C-051's documented delta does not
+    account for: over every committed leg fixture, ``build_pwml_ir``'s output on
+    the pre-freeze-routed payload is byte-identical to the re-baselined sweep,
+    and the four ``(leg, configuration)`` pairs that stop pre-freeze stop with
+    exactly the recorded code. A non-empty diff here is a drift, not a licence
+    to re-baseline.
     """
     mismatched = []
     for leg, expected in GOLDEN.items():
         path = ROOT / leg
         assert path.is_file(), f"committed leg fixture is missing: {leg}"
         payload = json.loads(path.read_text(encoding="utf-8"))
-        actual = _leg_digest(payload)
+        actual, stops = _leg_digest(payload)
+        if stops != GOLDEN_PREFREEZE_STOPS.get(leg, {}):
+            mismatched.append(
+                f"{leg}\n  expected stops {GOLDEN_PREFREEZE_STOPS.get(leg, {})}"
+                f"\n  actual stops   {stops}")
         if actual != expected:
             mismatched.append(f"{leg}\n  expected {expected}\n  actual   {actual}")
     assert not mismatched, "build_pwml_ir output drifted:\n" + "\n".join(mismatched)

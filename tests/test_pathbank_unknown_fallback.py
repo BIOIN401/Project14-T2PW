@@ -5,6 +5,11 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.mapping.enrich_entities import enrich_payload
 from t2pw.mapping.map_ids import map_payload
 from t2pw.pipeline.process_normalizer import normalize_process_payload
@@ -415,7 +420,7 @@ def test_unknown_fallback_passes_stage3_and_serializes_exact_pathbank_sentinel(t
     assert stage3_report["ok"] is True
     assert validate_required_pwml_contract(normalized, strict_db=False)["ok"] is True
 
-    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    ir, ir_report = build_pwml_ir(prefrozen_when_compounded(normalized), strict_db=False)
     assert ir_report["errors"] == []
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
     builder = DeterministicPwmlBuilder(
@@ -561,7 +566,7 @@ def test_real_pathbank_complex_with_no_listed_components_exports_with_empty_memb
     assert stage3_report["ok"] is True
     assert validate_required_pwml_contract(normalized, strict_db=False)["ok"] is True
 
-    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    ir, ir_report = build_pwml_ir(prefrozen_when_compounded(normalized), strict_db=False)
     assert ir_report["errors"] == []
 
     validation = validate_pwml_ir(ir)

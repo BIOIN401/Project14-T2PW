@@ -15,12 +15,18 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from helpers_prefreeze import (  # noqa: E402
+    prefreeze_report,
+    prefrozen,
+    prefrozen_when_compounded,
+)
 from t2pw.pwml.ir import build_pwml_ir as _build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
 from t2pw.pwml.writer import (  # noqa: E402
     DeterministicPwmlBuilder,
     blocking_pwml_ir_errors,
     get_rect_anchor_toward_target,
+    is_non_blocking_pwml_ir_error,
     run_pwml_pipeline_export,
 )
 
@@ -155,7 +161,32 @@ def _stage6_ready_payload(payload: dict) -> dict:
 
 
 def build_pwml_ir(payload: dict, *args: object, **kwargs: object) -> tuple[dict, dict]:
-    return _build_pwml_ir(_stage6_ready_payload(payload), *args, **kwargs)
+    """Stage-6 preparation, then the pre-freeze sequence, then the exporter.
+
+    **C-051 / D-015 (LOCKED) extends this existing wrapper; it does not add a
+    second mechanism.** ``build_pwml_ir`` no longer resolves compound identity --
+    doing so after the canonical graph is frozen is what merge rule 8 and
+    ``PRODUCT_CONTRACT`` §5 forbid -- and now refuses a compound row that
+    carries no verdict. The fixtures in this module are raw extraction payloads,
+    so they are taken through the stage that now does that work.
+
+    The order is production's, measured: ``normalize -> prefreeze``, never the
+    reverse (``probe_c045b_cli_prefreeze_seam._order``). ``prefrozen_when_
+    compounded`` asserts the stage ruled on **every** compound row, so a tree
+    where the stage is absent or does nothing fails here rather than passing.
+    """
+
+    prepared = _stage6_ready_payload(payload)
+    # Forward the resolver and index the test chose. Production hands the same
+    # two to the pre-freeze stage that the exporter used to consult itself, so
+    # NOT forwarding them would silently resolve against the ambient
+    # environment and make these fixtures non-deterministic.
+    stage_kwargs = {
+        key: kwargs[key] for key in ("db_resolver", "name_index") if key in kwargs
+    }
+    return _build_pwml_ir(
+        prefrozen_when_compounded(prepared, **stage_kwargs), *args, **kwargs
+    )
 
 
 class _CompoundDb:
@@ -634,7 +665,36 @@ def test_structured_ir_db_backed_biological_state_emits_real_pwbs_id() -> None:
 
 
 def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> None:
-    payload = _payload_with_complex_enzyme()
+    """A compound DB resolution failure must not block a PWML build.
+
+    **Re-homed to the pre-freeze producer, C-051c; the property is unchanged.**
+    This test used to read ``compound_db_resolution_failed`` off the *IR* report,
+    which was true while ``build_pwml_ir`` resolved compounds itself. C-051
+    deleted that call under merge rule 8, so no input can put the code in the IR
+    report any more -- ``compound_resolution.py:566`` is its only producer and it
+    now writes into the **pre-freeze** report. The failure did not disappear; it
+    moved, and ``REV-051`` measured the move as content-complete
+    (``db_resolution.compounds`` n=10, ``unresolved.db_identities`` n=2,
+    ``Counter({'compound_db_resolution_failed': 2})``, matching what base's
+    ``pwml_ir_report.json`` carried).
+
+    So every clause is asserted where the fact now lives, and none is dropped:
+
+    1. the failure is **recorded** -- same code, same count, error severity under
+       ``strict_db=True``, now on the pre-freeze report;
+    2. it is **non-blocking** -- ``blocking_pwml_ir_errors`` over those very
+       entries returns ``[]``. That is the same policy function, applied to the
+       same issues, and it is what keeps ``is_non_blocking_pwml_ir_error``'s
+       tolerated branch reachable from a real producer rather than dead;
+    3. the **build proceeds** -- the exporter emits both compounds, under their
+       extraction names, and the PWML builder runs to completion.
+
+    Strengthened, not weakened: clause 2 used to hold trivially the moment the
+    exporter stopped producing the code, and clause 1 is now non-vacuous by
+    ``helpers_prefreeze._run``'s own assertions.
+    """
+
+    payload = _stage6_ready_payload(_payload_with_complex_enzyme())
     payload["entities"]["compounds"] = [
         {"name": "norbelladine"},
         {"name": "Schiff-base intermediate"},
@@ -642,10 +702,26 @@ def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> No
     payload["processes"]["reactions"][0]["inputs"] = ["norbelladine"]
     payload["processes"]["reactions"][0]["outputs"] = ["Schiff-base intermediate"]
 
-    ir, report = build_pwml_ir(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
+    # Production's order and production's strictness: ``run_pwml_pipeline_export``
+    # hands ``strict_db`` straight to ``run_prefreeze_resolution``, and it is that
+    # flag that makes the refusal an ERROR rather than a warning
+    # (``compound_resolution.py:565``).
+    stage = prefreeze_report(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
+    resolution = stage["compounds"]["resolution_report"]
 
-    assert report["errors"]
-    assert {err["code"] for err in report["errors"]} == {"compound_db_resolution_failed"}
+    assert resolution["errors"]
+    assert {err["code"] for err in resolution["errors"]} == {"compound_db_resolution_failed"}
+    assert len(resolution["errors"]) == 2
+    # The tolerated branch, pinned by symbol as well as through the filter. It
+    # is ``code == 'compound_db_resolution_failed' and entity_type ==
+    # 'compound'``; a producer that stopped carrying ``entity_type`` would make
+    # the code blocking again and is caught here rather than downstream.
+    assert all(is_non_blocking_pwml_ir_error(err) for err in resolution["errors"])
+    assert blocking_pwml_ir_errors(resolution) == []
+
+    # The exporter builds from the payload the stage just froze -- no second
+    # resolution pass, and no blocking error either.
+    ir, report = _build_pwml_ir(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
     assert blocking_pwml_ir_errors(report) == []
 
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
@@ -1423,6 +1499,7 @@ def test_pwml_uses_db_exact_compound_rows_and_ids_for_hexokinase() -> None:
 # ---------------------------------------------------------------------------
 
 from t2pw.pwml.name_index import PathwhizNameIndex  # noqa: E402
+from t2pw.pwml.prefreeze_resolution import resolve_species_prefreeze  # noqa: E402
 
 
 def _offline_index() -> PathwhizNameIndex:
@@ -1497,11 +1574,36 @@ def _canonicalization_payload() -> dict:
 
 
 def test_offline_index_emits_canonical_compound_name() -> None:
+    """The offline index's canonical name reaches the IR, and so does the
+    extraction name it was resolved from.
+
+    **The two stages are called apart, C-051c; every assertion is the one that
+    was here before.** The module-level ``build_pwml_ir`` shim runs the
+    pre-freeze stage and then the exporter, and returns only the *exporter's*
+    report -- but ``name_canonicalization['compounds']`` is written by
+    ``compound_resolution._canonicalize_compound_offline`` into the report of
+    whichever stage consulted the index, and since C-051 that is the pre-freeze
+    one. Reading it off the IR report was a stale premise, hidden until now
+    behind the ``raw_name`` failure two lines above it. So the same two steps run
+    in the same order on the same fixture, and each clause is read where the fact
+    it names actually lives.
+
+    ``raw_name == 'glycolate'`` is the clause C-051c's production change earns:
+    ``apply_compound_db_resolution`` re-derives ``raw_name`` from the name it
+    queried on *this* pass, so the loop's second pass used to overwrite the
+    extraction name with the canonical one and the row reached the freeze -- and
+    ``ir.py:433`` -- claiming the paper had said "Glycolic acid".
+    """
+
     # _EmptyCompoundDb forces the "no live DB match" path so the offline
     # name-index is exercised deterministically, regardless of whether a live
     # PathBank DB happens to be reachable from the test environment.
-    ir, report = build_pwml_ir(
-        _canonicalization_payload(),
+    payload = _stage6_ready_payload(_canonicalization_payload())
+    stage = prefreeze_report(
+        payload, db_resolver=_EmptyCompoundDb(), name_index=_offline_index()
+    )
+    ir, _report = _build_pwml_ir(
+        payload,
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),
@@ -1516,13 +1618,43 @@ def test_offline_index_emits_canonical_compound_name() -> None:
     resolved = next(c for c in ir["entities"]["compounds"] if c["name"] == "Glycolic acid")
     assert resolved.get("raw_name") == "glycolate"
     assert (resolved.get("db_row") or {}).get("name") == "Glycolic acid"
-    canon = report.get("name_canonicalization", {}).get("compounds", [])
+    canon = (
+        stage["compounds"]["resolution_report"]
+        .get("name_canonicalization", {})
+        .get("compounds", [])
+    )
     assert any(entry["from"] == "glycolate" and entry["to"] == "Glycolic acid" for entry in canon)
+
+
+def _species_canonicalized_payload() -> dict:
+    """The canonicalization payload, with the species stage already run on it.
+
+    **Baseline moved deliberately, C-045 / D-016 (LOCKED).** These two tests used
+    to call ``build_pwml_ir`` directly and read the canonical species name off its
+    output, because the species ladder ran *inside* the exporter -- after the
+    canonical payload was frozen, which permanent merge rule 8 forbids. D-016
+    moved the ladder into the pre-freeze sequence, so the exporter is now handed a
+    payload that is already canonical.
+
+    **The delta is the stage, not the assertion.** Both tests below still assert
+    exactly what they asserted before -- the offline index's canonical organism
+    name reaches the emitted IR, and reaches the written PWML -- on the same
+    fixture, with the same index, by the same comparison. Nothing is relaxed to
+    a subset, an allowlist or a normalized comparand; the payload is simply taken
+    through the stage that now does the work.
+    """
+
+    payload = _canonicalization_payload()
+    summary = resolve_species_prefreeze(payload, name_index=_offline_index())
+    assert summary["rename_map"] == {
+        "Herbaspirillum huttiense": "Herbaspirillum huttiense IAM 15032"
+    }, "the pre-freeze stage did not canonicalize the species; the tests below would be vacuous"
+    return payload
 
 
 def test_offline_index_emits_canonical_species_name() -> None:
     ir, _ = build_pwml_ir(
-        _canonicalization_payload(),
+        _species_canonicalized_payload(),
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),
@@ -1548,7 +1680,7 @@ def test_offline_index_disabled_keeps_extraction_names() -> None:
 
 def test_offline_index_canonical_name_reaches_written_pwml() -> None:
     ir, report = build_pwml_ir(
-        _canonicalization_payload(),
+        _species_canonicalized_payload(),
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),
@@ -1562,3 +1694,172 @@ def test_offline_index_canonical_name_reaches_written_pwml() -> None:
     assert "glycolate" not in compound_names
     species_names = {item["name"] for item in builder.section_items["species"]}
     assert "Herbaspirillum huttiense IAM 15032" in species_names
+
+
+# ---------------------------------------------------------------------------
+# The CLI export path -- README.md:40 -> scripts/run_pwml.py -> here.
+#
+# The two tests above feed ``build_pwml_ir`` a payload the species stage has
+# ALREADY been run over (``_species_canonicalized_payload``), which is right for
+# what they pin but leaves the exporter-shaped entry point -- the one an operator
+# actually invokes -- with no species coverage at all. These two restore it, on
+# the entry point rather than on the function beneath it.
+# ---------------------------------------------------------------------------
+
+
+def _kf147_payload() -> dict:
+    """A taxonomy-identified strain the offline index does not cover.
+
+    ``pathwhiz_id_db.json`` has no entry for taxonomy ``1091041``, so the species
+    ladder falls through to rung 4, deterministic strain normalization, and
+    ``Lactococcus lactis subsp. lactis KF147`` must reach PWML as ``Lactococcus
+    lactis``. The two compounds are answered by the same offline index on their
+    KEGG ids, so one payload exercises both registered canonicalizers.
+    """
+
+    return {
+        "entities": {
+            "species": [
+                {"name": "Lactococcus lactis subsp. lactis KF147", "taxonomy_id": "1091041"}
+            ],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "gly", "kegg_id": "C00037"},
+                {"name": "pyr", "kegg_id": "C00022"},
+            ],
+            "proteins": [{
+                "name": "GlyA",
+                "species": "Lactococcus lactis subsp. lactis KF147",
+                "uniprot": "Q00001",
+                "pathbank_protein_id": 201,
+            }],
+            "protein_complexes": [{
+                "name": "GlyA complex",
+                "species": "Lactococcus lactis subsp. lactis KF147",
+                "components": ["GlyA"],
+                "generated": True,
+                "generation_reason": "single_protein_pathwhiz_wrapper",
+            }],
+        },
+        "biological_states": [{
+            "name": "cyto_state",
+            "species": "Lactococcus lactis subsp. lactis KF147",
+            "subcellular_location": "cytosol",
+        }],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "gly", "biological_state": "cyto_state"},
+                {"compound": "pyr", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": "GlyA", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [{
+                "name": "gly to pyr",
+                "inputs": ["gly"],
+                "outputs": ["pyr"],
+                "biological_state": "cyto_state",
+                "enzymes": [{"entity": "GlyA complex", "entity_type": "protein_complex"}],
+            }],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
+def _run_cli_export(tmp_path: Path, payload: dict) -> tuple[dict, Path]:
+    out_dir = tmp_path / "out"
+    input_path = tmp_path / "input.json"
+    input_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    result = run_pwml_pipeline_export(
+        SimpleNamespace(
+            input_path=str(input_path),
+            out_dir=str(out_dir),
+            ref=str(ROOT / "reference" / "PW000001.pwml"),
+            name="Generated Pathway",
+            subject="Metabolic",
+            description="",
+            width=3200,
+            height=1400,
+            background_color="#FFFFFF",
+            non_strict_db=True,
+        )
+    )
+    return result, out_dir
+
+
+def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+    tmp_path: Path,
+) -> None:
+    """D-016 (LOCKED) on the CLI entry point, end to end.
+
+    Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+    sequence and only Streamlit called it, so this entry point emitted
+    ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+    ``name_canonicalization["species"]`` and no preflight -- the exported organism
+    wearing the un-normalized name with no record that a normalization was owed.
+    """
+
+    result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+    assert "error" not in result
+
+    pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+    assert "<name>Lactococcus lactis</name>" in pwml
+    assert "KF147" not in pwml
+
+    ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+    species = ir["species"]
+    assert [row["name"] for row in species] == ["Lactococcus lactis"]
+    # The alias is the provenance the IR carries: the row still answers to the
+    # name the paper used, so an importer matching on either finds one organism.
+    # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+    # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+    # stage writes onto the payload row -- asserted directly in
+    # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+    # Measured identical on the Streamlit path; not introduced by this seam.
+    assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+
+    report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+    assert report["name_canonicalization"]["species"] == [{
+        "from": "Lactococcus lactis subsp. lactis KF147",
+        "to": "Lactococcus lactis",
+        "taxonomy_id": "1091041",
+        "source": "deterministic_strain_normalization",
+    }]
+    # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+    # answers ``None`` and this leg is offline. Asserted rather than assumed --
+    # a reachable DB would make the preflight below silently absent instead of
+    # wrong, and a vacuous assertion is not evidence.
+    assert report["db_resolution"]["available"] is False
+    assert report["preflight"]["species"] == ["Lactococcus lactis"]
+
+
+def test_cli_export_runs_every_registered_prefreeze_canonicalizer(tmp_path: Path) -> None:
+    """The seam is on the tuple, not on one stage.
+
+    ``run_pwml_pipeline_export`` calls ``run_prefreeze_resolution``, so every
+    entry of ``PREFREEZE_CANONICALIZERS`` reaches the CLI -- compounds included.
+    That matters beyond species: the exporter's own ``_resolve_compound_rows``
+    pass is the only compound resolution this path had, and C-051 withdraws it.
+    Asserting the whole registry here, rather than the species stage alone, is
+    what keeps the CLI's compound resolution alive across that removal.
+    """
+
+    result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+    report = json.loads(
+        (out_dir / "pwml_prefreeze_resolution_report.json").read_text(encoding="utf-8")
+    )
+    assert report["stage"] == "prefreeze_resolution"
+
+    from t2pw.pwml.prefreeze_resolution import PREFREEZE_CANONICALIZERS
+
+    assert report["canonicalizers"] == [name for name, _ in PREFREEZE_CANONICALIZERS]
+    assert report["compounds"]["rename_map"] == {"gly": "Glycine", "pyr": "Pyruvic acid"}
+    assert report["species"]["rename_map"] == {
+        "Lactococcus lactis subsp. lactis KF147": "Lactococcus lactis"
+    }
+    assert report["ok"] is True
+    assert report["review_required"] == {}
+    assert result["prefreeze_resolution_report"] == str(
+        out_dir / "pwml_prefreeze_resolution_report.json"
+    )

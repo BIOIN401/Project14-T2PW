@@ -58,6 +58,11 @@ if "openai" not in sys.modules:
     openai_stub.BadRequestError = RuntimeError
     sys.modules["openai"] = openai_stub
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pipeline.entity_identity import (  # noqa: E402
     PATHBANK_UNKNOWN_PROTEIN_ID,
     PATHBANK_UNKNOWN_PROTEIN_NAME,
@@ -559,7 +564,7 @@ def test_a_two_substrate_repair_is_applied_whole_and_closes_the_gap() -> None:
 
     assert gap.gap_id not in _unresolved_ids(result)
     assert validate_post_extraction(result.payload)["ok"] is True
-    _ir, report = build_pwml_ir(result.payload, strict_db=False)
+    _ir, report = build_pwml_ir(prefrozen_when_compounded(result.payload), strict_db=False)
     assert report["unresolved"]["biological_state_references"] == []
     validate_required_pwml_contract(result.payload)
 
@@ -1093,7 +1098,7 @@ def test_two_locations_are_both_written_never_one_written_and_two_claimed() -> N
 
     assert gap.gap_id not in _unresolved_ids(result)
     assert validate_post_extraction(result.payload)["ok"] is True
-    _ir, report = build_pwml_ir(result.payload, strict_db=False)
+    _ir, report = build_pwml_ir(prefrozen_when_compounded(result.payload), strict_db=False)
     assert report["unresolved"]["biological_state_references"] == []
     validate_required_pwml_contract(result.payload)
 

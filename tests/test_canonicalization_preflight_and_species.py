@@ -19,6 +19,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pwml.ir import (  # noqa: E402
     _deterministic_species_name,
     build_pwml_ir,
@@ -60,7 +65,7 @@ def test_preflight_warns_when_no_db_and_no_covering_index() -> None:
     # empty index that covers nothing and no db_resolver connection.
     empty_index = PathwhizNameIndex({})
     ir, report = build_pwml_ir(
-        payload,
+        prefrozen_when_compounded(payload),
         strict_db=False,
         db_resolver=_UnavailableDb(),
         name_index=empty_index,
@@ -95,7 +100,11 @@ def test_preflight_silent_when_offline_index_covers_entities() -> None:
         }
     )
     ir, report = build_pwml_ir(
-        payload,
+        # The index the test chose is forwarded to the pre-freeze stage as well.
+        # That stage is what consults it now, so resolving against the ambient
+        # default instead would make this fixture depend on the environment and
+        # the "silent" assertion below would not be about this index at all.
+        prefrozen_when_compounded(payload, db_resolver=_UnavailableDb(), name_index=index),
         strict_db=False,
         db_resolver=_UnavailableDb(),
         name_index=index,
@@ -141,7 +150,7 @@ def test_same_taxonomy_id_yields_same_species_name_across_variants() -> None:
     emitted = []
     for variant in variants:
         ir, _report = build_pwml_ir(
-            _species_payload(variant, taxonomy_id="863372"),
+            prefrozen_when_compounded(_species_payload(variant, taxonomy_id="863372")),
             strict_db=False,
             db_resolver=_UnavailableDb(),
             name_index=None,
@@ -158,7 +167,7 @@ def test_novel_species_without_taxonomy_keeps_extraction_name() -> None:
     # No taxonomy_id => truly novel => extraction name preserved verbatim.
     payload = _species_payload("Wobblegut fictitious STRAIN-42", taxonomy_id="")
     ir, _report = build_pwml_ir(
-        payload, strict_db=False, db_resolver=_UnavailableDb(), name_index=None
+        prefrozen_when_compounded(payload), strict_db=False, db_resolver=_UnavailableDb(), name_index=None
     )
     names = [row["name"] for row in ir["species"]]
     assert names == ["Wobblegut fictitious STRAIN-42"]

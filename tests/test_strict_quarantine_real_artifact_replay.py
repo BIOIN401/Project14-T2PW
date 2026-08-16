@@ -48,6 +48,9 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): committed legs predate pre-freeze compound
+# resolution, so each is taken through that stage before the exporter.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
     GateValidationError,
     normalize_process_payload,
@@ -103,7 +106,13 @@ def _ir_codes(payload: Dict[str, Any]) -> List[str]:
 
     try:
         ir, ir_report = build_pwml_ir(
-            deepcopy(payload),
+            # C-051 / D-015 (LOCKED): every leg here is a committed
+            # ``final_mapped.json`` written before compound resolution moved
+            # ahead of the freeze -- measured, all 32 carry no verdict on any
+            # compound row. Production now runs the pre-freeze sequence at both
+            # export entry points, so each leg is brought to that state before
+            # the exporter sees it rather than being resolved late inside it.
+            prefrozen_when_compounded(deepcopy(payload)),
             pathway_name=EXPORT_PATHWAY_NAME,
             pathway_subject=EXPORT_PATHWAY_SUBJECT,
             strict_db=True,

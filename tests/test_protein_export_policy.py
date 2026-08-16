@@ -31,6 +31,11 @@ from unittest.mock import patch
 
 import pytest
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.mapping.map_ids import map_payload, verify_real_protein_identity
 from t2pw.pipeline.entity_identity import (
     PATHBANK_UNKNOWN_PROTEIN_ID,
@@ -1340,7 +1345,7 @@ def test_reaction_and_transport_actors_never_point_to_literal_unknown(tmp_path: 
 
 
 def _build_pwml_root(normalized: Dict[str, Any]) -> Any:
-    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    ir, ir_report = build_pwml_ir(prefrozen_when_compounded(normalized), strict_db=False)
     assert ir_report["errors"] == []
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
     builder = DeterministicPwmlBuilder(

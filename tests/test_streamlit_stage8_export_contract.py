@@ -9,6 +9,11 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze; the fixture below is taken through the stage that
+# now does that work. helpers_prefreeze asserts the stage ruled on every row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
+
 
 def _load_stage8_validator() -> Any:
     source = APP_PATH.read_text(encoding="utf-8")
@@ -42,6 +47,23 @@ def _load_stage8_validator() -> Any:
 
 
 def _stage6_payload() -> dict[str, Any]:
+    """The Stage-6 payload, already through the pre-freeze sequence.
+
+    **C-051 / D-015 (LOCKED).** ``build_pwml_ir`` no longer resolves compound
+    identity after the canonical freeze and refuses a compound row that carries
+    no verdict, so a raw extraction payload is not what production hands it.
+    The stage is applied **here**, at the fixture, rather than at the call
+    sites: two tests below snapshot ``before = deepcopy(payload)`` and assert
+    ``payload == before``, and that no-mutation invariant is exactly what they
+    exist to pin. Pre-resolving at the call site would have moved the payload
+    *inside* the window they measure and turned a passing invariant into a
+    false failure.
+    """
+
+    return prefrozen_when_compounded(_stage6_extraction_payload())
+
+
+def _stage6_extraction_payload() -> dict[str, Any]:
     return {
         "metadata": {
             "name": "Caffeine demethylation",

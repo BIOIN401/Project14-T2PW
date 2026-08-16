@@ -1,6 +1,7 @@
 """Deterministic split-process Chunk D gate (authorization CONTROL-PLANE-RECONCILE-001).
 
-Chunk D's monolithic definition runs 177 tests across seven files in ONE process.
+Chunk D's monolithic definition runs 179 tests across seven files in ONE process
+(177 until C-045b's authorized ``core`` 150 -> 152 move; see ``TOTAL`` below).
 Two of those files drive Streamlit ``AppTest``, and several ``AppTest`` instances
 in one process eventually leave a worker thread without a ``ScriptRunContext``:
 the run dies with ``RuntimeError: FragmentThreadState not initialized``
@@ -19,7 +20,7 @@ and no retry is added.
 PER-FILE ISOLATION WAS MEASURED INSUFFICIENT (H-007 supersedes the earlier reading
 that no process partition could work). Running the whole 23-test ``qb`` FILE in one
 fresh process leaves the documented cause untouched, because that one process still
-builds 23 ``AppTest`` objects. ``run`` therefore isolates per NODE: the 150 core
+builds 23 ``AppTest`` objects. ``run`` therefore isolates per NODE: the 152 core
 tests keep their single deterministic process, and each of the 27 AppTest node IDs
 gets a fresh process that has built exactly one ``AppTest``. See ``TEST_MATRIX.md``
 § "Chunk D" for the standing result; never read a ``qb`` red as expected.
@@ -67,10 +68,20 @@ S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
 #: ``(name, files, expected_count)`` -- ENFORCED by ``run``; ``collect`` only reports.
 COMPONENTS: List[Tuple[str, List[str], int]] = [
-    ("core", CORE, 150), ("s8", S8, 4), ("qb", QB, 23)]
+    ("core", CORE, 152), ("s8", S8, 4), ("qb", QB, 23)]
 #: The original monolithic selection, verbatim -- what the split must equal.
 MONOLITHIC = CORE + S8 + QB
-#: 150 + 4 + 23. Chunk D is 177 tests and stays 177 tests.
+#: 152 + 4 + 23 = 179. MOVED ONCE, DELIBERATELY, by C-045b on 2026-08-15 under
+#: permanent merge rule 4, orchestrator-authorized: ``core`` 150 -> 152, so the
+#: derived ``TOTAL`` follows 177 -> 179. The two added tests are
+#: ``tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_
+#: keeps_its_provenance`` and ``::test_cli_export_runs_every_registered_prefreeze_
+#: canonicalizer``, which C-045b's charter mandated and whose correct home is a
+#: ``CORE`` file. This is a baseline move, not a weakened gate: the substantive
+#: check is ``partition``'s SET equality, which passed unchanged across the move
+#: (``SETS_EQUAL=True``, ``overlap=0``, ``missing=0``, ``extra=0``, no
+#: deselection). The integer is derived from that set and has nowhere for a
+#: silent regression to hide. Chunk D is 179 tests and stays 179 tests.
 TOTAL = sum(expect for _n, _f, expect in COMPONENTS)
 #: The two AppTest components. ``run`` executes each of their 27 node IDs ALONE.
 APPTEST = ("s8", "qb")
