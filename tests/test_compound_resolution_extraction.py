@@ -9,13 +9,15 @@ absence is not behavioural proof.
 
 The load-bearing assertion is the opposite of a regression proof:
 ``test_build_pwml_ir_matches_the_pre_extraction_golden`` asserts that **nothing**
-changed. Its digests were derived from a sweep captured at the dispatch base
-``e4eeef429468ef42cfdfd12295ea86447f0c674f`` *before* the extraction, so it pins
-pre-extraction behaviour and will fail if the move was not pure.
+changed beyond a documented delta. Its digests no longer come from the raw sweep
+at the dispatch base ``e4eeef429468ef42cfdfd12295ea86447f0c674f``; they come from
+a **pre-freeze-routed** sweep at the C-051 stack tip.
 
-That pin is deliberate and it is expected to be moved -- once, deliberately, with
-a documented delta -- by C-051, which deletes the in-IR resolution call. It must
-never be moved to make an accidental drift go green.
+That pin has been moved twice, each time deliberately and with a documented
+delta: by C-045a (D-016 put species canonicalization before the freeze) and by
+C-051b (C-051 made ``build_pwml_ir`` refuse unresolved compound rows, so the
+sweep must route through ``run_prefreeze_resolution``). Both deltas are recorded
+above ``GOLDEN``. It must never be moved to make an accidental drift go green.
 """
 
 from __future__ import annotations
@@ -361,9 +363,16 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: do. The move was decomposed rather than asserted, at
 #: evidence/c051b_golden_move_attribution.json:
 #:
-#:   A raw @328862a -> B pre-freeze @328862a  the ROUTING alone, at pre-C-051 code
+#:   A raw @328862a -> B pre-freeze @328862a  the ROUTING plus the per-config
+#:                                            payload isolation it forces, at
+#:                                            pre-C-051 code
 #:   B            -> C pre-freeze @tip        the C-051 stack's CODE alone
 #:   A            -> C                        the whole move; every digest below
+#:
+#: REV-051b split A->B further: isolation alone moves ``db_match/reason`` on 23
+#: pairs and routing alone moves it back exactly, so A->B is FOUR IR paths of
+#: which one cancels and the bucket correctly reports three. No digest is
+#: affected -- A->C is the two ``synonyms`` paths only.
 #:
 #: P1: under a hash-verified export of 328862a -- the last SHA before C-051, where
 #: this file is byte-identical to its C-045a state -- the superseded 32 digests

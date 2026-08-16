@@ -21,8 +21,20 @@ Three steps decompose the move, so no part of it rests on assertion:
     C  prefreeze @ tip      -- what the NEW digests hash
     D  raw       @ tip      -- C-051's refusal, measured directly
 
-``A->B`` is the routing alone; ``B->C`` is the production-code change alone;
-``A->C`` is the whole move. ``D`` is why ``A`` has no successor at the tip.
+``A->B`` is the routing **plus the per-config payload isolation the routing
+forces** -- sweep A shares one payload across the five configs, B and C deep-copy
+per config, because the pre-freeze stage rewrites in place. ``B->C`` is the
+production-code change alone; ``A->C`` is the whole move. ``D`` is why ``A`` has
+no successor at the tip.
+
+REV-051b measured the two components of ``A->B`` separately: isolation alone
+moves ``/0/entities/compounds/[]/db_match/reason`` on 23 pairs (config E only,
+``db_resolver_unavailable:harves...`` -> ``db_not_configured``) and routing alone
+moves it back exactly. ``A->B`` is therefore FOUR IR paths of which one cancels,
+which is why ``step_A_to_B_...`` below reports three -- an attribution-label gap,
+not a hidden move: ``A->C``, which defines every digest, is the two ``synonyms``
+paths only. That bucket key keeps its historical name so C-051b's committed
+``c051b_golden_move_attribution.json`` still matches a re-derivation.
 
 Usage::  <python> c051b_delta_attribution.py --work <dir> --out F
 It imports no ``t2pw`` -- it reads the sweeps and the digest lists only.
