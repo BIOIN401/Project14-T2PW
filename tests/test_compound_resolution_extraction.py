@@ -320,13 +320,30 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: under all five configurations below, hashed both key-sorted and in insertion
 #: order. MOVED ONCE, DELIBERATELY, by C-045a on 2026-08-15 under permanent merge
 #: rule 4 -- not a behavioural correction. D-016 (LOCKED) put the species
-#: canonicalization before the freeze, so a *standalone* build_pwml_ir -- what
-#: this pins, and no longer the production path -- cannot know a species was only
-#: deterministically normalized and stops publishing report["preflight"]["species"]
-#: and its collision warning. The measured delta, the negative that nothing under
-#: ``ir`` moved, and the proof that the production path preserves the preflight
-#: unchanged are evidence/c045a_{standalone,production}_delta.json; every digest
-#: below regenerates via evidence/c045a_golden_rebaseline.py --mode digest.
+#: canonicalization before the freeze, so a *standalone* build_pwml_ir -- which is
+#: what this pins -- cannot know a species was only deterministically normalized
+#: and stops publishing report["preflight"]["species"] and its collision warning.
+#: The measured delta, the negative that nothing under ``ir`` moved, and the proof
+#: that the production path preserves the preflight unchanged are
+#: evidence/c045a_{standalone,production}_delta.json; every digest below
+#: regenerates via evidence/c045a_golden_rebaseline.py --mode digest.
+#:
+#: WHAT THIS DOES AND DOES NOT COVER -- corrected by C-045b, 2026-08-15. The
+#: sentence above used to read "and no longer the production path". That was
+#: false when it was written: at C-045a's tip only Streamlit ran the pre-freeze
+#: sequence, and the CLI entry point (README.md:40 -> scripts/run_pwml.py ->
+#: writer.run_pwml_pipeline_export) still reached build_pwml_ir with a payload no
+#: pre-freeze stage had touched -- so this configuration WAS a production path,
+#: and it exported the un-normalized organism name. C-045b wired the seam into
+#: run_pwml_pipeline_export, which is what makes the claim true. Accurately, now:
+#: this golden pins build_pwml_ir called WITHOUT the pre-freeze sequence, which is
+#: no longer how either production entry point reaches it; both entry points are
+#: covered behaviourally instead -- Streamlit by
+#: tests/test_streamlit_quarantine_boundary.py, the CLI by
+#: tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_
+#: keeps_its_provenance and ::test_cli_export_runs_every_registered_prefreeze_
+#: canonicalizer. The 32 digests below are unchanged by C-045b and were
+#: independently reproduced at both SHAs by REV-045a.
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "55d6c3940a715d5b708099916270311805928d68a7a0fc5f6cbb8b81b29dc7ab",
     "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "43a165d24f4d743222ff6a53822e25e33ee8fb38e2c89cda6caed907df10cf04",

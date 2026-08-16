@@ -1,0 +1,206 @@
+{
+  "label": "chunkd-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/chunk_d_gate.py",
+    "run",
+    "--tmp",
+    "C:/t/c045b/dc",
+    "--task",
+    "C-045b",
+    "--timeout",
+    "900",
+    "--node-timeout",
+    "600",
+    "--only",
+    "core"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p45b-cli-seam",
+  "started_at": "2026-08-16T02:22:52+00:00",
+  "finished_at": "2026-08-16T02:22:57+00:00",
+  "duration_seconds": 5.209630899989861,
+  "timeout_seconds": 3000.0,
+  "root_pid": 228344,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 229764,
+      "name": "python.exe",
+      "ppid": 228344
+    },
+    {
+      "pid": 229808,
+      "name": "python.exe",
+      "ppid": 229764
+    },
+    {
+      "pid": 229824,
+      "name": "python.exe",
+      "ppid": 229808
+    },
+    {
+      "pid": 226808,
+      "name": "git.exe",
+      "ppid": 229824
+    },
+    {
+      "pid": 229952,
+      "name": "python.exe",
+      "ppid": 229824
+    },
+    {
+      "pid": 229964,
+      "name": "python.exe",
+      "ppid": 229952
+    },
+    {
+      "pid": 230276,
+      "name": "python.exe",
+      "ppid": 230288
+    },
+    {
+      "pid": 230288,
+      "name": "python.exe",
+      "ppid": 229764
+    },
+    {
+      "pid": 229792,
+      "name": "python.exe",
+      "ppid": 230276
+    },
+    {
+      "pid": 229872,
+      "name": "python.exe",
+      "ppid": 229792
+    },
+    {
+      "pid": 209372,
+      "name": "python.exe",
+      "ppid": 229764
+    },
+    {
+      "pid": 228524,
+      "name": "python.exe",
+      "ppid": 209372
+    },
+    {
+      "pid": 229812,
+      "name": "git.exe",
+      "ppid": 228524
+    },
+    {
+      "pid": 230032,
+      "name": "python.exe",
+      "ppid": 228524
+    },
+    {
+      "pid": 230048,
+      "name": "python.exe",
+      "ppid": 230032
+    },
+    {
+      "pid": 202188,
+      "name": "python.exe",
+      "ppid": 229764
+    },
+    {
+      "pid": 229820,
+      "name": "python.exe",
+      "ppid": 202188
+    },
+    {
+      "pid": 229992,
+      "name": "python.exe",
+      "ppid": 230324
+    },
+    {
+      "pid": 230324,
+      "name": "python.exe",
+      "ppid": 229820
+    }
+  ],
+  "descendants_terminated": [
+    202188,
+    209372,
+    226808,
+    228524,
+    229764,
+    229792,
+    229808,
+    229812,
+    229820,
+    229824,
+    229872,
+    229952,
+    229964,
+    229992,
+    230032,
+    230048,
+    230276,
+    230288,
+    230324
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69196,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202968,
+      "name": "python.exe"
+    },
+    {
+      "pid": 230196,
+      "name": "python.exe"
+    },
+    {
+      "pid": 230228,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-045b/09-chunkd-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p45b-cli-seam\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p45b-cli-seam",
+    "repo_head": "d146be48aa935915b19df616a9c3bef80d0a0b11",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

@@ -1589,3 +1589,172 @@ def test_offline_index_canonical_name_reaches_written_pwml() -> None:
     assert "glycolate" not in compound_names
     species_names = {item["name"] for item in builder.section_items["species"]}
     assert "Herbaspirillum huttiense IAM 15032" in species_names
+
+
+# ---------------------------------------------------------------------------
+# The CLI export path -- README.md:40 -> scripts/run_pwml.py -> here.
+#
+# The two tests above feed ``build_pwml_ir`` a payload the species stage has
+# ALREADY been run over (``_species_canonicalized_payload``), which is right for
+# what they pin but leaves the exporter-shaped entry point -- the one an operator
+# actually invokes -- with no species coverage at all. These two restore it, on
+# the entry point rather than on the function beneath it.
+# ---------------------------------------------------------------------------
+
+
+def _kf147_payload() -> dict:
+    """A taxonomy-identified strain the offline index does not cover.
+
+    ``pathwhiz_id_db.json`` has no entry for taxonomy ``1091041``, so the species
+    ladder falls through to rung 4, deterministic strain normalization, and
+    ``Lactococcus lactis subsp. lactis KF147`` must reach PWML as ``Lactococcus
+    lactis``. The two compounds are answered by the same offline index on their
+    KEGG ids, so one payload exercises both registered canonicalizers.
+    """
+
+    return {
+        "entities": {
+            "species": [
+                {"name": "Lactococcus lactis subsp. lactis KF147", "taxonomy_id": "1091041"}
+            ],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "gly", "kegg_id": "C00037"},
+                {"name": "pyr", "kegg_id": "C00022"},
+            ],
+            "proteins": [{
+                "name": "GlyA",
+                "species": "Lactococcus lactis subsp. lactis KF147",
+                "uniprot": "Q00001",
+                "pathbank_protein_id": 201,
+            }],
+            "protein_complexes": [{
+                "name": "GlyA complex",
+                "species": "Lactococcus lactis subsp. lactis KF147",
+                "components": ["GlyA"],
+                "generated": True,
+                "generation_reason": "single_protein_pathwhiz_wrapper",
+            }],
+        },
+        "biological_states": [{
+            "name": "cyto_state",
+            "species": "Lactococcus lactis subsp. lactis KF147",
+            "subcellular_location": "cytosol",
+        }],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "gly", "biological_state": "cyto_state"},
+                {"compound": "pyr", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": "GlyA", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [{
+                "name": "gly to pyr",
+                "inputs": ["gly"],
+                "outputs": ["pyr"],
+                "biological_state": "cyto_state",
+                "enzymes": [{"entity": "GlyA complex", "entity_type": "protein_complex"}],
+            }],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
+def _run_cli_export(tmp_path: Path, payload: dict) -> tuple[dict, Path]:
+    out_dir = tmp_path / "out"
+    input_path = tmp_path / "input.json"
+    input_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    result = run_pwml_pipeline_export(
+        SimpleNamespace(
+            input_path=str(input_path),
+            out_dir=str(out_dir),
+            ref=str(ROOT / "reference" / "PW000001.pwml"),
+            name="Generated Pathway",
+            subject="Metabolic",
+            description="",
+            width=3200,
+            height=1400,
+            background_color="#FFFFFF",
+            non_strict_db=True,
+        )
+    )
+    return result, out_dir
+
+
+def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+    tmp_path: Path,
+) -> None:
+    """D-016 (LOCKED) on the CLI entry point, end to end.
+
+    Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+    sequence and only Streamlit called it, so this entry point emitted
+    ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+    ``name_canonicalization["species"]`` and no preflight -- the exported organism
+    wearing the un-normalized name with no record that a normalization was owed.
+    """
+
+    result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+    assert "error" not in result
+
+    pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+    assert "<name>Lactococcus lactis</name>" in pwml
+    assert "KF147" not in pwml
+
+    ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+    species = ir["species"]
+    assert [row["name"] for row in species] == ["Lactococcus lactis"]
+    # The alias is the provenance the IR carries: the row still answers to the
+    # name the paper used, so an importer matching on either finds one organism.
+    # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+    # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+    # stage writes onto the payload row -- asserted directly in
+    # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+    # Measured identical on the Streamlit path; not introduced by this seam.
+    assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+
+    report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+    assert report["name_canonicalization"]["species"] == [{
+        "from": "Lactococcus lactis subsp. lactis KF147",
+        "to": "Lactococcus lactis",
+        "taxonomy_id": "1091041",
+        "source": "deterministic_strain_normalization",
+    }]
+    # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+    # answers ``None`` and this leg is offline. Asserted rather than assumed --
+    # a reachable DB would make the preflight below silently absent instead of
+    # wrong, and a vacuous assertion is not evidence.
+    assert report["db_resolution"]["available"] is False
+    assert report["preflight"]["species"] == ["Lactococcus lactis"]
+
+
+def test_cli_export_runs_every_registered_prefreeze_canonicalizer(tmp_path: Path) -> None:
+    """The seam is on the tuple, not on one stage.
+
+    ``run_pwml_pipeline_export`` calls ``run_prefreeze_resolution``, so every
+    entry of ``PREFREEZE_CANONICALIZERS`` reaches the CLI -- compounds included.
+    That matters beyond species: the exporter's own ``_resolve_compound_rows``
+    pass is the only compound resolution this path had, and C-051 withdraws it.
+    Asserting the whole registry here, rather than the species stage alone, is
+    what keeps the CLI's compound resolution alive across that removal.
+    """
+
+    result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+    report = json.loads(
+        (out_dir / "pwml_prefreeze_resolution_report.json").read_text(encoding="utf-8")
+    )
+    assert report["stage"] == "prefreeze_resolution"
+
+    from t2pw.pwml.prefreeze_resolution import PREFREEZE_CANONICALIZERS
+
+    assert report["canonicalizers"] == [name for name, _ in PREFREEZE_CANONICALIZERS]
+    assert report["compounds"]["rename_map"] == {"gly": "Glycine", "pyr": "Pyruvic acid"}
+    assert report["species"]["rename_map"] == {
+        "Lactococcus lactis subsp. lactis KF147": "Lactococcus lactis"
+    }
+    assert report["ok"] is True
+    assert report["review_required"] == {}
+    assert result["prefreeze_resolution_report"] == str(
+        out_dir / "pwml_prefreeze_resolution_report.json"
+    )

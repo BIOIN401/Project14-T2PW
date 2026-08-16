@@ -2659,6 +2659,78 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
             "error": "Post-normalization gate failed before PWML export.",
         }
 
+    # ── pre-freeze canonicalization ─────────────────────────────────────────
+    #
+    # ``DECISIONS.md`` D-015 and D-016 (both LOCKED): compound *and* organism
+    # canonicalization are part of the canonical biological representation and
+    # must finish BEFORE the payload reaches an exporter. There are two
+    # production entry points (``docs/pathwhiz_requirements.md`` §316-318,
+    # §523-525): the Streamlit one, which grew this seam at
+    # ``streamlit_app.py:3578``, and this one -- ``README.md:40`` ->
+    # ``scripts/run_pwml.py`` -> here. Only the first was wired, so the CLI
+    # exported the un-normalized organism name with no record that a
+    # normalization was ever owed, which is exactly what D-016 forbids losing.
+    #
+    # The seam is deliberately on ``run_prefreeze_resolution`` -- the whole
+    # ``PREFREEZE_CANONICALIZERS`` tuple -- and not on any single stage, so a
+    # canonicalizer registered there reaches both entry points at once rather
+    # than needing to be wired twice. That is what keeps the CLI's compound
+    # resolution alive when the exporter's own pass is withdrawn.
+    #
+    # Mutates ``payload`` IN PLACE, so ``build_pwml_ir`` below cannot hold a
+    # pre-resolution view of it. Function-local import for the same reason the
+    # Streamlit seam keeps its own: ``prefreeze_resolution`` is another card's
+    # module surface, and this module must not grow an import-time dependency
+    # on it.
+    from t2pw.pwml.prefreeze_resolution import (
+        PrefreezeResolutionError,
+        run_prefreeze_resolution,
+    )
+
+    prefreeze_report_path = out_dir / "pwml_prefreeze_resolution_report.json"
+    try:
+        prefreeze_report = run_prefreeze_resolution(
+            payload,
+            strict_db=not args.non_strict_db,
+        )
+    except PrefreezeResolutionError as exc:
+        # D-015 clause 6: an ambiguous rename or a reference the rename would
+        # break is a stop condition, and the payload is left untouched. This
+        # is not a *new* abort -- the raise already terminates the Streamlit
+        # export -- it is the same terminal outcome rendered in this entry
+        # point's own failure shape, so the operator gets the code, the offence
+        # and a nonzero exit instead of an opaque traceback. PRODUCT_CONTRACT
+        # §1 wants a usable recovery, and the recovery is real: the input file
+        # is unmodified and the report below names the row to fix.
+        _write_json(
+            prefreeze_report_path,
+            {
+                "stage": "prefreeze_resolution",
+                "ok": False,
+                "raised": True,
+                "code": exc.code,
+                "message": exc.message,
+                "details": exc.details,
+            },
+        )
+        return {
+            "ok": False,
+            "export_normalization_report": str(export_normalization_report_path),
+            "prefreeze_resolution_report": str(prefreeze_report_path),
+            "error": f"Pre-freeze canonicalization failed: {exc.code}: {exc.message}",
+        }
+    _write_json(prefreeze_report_path, prefreeze_report)
+
+    # ``prefreeze_report["ok"] is False`` deliberately does NOT abort. D-029
+    # (LOCKED) rules an unreachable PathBank DB a ``review_required`` outcome
+    # that must not raise by itself, and permanent merge rule 7 keeps an
+    # incomplete-but-correct pathway rather than dropping it: the biology the
+    # operator supplied is unchanged and still correct, merely un-enriched.
+    # So the verdict is persisted and surfaced -- never swallowed, and never
+    # promoted into a blocker this entry point has no mandate to invent.
+    # Acting on it is the downstream seam's job (D-029's closing paragraph).
+    prefreeze_review_required = prefreeze_report.get("review_required") or {}
+
     ir, ir_report = build_pwml_ir(
         payload,
         pathway_name=args.name,
@@ -2689,6 +2761,8 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
             "pwml_ir_report": str(ir_report_path),
             "pwml_ir_validation_report": str(ir_validation_path),
             "export_normalization_report": str(export_normalization_report_path),
+            "prefreeze_resolution_report": str(prefreeze_report_path),
+            "prefreeze_review_required": prefreeze_review_required,
             "error": "PWML IR validation failed.",
         }
 
@@ -2726,6 +2800,8 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
         "pwml_ir_report": str(ir_report_path),
         "pwml_ir_validation_report": str(ir_validation_path),
         "export_normalization_report": str(export_normalization_report_path),
+        "prefreeze_resolution_report": str(prefreeze_report_path),
+        "prefreeze_review_required": prefreeze_review_required,
         "pwml_file": str(pwml_path),
         "pwml_validation_report": str(validation_report_path),
         "pwml_qa_report": str(qa_report_path),
