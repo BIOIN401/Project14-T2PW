@@ -22,6 +22,44 @@ logger = logging.getLogger(__name__)
 # offline canonicalization, distinct from "not provided -> load the default".
 _NAME_INDEX_UNSET = object()
 
+#: The field a compound row carries once compound resolution has ruled on it.
+#: Written on **every** row by the resolution machinery -- ``matched``,
+#: ``unmatched``, ``legacy_id_unverified``, ``identity_refused_review_required``
+#: or ``matched_offline_name_index`` -- so its presence is the verdict and its
+#: absence means no resolution ever ran on the row.
+COMPOUND_RESOLUTION_VERDICT_FIELD = "db_status"
+
+
+class UnresolvedCompoundRowError(RuntimeError):
+    """A compound row reached the exporter carrying no resolution verdict.
+
+    D-015 (LOCKED) puts compound identity resolution **before** the canonical
+    freeze and ``PRODUCT_CONTRACT`` §5 forbids an exporter to "add, remove,
+    resolve or reinterpret biological content after the canonical graph is
+    frozen". So the exporter refuses such a row loudly rather than resolving it
+    late: no defaulted verdict, no warn-and-continue, no silent drop.
+    """
+
+    code = "PWML_IR_COMPOUND_VERDICT_MISSING"
+
+    def __init__(self, rows: Sequence[Dict[str, Any]], *, pointer_prefix: str) -> None:
+        self.rows = [dict(row) for row in rows]
+        self.pointer_prefix = pointer_prefix
+        self.names = [_canonical(row.get("name")) for row in self.rows]
+        self.keys = [str(row.get("key") or "") for row in self.rows]
+        located = ", ".join(
+            f"{name or '<unnamed>'} (key={key or '<none>'})"
+            for name, key in zip(self.names, self.keys)
+        )
+        super().__init__(
+            f"{self.code}: {len(self.rows)} compound row(s) at {pointer_prefix} carry no "
+            f"'{COMPOUND_RESOLUTION_VERDICT_FIELD}' resolution verdict, so compound "
+            f"resolution never ran on them before the canonical payload was frozen. The "
+            f"PWML exporter does not resolve identity after the freeze (D-015, "
+            f"PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution."
+            f"run_prefreeze_resolution on the payload first. Offending rows: {located}"
+        )
+
 
 ENTITY_BUCKETS = {
     "compound": "compounds",
@@ -976,14 +1014,32 @@ def build_pwml_ir(
             pointer_prefix=f"/entities/{source_key}",
         )
         if source_key == "compounds":
-            rows = _resolve_compound_rows(
-                rows,
-                db_resolver=db_resolver,
-                strict_db=strict_db,
-                report=report,
-                pointer_prefix=f"/entities/{source_key}",
-                name_index=resolved_name_index,
-            )
+            # D-021 (LOCKED) section 1: "C-051 -- assert only. Delete the
+            # now-redundant in-IR resolution call and replace it with a
+            # fail-closed assertion that every compound row already carries a
+            # resolution verdict. C-051 resolves nothing and repairs nothing."
+            #
+            # The deleted call was ``_resolve_compound_rows(...)``: the exporter
+            # resolving compound identity AFTER the canonical graph was frozen,
+            # which permanent merge rule 8 and ``PRODUCT_CONTRACT`` section 5
+            # forbid. D-015 (LOCKED) put that work in
+            # ``prefreeze_resolution.resolve_compounds_prefreeze``, and D-032
+            # (LOCKED) wired the pre-freeze sequence at BOTH production export
+            # entry points -- ``streamlit_app`` and
+            # ``writer.run_pwml_pipeline_export`` -- so by the time the IR is
+            # built the verdict is always already on the row.
+            #
+            # Nothing here constructs, resolves, renames or repairs a row: the
+            # only outcomes are "carry on unchanged" and "refuse loudly".
+            unresolved_rows = [
+                row
+                for row in rows
+                if not str(row.get(COMPOUND_RESOLUTION_VERDICT_FIELD) or "").strip()
+            ]
+            if unresolved_rows:
+                raise UnresolvedCompoundRowError(
+                    unresolved_rows, pointer_prefix=f"/entities/{source_key}"
+                )
         bucket = ENTITY_BUCKETS[entity_type]
         for row in rows:
             rec = _entity_record(row, row["key"], db_keys, db_field)
