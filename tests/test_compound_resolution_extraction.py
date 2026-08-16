@@ -318,40 +318,48 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 
 #: sha256 per committed leg fixture over build_pwml_ir's (ir, report) tuple
 #: under all five configurations below, hashed both key-sorted and in insertion
-#: order. DERIVED FROM A SWEEP AT BASE e4eeef42, BEFORE the extraction.
+#: order. MOVED ONCE, DELIBERATELY, by C-045a on 2026-08-15 under permanent merge
+#: rule 4 -- not a behavioural correction. D-016 (LOCKED) put the species
+#: canonicalization before the freeze, so a *standalone* build_pwml_ir -- what
+#: this pins, and no longer the production path -- cannot know a species was only
+#: deterministically normalized and stops publishing report["preflight"]["species"]
+#: and its collision warning. The measured delta, the negative that nothing under
+#: ``ir`` moved, and the proof that the production path preserves the preflight
+#: unchanged are evidence/c045a_{standalone,production}_delta.json; every digest
+#: below regenerates via evidence/c045a_golden_rebaseline.py --mode digest.
 GOLDEN = {
-    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "f7b90d9c316551e7ea5a4926e44ccf56bc06526c0f16bf3430f00681ab37464f",
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "4776eaf3fa304f427be50f01d1647c18d2cc129ecbb1e57b475a109cdf2e9b4f",
-    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "636e7a9cca659cca4e365404ff1d27ae29776660bcf7e2fff84134e4be6f9529",
-    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "66469f59bc720627eeb9acd5b2a9d1d67db2ef201a8c1fe5684c94260c499917",
-    "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "9d9adcad5a124045750c99b6a37562e3d402cef8c84b627753563330961aaff4",
-    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "b355d20d744eba2d4e3efe0b909480926893440a4071f6be6317702f6deae3be",
-    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "76f9186a80caf753b644693348a0532af8cbc986b0888847d9accba4908df90b",
-    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "55337f73f621ec067d328a7beabc563d53cb2339d74a02dda3462d770d1ff0ad",
-    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "df5d14202ec1109d98bf5e210338b096bd96c09c12a361fdcda419c1592d9d2d",
-    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "37ecb1279d0635128b608707b29df8c01b2c792e58d0c9658a85fc5be3f2c877",
-    "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": "0aae3942f7a384106549ca7dc5c8f47d70853477925d53d6d155d15474eff360",
-    "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": "ed0efe5ef1002bf5e3ec7c25dd07a2b75c7ac421bb36821dd121739a768d9801",
-    "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": "e439b998b658df3507169db4b393ea43084eefaecef77075958b4b61abde5f7b",
-    "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": "15a1cc3b2454d03a76ed98ef3c1e7d135540ac806d1c0da6a9629b201c8422bd",
-    "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": "84b5f7d96333ad19f29112fe20bf90876b166d6be063e9bf54b964bc8359fe70",
-    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "754736facd1d7745d7dbf074ff0d1fc528c742830560e9ad9dd3fcacc73f4ba7",
-    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "f4c7e27b60df966d43b0a5cf66b1ce8602f6253de65de19658ebe98451115d01",
-    "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "020e3af1b35eab20911e31128040cacc49600b579bc63a095b572ecf4f902043",
-    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "14034d1ebca67cc28b572b3eead411b10db00fbe4e3ede9e5c9698aab9ff0c09",
-    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "fbd84dbe7222b2a007c89cc15e6823ae69e3dcafa07ebf6820411e9f52d03a82",
-    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "ce6b5f23bf6b6fcbf7b23ae8971f9f36468b61ee8e6ebcdb69ca0f6743a5ebde",
-    "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "281875fc54583cb78e83c3a97510a04fb365300e40dd7aaaff901032aa817384",
-    "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "f13b25e1d30f8c86bca8ff40ff8ca704b81294e4ac09f7c6611868dfde1af328",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "cf6eb786ae0180e26f547e930d50ce8ef3455cb495659191b5ab88a93e762618",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "7f23596a8d47bfc9fb75cb81a357df4d9d5102c195be61172b43a87747379a89",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "b62db93e3206d2e17d751cf53c1115f640eb6407a5eb89a2108c6ae4d8e095fc",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "fb3c0a4787b5b3d298f222485e19d454d706a3b4bafa6075e4a9b6282f9059ce",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "7b61228e9c9ea71846b7fa7e6fe7bc9da276c5199129a57e2b26b8e24e05b6ab",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "0393db5ef8c9f6065a85067fdcc6ec143b018a90b5d137dd8229de6ebbd637dc",
-    "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "5c72760a9e6d300eae50ea7c87c892f07c82db114f2e35fad59b14d18656a556",
-    "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "ee59deb6df99861940633713185849c5e2db3631a1f7d93d77426bb5696bfac1",
-    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "ddc900f9731d69a03f197b083a38a2bc3b4c05d77d7534f827fa498df13da9f1",
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "55d6c3940a715d5b708099916270311805928d68a7a0fc5f6cbb8b81b29dc7ab",
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "43a165d24f4d743222ff6a53822e25e33ee8fb38e2c89cda6caed907df10cf04",
+    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "02d1e354daabb6600afa1fad88cf3bb870ee9ac64d9c717194f9fb7f067bc362",
+    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "ad84f2f4b9d87a9c8c9a42b2132f50c3a239047ecac5196c18436c289efab73b",
+    "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "2cbd51157a3106f140ed9a91eda2910895853b50bac958c37e1345bf11ca3d05",
+    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "4cb0fef1571c3262825879571b7e754fcf95e6c1b0581de93445b7d69f621311",
+    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "ad160d65c2d1303ba58b1b300948030931e466127a85f6e078a68671953ce6f3",
+    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "e2add078c442e2a31fcc515944651b12773a1acbabfc4e771ef6ac4e8e596cf1",
+    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "bd200e361a5b60bbc34ae59b25f1bc3a9e34bd637bec74a23cc983b4dfdb30e8",
+    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "0fab3c5364a0072e3973c002a319f251ecd338b16a477b43179f5d546d34531e",
+    "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": "5d95036ca6783f93bfa590d9ac9b0621c88b327881f3be0ba611c13e9bd4ccf3",
+    "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": "ca0c4b43723f785a1a7830d914056167f6c53ddc09ca4ebee5db47793b4b4958",
+    "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": "43bd1e6048daf42a9a67126bc7a2556f38ab03b9f53b465bc582537955856d03",
+    "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": "91e237161790b6f73745e8aaedfb3eb99d80b70306739e2c970c5386d4e65e85",
+    "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": "c76a509af1ecd8d3229c64bbb961a0c0b1cdfe9d5c525731a02f6f1d74e6b984",
+    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "a6a79fbeb4f18fc44050de8a1a7578379193cebb8fef9f45bafc7dce594ae45b",
+    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "0f7f68682e48b7d28bdf308d4f75f8b74483231d476755884a6a0230be228675",
+    "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "5485f752a7eddfdcfb32b402be39ef22dfa107d0d2213ede5b92aded436d4218",
+    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "b3b2b2b79c3292a5d0da3947904eb3e266d2b1d6a016c0a30084dd45d87bd804",
+    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "b48b2f35097af8d244b4f2a31b53420533981e54534f6153564f70c2791cafaa",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "9714cf38774406a7cfacad89e7bbdf3eb7778a948b2927840cf9069f945d85a6",
+    "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "da0a7b2a805bbf162b148399efe17e1f1841fdf5e61d3a56d76247c1af171f9f",
+    "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "49eb933dd26f086ed831497c012e4538952ab900d37a2697eb85b67e641985fc",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "22fb2b6c25a14816acc3b4aea96a30d412a7e63119683966c4dad0a2f50b4fb7",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "f4b738e66651ba680a57683976bd607406699fbc355a620e45163441effd6e4d",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "fa7c19d58fa908e7289971434ac64469454951967956d55bc6e5bb323d7b11e8",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "15e417a78b8ec03fbb193a47e7d67b435cb4aadbcca37e79d627065efe226c81",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "99b2c87451690db27fb4c75315970eacc4bc4164edb21cc86b60517da077cf04",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "e1c787a38e59e81ec70434e9a79ea84f280c05d99d136db1b3c04848c174e5d2",
+    "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "6cd0da47635552261daf6fc8bb46768be04a93a59326f90513d1022363d71df5",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "443fe9f59b19935747ff45baec488bbbef29fea470d883ea33a186406739384f",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "ae853353b520df0b57a243270477d7904953c0b3e3387dd8343963a8454a1651",
 }
 
 
