@@ -1,0 +1,143 @@
+{
+  "label": "smoke460",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/rv/sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p51d-docs",
+  "started_at": "2026-08-16T17:30:45+00:00",
+  "finished_at": "2026-08-16T17:31:13+00:00",
+  "duration_seconds": 27.747488100008923,
+  "timeout_seconds": 900.0,
+  "root_pid": 714532,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 737000,
+      "name": "python.exe",
+      "ppid": 714532
+    },
+    {
+      "pid": 716624,
+      "name": "python.exe",
+      "ppid": 737000
+    },
+    {
+      "pid": 728720,
+      "name": "python.exe",
+      "ppid": 737000
+    },
+    {
+      "pid": 738040,
+      "name": "python.exe",
+      "ppid": 728720
+    },
+    {
+      "pid": 523828,
+      "name": "python.exe",
+      "ppid": 737000
+    },
+    {
+      "pid": 715492,
+      "name": "python.exe",
+      "ppid": 523828
+    },
+    {
+      "pid": 730480,
+      "name": "python.exe",
+      "ppid": 730940
+    },
+    {
+      "pid": 730940,
+      "name": "python.exe",
+      "ppid": 737000
+    }
+  ],
+  "descendants_terminated": [
+    523828,
+    715492,
+    716624,
+    728720,
+    730480,
+    730940,
+    737000,
+    738040
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 438376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 438420,
+      "name": "python.exe"
+    },
+    {
+      "pid": 737564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 737644,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p51d-docs\\docs\\pwml_recovery_sprint\\evidence\\g11\\REVC-051\\02-smoke460.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p51d-docs\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p51d-docs",
+    "repo_head": "9cc40286577c4a9d4f7d57585deb27f4b8e092e9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
