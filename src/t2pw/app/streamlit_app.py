@@ -4049,6 +4049,89 @@ def run_pwml_export(
                 "reaction_preservation_before_final_export": before_export_report,
             }
 
+        # ── the pre-freeze sequence, at the THIRD export entry point ────────
+        #
+        # ``DECISIONS.md`` D-033 (LOCKED) amends D-032 clause 1: there are
+        # THREE production export entry points, not two, and this is the third.
+        # It is also, measured on this module, the ONLY producer of PWML in the
+        # app: ``build_pwml_ir`` appears exactly once in this file -- below --
+        # and ``outputs/pathway.pwml`` is written at the bottom of this same
+        # function. ``run_post_pipeline_sbml_artifacts`` holds its own seam and
+        # never builds an IR, so every byte of Streamlit PWML came out of a
+        # payload no canonicalizer had run over.
+        #
+        # At base that was invisible, because ``ir.build_pwml_ir`` re-resolved
+        # compound identity itself, downstream of the freeze, which permanent
+        # merge rule 8 and ``PRODUCT_CONTRACT`` §5 forbid. C-051 withdrew that
+        # call, so those rows now refuse loudly instead of being repaired
+        # silently. This is the withdrawn work put back where D-015 and D-016
+        # say it belongs -- upstream of the exporter, on the whole
+        # ``PREFREEZE_CANONICALIZERS`` tuple rather than on any one stage, so
+        # every present and future canonicalizer reaches this path by
+        # construction (D-032 clause 1).
+        #
+        # WHERE, and why not earlier. The seam sits after the quarantine
+        # decision and after both gates -- exactly where the withdrawn ``ir.py``
+        # pass used to run -- so nothing this function already decided is judged
+        # on different names than it was at base. Above ``decision_matches`` the
+        # canonicalization would move the payload before the reuse check and
+        # re-quarantine every export; above the gates it would hand them names
+        # the base never showed them.
+        #
+        # Mutates ``payload`` IN PLACE, so ``build_pwml_ir`` below cannot hold a
+        # pre-resolution view of it. Function-local import for the same reason
+        # the other two seams keep theirs: ``prefreeze_resolution`` is another
+        # card's module surface.
+        from t2pw.pwml.prefreeze_resolution import (
+            PrefreezeResolutionError,
+            run_prefreeze_resolution,
+        )
+
+        try:
+            prefreeze_resolution_report = run_prefreeze_resolution(
+                payload,
+                strict_db=bool(strict_db),
+            )
+        except PrefreezeResolutionError as exc:
+            # D-015 clause 6: an ambiguous rename, or a reference the rename
+            # would break, is a stop condition and the payload is left
+            # untouched. Rendered in this function's own failure shape rather
+            # than left to the catch-all below, which would bury the code in a
+            # string and drop the refusal reason.
+            return {
+                "ok": False,
+                "error": f"Pre-freeze canonicalization failed: {exc.code}: {exc.message}",
+                "counts": {},
+                "issues": 1,
+                "refusal_reasons": [f"prefreeze_resolution_failed:{exc.code}"],
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "stage3_gate_report": stage3_gate_report,
+                "stage3_contract_report": stage3_contract_report,
+                "required_gate_report": required_gate_report,
+                "required_gate_report_path": str(required_gate_path),
+                "prefreeze_resolution_error": {
+                    "code": exc.code,
+                    "message": exc.message,
+                    "details": exc.details,
+                },
+                "quarantine_report": quarantine_report,
+                "quarantine_artifacts": quarantine_artifacts,
+                "quarantine_reused": quarantine_reused,
+                "reaction_preservation_before_final_export": before_export_report,
+            }
+        # ``report["ok"] is False`` deliberately does NOT abort here. D-029
+        # (LOCKED) rules an unreachable PathBank DB a ``review_required``
+        # outcome that must not raise by itself, and merge rule 7 keeps an
+        # incomplete-but-correct pathway rather than dropping it. Persisting and
+        # acting on that flag is the downstream seam's job (D-029's closing
+        # paragraph names C-052), so this seam does not invent a reader for it.
+        # The durable outcome is on the payload anyway -- ``db_status``,
+        # ``raw_name``, ``synonyms`` and the DB-reachability marker
+        # ``build_pwml_ir`` reads below.
+        assert isinstance(prefreeze_resolution_report, dict)
+
         pwml_ir, ir_report = build_pwml_ir(
             payload,
             pathway_name=pathway_name,

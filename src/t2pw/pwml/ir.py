@@ -29,6 +29,32 @@ _NAME_INDEX_UNSET = object()
 #: absence means no resolution ever ran on the row.
 COMPOUND_RESOLUTION_VERDICT_FIELD = "db_status"
 
+#: Where the pre-freeze sequence records, **on the payload**, whether a live
+#: PathBank resolution DB was actually consulted before the freeze.
+#:
+#: ``_emit_canonicalization_preflight`` decides whether to warn from
+#: ``report["db_resolution"]["available"]``, and D-032 clause 6 (LOCKED) rules
+#: ``preflight`` product-visible export content rather than a diagnostic. The
+#: value is produced at ``compound_resolution.py:485``, from
+#: ``db_resolver.available()`` after a ``None`` resolver has been replaced by
+#: ``PathBankDbResolver.from_env()`` -- so reproducing it here would be the
+#: exporter probing an external service after the freeze, which D-015 forbids
+#: outright. It is **carried**, never inferred.
+#:
+#: Nor is it inferable from the rows. On an all-legacy population every row
+#: carries a ``pathbank_compound_id``, so ``compound_resolution.py:504`` takes
+#: the legacy branch and ``continue``s before the resolver is consulted: the
+#: resolved rows are byte-identical while ``available`` differs.
+#:
+#: The payload is the carrier for the same reason
+#: :data:`SPECIES_CANONICALIZATION_FIELD` is -- it is the one object every
+#: export entry point hands to :func:`build_pwml_ir`, and it survives the
+#: freeze, the JSON round trip and ``deepcopy`` intact. It is provenance, not
+#: biology: the name is not in ``canonical_hash.GRAPH_FIELDS`` or
+#: ``GRAPH_SECTIONS``, so the graph hash never sees it, and nothing projects it
+#: into the IR, so the emitted PWML is unchanged.
+PREFREEZE_DB_RESOLUTION_FIELD = "prefreeze_db_resolution"
+
 
 class UnresolvedCompoundRowError(RuntimeError):
     """A compound row reached the exporter carrying no resolution verdict.
@@ -867,6 +893,19 @@ def build_pwml_ir(
         ir = _empty_ir(pathway_name, pathway_subject, width, height)
         _add_issue(report, "error", "invalid_payload", "PWML IR input payload must be an object.")
         return ir, report
+
+    # The pre-freeze stage's verdict on DB reachability, carried on the payload
+    # (:data:`PREFREEZE_DB_RESOLUTION_FIELD`) and read here. Read-only, and only
+    # when the marker is actually there: a payload no pre-freeze stage ever
+    # touched keeps exactly the ``db_resolution`` shape ``_new_report`` gives it,
+    # so nothing this exporter already emits moves.
+    carried_db_resolution = _safe_dict(payload.get(PREFREEZE_DB_RESOLUTION_FIELD))
+    if isinstance(carried_db_resolution.get("available"), bool):
+        report["db_resolution"]["available"] = carried_db_resolution["available"]
+    # An absent reason is defaulted below to ``"db_not_configured"`` -- false of
+    # a DB that was configured and down. Carried for the same reason.
+    if str(carried_db_resolution.get("reason") or "").strip():
+        report["db_resolution"]["reason"] = str(carried_db_resolution["reason"])
 
     resolved_name_index = default_name_index() if name_index is _NAME_INDEX_UNSET else name_index
 

@@ -53,6 +53,7 @@ from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Tupl
 
 from t2pw.pwml.compound_resolution import _db_id, _resolve_compound_rows, ensure_resolution_report
 from t2pw.pwml.ir import (
+    PREFREEZE_DB_RESOLUTION_FIELD,
     SPECIES_CANONICALIZATION_FIELD,
     _canonicalize_species_offline,
     _dedupe_aliases,
@@ -1286,4 +1287,43 @@ def run_prefreeze_resolution(
         name: reason for name, reason in failures.items()
         if reason in _REVIEW_REQUIRED_REASONS
     }
+
+    # ---- carry the DB-reachability verdict to the exporter ----------------
+    #
+    # ``ir._emit_canonicalization_preflight`` reads
+    # ``report["db_resolution"]["available"]`` to decide whether names may be
+    # non-canonical, and D-032 clause 6 (LOCKED) rules ``preflight`` and
+    # ``name_canonicalization`` product-visible export content. The value is
+    # decided *here*, pre-freeze: ``compound_resolution.py:485`` computes it
+    # from ``db_resolver.available()`` after replacing a ``None`` resolver with
+    # ``PathBankDbResolver.from_env()``. The exporter may not re-derive it --
+    # that would be a post-freeze probe of an external service, which D-015
+    # forbids -- and cannot infer it either, because an all-legacy population
+    # resolves to byte-identical rows whether or not the DB was reachable. So
+    # it is written onto the payload, the one object every export entry point
+    # hands to ``build_pwml_ir``.
+    #
+    # Written only when a canonicalizer actually recorded the fact. A payload
+    # this function skipped entirely (no compound rows) records nothing rather
+    # than asserting an availability nobody measured, and ``build_pwml_ir``
+    # keeps the report shape it already had.
+    # ``reason`` rides with ``available``: the preflight prints both, and it
+    # defaults an absent reason to ``"db_not_configured"`` -- false of a DB that
+    # was configured and down. Only the compound stage records either.
+    consulted: List[bool] = []
+    reasons: List[str] = []
+    for name, _canonicalizer in canonicalizers:
+        db_resolution = _safe_dict(
+            _safe_dict(_safe_dict(report.get(name)).get("resolution_report")).get("db_resolution")
+        )
+        if isinstance(db_resolution.get("available"), bool):
+            consulted.append(bool(db_resolution["available"]))
+        if str(db_resolution.get("reason") or "").strip():
+            reasons.append(str(db_resolution["reason"]))
+    if consulted and isinstance(payload, dict):
+        marker: Dict[str, Any] = {"available": any(consulted)}
+        if reasons:
+            marker["reason"] = reasons[0]
+        payload[PREFREEZE_DB_RESOLUTION_FIELD] = marker
+
     return report
