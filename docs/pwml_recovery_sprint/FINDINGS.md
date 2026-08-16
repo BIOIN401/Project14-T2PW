@@ -715,3 +715,126 @@ error; the silent merge was worse than recorded, which strengthens rather than w
    `pathbank_compound_id=78` onto **both** `PEtN-lipid A` and `modified Lipid A`
    (`db_resolver.py:458-472`) and **clause 7's must-keep-refusing reference case consolidates**.
 3. Wrong-identity rows are a **separate mapping defect**, not a duplicate-row concern.
+
+---
+
+## F-039 — MEASURED AND RESOLVED · merge rule 8 **is** violated at EP3, and live exposure is **zero**
+
+**Amended 2026-08-16** by the F-039 measurement. This supersedes F-039's "exposure unquantified" status.
+The finding's own precondition — *do not assert a merge rule 8 violation until the call ordering is
+measured* — **has now been discharged by measurement**, and the answer is that it **is** violated.
+
+### Q1 — call ordering, per D-033 entry point
+
+`freeze_canonical_payload` is defined at `streamlit_app.py:2509` and **called exactly once in production**,
+at `streamlit_app.py:3627`.
+
+| EP | Path | Verdict |
+|---|---|---|
+| **EP1** `run_post_pipeline_sbml_artifacts` `:2617` | `normalize_process_payload:2884` → `run_prefreeze_resolution:3587` → `freeze_canonical_payload:3627` → SBML `:3649` → return `:3680` | **Never reaches `build_pwml_ir` at all.** Freezes and serializes; builds no IR. **No rule-8 exposure.** |
+| **EP2** CLI `writer.run_pwml_pipeline_export:2642` | `json.loads:2647` → `normalize_process_payload:2650` → `run_prefreeze_resolution:2692` → `build_pwml_ir:2734` | **`freeze_canonical_payload` is never called.** No in-process freeze, so before/after is undefined *in process*. Its documented input is `--in final.mapped.json` (`:2816`) — the serialization of EP1's frozen payload. **Post-freeze in the artifact sense, indeterminate in the process sense.** See open question 4 below. |
+| **EP3** `run_pwml_export:3828` | `freeze_canonical_payload:3627` → `CANONICAL_PAYLOAD_KEY:3694` → UI `:5955` → `initialize_refinement_review_state:6033`/`:6059` → `deepcopy` → `refinement_working_json:1183` → button `:2228` → `_generate_pwml_from_refinement_working_json:1899` → `run_pwml_export:1939` → `deepcopy(final_payload):3869` → `run_prefreeze_resolution:4091` → `build_pwml_ir:4135` → `_dedupe_named_rows` (`ir.py:957`, `:1049`) | **DECISIVE — unambiguously post-freeze.** Operates on a deepcopy-of-a-deepcopy of the frozen payload, taken **after the hash** and after `tmp/final.canonical.json` was written. **MERGE RULE 8 IS VIOLATED HERE.** |
+
+**EP3 is the path every committed batch leg takes** — `driver.py:129-130` binds `pwml_generate_btn` and
+`refinement_generate_pwml`, and `driver.py:2085-2112` clicks the second after the first.
+
+### Q2 — live exposure at the tip: **ZERO of 32 legs**
+
+Replayed `ir._norm(ir._canonical(...))` (imported, not reimplemented) with first-wins across all 32
+committed `final_mapped.json`, all five entity buckets (`ir.py:1003-1044`) and four component buckets
+(`ir.py:923-933`). **Exactly one leg** ever collides — the D-034 leg, dropping `#23 'lipid IV A'` in favour
+of `#5 'lipid IV_A'` — and **that leg now aborts pre-freeze at the tip**, pinned by
+`tests/test_prefreeze_compound_resolution.py:1246`. The committed `pwml_ir.json` showing 44 rows in / 43 out
+is a **base-era artifact**. All other 31 legs: zero collisions in every bucket.
+
+### The concrete proof that this is invented biology, not a harmless duplicate
+
+From committed artifacts alone, on that one leg: the frozen payload references `"lipid IV A"` in four
+places including `/processes/reactions/9/inputs/0`, and frozen reaction 9 is
+`"lipid IV A -> lipid A precursor"` with substrate **PathBank 40738 / ChEBI 60365 / KEGG C06025**. In
+`pwml_ir.json`, reaction 9's `left` is `entity_key "cmp_6"` = `'lipid IV_A'`, **PathBank 40982 / ChEBI
+58603**, and the string `"lipid IV A"` appears nowhere.
+
+**The exporter re-bound a reaction to a different database compound after the hash, emitting one warning
+and no error.**
+
+References do **not** dangle — they **silently repoint**. `entity_by_name` (`ir.py:1105-1117`) is keyed on
+the same `_norm` the dedupe grouped on, so `resolve_entity:1371` *succeeds* against the survivor and
+`unresolved_entity_reference` never fires. Same for locations (`:1514`→`:1525`). Everything of the dropped
+row is lost: `ir.py:408-417` warns then `continue`s — the dict is never copied, never entered in `by_norm`,
+and its `synonyms` / `mapped_ids` / `raw_name` are not merged into the survivor.
+
+### Status
+
+**Rule-8 claim: CONFIRMED. Live corpus exposure: ZERO — this is hardening against a latent defect, not an
+active data loss.** Routed as **C-050i**. Any card fixing it must be labelled **G9 new capability with an
+explicitly labelled new acceptance test**: there is no base SHA at which a behavioural probe over the tip's
+corpus fails, because the only leg that reaches the code now aborts earlier.
+
+**Unmeasured residual:** EP3's *second* `run_prefreeze_resolution` can create a `_norm` collision absent
+from the committed file. D-034 clause 5's structural blindness is caught today only when the collided row
+is a **participant**; a non-participant compound in that shape still reaches the dedupe and drops silently.
+Measuring it requires a live pre-freeze run — the heavy-job slot.
+
+---
+
+## F-040 — CORRECTED · two of the four "disagreeing" normalizers are byte-identical duplicates
+
+**Amended 2026-08-16.** **F-040 as originally registered was half wrong and is corrected here rather than
+left to mislead.**
+
+`prefreeze_resolution._norm` (`:94-96`) and `._canonical` (`:90-91`) are **byte-identical duplicates** of
+`ir._norm` (`ir.py:120-122`) and `ir._canonical` (`ir.py:116-117`) — verified by `inspect.getsource`
+equality, and **deliberate**, per the comment at `prefreeze_resolution.py:83-87`. `ir` imports neither; it
+defines its own copies. **They do not disagree.** The original finding's implication that `_norm` and the
+pre-freeze normalizer are competing keys is **false**.
+
+The genuine disagreement is between:
+
+| Key | Site | Non-`[a-z0-9:+ ]` class |
+|---|---|---|
+| `_norm` (`ir` ≡ `prefreeze_resolution`) | `ir.py:120-122` | **substitutes a space** |
+| `process_normalizer._normalize` | `:333-335` | **deletes** |
+| `process_normalizer._norm_text` | `:338-341` | keeps `-`, drops `:`/`+` — **a fourth key F-040 originally omitted** |
+| `_collapsed` | `prefreeze_resolution.py:743-747` | third variant, scoped to one comparison |
+
+**`_norm` and `_normalize` are incomparable — neither is coarser:**
+
+* `'lipid IV_A'` vs `'lipid IV A'` → `_norm` `'lipid iv a'` / `'lipid iv a'` **same group**; `_normalize`
+  `'lipid iva'` / `'lipid iv a'` **different**. This is the real F-039 pair, and **this disagreement is the
+  sole reason `ir._dedupe_named_rows` ever fires on committed data.**
+* Reverse: `'UDP-GlcNAc'` vs `'UDPGlcNAc'` → `_normalize` same group, `_norm` different.
+
+**Ruling: `_norm` is the only defensible definition of an exporter-relevant group**, because
+`entity_by_name` (`ir.py:1105-1117`) and `resolve_entity` (`ir.py:1371`) key on it. Any card grouping rows
+for exporter purposes uses `_norm` and says so.
+
+---
+
+## F-044 — `process_normalizer._dedupe_named_rows` merges 59 rows pre-freeze and records nothing
+
+**Registered 2026-08-16** from the F-039 measurement. **Distinct from F-039**: opposite side of the freeze,
+incomparable key, opposite failure mode.
+
+`process_normalizer._dedupe_named_rows` (`:706-721`) is **pre-freeze** — reached from `_ensure_compound:922`
+→ `:933` and `normalize_composites:1446` → `:1551-1559`; `normalize_composites` is called by
+`normalize_process_payload:5426`, which Streamlit calls at `streamlit_app.py:2884` (743 lines *above* the
+freeze, same function) and the CLI at `writer.py:2650`.
+
+It merges on **`_normalize(name)` alone** (`:714`) via `_merge_dicts_keep_existing` (`:715-719`), with
+`rows[:] = list(by_norm.values())` at `:721`. **No class check, no identifier comparison** — exactly what
+**D-035 clause 1** forbids. It takes **no report argument and records nothing anywhere**: strictly more
+silent than `ir._dedupe_named_rows`, which at least warns.
+
+**Measured effect:** **8 of 60** committed `merged_payload.json` (`driver.py:1170-1172`, `:1204-1205`),
+**59 rows merged away** — 5/3/1/1/21/22/2/4 across PMC12312563 ×2, PMC13231680 ×3, PMC12444477 ×2,
+PMC13278307. **Lossiness today: zero** — for all 59 pairs, the set of fields where both rows hold a
+non-blank *differing* value (excluding `evidence`, longest-wins at `:682-687`) is **empty**; they are
+pre-mapping exact-name duplicates carrying no accessions. 0 of 32 `final_mapped.json` retain any
+`_normalize` collision.
+
+**It becomes lossy the moment a pair carries a conflict**, because `:700-701` only fills blanks. Being
+pre-freeze it does not violate merge rule 8, and being currently lossless it is **not urgent** — but it is a
+name-only consolidator operating with zero identity evidence and zero record, which is the exact practice
+D-035 exists to forbid. **Owner: unassigned. Deliberately NOT folded into C-050h or C-050i** (F-015: that
+would widen an unstudied boundary across three files and two sides of the freeze).
