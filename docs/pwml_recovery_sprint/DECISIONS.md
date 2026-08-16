@@ -1327,3 +1327,75 @@ gate or increase PWML output. Ratifying it costs nothing that a later measuremen
 against PathBank rows on the committed corpus and demonstrates the namespace corroborates
 reliably. Until such a measurement exists, an agent may **not** add DrugBank to the corroborating
 set, and may not treat its absence as an oversight. **P4-03 is closed.**
+
+---
+
+## D-032 — the pre-freeze sequence must run at BOTH production export entry points, and that is a prerequisite for C-051 · 2026-08-15 · LOCKED
+
+**Measured, not inferred.** `REV-045a` drove the documented README command
+(`python scripts/run_pwml.py --in <payload> --out-dir <out> --non-strict-db`) over a
+taxonomy-identified strain at `0ec64d2c` and at `d146be48`:
+
+```
+BASE  pathway.pwml -> <name>Lactococcus lactis</name>
+      IR species   -> raw_name + aliases preserve "…subsp. lactis KF147"
+      report       -> name_canonicalization.species = [deterministic_strain_normalization]
+                      preflight.species = ["Lactococcus lactis"]
+
+TIP   pathway.pwml -> <name>Lactococcus lactis subsp. lactis KF147</name>
+      IR species   -> NO raw_name, NO aliases
+      report       -> name_canonicalization.species = []   preflight = null
+```
+
+The exported organism **changes identity**, and the provenance carrier is gone with it, so the row
+wears the un-normalized name with **no record that normalization was ever owed**. That violates
+`PRODUCT_CONTRACT` §5 (organism/species equivalence is must-remain-equivalent) and **D-016**'s own
+requirement to *"preserve or record organism/species provenance"*.
+
+### The structural cause
+
+`run_prefreeze_resolution` has **exactly one** production caller: `streamlit_app.py:3587`.
+`writer.py` contains **zero** prefreeze references, yet `run_pwml_pipeline_export` (`writer.py:2642`)
+calls `build_pwml_ir` at `:2662` and is reached from `scripts/run_pwml.py:12-16`, documented at
+`README.md:40`. `docs/pathwhiz_requirements.md:316-318` and `:523-525` name **"the two production
+entry points"** and identify the CLI one by symbol. `MASTER_PLAN.md:420` confirms **no card owns
+`run_pwml_pipeline_export`**, so this was a gap, not a sequenced interim state.
+
+**No single card erred.** C-045 correctly removed the in-exporter ladder call under D-016 and merge
+rule 8; C-050 correctly added the pre-freeze call to Streamlit; C-045 honestly re-pointed
+`test_pwml_writer.py`'s species assertions through a pre-canonicalized payload; C-045a honestly
+re-baselined the golden. The defect is **emergent across four cards**, each link individually
+defensible and documented. The orchestrator's C-045a charter compounded it by asserting the
+standalone `build_pwml_ir` configuration was *"not the production path"* — singular, and false.
+
+### ⚠ The same defect is queued to recur, for compounds
+
+Measured at `d146be48`: `_resolve_compound_rows` is **still called at `ir.py:979` inside
+`build_pwml_ir`**, so the CLI path currently still receives **compound** resolution from the
+exporter — and **C-051's charter is to remove exactly that call site.** Landing C-051 while the CLI
+seam is unwired would strip compound resolution from a documented production entry point, on the
+primary biology of a metabolic pathway.
+
+### The decision
+
+1. **The pre-freeze sequence must run at both production export entry points.** It is wired once,
+   for the whole `PREFREEZE_CANONICALIZERS` tuple, never per-stage — so every present and future
+   canonicalizer is covered by construction.
+2. **`C-045b` owns `writer.py :: run_pwml_pipeline_export`** and is the card that wires it. No other
+   card may add a competing seam.
+3. **C-045b is a hard prerequisite for C-051.** Build order becomes
+   `C-050e → C-050d → C-050f → C-045 → C-045a → C-045b → C-051 → ONE composite --no-ff merge`.
+   **C-051 must not be dispatched until C-045b is approved.**
+4. **C-051's acceptance is extended:** it must show that removing the `ir.py:979` call site leaves
+   compound resolution intact on **both** entry points, measured through the CLI, not argued.
+5. **A pre-freeze stage may not be considered wired on the strength of one caller.** Any future card
+   moving work into `PREFREEZE_CANONICALIZERS` must demonstrate coverage at **both** entry points.
+6. **`preflight` and `name_canonicalization` are product-visible export content**, not diagnostics.
+   Losing them on an entry point is a regression, not a cosmetic change.
+
+### What this does not do
+
+It does not reopen C-045, C-045a or any merged card, and it does not authorize editing
+`prefreeze_resolution.py`, `build_pwml_ir`, or the 32 `GOLDEN` digests — `REV-045a` independently
+reproduced all 32 at both SHAs and they are correct. C-045a's measurements were sound; only its
+**significance claim** was wrong, and that claim originated in the orchestrator's charter.
