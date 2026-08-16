@@ -588,3 +588,130 @@ no assertion, where the base whole-object comparison covered it. It is a counter
 `src/t2pw/pwml/` and `src/t2pw/sbml/`: no hits), so the "nothing PWML or SBML consumes altered"
 requirement is not breached. **Cheap future hardening:** iterate all top-level keys except `entities`
 instead of a fixed tuple. Not worth a correction round.
+
+---
+
+## F-039 — `ir._dedupe_named_rows` still drops rows on a name-only collision, post-freeze
+
+**Registered 2026-08-16** from the C-050h census, **verified independently by the orchestrator** against
+live source. **This is not a re-opening of B-1; it is a distinct mutation class that B-1's accepted gate
+did not measure.**
+
+`_dedupe_named_rows` (`src/t2pw/pwml/ir.py:391-424`) groups rows on `_norm(_canonical(name))` and, on a
+collision, **silently keeps the first and drops the rest**, emitting only a `duplicate_named_record`
+*warning* (`:409-415`). It is called at **`:957`** and — on `entities.compounds` — at **`:1049`**.
+
+**Why the accepted gate did not catch it.** The stack's landing measured *post-freeze compound identity
+mutations*: **13 at the integration base, 0 at the merged tip**. That measurement is sound and is not
+disturbed. But identity mutation (a row's `pathwhiz_id` / identifiers changing) and **row dropping** are
+different classes. A first-wins dedupe removes a row without mutating any surviving row's identity, so it
+passes an identity-mutation probe unseen.
+
+**Status: OPEN, exposure unquantified.** Two things are *measured*: the function is live, and it drops on
+name coincidence alone with no identity evidence — which is precisely what **D-035 clause 1** forbids. Two
+things are **NOT yet measured and must not be asserted**:
+
+1. whether `build_pwml_ir` runs **after** `freeze_canonical_payload` at each of the three export entry
+   points (D-033), which is what decides whether this is an actual **merge rule 8** violation or a
+   pre-freeze-adjacent dedupe;
+2. how many committed legs currently reach it with a live collision — the D-034 leg does **not**, because
+   it aborts earlier in pre-freeze.
+
+**Do not state that merge rule 8 is violated until item 1 is measured.** Equally, do not treat the
+question as closed by the B-1 discharge: B-1 measured a different thing.
+
+**Owner: unassigned.** Natural candidate is **C-050h**, whose D-035 mandate already covers "never merge
+rows because names coincide" — but the census also shows the two functions disagree about what a group
+*is*, so folding it in without measuring item 1 would widen an unstudied boundary (**F-015**).
+
+---
+
+## F-040 — three disagreeing name normalizers, and a third name-only consolidator upstream
+
+**Registered 2026-08-16** from the C-050h census.
+
+A **third** name-only consolidator exists upstream of the pre-freeze stage:
+`src/t2pw/pipeline/process_normalizer.py:706-721` merges compound rows on coincident `_normalize(name)`
+with **zero identity evidence**, pre-freeze, reached from `:933`, `:1551` and `:1557`.
+
+Three normalization keys are live and **mutually disagreeing**:
+
+| Key | Site | Behaviour on the non-`[a-z0-9:+ ]` class |
+|---|---|---|
+| `_norm` | `pwml/prefreeze_resolution.py:94` | **substitutes a space** |
+| `_normalize` | `pipeline/process_normalizer.py:333-335` | **deletes** |
+| `_collapsed` | `pwml/prefreeze_resolution.py` | third variant |
+
+Consequence: "the duplicate group" is not a well-defined set — it depends on which function asks. Any
+D-035 implementation must **name the normalizer that defines a group** and say why, and must state whether
+D-035 binds `process_normalizer._dedupe_named_rows` and `ir._dedupe_named_rows` (see **F-039**).
+
+---
+
+## F-041 — A0-C7 is orphaned: its owner card shipped without discharging it
+
+**Registered 2026-08-16** by the orchestrator during C-052 charter validation.
+
+`LEDGER.md`'s carried-requirement table records **A0-C7's owner as C-030** (C-052 is listed only under
+"related"). **C-030 is `ACCEPTED`, merged `f3e9fb1`**, and its ledger cell records only **A0-C1** as
+discharged. So A0-C7 — *"capture the pre-seam caller-owned payload reference and prove the intended
+object-sharing relationship after `freeze_canonical_payload`; `final_mapped is result["payload"]` is
+tautological and a share→copy mutant survives it"* — has **no live owner**.
+
+**Correction to the sprint record:** the handoff note that "C-052 carries A0-C7 and A0-C8" is **half
+wrong**. **A0-C8 is C-052's. A0-C7 is not**, and C-052 must not silently absorb it — that would let a
+requirement change owner without a decision. A0-C7 needs an explicit re-assignment.
+
+The C-052 study did locate a genuine discriminator for it — a **share→copy mutant at
+`streamlit_app.py:3748`** that the tautological assertion survives — so re-assignment is actionable
+whenever an owner is named.
+
+---
+
+## F-042 — `PATHSPEC` omits `scripts/`, so no exported base tree can run Chunk B or SMOKE
+
+**Registered 2026-08-16** from the H-010 study, **verified independently by the orchestrator**, and
+**deliberately excluded from H-010's boundary** so that card does not grow further.
+
+`PATHSPEC` (`docs/pwml_recovery_sprint/evidence/c045b_base_tree.py:35-38`) is
+`["src", "tests", "reference", "pytest.ini", "pyproject.toml", "data/pathwhiz_id_db.json",
+"docs/pwml_recovery_sprint/evidence"]` — **`scripts/` is absent**.
+
+**It affects the mandated materializer too:** `c051a_base_tree_batch.py:21` does
+`from c045b_base_tree import PATHSPEC`, so every base tree built by the *required* tool is missing
+`scripts/`.
+
+**Blast radius exceeds imports.** Beyond `tests/test_bench_controls.py:344`'s
+`from scripts import batch_run`, these reference `scripts/batch_run.py` **as a path**:
+`tests/test_batch_preflight.py:57`/`:481`/`:590`/`:612`, `tests/test_batch_run.py:42`/`:1425`, and
+`tests/helpers_eligibility.py:146-147` inserts `ROOT/"scripts"` on `sys.path` itself.
+
+**Interaction to respect:** H-010's `require_scripts` guard defaults **off / selection-derived** precisely
+so that it does not newly refuse Chunk D in an exported base tree while F-042 is unfixed. Fixing F-042 and
+defaulting that guard on are the same decision and belong to one card.
+
+---
+
+## F-043 — a duplicate group that clears D-035's bar and is biologically wrong
+
+**Registered 2026-08-16** from the C-050h census. **This is the strongest argument against
+identifier-equality as a consolidation trigger.**
+
+Three rows — `PG`, `PG phosphate`, `(PGP)` — all carry `pathbank_compound_id` **193**, satisfy every
+D-035 clause 3 sub-test, and would consolidate. **PathBank 193 is UDP-glucose**, which is none of them.
+
+Separately, in the D-034 leg, row 23 `lipid IV A` carries **row 6 `Kdo-lipid IV_A`'s exact identifier
+triple** (pathbank 40738 / kegg C06025 / chebi CHEBI:60365). So the pair the old exporter silently merged
+was **not** one molecule spelled two ways — it merged `lipid IV_A` with a row bearing a *different*
+molecule's identity in a *different* biological state. **D-034's account of that leg understated the
+error; the silent merge was worse than recorded, which strengthens rather than weakens D-034.**
+
+**Consequences for any D-035 implementation:**
+
+1. Consolidation must be **triggered by name collision** and only then *proved* by identity. Triggering on
+   identifier equality is measurably unsafe.
+2. Clause 3 must be evaluated on **payload-carried, pre-resolution** identifiers, with **3b (no conflicting
+   identifiers) ordered before 3c (matching identifier)** — otherwise the `C_canned` stub stamps
+   `pathbank_compound_id=78` onto **both** `PEtN-lipid A` and `modified Lipid A`
+   (`db_resolver.py:458-472`) and **clause 7's must-keep-refusing reference case consolidates**.
+3. Wrong-identity rows are a **separate mapping defect**, not a duplicate-row concern.
