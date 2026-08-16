@@ -11,13 +11,11 @@ which tree was measured.
 ``bounded_run.py`` records no environment and deletes the child's merged log (F-004), so a
 verdict printed to stdout is as uncheckable as ``c045_pinned_pytest.py``'s ``print`` was.
 Every refusal and every pass therefore writes its own JSON verdict, produced by the process
-that actually resolved the imports.
-
-Imports nothing from ``src/``, nothing from ``bounded_run``, and **never ``pytest``**: this
-runs before pytest is imported, hence before plugins, ``rootdir`` and collection.
-``expected_tree`` deliberately duplicates ``_repo_root._find_root`` rather than importing
-it -- importing ``_repo_root`` executes its module-level ``REPO_ROOT`` resolution and would
-entangle this guard with the very asymmetry it exists to audit.
+that actually resolved the imports. This module imports nothing from ``src/``, nothing from
+``bounded_run``, and **never ``pytest``**: it runs before pytest exists in the process.
+``expected_tree`` duplicates ``_repo_root._find_root`` rather than importing it -- importing
+``_repo_root`` would execute its ``REPO_ROOT`` resolution and entangle this guard with the
+very asymmetry it audits.
 """
 
 from __future__ import annotations
@@ -37,17 +35,27 @@ REFUSAL_MARKER = "T2PW_MEASUREMENT_TREE_REFUSED"
 #: (``bounded_run.EXIT_INFRASTRUCTURE_FAILURE``), 124 (timeout) and 130 (cancelled).
 EXIT_MEASUREMENT_TREE_REFUSED = 98
 
-#: Emitted in this order, so a verdict diff is stable.
+#: Emitted in this order, so a verdict diff is stable. A bad *expectation* reads
+#: differently from a wrong *tree*: they are different operator errors.
 VIOLATION_CODES = (
+    "EXPECT_TREE_NOT_A_CHECKOUT",
     "T2PW_UNIMPORTABLE",
     "T2PW_FROM_WRONG_TREE",
     "CWD_NOT_EXPECTED_ROOT",
     "SCRIPTS_UNIMPORTABLE",
     "SCRIPTS_FROM_WRONG_TREE",
     "SELECTION_OUTSIDE_EXPECTED_TREE",
+    "VERDICT_UNWRITABLE",
 )
 
 _IMPORTS_SCRIPTS = re.compile(r"^[ \t]*(?:from|import)[ \t]+scripts\b", re.M)
+
+
+def is_checkout(path: Path) -> bool:
+    """The tree-identity rule -- one definition, shared by discovery and by
+    ``--expect-tree`` validation, so the two can never drift."""
+
+    return (path / "pyproject.toml").is_file() and (path / "src" / "t2pw").is_dir()
 
 
 def expected_tree(start: Optional[Path] = None) -> Path:
@@ -56,7 +64,7 @@ def expected_tree(start: Optional[Path] = None) -> Path:
 
     base = Path(start).resolve() if start is not None else Path(__file__).resolve()
     for candidate in (base, *base.parents):
-        if (candidate / "pyproject.toml").is_file() and (candidate / "src" / "t2pw").is_dir():
+        if is_checkout(candidate):
             return candidate
     raise RuntimeError(
         "could not locate the tree under measurement above " + str(base)
@@ -155,12 +163,20 @@ def resolve_facts(expected: Path, *, selection: Sequence[str] = (),
 
 
 def check(expected: Path, facts: Dict[str, Any], *, require_scripts: bool) -> List[str]:
-    """Pure. Ordered violation codes, or ``[]``."""
+    """Pure. Ordered violation codes, or ``[]``.
+
+    **Containment is against the exact package directory, never the tree root.** Every
+    agent worktree lives at ``<primary>/.claude/worktrees/``, *inside* the primary checkout,
+    so a root-level ``is_relative_to`` would accept ~70 wrong trees and vouch for each.
+    """
 
     found = set()
+    if not is_checkout(expected):
+        found.add("EXPECT_TREE_NOT_A_CHECKOUT")
+
     if not facts.get("t2pw_file"):
         found.add("T2PW_UNIMPORTABLE")
-    elif not _under(facts["t2pw_file"], expected):
+    elif not _under(facts["t2pw_file"], expected / "src" / "t2pw"):
         found.add("T2PW_FROM_WRONG_TREE")
 
     cwd = facts.get("cwd")
@@ -171,7 +187,7 @@ def check(expected: Path, facts: Dict[str, Any], *, require_scripts: bool) -> Li
         locations = facts.get("scripts_locations") or []
         if not locations:
             found.add("SCRIPTS_UNIMPORTABLE")
-        elif not all(_under(entry, expected) for entry in locations):
+        elif not all(_under(entry, expected / "scripts") for entry in locations):
             found.add("SCRIPTS_FROM_WRONG_TREE")
 
     if any(not _under(entry, expected) for entry in facts.get("selection_paths") or []):
@@ -228,6 +244,10 @@ def enforce(*, expected: Optional[Path] = None, require_scripts: bool,
     facts = resolve_facts(tree, selection=selection, cwd_at_entry=cwd_at_entry)
     violations = check(tree, facts, require_scripts=require_scripts)
     verdict = write_verdict(verdict_path, facts, violations)
+    # Asked for and unwritable is fatal: TEST_MATRIX § 0 requires the artifact on every
+    # gate record, so a green run without one would over-claim.
+    if verdict_path and verdict is None:
+        violations = violations + ["VERDICT_UNWRITABLE"]
     facts["violations"] = violations
     facts["verdict_path"] = verdict
     if violations:

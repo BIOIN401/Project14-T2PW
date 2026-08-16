@@ -11,18 +11,19 @@ refuses with exit 98 here, before plugins, ``rootdir`` and collection. (5) print
 ``T2PW: ...`` line byte-identically to what ``c045_pinned_pytest.py`` always printed, so
 every committed report form stays valid. (6) only now ``import pytest``.
 
-Note what step 3 deliberately does **not** do: it does not put ``<expected>/src`` on
-``sys.path``. Repairing that would make the wrong-tree refusal unreachable and turn
-``PYTHONPATH`` into decoration. Half 1 is *verified*; only the cwd hole is repaired.
+Step 3 deliberately does **not** put ``<expected>/src`` on ``sys.path``: repairing that
+would make the wrong-tree refusal unreachable and turn ``PYTHONPATH`` into decoration.
+Half 1 is *verified*; only the cwd hole is repaired. An ``--expect-tree`` override is not
+trusted either -- ``tree_pin.check`` validates it with the same rule ``expected_tree()``
+uses and refuses with ``EXPECT_TREE_NOT_A_CHECKOUT``, so naming a common ancestor of
+several checkouts cannot launder a run. ``--require-scripts`` defaults to selection-derived
+and **off**, so no currently-green command is newly failed (Finding H-3).
 
 Usage::
 
     <python> pinned_pytest.py [--expect-tree DIR] [--pin-verdict FILE]
                               [--require-scripts | --no-require-scripts]
                               -q --basetemp=C:/t/x/y tests/test_x.py
-
-``--require-scripts`` defaults to selection-derived and **off**, so no currently-green
-command is newly failed; exported base trees carry no ``scripts/`` at all (Finding H-3).
 """
 
 from __future__ import annotations
@@ -76,6 +77,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     expect, verdict, require, rest = split_argv(list(sys.argv[1:] if argv is None else argv))
     expected = Path(expect).resolve() if expect else tree_pin.expected_tree()
     cwd_at_entry = os.getcwd()
+    # Resolve the verdict destination BEFORE the chdir. A relative --pin-verdict must
+    # land where the operator invoked the launcher; resolving it afterwards silently
+    # wrote it into the *expected* tree, which with --expect-tree is another checkout.
+    if verdict:
+        verdict = str(Path(verdict).resolve())
 
     if str(expected) not in sys.path:
         sys.path.insert(0, str(expected))

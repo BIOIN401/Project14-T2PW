@@ -64,18 +64,16 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 - **Current-card impact** none — every Pack 1 writer and reviewer pinned `PYTHONPATH` and
   certified `t2pw.__file__` **inside the pytest process**. All merge gates were run from the
   primary checkout with the merge staged, so they resolve correctly by construction.
-- **Owner** **H-010** — closed for every run that goes through the measured launcher
-  (`evidence/pinned_pytest.py` + `evidence/tree_pin.py`, `TEST_MATRIX.md` § 0 rule 10):
-  the resolved `t2pw.__file__` is compared against the tree under measurement and a
-  mismatch **refuses with exit 98 before collection**, writing a committed `*.pin.json`
-  verdict. The originally proposed remedy — a one-line `pythonpath = src` in `pytest.ini`
-  — was **considered and REFUSED**: pytest *prepends* `pythonpath` entries at collection,
-  so it would sit ahead of the `PYTHONPATH` pin and make every base-tree G9 proof silently
-  measure the tip — the same defect class as this finding, aimed at the proofs themselves.
-  A `conftest.py` was likewise not adopted. **Residual, still unowned:** commands that do
-  not yet use the launcher (SMOKE, Chunk E, `baseline_suite.py`, the 15
-  `add_src_to_path()` probes) remain masked only by test-file ordering; `chunk_d_gate.py`
-  adoption is a deliberate follow-up card.
+- **Owner** **H-010** — closed for every run through the measured launcher
+  (`evidence/pinned_pytest.py` + `evidence/tree_pin.py`, `TEST_MATRIX.md` § 0 rule 10): the
+  resolved `t2pw.__file__` is compared against `<measured>/src/t2pw` and a mismatch
+  **refuses with exit 98 before collection**, writing a committed `*.pin.json` verdict. The
+  proposed remedy — `pythonpath = src` in `pytest.ini` — was **considered and REFUSED**:
+  pytest *prepends* those entries, so it would sit ahead of the `PYTHONPATH` pin and make
+  every base-tree G9 proof silently measure the tip, the same defect class aimed at the
+  proofs. A `conftest.py` was likewise not adopted. **Residual, unowned:** commands not yet
+  on the launcher (SMOKE, Chunk E, `baseline_suite.py`, the 15 `add_src_to_path()` probes)
+  stay masked by file ordering; `chunk_d_gate.py` adoption is a follow-up card.
 
 ## F-004 — G11 reports record no environment
 
@@ -86,11 +84,11 @@ expected · minimal reproducer or evidence · current-card impact · future owne
   environment**, so a `PYTHONPATH` pinning claim is not self-evidencing from the artifact.
   Reviewers had to re-derive every pinning claim independently.
 - **Current-card impact** none — reviewers re-derived
-- **Owner** **H-010, worked around — `bounded_run.py` itself is untouched.** No ownership
-  grant was sought: instead the measured launcher writes its **own** `*.pin.json` verdict
-  carrying the resolved `t2pw.__file__`, `sys.path[:8]`, cwd, `PYTHONPATH` and the
-  violation list. That is strictly better evidence than a wrapper field, because it is
-  produced by the process that actually resolved the imports rather than by its parent.
+- **Owner** **H-010, worked around — `bounded_run.py` untouched.** No ownership grant was
+  sought: the measured launcher writes its **own** `*.pin.json` verdict carrying the
+  resolved `t2pw.__file__`, `sys.path[:8]`, cwd, `PYTHONPATH` and the violation list —
+  better evidence than a wrapper field, since the process that resolved the imports
+  produced it rather than its parent.
   The underlying schema gap stays **open and unowned**: a job that does not run through the
   launcher still records no environment at all.
 

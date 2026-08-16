@@ -3,23 +3,21 @@
 **G9 label: NEW CAPABILITY, explicitly.** No repository mechanism has ever refused a
 mis-pinned run -- ``c045_pinned_pytest.py`` printed and proceeded, ``chunk_d_gate.py``
 prints and proceeds, ``bounded_run.py`` records no environment at all. There is no prior
-behaviour to restore, so **no base failure is offered or expected** for these five cases;
-a manufactured one would rest on ``tree_pin`` not existing at the base SHA, which is
-symbol absence and is not proof. (The *separate* CWD/``scripts`` defect in
-``c045_pinned_pytest.py`` **is** a pre-existing regression with a real behavioural base
-failure -- proved outside this file, by running the base's own launcher at the base SHA.)
+behaviour to restore, so **no base failure is offered or expected** here; a manufactured
+one would rest on ``tree_pin`` not existing at the base SHA, which is symbol absence and is
+not proof. (The *separate* CWD/``scripts`` defect in ``c045_pinned_pytest.py`` **is** a
+pre-existing regression with a real base failure -- proved outside this file.)
 
 **The real venv is never touched.** Each case builds a synthetic checkout under the run's
 own basetemp -- ``pyproject.toml``, ``src/t2pw/__init__.py`` with a unique marker,
 ``scripts/``, ``tests/``, and a copy of ``tree_pin.py`` + ``pinned_pytest.py`` so that
 ``expected_tree()`` resolves to it. The editable ``.pth`` is simulated by a
 ``sitecustomize.py`` on the child's ``PYTHONPATH``: it drops every ``src`` entry and
-*appends* a decoy, and a tail append is exactly ``.pth`` semantics.
+*appends* a decoy, which is exactly ``.pth`` tail-append semantics.
 
-**Guard-removal proof.** Every case also runs ``legacy.py``: the pre-H-010
-``c045_pinned_pytest.py`` body verbatim -- import ``t2pw``, print it, hand off to
-``pytest.main``. That is the guard genuinely removed rather than mocked, and each case
-asserts the legacy launcher sails straight through the same input.
+**Guard-removal proof.** Each case also runs ``legacy.py``: the pre-H-010
+``c045_pinned_pytest.py`` body verbatim. That is the guard genuinely removed rather than
+mocked, and every case asserts the legacy launcher sails straight through the same input.
 """
 
 from __future__ import annotations
@@ -75,15 +73,18 @@ print("BARE_ENFORCE_OK", flush=True)
 """
 
 
-def _make_tree(root: Path, marker: str, *, launcher: bool = True) -> Path:
+def _make_tree(root: Path, marker: str, *, launcher: bool = True,
+               scripts: bool = True) -> Path:
     """A synthetic checkout that ``expected_tree()`` will recognise."""
 
     (root / "src" / "t2pw").mkdir(parents=True, exist_ok=True)
-    (root / "scripts").mkdir(exist_ok=True)
     (root / "tests").mkdir(exist_ok=True)
+    if scripts:
+        (root / "scripts").mkdir(exist_ok=True)
+        (root / "scripts" / "marker.py").write_text(
+            f"MARKER = {marker!r}\n", encoding="utf-8")
     (root / "pyproject.toml").write_text("[project]\nname = 'synthetic'\n", encoding="utf-8")
     (root / "src" / "t2pw" / "__init__.py").write_text(f"MARKER = {marker!r}\n", encoding="utf-8")
-    (root / "scripts" / "marker.py").write_text(f"MARKER = {marker!r}\n", encoding="utf-8")
     (root / "tests" / "test_plain.py").write_text(
         "def test_plain():\n    assert True\n", encoding="utf-8")
     (root / "tests" / "test_uses_scripts.py").write_text(
@@ -343,3 +344,86 @@ def test_correct_tree_passes_and_wrong_tree_fails_visibly_before_any_count(tmp_p
     legacy = _run(tree / "ev" / "legacy.py", ["-q", f"--basetemp={bt / 'c'}", "tests/test_plain.py"],
                   cwd=tree, env={"PYTHONPATH": str(decoy / "src")})
     assert legacy.returncode == 0 and "1 passed" in _out(legacy)
+
+
+def test_a_decoy_nested_inside_the_expected_tree_is_refused(tmp_path: Path) -> None:
+    """REV-H010 finding 1: containment must be against ``<expected>/src/t2pw``, not the
+    tree root -- every agent worktree lives at ``<primary>/.claude/worktrees/``, so a
+    root-level ``is_relative_to`` accepts ~70 wrong trees and certifies each."""
+
+    tree = _make_tree(tmp_path / "primary", "PRIMARY", scripts=False)
+    nested = _make_tree(tree / ".claude" / "worktrees" / "agent-x", "NESTED", launcher=False)
+    bt = tmp_path / "bt"
+    bt.mkdir()
+    launcher = tree / "ev" / "pinned_pytest.py"
+
+    # (a) t2pw from the nested worktree while the PRIMARY is under measurement.
+    v1 = tmp_path / "v1.json"
+    proc = _run(launcher, [f"--pin-verdict={v1}", "-q", f"--basetemp={bt / 'a'}",
+                           "tests/test_plain.py"],
+                cwd=tree, env={"PYTHONPATH": str(nested / "src")})
+    data = _assert_refused(proc, v1, ["T2PW_FROM_WRONG_TREE"])
+    # The differential, in one line: the PRE-FIX predicate accepted exactly this.
+    assert Path(str(data["t2pw_file"])).is_relative_to(tree)
+    assert Path(str(data["t2pw_file"])).is_relative_to(nested / "src" / "t2pw")
+
+    # (b) the other half: `scripts` from the nested worktree. The expected tree has none.
+    v2 = tmp_path / "v2.json"
+    proc = _run(launcher, [f"--pin-verdict={v2}", "--require-scripts", "-q",
+                           f"--basetemp={bt / 'b'}", "tests/test_plain.py"],
+                cwd=tree, env={"PYTHONPATH": os.pathsep.join(
+                    [str(tree / "src"), str(nested)])})
+    data = _assert_refused(proc, v2, ["SCRIPTS_FROM_WRONG_TREE"])
+    assert data["scripts_locations"]
+    assert all(Path(loc).is_relative_to(tree) for loc in data["scripts_locations"])
+
+    # GUARD REMOVED: the nested decoy sails through and counts a test.
+    legacy = _run(tree / "ev" / "legacy.py",
+                  ["-q", f"--basetemp={bt / 'c'}", "tests/test_plain.py"],
+                  cwd=tree, env={"PYTHONPATH": str(nested / "src")})
+    assert legacy.returncode == 0 and "1 passed" in _out(legacy)
+    assert str(nested) in _out(legacy)
+
+
+def test_a_bad_expectation_and_an_unwritable_verdict_are_both_refused(tmp_path: Path) -> None:
+    """REV-H010 findings 2 and 4."""
+
+    tree = _make_tree(tmp_path / "measured", "MEASURED")
+    bt = tmp_path / "bt"
+    bt.mkdir()
+    launcher = tree / "ev" / "pinned_pytest.py"
+    pinned = {"PYTHONPATH": str(tree / "src")}
+    sel = ["-q", "tests/test_plain.py"]
+
+    # (a) --expect-tree at a common ancestor of several checkouts -- which CONTAINS the
+    #     right t2pw, so only the checkout rule catches it -- then at a file, then at a
+    #     path that does not exist.
+    for name, target in (("a", tmp_path), ("f", tree / "pyproject.toml"),
+                         ("g", tmp_path / "nope")):
+        verdict = tmp_path / f"{name}.json"
+        proc = _run(launcher, [f"--expect-tree={target}", f"--pin-verdict={verdict}",
+                               f"--basetemp={bt / name}", *sel], cwd=tree, env=pinned)
+        data = _assert_refused(proc, verdict, ["EXPECT_TREE_NOT_A_CHECKOUT"])
+        if name == "a":  # the ancestor case: t2pw IS nested inside the claimed tree
+            assert Path(str(data["t2pw_file"])).is_relative_to(target)
+
+    # (b) a RELATIVE --pin-verdict lands where the operator invoked the launcher, not in
+    #     the expected tree. Resolving it after the chdir wrote it into another checkout.
+    other = _make_tree(tmp_path / "other", "OTHER")
+    proc = _run(launcher, [f"--expect-tree={other}", "--pin-verdict=rel.pin.json",
+                           f"--basetemp={bt / 'r'}", *sel],
+                cwd=tree, env={"PYTHONPATH": str(tree / "src")})
+    assert proc.returncode == 98, _out(proc)
+    assert (tree / "rel.pin.json").is_file(), sorted(p.name for p in tree.iterdir())
+    assert not (other / "rel.pin.json").exists()
+
+    # (c) a verdict ASKED FOR and unwritable is fatal: no green run without the artifact.
+    blocked = tmp_path / "blocked"
+    blocked.mkdir()
+    (blocked / "wall").write_text("not a directory\n", encoding="utf-8")
+    proc = _run(launcher, [f"--pin-verdict={blocked / 'wall' / 'v.json'}",
+                           f"--basetemp={bt / 'h'}", *sel], cwd=tree, env=pinned)
+    assert proc.returncode == 98, _out(proc)
+    assert "T2PW_PIN_VERDICT_UNWRITABLE" in _out(proc)
+    assert "VERDICT_UNWRITABLE" in _out(proc)
+    assert "passed" not in _out(proc)

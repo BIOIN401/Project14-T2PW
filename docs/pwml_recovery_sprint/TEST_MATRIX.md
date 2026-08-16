@@ -104,24 +104,29 @@ hung it.
     `pythonpath` and there is no `conftest.py`; separately, any in-process
     `sys.path.insert(0, …)` — including `_repo_root.add_src_to_path()` and the self-pin in
     24 of the 27 smoke and Chunk D test modules — **overrides `PYTHONPATH`** in a worktree
-    or exported tree while being a no-op in the primary checkout. Only the **resolved**
-    path, compared against the expected tree and written to a committed verdict artifact,
-    settles which tree was measured.
+    while being a no-op in the primary checkout. Only the **resolved** path, compared
+    against the expected tree and written to a committed verdict, settles which tree was
+    measured. `pytest.ini` **must not** gain `pythonpath = src`: it was considered as a
+    remedy for F-003 and is **refused**, because pytest *prepends* those entries, so it
+    would sit ahead of the `PYTHONPATH` pin and make every base-tree G9 proof silently
+    measure the tip — the same defect class as F-003, aimed at the proofs themselves.
 
-    `pytest.ini` **must not** gain `pythonpath = src`. It was considered as a remedy for
-    F-003 and is **refused**: pytest *prepends* `pythonpath` entries at collection, so the
-    entry would sit ahead of the `PYTHONPATH` pin and make every base-tree G9 proof
-    silently measure the tip — the same defect class as F-003, aimed at the proofs
-    themselves.
+    **"Inside the tree" means inside the package directory, not the tree root.** `t2pw`
+    must resolve under `<expected>/src/t2pw` and `scripts` under `<expected>/scripts`: every
+    agent worktree lives at `<primary>/.claude/worktrees/`, inside the primary checkout, so
+    a root-level containment test would pass ~70 wrong trees and vouch for each. An
+    `--expect-tree` override is validated by the same rule and refused with
+    `EXPECT_TREE_NOT_A_CHECKOUT`, so naming a common ancestor cannot launder a run.
 
-    The launcher writes a `*.pin.json` verdict to
-    `evidence/g11/pin/<TASK-ID>/<SEQ>-<label>.pin.json`, committed with the branch. This is
-    required because `bounded_run.py` records no environment and discards child stdout
-    (rule 9 and F-004): without the verdict artifact a tree-pinning claim is uncheckable
-    after the fact. It goes in `g11/pin/`, **not** in `g11/<TASK-ID>/` — measured, a
-    `.pin.json` sitting beside the cleanup reports is picked up by `iter_reports`, checked
-    against the `bounded_run` schema and fails `g11_evidence.py check --task` with 22
-    spurious violations. `pin` does not match `TASK_RE`, so that directory is skipped.
+    **Every gate, G9 proof and baseline capture must pass `--pin-verdict`.** A run with no
+    verdict is **uncertifiable**, exactly as a job with no cleanup report is; a verdict
+    requested and unwritable is itself a refusal (`VERDICT_UNWRITABLE`, exit 98). The
+    verdict goes to `evidence/g11/pin/<TASK-ID>/<SEQ>-<label>.pin.json`, committed with the
+    branch — required because `bounded_run.py` records no environment and discards child
+    stdout (rule 9 and F-004). It goes in `g11/pin/`, **not** `g11/<TASK-ID>/`: measured, a
+    `.pin.json` beside the cleanup reports is picked up by `iter_reports`, checked against
+    the `bounded_run` schema and fails `g11_evidence.py check --task` with 22 spurious
+    violations. `pin` does not match `TASK_RE`, so that directory is skipped.
 
 #### The measured launcher
 
