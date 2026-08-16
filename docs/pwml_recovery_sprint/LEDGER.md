@@ -318,6 +318,54 @@ composite reviewer's exact bare `APPROVE`. **node10 is expected GREEN** — its 
 the `OPDA → Dinor-12-oxo-phytodienoate` rename that D-028/C-040a now refuses; **node10 is not to be
 changed to obtain that result.**
 
+### ✅ THE STACK LANDED — `beddcdd6`, twelve cards, one `--no-ff` merge (2026-08-16)
+
+The composite landing above **completed**. C-050g (`47e608c6`) joined the eleven and the whole stack merged
+as a single `--no-ff` commit **`beddcdd634ba645ab67362bf3dca779c4ab5f67d`**, second parent **`47e608c6`**
+(verified). Nothing merged before it.
+
+**Accepted gates at the merged tip:** C-050 five-category probe `0/0/0/0/0`, `C-050 ACCEPTANCE: PASSED` ·
+post-freeze compound identity mutations **13 at integration base, 0 at merged tip** on a real leg ·
+Chunk D **179** (core 152 / s8 4 / qb 23) · **SMOKE 460 exact** · whole-tree G11 zero non-compliant ·
+protected manifest 42/42 · zero surviving owned processes.
+
+**B-1 is discharged. Merge rule 8 holds.** Do not re-review the twelve cards and do not rerun the 32-leg
+base-versus-tip comparison; both are accepted measurements.
+
+**The ratified cost is D-034.** Exactly one committed leg of thirty-two no longer exports —
+`runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict`. It exported at
+base only because the exporter silently merged `lipid IV_A` with `lipid IV A` **after** the freeze. The
+fail-closed result stands until the duplicate-row policy card lands. **Do not restore the post-freeze merge
+and do not weaken the guard to recover the leg.**
+
+**All twelve card branches and the eight pre-stack branches are preserved** — not to be reset, deleted,
+pruned, reused or rewritten.
+
+## Post-stack cohort — opened 2026-08-16
+
+Takeover verified at `beddcdd6`: local = `origin` = `ls-remote`, no merge in progress, empty index,
+protected manifest 42/42, G11 zero non-compliant across the primary checkout and every registered worktree,
+zero abandoned `g11_reserved` placeholders in the repository, zero surviving owned processes.
+
+| ID | Task | Status | Deps | Notes |
+|---|---|---|---|---|
+| C-050h | duplicate canonical rows — policy implementation (discharges **D-034 clause 4** and the remaining half of **F-8**) | **`MEASURING`** 2026-08-16. Product ruling recorded as **D-035** *before* dispatch, so the card does not stop to ask "merge or refuse". A read-only census agent is measuring committed duplicate-canonical groups against D-035 clause 3 **before** any implementation charter is written | D-034 ✔ · D-035 ✔ | Base `beddcdd6`. **A measured finding that no committed group clears the D-035 clause 3 bar is a valid outcome** — the D-034 leg is then correctly still refusing. Evidence must not be stretched to recover it. `_reject_ambiguous_renames` is structurally blind here (D-034 clause 5) and the card must supply its own detection |
+| H-010 | measurement-harness source pin — the `.pth` / CWD hole | **`STUDYING`** 2026-08-16, charter in preparation from live source | — | Base `beddcdd6`. Two halves of one defect: `__editable__.t2pw-0.1.0.pth` hard-codes the **primary** checkout's `src`, so a worktree run without a source pin can silently measure **base** code and pass; and `c045_pinned_pytest.py` sets `sys.path[0]` to its own directory where `python -m pytest` sets the CWD (C-050g's `ModuleNotFoundError: scripts`). **`bounded_run.py` is protected** — a companion launcher or preflight is preferred to modifying it. Target invariant: every official measured command **fails fast and visibly** unless the loaded `t2pw` and `scripts` come from the exact tree under measurement |
+| C-052 | pre-freeze report at the Streamlit seams (carries **A0-C7**, **A0-C8**) | **`STUDYING`** 2026-08-16 — **the earlier description is stale and is not to be implemented from.** Charter being derived from live source; will not be dispatched until the orchestrator verifies it against source | D-029 ✔ · D-032 ✔ · D-033 ✔ | Base `beddcdd6`. Both Streamlit seams discard the pre-freeze report while the CLI (C-045b / C-051a) persists it, so `rename_sources_collapsed` and the compound-resolution diagnostics are unreachable from the UI. **The CLI is the reference — converge Streamlit onto it, not the reverse.** D-033 binds: any claim about "the" call site or "both" of anything carries its measurement. Testability is contingent on the import-time `st.form` hazard at `streamlit_app.py:4310` |
+
+**ID allocation note.** `C-053`, `C-054`, `C-055`, `C-056a/b` and `C-057` were **already allocated** in
+`MASTER_PLAN` §9 to other planned cards and are **not** reused here. The duplicate-row card takes the next
+free suffix in its own family, **`C-050h`**; the harness card takes the next free harness number, **`H-010`**
+(`H-001`…`H-009` are taken).
+
+**Serialization note.** C-050h and H-010 may both touch shared test infrastructure. If they do, their
+**merges serialize** and only the implicated cross-seam checks re-run after the first merge — their complete
+reviews are not repeated.
+
+**Still ahead of T-100:** C-053 (dependency C-041 is merged, boundary disjoint) and C-056b (blocked on
+C-056a, which was never dispatched — **dispatch C-056a first**). **No strict benchmark-success figure may be
+quoted until both C-053 and C-056b are merged.**
+
 ## Wave E — placeholders
 
 | ID | Task | Status | Deps | Notes |

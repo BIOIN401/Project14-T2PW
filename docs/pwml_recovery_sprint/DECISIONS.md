@@ -1519,3 +1519,67 @@ It does not authorize merging rows, changing `_norm` or `_canonical`, weakening 
 reopening any accepted card. It does not claim the leg's loss is acceptable in the long run — it records
 that the loss is **preferred to the silent merge** until the follow-up card rules, and that the cost is
 **known, measured and attributable** rather than discovered later by a user whose pathway vanished.
+
+## D-035 — duplicate canonical rows: consolidation requires proven identity, never coincident spelling · 2026-08-16 · LOCKED
+
+**Ruled by the product owner**, discharging **D-034 clause 4** and the remaining half of **F-8**. This is a
+*policy* ruling issued ahead of the implementation card so that the card does not stop to ask "merge or
+refuse". It fixes the **bar**; measurement decides only **which groups clear it**.
+
+### The decision
+
+1. **Coincident names are not identity.** Rows are **never** merged merely because their normalized or
+   canonical names coincide.
+2. **Pre-freeze consolidation is permitted** — and only pre-freeze — when deterministic evidence proves the
+   rows represent the **same biological entity**. Nothing here relaxes **merge rule 8**: the exporter still
+   may not repair biology after the freeze.
+3. **Proof of equivalence requires all four of:**
+   a. the **same entity class**;
+   b. **no conflicting non-empty stable identifiers**;
+   c. **either** at least one **matching stable external identifier**, **or** authoritative resolution
+      provenance mapping both rows to the **same database entity**;
+   d. **no conflicting structural or biological attributes** that would make consolidation lossy.
+4. **Spelling-only resemblance without identity corroboration is insufficient.** A group that resembles
+   itself and nothing more does not clear the bar, however obvious the resemblance looks to a reader.
+5. **When equivalence is proven**, the stage must: merge **before the freeze**; choose the survivor
+   **deterministically**; preserve **every original spelling** in aliases / raw-name provenance; preserve
+   and **union** compatible identifiers and provenance; **rewrite all references before the freeze**; record
+   **exactly which rows collapsed and why**; and reduce the row count **only** by the number of
+   proven-equivalent duplicates.
+6. **When equivalence is not proven**, the stage must: **not merge**; **not emit PWML with ambiguous
+   connectivity**; return a **named, machine-readable fail-closed reason** in place of the current opaque
+   diff-string diagnosis; and preserve enough diagnostic information for review.
+7. **Genuinely distinct compounds that collide under canonicalization** remain distinct, or cause a **named
+   non-exporting review outcome**. They are **never** silently coalesced. `PMC13278307…/strict` under
+   `C_canned` (`PEtN-lipid A` vs `modified Lipid A`) is the reference case and **must keep refusing**.
+8. **`AMBIGUOUS_RENAME_TARGET` must not become a successful export.** The card may convert it into a
+   structured review-required or refusal result **only if** the graph remains intact and **no invalid PWML
+   is emitted**.
+9. **The D-015 clause 5 reinterpretation is narrow.** Row-count change is permitted **only** for explicitly
+   proven-equivalent duplicate groups, and the `PREFREEZE_ROW_COUNT_CHANGED` exemption extends no further
+   than that number.
+
+### What this ruling deliberately does not decide
+
+It does **not** assert that any particular committed group clears clause 3 — including the four-spelling
+`glycerol-3-phosphate` group of **D-034**. Whether the committed data actually carries the identifiers or
+resolution provenance required by clause 3c is a **measurement**, and it is the implementation card's first
+obligation. **A measured finding that no committed group clears the bar is a valid and acceptable outcome**;
+the D-034 leg is then *correctly* still refusing, and the ruling has been applied rather than defeated.
+**Evidence must not be stretched to recover that leg.**
+
+It does not authorize changing `_norm` or `_canonical`, weakening any structural code, permitting
+post-freeze merges, or reopening any accepted card.
+
+### Why the bar is set here
+
+**D-034** recorded that the old exporter's silent post-freeze merge of `lipid IV_A` with `lipid IV A` was
+undetectable for the whole prior history of the exporter — it invented biology the frozen graph did not
+carry. The failure mode this ruling guards against is the same one in a new costume: a consolidation that
+*looks* obviously right because two strings resemble each other, and is wrong because they are two
+molecules. Requiring an identifier or an authoritative resolution to the same database entity is what makes
+a collapse **checkable by someone who was not present when it was decided**.
+
+**D-034 clause 5 stands unamended**: `_reject_ambiguous_renames` remains structurally blind to a collision
+between a rename target and a row that is not itself renamed, because it groups only over `rename_map`
+sources. Any implementation of this ruling must supply its own detection rather than assume that guard.
