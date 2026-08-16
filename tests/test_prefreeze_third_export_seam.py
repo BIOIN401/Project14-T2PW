@@ -338,7 +338,14 @@ def test_db_reachability_reaches_the_exporter_in_both_directions(
 
     _ir, ir_report = build_pwml_ir(payload, strict_db=False)
     assert ir_report["db_resolution"]["available"] is reachable
-    assert payload[PREFREEZE_DB_RESOLUTION_FIELD]["available"] is reachable
+    # WHOLE-marker equality, not just ``available``: this is the only whole-dict
+    # pin on the REACHABLE leg (the exhaustive ones below are both unreachable),
+    # and the marker moves ``canonical_payload_sha256`` and
+    # ``admitted_payload_hash`` -- the fingerprint every quarantine decision
+    # binds to. A stray key here is a moved decision hash, not a cosmetic.
+    assert payload[PREFREEZE_DB_RESOLUTION_FIELD] == (
+        {"available": True} if reachable
+        else {"available": False, "reason": "db_not_configured"})
 
 
 def test_an_all_legacy_population_proves_the_value_is_carried_not_inferred() -> None:

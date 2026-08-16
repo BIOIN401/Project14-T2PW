@@ -1320,6 +1320,14 @@ def run_prefreeze_resolution(
             consulted.append(bool(db_resolution["available"]))
         if str(db_resolution.get("reason") or "").strip():
             reasons.append(str(db_resolution["reason"]))
+    # D-032 clause 1 exists so this tuple GROWS. The day a second canonicalizer
+    # records ``db_resolution``, ``any()`` would OR two different facts and
+    # ``reasons[0]`` would pair one stage's availability with another's reason.
+    # Asserted rather than assumed, so that fails loudly instead of mispairing.
+    assert len(consulted) <= 1, (
+        "more than one canonicalizer recorded db_resolution; this carrier has no "
+        "rule for combining them: " + str([name for name, _ in canonicalizers])
+    )
     if consulted and isinstance(payload, dict):
         marker: Dict[str, Any] = {"available": any(consulted)}
         if reasons:
