@@ -784,7 +784,7 @@ active data loss.** Routed as **C-050i**. Any card fixing it must be labelled **
 explicitly labelled new acceptance test**: there is no base SHA at which a behavioural probe over the tip's
 corpus fails, because the only leg that reaches the code now aborts earlier.
 
-**Unmeasured residual:** EP3's *second* `run_prefreeze_resolution` can create a `_norm` collision absent
+**Unmeasured residual — EXPLICITLY IN C-050i's SCOPE, assigned 2026-08-16.** Recorded because REV-050h observed this paragraph sits *after* the "Routed as C-050i" sentence and so inherited an owner **by proximity alone**. It is now assigned by name, so it cannot fall between C-050h and C-050i: C-050h creates the collision case it does not refuse (an *unreferenced* created duplicate, which exports identically at base and tip — measured), and C-050i owns the harm. EP3's *second* `run_prefreeze_resolution` can create a `_norm` collision absent
 from the committed file. D-034 clause 5's structural blindness is caught today only when the collided row
 is a **participant**; a non-participant compound in that shape still reaches the dedupe and drops silently.
 Measuring it requires a live pre-freeze run — the heavy-job slot.
