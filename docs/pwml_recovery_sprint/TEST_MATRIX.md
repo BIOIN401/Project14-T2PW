@@ -86,6 +86,74 @@ hung it.
    the branch. A pasted table is not evidence: a G11 claim must be checkable against a
    committed artifact. See `evidence/g11/README.md`.
 
+10. **The measured tree is verified, not asserted.** Every pytest invocation that is a
+    merge gate, a focused obligation, a G9 proof or a baseline capture runs through a
+    launcher that **verifies, before collection begins**, that the imported `t2pw` and —
+    where the selection needs it — the repository `scripts` package both resolve inside
+    the tree under measurement. On any mismatch the launcher prints
+    `T2PW_MEASUREMENT_TREE_REFUSED` with the expected tree, the resolved `t2pw.__file__`,
+    the cwd, `PYTHONPATH` and `sys.path[0:4]`, and **exits 98 without counting a test**.
+
+    **Exit 98 is reserved sprint-wide** for this and nothing else. It is a *measurement
+    failure*, in the same class as an infrastructure failure (rule 6): never a test
+    result, never a pass. It is distinct from 97 (`bounded_run.EXIT_INFRASTRUCTURE_FAILURE`),
+    124 (timeout), 130 (cancelled) and pytest's 0–5. Do not allocate it to anything else.
+
+    **`PYTHONPATH` is not evidence and a printed path is not evidence.** The venv's
+    editable `.pth` names the primary checkout's `src`, `pytest.ini` sets **no**
+    `pythonpath` and there is no `conftest.py`; separately, any in-process
+    `sys.path.insert(0, …)` — including `_repo_root.add_src_to_path()` and the self-pin in
+    24 of the 27 smoke and Chunk D test modules — **overrides `PYTHONPATH`** in a worktree
+    while being a no-op in the primary checkout. Only the **resolved** path, compared
+    against the expected tree and written to a committed verdict, settles which tree was
+    measured. `pytest.ini` **must not** gain `pythonpath = src`: it was considered as a
+    remedy for F-003 and is **refused**, because pytest *prepends* those entries, so it
+    would sit ahead of the `PYTHONPATH` pin and make every base-tree G9 proof silently
+    measure the tip — the same defect class as F-003, aimed at the proofs themselves.
+
+    **"Inside the tree" means inside the package directory, not the tree root.** `t2pw`
+    must resolve under `<expected>/src/t2pw` and `scripts` under `<expected>/scripts`: every
+    agent worktree lives at `<primary>/.claude/worktrees/`, inside the primary checkout, so
+    a root-level containment test would pass ~70 wrong trees and vouch for each. An
+    `--expect-tree` override is validated by the same rule and refused with
+    `EXPECT_TREE_NOT_A_CHECKOUT`, so naming a common ancestor cannot launder a run.
+
+    **Every gate, G9 proof and baseline capture must pass `--pin-verdict`.** A run with no
+    verdict is **uncertifiable**, exactly as a job with no cleanup report is; a verdict
+    requested and unwritable is itself a refusal (`VERDICT_UNWRITABLE`, exit 98). The
+    verdict goes to `evidence/g11/pin/<TASK-ID>/<SEQ>-<label>.pin.json`, committed with the
+    branch — required because `bounded_run.py` records no environment and discards child
+    stdout (rule 9 and F-004). It goes in `g11/pin/`, **not** `g11/<TASK-ID>/`: measured, a
+    `.pin.json` beside the cleanup reports is picked up by `iter_reports`, checked against
+    the `bounded_run` schema and fails `g11_evidence.py check --task` with 22 spurious
+    violations. `pin` does not match `TASK_RE`, so that directory is skipped.
+
+#### The measured launcher
+
+```bash
+# The pinned form of any focused / G9 / baseline pytest run. Sets cwd and sys.path[0]
+# to the tree under measurement exactly as `python -m pytest` from the repo root does,
+# then REFUSES with exit 98 if t2pw or scripts resolve elsewhere.
+<py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label <l> --timeout <s> \
+     --json docs/pwml_recovery_sprint/evidence/g11/<ID>/<SEQ>-<l>.json -- \
+     <py> -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py \
+       --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/<ID>/<SEQ>-<l>.pin.json \
+       -q --basetemp=<short-tmp> <selection...>
+```
+
+`docs/pwml_recovery_sprint/evidence/c045_pinned_pytest.py` is a thin delegator to the same
+`main()`, so its two committed invocation forms keep working unchanged.
+
+- `--expect-tree <dir>` overrides the default (the launcher's own checkout). Required only
+  when measuring an **exported base tree** from another checkout's launcher.
+- `--require-scripts` / `--no-require-scripts` override the default, which is
+  **selection-derived and off**: a selection whose sources do not visibly import `scripts`
+  does not demand it, so no currently-green command is newly failed.
+- **Base trees exported by `c045b_base_tree.py` / `c051a_base_tree_batch.py` do not contain
+  `scripts/`** (`PATHSPEC`, `c045b_base_tree.py:35-38`), so Chunk B and SMOKE cannot be
+  measured on one until that `PATHSPEC` is widened — **Finding H-3**. This is the second
+  reason `require_scripts` defaults off.
+
 ### Cleanup report — required on every test record
 
 | Field | |
@@ -98,6 +166,7 @@ hung it.
 | descendants terminated | |
 | final surviving count | **must be 0** |
 | cleanup success/failure | **must be `true`** — a count of 0 alone is not sufficient |
+| measured-tree verdict | path to the `*.pin.json`; **`violations` must be `[]`** |
 
 ### Durable evidence — where that report lives
 
