@@ -55,6 +55,11 @@ if "openai" not in sys.modules:
     openai_stub.BadRequestError = RuntimeError
     sys.modules["openai"] = openai_stub
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pipeline.entity_identity import (  # noqa: E402
     PATHBANK_UNKNOWN_FALLBACK_RULE,
     PATHBANK_UNKNOWN_PROTEIN_ID,
@@ -443,7 +448,7 @@ def test_the_biological_state_reference_resolves_in_the_pwml_ir() -> None:
     gap = _typed_gap("missing_compartment", "B")
     result = _run(gap, "B occurs in the periplasm.")
 
-    _ir, report = build_pwml_ir(result.payload, strict_db=False)
+    _ir, report = build_pwml_ir(prefrozen_when_compounded(result.payload), strict_db=False)
     assert report["unresolved"]["biological_state_references"] == []
 
     contract = validate_required_pwml_contract(result.payload, strict_db=False)
@@ -469,7 +474,7 @@ def test_a_dangling_biological_state_reference_is_not_closure() -> None:
         payload, gap, _open_metabolites(payload), _payload_participants(payload)
     )
 
-    _ir, report = build_pwml_ir(payload, strict_db=False)
+    _ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=False)
     assert report["unresolved"]["biological_state_references"], (
         "the IR must see the dangling reference this predicate now refuses"
     )

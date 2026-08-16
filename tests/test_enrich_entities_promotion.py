@@ -9,6 +9,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.mapping.enrich_entities import enrich_payload  # noqa: E402
 from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
 
@@ -134,7 +139,7 @@ def test_promoted_fields_survive_pwml_ir_build() -> None:
         "processes": {"reactions": [], "transports": [], "interactions": []},
     }
 
-    ir, _report = build_pwml_ir(payload, strict_db=False)
+    ir, _report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=False)
     compound = ir["entities"]["compounds"][0]
     protein = ir["entities"]["proteins"][0]
 

@@ -15,6 +15,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from helpers_prefreeze import prefrozen, prefrozen_when_compounded  # noqa: E402
 from t2pw.pwml.ir import build_pwml_ir as _build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
 from t2pw.pwml.writer import (  # noqa: E402
@@ -155,7 +156,32 @@ def _stage6_ready_payload(payload: dict) -> dict:
 
 
 def build_pwml_ir(payload: dict, *args: object, **kwargs: object) -> tuple[dict, dict]:
-    return _build_pwml_ir(_stage6_ready_payload(payload), *args, **kwargs)
+    """Stage-6 preparation, then the pre-freeze sequence, then the exporter.
+
+    **C-051 / D-015 (LOCKED) extends this existing wrapper; it does not add a
+    second mechanism.** ``build_pwml_ir`` no longer resolves compound identity --
+    doing so after the canonical graph is frozen is what merge rule 8 and
+    ``PRODUCT_CONTRACT`` §5 forbid -- and now refuses a compound row that
+    carries no verdict. The fixtures in this module are raw extraction payloads,
+    so they are taken through the stage that now does that work.
+
+    The order is production's, measured: ``normalize -> prefreeze``, never the
+    reverse (``probe_c045b_cli_prefreeze_seam._order``). ``prefrozen_when_
+    compounded`` asserts the stage ruled on **every** compound row, so a tree
+    where the stage is absent or does nothing fails here rather than passing.
+    """
+
+    prepared = _stage6_ready_payload(payload)
+    # Forward the resolver and index the test chose. Production hands the same
+    # two to the pre-freeze stage that the exporter used to consult itself, so
+    # NOT forwarding them would silently resolve against the ambient
+    # environment and make these fixtures non-deterministic.
+    stage_kwargs = {
+        key: kwargs[key] for key in ("db_resolver", "name_index") if key in kwargs
+    }
+    return _build_pwml_ir(
+        prefrozen_when_compounded(prepared, **stage_kwargs), *args, **kwargs
+    )
 
 
 class _CompoundDb:

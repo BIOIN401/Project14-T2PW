@@ -13,6 +13,13 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): compound resolution finishes BEFORE the canonical
+# freeze, so ``build_pwml_ir`` now refuses a compound row that carries no
+# resolution verdict instead of resolving it late. Every fixture below is a raw
+# extraction payload, which production no longer hands the exporter, so each
+# call site is taken through the stage that now does the work. The helper
+# asserts the stage actually ruled on every row -- see helpers_prefreeze.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract  # noqa: E402
 from t2pw.pwml.qa import run_pwml_qa  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree  # noqa: E402
@@ -93,7 +100,7 @@ def _obag_plp_payload() -> dict:
 
 
 def test_reaction_ir_construction_refs_resolve() -> None:
-    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(_base_payload()), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not report["errors"]
@@ -127,7 +134,7 @@ def test_validate_pwml_ir_errors_on_protein_complex_missing_components() -> None
         {"name": "oxoglutarate dehydrogenase complex", "species": "Homo sapiens", "components": []}
     )
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     # build_pwml_ir mirrors validate_pwml_ir's own errors into its report, so
     # this surfaces here too -- catching the gap even earlier than export time.
     assert "protein_complex_missing_components" in {
@@ -143,7 +150,7 @@ def test_validate_pwml_ir_errors_on_protein_complex_missing_components() -> None
 
 
 def test_required_contract_validates_protein_complex_enzyme_in_direct_ir() -> None:
-    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(_base_payload()), strict_db=True)
     assert not report["errors"]
 
     valid_contract = validate_required_pwml_contract(ir, strict_db=True)
@@ -184,7 +191,7 @@ def test_required_contract_accepts_canonical_complex_modifier_mirror() -> None:
         "duplicate_reaction_enzyme_complex",
     } & {error["code"] for error in contract["errors"]}
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     assert not report["errors"]
     assert len(ir["processes"]["reactions"][0]["enzymes"]) == 1
 
@@ -198,7 +205,7 @@ def test_compound_catalyst_modifier_is_not_exported_as_reaction_enzyme() -> None
         {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"}
     ]
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert validation["ok"], validation["errors"]
@@ -215,7 +222,7 @@ def test_bare_protein_catalyst_fails_instead_of_being_wrapped_during_export() ->
         {"entity": "Hexokinase", "entity_type": "protein", "role": "catalyst"}
     ]
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not validation["ok"]
@@ -226,7 +233,7 @@ def test_bare_protein_catalyst_fails_instead_of_being_wrapped_during_export() ->
 
 
 def test_obag_export_drops_plp_catalyst_but_rejects_bare_protein_enzyme() -> None:
-    ir, report = build_pwml_ir(_obag_plp_payload(), strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(_obag_plp_payload()), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not validation["ok"]
@@ -256,7 +263,7 @@ def test_legacy_reaction_enzyme_rows_continue_exporting() -> None:
         payload["entities"]["protein_complexes"] = protein_complexes
         payload["processes"]["reactions"][0]["enzymes"] = [enzyme_row]
 
-        ir, report = build_pwml_ir(payload, strict_db=True)
+        ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
         validation = validate_pwml_ir(ir)
 
         assert not report["errors"]
@@ -282,7 +289,7 @@ def test_create_defaults_fill_unmatched_species_and_cell_location() -> None:
         "processes": {"reactions": [], "transports": [], "interactions": []},
     }
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not report["errors"]
@@ -335,7 +342,7 @@ def test_biological_state_locations_are_hydrated_into_component_registry() -> No
         "processes": {"reactions": [], "transports": [], "interactions": []},
     }
 
-    ir, report = build_pwml_ir(payload, strict_db=False)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=False)
     validation = validate_pwml_ir(ir)
 
     assert not any(error["code"].startswith("biological_state_") for error in report["errors"])
@@ -378,7 +385,7 @@ def test_transport_ir_construction_has_state_and_visual_refs() -> None:
         },
     }
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not report["errors"]
@@ -398,7 +405,7 @@ def test_name_only_compound_is_exportable_without_db_identity_class_or_type() ->
     payload["entities"]["compounds"][0].pop("pathbank_compound_id")
     payload["entities"]["compounds"][0].pop("mapped_ids")
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not any(err["code"] == "missing_db_identity" and err.get("entity_type") == "compound" for err in report["errors"])
@@ -439,7 +446,7 @@ def test_name_only_biological_state_is_not_exportable() -> None:
     payload["biological_states"] = [{"name": "Generic state"}]
     payload["processes"]["reactions"][0]["biological_state"] = "Generic state"
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     error_codes = {err["code"] for err in report["errors"]}
@@ -496,7 +503,7 @@ def test_novel_protein_complex_with_resolved_components_does_not_need_db_identit
     ]
 
     contract = validate_required_pwml_contract(payload, strict_db=True)
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert "protein_complex_missing_db_identity" not in {err["code"] for err in contract["errors"]}
@@ -526,7 +533,7 @@ def test_generated_single_protein_complex_requires_valid_component_not_complex_i
     ]
 
     contract = validate_required_pwml_contract(payload, strict_db=True)
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     codes = {err["code"] for err in contract["errors"]}
@@ -570,7 +577,7 @@ def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None
         }
     ]
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not report["errors"]
@@ -629,7 +636,7 @@ def test_protein_complex_component_links_by_matching_uniprot_or_pathbank_id() ->
     ]
 
     contract = validate_required_pwml_contract(payload, strict_db=True)
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert not any(err["code"] == "component_protein_unresolved" for err in contract["errors"])
@@ -651,7 +658,7 @@ def test_protein_complex_unresolved_component_is_exportable_with_warnings() -> N
         }
     ]
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     assert any(w["code"] == "component_protein_unresolved" for w in report["warnings"])
@@ -670,7 +677,7 @@ def test_protein_complex_unresolved_component_is_exportable_with_warnings() -> N
 
 
 def test_dangling_process_visualization_references_fail_validation() -> None:
-    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(_base_payload()), strict_db=True)
     assert not report["errors"]
 
     ir["process_visualizations"][0]["process_key"] = "missing_process"
@@ -708,7 +715,7 @@ def test_same_compound_two_states_is_one_entity_two_locations() -> None:
         "processes": {"reactions": [], "transports": [], "interactions": []},
     }
 
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
     pyruvate_key = ir["entities"]["compounds"][0]["key"]
     pyruvate_locations = [loc for loc in ir["locations"] if loc["entity_key"] == pyruvate_key]
@@ -722,7 +729,7 @@ def test_same_compound_two_states_is_one_entity_two_locations() -> None:
 
 
 def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
-    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(_base_payload()), strict_db=True)
     assert not report["errors"]
 
     ref_path = ROOT / "reference" / "PW000001.pwml"
@@ -759,7 +766,7 @@ def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
 def test_spontaneous_field_is_always_forced_false_on_export() -> None:
     payload = _base_payload()
     payload["processes"]["reactions"][0].update({"enzymes": [], "spontaneous": True})
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     assert not report["errors"]
     assert ir["processes"]["reactions"][0]["spontaneous"] is False
 
@@ -779,7 +786,7 @@ def test_pre_export_and_qa_reject_duplicate_enzyme_complex_even_when_spontaneous
         error["code"] for error in contract["errors"]
     }
 
-    ir, _ = build_pwml_ir(payload, strict_db=True)
+    ir, _ = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
     args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))
     root = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args).build().root
@@ -805,7 +812,7 @@ def test_writer_serializes_each_proteins_resolved_species() -> None:
     payload = _base_payload()
     payload["entities"]["species"].append({"name": "Mus musculus", "pathwhiz_id": 9})
     payload["entities"]["proteins"][0]["species"] = "Mus musculus"
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     assert not report["errors"]
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
     args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))

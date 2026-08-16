@@ -37,6 +37,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
     # NOTE: GateValidationError is deliberately NOT imported. Every gate this file
     # exercises goes through run_strict_post_normalization_gates, which RETURNS a
@@ -449,7 +454,7 @@ def test_relocated_operon_still_exports_through_the_pwml_ir() -> None:
     payload = _pmc13278307_payload()
     normalized, _ = normalize_process_payload(deepcopy(payload))
 
-    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    ir, ir_report = build_pwml_ir(prefrozen_when_compounded(normalized), strict_db=False)
 
     na_rows = ir["entities"]["nucleic_acids"]
     assert [row["name"] for row in na_rows] == ["pmrHFIJKLM operon"]
@@ -472,5 +477,5 @@ def test_relocated_operon_still_exports_through_the_pwml_ir() -> None:
     # "reaction_enzyme_must_be_protein_complex", an artefact of the fixture
     # naming bare proteins as enzymes -- map_ids wraps those into single-protein
     # complexes in the real pipeline, a step this reduced payload skips.)
-    baseline_ir, _ = build_pwml_ir(_normalized_without_gate(payload), strict_db=False)
+    baseline_ir, _ = build_pwml_ir(prefrozen_when_compounded(_normalized_without_gate(payload)), strict_db=False)
     assert _error_codes(validate_pwml_ir(ir)) == _error_codes(validate_pwml_ir(baseline_ir))

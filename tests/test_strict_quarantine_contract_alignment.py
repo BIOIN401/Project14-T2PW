@@ -29,6 +29,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
     GateValidationError,
     run_strict_post_normalization_gates,
@@ -326,7 +331,7 @@ def test_a_coupled_transport_is_refused_explicitly_rather_than_accepted() -> Non
     # And the reduced payload really is exportable, which is the claim the
     # refusal is making.
     assert result.ok is True
-    ir, _report = build_pwml_ir(deepcopy(result.payload), strict_db=True)
+    ir, _report = build_pwml_ir(prefrozen_when_compounded(deepcopy(result.payload)), strict_db=True)
     assert validate_pwml_ir(ir)["ok"] is True
 
 
@@ -343,7 +348,7 @@ def test_the_ir_still_cannot_represent_a_coupled_transport() -> None:
         {"name": "efflux coupling", "reaction": "glutathione synthesis", "transport": "glutathione efflux"}
     ]
 
-    ir, _report = build_pwml_ir(payload, strict_db=True)
+    ir, _report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     rct = ir["processes"]["reaction_coupled_transports"][0]
 
     assert rct["left"] == [] and rct["right"] == [] and rct["enzymes"] == []

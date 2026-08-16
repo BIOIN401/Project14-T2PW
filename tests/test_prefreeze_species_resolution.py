@@ -23,6 +23,7 @@ from typing import Any, Dict, List
 
 import pytest
 
+from helpers_prefreeze import prefrozen
 from t2pw.pwml import ir as ir_module
 from t2pw.pwml.ir import SPECIES_CANONICALIZATION_FIELD, build_pwml_ir
 from t2pw.pwml.prefreeze_resolution import (
@@ -56,8 +57,17 @@ def _resolve(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _build(payload: Dict[str, Any]) -> tuple:
+    # C-051 / D-015 (LOCKED): ``build_pwml_ir`` no longer resolves compound
+    # identity after the canonical freeze and refuses a compound row that
+    # carries no verdict. ``_payload`` above carries one ``glycine`` row, so the
+    # copy handed to the exporter goes through the pre-freeze stage first --
+    # which is what production does at both entry points, and what these tests
+    # already assert for the *species* half. ``prefrozen`` asserts the stage
+    # ruled on every compound row, so this cannot pass on a tree where the
+    # pre-freeze sequence is absent or inert.
     return build_pwml_ir(
-        deepcopy(payload), pathway_name="P", pathway_subject="Metabolic",
+        prefrozen(deepcopy(payload), name_index=None),
+        pathway_name="P", pathway_subject="Metabolic",
         strict_db=False, name_index=None,
     )
 

@@ -13,6 +13,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+# C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
+# after the canonical freeze, so a raw extraction payload is taken through the
+# pre-freeze stage that now does that work. helpers_prefreeze asserts the stage
+# actually ruled on every compound row.
+from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species_id  # noqa: E402
 from t2pw.mapping.map_ids import _wrapper_complex_name, route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
@@ -1042,7 +1047,7 @@ def test_catalytic_interaction_to_reaction_name_is_promoted_and_removed() -> Non
     ]
     assert report["summary"]["interaction_enzymes_promoted"] == 1
 
-    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    ir, ir_report = build_pwml_ir(prefrozen_when_compounded(normalized), strict_db=False)
     validation = validate_pwml_ir(ir)
 
     assert "reaction_enzyme_must_be_protein_complex" in {
@@ -1299,7 +1304,7 @@ def test_stage8_rejects_bare_protein_enzyme_with_canonical_modifier() -> None:
     ]
 
     contract = validate_required_pwml_contract(payload, strict_db=True)
-    ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
     validation = validate_pwml_ir(ir)
 
     wrapper_errors = [

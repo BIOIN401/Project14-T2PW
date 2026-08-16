@@ -354,6 +354,13 @@ def _cli(tmp: Path) -> Tuple[int, Dict[str, Any]]:
         "first_call_order": seen,
         "exported_compound_names": [row.get("name") for row in rows],
         "exported_compound_verdicts": [row.get(VERDICT_FIELD) for row in rows],
+        # ``raw_name`` is the extraction name a row was resolved FROM. Recorded
+        # at both SHAs because ``test_pwml_writer`` pins it: the pre-freeze
+        # fixed-point loop's ``_PROVENANCE_FIELDS`` does not include it, so the
+        # question "is the drift mine or was it already production's?" is
+        # answered by the base leg of this same probe, not by argument.
+        "exported_compound_raw_names": [row.get("raw_name") for row in rows],
+        "exported_compound_aliases": [row.get("aliases") for row in rows],
         "ok": result.get("ok"),
     }
 
@@ -363,6 +370,8 @@ def _cli(tmp: Path) -> Tuple[int, Dict[str, Any]]:
     print(f"    first-call order                : {' -> '.join(seen)}")
     print(f"    exported compound names         : {observed['exported_compound_names']}")
     print(f"    exported compound verdicts      : {observed['exported_compound_verdicts']}")
+    print(f"    exported compound raw_names     : {observed['exported_compound_raw_names']}")
+    print(f"    exported compound aliases       : {observed['exported_compound_aliases']}")
 
     failures: List[str] = []
     if counts["run_prefreeze_resolution"] != 1:
@@ -435,6 +444,109 @@ def _corpus(tmp: Path, corpus_root: Path) -> Tuple[int, Dict[str, Any]]:
 
 
 # ---------------------------------------------------------------------------
+# carrier -- can build_pwml_ir derive db_resolution.available from the rows?
+# ---------------------------------------------------------------------------
+
+
+class _CannedDb:
+    """A reachable PathBank DB. ``available()`` True is what makes
+    ``_resolve_compound_rows`` construct a live resolver and record
+    ``db_resolution['available'] = True``."""
+
+    def available(self) -> bool:
+        return True
+
+    def _query(self, sql: str, params: Any) -> List[Dict[str, Any]]:  # noqa: ARG002
+        return [{
+            "id": 78, "name": "Glycine", "short_name": "Gly", "hmdb_id": "HMDB0000123",
+            "kegg_id": "C00037", "chebi_id": "15428", "pubchem_cid": "750",
+            "cas": "56-40-6", "biocyc_id": "GLY", "chemspider_id": "730",
+            "drugbank_id": "DB00145", "pwc_id": "PW_C000123", "description": "canned",
+            "synonyms": "Glycine; Gly",
+        }]
+
+
+#: label -> the compound rows. ``all_legacy`` is the decisive population: every
+#: row carries a ``pathbank_compound_id``, so ``_resolve_compound_rows`` takes
+#: its legacy-id branch, which ``continue``s **before** the resolver is ever
+#: consulted. Nothing about DB reachability can reach such a row.
+CARRIER_POPULATIONS: Dict[str, List[Dict[str, Any]]] = {
+    "all_legacy": [
+        {"name": "Glycine", "pathbank_compound_id": 78},
+        {"name": "Pyruvic acid", "pathbank_compound_id": 91},
+    ],
+    "mixed": [
+        {"name": "Glycine", "pathbank_compound_id": 78},
+        {"name": "gly", "kegg_id": "C00037"},
+    ],
+}
+
+
+def _carrier() -> Tuple[int, Dict[str, Any]]:
+    """Two legs differing ONLY in DB reachability. Are the rows distinguishable?
+
+    ``_emit_canonicalization_preflight`` (``ir.py:797-798``) reads
+    ``report['db_resolution']['available']``, which the deleted ``ir.py:979``
+    call used to populate. The orchestrator's ruling: set it inside
+    ``build_pwml_ir`` **only** if it can be derived faithfully from the verdicts
+    already on the rows, and stop and report if that would be a guess.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
+
+    print("\n=== carrier: is db_resolution.available derivable from the rows? ===")
+    results: Dict[str, Any] = {}
+    for population, rows in CARRIER_POPULATIONS.items():
+        leg_rows: Dict[str, Any] = {}
+        leg_available: Dict[str, Any] = {}
+        for leg, resolver in (("db_reachable", _CannedDb()), ("db_not_configured", None)):
+            payload = deepcopy(UNRESOLVED_PAYLOAD)
+            payload["entities"]["compounds"] = deepcopy(rows)
+            payload["element_locations"] = {"compound_locations": []}
+            payload["processes"] = {"reactions": [], "transports": [], "interactions": []}
+            report = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+            resolution = (report["compounds"] or {}).get("resolution_report") or {}
+            leg_available[leg] = {
+                "available": (resolution.get("db_resolution") or {}).get("available"),
+                "reason": (resolution.get("db_resolution") or {}).get("reason"),
+            }
+            leg_rows[leg] = json.dumps(
+                payload["entities"]["compounds"], sort_keys=True, default=str
+            )
+        rows_identical = leg_rows["db_reachable"] == leg_rows["db_not_configured"]
+        available_differs = (
+            leg_available["db_reachable"]["available"]
+            != leg_available["db_not_configured"]["available"]
+        )
+        results[population] = {
+            "available_by_leg": leg_available,
+            "rows_identical_across_legs": rows_identical,
+            "available_differs_across_legs": available_differs,
+            "derivable_from_rows": not (rows_identical and available_differs),
+        }
+        print(f"    {population}")
+        print(f"        available (db reachable)    : {leg_available['db_reachable']}")
+        print(f"        available (not configured)  : {leg_available['db_not_configured']}")
+        print(f"        rows identical across legs  : {rows_identical}")
+        print(f"        available differs           : {available_differs}")
+        print(f"        DERIVABLE FROM THE ROWS     : {results[population]['derivable_from_rows']}")
+
+    undecidable = sorted(
+        name for name, entry in results.items() if not entry["derivable_from_rows"]
+    )
+    results["_undecidable_populations"] = undecidable
+    results["_verdict"] = (
+        "NOT_DERIVABLE" if undecidable else "DERIVABLE"
+    )
+    print(f"    VERDICT                         : {results['_verdict']}")
+    if undecidable:
+        print(f"    indistinguishable populations   : {undecidable}")
+        print("    -> build_pwml_ir would be GUESSING; the carrier belongs upstream.")
+    # This section reports a fact; it is not a pass/fail gate on the card.
+    return 0, results
+
+
+# ---------------------------------------------------------------------------
 
 
 def main(argv: List[str] | None = None) -> int:
@@ -443,7 +555,7 @@ def main(argv: List[str] | None = None) -> int:
     parser.add_argument("--corpus-root", default=str(REPO_ROOT))
     parser.add_argument(
         "--section", default="all",
-        choices=("all", "refuse", "identity", "cli", "corpus"),
+        choices=("all", "refuse", "identity", "cli", "corpus", "carrier"),
     )
     parser.add_argument("--out", default=None, help="write the measurements as JSON")
     args = parser.parse_args(argv)
@@ -465,6 +577,9 @@ def main(argv: List[str] | None = None) -> int:
         code |= rc
     if args.section in ("all", "corpus"):
         rc, payload["corpus"] = _corpus(tmp, Path(args.corpus_root))
+        code |= rc
+    if args.section in ("all", "carrier"):
+        rc, payload["carrier"] = _carrier()
         code |= rc
 
     if args.out:
