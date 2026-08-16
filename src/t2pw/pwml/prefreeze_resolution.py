@@ -469,11 +469,43 @@ def _rows_fingerprint(rows: Sequence[Dict[str, Any]]) -> str:
     return json.dumps(rows, sort_keys=True, ensure_ascii=False, default=str)
 
 
-#: The fields that record **who decided** a compound's identity, as opposed to
-#: what the identity is. A later pass may add identity; it may never rewrite
-#: this record, because by then the only thing it can observe is what an earlier
-#: pass already wrote. See :func:`_authoritative_provenance`.
-_PROVENANCE_FIELDS: Tuple[str, ...] = ("db_status", "chosen_rule", "confidence", "db_match")
+#: The fields that record **who decided** a compound's identity, and *what it
+#: was decided from*, as opposed to what the identity is. A later pass may add
+#: identity; it may never rewrite this record, because by then the only thing it
+#: can observe is what an earlier pass already wrote. See
+#: :func:`_authoritative_provenance`.
+#:
+#: The set is exactly the unconditional block of
+#: ``db_resolver.apply_compound_db_resolution`` (``:450-454``) -- every field it
+#: writes *before* its ``matched and admit_identity`` early return, i.e. every
+#: field a re-run overwrites on a row it has already resolved:
+#:
+#: .. code-block:: text
+#:
+#:     out["raw_name"]    = match.raw_name or row.raw_name or row.name   # :450
+#:     out["db_status"]   = ...                                          # :451
+#:     out["db_match"]    = match                                        # :452
+#:     out["chosen_rule"] = match.chosen_rule                            # :453
+#:     out["confidence"]  = match.confidence                             # :454
+#:
+#: ``raw_name`` was the one member omitted, and the omission is observable, not
+#: cosmetic. ``PathWhizCompoundResolver.resolve`` (``db_resolver.py:279``) sets
+#: ``match["raw_name"] = row["name"]`` -- *the name it queried on this pass* --
+#: and ``:450`` prefers it over the row's own. So pass 1 records the extraction
+#: name correctly and pass 2, querying the row pass 1 renamed, overwrites it
+#: with the canonical one. Measured on ``glycolate`` -> ``Glycolic acid``:
+#: ``raw_name`` came out ``'Glycolic acid'`` through a reachable resolver and
+#: ``'glycolate'`` with ``db_resolver=None`` -- the same payload, differing only
+#: in whether a second pass ran.
+#:
+#: That is the extraction-name provenance carrier (``PRODUCT_CONTRACT`` §3):
+#: ``ir.py:433`` projects it into every entity record, so the frozen payload and
+#: the IR would both record the canonical name *as though it were what the paper
+#: said*. ``db_match["raw_name"]`` was already preserved here, by ``db_match``;
+#: only the top-level projection of the same fact drifted.
+_PROVENANCE_FIELDS: Tuple[str, ...] = (
+    "raw_name", "db_status", "chosen_rule", "confidence", "db_match",
+)
 
 #: Absence, distinguished from ``None``: a field the authoritative pass did not
 #: write must be *removed* again, not set to ``None``.
@@ -508,6 +540,15 @@ def _authoritative_provenance(
     and must not restate it -- that is what makes the whole operation idempotent
     rather than rewriting its own provenance a little further on every re-run.
     Otherwise pass 1 is the pass that chose, and pass 1's account stands.
+
+    ``raw_name`` rides this same arbitration deliberately, absences included.
+    A row that arrived already carrying a ``db_status`` was resolved by someone
+    else, and the only name this loop can see on it is the one it already wears
+    -- which for a renamed row is the *canonical* name, not the extraction one.
+    Manufacturing a ``raw_name`` from that would assert a provenance nobody
+    recorded, so the incoming account stands in full and ``_ABSENT`` stays
+    absent, exactly as it already does for ``db_match``, ``chosen_rule`` and
+    ``confidence``.
     """
 
     out: List[Dict[str, Any]] = []

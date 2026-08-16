@@ -15,13 +15,18 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from helpers_prefreeze import prefrozen, prefrozen_when_compounded  # noqa: E402
+from helpers_prefreeze import (  # noqa: E402
+    prefreeze_report,
+    prefrozen,
+    prefrozen_when_compounded,
+)
 from t2pw.pwml.ir import build_pwml_ir as _build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
 from t2pw.pwml.writer import (  # noqa: E402
     DeterministicPwmlBuilder,
     blocking_pwml_ir_errors,
     get_rect_anchor_toward_target,
+    is_non_blocking_pwml_ir_error,
     run_pwml_pipeline_export,
 )
 
@@ -660,7 +665,36 @@ def test_structured_ir_db_backed_biological_state_emits_real_pwbs_id() -> None:
 
 
 def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> None:
-    payload = _payload_with_complex_enzyme()
+    """A compound DB resolution failure must not block a PWML build.
+
+    **Re-homed to the pre-freeze producer, C-051c; the property is unchanged.**
+    This test used to read ``compound_db_resolution_failed`` off the *IR* report,
+    which was true while ``build_pwml_ir`` resolved compounds itself. C-051
+    deleted that call under merge rule 8, so no input can put the code in the IR
+    report any more -- ``compound_resolution.py:566`` is its only producer and it
+    now writes into the **pre-freeze** report. The failure did not disappear; it
+    moved, and ``REV-051`` measured the move as content-complete
+    (``db_resolution.compounds`` n=10, ``unresolved.db_identities`` n=2,
+    ``Counter({'compound_db_resolution_failed': 2})``, matching what base's
+    ``pwml_ir_report.json`` carried).
+
+    So every clause is asserted where the fact now lives, and none is dropped:
+
+    1. the failure is **recorded** -- same code, same count, error severity under
+       ``strict_db=True``, now on the pre-freeze report;
+    2. it is **non-blocking** -- ``blocking_pwml_ir_errors`` over those very
+       entries returns ``[]``. That is the same policy function, applied to the
+       same issues, and it is what keeps ``is_non_blocking_pwml_ir_error``'s
+       tolerated branch reachable from a real producer rather than dead;
+    3. the **build proceeds** -- the exporter emits both compounds, under their
+       extraction names, and the PWML builder runs to completion.
+
+    Strengthened, not weakened: clause 2 used to hold trivially the moment the
+    exporter stopped producing the code, and clause 1 is now non-vacuous by
+    ``helpers_prefreeze._run``'s own assertions.
+    """
+
+    payload = _stage6_ready_payload(_payload_with_complex_enzyme())
     payload["entities"]["compounds"] = [
         {"name": "norbelladine"},
         {"name": "Schiff-base intermediate"},
@@ -668,10 +702,26 @@ def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> No
     payload["processes"]["reactions"][0]["inputs"] = ["norbelladine"]
     payload["processes"]["reactions"][0]["outputs"] = ["Schiff-base intermediate"]
 
-    ir, report = build_pwml_ir(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
+    # Production's order and production's strictness: ``run_pwml_pipeline_export``
+    # hands ``strict_db`` straight to ``run_prefreeze_resolution``, and it is that
+    # flag that makes the refusal an ERROR rather than a warning
+    # (``compound_resolution.py:565``).
+    stage = prefreeze_report(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
+    resolution = stage["compounds"]["resolution_report"]
 
-    assert report["errors"]
-    assert {err["code"] for err in report["errors"]} == {"compound_db_resolution_failed"}
+    assert resolution["errors"]
+    assert {err["code"] for err in resolution["errors"]} == {"compound_db_resolution_failed"}
+    assert len(resolution["errors"]) == 2
+    # The tolerated branch, pinned by symbol as well as through the filter. It
+    # is ``code == 'compound_db_resolution_failed' and entity_type ==
+    # 'compound'``; a producer that stopped carrying ``entity_type`` would make
+    # the code blocking again and is caught here rather than downstream.
+    assert all(is_non_blocking_pwml_ir_error(err) for err in resolution["errors"])
+    assert blocking_pwml_ir_errors(resolution) == []
+
+    # The exporter builds from the payload the stage just froze -- no second
+    # resolution pass, and no blocking error either.
+    ir, report = _build_pwml_ir(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
     assert blocking_pwml_ir_errors(report) == []
 
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
@@ -1524,11 +1574,36 @@ def _canonicalization_payload() -> dict:
 
 
 def test_offline_index_emits_canonical_compound_name() -> None:
+    """The offline index's canonical name reaches the IR, and so does the
+    extraction name it was resolved from.
+
+    **The two stages are called apart, C-051c; every assertion is the one that
+    was here before.** The module-level ``build_pwml_ir`` shim runs the
+    pre-freeze stage and then the exporter, and returns only the *exporter's*
+    report -- but ``name_canonicalization['compounds']`` is written by
+    ``compound_resolution._canonicalize_compound_offline`` into the report of
+    whichever stage consulted the index, and since C-051 that is the pre-freeze
+    one. Reading it off the IR report was a stale premise, hidden until now
+    behind the ``raw_name`` failure two lines above it. So the same two steps run
+    in the same order on the same fixture, and each clause is read where the fact
+    it names actually lives.
+
+    ``raw_name == 'glycolate'`` is the clause C-051c's production change earns:
+    ``apply_compound_db_resolution`` re-derives ``raw_name`` from the name it
+    queried on *this* pass, so the loop's second pass used to overwrite the
+    extraction name with the canonical one and the row reached the freeze -- and
+    ``ir.py:433`` -- claiming the paper had said "Glycolic acid".
+    """
+
     # _EmptyCompoundDb forces the "no live DB match" path so the offline
     # name-index is exercised deterministically, regardless of whether a live
     # PathBank DB happens to be reachable from the test environment.
-    ir, report = build_pwml_ir(
-        _canonicalization_payload(),
+    payload = _stage6_ready_payload(_canonicalization_payload())
+    stage = prefreeze_report(
+        payload, db_resolver=_EmptyCompoundDb(), name_index=_offline_index()
+    )
+    ir, _report = _build_pwml_ir(
+        payload,
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),
@@ -1543,7 +1618,11 @@ def test_offline_index_emits_canonical_compound_name() -> None:
     resolved = next(c for c in ir["entities"]["compounds"] if c["name"] == "Glycolic acid")
     assert resolved.get("raw_name") == "glycolate"
     assert (resolved.get("db_row") or {}).get("name") == "Glycolic acid"
-    canon = report.get("name_canonicalization", {}).get("compounds", [])
+    canon = (
+        stage["compounds"]["resolution_report"]
+        .get("name_canonicalization", {})
+        .get("compounds", [])
+    )
     assert any(entry["from"] == "glycolate" and entry["to"] == "Glycolic acid" for entry in canon)
 
 
