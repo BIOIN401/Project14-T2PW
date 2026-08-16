@@ -1457,3 +1457,65 @@ where D-032 named two.
 Standing requirement, binding on every future charter and decision in this sprint: **a claim about
 "the" call site, "the" entry point or "both" of anything must carry the measurement that establishes
 the count, and the card must re-derive it at its own base rather than inherit it.**
+
+---
+
+## D-034 — duplicate compound spellings: the refusal is ratified, fail-closed, with its cost recorded · 2026-08-16 · LOCKED
+
+**Ruled by the product owner** after the composite reviewer blocked the eleven-card stack's landing and
+C-050g measured that the obvious fix does not close it.
+
+### What was measured
+
+`runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict` carries **44
+compound rows including four spellings of one molecule** — `#20 'glycerol-3-phosphate'`,
+`#36 'sn -glycerol 3-phosphate'`, `#37 'sn -glycerol-3-phosphate (G3P)'`, `#38 'sn-glycerol 3-phosphate'`
+— and a pre-existing two-row collision, `#5 'lipid IV_A'` / `#23 'lipid IV A'`.
+
+* **At integration base the leg exports**, producing **43** IR compounds from 44 rows — because the
+  **post-freeze exporter silently merged the `lipid IV A` duplicate**. That is precisely the merge-rule-8
+  violation this stack exists to remove.
+* **At the stack tip the leg refuses.** The pre-freeze stage canonicalizes `#36`/`#38` onto
+  `Glycerol 3-phosphate`, whose `_norm` already equals row `#20`'s. `#20` is **not in the rename map**, so
+  neither half of `_reject_ambiguous_renames` can see it; the new three-way collision breaks the alias
+  index's single-owner resolution and `PREFREEZE_CONNECTIVITY_BROKEN` fires.
+* **C-050g's whitespace-collapse fix is correct and lands, but does not change this** — it moves the abort
+  from `AMBIGUOUS_RENAME_TARGET` to `PREFREEZE_CONNECTIVITY_BROKEN`. The abort relocates; it does not lift.
+
+### The gap
+
+**No legal route exists today for a payload carrying duplicate compound spellings.** The pre-freeze stage
+may not merge rows (`PREFREEZE_ROW_COUNT_CHANGED`); the exporter may not merge them after the freeze
+(**merge rule 8**); and **D-015 clause 5** requires participant connectivity be preserved. Such a payload
+therefore either exports via an illegal silent merge, as at base, or does not export, as at tip.
+
+### The decision
+
+1. **The refusal is ratified. Fail-closed stands.** A payload whose canonicalization produces a name
+   collision with an untouched row **refuses**, and produces no PWML.
+2. **`PRODUCT_CONTRACT` § 1 is knowingly not met for this class**, and that is accepted deliberately rather
+   than overlooked. The only alternative available today is the merge-rule-8 violation the stack removes.
+   **A silent post-freeze merge is worse than an honest refusal**: it invents biology the frozen graph does
+   not carry, and it did so undetectably for the entire prior history of the exporter.
+3. **C-050g lands**, and the golden re-baselines onto **`PREFREEZE_CONNECTIVITY_BROKEN`** for
+   `PMC12444477…/strict` under configs A, C and D. That code is the **honest** diagnosis;
+   `AMBIGUOUS_RENAME_TARGET` claimed two distinct compounds where there is one molecule spelled two ways
+   plus a collision the guard cannot see. `PMC13278307…/strict` under `C_canned` is a **correct** refusal on
+   genuinely distinct compounds (`PEtN-lipid A` vs `modified Lipid A`) and **must keep raising**.
+4. **The merge policy is routed as a follow-up card**, not resolved here. It must decide whether the
+   pre-freeze stage may merge rows whose canonical names coincide — which requires a
+   `PREFREEZE_ROW_COUNT_CHANGED` exemption and a **D-015 clause 5 reinterpretation** — or whether a named
+   refusal code should replace the current diff-string diagnosis.
+5. **`_reject_ambiguous_renames` is recorded as structurally blind** to a collision between a rename target
+   and a row that is not itself renamed. It groups only over `rename_map` sources. Any future card touching
+   compound canonicalization must not assume that guard covers the case.
+6. **The remaining half of F-8 is subsumed here.** Whether `AMBIGUOUS_RENAME_TARGET` should ever be a hard
+   abort for genuinely distinct compounds rather than `review_required` is folded into clause 4's card,
+   since both questions are "what should a canonicalization conflict do to the run".
+
+### What this does not do
+
+It does not authorize merging rows, changing `_norm` or `_canonical`, weakening any structural code, or
+reopening any accepted card. It does not claim the leg's loss is acceptable in the long run — it records
+that the loss is **preferred to the silent merge** until the follow-up card rules, and that the cost is
+**known, measured and attributable** rather than discovered later by a user whose pathway vanished.
