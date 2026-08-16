@@ -838,3 +838,33 @@ pre-freeze it does not violate merge rule 8, and being currently lossless it is 
 name-only consolidator operating with zero identity evidence and zero record, which is the exact practice
 D-035 exists to forbid. **Owner: unassigned. Deliberately NOT folded into C-050h or C-050i** (F-015: that
 would widen an unstudied boundary across three files and two sides of the freeze).
+
+---
+
+## F-045 — a measurement script resolved its output path AFTER `chdir`, writing evidence into the checkout it was auditing
+
+**Registered 2026-08-16**, self-disclosed by H-010 during correction round 1 and **verified by the
+orchestrator**. Fixed inside H-010; recorded because the *pattern* is not unique to it.
+
+`pinned_pytest.py` resolved `--pin-verdict` **after** its `chdir`, so a **relative** verdict path combined
+with `--expect-tree` wrote the artifact into the **other checkout**. H-010's own round-0 run 25 did exactly
+this, creating an `evidence/g11/pin/` directory **inside the primary checkout** while measuring a worktree.
+
+**Impact was contained:** the stray artifact was untracked, no tracked file in the primary was modified, and
+the card moved it (same bytes, same process) into its worktree and removed the strays. Orchestrator-verified
+afterwards: primary working tree is exactly the 7 protected scratch modifications + `.claude/settings.json`
++ the 3 protected untracked `topics_*.txt`; no `evidence/g11/pin` directory; no `*.pin.json` under the
+primary's `g11/`; G11 **1870 / 0 non-compliant**, unchanged from takeover.
+
+**Why it is recorded rather than closed silently.** A measurement harness that writes its own evidence into
+whichever checkout it happens to be auditing is a defect in the same class the harness exists to prevent —
+it corrupts the thing being measured, and in a sprint where **~70 worktrees are nested inside the primary
+checkout** the blast radius is every one of them. It also produces evidence whose *location* misattributes
+which tree a measurement belongs to.
+
+**Residual, unowned:** any other evidence script that combines a `chdir` with a relative output path has the
+same hazard. Not surveyed. A cheap sweep would look for `chdir` in `docs/pwml_recovery_sprint/evidence/*.py`
+and check whether every output path is resolved before it.
+
+**Rule to carry forward:** resolve every output path **before** any `chdir`, and prefer asserting the
+artifact landed at the invocation cwd over trusting the path string.
