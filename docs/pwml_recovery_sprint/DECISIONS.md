@@ -1583,3 +1583,82 @@ a collapse **checkable by someone who was not present when it was decided**.
 **D-034 clause 5 stands unamended**: `_reject_ambiguous_renames` remains structurally blind to a collision
 between a rename target and a row that is not itself renamed, because it groups only over `rename_map`
 sources. Any implementation of this ruling must supply its own detection rather than assume that guard.
+
+## D-036 — C-050h is scoped to the refusal path only; the consolidation engine is deferred, not cancelled · 2026-08-16 · LOCKED
+
+**Ruled by the product owner** after the D-035 census measured that **no committed duplicate group clears
+D-035 clause 3**. This entry deliberately records the rejected alternatives and the measurements behind
+them, so a later card can reopen the question **without re-running the census**.
+
+### What the census measured
+
+Across all **32 committed `final_mapped.json`**, **exactly one leg** carries any duplicate-canonical group.
+**Zero name-colliding groups clear the bar, and the only groups that clear the bar do not collide.**
+
+| Group | Rows | Verdict | Decisive evidence |
+|---|---|---|---|
+| `glycerol-3-phosphate` full | 20, 36, 38 | **NOT-PROVEN** | KEGG conflict `C03189` vs `C00093` (3b) |
+| closest sub-pair | 36, 38 | **NOT-PROVEN** | satisfies 3c twice (KEGG + ChEBI agree; both → PathWhiz 81) but **fails 3b** — `pathbank` 81 vs 247666, `pubchem` 439162 vs 3393 |
+| `sn -glycerol-3-phosphate (G3P)` | 37 | **NOT-PROVEN** | **zero identifiers**; provenance affirmatively `novel/no_db_candidates`, confidence 0.0 — can never satisfy 3c |
+| `lipid IV_A` / `lipid IV A` | 5, 23 | **GENUINELY-DISTINCT** | `pathbank` 40982 vs 40738; `chebi` 58603 vs 60365; cytoplasmic vs *E. coli* state |
+| `PEtN-lipid A` / `modified Lipid A` | 4, 12 | **GENUINELY-DISTINCT** ✔ | KEGG `C21995` vs `C22003` — the clause 7 reference case, still refusing as required |
+
+**The D-034 leg is correctly still refusing and is not recoverable under D-035 as written.** Note also that
+merging 36/38 would not help: row 20 still owns the `_norm` key `glycerol 3 phosphate`, so the collision
+raising `PREFREEZE_CONNECTIVITY_BROKEN` survives the merge.
+
+**D-034's account of that leg understated the error.** Row 23 `lipid IV A` carries row 6
+`Kdo-lipid IV_A`'s **exact identifier triple** (`pathbank` 40738 / `kegg` C06025 / `chebi` CHEBI:60365). The
+pair the old exporter silently merged was not one molecule spelled twice — it merged two **different
+molecules in different biological states**. This strengthens D-034 rather than weakening it.
+
+### The decision
+
+1. **C-050h implements D-035 clause 6 only** — the refusal path. It replaces the opaque diff-string
+   diagnosis with a **named, machine-readable fail-closed reason**, keeps the graph intact, emits no PWML
+   with ambiguous connectivity, and preserves enough diagnostics for review. **`AMBIGUOUS_RENAME_TARGET`
+   must not become a successful export** (D-035 clause 8) still binds.
+2. **The consolidation engine — D-035 clauses 2 through 5 — is NOT built.** Deterministic survivor
+   selection, alias/raw-name preservation, identifier and provenance union, pre-freeze reference rewrite,
+   and the narrow `PREFREEZE_ROW_COUNT_CHANGED` exemption are **deferred**.
+3. **D-035 is unamended and remains the governing bar.** Nothing here relaxes it. When a payload is later
+   measured to clear clause 3, the engine is chartered then, against D-035 as written.
+
+### Why the engine was deferred — recorded so it is not re-argued from scratch
+
+Building it now would ship machinery that **no production input can reach**, exercised only by synthetic
+fixtures. Untested-in-production consolidation code that merges biological rows is precisely the class of
+risk this sprint exists to reduce, and an unused path invites a future card to "fix" a fixture rather than
+the data. The smaller diff also avoids golden churn.
+
+**The counter-argument, preserved:** the capability would exist the moment real data qualifies, and the
+census covers only *today's* 32 committed legs — a new corpus could qualify tomorrow. **This is the trigger
+for reopening**: if a payload is measured to clear clause 3, charter the engine; do not hand-wave it in
+under the refusal card.
+
+### The third option, also deferred
+
+Folding **F-039** (`ir._dedupe_named_rows`, still live, still first-wins on name coincidence) and **F-040**
+(`process_normalizer._dedupe_named_rows`, upstream, also name-only) into C-050h was considered and
+**declined for this card**, because it spans three files and its scope depends on a measurement still in
+flight. **It is not dismissed.** Leaving two live name-only consolidators behind a new refusal is a real gap
+and the sprint record says so plainly. F-039's own terms bind: **no one may assert a merge rule 8 violation
+until it is measured whether `build_pwml_ir` runs after `freeze_canonical_payload` at each of the three
+D-033 entry points.**
+
+### Binding constraints carried into C-050h's charter
+
+1. Consolidation must be **triggered by name collision** and only then **proved** by identity. **Triggering
+   on identifier equality is measurably unsafe** — **F-043**: `PG` / `PG phosphate` / `(PGP)` all carry
+   `pathbank_compound_id` **193**, satisfy every clause 3 sub-test, and would consolidate; **193 is
+   UDP-glucose**, which is none of them.
+2. Clause 3 must be evaluated on **payload-carried, pre-resolution** identifiers, with **3b ordered before
+   3c**. Otherwise the `C_canned` stub stamps `pathbank_compound_id=78` onto **both** `PEtN-lipid A` and
+   `modified Lipid A` (`db_resolver.py:458-472`) and **clause 7's must-keep-refusing case consolidates**.
+3. The card must **name the normalizer that defines a group** and justify it. Three disagreeing keys are
+   live (**F-040**): `_norm` substitutes a space for the non-`[a-z0-9:+ ]` class, `_normalize` deletes it,
+   `_collapsed` is a third variant.
+4. A new refusal code implies a **golden re-baseline**; that must be explicitly instructed and measured, not
+   absorbed.
+5. Wrong-identity rows (row 23 carrying row 6's triple) are a **separate mapping defect**, not a
+   duplicate-row concern, and must not be repaired here.
