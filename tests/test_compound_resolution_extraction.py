@@ -399,7 +399,11 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: does not export.
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "f0dd12d5171ddb81fcb279efd4221166396c9196c58164e11e9a585e327553ad",
+    # C-050h delta: f0dd12d5… -> e5a40385…, the ONLY moved digest in this table.
+    # ``_leg_digest`` hashes each stop's code and this leg's three stopping
+    # configurations now stop with ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``. Nothing
+    # started or stopped raising, no built IR changed, and B / E are identical.
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "e5a40385cbd1bbd5409928b77c25540a805bd240ab8d989b69d44e7e605351dd",
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "7954a4c9ae7a2905923b97194e620e1440888f83c4152c023ac7625a381b9e01",
     "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "f1a6a4d381e97d31cd09bbf037ed67da0e4a3fe45456906135cab736fb35603b",
     "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "bdcb0fb81a19b8c2f956a959e20fb747d60ebd87aed9ff4bb540d041c66cfa80",
@@ -482,11 +486,26 @@ GOLDEN = {
 #: run: it is identical before and after the rename, so the signature does not
 #: move. It is why 44 committed rows became 43 IR compounds at the integration
 #: base -- the post-freeze exporter merged that pair silently.
+#: C-050h · PMC12444477 · A, C, D -- code SUBSTITUTED again,
+#: ``PREFREEZE_CONNECTIVITY_BROKEN`` -> ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``.
+#: **The refusal is not lifted and was not meant to be** (D-034 clause 1,
+#: ratified; D-036 records the census measuring this group NOT-PROVEN under
+#: D-035 clause 3, KEGG ``C03189`` against ``C00093``). What moved is the
+#: diagnosis: the connectivity check reported a truncated diff of two resolved
+#: signature strings; ``_reject_duplicate_canonical_rows`` now refuses first and
+#: names rows 20 / 36 / 38, their before and after spellings, which of them
+#: canonicalization moved, and each row's payload-carried identifiers.
+#:
+#: **Measured scope of the C-050h delta over this whole table: three
+#: (leg, configuration) pairs, all on this leg, code only.** No pair started or
+#: stopped stopping and no built IR moved -- including PMC13278307 · C_canned
+#: below, still raising ``AMBIGUOUS_RENAME_TARGET`` on two genuinely distinct
+#: compounds as D-035 clause 7 requires.
 GOLDEN_PREFREEZE_STOPS: Dict[str, Dict[str, str]] = {
     "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
-        "A_dbdown_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
-        "C_canned_defaultindex_lenient": "PREFREEZE_CONNECTIVITY_BROKEN",
-        "D_emptydb_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
+        "A_dbdown_defaultindex_strict": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
+        "C_canned_defaultindex_lenient": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
+        "D_emptydb_defaultindex_strict": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
     },
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
         "C_canned_defaultindex_lenient": "AMBIGUOUS_RENAME_TARGET",

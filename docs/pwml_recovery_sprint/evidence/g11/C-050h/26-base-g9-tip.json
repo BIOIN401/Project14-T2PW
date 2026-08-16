@@ -1,0 +1,90 @@
+{
+  "label": "base-g9-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/p50h/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/p50h/base",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p50h-dup-refusal/docs/pwml_recovery_sprint/evidence/g11/pin/C-050h/26-base-g9-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/p50h/26",
+    "-p",
+    "no:logging",
+    "-k",
+    "c050h or propagation_is_all_or_nothing or collapsed_spellings",
+    "C:/t/p50h/base/tests/test_prefreeze_compound_resolution.py"
+  ],
+  "cwd": "C:/t/p50h/base",
+  "started_at": "2026-08-16T21:23:49+00:00",
+  "finished_at": "2026-08-16T21:23:50+00:00",
+  "duration_seconds": 1.1418596000003163,
+  "timeout_seconds": 900.0,
+  "root_pid": 887628,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 899240,
+      "name": "python.exe",
+      "ppid": 887628
+    }
+  ],
+  "descendants_terminated": [
+    899240
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 859712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 864444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 898260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 900000,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50h-dup-refusal\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-050h\\26-base-g9-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50h-dup-refusal\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50h-dup-refusal",
+    "repo_head": "b5fb82aa19e4ed837c0d34720e2238b0dfafb7eb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
