@@ -1399,3 +1399,61 @@ It does not reopen C-045, C-045a or any merged card, and it does not authorize e
 `prefreeze_resolution.py`, `build_pwml_ir`, or the 32 `GOLDEN` digests — `REV-045a` independently
 reproduced all 32 at both SHAs and they are correct. C-045a's measurements were sound; only its
 **significance claim** was wrong, and that claim originated in the orchestrator's charter.
+
+---
+
+## D-033 — D-032 clause 1 undercounted: there are THREE export entry points, not two · 2026-08-15 · LOCKED
+
+**This amends D-032, which is LOCKED and stands in every other respect.** Clause 1 said the pre-freeze
+sequence must run at *"both production export entry points"*. **That enumeration was wrong.**
+
+**Measured by C-051, confirmed independently by the orchestrator on `328862ab`:**
+
+```
+streamlit_app.py :: run_post_pipeline_sbml_artifacts   2617-3809
+                      run_prefreeze_resolution   :3587      <- the seam
+streamlit_app.py :: run_pwml_export                    3828-4136
+                      build_pwml_ir              :4052      <- OUTSIDE the seam's function
+        reached by _render_review_refine_section:2231
+                -> _generate_pwml_from_refinement_working_json:1898
+                -> run_pwml_export
+```
+
+The **refinement re-export** path reaches `build_pwml_ir` **without ever entering the function that
+holds the pre-freeze call.** It is a third export entry point. At base it was invisible because the
+exporter's `_resolve_compound_rows` (`ir.py:979`) silently repaired those rows **after the freeze** —
+exactly what merge rule 8 forbids. C-051's removal of that call converted the silent repair into a
+loud refusal, which is **the card working correctly**: `qb` node06 turning red is the defect becoming
+visible, not the card misbehaving.
+
+### The amendment
+
+1. **D-032 clause 1 is corrected to THREE entry points:** the Streamlit post-pipeline export
+   (`run_post_pipeline_sbml_artifacts`, wired by C-050), the CLI export
+   (`writer.py :: run_pwml_pipeline_export`, wired by C-045b), and the **refinement re-export**
+   (`streamlit_app.py :: run_pwml_export`, **unwired**).
+2. **`C-051a` owns the third seam** and lands on C-051's approved tip, before the golden re-baseline.
+   `run_pwml_export` and the refinement path are C-030/C-052 surface; C-051a is granted exactly that
+   seam and nothing else.
+3. **D-032 clause 5 is strengthened.** It required demonstrating coverage at "both" entry points.
+   It now requires a card to **enumerate every caller of `build_pwml_ir` by measurement** and show
+   coverage at each. **An enumeration inherited from a charter, a decision or a prior card is not
+   acceptable evidence** — this clause has now been wrong twice.
+4. **`qb` node06 is expected RED between C-051 and C-051a**, and that red is a **PASS condition** for
+   C-051 in the same way A9's fifth category was a pass condition for every card before it.
+   **It must not be chased, silenced, or fixed by adjusting node06.**
+
+### Why this keeps happening, recorded so it stops
+
+Four site-count errors on this stack, each found by measurement after a charter asserted a smaller
+number: **C-050f** — two rewrite sites where the charter named one; **C-045b** — two production entry
+points where the charter named one; **C-051** — two `pathwhiz_id` materialization sites where P2-06
+and D-027 named one (the orchestrator warned of this at dispatch and the STOP condition correctly did
+not trigger, because the compound path runs through `_entity_record:447` while `_component_record:419`
+serves species, locations, cell types and tissues); and **this one** — three export entry points
+where D-032 named two.
+
+**The pattern is the control plane asserting a count that was true when written and stale when read.**
+Standing requirement, binding on every future charter and decision in this sprint: **a claim about
+"the" call site, "the" entry point or "both" of anything must carry the measurement that establishes
+the count, and the card must re-derive it at its own base rather than inherit it.**
