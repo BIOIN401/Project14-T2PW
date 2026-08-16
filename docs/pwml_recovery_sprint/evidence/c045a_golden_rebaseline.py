@@ -101,7 +101,19 @@ def _mode_flatten(tm: Any, production: bool) -> Dict[str, Any]:
                 except Exception as exc:  # a D-015 cl.6 stop is a result, not a crash
                     per_config[name] = {"#raised": f"{type(exc).__name__}: {exc}"}
                     continue
-            per_config[name] = _leaves(tm, build_pwml_ir(payload, **kwargs))
+            try:
+                per_config[name] = _leaves(tm, build_pwml_ir(payload, **kwargs))
+            except Exception as exc:
+                # C-051b. Without ``--production`` this is the RAW payload, and
+                # since C-051 ``build_pwml_ir`` refuses a compound row carrying
+                # no resolution verdict -- so at any post-C-051 tree this mode
+                # died here on leg 1 and the tool had two dead modes, not one.
+                # The refusal is the measured result of the standalone
+                # configuration, recorded in the same shape ``--production``
+                # already records a pre-freeze stop in, so a base-vs-tip
+                # ``--mode delta`` still lines the two sweeps up instead of
+                # having nothing to compare.
+                per_config[name] = {"#raised": f"{type(exc).__name__}: {exc}"}
         result[leg] = per_config
         print(f"  {leg}", flush=True)
     return result
