@@ -842,10 +842,16 @@ def test_new_acceptance_a_failed_resolution_report_is_not_reported_as_ok() -> No
     # A resolver that WAS consulted and rejected the row is not review-deferred.
     assert report["review_required"] == {}
 
-    # A skip that is not a clean no-op falsifies it too.
+    # A skip that is not a clean no-op falsifies it too -- for EVERY registered
+    # canonicalizer, not only the first. C-045 registered ``species`` beside
+    # ``compounds`` (D-016), and a verdict that named only one of them would be
+    # the same partial record this test exists to forbid.
     skipped = run_prefreeze_resolution([], db_resolver=_OfflineResolver(), name_index=None)
     assert skipped["ok"] is False
-    assert skipped["failures"] == {"compounds": "payload_not_a_mapping"}
+    assert skipped["failures"] == {
+        "compounds": "payload_not_a_mapping",
+        "species": "payload_not_a_mapping",
+    }
 
     # A payload with nothing to canonicalize is still a clean run.
     clean = run_prefreeze_resolution(

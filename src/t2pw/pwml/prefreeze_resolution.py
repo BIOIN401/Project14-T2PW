@@ -31,12 +31,17 @@ Ambiguity and broken connectivity raise :class:`PrefreezeResolutionError`, which
 carries a machine-readable ``code``. The payload handed in is left **exactly** as
 it was -- there is no partially propagated state to observe, and no silent skip.
 
-Extending this to species (C-045)
----------------------------------
+Species too (C-045 / D-016)
+---------------------------
 :data:`PREFREEZE_CANONICALIZERS` is an ordered tuple of ``(name, callable)``.
 Each callable takes ``(payload, context)`` and returns its own summary block.
-C-045 adds a species entry beside the compound one; nothing else has to move, and
-the Streamlit call site does not change again.
+C-045 added :func:`resolve_species_prefreeze` beside the compound one, for the
+reason **D-016 (LOCKED)** gives: organism context is canonical biology as much as
+compound identity is, and it was being rewritten inside the exporter, after the
+freeze. Nothing else moved, and the Streamlit call site did not change again.
+The species ladder itself is ``ir._canonicalize_species_offline``, imported --
+this module has no second implementation of it, exactly as it has no second
+implementation of compound resolution.
 """
 
 from __future__ import annotations
@@ -47,6 +52,11 @@ from copy import deepcopy
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Tuple
 
 from t2pw.pwml.compound_resolution import _db_id, _resolve_compound_rows, ensure_resolution_report
+from t2pw.pwml.ir import (
+    SPECIES_CANONICALIZATION_FIELD,
+    _canonicalize_species_offline,
+    _dedupe_aliases,
+)
 from t2pw.pwml.name_index import default_name_index
 
 #: ``ir.py``'s compound ``entity_spec`` db-key list and its ``db_field``. ``ir._entity_record``
@@ -63,6 +73,7 @@ __all__ = [
     "PrefreezeResolutionError",
     "PREFREEZE_CANONICALIZERS",
     "resolve_compounds_prefreeze",
+    "resolve_species_prefreeze",
     "run_prefreeze_resolution",
 ]
 
@@ -848,16 +859,299 @@ def _first_divergence(before: str, after: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# The species canonicalizer (C-045 / D-016).
+# ---------------------------------------------------------------------------
+
+
+def _reject_ambiguous_species_renames(
+    rename_map: Dict[str, str],
+    before_names: Sequence[str],
+    after_names: Sequence[str],
+    primary_before: Dict[str, Tuple[str, ...]],
+) -> None:
+    """D-015 clause 6 for species, checked before anything is written.
+
+    The **rule** is :func:`_reject_ambiguous_renames`'s, and the two error codes
+    are the same two: a shared source name would redirect references meant for
+    another entity, and two distinct sources sharing a target would merge two
+    organisms into one. Only the bucket differs, and it differs materially --
+    that function builds its compatibility set out of ``"compounds#<i>"`` tokens
+    while :func:`_alias_index` labels a species row ``"species#<i>"``, so reusing
+    it here would find *every* species rename rogue and raise
+    ``AMBIGUOUS_REFERENCE`` on a rename that is not ambiguous at all. It is
+    C-050's owned function and this card may not retune it, so the bucket-correct
+    twin lives here. Unifying the two is a deferred finding, not this card's.
+    """
+
+    by_target: Dict[str, List[str]] = {}
+    for old, new in rename_map.items():
+        by_target.setdefault(_norm(new), []).append(old)
+    for target, sources in sorted(by_target.items()):
+        if len({_norm(source) for source in sources}) > 1:
+            raise PrefreezeResolutionError(
+                "AMBIGUOUS_RENAME_TARGET",
+                f"{len(sources)} distinct species names canonicalize to {target!r}; "
+                "applying the rename would merge them",
+                target=target, sources=sorted(sources),
+            )
+
+    compatible: Dict[str, set] = {}
+    for index, before in enumerate(before_names):
+        if before:
+            compatible.setdefault(_norm(before), set()).add(f"species#{index}")
+    for old, new in sorted(rename_map.items()):
+        owners = primary_before.get(_norm(old), ())
+        rogue = [
+            owner for owner in owners
+            if owner not in compatible.get(_norm(old), set())
+            or _norm(after_names[int(owner.split("#")[1])]) != _norm(new)
+        ]
+        if rogue:
+            raise PrefreezeResolutionError(
+                "AMBIGUOUS_REFERENCE",
+                f"the name {old!r} is also carried by {rogue}; a reference to it cannot be "
+                f"unambiguously redirected to {new!r}",
+                name=old, target=new, conflicting_entities=sorted(rogue),
+            )
+
+
+def _canonicalize_species_rows(rows: List[Any], *, name_index: Any) -> List[Dict[str, Any]]:
+    """Run **the** species ladder over ``rows``, once per surviving row.
+
+    ``ir._canonicalize_species_offline`` is imported, never re-implemented: one
+    precedence ladder, one set of statuses, one log shape. What this adds is the
+    ordering the exporter used to supply for free.
+
+    ``build_pwml_ir`` canonicalized the output of ``_dedupe_named_rows``, which
+    keeps the **first** row of each ``_norm(name)`` group and drops the rest with
+    a ``duplicate_named_record`` warning. Running the ladder over every payload
+    row instead would let a dropped duplicate be renamed to a name the survivor
+    does not share -- and a row that stops being a duplicate becomes a **second
+    species** in the IR that the exporter never emitted. That is inventing
+    biology, so the group leader is the row that gets canonicalized, and the rest
+    of its group follows it **only when the leader's rename moved the group's
+    ``_norm``**, which is exactly the condition under which they would otherwise
+    stop deduplicating. A leader left alone leaves its group alone.
+
+    Every row that participated carries :data:`ir.SPECIES_CANONICALIZATION_FIELD`
+    afterwards, so ``build_pwml_ir`` can rebuild the report it used to compute.
+    That marker is **durable**, and the returned list is not: re-running the stage
+    over an already-canonical payload produces no fresh log entry -- the ladder
+    correctly finds nothing to do -- but the row must keep the account of the pass
+    that *did* decide, or a replayed payload would silently lose the rename from
+    ``pwml_ir_report.json``. Same distinction ``_authoritative_provenance`` draws
+    on the compound side, for the same reason. The returned entries describe what
+    **this** call did, so the summary never claims a second consultation.
+    """
+
+    fresh: List[Dict[str, Any]] = []
+    leaders: Dict[str, int] = {}
+    for index, row in enumerate(rows):
+        if isinstance(row, dict) and _canonical(row.get("name")):
+            leaders.setdefault(_norm(row.get("name")), index)
+
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict) or not _canonical(row.get("name")):
+            continue  # ``_dedupe_named_rows`` never saw this row either
+        leader = leaders[_norm(row.get("name"))]
+        prior = _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD))
+        if leader == index:
+            log: Dict[str, Any] = {}
+            status = _canonicalize_species_offline(row, name_index=name_index, report=log)
+            entries = _safe_list(_safe_dict(log.get("name_canonicalization")).get("species"))
+            marker: Dict[str, Any] = {"status": status}
+            if entries:
+                marker["entry"] = entries[0]
+                fresh.append(entries[0])
+            elif isinstance(prior.get("entry"), dict):
+                marker["entry"] = prior["entry"]
+            row[SPECIES_CANONICALIZATION_FIELD] = marker
+            continue
+        leader_row = rows[leader]
+        marker = {"status": _safe_dict(leader_row.get(SPECIES_CANONICALIZATION_FIELD)).get("status")}
+        target = _canonical(leader_row.get("name"))
+        own = _canonical(row.get("name"))
+        if target and _norm(target) != _norm(own):
+            row.setdefault("raw_name", own)
+            aliases = _dedupe_aliases([*_safe_list(row.get("aliases")), own])
+            if aliases:
+                row["aliases"] = aliases
+            row["name"] = target
+            marker["followed_leader"] = own
+        elif isinstance(prior.get("followed_leader"), str):
+            marker["followed_leader"] = prior["followed_leader"]
+        row[SPECIES_CANONICALIZATION_FIELD] = marker
+
+    return fresh
+
+
+def resolve_species_prefreeze(
+    payload: Dict[str, Any],
+    *,
+    db_resolver: Any = None,  # noqa: ARG001 - the ladder is offline; see below
+    strict_db: bool = False,  # noqa: ARG001
+    name_index: Any = _NAME_INDEX_UNSET,
+    report: Optional[Dict[str, Any]] = None,  # noqa: ARG001
+) -> Dict[str, Any]:
+    """Canonicalize ``payload['entities']['species']`` in place, pre-freeze.
+
+    ``DECISIONS.md`` **D-016 (LOCKED)**: organism context is part of the canonical
+    biological representation, so the species rename belongs upstream of the
+    freeze for the same reason the compound rename does. This is that move -- the
+    ladder is ``ir._canonicalize_species_offline``, unchanged and unduplicated;
+    what changes is that it now runs here rather than inside ``build_pwml_ir``.
+
+    Mutates **the object it is given**, row identities included where the ladder
+    left them alone, so a caller holding ``final_export_payload`` cannot end up
+    holding a pre-canonicalization view of it.
+
+    ``db_resolver`` and ``strict_db`` are accepted because
+    :func:`run_prefreeze_resolution` passes them to every canonicalizer, and are
+    deliberately **unused**: the species ladder's step 1 (a live resolution-DB
+    name) is applied upstream in stage-2 hydration and reaches this function as a
+    name already on the row, and steps 2-4 are offline by construction. So this
+    stage opens no connection and can report no ``db_unavailable`` -- D-029's
+    ``review_required`` outcome is reachable here only through the compound
+    canonicalizer beside it, which is where the database actually is.
+
+    Raises :class:`PrefreezeResolutionError` on an ambiguous rename or a
+    reference the rename would break. On any raise the payload is unchanged.
+    """
+
+    summary: Dict[str, Any] = {
+        "applied": False,
+        "rows": 0,
+        "renamed": 0,
+        "rename_map": {},
+        "references_updated": [],
+        "statuses": {},
+        "at_risk": [],
+        "name_canonicalization": [],
+    }
+    if not isinstance(payload, dict):
+        summary["skipped_reason"] = "payload_not_a_mapping"
+        return summary
+    entities = payload.get("entities")
+    rows = entities.get("species") if isinstance(entities, dict) else None
+    if not isinstance(rows, list) or not rows:
+        summary["skipped_reason"] = "no_species_rows"
+        return summary
+
+    summary["rows"] = len(rows)
+    resolved_name_index = default_name_index() if name_index is _NAME_INDEX_UNSET else name_index
+    if resolved_name_index is not None and not hasattr(resolved_name_index, "species_canonical"):
+        # A name index that cannot answer a species question is step 2 being
+        # *absent*, not step 2 saying "no". Recorded rather than swallowed: the
+        # ladder still runs, and its remaining steps still decide whether to
+        # APPLY a rename (D-028), but the record says which rung was missing.
+        summary["name_index"] = "no_species_canonical"
+        resolved_name_index = None
+
+    # ---- stage 1: canonicalize on a copy. The live rows are untouched. ----
+    staged = deepcopy(rows)
+    before_names = [_canonical(row.get("name")) if isinstance(row, dict) else "" for row in staged]
+    fresh_entries = _canonicalize_species_rows(staged, name_index=resolved_name_index)
+    if len(staged) != len(rows):
+        raise PrefreezeResolutionError(
+            "PREFREEZE_ROW_COUNT_CHANGED",
+            f"species canonicalization returned {len(staged)} rows for {len(rows)} inputs",
+            expected=len(rows), actual=len(staged),
+        )
+    after_names = [_canonical(row.get("name")) if isinstance(row, dict) else "" for row in staged]
+
+    summary["statuses"] = {
+        before_names[index]: _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status")
+        for index, row in enumerate(staged)
+        if isinstance(row, dict) and before_names[index]
+    }
+    summary["at_risk"] = [
+        after_names[index]
+        for index, row in enumerate(staged)
+        if isinstance(row, dict)
+        and _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status") == "deterministic"
+    ]
+    summary["name_canonicalization"] = fresh_entries
+
+    # ---- stage 2: the explicit rename map (D-015 clause 2) -----------------
+    rename_map: Dict[str, str] = {}
+    for index, (before, after) in enumerate(zip(before_names, after_names)):
+        if not before or not after or before == after:
+            continue
+        previous = rename_map.get(before)
+        if previous is not None and _norm(previous) != _norm(after):
+            raise PrefreezeResolutionError(
+                "AMBIGUOUS_RENAME_SOURCE",
+                f"species name {before!r} canonicalizes to both {previous!r} and {after!r}",
+                name=before, targets=sorted({previous, after}), row=index,
+            )
+        rename_map[before] = after
+    summary["rename_map"] = dict(rename_map)
+    summary["renamed"] = len(rename_map)
+
+    primary_before, alias_before = _alias_index(payload)
+    if rename_map:
+        _reject_ambiguous_species_renames(rename_map, before_names, after_names, primary_before)
+
+    # ---- stage 3: propagate on a staged copy of the whole payload ----------
+    # Same traversal, same match rule, same audit as the compound stage --
+    # ``_LOCATION_MEMBER_FIELDS`` was written to cover all four buckets for
+    # exactly this call.
+    staged_payload = deepcopy(payload)
+    staged_payload["entities"]["species"] = staged
+    staged_updates = _propagate(staged_payload, rename_map)
+    _assert_fully_propagated(staged_payload, rename_map)
+
+    _, alias_after = _alias_index(staged_payload)
+    signature_before = _connectivity_signature(payload, alias_before)
+    signature_after = _connectivity_signature(staged_payload, alias_after)
+    if signature_before != signature_after:
+        raise PrefreezeResolutionError(
+            "PREFREEZE_CONNECTIVITY_BROKEN",
+            "renaming changed the participant edge set; the payload was not modified",
+            first_divergence=_first_divergence(signature_before, signature_after),
+            rename_map=dict(rename_map),
+        )
+
+    # ---- stage 4: commit to the LIVE payload, with an undo log ------------
+    undo: List[Tuple[Any, Any, Any]] = [(rows, slice(None), list(rows))]
+    try:
+        rows[:] = staged
+        _propagate(payload, rename_map, undo)
+        _assert_fully_propagated(payload, rename_map)
+        _, live_alias = _alias_index(payload)
+        if _connectivity_signature(payload, live_alias) != signature_after:
+            raise PrefreezeResolutionError(
+                "PREFREEZE_COMMIT_DIVERGED",
+                "the committed payload did not match the validated staged payload",
+                rename_map=dict(rename_map),
+            )
+    except Exception:
+        for container, key, value in reversed(undo):
+            container[key] = value
+        raise
+
+    summary["applied"] = True
+    summary["references_updated"] = [
+        {"pointer": pointer, "from": before, "to": after} for pointer, before, after in staged_updates
+    ]
+    return summary
+
+
+# ---------------------------------------------------------------------------
 # Orchestration.
 # ---------------------------------------------------------------------------
 
-#: Ordered canonicalizers. C-045 appends ``("species", resolve_species_prefreeze)``.
+#: Ordered canonicalizers. C-045 appended ``("species", resolve_species_prefreeze)``
+#: at the seam C-050 declared for it. The two are independent -- neither reads a
+#: row the other writes -- so the order is the declaration order and nothing else
+#: depends on it.
 PREFREEZE_CANONICALIZERS: Tuple[Tuple[str, Callable[..., Dict[str, Any]]], ...] = (
     ("compounds", resolve_compounds_prefreeze),
+    ("species", resolve_species_prefreeze),
 )
 
 #: A canonicalizer that ran on nothing is not a failure. Any other skip is.
-_BENIGN_SKIPS = frozenset({"no_compound_rows"})
+_BENIGN_SKIPS = frozenset({"no_compound_rows", "no_species_rows"})
 
 #: Verdicts that mean "identity was not established", not "the payload is wrong".
 #: An unreachable PathBank DB is an infrastructure condition, not a defect in the

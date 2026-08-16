@@ -1423,6 +1423,7 @@ def test_pwml_uses_db_exact_compound_rows_and_ids_for_hexokinase() -> None:
 # ---------------------------------------------------------------------------
 
 from t2pw.pwml.name_index import PathwhizNameIndex  # noqa: E402
+from t2pw.pwml.prefreeze_resolution import resolve_species_prefreeze  # noqa: E402
 
 
 def _offline_index() -> PathwhizNameIndex:
@@ -1520,9 +1521,35 @@ def test_offline_index_emits_canonical_compound_name() -> None:
     assert any(entry["from"] == "glycolate" and entry["to"] == "Glycolic acid" for entry in canon)
 
 
+def _species_canonicalized_payload() -> dict:
+    """The canonicalization payload, with the species stage already run on it.
+
+    **Baseline moved deliberately, C-045 / D-016 (LOCKED).** These two tests used
+    to call ``build_pwml_ir`` directly and read the canonical species name off its
+    output, because the species ladder ran *inside* the exporter -- after the
+    canonical payload was frozen, which permanent merge rule 8 forbids. D-016
+    moved the ladder into the pre-freeze sequence, so the exporter is now handed a
+    payload that is already canonical.
+
+    **The delta is the stage, not the assertion.** Both tests below still assert
+    exactly what they asserted before -- the offline index's canonical organism
+    name reaches the emitted IR, and reaches the written PWML -- on the same
+    fixture, with the same index, by the same comparison. Nothing is relaxed to
+    a subset, an allowlist or a normalized comparand; the payload is simply taken
+    through the stage that now does the work.
+    """
+
+    payload = _canonicalization_payload()
+    summary = resolve_species_prefreeze(payload, name_index=_offline_index())
+    assert summary["rename_map"] == {
+        "Herbaspirillum huttiense": "Herbaspirillum huttiense IAM 15032"
+    }, "the pre-freeze stage did not canonicalize the species; the tests below would be vacuous"
+    return payload
+
+
 def test_offline_index_emits_canonical_species_name() -> None:
     ir, _ = build_pwml_ir(
-        _canonicalization_payload(),
+        _species_canonicalized_payload(),
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),
@@ -1548,7 +1575,7 @@ def test_offline_index_disabled_keeps_extraction_names() -> None:
 
 def test_offline_index_canonical_name_reaches_written_pwml() -> None:
     ir, report = build_pwml_ir(
-        _canonicalization_payload(),
+        _species_canonicalized_payload(),
         strict_db=False,
         db_resolver=_EmptyCompoundDb(),
         name_index=_offline_index(),

@@ -613,6 +613,25 @@ _SPECIES_CREATE_DEFAULT_CANON_NORMS = frozenset(
     if _norm(entry.get("name"))
 )
 
+#: Where the pre-freeze species stage records **what it decided**, on the payload
+#: row it decided about. ``DECISIONS.md`` **D-016 (LOCKED)** moves
+#: :func:`_canonicalize_species_offline` upstream of the freeze, so the status it
+#: returns is no longer produced inside ``build_pwml_ir`` and cannot be read off
+#: the call stack there any more. It travels on the row instead, which is the
+#: only carrier that survives ``_hydrate_component_rows_from_biological_states``,
+#: ``_apply_create_defaults`` and ``_dedupe_named_rows`` intact.
+#:
+#: It is provenance, not biology: the name is **not** in
+#: ``canonical_hash.GRAPH_FIELDS``, so it is stripped from the graph hash, and
+#: ``_component_record`` does not copy it, so the emitted IR shape is unchanged --
+#: which is what the docstring below has always promised about this function.
+SPECIES_CANONICALIZATION_FIELD = "species_canonicalization"
+
+#: The db-identity keys ``build_pwml_ir``'s species ``component_spec`` names.
+#: Kept beside the reader so the pre-freeze caller and ``_component_record``
+#: project the same id from the same row.
+SPECIES_DB_KEYS: Tuple[str, ...] = ("pathbank_species_id", "pw_species_id", "pathwhiz_id")
+
 
 def _canonicalize_species_offline(
     record: Dict[str, Any],
@@ -640,16 +659,30 @@ def _canonicalize_species_offline(
     default), ``"deterministic"`` (taxonomy-identified but only normalized -- may
     still collide on import), or ``"novel"`` (no taxonomy id, left untouched). The
     record itself is never tagged, so its emitted shape is unchanged.
+
+    **Where this runs (D-016, LOCKED).** It used to be called from inside
+    ``build_pwml_ir``, on the output of :func:`_component_record` -- i.e. by the
+    exporter, on a payload the freeze had already hashed, which
+    ``PRODUCT_CONTRACT`` §5 and permanent merge rule 8 forbid. Its one caller is
+    now :func:`t2pw.pwml.prefreeze_resolution.resolve_species_prefreeze`, which
+    hands it the **payload** row instead. The ladder below is unchanged; only the
+    two identity reads were widened, so that a payload row and the
+    ``_component_record`` projection of that same row resolve to the same
+    taxonomy id and the same PathBank id. Both widenings are inert on a
+    ``_component_record``, which carries neither an alternate spelling nor a
+    ``mapping_meta``.
     """
     canon = report.setdefault("name_canonicalization", {}).setdefault("species", [])
 
     # (2) offline index by taxonomy / pathbank id -- authoritative when present.
     if name_index is not None:
         hit = name_index.species_canonical(
-            taxonomy_id=record.get("taxonomy_id"),
-            pathbank_species_id=record.get("pathbank_species_id")
-            or record.get("pw_species_id")
-            or record.get("pathwhiz_id"),
+            # ``_component_record`` folds ``taxonomy-id`` onto ``taxonomy_id``
+            # and ``_db_id`` reads the PathBank id through ``_first_nonempty``,
+            # which also looks inside ``mapping_meta``/``mapped_ids``. A raw
+            # payload row has had neither done to it yet.
+            taxonomy_id=record.get("taxonomy_id") or record.get("taxonomy-id"),
+            pathbank_species_id=_first_nonempty(record, SPECIES_DB_KEYS),
             name=record.get("name"),
         )
         canonical = _canonical(hit.get("name")) if hit else ""
@@ -674,7 +707,7 @@ def _canonicalize_species_offline(
             return "canonical"
 
     # (4) deterministic normalization for taxonomy-identified species only.
-    taxonomy_id = _canonical(record.get("taxonomy_id"))
+    taxonomy_id = _canonical(record.get("taxonomy_id") or record.get("taxonomy-id"))
     if not taxonomy_id:
         return "novel"  # truly novel / unidentified -> keep extraction name verbatim
     extraction_name = _canonical(record.get("name"))
@@ -839,12 +872,34 @@ def build_pwml_ir(
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
         if source_key == "species":
+            # D-016 (LOCKED): the canonicalization itself now happens BEFORE the
+            # freeze, in ``prefreeze_resolution.resolve_species_prefreeze``. What
+            # is left here is a **reader**, not a second pass: it replays the
+            # decision the pre-freeze stage recorded on the row so that this
+            # report keeps carrying exactly what it carried before -- the
+            # ``name_canonicalization["species"]`` log, in row order, and the
+            # ``_species_at_risk`` set ``_emit_canonicalization_preflight``
+            # consumes below. Nothing is re-derived and no name is rewritten
+            # here; a row with no marker (one hydrated from a biological state,
+            # which the ladder always classified ``novel``) contributes nothing,
+            # exactly as before.
             species_at_risk: List[str] = []
-            for record in ir[ir_key]:
-                status = _canonicalize_species_offline(
-                    record, name_index=resolved_name_index, report=report
-                )
-                if status == "deterministic":
+            if ir[ir_key]:
+                # The ladder created this key on its first call, so it was
+                # present -- as ``{"species": []}`` -- for every payload that had
+                # a species row at all, whether or not anything was renamed.
+                # ``pwml_ir_report.json`` is a committed artifact and C-040's
+                # golden hashes this report, so the empty case is part of the
+                # shape, not an accident of it.
+                report.setdefault("name_canonicalization", {}).setdefault("species", [])
+            for row, record in zip(rows, ir[ir_key]):
+                marker = _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD))
+                entry = marker.get("entry")
+                if isinstance(entry, dict):
+                    report.setdefault("name_canonicalization", {}).setdefault(
+                        "species", []
+                    ).append(entry)
+                if marker.get("status") == "deterministic":
                     species_at_risk.append(_canonical(record.get("name")))
             report["_species_at_risk"] = species_at_risk
         by_name: Dict[str, Dict[str, Any]] = {}
