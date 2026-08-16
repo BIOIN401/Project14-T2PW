@@ -1298,10 +1298,16 @@ def test_c050g_new_acceptance_a_collision_with_an_untouched_row_is_invisible_her
 # ``PREFREEZE_CONNECTIVITY_BROKEN`` -> ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``, so
 # every CORRECTION test FAILS at base b5fb82aa on the code string; nothing rests
 # on a symbol being absent. **NEW ACCEPTANCE**: by-name tests for four structural
-# codes that had none, and two over-fire controls. **Nothing here newly refuses a
-# payload that exported at base** -- the only behaviour that moves is the NAME of
-# a refusal already happening, three (leg, configuration) pairs on one leg over
-# the whole committed corpus, in ``test_compound_resolution_extraction``'s golden.
+# codes that had none, and the over-fire controls.
+#
+# **Over the committed corpus -- 32 legs x 5 configurations, all 160 cells
+# measured -- nothing newly refuses a payload that exported at base.** Exactly
+# three cells differ, all on one leg, all code-only; none moves export->STOP or
+# STOP->export (``test_compound_resolution_extraction``'s golden). **That claim
+# does not generalise**: synthetic shapes exist where a base export now refuses,
+# pinned by
+# ``test_c050h_new_acceptance_a_pre_existing_group_renamed_en_bloc_refuses``. The
+# direction is **fail-closed** and the authority is **D-035 clause 6**.
 # --------------------------------------------------------------------------
 
 DUPLICATE_ROWS = "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
@@ -1499,13 +1505,15 @@ def test_c050h_new_acceptance_ambiguous_rename_target_cannot_reach_an_export() -
     assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
 
 
-def test_c050h_new_acceptance_a_pre_existing_duplicate_group_is_not_refused_here() -> None:
+def test_c050h_new_acceptance_an_unrenamed_pre_existing_duplicate_is_not_refused() -> None:
     """NEW ACCEPTANCE, and the first over-fire control.
 
-    ``lipid IV_A`` and ``lipid IV A`` share a ``_norm`` name before anything
-    canonicalizes, so this stage created nothing and has nothing to refuse: the
-    group is **F-039**'s (``ir._dedupe_named_rows``, post-freeze, first-wins,
-    C-050i). Firing here would refuse legs on a defect this card does not own.
+    Named for the sub-case it actually pins. ``lipid IV_A`` and ``lipid IV A``
+    carry no ChEBI, so neither enters the rename map, ``arrived`` is empty and
+    this stage created nothing to refuse: the group is **F-039**'s
+    (``ir._dedupe_named_rows``, post-freeze, first-wins, C-050i). A pre-existing
+    group that *is* renamed is a different case and does refuse -- see
+    ``..._a_pre_existing_group_renamed_en_bloc_refuses`` below.
     """
 
     payload = {
@@ -1522,6 +1530,39 @@ def test_c050h_new_acceptance_a_pre_existing_duplicate_group_is_not_refused_here
     assert summary["applied"] is True
     assert [row["name"] for row in payload["entities"]["compounds"]] == [
         "lipid IV_A", "lipid IV A", "Glycine"]
+
+
+def test_c050h_new_acceptance_a_pre_existing_group_renamed_en_bloc_refuses() -> None:
+    """NEW ACCEPTANCE. **The widening, pinned** -- REV-050h round 1, finding 1.
+
+    ``arrived`` is per-row, so a group that already collided and is renamed
+    *together* onto a NEW ``_norm`` key has every member arriving, and refuses.
+    **At b5fb82aa this payload returns ``applied: True``** and exports two rows
+    both named ``Lipid IVA`` into ``ir._dedupe_named_rows``' first-wins drop --
+    the invented-biology shape D-036's census documented. The refusal is D-035
+    clause 6 working, and it extends D-034 clause 2's accepted
+    ``PRODUCT_CONTRACT`` §1 class in the **fail-closed** direction. Pinned here so
+    the widening is attributable rather than latent.
+    """
+
+    payload = {
+        "entities": {"compounds": [
+            _compound("lipid IV_A", "CHEBI:9"), _compound("lipid IV A", "CHEBI:9"),
+        ]},
+        "processes": {"reactions": [
+            {"name": "R1", "inputs": ["lipid IV_A"], "outputs": []},
+        ]},
+    }
+    original = deepcopy(payload)
+    index = _StubNameIndex({"9": {"id": 78, "name": "Lipid IVA", "matched_on": "chebi"}})
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, index)
+
+    assert excinfo.value.code == DUPLICATE_ROWS
+    assert excinfo.value.details["canonical_key"] == "lipid iva"
+    assert excinfo.value.details["canonicalized_rows"] == [0, 1]
+    assert payload == original, "nothing may be committed on a refusal"
 
 
 def test_c050h_new_acceptance_an_unreferenced_created_duplicate_is_not_refused() -> None:

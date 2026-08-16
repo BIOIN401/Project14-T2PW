@@ -816,8 +816,8 @@ def _reject_duplicate_canonical_rows(
     """D-035 clause 6 / D-036 clause 1 -- the refusal path, named.
 
     Refuses when canonicalization leaves **two or more compound rows sharing one
-    ``_norm`` name**, at least one of them did not already have that name, and a
-    participant reference lands on that name.
+    ``_norm`` name**, at least one of them (``arrived``) did not already hold that
+    key, and a participant reference lands on it.
 
     ``_norm`` defines the group and nothing else does (**F-040 as corrected**):
     ``entity_by_name`` (``ir.py:1105-1117``) and ``resolve_entity``
@@ -839,14 +839,26 @@ def _reject_duplicate_canonical_rows(
     * It does **not** compare identifiers to decide. Identifier equality is a
       measurably unsafe trigger (**F-043**: ``PG`` / ``PG phosphate`` / ``(PGP)``
       all carry ``pathbank_compound_id`` 193, which is UDP-glucose).
-    * It does **not** fire on a collision the payload already carried, nor on a
-      created group **no reference reaches**. D-035 clause 6's subject is "PWML
-      with ambiguous connectivity" and D-036 clause 1 charters a *name* for the
-      condition that was already refusing. Both excluded shapes export today and
-      are then coalesced first-wins by ``ir._dedupe_named_rows`` -- **F-039**,
-      routed as **C-050i**, which D-036's "third option" declined to fold in
-      here. Measured cost of that boundary: without it, two parametrizations of
-      ``test_prefreeze_third_export_seam`` A3 newly refuse.
+    * It does **not** fire when **every** member already held that ``_norm`` key
+      (``arrived`` empty), nor when **no reference reaches** the group. Both such
+      shapes export today and are then coalesced first-wins by
+      ``ir._dedupe_named_rows`` -- **F-039**, **C-050i's**, which D-036's "third
+      option" declined to fold in here. Measured cost of the reference condition:
+      without it, two parametrizations of ``test_prefreeze_third_export_seam`` A3
+      newly refuse.
+
+      **``arrived`` is per-row, which is narrower than "a collision the payload
+      already carried", and the difference is a real widening -- recorded, not
+      denied.** A group that already collided and is renamed **en bloc onto a new
+      key** has every member arriving, and **does** refuse. Measured base against
+      tip on ``lipid IV_A`` / ``lipid IV A`` -> ``Lipid IVA``: base returns
+      ``applied: True`` and hands two rows on one name to
+      ``ir._dedupe_named_rows``' first-wins drop; the tip refuses with the payload
+      byte-unchanged. That is D-035 clause 6 working, and it extends **D-034
+      clause 2**'s accepted ``PRODUCT_CONTRACT`` §1 class in the **fail-closed**
+      direction -- the class stays *known, measured and attributable*, which is
+      what clause 2 bought. Pinned by
+      ``test_c050h_new_acceptance_a_pre_existing_group_renamed_en_bloc_refuses``.
     * An empty ``_norm`` is not a group -- bucketing names written entirely
       outside ``[a-z0-9:+ ]`` together would merge names that are not the same
       name, as :func:`_match_key` already records.
