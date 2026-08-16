@@ -367,6 +367,7 @@ def resolve_compounds_prefreeze(
         "rename_map": {},
         "references_updated": [],
         "aliases_preserved": [],
+        "rename_sources_collapsed": [],
         "resolution_report": resolution_report,
     }
     if not isinstance(payload, dict):
@@ -420,7 +421,7 @@ def resolve_compounds_prefreeze(
     primary_before, alias_before = _alias_index(payload)
 
     if rename_map:
-        _reject_ambiguous_renames(rename_map, before_names, after_names, primary_before)
+        _reject_ambiguous_renames(rename_map, before_names, after_names, primary_before, summary)
 
     # ---- stage 3: propagate on a staged copy of the whole payload ----------
     staged_payload = deepcopy(payload)
@@ -696,6 +697,7 @@ def _reject_ambiguous_renames(
     before_names: Sequence[str],
     after_names: Sequence[str],
     primary_before: Dict[str, Tuple[str, ...]],
+    summary: Optional[Dict[str, Any]] = None,
 ) -> None:
     """D-015 clause 6, checked before anything is written.
 
@@ -704,19 +706,69 @@ def _reject_ambiguous_renames(
     references named for it would redirect references meant for that entity.
     **Two distinct sources share a target**: the rename would merge two
     compounds into one, which is inventing biology, not canonicalizing it.
+
+    "Distinct" is decided on the ``_norm`` form with its interior space runs
+    collapsed, and that qualifier is load-bearing rather than cosmetic.
+    ``_norm`` is ``_canonical`` -- which collapses whitespace -- followed by
+    ``[^a-z0-9:+ ]+ -> " "``, and that substitution can put a **second** space
+    back where a separator sat next to one, with nothing left to collapse it::
+
+        _norm('sn -glycerol 3-phosphate') == 'sn  glycerol 3 phosphate'
+        _norm('sn-glycerol 3-phosphate')  == 'sn glycerol 3 phosphate'
+
+    Measured on ``runs/2026-07-28_0919/…PMC12444477…/strict``, where the offline
+    index maps both spellings to one canonical target: the guard read them as two
+    compounds and aborted a real 27-reaction export at both production entry
+    points, in both ``strict_db`` modes, producing no PWML at all
+    (``PRODUCT_CONTRACT`` §1; permanent merge rule 7). Merging two spellings of
+    one molecule is canonicalization, which D-015 **asks for**.
+
+    **This does not widen the guard's notion of sameness** (merge rule 6).
+    ``_norm`` already maps every character outside ``[a-z0-9:+ ]`` to a space, so
+    it *already* reads ``beta-D-glucose`` and ``beta D glucose`` as one source --
+    measured, at base, no raise. The equivalence has always been "the same token
+    sequence"; the double space was the one place ``_norm`` failed to apply its
+    own rule, because the count of separator characters leaked through. Collapsing
+    here restores consistency and adds no class of name that was not already
+    equivalent under a single separator. Sources whose tokens differ at all --
+    ``glycerol 2-phosphate`` vs ``glycerol 3-phosphate``, ``ATP`` vs ``ADP``,
+    ``PEtN-lipid A`` vs ``modified Lipid A`` -- still collide and still raise.
+
+    ``_norm`` and ``_canonical`` themselves are **not** touched. They are
+    byte-identical to ``ir._norm`` / ``ir._canonical`` by design, every downstream
+    resolver keys on them, and changing them would move the graph hash. The
+    collapse is local to this comparison.
     """
 
+    def _collapsed(value: Any) -> str:
+        """``_norm`` with its interior space runs squeezed. Never a substitute
+        for ``_norm``: nothing outside this comparison may key on it."""
+
+        return re.sub(r" +", " ", _norm(value))
+
+    merged: List[Dict[str, Any]] = []
     by_target: Dict[str, List[str]] = {}
     for old, new in rename_map.items():
         by_target.setdefault(_norm(new), []).append(old)
     for target, sources in sorted(by_target.items()):
-        if len({_norm(source) for source in sources}) > 1:
+        keys = {_collapsed(source) for source in sources}
+        if len(keys) > 1:
             raise PrefreezeResolutionError(
                 "AMBIGUOUS_RENAME_TARGET",
-                f"{len(sources)} distinct compound names canonicalize to {target!r}; "
+                f"{len(keys)} distinct compound names canonicalize to {target!r}; "
                 "applying the rename would merge them",
                 target=target, sources=sorted(sources),
             )
+        if len(sources) > 1:
+            # One molecule, spelled more than one way. The rename proceeds, but
+            # the operator is told which spellings were read as one -- the same
+            # shape ``aliases_preserved`` and ``identity_projected`` use.
+            merged.append({
+                "target": target, "sources": sorted(sources),
+                "source_key": sorted(keys)[0],
+            })
+    if isinstance(summary, dict):
+        summary["rename_sources_collapsed"] = merged
 
     compatible: Dict[str, set] = {}
     for index, (before, after) in enumerate(zip(before_names, after_names)):

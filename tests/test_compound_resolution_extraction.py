@@ -388,9 +388,18 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: moves on any leg or configuration. The remaining delta is all under the
 #: report, where the exporter no longer publishes a resolution it no longer
 #: performs. Regenerate with evidence/c045a_golden_rebaseline.py --mode digest.
+#:
+#: MOVED A THIRD TIME by C-050g on 2026-08-16, on ONE leg only. C-050g repaired
+#: the source-collision comparison in ``_reject_ambiguous_renames``, which
+#: changes the code that stops ``PMC12444477…/strict`` under three of the five
+#: configurations -- and ``_leg_digest`` hashes the stop code in, so that leg's
+#: digest moves with it. Re-derived with --mode digest at the tip: **1 digest
+#: moved, 31 byte-identical, 0 stops removed, 3 codes substituted.** See
+#: GOLDEN_PREFREEZE_STOPS below for why the code changed and why that leg still
+#: does not export.
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "2a07c7df2b661a10e2e50724cf82fd1dc1ac2bca5957a969b055c91ddf580fa9",
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "f0dd12d5171ddb81fcb279efd4221166396c9196c58164e11e9a585e327553ad",
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "7954a4c9ae7a2905923b97194e620e1440888f83c4152c023ac7625a381b9e01",
     "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "f1a6a4d381e97d31cd09bbf037ed67da0e4a3fe45456906135cab736fb35603b",
     "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "bdcb0fb81a19b8c2f956a959e20fb747d60ebd87aed9ff4bb540d041c66cfa80",
@@ -427,22 +436,57 @@ GOLDEN = {
 #:
 #: A stop is a **result of that configuration, not a failure and not a digest**.
 #: D-015 clause 6 requires the pre-freeze stage to "fail visibly on ambiguous or
-#: dangling references", and on these two committed legs two distinct compound
-#: names canonicalize onto one target -- 'glycerol 3 phosphate' and 'glycine' --
-#: so applying the rename would merge two compounds, which is inventing biology.
-#: Refusing is the system working, so they are recorded rather than skipped,
-#: deselected, xfailed or swallowed: a change that silently stopped raising, or
-#: that raised a different code, or that started raising on a sixth pair, fails
-#: ``test_build_pwml_ir_matches_the_pre_extraction_golden`` here.
+#: dangling references". Refusing is the system working, so these are recorded
+#: rather than skipped, deselected, xfailed or swallowed: a change that silently
+#: stopped raising, or that raised a different code, or that started raising on a
+#: fifth pair, fails ``test_build_pwml_ir_matches_the_pre_extraction_golden``.
 #:
-#: Pre-existing and NOT moved by this stack: C-051b measured all four raising
-#: identically, with identical messages, at 328862a and at the tip, and REV-045a
-#: had already observed the same four.
+#: C-051b measured all four raising identically at 328862a and at its tip, and
+#: REV-045a had observed the same four. Both readings recorded them as one
+#: phenomenon. **C-050g measured them individually and they are TWO, with
+#: different causes and different correct outcomes.**
+#:
+#: PMC13278307 · C_canned -- ``AMBIGUOUS_RENAME_TARGET``, UNCHANGED and CORRECT.
+#: The sources are ``PEtN-lipid A`` and ``modified Lipid A``, two genuinely
+#: distinct compounds the canned resolver sends to one target. Applying that
+#: rename would merge them, which is inventing biology, so the guard must keep
+#: raising here -- and it does. Note this pair stops ONLY under the canned
+#: resolver; at production defaults the leg resolves and exports at both SHAs.
+#:
+#: PMC12444477 · A, C, D -- code SUBSTITUTED by C-050g, ``AMBIGUOUS_RENAME_TARGET``
+#: -> ``PREFREEZE_CONNECTIVITY_BROKEN``. The old code was a FALSE diagnosis. Its
+#: two sources were ``sn -glycerol 3-phosphate`` and ``sn-glycerol 3-phosphate``:
+#: one molecule, two spellings, which ``_norm`` read as two only because its
+#: ``[^a-z0-9:+ ]+ -> " "`` substitution re-introduced a double space after
+#: ``_canonical`` had already collapsed whitespace. C-050g collapses that at the
+#: comparison, so the guard correctly stops firing.
+#:
+#: **The leg still does not export, and that is a ratified position, not an
+#: unfinished fix.** Measured at production defaults, both ``strict_db`` modes:
+#: the rename target ``Glycerol 3-phosphate`` normalizes to
+#: ``glycerol 3 phosphate``, which is ALSO the ``_norm`` of compound row #20,
+#: ``glycerol-3-phosphate`` -- a row that is **not in the rename map**.
+#: ``_reject_ambiguous_renames`` groups only over rename-map sources, so neither
+#: half of it can see that collision; the rename proceeds, rows 20/36/38 end up
+#: sharing one name, a participant reference that resolved to ``compounds#20``
+#: starts resolving to ``compounds#20|compounds#36|compounds#38``, and the
+#: connectivity signature check stops the run. That refusal is CORRECT under
+#: today's rules: D-015 clause 5 requires participant connectivity to be
+#: preserved, and the payload holds four spellings of this one molecule (#20,
+#: #36, #37, #38). Merging duplicate ROWS is a policy this codebase does not have
+#: -- pre-freeze may not (``PREFREEZE_ROW_COUNT_CHANGED``) and post-freeze may not
+#: (permanent merge rule 8) -- and it is routed as a separate card. The
+#: no-PWML outcome is an accepted ``PRODUCT_CONTRACT`` §1 cost until then.
+#:
+#: The pre-existing collision ``lipid iv a`` (rows 5 and 23) does NOT stop the
+#: run: it is identical before and after the rename, so the signature does not
+#: move. It is why 44 committed rows became 43 IR compounds at the integration
+#: base -- the post-freeze exporter merged that pair silently.
 GOLDEN_PREFREEZE_STOPS: Dict[str, Dict[str, str]] = {
     "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
-        "A_dbdown_defaultindex_strict": "AMBIGUOUS_RENAME_TARGET",
-        "C_canned_defaultindex_lenient": "AMBIGUOUS_RENAME_TARGET",
-        "D_emptydb_defaultindex_strict": "AMBIGUOUS_RENAME_TARGET",
+        "A_dbdown_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
+        "C_canned_defaultindex_lenient": "PREFREEZE_CONNECTIVITY_BROKEN",
+        "D_emptydb_defaultindex_strict": "PREFREEZE_CONNECTIVITY_BROKEN",
     },
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
         "C_canned_defaultindex_lenient": "AMBIGUOUS_RENAME_TARGET",

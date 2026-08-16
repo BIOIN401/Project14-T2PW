@@ -1073,3 +1073,195 @@ def test_c050f_the_rewrite_set_and_the_detection_set_are_one_set() -> None:
 
     assert rewrite_keys == detect_keys
     assert len(rewrite_keys) == 4, "the empty-_norm names must not share one bucket"
+
+
+# --------------------------------------------------------------------------
+# C-050g -- the source-collision comparison collapses interior whitespace.
+#
+# G9 LABELLING. ``test_c050g_two_spellings_of_one_molecule_are_one_source`` is a
+# **behavioural correction**: it FAILS at the base SHA 9cc40286, where the guard
+# raises ``AMBIGUOUS_RENAME_TARGET`` on two spellings of one molecule, and passes
+# here. Symbol absence is not used anywhere. The over-fire controls beside it are
+# labelled NEW ACCEPTANCE -- they pass at base too, and that is the point: they
+# pin that the relaxation did not take the gate with it (merge rule 6).
+# --------------------------------------------------------------------------
+
+
+def _guard(rename_map: Dict[str, str], before: List[str], after: List[str]) -> Optional[str]:
+    """Call the guard alone and return the code it raised, or ``None``.
+
+    ``primary_before`` is derived from ``before`` exactly as
+    ``resolve_compounds_prefreeze`` derives it, so the rogue-owner half is
+    satisfied and the **source-collision** half is the only thing under test.
+    """
+
+    from t2pw.pwml.prefreeze_resolution import _norm, _reject_ambiguous_renames
+
+    primary: Dict[str, tuple] = {}
+    for index, name in enumerate(before):
+        key = _norm(name)
+        primary[key] = primary.get(key, ()) + (f"compounds#{index}",)
+    try:
+        _reject_ambiguous_renames(rename_map, before, after, primary)
+    except PrefreezeResolutionError as stop:
+        return stop.code
+    return None
+
+
+def test_c050g_two_spellings_of_one_molecule_are_one_source() -> None:
+    """BEHAVIOURAL CORRECTION -- fails at 9cc40286, passes here.
+
+    ``_norm`` is ``_canonical`` (which collapses whitespace) followed by
+    ``[^a-z0-9:+ ]+ -> " "``, and that substitution can put a second space back
+    where a separator sat next to one::
+
+        _norm('sn -glycerol 3-phosphate') == 'sn  glycerol 3 phosphate'
+        _norm('sn-glycerol 3-phosphate')  == 'sn glycerol 3 phosphate'
+
+    Nothing collapses it again, so the guard counted one molecule as two and
+    aborted a real committed 27-reaction leg at both production entry points in
+    both ``strict_db`` modes (``PRODUCT_CONTRACT`` section 1, merge rule 7).
+    """
+
+    assert _guard(
+        {"sn -glycerol 3-phosphate": "Glycerol 3-phosphate",
+         "sn-glycerol 3-phosphate": "Glycerol 3-phosphate"},
+        ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
+        ["Glycerol 3-phosphate", "Glycerol 3-phosphate"],
+    ) is None
+
+
+@pytest.mark.parametrize(
+    "label,sources",
+    [
+        ("different molecules", ["D-glucose", "D-fructose"]),
+        ("one phosphate position apart", ["glycerol 2-phosphate", "glycerol 3-phosphate"]),
+        ("the second pinned leg shape", ["PEtN-lipid A", "modified Lipid A"]),
+        # Both sources carry the SAME double-space artefact. A fix keyed on
+        # "this name contains a collapsible run" rather than on the collapsed
+        # VALUE would wave these through; they are different molecules.
+        ("same artefact, different tokens",
+         ["sn -glycerol 3-phosphate", "sn -glycerol 1-phosphate"]),
+    ],
+)
+def test_c050g_new_acceptance_genuinely_distinct_sources_still_abort(
+    label: str, sources: List[str],
+) -> None:
+    """NEW ACCEPTANCE, and the merge-rule-6 control on this card.
+
+    C-050g makes a biological gate fire less often. If it stopped catching a real
+    merge it would have traded a dropped pathway for invented biology, which is
+    strictly worse. Each pair below is two **different compounds** sent to one
+    target; every one must still raise.
+
+    The relaxation cannot reach them, and the reason is structural rather than
+    empirical: ``_norm`` already maps every character outside ``[a-z0-9:+ ]`` to a
+    space, so it already read ``beta-D-glucose`` and ``beta D glucose`` as one
+    source before this card. The equivalence has always been "the same token
+    sequence"; the double space was the one place the *count* of separator
+    characters leaked through. Collapsing it adds no name that a single separator
+    did not already make equivalent.
+    """
+
+    target = "Merged target"
+    assert _guard(
+        {source: target for source in sources}, list(sources), [target] * len(sources),
+    ) == "AMBIGUOUS_RENAME_TARGET", label
+
+
+def test_c050g_new_acceptance_the_collapsed_spellings_are_recorded() -> None:
+    """NEW ACCEPTANCE. Reading two names as one is a fact the operator gets told.
+
+    Recorded in the shape the module already uses for such facts --
+    ``aliases_preserved``, ``identity_projected``: a list of flat dicts on the
+    compound summary. No new report schema.
+    """
+
+    payload = {
+        "entities": {"compounds": [
+            _compound("sn -glycerol 3-phosphate", "CHEBI:15428"),
+            _compound("sn-glycerol 3-phosphate", "CHEBI:15428"),
+        ]},
+        # Neither row is referenced from ``processes``; see the connectivity test
+        # below for why that is load-bearing rather than laziness.
+        "processes": {"reactions": [{"name": "R1", "inputs": [], "outputs": []}]},
+    }
+    index = _StubNameIndex(
+        {"15428": {"id": 78, "name": "Glycerol 3-phosphate", "matched_on": "chebi"}})
+
+    summary = _run(payload, index)
+
+    assert summary["applied"] is True
+    assert summary["rename_sources_collapsed"] == [{
+        "target": "glycerol 3 phosphate",
+        "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
+        "source_key": "sn glycerol 3 phosphate",
+    }]
+    assert [row["name"] for row in payload["entities"]["compounds"]] == [
+        "Glycerol 3-phosphate", "Glycerol 3-phosphate"]
+
+
+def test_c050g_new_acceptance_the_record_is_empty_when_nothing_merged() -> None:
+    """NEW ACCEPTANCE. The key is always present, and empty when nothing merged."""
+
+    payload = _payload()
+    summary = _run(payload, _glycine_index())
+    assert summary["rename_map"] == {"gly": "Glycine"}
+    assert summary["rename_sources_collapsed"] == []
+
+
+def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> None:
+    """NEW ACCEPTANCE, and the honest record of what this card does NOT fix.
+
+    The guard no longer miscounts the spellings -- but the two rows now share one
+    name, so ``_alias_index`` maps that name to **both** tokens and a participant
+    reference that resolved to ``compounds#0`` starts resolving to
+    ``compounds#0|compounds#1``. The connectivity signature moves and the run
+    stops, correctly: D-015 clause 5 requires participant connectivity to be
+    preserved, and merging duplicate ROWS is a policy this codebase does not have
+    -- pre-freeze may not (``PREFREEZE_ROW_COUNT_CHANGED``) and post-freeze may
+    not (permanent merge rule 8). It is routed as a separate card.
+
+    So the practical effect of C-050g on a *referenced* duplicate is to replace a
+    **false** diagnosis with a **true** one, not to produce PWML. That is the
+    ratified position, and this test is where a future reader meets it rather
+    than rediscovering it from a digest that moved.
+    """
+
+    payload = {
+        "entities": {"compounds": [
+            _compound("sn -glycerol 3-phosphate", "CHEBI:15428"),
+            _compound("sn-glycerol 3-phosphate", "CHEBI:15428"),
+        ]},
+        "processes": {"reactions": [
+            {"name": "R1", "inputs": ["sn -glycerol 3-phosphate"], "outputs": []},
+        ]},
+    }
+    original = deepcopy(payload)
+    index = _StubNameIndex(
+        {"15428": {"id": 78, "name": "Glycerol 3-phosphate", "matched_on": "chebi"}})
+
+    with pytest.raises(PrefreezeResolutionError) as excinfo:
+        _run(payload, index)
+
+    assert excinfo.value.code == "PREFREEZE_CONNECTIVITY_BROKEN"
+    assert payload == original, "nothing may be committed on a refusal"
+
+
+def test_c050g_new_acceptance_a_collision_with_an_untouched_row_is_invisible_here() -> None:
+    """NEW ACCEPTANCE. The finding this card surfaced, pinned as behaviour.
+
+    ``_reject_ambiguous_renames`` groups only over ``rename_map`` **sources**, so
+    a target whose ``_norm`` equals the ``_norm`` of a row that is *not* being
+    renamed is invisible to both halves of it. Below, ``glycerol-3-phosphate``
+    (row 0) is never renamed, yet the rename of row 1 lands on its normalized
+    name. The guard returns cleanly; only the connectivity check two stages later
+    catches it, and it reports a diff-string rather than a named cause.
+
+    This is the shape that stops ``PMC12444477…/strict`` at production defaults.
+    Recorded, not fixed: naming that condition is outside this card's boundary.
+    """
+
+    before = ["glycerol-3-phosphate", "sn-glycerol 3-phosphate"]
+    after = ["glycerol-3-phosphate", "Glycerol 3-phosphate"]
+    assert _guard({"sn-glycerol 3-phosphate": "Glycerol 3-phosphate"}, before, after) is None
