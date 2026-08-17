@@ -1,0 +1,251 @@
+{
+  "claim_one_organism_false_positive": {
+    "abbreviation_row": {
+      "compare_organism": "match",
+      "live_predicate_emits_finding": true,
+      "note": "ABBREVIATION -- the alleged false positive",
+      "observed": "E. coli",
+      "requested": "Escherichia coli",
+      "widened_would_emit_finding": false
+    },
+    "claim": "requested 'Escherichia coli' / observed 'E. coli' emits a finding today",
+    "holds": true,
+    "monotone": true,
+    "rows_removed_by_widening": [
+      "Escherichia coli / E. coli",
+      "Saccharomyces cerevisiae / S. cerevisiae"
+    ],
+    "table": [
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": false,
+        "note": "positive: identical",
+        "observed": "Escherichia coli",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": true,
+        "note": "ABBREVIATION -- the alleged false positive",
+        "observed": "E. coli",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": false,
+        "note": "whitespace",
+        "observed": "  Escherichia   coli  ",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": false,
+        "note": "punctuation",
+        "observed": "Escherichia coli.",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": false,
+        "note": "strain suffix",
+        "observed": "Escherichia coli K-12",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "genus_level",
+        "live_predicate_emits_finding": false,
+        "note": "bare genus -- already tolerated, must NOT move",
+        "observed": "Escherichia",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "genus_level",
+        "live_predicate_emits_finding": true,
+        "note": "same genus, other species -- must STAY a finding",
+        "observed": "Escherichia fergusonii",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": true
+      },
+      {
+        "compare_organism": "mismatch",
+        "live_predicate_emits_finding": true,
+        "note": "negative: unrelated organism",
+        "observed": "Listeria monocytogenes",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": true
+      },
+      {
+        "compare_organism": "unknown",
+        "live_predicate_emits_finding": false,
+        "note": "blank observed is never a violation",
+        "observed": "",
+        "requested": "Escherichia coli",
+        "widened_would_emit_finding": false
+      },
+      {
+        "compare_organism": "mismatch",
+        "live_predicate_emits_finding": true,
+        "note": "abbreviation, second lineage",
+        "observed": "H. sapiens",
+        "requested": "Homo sapiens",
+        "widened_would_emit_finding": true
+      },
+      {
+        "compare_organism": "match",
+        "live_predicate_emits_finding": true,
+        "note": "abbreviation, third lineage",
+        "observed": "S. cerevisiae",
+        "requested": "Saccharomyces cerevisiae",
+        "widened_would_emit_finding": false
+      }
+    ]
+  },
+  "claim_two_reachability_break": {
+    "by_derivation": {
+      "A_context_only": {
+        "holds_under_closed_four_gating": false,
+        "holds_under_report_ok_gating": true,
+        "members": [
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": true,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "requested_pathway_anchors_present",
+              "retained_reactions_match_supported_signatures",
+              "organism_compatible",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_base",
+            "requested_organism": "",
+            "requested_pathway": "",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "release_ready"
+          },
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": false,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "requested_pathway_anchors_present",
+              "retained_reactions_match_supported_signatures",
+              "organism_compatible",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_reference_payload",
+            "requested_organism": "",
+            "requested_pathway": "",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "review_required"
+          },
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": false,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "requested_pathway_anchors_present",
+              "retained_reactions_match_supported_signatures",
+              "organism_compatible",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_unexportable_payload",
+            "requested_organism": "",
+            "requested_pathway": "",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "diagnostic_only"
+          }
+        ]
+      },
+      "B_metadata_fallback": {
+        "holds_under_closed_four_gating": false,
+        "holds_under_report_ok_gating": true,
+        "members": [
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": true,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "retained_reactions_match_supported_signatures",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_base",
+            "requested_organism": "Homo sapiens",
+            "requested_pathway": "Glutathione biosynthesis",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "release_ready"
+          },
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": false,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "retained_reactions_match_supported_signatures",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_reference_payload",
+            "requested_organism": "Homo sapiens",
+            "requested_pathway": "Glutathione biosynthesis",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "review_required"
+          },
+          {
+            "demotes_under_closed_four_gating": false,
+            "demotes_under_report_ok_gating": false,
+            "failed_checks_all": [
+              "reaction_source_carrier_present"
+            ],
+            "failed_checks_in_closed_four": [],
+            "inapplicable_checks": [
+              "retained_reactions_match_supported_signatures",
+              "no_rejected_rag_reaction_reintroduced",
+              "minimum_connected_core"
+            ],
+            "member": "_unexportable_payload",
+            "requested_organism": "Homo sapiens",
+            "requested_pathway": "Glutathione biosynthesis",
+            "semantic_evaluated": true,
+            "semantic_ok_all_checks": false,
+            "status_today": "diagnostic_only"
+          }
+        ]
+      }
+    },
+    "claim": "states == {release_ready, review_required, diagnostic_only} breaks once semantics gate",
+    "holds_under_closed_four_gating": false,
+    "holds_under_report_ok_gating": true
+  },
+  "purpose": "section 0 pre-edit measurement of the two premises",
+  "t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\src\\t2pw\\__init__.py",
+  "task": "C-056a"
+}
