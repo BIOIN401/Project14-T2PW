@@ -1,0 +1,5348 @@
+{
+  "t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\src\\t2pw\\pwml\\ir.py",
+  "db_available": true,
+  "db_reason": "",
+  "legs_measured": 32,
+  "legs": [
+    {
+      "leg": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "dhna": [
+            {
+              "entity_key": "cmp_5",
+              "entity_type": "compound",
+              "name": "1,4-dihydroxy-2-naphthoic acid",
+              "pathwhiz_id": 40747
+            },
+            {
+              "entity_key": "cmp_9",
+              "entity_type": "compound",
+              "name": "DHNA",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "cmp_9",
+              "entity_type": "compound",
+              "name": "DHNA",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "cmp_9",
+              "entity_type": "compound",
+              "name": "DHNA",
+              "pathwhiz_id": null
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 3,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "dhna",
+            "n_candidates": 4,
+            "caller": "build_pwml_ir",
+            "clean": null,
+            "role": null,
+            "pointer": "/entities/protein_complexes/2/components/0",
+            "hint": null,
+            "candidates": [
+              {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "FALL_THROUGH_CANDIDATES_0",
+              "bound": {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              }
+            }
+          },
+          {
+            "key": "dhna",
+            "n_candidates": 4,
+            "caller": "resolve_entity",
+            "clean": "DHNA",
+            "role": "reaction_member",
+            "pointer": "/element_locations/compound_locations/8/compound",
+            "hint": "compound",
+            "candidates": [
+              {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              }
+            }
+          },
+          {
+            "key": "dhna",
+            "n_candidates": 4,
+            "caller": "resolve_entity",
+            "clean": "DHNA",
+            "role": "reaction_member",
+            "pointer": "/processes/reactions/6/outputs/0",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_9",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_5",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 9,
+        "part4_detail": {
+          "ketoglutarate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhna": {
+            "candidate_slots": 4,
+            "distinct_entity_keys": 2,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "mg2+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "intermediate i": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "intermediate ii": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhna coa": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "mend": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "lmrg 02730": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "meni": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 18,
+        "norm_keys_with_multiple_candidate_slots": 9,
+        "resolve_entity_consultations_total": 62
+      }
+    },
+    {
+      "leg": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json",
+      "strict_db": true,
+      "status": "PREFREEZE_STOP",
+      "prefreeze_stop_code": "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
+    },
+    {
+      "leg": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 11,
+        "part4_detail": {
+          "petn lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "l 4aran": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid a modified with l ara4n": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid a modified with petn": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid a with petn": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "modified lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "petn group": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "phosphate groups of lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "phosphorylated phop": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "phospohoethanolamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "pmrhfijklm operon": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 42,
+        "norm_keys_with_multiple_candidate_slots": 11,
+        "resolve_entity_consultations_total": 250
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "l serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 22,
+        "norm_keys_with_multiple_candidate_slots": 5,
+        "resolve_entity_consultations_total": 91
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ppi": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 25,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 85
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "5 10 methylene thf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "thf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 12,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 44
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 2,
+        "part4_detail": {
+          "5 10 methylene thf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "succinyl coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 19,
+        "norm_keys_with_multiple_candidate_slots": 2,
+        "resolve_entity_consultations_total": 41
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 12,
+        "part4_detail": {
+          "udp glcnac": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "hydroxyacyl acp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 o r 3 hydroxymyristoyl n acetylglucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 o r 3 hydroxymyristoyl glucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 2 3 diacylglucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 diacylglucosamine 1 phosphate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "tetra acylated disaccharide": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid iv a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo lipid iv a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "core lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 29,
+        "norm_keys_with_multiple_candidate_slots": 12,
+        "resolve_entity_consultations_total": 109
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 15,
+        "part4_detail": {
+          "udp glcnac": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "hydroxyacyl acp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 o r 3 hydroxymyristoyl n acetylglucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 o r 3 hydroxymyristoyl glucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ump": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid iv a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo lipid iv a": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo lipid a": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 0 r 3 hydroxymyristoyl d glucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp n2 o3 bis  r 3 hydroxymyristoyl d glucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 2 3 diacylglucosamine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lipid x": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "tetra acylated disaccharide intermediate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "kdo lipid a  intermediate": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "core lipid a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 33,
+        "norm_keys_with_multiple_candidate_slots": 15,
+        "resolve_entity_consultations_total": 100
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 4,
+        "part4_detail": {
+          "dhb amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferrous iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "fe3+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferric iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 22,
+        "norm_keys_with_multiple_candidate_slots": 4,
+        "resolve_entity_consultations_total": 79
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 1,
+        "part4_detail": {
+          "4 4 dimethylcholesta 8 9 14 24 trien 3 ol": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 9,
+        "norm_keys_with_multiple_candidate_slots": 1,
+        "resolve_entity_consultations_total": 22
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 2,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "pyridoxal 5 phosphate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 7,
+        "norm_keys_with_multiple_candidate_slots": 2,
+        "resolve_entity_consultations_total": 25
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "succinyl coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "plp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 8,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 29
+      }
+    },
+    {
+      "leg": "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "phthalylsulfacetamide": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "zn": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "hydrolyzed meropenem": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 7,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 22
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "phosphorylated udp 3 o r 3 hydroxymyristoyl glucosamine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "udp 3 o r 3 hydroxymyristoyl glucosamine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "zn": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 4,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 14
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 3,
+        "part4_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhb amp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydro 2 3 dihydroxybenzoate  dhb": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 14,
+        "norm_keys_with_multiple_candidate_slots": 3,
+        "resolve_entity_consultations_total": 44
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 ketoglutarate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "fe3+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferric iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 27,
+        "norm_keys_with_multiple_candidate_slots": 5,
+        "resolve_entity_consultations_total": 67
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 2,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "pyridoxal 5 phosphate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 7,
+        "norm_keys_with_multiple_candidate_slots": 2,
+        "resolve_entity_consultations_total": 20
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "l serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ppi": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 25,
+        "norm_keys_with_multiple_candidate_slots": 5,
+        "resolve_entity_consultations_total": 87
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate  dhb": [
+            {
+              "entity_key": "cmp_3",
+              "entity_type": "compound",
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "cmp_8",
+              "entity_type": "compound",
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+              "pathwhiz_id": 40770
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 3,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "2 3 dihydro 2 3 dihydroxybenzoate  dhb",
+            "n_candidates": 2,
+            "caller": "build_pwml_ir",
+            "clean": null,
+            "role": null,
+            "pointer": "/entities/protein_complexes/0/components/0",
+            "hint": null,
+            "candidates": [
+              {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_8",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+                "pathwhiz_id": 40770
+              }
+            ],
+            "binding_today": {
+              "replay": "FALL_THROUGH_CANDIDATES_0",
+              "bound": {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "2 3 dihydro 2 3 dihydroxybenzoate  dhb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "role": "reaction_member",
+            "pointer": "/element_locations/compound_locations/8/compound",
+            "hint": "compound",
+            "candidates": [
+              {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_8",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+                "pathwhiz_id": 40770
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "2 3 dihydro 2 3 dihydroxybenzoate  dhb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "role": "reaction_member",
+            "pointer": "/processes/reactions/5/outputs/0",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_8",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+                "pathwhiz_id": 40770
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_3",
+                "entity_type": "compound",
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "pathwhiz_id": null
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhb amp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "fe3+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferric iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferri enterobactin": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 21,
+        "norm_keys_with_multiple_candidate_slots": 6,
+        "resolve_entity_consultations_total": 83
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 6,
+        "part1_detail": {
+          "entb": [
+            {
+              "entity_key": "prot_1",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_2",
+              "entity_type": "nucleic_acid",
+              "name": "entB",
+              "pathwhiz_id": null
+            }
+          ],
+          "entc": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntC",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_1",
+              "entity_type": "nucleic_acid",
+              "name": "entC",
+              "pathwhiz_id": null
+            }
+          ],
+          "enta": [
+            {
+              "entity_key": "prot_3",
+              "entity_type": "protein",
+              "name": "EntA",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_3",
+              "entity_type": "nucleic_acid",
+              "name": "entA",
+              "pathwhiz_id": null
+            }
+          ],
+          "ente": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_4",
+              "entity_type": "nucleic_acid",
+              "name": "entE",
+              "pathwhiz_id": null
+            }
+          ],
+          "entf": [
+            {
+              "entity_key": "prot_5",
+              "entity_type": "protein",
+              "name": "EntF",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_5",
+              "entity_type": "nucleic_acid",
+              "name": "entF",
+              "pathwhiz_id": null
+            }
+          ],
+          "entd": [
+            {
+              "entity_key": "prot_6",
+              "entity_type": "protein",
+              "name": "EntD",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "na_6",
+              "entity_type": "nucleic_acid",
+              "name": "entD",
+              "pathwhiz_id": null
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 34,
+        "part2_distinct_ambiguous_keys_consulted": 6,
+        "part3_consultations": [
+          {
+            "key": "entc",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntC",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/0/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_1",
+                "entity_type": "nucleic_acid",
+                "name": "entC",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entc",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntC",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/0/enzymes/2",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_1",
+                "entity_type": "nucleic_acid",
+                "name": "entC",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/2",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "enta",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntA",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/2/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_3",
+                "entity_type": "nucleic_acid",
+                "name": "entA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "enta",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntA",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/2/enzymes/2",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_3",
+                "entity_type": "nucleic_acid",
+                "name": "entA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/2",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entf",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntF",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_5",
+                "entity_type": "nucleic_acid",
+                "name": "entF",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entf",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntF",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/3",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_5",
+                "entity_type": "nucleic_acid",
+                "name": "entF",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/4",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "transporter",
+            "pointer": "/processes/transports/0/transporters/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "transporter",
+            "pointer": "/processes/transports/1/transporters/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/0/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entd",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntD",
+            "role": "interaction",
+            "pointer": "/processes/interactions/1/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_6",
+                "entity_type": "nucleic_acid",
+                "name": "entD",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/1/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entd",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntD",
+            "role": "interaction",
+            "pointer": "/processes/interactions/2/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_6",
+                "entity_type": "nucleic_acid",
+                "name": "entD",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entf",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntF",
+            "role": "interaction",
+            "pointer": "/processes/interactions/2/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_5",
+                "entity_type": "nucleic_acid",
+                "name": "entF",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entd",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entD",
+            "role": "interaction",
+            "pointer": "/processes/interactions/4/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_6",
+                "entity_type": "nucleic_acid",
+                "name": "entD",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entc",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entC",
+            "role": "interaction",
+            "pointer": "/processes/interactions/6/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_1",
+                "entity_type": "nucleic_acid",
+                "name": "entC",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entc",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntC",
+            "role": "interaction",
+            "pointer": "/processes/interactions/6/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_1",
+                "entity_type": "nucleic_acid",
+                "name": "entC",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/7/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/7/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "enta",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entA",
+            "role": "interaction",
+            "pointer": "/processes/interactions/8/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_3",
+                "entity_type": "nucleic_acid",
+                "name": "entA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "enta",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntA",
+            "role": "interaction",
+            "pointer": "/processes/interactions/8/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_3",
+                "entity_type": "nucleic_acid",
+                "name": "entA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_3",
+                "entity_type": "protein",
+                "name": "EntA",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entE",
+            "role": "interaction",
+            "pointer": "/processes/interactions/9/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "interaction",
+            "pointer": "/processes/interactions/9/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_4",
+                "entity_type": "nucleic_acid",
+                "name": "entE",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entf",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entF",
+            "role": "interaction",
+            "pointer": "/processes/interactions/10/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_5",
+                "entity_type": "nucleic_acid",
+                "name": "entF",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entf",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntF",
+            "role": "interaction",
+            "pointer": "/processes/interactions/10/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_5",
+                "entity_type": "nucleic_acid",
+                "name": "entF",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_5",
+                "entity_type": "protein",
+                "name": "EntF",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entd",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "entD",
+            "role": "interaction",
+            "pointer": "/processes/interactions/11/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_6",
+                "entity_type": "nucleic_acid",
+                "name": "entD",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entd",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntD",
+            "role": "interaction",
+            "pointer": "/processes/interactions/11/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_6",
+                "entity_type": "nucleic_acid",
+                "name": "entD",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_6",
+                "entity_type": "protein",
+                "name": "EntD",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entc",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntC",
+            "role": "interaction",
+            "pointer": "/processes/interactions/12/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_1",
+                "entity_type": "nucleic_acid",
+                "name": "entC",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntC",
+                "pathwhiz_id": null
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/12/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "na_2",
+                "entity_type": "nucleic_acid",
+                "name": "entB",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": null
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "l serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "sephchc": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "2 ketoglutarate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 29,
+        "norm_keys_with_multiple_candidate_slots": 11,
+        "resolve_entity_consultations_total": 85
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 2,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "pyridoxal phosphate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 8,
+        "norm_keys_with_multiple_candidate_slots": 2,
+        "resolve_entity_consultations_total": 21
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 5,
+        "part4_detail": {
+          "heme": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "glycine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "gly": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "succinyl coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "alas2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 26,
+        "norm_keys_with_multiple_candidate_slots": 5,
+        "resolve_entity_consultations_total": 21
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 11,
+        "part1_detail": {
+          "entb": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterobactin biosynthesis bifunctional protein entb": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterochelin synthase b": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "entg": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterobactin synthase component b": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "ente": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ],
+          "2 3 dihydroxybenzoate amp ligase": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ],
+          "2 3 dihydroxybenzoate amp synthase": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ],
+          "dihydroxybenzoic acid activating enzyme": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ],
+          "enterochelin synthase e": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ],
+          "enterobactin synthase component e": [
+            {
+              "entity_key": "prot_4",
+              "entity_type": "protein",
+              "name": "EntE",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 13,
+        "part2_distinct_ambiguous_keys_consulted": 2,
+        "part3_consultations": [
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "build_pwml_ir",
+            "clean": null,
+            "role": null,
+            "pointer": "/entities/protein_complexes/0/components/0",
+            "hint": null,
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "FALL_THROUGH_CANDIDATES_0",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "reaction_member",
+            "pointer": "/element_locations/protein_locations/1/protein",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "build_pwml_ir",
+            "clean": null,
+            "role": null,
+            "pointer": "/entities/protein_complexes/0/components/0",
+            "hint": null,
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "FALL_THROUGH_CANDIDATES_0",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "reaction_member",
+            "pointer": "/element_locations/protein_locations/3/protein",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/2",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/4/enzymes/5",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "transporter",
+            "pointer": "/processes/transports/0/transporters/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "ente",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntE",
+            "role": "transporter",
+            "pointer": "/processes/transports/1/transporters/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_4",
+                "entity_type": "protein",
+                "name": "EntE",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/0/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 16,
+        "part4_detail": {
+          "chorismate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "isochorismate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "nadh": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "nad+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "nad": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "atp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "l serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "fe3+": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "entc": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "entb": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 2,
+            "entity_types": [
+              "protein",
+              "protein",
+              "protein"
+            ]
+          },
+          "enta": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "ente": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 2,
+            "entity_types": [
+              "protein",
+              "protein",
+              "protein"
+            ]
+          },
+          "entf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "entd": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 69,
+        "norm_keys_with_multiple_candidate_slots": 25,
+        "resolve_entity_consultations_total": 89
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 6,
+        "part4_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "nadh": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "nad+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "atp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydroxybenzoyl amp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydro 2 3 dihydroxybenzoate  dhb": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 27,
+        "norm_keys_with_multiple_candidate_slots": 6,
+        "resolve_entity_consultations_total": 95
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 15,
+        "part4_detail": {
+          "serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "glycine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "gly": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "5 10 methylene thf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "formate": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "heme": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "iron": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "citrate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "sfxn1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn3": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn4": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn5": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "ferrochelatase": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "alas2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 51,
+        "norm_keys_with_multiple_candidate_slots": 15,
+        "resolve_entity_consultations_total": 78
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "serine hydroxymethyltransferase  mitochondrial": [
+            {
+              "entity_key": "prot_1",
+              "entity_type": "protein",
+              "name": "SHMT2",
+              "pathwhiz_id": 737
+            },
+            {
+              "entity_key": "pc_1",
+              "entity_type": "protein_complex",
+              "name": "Serine hydroxymethyltransferase, mitochondrial",
+              "pathwhiz_id": 671
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 2,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "serine hydroxymethyltransferase  mitochondrial",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "Serine hydroxymethyltransferase, mitochondrial",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/0/enzymes/0",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "SHMT2",
+                "pathwhiz_id": 737
+              },
+              {
+                "entity_key": "pc_1",
+                "entity_type": "protein_complex",
+                "name": "Serine hydroxymethyltransferase, mitochondrial",
+                "pathwhiz_id": 671
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_1",
+                "entity_type": "protein_complex",
+                "name": "Serine hydroxymethyltransferase, mitochondrial",
+                "pathwhiz_id": 671
+              }
+            }
+          },
+          {
+            "key": "serine hydroxymethyltransferase  mitochondrial",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "Serine hydroxymethyltransferase, mitochondrial",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/0/enzymes/1",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_1",
+                "entity_type": "protein",
+                "name": "SHMT2",
+                "pathwhiz_id": 737
+              },
+              {
+                "entity_key": "pc_1",
+                "entity_type": "protein_complex",
+                "name": "Serine hydroxymethyltransferase, mitochondrial",
+                "pathwhiz_id": 671
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_1",
+                "entity_type": "protein_complex",
+                "name": "Serine hydroxymethyltransferase, mitochondrial",
+                "pathwhiz_id": 671
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 12,
+        "part4_detail": {
+          "serine": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "glycine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "gly": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "5 10 methylene thf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "heme": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "iron": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "shmt2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "ferrochelatase": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "alas2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sfxn4": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 50,
+        "norm_keys_with_multiple_candidate_slots": 13,
+        "resolve_entity_consultations_total": 50
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 6,
+        "part1_detail": {
+          "223d3d": [
+            {
+              "entity_key": "cmp_3",
+              "entity_type": "compound",
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+              "pathwhiz_id": 40770
+            },
+            {
+              "entity_key": "cmp_7",
+              "entity_type": "compound",
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+              "pathwhiz_id": 40770
+            }
+          ],
+          "entb": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterobactin biosynthesis bifunctional protein entb": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterochelin synthase b": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "entg": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ],
+          "enterobactin synthase component b": [
+            {
+              "entity_key": "prot_2",
+              "entity_type": "protein",
+              "name": "EntB",
+              "pathwhiz_id": 6224
+            },
+            {
+              "entity_key": "prot_8",
+              "entity_type": "protein",
+              "name": "Isochorismatase (EntB)",
+              "pathwhiz_id": 6224
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 4,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/0",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/1/enzymes/1",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/4/entity_2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          },
+          {
+            "key": "entb",
+            "n_candidates": 3,
+            "caller": "resolve_entity",
+            "clean": "EntB",
+            "role": "interaction",
+            "pointer": "/processes/interactions/6/entity_1",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              },
+              {
+                "entity_key": "prot_8",
+                "entity_type": "protein",
+                "name": "Isochorismatase (EntB)",
+                "pathwhiz_id": 6224
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_2",
+                "entity_type": "protein",
+                "name": "EntB",
+                "pathwhiz_id": 6224
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 8,
+        "part4_detail": {
+          "chorismate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhb amp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "entc": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "entb": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 2,
+            "entity_types": [
+              "protein",
+              "protein",
+              "protein"
+            ]
+          },
+          "ente": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "entd": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "entf": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "fepa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 49,
+        "norm_keys_with_multiple_candidate_slots": 13,
+        "resolve_entity_consultations_total": 44
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": false,
+        "review_required": {},
+        "failures": {
+          "compounds": "resolution_report_not_ok"
+        }
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "enterobactin synthase": [
+            {
+              "entity_key": "prot_9",
+              "entity_type": "protein",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 6301
+            },
+            {
+              "entity_key": "pc_4",
+              "entity_type": "protein_complex",
+              "name": "enterobactin synthase",
+              "pathwhiz_id": 3623
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 6,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "build_pwml_ir",
+            "clean": null,
+            "role": null,
+            "pointer": "/entities/protein_complexes/3/components/3",
+            "hint": null,
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "FALL_THROUGH_CANDIDATES_0",
+              "bound": {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "enterobactin synthase",
+            "role": "reaction_member",
+            "pointer": "/element_locations/protein_locations/8/protein",
+            "hint": "protein",
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein",
+              "bound": {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              }
+            }
+          },
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "enterobactin synthase",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/2/enzymes/0",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            }
+          },
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "enterobactin synthase",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/2/enzymes/1",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            }
+          },
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "enterobactin synthase",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/1",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            }
+          },
+          {
+            "key": "enterobactin synthase",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "enterobactin synthase",
+            "role": "enzyme",
+            "pointer": "/processes/reactions/3/enzymes/3",
+            "hint": "protein_complex",
+            "candidates": [
+              {
+                "entity_key": "prot_9",
+                "entity_type": "protein",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 6301
+              },
+              {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "protein_complex",
+              "bound": {
+                "entity_key": "pc_4",
+                "entity_type": "protein_complex",
+                "name": "enterobactin synthase",
+                "pathwhiz_id": 3623
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 7,
+        "part4_detail": {
+          "2 3 dihydro 2 3 dihydroxybenzoate": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "dhb amp": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "fe3+": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferric iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferri enterobactin": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "ferrous iron": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "2 3 dihydro 2 3 dihydroxybenzoate  dhb": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 23,
+        "norm_keys_with_multiple_candidate_slots": 8,
+        "resolve_entity_consultations_total": 80
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 24,
+        "part4_detail": {
+          "lanosterol": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "4 4 dimethylcholesta 8 9 14 24 trien 3 ol": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "desmosterol": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "cholesterol": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "lss": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "cyp51a1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "msmo1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "dhcr24": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "sqle": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "fdft1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "hmgcr": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "hmgcs1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "mvk": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "fdps": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "mvd": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "idi1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "acat2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "lipa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "lbr": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "hsd17b7": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "ebp": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "nsdhl": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "srebf1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "srebf2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 124,
+        "norm_keys_with_multiple_candidate_slots": 24,
+        "resolve_entity_consultations_total": 66
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json",
+      "strict_db": false,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": false,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 7,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "gly": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "succinyl coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "heme": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "pyridoxal 5 phosphate": {
+            "candidate_slots": 4,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "alas2": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          },
+          "alas1": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "protein",
+              "protein"
+            ]
+          }
+        },
+        "norm_keys_total": 38,
+        "norm_keys_with_multiple_candidate_slots": 7,
+        "resolve_entity_consultations_total": 39
+      }
+    },
+    {
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json",
+      "strict_db": true,
+      "prefreeze": {
+        "ok": true,
+        "review_required": {},
+        "failures": {}
+      },
+      "status": "BUILT",
+      "report_ok": true,
+      "ambiguous_entity_reference_issues": [],
+      "indexes_captured": 1,
+      "census": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "coa sh": [
+            {
+              "entity_key": "cmp_7",
+              "entity_type": "compound",
+              "name": "CoA-SH",
+              "pathwhiz_id": 282377
+            },
+            {
+              "entity_key": "cmp_7",
+              "entity_type": "compound",
+              "name": "CoA-SH",
+              "pathwhiz_id": 282377
+            },
+            {
+              "entity_key": "cmp_7",
+              "entity_type": "compound",
+              "name": "CoA-SH",
+              "pathwhiz_id": 282377
+            },
+            {
+              "entity_key": "cmp_8",
+              "entity_type": "compound",
+              "name": "coenzyme A",
+              "pathwhiz_id": 1099
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 1,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "coa sh",
+            "n_candidates": 4,
+            "caller": "resolve_entity",
+            "clean": "CoA-SH",
+            "role": "reaction_member",
+            "pointer": "/processes/reactions/1/outputs/2",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "cmp_7",
+                "entity_type": "compound",
+                "name": "CoA-SH",
+                "pathwhiz_id": 282377
+              },
+              {
+                "entity_key": "cmp_7",
+                "entity_type": "compound",
+                "name": "CoA-SH",
+                "pathwhiz_id": 282377
+              },
+              {
+                "entity_key": "cmp_7",
+                "entity_type": "compound",
+                "name": "CoA-SH",
+                "pathwhiz_id": 282377
+              },
+              {
+                "entity_key": "cmp_8",
+                "entity_type": "compound",
+                "name": "coenzyme A",
+                "pathwhiz_id": 1099
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_7",
+                "entity_type": "compound",
+                "name": "CoA-SH",
+                "pathwhiz_id": 282377
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 6,
+        "part4_detail": {
+          "succinyl coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "heme": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "pyridoxal 5 phosphate": {
+            "candidate_slots": 4,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "coa sh": {
+            "candidate_slots": 4,
+            "distinct_entity_keys": 2,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound",
+              "compound"
+            ]
+          },
+          "coenzyme a": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          },
+          "coa": {
+            "candidate_slots": 2,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 27,
+        "norm_keys_with_multiple_candidate_slots": 6,
+        "resolve_entity_consultations_total": 32
+      }
+    }
+  ],
+  "totals": {
+    "legs": 32,
+    "legs_built": 31,
+    "legs_with_index": 31,
+    "legs_prefreeze_stopped": 1,
+    "legs_ir_raised": 0,
+    "part1_ambiguous_norm_keys": 28,
+    "part2_ambiguous_consultations": 66,
+    "part4_same_key_repeat_norm_keys": 209,
+    "legs_with_part1_nonzero": 8,
+    "legs_with_part2_nonzero": 8,
+    "norm_keys_total": 872,
+    "resolve_entity_consultations_total": 1974
+  },
+  "stop_condition_2_triggered": true,
+  "classification": "MEASURED",
+  "mode": "census",
+  "tree": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity",
+  "fixtures": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity",
+  "dotenv": null,
+  "pin_verdict": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\docs\\pwml_recovery_sprint\\evidence\\g11\\pin\\C-050k\\04-census-prechange.pin.json",
+  "resolved_t2pw": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\src\\t2pw\\__init__.py"
+}
