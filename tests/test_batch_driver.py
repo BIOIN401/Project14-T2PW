@@ -200,6 +200,15 @@ _MERGED = {
 }
 
 
+#: The frozen release record a real strict export carries out of the quarantine
+#: boundary, as ``pwml_export_result["quarantine_report"]["release"]``. D-004 names
+#: the PWML file from it, so a passing strict fixture has to speak this part of the
+#: app's contract too: a ``pwml`` result WITHOUT it is exercising the
+#: classification-unavailable path (D-038 3), which is a different behaviour and is
+#: tested on purpose in ``tests/test_batch_pwml_artifact_naming.py``.
+_RELEASE_READY = {"status": "release_ready", "strict_acceptance_eligible": True}
+
+
 def _artifacts(mode_value: str, **overrides: object) -> dict:
     base = {
         "gate_failed": False,
@@ -263,6 +272,7 @@ def test_strict_pass_writes_pwml_and_reports(tmp_path: Path) -> None:
                 "qa": {"ok": True},
                 "counts": {"reactions": 1, "compounds": 2},
                 "output_path": "outputs/pathway.pwml",
+                "quarantine_report": {"release": _RELEASE_READY},
             },
         ),
     )
@@ -1096,7 +1106,8 @@ def test_a_missing_focus_box_degrades_to_a_warning(tmp_path: Path) -> None:
         "focus_missing",
         _post_pipeline_body(
             _artifacts("pathwhiz"),
-            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}}},
+            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}},
+                  "quarantine_report": {"release": _RELEASE_READY}},
         ),
         focus_box=False,
     )
@@ -1116,7 +1127,8 @@ def test_a_missing_focus_box_is_silent_when_there_was_nothing_to_type(tmp_path: 
         "focus_missing_pinned",
         _post_pipeline_body(
             _artifacts("pathwhiz"),
-            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}}},
+            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}},
+                  "quarantine_report": {"release": _RELEASE_READY}},
         ),
         focus_box=False,
     )
@@ -1380,7 +1392,8 @@ def test_dict_and_candidate_paper_shapes_are_both_accepted(tmp_path: Path) -> No
         "dict_paper",
         _post_pipeline_body(
             _artifacts("pathwhiz"),
-            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}}},
+            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}},
+                  "quarantine_report": {"release": _RELEASE_READY}},
         ),
     )
 

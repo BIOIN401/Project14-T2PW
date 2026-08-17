@@ -1,0 +1,207 @@
+{
+  "label": "collateral-sweep-diagnose",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming/docs/pwml_recovery_sprint/evidence/g11/pin/C-053/12-collateral-sweep-diagnose.pin.json",
+    "-q",
+    "--basetemp=C:/t/c053/cs2",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_deadline_budget.py",
+    "tests/test_deadline_leg_timeout.py"
+  ],
+  "cwd": "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming",
+  "started_at": "2026-08-17T19:15:10+00:00",
+  "finished_at": "2026-08-17T19:15:24+00:00",
+  "duration_seconds": 13.62760220002383,
+  "timeout_seconds": 1500.0,
+  "root_pid": 1203292,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1203136,
+      "name": "python.exe",
+      "ppid": 1203292
+    },
+    {
+      "pid": 1204484,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1204564,
+      "name": "python.exe",
+      "ppid": 1204484
+    },
+    {
+      "pid": 1201768,
+      "name": "python.exe",
+      "ppid": 1203676
+    },
+    {
+      "pid": 1203676,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1194672,
+      "name": "python.exe",
+      "ppid": 1204480
+    },
+    {
+      "pid": 1204480,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1203460,
+      "name": "python.exe",
+      "ppid": 1203752
+    },
+    {
+      "pid": 1203752,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1201040,
+      "name": "python.exe",
+      "ppid": 1204192
+    },
+    {
+      "pid": 1204192,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1203176,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1203616,
+      "name": "python.exe",
+      "ppid": 1203176
+    },
+    {
+      "pid": 1201548,
+      "name": "python.exe",
+      "ppid": 1204472
+    },
+    {
+      "pid": 1204472,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1201524,
+      "name": "python.exe",
+      "ppid": 1204700
+    },
+    {
+      "pid": 1204700,
+      "name": "python.exe",
+      "ppid": 1201548
+    },
+    {
+      "pid": 1203248,
+      "name": "python.exe",
+      "ppid": 1203136
+    },
+    {
+      "pid": 1205032,
+      "name": "python.exe",
+      "ppid": 1203248
+    },
+    {
+      "pid": 1204468,
+      "name": "python.exe",
+      "ppid": 1205032
+    },
+    {
+      "pid": 1204604,
+      "name": "python.exe",
+      "ppid": 1204468
+    }
+  ],
+  "descendants_terminated": [
+    1194672,
+    1201040,
+    1201524,
+    1201548,
+    1201768,
+    1203136,
+    1203176,
+    1203248,
+    1203460,
+    1203616,
+    1203676,
+    1203752,
+    1204192,
+    1204468,
+    1204472,
+    1204480,
+    1204484,
+    1204564,
+    1204604,
+    1204700,
+    1205032
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1192508,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1192616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1197996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1204772,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-053\\12-collateral-sweep-diagnose.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming",
+    "repo_head": "89203717377c2fc1dc74c6a5a3568591cdb51b8a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

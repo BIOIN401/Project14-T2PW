@@ -83,9 +83,13 @@ _PAYLOAD_FILES: Tuple[str, ...] = ("final_mapped.json", "merged_payload.json")
 _ADMISSION_FILES: Tuple[str, ...] = ("rag_admission_report.json",)
 _QUARANTINE_FILES: Tuple[str, ...] = ("quarantine_report.json",)
 
-#: Artifact whose presence means the strict leg actually emitted an importable
-#: file. Mirrors ``batch.runner.REQUIRED_ARTIFACTS["strict"]``.
-_STRICT_DELIVERABLE = "pathway.pwml"
+#: Artifacts whose presence means the strict leg actually emitted an importable
+#: file. Mirrors ``batch.runner.REQUIRED_ARTIFACTS["strict"]``, which D-004 splits
+#: by release state -- so BOTH names are deliverables here. "Did an importable
+#: file land?" and "may this count as strict success?" are different questions,
+#: and this constant answers only the first: the second is answered by the frozen
+#: record in ``release_status``, never by a filename.
+_STRICT_DELIVERABLES: Tuple[str, ...] = ("pathway.pwml", "pathway.review_required.pwml")
 _RESEARCH_DELIVERABLE = "research_pathway_report.txt"
 
 #: The exact text handed to the app, written by the batch runner as
@@ -156,10 +160,34 @@ class ModeResult:
     deliverable: bool = False
     semantic: Optional[SemanticReport] = None
     seconds: float = 0.0
+    #: The release classification the manifest row carried, verbatim, or ``None``
+    #: when the row recorded none. Never derived from a filename or from
+    #: ``status``, and never re-derived here: this module scores runs, it does not
+    #: classify them.
+    release_status: Optional[Dict[str, Any]] = None
+    #: The PWML filename the leg wrote, as the row reported it.
+    pwml_artifact: str = ""
 
     @property
     def passed(self) -> bool:
         return self.status.casefold() == "pass"
+
+    @property
+    def strict_acceptance_eligible(self) -> bool:
+        """May this leg count toward the STRICT benchmark denominator?
+
+        AFFIRMATIVE by construction: only a measured ``True`` inside the frozen
+        record qualifies. An absent record, a record this reader cannot parse and
+        a missing flag are all "not measured", and "not measured" is never
+        "eligible" -- so a run whose classification never arrived is excluded
+        without anyone having to enumerate the ways a record can go missing
+        (D-038 3). ``review_required`` is False by the invariant that builds the
+        record (``release_status.py:317``), which is why this reads the flag
+        rather than re-testing the state.
+        """
+
+        record = self.release_status
+        return isinstance(record, dict) and record.get("strict_acceptance_eligible") is True
 
     @property
     def extracted(self) -> bool:
@@ -170,7 +198,7 @@ class ModeResult:
         return int(self.semantic.graph.get("n_reactions", 0)) > 0
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        data: Dict[str, Any] = {
             "paper_id": self.paper_id,
             "mode": self.mode,
             "attempted": self.attempted,
@@ -191,6 +219,14 @@ class ModeResult:
             "seconds": self.seconds,
             "semantic": self.semantic.to_dict() if self.semantic else None,
         }
+        # Conditional, so a leg from a run that recorded neither serializes
+        # byte-identically to before -- and an absent classification stays absent
+        # rather than becoming a placeholder that reads like a measurement.
+        if self.release_status:
+            data["release_status"] = dict(self.release_status)
+        if self.pwml_artifact:
+            data["pwml_artifact"] = self.pwml_artifact
+        return data
 
 
 @dataclass
@@ -494,8 +530,17 @@ def score_run(
                     for f in (row.get("files") or [])
                     if isinstance(f, dict)
                 }
-                wanted = _STRICT_DELIVERABLE if mode == MODE_STRICT else _RESEARCH_DELIVERABLE
-                leg.deliverable = wanted in names
+                wanted = (
+                    _STRICT_DELIVERABLES
+                    if mode == MODE_STRICT
+                    else (_RESEARCH_DELIVERABLE,)
+                )
+                leg.deliverable = any(name in names for name in wanted)
+                # D-004's two new row keys, carried across unchanged. A row from
+                # before this card has neither, and both stay falsy there.
+                record = row.get("release_status")
+                leg.release_status = dict(record) if isinstance(record, dict) and record else None
+                leg.pwml_artifact = str(row.get("pwml_artifact") or "")
 
             leg.boundary, leg.boundary_evidence = classify_strict_boundary(row)
             if mode == MODE_RESEARCH and row is not None and not leg.passed:
@@ -637,7 +682,15 @@ def _build_denominators(report: AcceptanceReport, gold_set: GoldSet) -> None:
             )
         else:
             strict_pool.append(pid)
-            if strict_leg.passed and strict_leg.deliverable:
+            # Three separate facts, and none of them implies another: the leg
+            # completed, an importable file landed, and the run MEASURED itself
+            # release-ready. The third is the one D-004 adds. Without it a
+            # ``review_required`` export counts as strict success purely because
+            # its file used to be called ``pathway.pwml`` -- TRAP-1, and
+            # PRODUCT_CONTRACT 13's "Never strict success". The test is
+            # affirmative, so a leg whose classification never arrived is
+            # excluded rather than assumed good.
+            if strict_leg.passed and strict_leg.deliverable and strict_leg.strict_acceptance_eligible:
                 strict_ok.append(pid)
 
         # -- research: relevant AND the research leg was attempted --------------

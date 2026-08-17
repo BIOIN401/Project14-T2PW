@@ -103,7 +103,14 @@ def _observable(outcome: RunOutcome) -> dict:
         "artifact_digests": {name: [len(blob), _sha(blob)] for name, blob in blobs.items()},
         "relocated_files": runner._relocate_files(outcome.to_dict(), "pmc1", outcome.mode)["files"],
         "canonical_payload_sha256": json.loads(mapped)["canonical_payload_sha256"] if mapped else None,
-        "release_status_absent": "release_status" not in row,
+        # C-053 / MASTER_PLAN 3 hotspot 10, GROWTH-ONLY. ``release_status_absent``
+        # made ABSENCE the invariant, which was right only while no card owned the
+        # row. D-004 puts the classification and the artifact name IN the row, so
+        # the invariant becomes PRESENCE and both are recorded BY VALUE -- one
+        # field replaced by two, none dropped. The rule this encodes: a digest is
+        # never stabilised by deleting a field from this list.
+        "release_status": row.get("release_status"),
+        "pwml_artifact": row.get("pwml_artifact"),
     }
 
 
@@ -122,14 +129,35 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 
 #: Captured on the BASE SHA, before driver.py changed:
 #: ``(status|stage|failure_kind, message, sha256 of the canonicalized observable)``.
+#:
+#: **RE-BASELINED by C-053 under merge rule 4 / hotspot 10.** All seven digests
+#: move, which is expected and was budgeted: ``_observable`` folds its whole field
+#: list into one digest, so replacing ``release_status_absent`` with the two D-004
+#: fields moves every slot at once. The move is derived, not asserted -- the base
+#: capture is committed at ``docs/pwml_recovery_sprint/evidence/c053_golden_base.json``
+#: (it reproduced the seven pre-C-053 tuples exactly), the tip capture beside it,
+#: and the slot-by-slot difference at ``c053_golden_delta.json``. Reading down that
+#: delta:
+#:
+#: * **slot 0** (``status|stage|failure_kind``) moves on **no** leg. No leg changed
+#:   its exit classification.
+#: * **slot 1** (``message``) moves on exactly ONE leg, ``strict_pwml_export``:
+#:   ``pathway.pwml`` -> ``pathway.review_required.pwml``, because that fixture's
+#:   PWML result carries no frozen record and D-038 3 names that export honestly.
+#: * **slot 2** (digest) moves on all seven, and the per-leg field difference says
+#:   why: the four legs that never reached a classification differ in
+#:   ``release_status_absent`` alone (the replaced field); the two gate-blocked legs
+#:   add ``release_status`` to the row, which C-041 built and deliberately left out
+#:   of it; and ``strict_pwml_export`` additionally moves its artifact name, hence
+#:   ``artifact_*``, ``relocated_files`` and ``pwml_artifact``.
 GOLDEN: dict = {
-    "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "5f49be0ff60ffa75b32762a7f5aa577fcabee6d0885137b657f71baa450df096"),
-    "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "f0c0ca68385547a671a94d9ae57fe39a4864ffbc03c8874261c89a8cc028c7e2"),
-    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "7c74c7b62e93dbc7924e356b9e46db3099a6903eb2071ecd41497f7efa7dc399"),
-    "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "7e13ded1e51efb6f86e26346942a07e525d614e7cb03022d562bb021784d9058"),
-    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "9ad6c2721e827c0ae844b4bb8939630b70f216975942436ea5e902cc47cf44a4"),
-    "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "a39147d3cfc5c0f345628d648e3d02d534f352dd14e964c12c7011c6e093f7bf"),
-    "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.pwml is 43 bytes", "eb5ded64c2afa8b0db64f11e4059ec6e1d811773b0da84e31b6428959061dd0d"),
+    "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"),
+    "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
+    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "b3d1afbd99d051da3da2563312a432cc091c69eed24c0a6b6c3a98568686520f"),
+    "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),
+    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "501fe47b98e8ebfbd1d3a142926d757afe814a4965e68bc19901a19dfc94a0f1"),
+    "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"),
+    "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"),
 }
 
 
