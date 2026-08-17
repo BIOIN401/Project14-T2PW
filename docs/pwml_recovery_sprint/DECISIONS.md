@@ -2276,3 +2276,100 @@ by gating on `CHECK_ORGANISM`: zero.** C-056a may proceed.
   PathBank `Unknown` sentinel (`pathbank_protein_id: 9659`, `identity_status: "placeholder"`) — exactly the
   rows `semantic_production.py:113-121` deliberately excludes. Extending the check there would newly fail
   **7 of 32 legs on a sentinel**: a merge-rule-6 violation. Recorded for C-056b.
+
+---
+
+## D-043 — C-050k: every binding is correct, and the missing diagnostic is the violation · 2026-08-17 · LOCKED
+
+C-050k's census fired D-041 §3's escalation: **61 `resolve_entity` consultations through ambiguous alias
+keys across 8 legs, 20 of them same-type**, with **4 affected legs exporting `ok=True` today**. A
+`pwml-bio-auditor` adjudicated all 20 under `PRODUCT_CONTRACT` §14, reading the **committed frozen payloads**
+rather than the census summary. This records the verdict and re-scopes the card.
+
+### 1. All 20 bindings are biologically CORRECT. None is a `product_contract_violation`.
+
+| Class | n | Verdict |
+|---|---|---|
+| **EntB** | 8 | **Same entity.** Beyond the shared PathWhiz 6224: shared UniProt **P0ADI4**, shared `gene_name entB`, and the candidate's name parenthesises the gene symbol. "Isochorismatase" names one of EntB's two domains, not a different gene product. |
+| **EntE** | 7 | **Same record**, with a caveat. Both rows carry PW 6301 / UniProt **P10378** / gene `entE`. But *"enterobactin synthase"* (EC 6.3.2.14) denotes the EntB/EntE/EntF assembly while EntE is component E (EC 2.7.7.58) — `prot_9` is an **EntE record wearing a complex's name**. The identifier is right and the *name* is wrong: the F-043 trap running backwards. The mislabel is a pre-existing payload defect, not a consequence of the alias key. |
+| **DHNA** | 2 | **Same entity, and the binding also selects the identifier-bearing row.** `cmp_5`'s chain is internally consistent (PB 40747 → KEGG C03657 → ChEBI:11173); `cmp_9` carries **no identifier at all**, so identifier equality plays no part in the call. The importing source's own title (`PMC8091085`) fixes the abbreviation, and reaction 6 is MenI, whose product *is* 1,4-dihydroxy-2-naphthoate. |
+| **DHB** | 2 | **Same entity**, and **the orchestrator's framing was wrong on two points** — see §3. |
+| **CoA-SH** | 1 | **Same entity, different identifiers** — PB 282377 is the tetraanion (ChEBI:57287), PB 1099 the neutral form. The converse of the F-043 trap, and *both* identifiers are correct. **This case was in none of the three classes put to the auditor**; 15 + 2 + 2 = 19 and CoA-SH is the twentieth. |
+
+**Mechanism worth keeping:** the EntB/EntE collisions arise *because* the rows are identity-equivalent —
+`prot_8`/`prot_9` acquired `entB`/`entE` as synonyms **from the same UniProt record** as `prot_2`/`prot_4`,
+and the index then collides name-of-one against synonym-of-the-other. In this corpus same-type alias
+ambiguity is **structurally correlated with identity-equivalence**, not independent of it. **That is an
+argument for a diagnostic and against a rebinder.**
+
+### 2. What IS the violation: §3 traceability, uniformly across all 20
+
+`ir.py:1534`'s `ambiguous_entity_reference` fires **only in the fall-through branch**. All 20 same-type
+cases return early at `:1533` (`PREFERRED_TYPE_EARLY_RETURN` in every census record), so the diagnostic is
+structurally unreachable for **exactly the class where `preferred_order` cannot disambiguate**. Confirmed
+empirically: `ambiguous_entity_reference_issues: []` on **all 8** affected legs. Its message ("matched
+multiple entity **types**") also describes type ambiguity, so it would not name this class even where it
+fires.
+
+`PRODUCT_CONTRACT` §3 requires that information be **traceable so that false content can be attributed
+empirically**. An arbitrary row-order choice recorded nowhere is an untraceable decision. **Today it is
+harmless in all 20 cases; the contract obligation is to record it, not to have been lucky.**
+
+### 3. Two corrections to the orchestrator's own framing of the DHB case
+
+1. **No frozen identity is lost.** Frozen `entities.compounds[7]` carries **no** `pathwhiz_id`, **no**
+   `pathbank_compound_id` and **no** `mapped_ids`; `mapping_meta.resolution.status = "ambiguous"` at
+   confidence **0.565**. The `40770` I cited appears **only at EP3**, minted after
+   `run_prefreeze_resolution`. An export-path-minted identity is not acquired — it is not lost either.
+2. **Gold agrees with the conservative binding.** PMC12452463's `forbidden_identifiers` says the paper uses
+   DHB for two different molecules and *"the bare token is not a resolvable identity here"*. Binding the
+   id-less row is **gold-consistent, not gold-violating**.
+   The genuine upstream defect is elsewhere: the name-plausibility gate rejected
+   `(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate` with `no_shared_meaningful_token` — a false negative, since
+   that *is* the compound. That is a **mapping** defect; under §2 a missing identity is **depth, not
+   correctness**. Its own card, not this one.
+
+### 4. C-050k proceeds under D-041(a), re-scoped
+
+**D-041's ruling (a) is CONFIRMED and now rests on §3 rather than on caution alone.** Additionally binding:
+
+* **G9 is a CORRECTION, not new capability.** The base emits `ambiguous_entity_reference_issues: []` on all
+  8 legs across 61 live consultations; a fixture fails at base and passes at tip. **This is a genuine
+  base-SHA behavioural failure and must not be labelled new functionality** — which is what the C-050k
+  implementer concluded independently before stopping. Its re-charter instinct was right.
+* **Use a NEW, distinctly-coded issue.** Do **not** fold this into `ambiguous_entity_reference`: that code
+  means "multiple entity types" and this class is same-type. Folding them destroys the census's own
+  distinction.
+* **Compute ambiguity over distinct `entity_key`s, before the preferred-type loop**, and emit on every
+  ambiguous consultation regardless of which branch returns. **The return value must not change.** Payload
+  row order stays authoritative. This also disposes of the **209** same-key false positives.
+* **The diagnostic must not assert equivalence from identifier equality** — F-043 forbids exactly that
+  inference. Emit the candidate list with the ids the rows already carry, and let adjudication happen where
+  it is permitted.
+* **Architecture, binding on later cards:** the **exporter emits the ambiguity; the status classifier — not
+  the exporter — decides the leg's state.** §5 forbids exporters reinterpreting process-to-entity references
+  post-freeze and §8 forbids exporter DB lookups, so every repair path stays outside the freeze.
+* **No case here warrants withholding the PWML.** §4 `diagnostic_only` requires that exporting would demand
+  inventing biology; no wrong entity and no false identifier reaches any of these PWMLs. **The conditional
+  matters though:** if a same-type ambiguous key ever binds two genuinely different entities, §2 and §1 are
+  engaged and §7 requires at minimum `review_required`. Instrumenting is what makes that detectable.
+
+### 5. Four findings surfaced by the adjudication, none owned
+
+1. **Enzyme lists appear to be EXPANDED between the freeze and `resolve_entity`.** Committed
+   `PMC12096016/research` reaction 1 has **one** enzyme, yet the census records consultations at
+   `/1/enzymes/0` **and** `/1`; committed reaction 4 has **three**, and the census records `/4/enzymes/2` and
+   `/5`. If entries are added on the export path this is a **§5 post-freeze mutation larger than C-050k** and
+   needs its own measurement. Cause unverified from committed artifacts. **Highest-value open thread here.**
+2. **A possible §8 violation:** `_resolve_compound_rows` constructs `PathBankDbResolver.from_env()` and
+   `_project_db_identity` writes `pathwhiz_id` on the export path. §8 says *"Exporters perform no network or
+   database lookups."* Static-inspection **inference, not a run result** — measure before acting.
+3. **Two `ok=True` legs contradict their gold.** `PMC12312563/strict` exports `ok=True` against
+   `expected_export: partial_only`; `PMC12856317/strict` exports `ok=True` with the same ALAS2 condensation
+   twice against a gold saying one reaction cannot constitute a pathway — **and its PWML names
+   *Arabidopsis thaliana* in a human ALAS2 pathway.**
+4. **The `ir.py:1658` read site** (5 of the 66 consultations) remains unadjudicated and unowned.
+
+**The duplicate rows themselves — `1,4-dihydroxy-2-naphthoic acid` + `DHNA`, `CoA-SH` + `coenzyme A`, both
+materialised as separate nodes in shipped PWMLs — are D-036 consolidation territory. D-036's deferral stands
+and is NOT reopened here.**
