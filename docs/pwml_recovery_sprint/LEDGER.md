@@ -416,6 +416,30 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result
   does not invalidate the guard (charter §5).
 
+**C-053 ACCEPTED — merged `3fde1f1`, reviewed tip `09f8371`, independent bare `APPROVE` after one correction
+round.** Post-merge gates **on the merged state**: SMOKE **460 exact** · whole-tree G11 **exit 0**, 2073
+artifacts, 0 non-compliant · protected manifest **42/42** · **zero owned surviving processes** · no cache,
+`runs/`, `outputs/`, `data/`, `tmp/`, `writer.py` or `streamlit_app.py` touched. Hand-authored **1193 /
+1200** by the corrected **F-050** command.
+
+The re-review **reproduced rather than accepted**: all six return dispositions probed directly against the
+tip module, the new pin killed under **three** separate mutations with a hash-verified revert, the G9 base
+failure independently reproduced at `8920371`, the rest of `driver.py` proven **byte-identical outside the
+granted symbol**, and **319 tests run by name** across the files belonging to no chunk. The `_add_strict_artifacts`
+return is now correct and pinned on all six dispositions — the dimension that previously **could not fail**
+now fails three ways. The G9 labels are measured (`6 of 8`), and the new return pin is **deliberately not
+offered as a base proof**, because at base the function had no `return` at all and G9 holds that symbol
+absence is not proof.
+
+**Follow-ups recorded, none blocking:** `_finalize_gate_failure`'s docstring at `driver.py:1755-1757` is now
+stale (it says promoting the record into the row "belongs to C-053", which C-053 did) — correctly left
+untouched as out of boundary; owner is whichever card next holds that function. The row's `release_status`
+carries **15 keys on the PASS path** (the seam record verbatim, per D-038 §2) and **12 on the gate-fail
+path**; both carry `status` and `strict_acceptance_eligible`, so `describe()` and the denominator gate are
+safe — **flagged for C-056b, which reads these rows**. Historical `runs/` manifests carry no `release_status`
+and therefore now score **0 strict successes by design**; no test pins it, so **do not mis-read a future
+benchmark as a regression**.
+
 **REV-053 REJECTED `57be026`, 2026-08-17 — two blocking findings, correction round 1 of 2 dispatched.**
 The reviewer verified the card's substance independently and found it sound (see the accepted list below),
 then found two things the card's own suite structurally could not.
