@@ -1,0 +1,272 @@
+{
+  "label": "c050k-chunkd-collect",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/docs/pwml_recovery_sprint/evidence/chunk_d_gate.py",
+    "collect",
+    "--task",
+    "C-050k",
+    "--label-prefix",
+    "c050k-",
+    "--tmp",
+    "C:/t/c050k/btf"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-17T21:48:09+00:00",
+  "finished_at": "2026-08-17T21:48:20+00:00",
+  "duration_seconds": 9.708954300003825,
+  "timeout_seconds": 170.0,
+  "root_pid": 1294608,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1286892,
+      "name": "python.exe",
+      "ppid": 1294608
+    },
+    {
+      "pid": 1293364,
+      "name": "python.exe",
+      "ppid": 1294076
+    },
+    {
+      "pid": 1294076,
+      "name": "python.exe",
+      "ppid": 1286892
+    },
+    {
+      "pid": 1294836,
+      "name": "git.exe",
+      "ppid": 1293364
+    },
+    {
+      "pid": 1293712,
+      "name": "git.exe",
+      "ppid": 1293364
+    },
+    {
+      "pid": 1294040,
+      "name": "git.exe",
+      "ppid": 1295620
+    },
+    {
+      "pid": 1295620,
+      "name": "git.exe",
+      "ppid": 1293364
+    },
+    {
+      "pid": 1294812,
+      "name": "python.exe",
+      "ppid": 1293364
+    },
+    {
+      "pid": 1296088,
+      "name": "python.exe",
+      "ppid": 1294812
+    },
+    {
+      "pid": 1291920,
+      "name": "python.exe",
+      "ppid": 1286892
+    },
+    {
+      "pid": 1295444,
+      "name": "python.exe",
+      "ppid": 1291920
+    },
+    {
+      "pid": 1290488,
+      "name": "git.exe",
+      "ppid": 1295444
+    },
+    {
+      "pid": 1291328,
+      "name": "git.exe",
+      "ppid": 1295444
+    },
+    {
+      "pid": 1294700,
+      "name": "git.exe",
+      "ppid": 1291328
+    },
+    {
+      "pid": 1293516,
+      "name": "python.exe",
+      "ppid": 1294908
+    },
+    {
+      "pid": 1294908,
+      "name": "python.exe",
+      "ppid": 1295444
+    },
+    {
+      "pid": 1295960,
+      "name": "python.exe",
+      "ppid": 1296200
+    },
+    {
+      "pid": 1296200,
+      "name": "python.exe",
+      "ppid": 1286892
+    },
+    {
+      "pid": 1294628,
+      "name": "git.exe",
+      "ppid": 1295144
+    },
+    {
+      "pid": 1295144,
+      "name": "git.exe",
+      "ppid": 1295960
+    },
+    {
+      "pid": 1294100,
+      "name": "git.exe",
+      "ppid": 1295960
+    },
+    {
+      "pid": 1296120,
+      "name": "git.exe",
+      "ppid": 1294100
+    },
+    {
+      "pid": 1287496,
+      "name": "python.exe",
+      "ppid": 1295960
+    },
+    {
+      "pid": 1295756,
+      "name": "python.exe",
+      "ppid": 1287496
+    },
+    {
+      "pid": 1296392,
+      "name": "python.exe",
+      "ppid": 1286892
+    },
+    {
+      "pid": 1296404,
+      "name": "python.exe",
+      "ppid": 1296392
+    },
+    {
+      "pid": 1296492,
+      "name": "git.exe",
+      "ppid": 1296404
+    },
+    {
+      "pid": 1296580,
+      "name": "git.exe",
+      "ppid": 1296492
+    },
+    {
+      "pid": 1296628,
+      "name": "git.exe",
+      "ppid": 1296404
+    },
+    {
+      "pid": 1296656,
+      "name": "git.exe",
+      "ppid": 1296628
+    },
+    {
+      "pid": 1296708,
+      "name": "python.exe",
+      "ppid": 1296404
+    },
+    {
+      "pid": 1296720,
+      "name": "python.exe",
+      "ppid": 1296708
+    }
+  ],
+  "descendants_terminated": [
+    1286892,
+    1287496,
+    1290488,
+    1291328,
+    1291920,
+    1293364,
+    1293516,
+    1293712,
+    1294040,
+    1294076,
+    1294100,
+    1294628,
+    1294700,
+    1294812,
+    1294836,
+    1294908,
+    1295144,
+    1295444,
+    1295620,
+    1295756,
+    1295960,
+    1296088,
+    1296120,
+    1296200,
+    1296392,
+    1296404,
+    1296492,
+    1296580,
+    1296628,
+    1296656,
+    1296708,
+    1296720
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1295056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1295612,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/docs/pwml_recovery_sprint/evidence/g11/C-050k/21-chunkd-collect-partition.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity",
+    "repo_head": "468fca5f59297c67e571dcae545914a6c32c8ef4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
