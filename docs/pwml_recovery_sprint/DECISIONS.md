@@ -2373,3 +2373,85 @@ harmless in all 20 cases; the contract obligation is to record it, not to have b
 **The duplicate rows themselves — `1,4-dihydroxy-2-naphthoic acid` + `DHNA`, `CoA-SH` + `coenzyme A`, both
 materialised as separate nodes in shipped PWMLs — are D-036 consolidation territory. D-036's deferral stands
 and is NOT reopened here.**
+
+---
+
+## D-044 — C-050k's three baseline moves are ratified, and a sprint-wide measurement hazard is registered · 2026-08-17 · LOCKED
+
+C-050k built to D-043 and stopped for three decisions rather than taking any of them unilaterally, leaving
+its golden suite **committed RED** rather than editing the fixture. That is the correct behaviour and all
+three are ratified. Its tip is `46df623` (chain `dd5da13` → `b80cffa` → `468fca5` → `46df623`, first parent
+`15f36b4`).
+
+### 1. GOLDEN `_leg_digest`: the 8-leg move is RATIFIED
+
+**8 of 32 legs moved; 24 are byte-identical. The 8 are *exactly* the 8 legs the census independently
+identified as carrying ambiguous consultations.** That correspondence is the ratification argument: the
+delta is not a diffuse drift, it is the precise footprint of the change.
+
+| Leg | old → new |
+|---|---|
+| PMC12312563/strict | `64038a74` → `69d9da7b` |
+| 1306 PMC12452463/research | `dd9a2f5c` → `dbf62298` |
+| 1358 PMC12096016/research | `f1f6ff4d` → `20cbe56b` |
+| 1754 PMC12096016/research | `33112778` → `c04624aa` |
+| 1754 PMC12180156/strict | `e28efcf1` → `1427c040` |
+| 1754 PMC12452463/research | `a75cb748` → `1b503ae4` |
+| 1754 PMC12452463/strict | `5e40a7ca` → `219fdbfe` |
+| 1754 PMC12856317/strict | `32ab0313` → `a6ca91c5` |
+
+Bounded by measurement, satisfying **D-041 §2 limit 3**: the **IR digest did not move**, `errors` is empty
+and `ok is True` on both sides, and the delta is **exactly two warnings per affected leg**. Measured under
+pytest, never by a direct-import harness (**F-047**). **Authorised: update `GOLDEN` to the eight new digests
+and turn the suite green.** The R3 control re-pin `476e41da…` → `026c8a8e…` is ratified on the same basis,
+and asserting the warning fields **before** the digest is exactly right — it stops a second drift riding in
+behind the first.
+
+### 2. Chunk D partition `179 → 187` is RATIFIED, effective on the merged state only
+
+`core 152 → 160`, **TOTAL `179 → 187`**. `collect` proves **`SETS_EQUAL=True, missing=0, extra=0,
+overlap=0`** — only the derived integers move, and the `+8` is exactly the D-core arms the charter *required*
+be added to `tests/test_pwml_ir.py`, which had **zero** coverage of `resolve_entity` / `ambiguous` /
+`synonyms`. This is a deliberate **merge rule 4** baseline move with an exact documented delta, not a drift.
+
+**`TEST_MATRIX.md`'s counts must be updated to `core 160 + s8 4 + qb 23 = 187` as part of the C-050k merge,
+never before it.** Until that merge lands, **179 remains correct** and cards in flight (C-056a, C-052) must
+keep reporting it. A card reporting 187 on a tree without C-050k is measuring the wrong thing.
+
+**Not running the full gate to prove an integer it already knew was correct**, and letting `run` block on
+`COMPONENTS` instead, was the right call — it burned no artifacts to re-derive a known number.
+
+### 3. D-025 ceiling 1: `950 → 1,150`, RATIFIED
+
+Measured **1079**: probe 616, `ir.py` 147, `test_pwml_ir.py` 238, refusal suite 78. **The entire overage is
+the probe**, which my table budgeted at 250 against a real 616 — the same class of error as C-056a's, and
+mine again: a four-part census over 32 legs with live-DB reproduction of EP3 does not fit in 250 lines.
+Nothing was cut to fit (**REV-051a**). Ceilings 2 and 3 stand and are comfortable: **40/90**, **8519/12,000**.
+
+### 4. F-051 — a worktree without `.env` silently masks every DB-dependent test, in BOTH directions
+
+**Registered as a sprint-wide measurement hazard of the same class as F-042 and F-003. Unowned.**
+
+`ensure_dotenv_loaded` reads `PROJECT_ROOT/.env`, and **a git worktree created from a SHA never has `.env`,
+because it is gitignored.** So the PathBank DB is unreachable at base and reachable in a working tree, and
+the *same* selection runs **5.63 s vs 94.86 s**. **Any base-vs-tip comparison performed in a fresh worktree
+can hide a real regression or manufacture a false one.**
+
+C-050k caught this the right way: its fifteen-file gate was **9 failed / 386 passed** at tip against
+**2 / 393** at base, and it attributed the difference by **swapping only `src/t2pw/pwml/ir.py` to its base
+version inside its own tree** — reproducing the same 6 failures with its own code removed. 2 are the known
+base-red `[only_unrelated_reactions_survive]`, 1 is the ratified GOLDEN move, and **6 are not the card's**.
+D-core's single red (`test_cli_export_emits_the_canonical_organism…`, itself one of C-045b's two added
+tests) is the same effect.
+
+**That swap technique is the standing remedy until this finding is owned: hold the tree constant and change
+only the file under test.** Copying `.env` into a worktree is **not** the fix — C-050i's probe already
+refused that, and it would make the two sides differ in a second uncontrolled way. **Do not attribute a
+DB-dependent failure to a card without a same-tree swap.**
+
+### 5. Still owed by C-050k
+
+**SMOKE 460 and Chunk E were never run** — `C:\t\heavylock` was held by C-056a from 15:14:13 to 15:49:55
+across five acquisition attempts. The card stopped both background waiters rather than leave one armed to
+seize a lock with nobody to release it, which is right. **These two gates, plus full Chunk D on the updated
+partition, remain outstanding before C-050k can be reviewed for merge.**
