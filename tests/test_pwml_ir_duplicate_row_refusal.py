@@ -9,8 +9,17 @@ fabricated.** There is no honest *production* leg at which a probe of the corpus
 fails, because the one committed leg carrying a live ``_norm`` collision
 (``PMC12444477…/strict``) now stops in **pre-freeze** at production defaults
 (``PREFREEZE_DUPLICATE_CANONICAL_ROWS``). Live production exposure is **zero of 32
-legs**, measured -- and that is not a reason to narrow the guard: F-039 proved the
-mechanism real, reachable and unguarded.
+legs**, measured -- and zero exposure is not by itself a reason to narrow the guard:
+F-039 proved the mechanism real, reachable and unguarded.
+
+**Scope, as narrowed by the orchestrator in correction round 1.** The guard binds
+``ir.py``'s **entity** call site only. The **component** call site keeps its
+pre-existing warning, because ``prefreeze_resolution._canonicalize_species_rows``
+*deliberately* converges a ``_norm`` group onto its leader **because this dedupe
+collapses it**, and those rows share a ``taxonomy_id`` -- proven identity, which
+D-035 permits, unlike F-039's coincident spelling over conflicting identifiers.
+Both halves of that boundary are pinned under "Arm 6" below, and the component-side
+residual is registered as **F-046**, owned by **C-050j**, not by this card.
 
 What *is* demonstrated, by ``evidence/probe_c050i_dedupe_refusal.py --mode g9`` and
 pinned below, is the **latent defect** run through both real implementations (base
@@ -174,7 +183,8 @@ def test_new_acceptance_the_diagnostic_identifies_both_conflicting_rows() -> Non
 
     with pytest.raises(DuplicateNamedRowError) as excinfo:
         _dedupe_named_rows(rows, key_prefix="cmp", report=report,
-                           pointer_prefix="/entities/compounds")
+                           pointer_prefix="/entities/compounds",
+                           refuse_duplicates=True)
 
     error = excinfo.value
     assert error.names == ["lipid IV_A", "lipid IV A"]
@@ -312,7 +322,8 @@ def test_new_acceptance_distinct_rows_keep_their_key_numbering() -> None:
     ]
     report = _new_report()
     out, by_norm = _dedupe_named_rows(rows, key_prefix="cmp", report=report,
-                                      pointer_prefix="/entities/compounds")
+                                      pointer_prefix="/entities/compounds",
+                                      refuse_duplicates=True)
 
     assert [row["key"] for row in out] == ["cmp_1", "cmp_2", "cmp_3"]
     assert [row["name"] for row in out] == ["alpha", "beta", "gamma"]
@@ -322,23 +333,24 @@ def test_new_acceptance_distinct_rows_keep_their_key_numbering() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Arm 6 -- R1: every caller, every bucket
+# Arm 6 -- R1 AS NARROWED: entity buckets refuse, component buckets warn
 # ---------------------------------------------------------------------------
 
-#: Both ``_dedupe_named_rows`` call sites: the four **component** buckets and the
-#: five **entity** buckets. One shared helper feeds both, and both feed a
-#: ``_norm``-keyed lookup carrying the identical silent-repoint mechanism --
-#: ``component_by_name`` and ``entity_by_name``. R1: the guard binds all nine.
-#: Scoping it to compounds would need a discriminator parameter and would knowingly
-#: leave the same hole in the other eight.
-ALL_BUCKETS = ["species", "subcellular_locations", "cell_types", "tissues",
-               "compounds", "proteins", "nucleic_acids", "element_collections",
-               "protein_complexes"]
+#: The **five entity buckets** -- ``ir.py``'s entity call site, which refuses. All
+#: five feed ``entity_by_name``, keyed on the same ``_norm`` the dedupe groups on,
+#: so all five carry the identical silent-repoint mechanism.
+ENTITY_BUCKETS_UNDER_TEST = ["compounds", "proteins", "nucleic_acids",
+                             "element_collections", "protein_complexes"]
+
+#: The **four component buckets** -- ``ir.py``'s component call site, which keeps
+#: its warning. See ``test_new_acceptance_component_buckets_still_warn``.
+COMPONENT_BUCKETS = ["species", "subcellular_locations", "cell_types", "tissues"]
 
 
-@pytest.mark.parametrize("bucket", ALL_BUCKETS)
-def test_new_acceptance_every_bucket_refuses(bucket: str) -> None:
-    """NEW ACCEPTANCE (arm 6). R1 -- every caller, every bucket, not compounds only."""
+@pytest.mark.parametrize("bucket", ENTITY_BUCKETS_UNDER_TEST)
+def test_new_acceptance_every_entity_bucket_refuses(bucket: str) -> None:
+    """NEW ACCEPTANCE (arm 6). R1 as narrowed: all five entity buckets, not
+    compounds only."""
     rows = [{"name": "Escherichia coli", "db_status": "unmatched"},
             {"name": "escherichia  coli", "db_status": "unmatched"}]
     payload = _payload([_compound("glycine")], {bucket: rows})
@@ -350,6 +362,45 @@ def test_new_acceptance_every_bucket_refuses(bucket: str) -> None:
     assert excinfo.value.norm_key == "escherichia coli"
     # ``_canonical`` collapses the whitespace run before the name is recorded.
     assert excinfo.value.names == ["Escherichia coli", "escherichia coli"]
+
+
+@pytest.mark.parametrize("bucket", COMPONENT_BUCKETS)
+def test_new_acceptance_component_buckets_still_warn(bucket: str) -> None:
+    """NEW ACCEPTANCE (arm 6, the other half). **The narrowed boundary, pinned.**
+
+    R1 as first issued bound the guard to *every* caller. That was wrong for the
+    component call site and the orchestrator **narrowed it on measurement**:
+    ``prefreeze_resolution._canonicalize_species_rows`` (``:1180-1197``)
+    deliberately converges a ``_norm`` group onto its leader **because this dedupe
+    collapses it**, and a row that stopped being a duplicate would become "a second
+    species in the IR that the exporter never emitted" -- inventing biology in the
+    exact direction that module exists to prevent. Converged rows share a
+    ``taxonomy_id``: **proven identity**, which D-035 permits, unlike F-039's
+    compound pair (coincident spelling over PathBank 40738 vs 40982).
+
+    **The residual is named here rather than left silent: F-046, owned by C-050j,
+    not this card.** A component collision the pre-freeze converger did *not*
+    create still drops first-wins on a warning, and ``component_by_name``
+    (``ir.py:995-1000``) is keyed on the same ``_norm``, so the same repoint
+    applies. Measured live exposure over all 32 committed legs and all nine buckets
+    is **zero**: the only collision in the corpus is F-039's, in an entity bucket.
+    """
+    payload = _payload([_compound("glycine")], {
+        bucket: [{"name": "Escherichia coli"}, {"name": "escherichia  coli"}]})
+
+    ir, report = _build(payload)
+
+    # It collapses, exactly as before this card, and says so at severity warning.
+    assert [row["name"] for row in ir[bucket]] == ["Escherichia coli"]
+    # Scoped to THIS code: the minimal payload legitimately raises unrelated
+    # ``biological_state_*`` errors, and asserting on the whole bucket would pin
+    # those by accident.
+    assert not [i for i in report["errors"] if i.get("code") == "duplicate_named_record"]
+    warned = [i for i in report["warnings"] if i.get("code") == "duplicate_named_record"]
+    assert len(warned) == 1
+    assert warned[0]["message"] == (
+        "Duplicate record for 'escherichia coli' ignored in PWML IR.")
+    assert warned[0]["pointer"] == f"/entities/{bucket}/1"
 
 
 # ---------------------------------------------------------------------------
