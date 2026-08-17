@@ -1,0 +1,137 @@
+{
+  "label": "chunkb-r1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming/docs/pwml_recovery_sprint/evidence/g11/pin/C-053/16-chunkb-r1.pin.json",
+    "-q",
+    "--basetemp=C:/t/c053/cb1",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py"
+  ],
+  "cwd": "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c053-pwml-naming",
+  "started_at": "2026-08-17T19:46:13+00:00",
+  "finished_at": "2026-08-17T19:46:39+00:00",
+  "duration_seconds": 25.916348600003403,
+  "timeout_seconds": 1500.0,
+  "root_pid": 1224088,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1224200,
+      "name": "python.exe",
+      "ppid": 1224088
+    },
+    {
+      "pid": 1222576,
+      "name": "python.exe",
+      "ppid": 1224476
+    },
+    {
+      "pid": 1224476,
+      "name": "python.exe",
+      "ppid": 1224200
+    },
+    {
+      "pid": 1222876,
+      "name": "python.exe",
+      "ppid": 1223384
+    },
+    {
+      "pid": 1223384,
+      "name": "python.exe",
+      "ppid": 1224200
+    },
+    {
+      "pid": 1224636,
+      "name": "python.exe",
+      "ppid": 1224200
+    },
+    {
+      "pid": 1224208,
+      "name": "python.exe",
+      "ppid": 1224636
+    },
+    {
+      "pid": 1219920,
+      "name": "python.exe",
+      "ppid": 1224200
+    },
+    {
+      "pid": 1222764,
+      "name": "python.exe",
+      "ppid": 1219920
+    }
+  ],
+  "descendants_terminated": [
+    1219920,
+    1222576,
+    1222764,
+    1222876,
+    1223384,
+    1224200,
+    1224208,
+    1224476,
+    1224636
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1192508,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1192616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1224172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1224664,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-053\\16-chunkb-r1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c053-pwml-naming",
+    "repo_head": "57be026a9f4ea367a66b9597629710e86365c7d3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

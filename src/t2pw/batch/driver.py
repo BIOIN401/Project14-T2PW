@@ -1514,7 +1514,14 @@ def _add_strict_artifacts(
     ir = pwml_result.get("pwml_ir")
     if isinstance(ir, dict) and ir:
         out["pwml_ir.json"] = _json_text(ir)
-    for key, name in (
+    # ``artifact_name``, NOT ``name``: this loop runs unconditionally and its
+    # target outlives it, so reusing ``name`` here silently overwrote the PWML
+    # filename this function returns with the last JSON report's filename, on
+    # every path. The bug had no live effect -- both callers re-derive the name --
+    # which is exactly why it survived: it was the one dimension of this seam
+    # nothing could observe. It is pinned now in
+    # ``tests/test_batch_pwml_artifact_naming.py``.
+    for key, artifact_name in (
         ("pwml_ir_report", "pwml_ir_report.json"),
         ("pwml_ir_validation", "pwml_ir_validation.json"),
         ("validation_report", "pwml_validation_report.json"),
@@ -1523,7 +1530,7 @@ def _add_strict_artifacts(
     ):
         value = pwml_result.get(key)
         if isinstance(value, dict) and value:
-            out[name] = _json_text(value)
+            out[artifact_name] = _json_text(value)
     # ``final_mapped.json`` is written by _add_identity_artifacts on the common
     # path, which runs on every branch including the failing ones. Re-emitting it
     # here would be a second writer for one filename with no second source.

@@ -10,8 +10,15 @@ SS13 reserves for ``release_ready``; ``RunOutcome.to_dict`` emits no
 ``release_status``, so the manifest cannot correct the impression either; and
 ``acceptance.py`` counts that leg as strict success from the filename alone, which
 is TRAP-1 live rather than hypothetical (``LEDGER.md``, C-041a). The tests below
-named ``test_correction_*`` assert the corrected behaviour and every one of them
-fails at ``8920371``.
+named ``test_correction_*`` assert the corrected behaviour. **Measured on a base
+worktree at ``8920371``: 6 of the 8 fail there.** The two that PASS at the base
+are ``test_correction_a_release_ready_leg_keeps_the_reserved_name`` and
+``test_correction_a_release_ready_leg_still_counts``, and they pass **by design**:
+they are the PRESERVATION arms of the correction, asserting that the reserved name
+and the strict-success count are narrowed rather than retired, so a tree where
+they failed would be a tree this card had broken. They are grouped with the
+correction because they are the same behaviour seen from its other side, not
+because a base failure is claimed for them.
 
 **NEW ACCEPTANCE -- new capability, no base failure is claimed.** "The pipeline
 passed and its classification is unavailable" is a state enumerated nowhere before
@@ -41,7 +48,7 @@ for _path in (ROOT / "src", ROOT / "tests"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from t2pw.batch import runner  # noqa: E402
+from t2pw.batch import driver, runner  # noqa: E402
 from t2pw.batch.driver import MODE_STRICT, STRICT  # noqa: E402
 from t2pw.bench.acceptance import score_run  # noqa: E402
 from t2pw.bench.goldset import load_gold_set  # noqa: E402
@@ -358,3 +365,73 @@ def test_new_an_unavailable_classification_cannot_inflate_strict_ok(
     assert strict.denominator == 1
     assert paper_id not in strict.numerator_names
     assert strict.numerator == 0
+
+
+# ---------------------------------------------------------------------------
+# The seam's own contract. NEW -- and NO base failure is offered for it.
+# ---------------------------------------------------------------------------
+def _direct_pwml(release: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """An export result exactly as the seam receives it in memory.
+
+    The five JSON reports are here on purpose. The loop that writes them runs
+    UNCONDITIONALLY, so a seam that reused that loop's target as its own return
+    variable would answer with the last of THEM instead of the PWML filename --
+    and including them is what makes the difference observable at all.
+    """
+
+    result: Dict[str, Any] = {
+        "ok": True,
+        "xml_bytes": b"<pathway><name>menaquinone</name></pathway>",
+        "pwml_ir": {"pathway": {"name": "menaquinone"}},
+        "pwml_ir_report": {"counts": {"reactions": 1}},
+        "pwml_ir_validation": {"ok": True},
+        "validation_report": {"issues": 0},
+        "qa": {"ok": True},
+        "required_gate_report": {"ok": True},
+    }
+    if release is not None:
+        result["quarantine_report"] = {"release": release}
+    return result
+
+
+def test_new_the_seam_returns_the_name_it_actually_wrote() -> None:
+    """**NEW, and deliberately NOT offered as a G9 base proof.**
+
+    ``_add_strict_artifacts`` gained a return value in this card; at the base it
+    returned ``None`` because there was no ``return`` statement. A test that
+    "fails at the base" only because a value did not exist yet is symbol absence
+    wearing a behavioural costume, and G9 says symbol absence is not proof. So
+    this is labelled for what it is: a contract THIS card introduces, pinned so
+    it cannot drift, not evidence that anything was corrected.
+
+    It exists because the return was the one dimension of the new seam that
+    nothing could observe -- both callers ignore or re-derive it -- and an
+    unobservable documented contract is a trap for the next card on this seam.
+    The name written and the name returned are asserted TOGETHER on every
+    disposition, so they cannot diverge again.
+    """
+
+    for release, expected in (
+        (_release("release_ready"), RELEASE_READY_NAME),
+        (_release("review_required"), REVIEW_REQUIRED_NAME),
+        (_release("diagnostic_only"), ""),
+        (_release("core_release_ready"), REVIEW_REQUIRED_NAME),
+        (None, REVIEW_REQUIRED_NAME),
+    ):
+        out: Dict[str, Any] = {}
+        returned = driver._add_strict_artifacts({}, _direct_pwml(release), out)
+        written = sorted(key for key in out if key.endswith(".pwml"))
+
+        assert returned == expected, (release, returned)
+        assert written == ([expected] if expected else []), (release, written)
+        # PRESERVATION: the JSON reports still land under their own names. The
+        # loop that writes them is what the return value collided with, so a fix
+        # that freed the return by breaking them would be no fix at all.
+        assert "pwml_ir.json" in out
+        assert "pwml_required_field_gate_report.json" in out
+        assert "pwml_validation_report.json" in out
+
+    # No XML: nothing is named and nothing is claimed to have been.
+    out = {}
+    assert driver._add_strict_artifacts({}, {"ok": True, "pwml_ir": {"a": 1}}, out) == ""
+    assert [key for key in out if key.endswith(".pwml")] == []
