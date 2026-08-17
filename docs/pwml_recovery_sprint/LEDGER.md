@@ -416,6 +416,31 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result
   does not invalidate the guard (charter §5).
 
+**Charters v2 written 2026-08-17, and the v1 charters are RETIRED.** All three scratchpad v1 charters
+(`C-052-charter.md`, `C-053-charter.md`, `C-056a-charter.md`) are **not to be implemented from**: each ended
+with unrecorded rulings, and re-derivation against live source found that **every one had a false
+load-bearing premise**. C-053's mandated a data source that **cannot execute** (a `str` subscripted as a
+dict). C-052's cited a table column headed ***"Not owned by"*** as proof of ownership, and its mandated EP3
+filename **collides with the CLI's own default**. C-056a's central *"BLOCKING"* finding is **measurably
+false** — a public wrapper exists and the file itself proves a function-local import does not move the pin.
+Between them, **five rulings were already discharged** while the charters still demanded them.
+
+Replacements, written from the committed rulings and validated against live source, in this session's
+scratchpad (`…\3a5a9d9e-0c1e-4421-9b7a-d913b20f0bdb\scratchpad\`):
+
+| Card | Charter v2 | Built from |
+|---|---|---|
+| C-053 | `C-053-charter-v2.md` | **D-038** + the C-053 rulings block (Q1–Q9) |
+| C-056a | `C-056a-charter-v2.md` | **D-037** + **D-039** |
+| C-052 | `C-052-charter-v2.md` | **D-040** |
+
+Each carries its own D-025 ceilings computed from its **ordered gates**, an explicit stop-condition list, and
+a named focused gate for the files that belong to **no chunk** (**F-049** — the gap that nearly cost C-050i
+its merge, and which has now bitten three cards).
+
+**C-053 DISPATCHED 2026-08-17** at base **`8920371`** (the tip including C-050i), branch
+`agent/p09-pwml-naming`, worktree `.claude/worktrees/agent-c053-pwml-naming`.
+
 **C-050i correction round 2, ruled 2026-08-17 on REV-050i. One BLOCKING regression; a narrow boundary
 extension granted.** The independent reviewer **REJECTED** `6605066` and earned it: it proved, in two trees
 differing only in `src/`, that `tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions`
