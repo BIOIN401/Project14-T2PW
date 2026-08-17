@@ -1,0 +1,150 @@
+{
+  "label": "c2-smoke",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p50i-dedupe-refusal/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p50i-dedupe-refusal/docs/pwml_recovery_sprint/evidence/g11/pin/C-050i/120-c2-smoke.pin.json",
+    "-q",
+    "--basetemp=C:/t/p50i/sm4",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50i-dedupe-refusal",
+  "started_at": "2026-08-17T18:35:05+00:00",
+  "finished_at": "2026-08-17T18:35:33+00:00",
+  "duration_seconds": 27.70458520000102,
+  "timeout_seconds": 1800.0,
+  "root_pid": 1180932,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1180944,
+      "name": "python.exe",
+      "ppid": 1180932
+    },
+    {
+      "pid": 1181520,
+      "name": "python.exe",
+      "ppid": 1180944
+    },
+    {
+      "pid": 1181540,
+      "name": "python.exe",
+      "ppid": 1181520
+    },
+    {
+      "pid": 1181560,
+      "name": "python.exe",
+      "ppid": 1180944
+    },
+    {
+      "pid": 1181580,
+      "name": "python.exe",
+      "ppid": 1181560
+    },
+    {
+      "pid": 1180796,
+      "name": "python.exe",
+      "ppid": 1180944
+    },
+    {
+      "pid": 1180852,
+      "name": "python.exe",
+      "ppid": 1180796
+    },
+    {
+      "pid": 1180920,
+      "name": "python.exe",
+      "ppid": 1180944
+    },
+    {
+      "pid": 1180992,
+      "name": "python.exe",
+      "ppid": 1180920
+    }
+  ],
+  "descendants_terminated": [
+    1180796,
+    1180852,
+    1180920,
+    1180944,
+    1180992,
+    1181520,
+    1181540,
+    1181560,
+    1181580
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1111996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1112264,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1174008,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1174864,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-p50i-dedupe-refusal/docs/pwml_recovery_sprint/evidence/g11/C-050i/120-c2-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50i-dedupe-refusal\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-p50i-dedupe-refusal",
+    "repo_head": "6605066353c8abb4ebba19d4adfdb284a95f5d8e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

@@ -123,8 +123,51 @@ CARRIER_POPULATIONS: Dict[str, List[Dict[str, Any]]] = {
         {"name": "Glycine", "pathbank_compound_id": 78},
         {"name": "Pyruvic acid", "pathbank_compound_id": 91},
     ],
+    #: ``mixed`` is the complement of ``all_legacy``: one row takes the legacy-id
+    #: branch and never reaches the resolver, the other carries only a KEGG id and
+    #: does. That MIXTURE is the property this population exists for, and it is
+    #: unchanged below.
+    #:
+    #: **FIXTURE DELTA, C-050i, 2026-08-17 — one row's identity, nothing else.**
+    #: The PathBank-carrying row was ``{"name": "Glycine", "pathbank_compound_id":
+    #: 78}``. The KEGG-carrying row is resolved by the offline name index, which
+    #: renames ``gly`` -> ``Glycine`` on **both** legs, so the population arrived at
+    #: ``build_pwml_ir`` holding **two rows named ``Glycine``** in the compounds
+    #: (entity) bucket. At the integration base the exporter silently collapsed them
+    #: first-wins -- this fixture was unknowingly exercising the exact post-freeze
+    #: defect **F-039** describes -- and C-050i now refuses it. The refusal is
+    #: correct; the collision was incidental to what this population is for.
+    #:
+    #: So the legacy row becomes ``Pyruvic acid`` / **91**, the pair ``all_legacy``
+    #: already uses and this file already proves. Nothing else moves: the KEGG row,
+    #: its identifier, the resolver branch each row takes, and every assertion in
+    #: every test are untouched. ``gly`` still resolves through the name index; the
+    #: legacy row still ``continue``s before the resolver is consulted.
+    #:
+    #: **D-032's carried-not-inferred argument survives — MEASURED, not asserted.**
+    #: The per-row ``db_status`` verdicts say which branch each row actually took:
+    #:
+    #:   population   reachable   names after pre-freeze     verdicts
+    #:   ----------   ---------   ----------------------     --------
+    #:   mixed (new)  True        Pyruvic acid, Glycine      legacy_id_unverified, matched
+    #:   mixed (new)  False       Pyruvic acid, Glycine      legacy_id_unverified,
+    #:                                                       matched_offline_name_index
+    #:   all_legacy   True/False  Glycine, Pyruvic acid      legacy_id_unverified x2
+    #:
+    #: Row 0 is ``legacy_id_unverified`` on **both** legs -- it never reached the
+    #: resolver -- while row 1's verdict **differs between the legs**. That is the
+    #: mixture, demonstrated by the branch each row took rather than by the shape of
+    #: the literal. The exporter still reported ``available`` **True** on the
+    #: reachable leg and **False** on the unreachable one for this population.
+    #:
+    #: The discriminating half of the argument lives in ``all_legacy`` and is
+    #: **untouched**: its rows hash byte-identical across the two legs (measured:
+    #: identical) while the exporter still reports the two different answers, which
+    #: only a carried value can do. Before this delta ``mixed`` proved nothing at
+    #: all on either leg -- the exporter refused both -- so the argument is strictly
+    #: better supported now than at the tip this corrects.
     "mixed": [
-        {"name": "Glycine", "pathbank_compound_id": 78},
+        {"name": "Pyruvic acid", "pathbank_compound_id": 91},
         {"name": "gly", "kegg_id": "C00037"},
     ],
 }

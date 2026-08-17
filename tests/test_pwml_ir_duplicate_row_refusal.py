@@ -456,12 +456,30 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
 
     1. **No escape.** A colliding ``name`` still refuses when the rows also carry
        aliases -- decorating a row cannot buy it past the guard.
-    2. **The honest boundary, named rather than left silent.** ``_dedupe_named_rows``
+    2. **The residual, described as it actually behaves.** ``_dedupe_named_rows``
        groups on ``name`` alone, so a row whose *alias* collides with another row's
-       *name* is **not** a dedupe collision and does **not** refuse. That is a
-       different class -- an ambiguous ``entity_by_name`` entry, resolved
-       last-writer-wins -- and this card does not own it. It is pinned here so the
-       residue is attributable instead of latent.
+       *name* is **not** a dedupe collision and does **not** refuse. The guard is
+       right not to fire: those two rows are genuinely distinct entities, and
+       refusing would itself be wrong.
+
+       **CORRECTED 2026-08-17 (REV-050i, F-048).** This docstring previously said
+       the overlap was "resolved last-writer-wins" and "pinned here so the residue
+       is attributable instead of latent". **Measured, every part of that was
+       wrong.** ``entity_by_name`` is a ``defaultdict(list)`` populated with
+       ``.append``, and ``resolve_entity``'s ``preferred_order`` loop **returns the
+       first matching candidate**, so:
+
+       * it is **payload row order** that wins, not the last writer;
+       * the early ``return`` happens *before* the ``ambiguous_entity_reference``
+         branch, so **no warning is emitted at all**;
+       * the residue is therefore **exactly as latent as before** -- not
+         attributable.
+
+       That is **F-048**, owned by **C-050k**, not by this card. It is the same
+       harm class this card exists to prevent -- a reference binding to a
+       biologically different row with no diagnostic -- reached through the
+       *aliases* surface rather than the *name* surface. It is pinned below in both
+       row orders so the claim is measured rather than described.
     """
 
     # 1 -- aliases present, names still collide: refuses.
@@ -472,11 +490,26 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
         ]))
     assert excinfo.value.norm_key == "lipid iv a"
 
-    # 2 -- alias-only overlap: distinct ``name`` keys, so no dedupe collision.
-    ir, report = _build(_payload([
-        _compound("glycine"),
-        _compound("serine", synonyms=["Glycine"]),
-    ]))
-    assert [row["name"] for row in ir["entities"]["compounds"]] == ["glycine", "serine"]
-    assert not any(i.get("code") == "duplicate_named_record"
-                   for i in report["errors"] + report["warnings"])
+    # 2 -- alias-only overlap: distinct ``name`` keys, so no dedupe collision, and
+    # the binding follows PAYLOAD ROW ORDER with no diagnostic. Both orders are
+    # exercised, because one order alone cannot tell "first wins" from "last wins".
+    serine = dict(_compound("serine"), synonyms=["Glycine"])
+    for rows, expected_bound in (
+        ([serine, _compound("glycine")], "serine"),
+        ([_compound("glycine"), serine], "glycine"),
+    ):
+        payload = _payload([dict(row) for row in rows])
+        payload["processes"]["reactions"] = [
+            {"name": "R1", "inputs": ["Glycine"], "outputs": []}]
+        ir, report = _build(payload)
+
+        assert not any(i.get("code") == "duplicate_named_record"
+                       for i in report["errors"] + report["warnings"])
+        # The reaction input 'Glycine' binds to whichever row came FIRST...
+        bound_key = ir["processes"]["reactions"][0]["left"][0]["entity_key"]
+        bound = next(r for r in ir["entities"]["compounds"] if r["key"] == bound_key)
+        assert bound_key == "cmp_1"
+        assert bound["name"] == expected_bound
+        # ...and F-048's sting: nothing anywhere says the reference was ambiguous.
+        assert not any(i.get("code") == "ambiguous_entity_reference"
+                       for i in report["errors"] + report["warnings"])

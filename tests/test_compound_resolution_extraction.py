@@ -410,14 +410,29 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: pre-freeze stops added or removed, 0 codes substituted.** See
 #: GOLDEN_IR_REFUSALS below.
 #:
-#: **Instrument note, recorded because it cost a diagnosis.** Do NOT read these
-#: digests by importing this module outside pytest: legs that BUILD an IR hash a
-#: report whose ``default=_nonjson`` fallback renders objects with ``repr``, and an
-#: out-of-pytest harness produced different digests for all 31 building legs at BOTH
-#: the base SHA and the tip. pytest is the authority. The one leg C-050i moved is
-#: unaffected by that hazard: after the move none of its five configurations builds
-#: an IR at all, so its digest is composed purely of configuration names and
-#: stop/refusal codes, and the harness and pytest agreed on it exactly.
+#: **Instrument note, recorded because it cost a diagnosis. F-047.** Do NOT read
+#: these digests by importing this module outside pytest. An out-of-pytest harness
+#: reported different digests for every IR-BUILDING leg -- and reported all 32 as
+#: moved at the **base SHA** as well as at the tip, which is how the perturbation
+#: was located in the instrument rather than in the code. **pytest is the
+#: authority**, and the operational rule is: measure under pytest, and if you must
+#: use another harness, measure the base with that same harness first.
+#:
+#: **The cause is UNKNOWN. Do not reason from a mechanism here.** This note first
+#: blamed the ``default=_nonjson`` / ``repr`` fallback in the ``json.dumps`` below.
+#: **REV-050i falsified that**: it instrumented ``_nonjson`` and the hook fires
+#: **zero times** on the leg it measured, while independently reproducing the
+#: divergence (out-of-pytest ``fc587e03…`` against pytest/``GOLDEN``
+#: ``64038a74…``). The phenomenon is confirmed and its mechanism is not identified.
+#: Recorded as an admitted unknown rather than quietly reworded, because an
+#: authoritative-sounding wrong mechanism is worse than none -- the next card would
+#: try to reason from it.
+#:
+#: The one leg C-050i moved is **immune** to the hazard and its digest is therefore
+#: safe: after the move none of its five configurations builds an IR at all, so its
+#: digest is composed purely of configuration names and stop/refusal codes. Both
+#: instruments agreed on it exactly, and REV-050i additionally hand-computed it from
+#: first principles and matched the committed value.
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
     # C-050h delta: f0dd12d5… -> e5a40385…, then the ONLY moved digest again under
