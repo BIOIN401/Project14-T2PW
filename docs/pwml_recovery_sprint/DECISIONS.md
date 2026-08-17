@@ -2155,3 +2155,124 @@ detection against the transcribed control flow.
 `raw_name` normalize alike appears twice under one `_norm`. Testing list length would raise a false
 ambiguity on one entity and report its `entity_type` twice. **The test is over distinct entity keys.** This
 defect is recorded by no finding and is not C-050k's to fix beyond not being fooled by it.
+
+---
+
+## D-042 — D-039 §4 is struck as measurably false; the wiring must pin its derivation and demote exactly one step · 2026-08-17 · LOCKED
+
+**This corrects a decision this orchestrator issued.** C-056a stopped at its mandatory §0 measurement rather
+than build against it, which is exactly what D-033 and the stop conditions exist to produce. An independent
+adversarial verifier — instructed to refute, defaulting to refuted — **confirmed** the refutation from its
+own probe and then found four things the implementer's framing had smoothed over. All five results are
+recorded here.
+
+### 1. D-039 §4's repair is STRUCK. §3 stands unchanged.
+
+§4 predicted the three-state reachability assertion at `tests/test_strict_quarantine_release_seam.py:684`
+breaks on wiring, because `_base()`'s reactions carry no source field, `_has_source` is False,
+`_check_source_carrier` emits findings, and the `RELEASE_READY` member demotes.
+
+**That mechanism cannot reach the gate §3 defines.** `semantic.py:91` declares
+`CHECK_SOURCE_CARRIER = "reaction_source_carrier_present"` as a constant **distinct** from all four gating
+names (`semantic.py:81`, `:97`, `:98`, `:99`), and `_has_source` is referenced at exactly **two** sites in
+`src/` — its definition (`semantic.py:454`) and inside `_check_source_carrier` (`semantic.py:498`). A check
+that does not gate cannot demote. **§3 and §4 were never simultaneously satisfiable**, and §3's own text
+gives the game away: it justifies excluding `CHECK_SOURCE_CARRIER` on the ground that *"it is exactly what
+breaks the reachability assertion in §4."*
+
+Measured, `_base()` under the metadata-fallback derivation: `requested_pathway_anchors_present` ok,
+`organism_compatible` ok, `no_real_id_or_name_conflict` ok, `no_rejected_rag_reaction_reintroduced`
+inapplicable, `reaction_source_carrier_present` **the only failure**. Across three members × five
+legitimate derivations, **no demotion under the closed four**.
+
+**Consequences, binding:**
+* **No `_sourced_base()`. No edit to `tests/test_strict_quarantine_release_seam.py` at all.** The
+  three-state set stays whole with no change — strictly better than §4's own goal.
+* **The mandatory diff labels reduce from three to two:** `# NEW ACCEPTANCE …` and
+  `# REGRESSION GUARD (passes at base and tip) — not a G9 proof`. The label
+  `# MERGE RULE 4 BASELINE MOVE — release_seam three-state set, exact delta documented` is **forbidden**:
+  emitting it for a baseline that does not move is a fabricated delta, the precise failure G9 and D-033
+  exist to prevent.
+* **The obligation §4 was reaching for survives in a stronger form.** The card must *verify by measurement*
+  that all three states remain reachable at its tip, and if any gating check does demote a member, §4's
+  repair returns and the card stops for a fresh ruling.
+
+### 2. The wiring MUST pin its request derivation, and a test must lock it
+
+The verifier's decisive caveat: **the survival is a property of the derivation, not of the payload.** Under
+the most literal wiring (`pathway_context=None` on the `RELEASE_READY` member) `CHECK_ANCHORS` and
+`CHECK_ORGANISM` are `not_evaluated` — the assertion survives by *skipping*, not by passing. Under an
+adversarial sixth derivation (`metadata.pathway_subject`, a PathWhiz **category** rather than a pathway
+name) `CHECK_ANCHORS` fails on all three members and `_base` **does** demote.
+
+`pathway_subject` is not a legitimate derivation, so this is not a defect — but it proves the diff cannot
+leave the derivation implicit. **The diff pins exactly one derivation, names it in an in-line comment, and
+carries a test that locks it.** `entity_admission.pathway_context_from_stage_zero` is the codebase's
+single-sourced derivation (`pathway_name` / `likely_organism`|`organism`) and is already `t2pw.pipeline`,
+so it needs no cross-layer import; prefer it and justify any departure.
+
+### 3. Demotion is exactly ONE step, and it is a cap, never a move
+
+D-039 left the demotion **depth** unspecified. Settled here:
+
+**A failing gating semantic check caps the release status at `REVIEW_REQUIRED`. It never produces
+`DIAGNOSTIC_ONLY`, and it never moves a status that is already `REVIEW_REQUIRED` or `DIAGNOSTIC_ONLY`.**
+
+* `PRODUCT_CONTRACT` §13 defines `review_required` as *"valid, needs review"* — exactly the state of a
+  pathway whose semantics did not confirm. **Merge rule 7** preserves incomplete-but-correct work rather
+  than dropping it; `diagnostic_only` would drop it.
+* Measured: `tests/test_strict_quarantine_release_seam.py:566` and `:579` both survive a
+  `release_ready → review_required` demotion, and **`:579` breaks under a `diagnostic_only` demotion.**
+  The cap is what keeps the existing suite honest without weakening it.
+* A cap is monotone, so the change can only ever **remove** strict successes, never create one — consistent
+  with D-039 §3's closing sentence and with *no new strict success without measured evidence*.
+
+### 4. Three of the four gating checks are conditionally or structurally unevaluable at this seam. Say so.
+
+**`CHECK_RAG_REINTRODUCTION` is structurally unevaluable here today.** `quarantine_and_close`
+(`strict_quarantine.py:1793-1804`) has **no** `admission` parameter and `strict_quarantine.py` contains
+**zero** `rag_admission` / `admission_report` references. `CHECK_ANCHORS` and `CHECK_ORGANISM` evaluate only
+under a derivation that supplies them. So wired at `:2080` today, the gate reduces in practice to
+**`CHECK_ID_CONFLICT`** as the only unconditionally evaluable member.
+
+**This is contract-compliant and the card still ships.** `PRODUCT_CONTRACT` §11 requires semantic checks to
+affect the runtime `release_status`, which they now do; it also mandates that `not_evaluated` is never
+`false` and produces no status change, which is precisely what the unevaluable checks do — verified live:
+`semantic_production.py:59-63` returns `ok=True` with an inapplicable reason, which lands in neither
+`failed_checks` nor any applicability-filtered gate.
+
+**But it must not be reported as four live gates.** The card states the measured evaluability of each of the
+four in its report and in a test. **The gating set remains closed at four** — a check being currently
+inapplicable does not remove it from the set. **Giving `quarantine_and_close` an `admission` parameter is
+NOT granted to C-056a**; it is a signature change on a seam C-057 also touches, and it needs its own card.
+
+### 5. Organism exposure is measured at zero, so C-056a demotes nothing
+
+Across 16 committed run directories (145 legs, **32 with a `final_mapped.json`**): requested organisms are
+`Escherichia coli` ×16, `Homo sapiens` ×13, `""` ×3. **Exactly ONE process row in the entire corpus carries
+an observed organism** — `runs_verify/2026-08-04_1207/papers/PMC12452463/strict` `/processes/reactions/4`,
+`Escherichia coli` against requested `Escherichia coli`, `compare_organism` → `match`, no finding.
+
+**Legs failing `CHECK_ORGANISM` today: 0 / 32. After the §2 widening: 0 / 32. Committed legs newly demoted
+by gating on `CHECK_ORGANISM`: zero.** C-056a may proceed.
+
+**The reason is structural, and it falsifies a live comment.** `propagate_context_organism`
+(`pipeline.py:2391-2424`) writes organism onto `entities.species`, `entities.proteins` and
+`biological_states` — **never onto `processes` rows**, and nothing else does. The rationale at
+`semantic_production.py:132-133` claiming *"`pipeline.propagate_context_organism` fills it later"* is
+**factually wrong for reactions**. Registered as a finding; correcting the comment is not C-056a's.
+
+### 6. Two hazards registered, neither blocking C-056a
+
+* **The human abbreviation stays broken.** `eligibility._canonical_organism("H. sapiens")` returns `""`
+  while `("E. coli")` returns `"Escherichia coli"`; the human alias set carries no abbreviated binomial. So
+  the widening clears `E. coli` and `S. cerevisiae` and **leaves `Homo sapiens` / `H. sapiens` a finding** —
+  for the second-most-requested organism in the corpus. Zero process rows carry it today, so nothing
+  demotes; it becomes live the moment an extraction stage stamps organisms on reactions. **A0-C3's mandated
+  "abbreviation" assertion must be written in this measured form — the naive "all abbreviations match" is
+  false and would fail.** `rag/admission.py` and `rag/eligibility.py` remain **import-only**; fixing the
+  alias set is not C-056a's.
+* **Do not extend `CHECK_ORGANISM` to entity rows.** 8 Arabidopsis protein rows across the corpus are the
+  PathBank `Unknown` sentinel (`pathbank_protein_id: 9659`, `identity_status: "placeholder"`) — exactly the
+  rows `semantic_production.py:113-121` deliberately excludes. Extending the check there would newly fail
+  **7 of 32 legs on a sentinel**: a merge-rule-6 violation. Recorded for C-056b.
