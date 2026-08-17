@@ -2001,7 +2001,11 @@ def quarantine_and_close(
     # Function-local for the same reason ``evaluate_core_coverage``'s is: this
     # module is imported by the pipeline at large and the classification
     # vocabulary is needed at this seam only.
-    from t2pw.pipeline.release_status import classify_release_status, coverage_verdict
+    from t2pw.pipeline.release_status import (
+        classify_release_status,
+        coverage_verdict,
+        semantic_verdict,
+    )
 
     coverage_reasons = [
         f"minimum_core:{reason}" for reason in _safe_list(coverage.get("reasons"))
@@ -2077,6 +2081,54 @@ def quarantine_and_close(
         expansion_blocked_parts.append(
             "no further supported content remained at the freeze seam"
         )
+    # ── Semantic evaluation reaches the runtime release_status ───────────────
+    # PRODUCT_CONTRACT 11: "Semantic checks must affect the runtime
+    # ``release_status``. Wiring them only into benchmark denominators is
+    # insufficient." Until here nothing in ``src/`` produced ``SEMANTIC_FAILED``
+    # and ``semantic_evaluation`` was hardcoded, so a run could ship
+    # ``release_ready`` having never been semantically evaluated at all.
+    #
+    # LAYERING INVERSION, authorized narrowly by D-039 section 6 and NOT to be
+    # "fixed" by restructuring packages. This is the FIRST ``t2pw.pipeline`` ->
+    # ``t2pw.bench`` import in the codebase (measured: zero before it) and it
+    # inverts the layering ``bench/__init__.py`` declares, where bench sits above
+    # every layer and may import anything. It is authorized because the semantic
+    # vocabulary is needed at THIS seam only, and it is function-local for exactly
+    # the reason the ``release_status`` import above it is. It is not a cycle: the
+    # forward chain was traced and nothing under ``bench/`` or ``rag/`` imports
+    # ``strict_quarantine``.
+    from t2pw.bench.semantic_production import evaluate_production_semantics
+
+    # PINNED DERIVATION (D-042 section 2). The request is read through
+    # ``entity_admission.pathway_context_from_stage_zero`` and through nothing
+    # else. This matters more than it looks: the semantic verdict is a property of
+    # HOW the request is derived, not only of the payload. That factory is the
+    # codebase's single-sourced derivation (``pathway_name`` /
+    # ``likely_organism``|``organism``), it is already ``t2pw.pipeline`` so it
+    # costs no cross-layer import, and reusing it is what stops this seam, the
+    # eligibility screen and the admission gate reading the same run's request
+    # three different ways. ``metadata.pathway_subject`` is NOT a legitimate
+    # source -- it is a PathWhiz CATEGORY ("Metabolic"), not a pathway name, and
+    # deriving anchors from it fails CHECK_ANCHORS on essentially every payload.
+    # ``tests/test_semantic_release_gating.py`` locks this choice.
+    from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
+
+    requested = pathway_context_from_stage_zero(pathway_context)
+    # ``working`` is the reduced strict graph and is already final here -- the same
+    # object the coverage verdict above was computed from -- so the semantic
+    # verdict and the coverage verdict describe one graph, never two. No
+    # ``admission`` report exists at this seam (D-042 section 4), so
+    # CHECK_RAG_REINTRODUCTION is structurally inapplicable and reports itself as
+    # not evaluated rather than as a pass.
+    semantic_report = evaluate_production_semantics(
+        working,
+        requested_pathway=requested.requested_pathway,
+        requested_organism=requested.organism,
+        mode=coerce_mode(mode),
+        min_connected_reactions=min_core_processes,
+    )
+    semantic_state, semantic_reason, semantic_failed = semantic_verdict(semantic_report)
+
     release = classify_release_status(
         coverage,
         pipeline_executed=True,
@@ -2086,6 +2138,9 @@ def quarantine_and_close(
         serializable_without_invention=not unexportable,
         retrieval_attempts=retrieval_rows,
         expansion_blocked_reason="; ".join(expansion_blocked_parts),
+        semantic_evaluation=semantic_state,
+        semantic_not_evaluated_reason=semantic_reason,
+        semantic_failed_checks=semantic_failed,
     )
 
     # ── Research mode: decide, then apply nothing ────────────────────────────

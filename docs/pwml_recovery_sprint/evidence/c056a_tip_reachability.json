@@ -1,0 +1,55 @@
+{
+  "all_three_states_reachable": true,
+  "any_member_demoted_by_semantics": false,
+  "evaluability_at_this_seam": {
+    "no_real_id_or_name_conflict": "unconditional -- the only always-evaluable member at this seam",
+    "no_rejected_rag_reaction_reintroduced": "structurally unevaluable -- quarantine_and_close takes no admission parameter; granting one is NOT C-056a's (D-042 section 4)",
+    "organism_compatible": "conditional -- evaluable only when the pinned derivation supplies an organism",
+    "requested_pathway_anchors_present": "conditional -- evaluable only when the pinned derivation supplies a pathway_name"
+  },
+  "gating_set": [
+    "requested_pathway_anchors_present",
+    "organism_compatible",
+    "no_real_id_or_name_conflict",
+    "no_rejected_rag_reaction_reintroduced"
+  ],
+  "gating_set_size": 4,
+  "members": [
+    {
+      "member": "_base",
+      "reasons": [],
+      "semantic_evaluation": "passed",
+      "semantic_not_evaluated_reason": "",
+      "status_at_tip": "release_ready",
+      "strict_acceptance_eligible": true
+    },
+    {
+      "member": "_reference_payload",
+      "reasons": [
+        "requested_core_coverage_below_minimum:0.167<0.500"
+      ],
+      "semantic_evaluation": "passed",
+      "semantic_not_evaluated_reason": "",
+      "status_at_tip": "review_required",
+      "strict_acceptance_eligible": false
+    },
+    {
+      "member": "_unexportable_payload",
+      "reasons": [
+        "serialization_would_require_invention"
+      ],
+      "semantic_evaluation": "passed",
+      "semantic_not_evaluated_reason": "",
+      "status_at_tip": "diagnostic_only",
+      "strict_acceptance_eligible": false
+    }
+  ],
+  "purpose": "D-042 section 1: all three states still reachable at the tip",
+  "states_reachable": [
+    "diagnostic_only",
+    "release_ready",
+    "review_required"
+  ],
+  "t2pw_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\src\\t2pw\\__init__.py",
+  "task": "C-056a"
+}
