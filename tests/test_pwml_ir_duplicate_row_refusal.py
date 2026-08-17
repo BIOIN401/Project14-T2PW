@@ -275,7 +275,25 @@ R3_CONTROL_LEG = ("runs/2026-07-27_1623/papers/"
                   "PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/"
                   "final_mapped.json")
 R3_BASE_IR_DIGEST = "32bf7893e62fcb8ac5799cbf7d910a8076ff51ca63693f66262c9f1f7b1b8dc2"
-R3_BASE_REPORT_DIGEST = "476e41daeb97aa593f8b4141ac3ba21879972440799d2a921fc5a0677a3ae19a"
+#: MOVED ONCE, DELIBERATELY, by **C-050k** on 2026-08-17 under permanent **merge rule 4**:
+#: ``476e41daeb97…`` -> ``026c8a8e6b69…``. **The IR digest above did NOT move**, which is
+#: the property this control exists to hold: no key was renumbered and no reference was
+#: rebound. What moved is the *report*, and the delta is exactly two added warnings --
+#: enumerated and asserted in the test below rather than described, so re-pinning the
+#: hash cannot hide anything else moving with it.
+#:
+#: Measured base-vs-tip with the **same harness on both trees** (F-047), the base being a
+#: real git worktree at ``15f36b4``:
+#: ``probe_c050k_alias_ambiguity.py --mode g9``, artifacts ``g11/C-050k/07-g9-base.json``
+#: and ``08-g9-tip.json``. ``errors`` is empty on both sides and ``report["ok"]`` is
+#: ``True`` on both sides -- D-041 section 2 limit 3 holds: no leg changes whether it
+#: exports.
+#:
+#: This leg is "non-colliding" only for ``_dedupe_named_rows``, which groups on
+#: ``_norm(name)``. It carries a real ALIAS collision -- ``{"name": "1,4-dihydroxy-2-
+#: naphthoic acid", "synonyms": ["DHNA"]}`` against a bare ``{"name": "DHNA"}`` -- which
+#: is precisely why C-050k exists and why this control is where the delta surfaces.
+R3_BASE_REPORT_DIGEST = "026c8a8e6b69932ef78071186acf316fa3a4939c7f201980aa97b8020516e787"
 
 
 class _DownDb:
@@ -291,7 +309,14 @@ def test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base() -> N
     Deleting the dedupe was rejected because ``record["key"] =
     f"{key_prefix}_{len(out) + 1}"`` would renumber every IR key and move goldens.
     This pins that promoting the collision branch renumbers nothing: over a real leg
-    the whole IR and the whole report hash to what the base produced.
+    the whole IR hashes to what the base produced.
+
+    **AMENDED 2026-08-17 by C-050k (merge rule 4).** The **IR** half is unchanged and
+    stays the load-bearing claim -- ``R3_BASE_IR_DIGEST`` did not move, so nothing was
+    renumbered and no reference was rebound. The **report** half moved once, by exactly
+    two added ``ambiguous_entity_row_reference`` warnings, because this leg carries an
+    *alias* collision that ``_dedupe_named_rows`` cannot see. ``errors`` and
+    ``report["ok"]`` did not move. See ``R3_BASE_REPORT_DIGEST`` for the derivation.
     """
 
     path = ROOT / R3_CONTROL_LEG
@@ -304,6 +329,23 @@ def test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base() -> N
     assert hashlib.sha256(
         json.dumps(ir, sort_keys=True, indent=1, default=repr).encode()
     ).hexdigest() == R3_BASE_IR_DIGEST, "the non-colliding IR moved"
+    # C-050k, merge rule 4. The report digest moved ONCE and the whole of the move is
+    # enumerated here first, so a second, unrelated drift cannot ride in on the re-pin.
+    assert [i.get("code") for i in report["errors"]] == []
+    assert report["ok"] is True
+    assert [i.get("code") for i in report["warnings"]] == [
+        "component_inferred_from_biological_state",
+        "ambiguous_entity_row_reference",
+        "ambiguous_entity_row_reference",
+        "noncanonical_names_collision_risk",
+    ], "only the two C-050k warnings may be added, and nothing may be reordered"
+    assert [(i["name"], i["pointer"], i["entity_keys"], i["bound_entity_key"])
+            for i in report["warnings"]
+            if i["code"] == "ambiguous_entity_row_reference"] == [
+        ("DHNA", "/element_locations/compound_locations/8/compound",
+         ["cmp_5", "cmp_9"], "cmp_5"),
+        ("DHNA", "/processes/reactions/6/outputs/0", ["cmp_5", "cmp_9"], "cmp_5"),
+    ]
     assert hashlib.sha256(
         json.dumps(report, sort_keys=True, indent=1, default=repr).encode()
     ).hexdigest() == R3_BASE_REPORT_DIGEST, "the non-colliding report moved"
@@ -480,6 +522,27 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
        biologically different row with no diagnostic -- reached through the
        *aliases* surface rather than the *name* surface. It is pinned below in both
        row orders so the claim is measured rather than described.
+
+       **SUPERSEDED IN PART 2026-08-17 by C-050k (D-041 (a), D-043).** The third
+       bullet above -- "the residue is exactly as latent as before, not
+       attributable" -- **no longer holds, and that is the point of C-050k.**
+       ``resolve_entity`` now records the row-level ambiguity before it returns, so
+       the choice is traceable (``PRODUCT_CONTRACT`` section 3, which D-043 section 2
+       identifies as the violation actually at issue). The first two bullets stand
+       exactly as measured.
+
+       **Merge rule 4 delta, stated exactly.** Nothing here was deleted, relaxed or
+       re-baselined. The binding assertions are **untouched**: both row orders still
+       bind ``cmp_1``, because D-043 section 4 keeps payload row order authoritative
+       and forbids the exporter rebinding anything post-freeze. The
+       ``ambiguous_entity_reference`` absence assertion is **also untouched and still
+       green** -- both rows are compounds, so "matched multiple entity TYPES" was
+       never true of them, and D-043 section 4 forbids folding the row-level class
+       into that code. What moves is that **three assertions are added**: the new
+       ``ambiguous_entity_row_reference`` issue exists, names **both** candidate
+       keys, and records which row was bound. At base ``15f36b4`` that list is
+       empty, which is C-050k's G9 base-SHA behavioural failure -- a **correction**
+       of pre-existing observable behaviour, not new functionality.
     """
 
     # 1 -- aliases present, names still collide: refuses.
@@ -510,6 +573,15 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
         bound = next(r for r in ir["entities"]["compounds"] if r["key"] == bound_key)
         assert bound_key == "cmp_1"
         assert bound["name"] == expected_bound
-        # ...and F-048's sting: nothing anywhere says the reference was ambiguous.
+        # F-048's sting, half of which C-050k CORRECTS (D-043). The TYPE-based code
+        # still does not fire, and must not: these two rows are both compounds, so
+        # "matched multiple entity types" was never true of them.
         assert not any(i.get("code") == "ambiguous_entity_reference"
                        for i in report["errors"] + report["warnings"])
+        # ...but the residue is no longer latent. THIS IS THE MERGE RULE 4 DELTA:
+        # three added assertions, nothing deleted or weakened. Empty at base.
+        row_issues = [i for i in report["errors"] + report["warnings"]
+                      if i.get("code") == "ambiguous_entity_row_reference"]
+        assert len(row_issues) == 1, row_issues
+        assert sorted(row_issues[0]["entity_keys"]) == ["cmp_1", "cmp_2"]
+        assert row_issues[0]["bound_entity_key"] == "cmp_1"

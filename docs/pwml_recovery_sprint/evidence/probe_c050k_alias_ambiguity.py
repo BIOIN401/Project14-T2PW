@@ -1,11 +1,18 @@
 """C-050k: the alias-index ambiguity census (F-048), and the base-vs-tip differential.
 
-**G9 labelling, up front.** C-050k is a **new capability** under **D-041** ruling (a):
-``ir.resolve_entity`` gains a diagnostic it never had and **changes no binding**. It
-therefore carries an explicitly labelled new acceptance suite and **no base-SHA
-behavioural failure is claimed, and none is fabricated here**. ``--mode differential``
-is *differential evidence* -- the same fixture through two real implementations -- and
-is **not** a G9 regression proof. Read it as "what moved", never as "what broke".
+**G9 labelling, up front. CORRECTED 2026-08-17 by D-043 -- read this before the rest.**
+This file was written before the census ran, and labelled C-050k a *new capability*. The
+census falsified that: **61 live ``resolve_entity`` consultations through an ambiguous
+alias key, across 8 legs, with the diagnostic empty on all 8.** There is pre-existing
+observable behaviour here and it is wrong, so under **D-043 section 4** C-050k is a
+**CORRECTION**, carries a genuine base-SHA behavioural failure, and must not be presented
+as new functionality. ``--mode g9`` is that proof and **exits 1 where the diagnostic is
+absent**, so it fails at the base SHA and passes at the tip.
+
+``--mode differential`` remains what its name says -- *differential evidence*, the same
+fixture through two real implementations, "what moved" and never "what broke". The
+committed ``c050k_differential_base.json`` was produced under the old labelling and is
+still valid as differential evidence; it is simply not the G9 proof.
 
 ``--mode census``  (charter section 2 / D-041 section 3)
     **Exposure was UNMEASURED before this probe ran.** C-050i's and REV-050i's censuses
@@ -32,9 +39,12 @@ is **not** a G9 regression proof. Read it as "what moved", never as "what broke"
        Counted here so the number is on the record, and excluded from (1) by
        construction.
 
-    **If (2) is non-zero on any committed leg the card STOPS**: a live process reference
-    bound to a possibly-wrong molecule is a ``product_contract_violation`` candidate
-    under ``PRODUCT_CONTRACT`` section 14 whose disposition is a product ruling.
+    **(2) was non-zero and the card DID stop**, at tip ``dd5da13``. A ``pwml-bio-auditor``
+    then adjudicated all 20 same-type bindings against the committed frozen payloads and
+    **D-043** ruled every one of them biologically **correct**: no
+    ``product_contract_violation``. The violation is the **missing diagnostic** --
+    ``PRODUCT_CONTRACT`` section 3 traceability -- so the obligation is to record the
+    choice, not to have been lucky.
 
 ``--mode differential``
     F-048's decoy -- rows ``[serine (synonym "Glycine"), glycine]`` and a reaction input
@@ -54,7 +64,7 @@ read off the live frame. ``_norm`` / ``_canonical`` are **imported, never reimpl
 
 Usage::
 
-    <python> probe_c050k_alias_ambiguity.py --mode census|differential --tree <dir>
+    <python> probe_c050k_alias_ambiguity.py --mode census|differential|g9 --tree <dir>
              [--fixtures <dir>] [--pin-verdict <json>] [--dotenv <path>] --out <json>
 """
 
@@ -64,6 +74,7 @@ import argparse
 import collections
 import contextlib
 import copy
+import hashlib
 import json
 import os
 import sys
@@ -330,6 +341,22 @@ def _decoy_payload(order: str) -> Dict[str, Any]:
     }
 
 
+def _auditor_payload(order: str) -> Dict[str, Any]:
+    """The regression fixture ``pwml-bio-auditor`` specified in **D-043**, transcribed
+    exactly from the real ``PMC12312563/strict`` collision and DB-free."""
+
+    naphthoate = {"name": "1,4-dihydroxy-2-naphthoic acid", "synonyms": ["DHNA"],
+                  "pathbank_compound_id": 40747, "db_status": "unmatched"}
+    dhna = {"name": "DHNA", "db_status": "unmatched"}
+    rows = [naphthoate, dhna] if order == "naphthoate_first" else [dhna, naphthoate]
+    return {
+        "metadata": {"pathway_name": "P", "pathway_subject": "Metabolic"},
+        "entities": {"compounds": copy.deepcopy(rows), "proteins": []},
+        "processes": {"reactions": [
+            {"name": "R1", "inputs": ["DHNA-CoA"], "outputs": ["DHNA"]}]},
+    }
+
+
 def _control_payload() -> Dict[str, Any]:
     """One row, no overlap: the diagnostic must stay silent and nothing may move."""
 
@@ -367,7 +394,9 @@ def _differential_arm(ir_mod: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
             return arm
     arm["status"] = "BUILT"
     arm["report_ok"] = report["ok"]
-    left = ir["processes"]["reactions"][0].get("left") or []
+    reaction = ir["processes"]["reactions"][0]
+    # ``left`` for an inputs-side fixture, ``right`` for the auditor's outputs-side one.
+    left = (reaction.get("left") or []) or (reaction.get("right") or [])
     if left:
         bound_key = left[0]["entity_key"]
         bound = next(row for row in ir["entities"]["compounds"] if row["key"] == bound_key)
@@ -378,6 +407,13 @@ def _differential_arm(ir_mod: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
     arm["ambiguous_entity_reference"] = [
         issue for bucket in ("errors", "warnings") for issue in report.get(bucket, [])
         if issue.get("code") == "ambiguous_entity_reference"]
+    # C-050k's own code, kept SEPARATE from the type-based one above (D-043 section 4).
+    arm["ambiguous_entity_row_reference"] = [
+        issue for bucket in ("errors", "warnings") for issue in report.get(bucket, [])
+        if issue.get("code") == "ambiguous_entity_row_reference"]
+    arm["row_reference_severity"] = ("error" if any(
+        i.get("code") == "ambiguous_entity_row_reference" for i in report.get("errors", []))
+        else "warning" if arm["ambiguous_entity_row_reference"] else "none")
     arm["ambiguous_severity"] = ("error" if any(
         i.get("code") == "ambiguous_entity_reference" for i in report.get("errors", []))
         else "warning" if arm["ambiguous_entity_reference"] else "none")
@@ -387,6 +423,98 @@ def _differential_arm(ir_mod: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
     if index is not None:
         arm["index"] = _analyse(ir_mod, index)
     return arm
+
+
+#: C-050i's R3 control -- "non-colliding" for ``_dedupe_named_rows``, which groups on
+#: ``_norm(name)``, and therefore exactly the leg that shows the alias surface is a
+#: different surface: the census found the ``dhna`` ambiguity on it.
+R3_CONTROL_LEG = ("runs/2026-07-27_1623/papers/"
+                  "PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/"
+                  "final_mapped.json")
+
+
+def _r3_control(ir_mod: Any, fixtures: Path) -> Dict[str, Any]:
+    """The R3 control leg under golden configuration B, digested and itemised."""
+
+    from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
+
+    class _DownDb:
+        last_error = "harvest_db_down"
+
+        def available(self) -> bool:
+            return False
+
+    staged = json.loads((fixtures / R3_CONTROL_LEG).read_text(encoding="utf-8"))
+    run_prefreeze_resolution(staged, strict_db=True, db_resolver=_DownDb(), name_index=None)
+    ir, report = ir_mod.build_pwml_ir(staged, db_resolver=_DownDb(), strict_db=True,
+                                      name_index=None)
+    return {
+        "ir_digest": hashlib.sha256(
+            json.dumps(ir, sort_keys=True, indent=1, default=repr).encode()).hexdigest(),
+        "report_digest": hashlib.sha256(
+            json.dumps(report, sort_keys=True, indent=1, default=repr).encode()).hexdigest(),
+        "report_ok": report["ok"],
+        "error_codes": [i.get("code") for i in report.get("errors", [])],
+        "warning_codes": [i.get("code") for i in report.get("warnings", [])],
+        "row_reference_issues": [i for i in report.get("warnings", [])
+                                 if i.get("code") == "ambiguous_entity_row_reference"],
+    }
+
+
+def _mode_g9(tree: Path, fixtures: Path) -> Dict[str, Any]:
+    """**The G9 proof, and it is a CORRECTION, not new functionality** (D-043 section 4).
+
+    ``main`` returns **exit 1** when the row-level diagnostic is missing on the
+    auditor's fixture, so this fails *behaviourally* in a real git worktree at the base
+    SHA and passes at the tip. The base failure is not fabricated and is not a symbol
+    check: the base runs the same fixture through the same real ``build_pwml_ir`` and
+    silently binds a row while recording nothing, which is the ``PRODUCT_CONTRACT``
+    section 3 violation D-043 section 2 names.
+
+    Three claims, all of which must hold at the tip:
+
+    1. **fires** on the auditor's fixture, naming both candidate keys;
+    2. **binding unchanged** -- ``cmp_1`` in both payload row orders;
+    3. **silent** on one entity occupying several alias slots (D-041 section 5's 209
+       false positives). Claim 3 is what stops claim 1 being satisfied by a diagnostic
+       that fires on everything.
+    """
+
+    from t2pw.pwml import ir as ir_mod
+
+    out: Dict[str, Any] = {"t2pw_file": ir_mod.__file__,
+                           "label": "G9 CORRECTION PROOF: exits 1 where the diagnostic is absent"}
+    arms = {
+        "auditor_fixture_naphthoate_first": _differential_arm(
+            ir_mod, _auditor_payload("naphthoate_first")),
+        "auditor_fixture_reversed": _differential_arm(
+            ir_mod, _auditor_payload("dhna_first")),
+        "control_slot_duplicate_single_entity": _differential_arm(
+            ir_mod, _slot_duplicate_payload()),
+        "control_single_row": _differential_arm(ir_mod, _control_payload()),
+    }
+    out["arms"] = arms
+    fires = [name for name in ("auditor_fixture_naphthoate_first", "auditor_fixture_reversed")
+             if arms[name].get("ambiguous_entity_row_reference")]
+    silent = [name for name in ("control_slot_duplicate_single_entity", "control_single_row")
+              if not arms[name].get("ambiguous_entity_row_reference")]
+    bindings = {name: arms[name].get("bound_entity_key") for name in arms}
+    out["claim_1_fires_on_ambiguity"] = len(fires) == 2
+    out["claim_2_binding_unchanged"] = all(key == "cmp_1" for key in bindings.values())
+    out["claim_3_silent_on_slot_duplication"] = len(silent) == 2
+    out["severities"] = {name: arms[name].get("row_reference_severity") for name in arms}
+    out["claim_4_severity_is_warning_only"] = all(
+        value in ("warning", "none") for value in out["severities"].values())
+    out["bindings"] = bindings
+    # The merge rule 4 delta, captured with the SAME harness on BOTH trees, which is
+    # what F-047 requires of any harness that is not pytest. Configuration B
+    # (DB down, no index, strict) is exactly what the R3 control test runs.
+    out["r3_control_leg"] = _r3_control(ir_mod, fixtures)
+    out["verdict"] = "PASS" if all(
+        out[key] for key in ("claim_1_fires_on_ambiguity", "claim_2_binding_unchanged",
+                             "claim_3_silent_on_slot_duplication",
+                             "claim_4_severity_is_warning_only")) else "FAIL"
+    return out
 
 
 def _mode_differential(tree: Path, fixtures: Path) -> Dict[str, Any]:
@@ -410,7 +538,7 @@ def evidence_dir() -> Path:
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="C-050k alias-ambiguity probe")
-    parser.add_argument("--mode", required=True, choices=("census", "differential"))
+    parser.add_argument("--mode", required=True, choices=("census", "differential", "g9"))
     parser.add_argument("--tree", required=True, help="the tree under measurement")
     parser.add_argument("--fixtures", default=None,
                         help="checkout to read committed runs/ legs from (default: --tree)")
@@ -449,8 +577,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     facts = tree_pin.enforce(expected=tree, require_scripts=False,
                              verdict_path=verdict_path, cwd_at_entry=cwd_at_entry)
 
-    payload = (_mode_census(tree, fixtures) if args.mode == "census"
-               else _mode_differential(tree, fixtures))
+    modes = {"census": _mode_census, "differential": _mode_differential, "g9": _mode_g9}
+    payload = modes[args.mode](tree, fixtures)
     payload["mode"] = args.mode
     payload["tree"] = str(tree)
     payload["fixtures"] = str(fixtures)
@@ -466,6 +594,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     print(f"t2pw resolved  : {facts.get('t2pw_file')}")
     print(f"fixtures from  : {fixtures}")
     print(f"artifact landed: {out_path} ({out_path.stat().st_size} bytes)")
+    if args.mode == "g9":
+        print(json.dumps({k: v for k, v in payload.items()
+                          if k.startswith(("claim_", "verdict", "bindings", "severities"))},
+                         indent=2))
+        # The behavioural failure IS the exit code. At the base SHA claim 1 is false
+        # and this returns 1; at the tip every claim holds and it returns 0.
+        return 0 if payload["verdict"] == "PASS" else 1
     if args.mode == "census":
         print(json.dumps(payload["totals"], indent=2))
         print(f"stop_condition_2_triggered: {payload['stop_condition_2_triggered']}")
