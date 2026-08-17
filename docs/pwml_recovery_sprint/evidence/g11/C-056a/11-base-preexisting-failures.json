@@ -1,0 +1,200 @@
+{
+  "label": "base-preexisting-failures",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/c056a-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c056a-base",
+    "--pin-verdict",
+    "C:/t/c056a/base_pin.json",
+    "-q",
+    "--basetemp=C:/t/c056a/base",
+    "--no-header",
+    "-rf",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\c056a-base",
+  "started_at": "2026-08-17T20:56:28+00:00",
+  "finished_at": "2026-08-17T20:56:39+00:00",
+  "duration_seconds": 10.335253900004318,
+  "timeout_seconds": 1200.0,
+  "root_pid": 1267936,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1267956,
+      "name": "python.exe",
+      "ppid": 1267936
+    },
+    {
+      "pid": 1263692,
+      "name": "python.exe",
+      "ppid": 1267372
+    },
+    {
+      "pid": 1267372,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1268116,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1265336,
+      "name": "python.exe",
+      "ppid": 1268116
+    },
+    {
+      "pid": 1263608,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1268476,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1260588,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1265200,
+      "name": "python.exe",
+      "ppid": 1260588
+    },
+    {
+      "pid": 1227516,
+      "name": "python.exe",
+      "ppid": 1268156
+    },
+    {
+      "pid": 1268156,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1263872,
+      "name": "python.exe",
+      "ppid": 1227516
+    },
+    {
+      "pid": 1266764,
+      "name": "python.exe",
+      "ppid": 1263872
+    },
+    {
+      "pid": 1256340,
+      "name": "python.exe",
+      "ppid": 1267956
+    },
+    {
+      "pid": 1268452,
+      "name": "python.exe",
+      "ppid": 1256340
+    },
+    {
+      "pid": 1265304,
+      "name": "python.exe",
+      "ppid": 1268452
+    },
+    {
+      "pid": 1267384,
+      "name": "python.exe",
+      "ppid": 1265304
+    }
+  ],
+  "descendants_terminated": [
+    1227516,
+    1256340,
+    1260588,
+    1263608,
+    1263692,
+    1263872,
+    1265200,
+    1265304,
+    1265336,
+    1266764,
+    1267372,
+    1267384,
+    1267956,
+    1268116,
+    1268156,
+    1268452,
+    1268476
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1263760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1265112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1266956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1266984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1267348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1267360,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056a-semantic-gating/docs/pwml_recovery_sprint/evidence/g11/C-056a/11-base-preexisting-failures.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+    "repo_head": "a5174fa56e0165a36fb35e70ec43b8056168f86a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
