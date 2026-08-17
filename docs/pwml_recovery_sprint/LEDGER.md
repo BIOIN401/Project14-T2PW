@@ -416,6 +416,40 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result
   does not invalidate the guard (charter §5).
 
+**C-053 round 0 rulings, 2026-08-17. Ceiling ratified, two test files granted, one instrument corrected.**
+The card **stopped before committing** on a ceiling-1 overage and staged the complete patch rather than
+trimming it. That is the required behaviour (D-025), and because no commit exists the ceiling can still be
+raised cleanly. Orchestrator-verified in the worktree: `HEAD` still at base `8920371`, **zero** commits, no
+forbidden path staged (`pwml/writer.py`, `streamlit_app.py`, `outputs/`, `batch/report.py`,
+`bench/render.py`, `bench/goldset.py`, caches, `runs/`, `tmp/` — all absent), and **`driver.py :: _drive`
+untouched at zero lines** as chartered.
+
+* **Ceiling 1 raised 950 → 1,200, ratified not charged.** Measured hand-authored is **1,105** — `src`+`tests`
+  **722** plus `evidence/*.py` **383**. Both overruns are the orchestrator's mis-estimate: the charter
+  budgeted **one** base-proof script at ≈120 lines and **three** were needed (the §0 probe, the golden
+  capture/delta tool, the preflight attribution), and `driver.py` came in at 176 against ≈90 budgeted.
+  **REV-051a governs.** Ceilings 2 (**25**/60) and 3 (**3,640**/18,000) are comfortably under.
+* **The budget command itself is defective — F-050.** Its literal output here is **2974**, of which **1869**
+  is generated `evidence/c053_*.json`: the command's only exclusion is `evidence/g11/`, so generated evidence
+  written anywhere else is counted as hand-authored. The literal figure and the charter's derivation differ
+  by ≈2.7×. **Use the corrected command in F-050 from now on**; charters already dispatched carry the old
+  one, so **re-measure before concluding anything from an overage**.
+* **Two additional test files GRANTED as "directly corresponding tests":** `tests/test_batch_driver.py`
+  (Chunk B — its strict-pass fixtures carried no frozen release record and would otherwise have become
+  classification-unavailable legs) and `tests/test_batch_driver_quarantine_artifacts.py` (unchunked; asserts
+  `warnings == []`). Both are consequences of the chartered change, not scope creep, and both are inside the
+  card's named focused gate.
+* **`tests/test_batch_preflight.py`'s two failures are PRE-EXISTING and are NOT this card's.** Measured red
+  at base `8920371` with `base_missed = ['t2pw.pipeline.strict_quarantine', 't2pw.pipeline.release_status']`
+  and **`modules_newly_uncovered_at_tip = []`** — the diff adds no newly-uncovered module, it only repeats an
+  already-uncovered name. The cure is `runner.py :: CHILD_IMPORTS`, **outside the boundary**; correctly
+  reported and not touched. The second failure (`this project ships a .venv; the test assumes it`) is a
+  worktree artefact independent of the diff. **Both belong to F-049's class — another unchunked file.**
+* **§0 measurement PASSED:** `pwml_result["quarantine_report"]["release"]` is `PRESENT_AND_NON_EMPTY` at
+  runtime through the real production export on **both** boundary dispositions (`fresh`, and the batch-shaped
+  `carried` where `decision_matches` reuses the record), 15 keys observed. D-033's re-measure obligation is
+  discharged.
+
 **Charters v2 written 2026-08-17, and the v1 charters are RETIRED.** All three scratchpad v1 charters
 (`C-052-charter.md`, `C-053-charter.md`, `C-056a-charter.md`) are **not to be implemented from**: each ended
 with unrecorded rulings, and re-derivation against live source found that **every one had a false

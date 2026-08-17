@@ -1062,3 +1062,40 @@ belong to no chunk and closes the set.**
 Two parametrizations fail at `8f7514f` — **pre-existing, reproduced against base `src/`, not caused by any
 card in flight**. Another IR-building file that **no chunk runs**, so the failure has been invisible.
 **Unowned.** Do not let a later card discover this and mis-attribute it to its own diff.
+
+## F-050 — the D-025 budget command measures hand-authored and generated evidence together
+
+**Registered 2026-08-17** by C-053, which stopped at its ceiling and, in reporting the number, showed the
+number is not measuring what the ceiling means.
+
+The command quoted in every charter this sprint is:
+
+```
+git diff --numstat <base> HEAD | grep -v "evidence/g11/" | awk -F'\t' '{s+=$1+$2} END {print s}'
+```
+
+`D-025` ceiling 1 is **hand-authored additions plus deletions**, and ceilings 2 and 3 separately budget
+**generated** artifacts. But this command's only exclusion is `evidence/g11/` — so **generated evidence JSON
+that does not live under `evidence/g11/` is counted as hand-authored.**
+
+**Measured on C-053:** the literal command reports **2974**, of which **1869** is generated
+`evidence/c053_*.json` output. Actual hand-authored is **1105** — `src` + `tests` **722** plus
+`evidence/*.py` **383**. The literal figure and the charter's own derivation were measuring different things,
+by a factor of roughly 2.7.
+
+**Consequence.** Ceiling-1 overages have been the orchestrator's error every time (REV-051a), and this is
+part of why: the instrument over-reports whenever a card writes generated evidence outside `evidence/g11/`.
+A card that trusted the literal number would appear catastrophically over budget and might cut real work to
+"fix" it — the exact failure D-025 forbids.
+
+**Corrected command — quote this one from now on:**
+
+```
+git diff --numstat <base> HEAD -- src tests 'docs/pwml_recovery_sprint/evidence/*.py' \
+  | awk -F'\t' '{s+=$1+$2} END {print s+0}'
+```
+
+It measures exactly what ceiling 1 names: production code, tests, and hand-written evidence tooling.
+Generated evidence is counted by ceilings 2 and 3, where it belongs. **Charters already dispatched carry the
+old command; when ratifying an overage, re-measure with the corrected one before concluding anything.**
+Unowned as a control-plane cleanup; the corrected command is usable immediately.
