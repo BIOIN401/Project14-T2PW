@@ -87,6 +87,72 @@ class UnresolvedCompoundRowError(RuntimeError):
         )
 
 
+class DuplicateNamedRowError(RuntimeError):
+    """Two **entity** rows collapse onto a single exporter name key.
+
+    Modelled on :class:`UnresolvedCompoundRowError` above and raised for the same
+    reason: ``build_pwml_ir`` runs **after** the canonical freeze at every entry
+    point that builds an IR, and ``PRODUCT_CONTRACT`` section 5 with permanent
+    merge rule 8 forbid the exporter to "add, remove, resolve or reinterpret
+    biological content" there. Dropping the second row is exactly that.
+
+    **Entity buckets only** -- see :func:`_dedupe_named_rows` for why the component
+    call site keeps a warning instead (F-046, owned by C-050j).
+
+    It is **not** a dangling reference some later gate would catch:
+    :func:`_dedupe_named_rows` groups on :func:`_norm` and ``entity_by_name`` is
+    keyed on the **same** ``_norm``, so ``resolve_entity`` finds the *survivor* and
+    ``unresolved_entity_reference`` never fires. The reference silently repoints to
+    a biologically different row -- measured on a real leg (F-039): reaction 9
+    ``"lipid IV A -> lipid A precursor"`` was frozen consuming PathBank 40738 /
+    ChEBI 60365 and exported consuming PathBank 40982 / ChEBI 58603, with one
+    warning and no error.
+
+    A blocking report issue alone would not do: ``_add_issue(report, "error", …)``
+    sets ``report["ok"] = False`` but does **not** stop IR construction, so the row
+    would still be dropped and an invalid IR still returned. Only raising fails
+    before an invalid IR can be emitted.
+
+    This refuses; it never repairs. Consolidating the rows would be post-freeze
+    biological repair of a different kind: D-035 is unamended and D-036 defers the
+    consolidation engine.
+    """
+
+    code = "PWML_IR_DUPLICATE_NAMED_ROW"
+
+    def __init__(
+        self,
+        *,
+        norm_key: str,
+        pointer_prefix: str,
+        rows: Sequence[Dict[str, Any]],
+    ) -> None:
+        #: Row *descriptors* -- ``name`` / ``key`` / ``pointer`` -- not the raw
+        #: payload rows. The same objects are attached to the structured
+        #: ``duplicate_named_record`` report issue, so the machine-readable
+        #: account of the collision is identical whether it is read off the
+        #: report or off the exception.
+        self.rows = [dict(row) for row in rows]
+        self.norm_key = norm_key
+        self.pointer_prefix = pointer_prefix
+        self.names = [str(row.get("name") or "") for row in self.rows]
+        self.keys = [str(row.get("key") or "") for row in self.rows]
+        self.pointers = [str(row.get("pointer") or "") for row in self.rows]
+        located = " and ".join(
+            f"'{name or '<unnamed>'}' (key={key or '<unassigned>'}, pointer={pointer})"
+            for name, key, pointer in zip(self.names, self.keys, self.pointers)
+        )
+        super().__init__(
+            f"{self.code}: {len(self.rows)} rows at {pointer_prefix} share the PWML "
+            f"exporter name key '{norm_key}': {located}. The PWML exporter runs after "
+            f"the canonical freeze, so it may not choose between them, drop one, or "
+            f"merge them (PRODUCT_CONTRACT section 5, merge rule 8). Dropping one "
+            f"silently repoints every reference to the survivor, which carries "
+            f"different identifiers. Resolve the collision in the payload before the "
+            f"freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution."
+        )
+
+
 ENTITY_BUCKETS = {
     "compound": "compounds",
     "protein": "proteins",
@@ -394,9 +460,40 @@ def _dedupe_named_rows(
     key_prefix: str,
     report: Dict[str, Any],
     pointer_prefix: str,
+    refuse_duplicates: bool = False,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Dict[str, Any]]]:
+    """Group rows by :func:`_norm` and key the survivors.
+
+    ``refuse_duplicates`` selects what a collision means, and the two answers are
+    **not** interchangeable -- they sit on opposite sides of the D-035 line.
+
+    ``True`` -- the **entity** call site. A collision there is coincident spelling
+    over *conflicting* identifiers: F-039's ``lipid IV A`` / ``lipid IV_A`` carry
+    PathBank 40738 and 40982, and dropping either silently repoints a reaction to a
+    different molecule after the freeze. Refuse.
+
+    ``False`` (default) -- the **component** call site, which keeps the
+    pre-existing warning. ``prefreeze_resolution._canonicalize_species_rows``
+    (``:1180-1197``) **deliberately converges a ``_norm`` group onto its leader
+    precisely because this dedupe collapses it**; a row that stopped being a
+    duplicate would become "a second species in the IR that the exporter never
+    emitted", which its docstring correctly calls inventing biology. Those rows
+    share a ``taxonomy_id`` -- **proven identity**, which D-035 permits. Refusing
+    there would break C-045/D-016 and cause the very harm this guard exists to
+    prevent.
+
+    The residual is named, not silently absorbed: a component collision that the
+    pre-freeze converger did **not** create still drops first-wins with only a
+    warning. That is **F-046**, owned by **C-050j**, and its measured live exposure
+    across all 32 committed legs and all nine buckets is **zero**.
+    """
+
     out: List[Dict[str, Any]] = []
     by_norm: Dict[str, Dict[str, Any]] = {}
+    # Where each surviving ``_norm`` group was first seen, so a refusal can point
+    # at the survivor as well as the intruder. Kept beside ``by_norm`` rather than
+    # on the record: nothing here may add a field to a row that reaches the IR.
+    first_idx: Dict[str, int] = {}
     idx = 0
     for raw in rows:
         if not isinstance(raw, dict):
@@ -406,20 +503,63 @@ def _dedupe_named_rows(
             continue
         n = _norm(name)
         if n in by_norm:
+            if not refuse_duplicates:
+                # Byte-identical to the pre-C-050i behaviour, deliberately: this
+                # is the branch the species converger depends on (F-046).
+                _add_issue(
+                    report,
+                    "warning",
+                    "duplicate_named_record",
+                    f"Duplicate record for '{name}' ignored in PWML IR.",
+                    pointer=f"{pointer_prefix}/{idx}",
+                )
+                idx += 1
+                continue
+            # C-050i / F-039. This used to warn and ``continue``, destroying the
+            # row after the freeze while every reference to it silently repointed
+            # to the survivor (``entity_by_name`` is keyed on this same ``_norm``).
+            # It now refuses. See :class:`DuplicateNamedRowError` for why a report
+            # issue alone is not sufficient, and why this blocks rather than
+            # consolidates.
+            survivor = by_norm[n]
+            conflicting = [
+                {
+                    "name": str(survivor.get("name") or ""),
+                    "key": str(survivor.get("key") or ""),
+                    "pointer": f"{pointer_prefix}/{first_idx[n]}",
+                },
+                {
+                    "name": name,
+                    # The intruder never reached the ``record["key"] = ...``
+                    # assignment below, so it has no exporter key to name.
+                    "key": str(raw.get("key") or ""),
+                    "pointer": f"{pointer_prefix}/{idx}",
+                },
+            ]
+            error = DuplicateNamedRowError(
+                norm_key=n, pointer_prefix=pointer_prefix, rows=conflicting
+            )
+            # The structured diagnostic is preserved, and promoted from warning
+            # to error. ``build_pwml_ir`` builds its report locally so the raise
+            # carries it away, but a caller that owns the report dict -- and any
+            # future caller of this helper -- still sees the machine-readable
+            # account under the code it has always had.
             _add_issue(
                 report,
-                "warning",
+                "error",
                 "duplicate_named_record",
-                f"Duplicate record for '{name}' ignored in PWML IR.",
+                str(error),
                 pointer=f"{pointer_prefix}/{idx}",
+                norm_key=n,
+                rows=conflicting,
             )
-            idx += 1
-            continue
+            raise error
         record = dict(raw)
         record["name"] = name
         record["key"] = f"{key_prefix}_{len(out) + 1}"
         out.append(record)
         by_norm[n] = record
+        first_idx[n] = idx
         idx += 1
     return out, by_norm
 
@@ -1051,6 +1191,10 @@ def build_pwml_ir(
             key_prefix=prefix,
             report=report,
             pointer_prefix=f"/entities/{source_key}",
+            # C-050i: the entity call site refuses a post-freeze name collision.
+            # The component call site above deliberately does not -- see
+            # :func:`_dedupe_named_rows` and F-046.
+            refuse_duplicates=True,
         )
         if source_key == "compounds":
             # D-021 (LOCKED) section 1: "C-051 -- assert only. Delete the

@@ -40,7 +40,7 @@ if str(SRC) not in sys.path:
 
 from t2pw.pwml import compound_resolution as cr  # noqa: E402
 from t2pw.pwml import ir as ir_mod  # noqa: E402
-from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
+from t2pw.pwml.ir import DuplicateNamedRowError, build_pwml_ir  # noqa: E402
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index  # noqa: E402
 from t2pw.pwml.prefreeze_resolution import (  # noqa: E402
     PrefreezeResolutionError,
@@ -397,13 +397,55 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: moved, 31 byte-identical, 0 stops removed, 3 codes substituted.** See
 #: GOLDEN_PREFREEZE_STOPS below for why the code changed and why that leg still
 #: does not export.
+#:
+#: MOVED A FOURTH TIME by C-050i on 2026-08-17, again on ONE leg only, again under
+#: permanent merge rule 4 and again NOT a behavioural correction of anything the
+#: golden was pinning. C-050i made ``ir._dedupe_named_rows`` REFUSE a post-freeze
+#: ``_norm`` collision in an **entity** bucket instead of dropping a row first-wins
+#: on a warning. ``PMC12444477…/strict``'s remaining two building configurations,
+#: B and E, hit F-039's ``lipid iv a`` collision (PathBank 40738 against 40982) and
+#: now raise ``PWML_IR_DUPLICATE_NAMED_ROW``; ``_leg_digest`` hashes that under a
+#: DISTINCT ``#ir_refusal:`` marker, so the digest moves with it. Measured under
+#: pytest over the full 32 x 5 sweep: **1 digest moved, 31 byte-identical, 0
+#: pre-freeze stops added or removed, 0 codes substituted.** See
+#: GOLDEN_IR_REFUSALS below.
+#:
+#: **Instrument note, recorded because it cost a diagnosis. F-047.** Do NOT read
+#: these digests by importing this module outside pytest. An out-of-pytest harness
+#: reported different digests for every IR-BUILDING leg -- and reported all 32 as
+#: moved at the **base SHA** as well as at the tip, which is how the perturbation
+#: was located in the instrument rather than in the code. **pytest is the
+#: authority**, and the operational rule is: measure under pytest, and if you must
+#: use another harness, measure the base with that same harness first.
+#:
+#: **The cause is UNKNOWN. Do not reason from a mechanism here.** This note first
+#: blamed the ``default=_nonjson`` / ``repr`` fallback in the ``json.dumps`` below.
+#: **REV-050i falsified that**: it instrumented ``_nonjson`` and the hook fires
+#: **zero times** on the leg it measured, while independently reproducing the
+#: divergence (out-of-pytest ``fc587e03…`` against pytest/``GOLDEN``
+#: ``64038a74…``). The phenomenon is confirmed and its mechanism is not identified.
+#: Recorded as an admitted unknown rather than quietly reworded, because an
+#: authoritative-sounding wrong mechanism is worse than none -- the next card would
+#: try to reason from it.
+#:
+#: The one leg C-050i moved is **immune** to the hazard and its digest is therefore
+#: safe: after the move none of its five configurations builds an IR at all, so its
+#: digest is composed purely of configuration names and stop/refusal codes. Both
+#: instruments agreed on it exactly, and REV-050i additionally hand-computed it from
+#: first principles and matched the committed value.
 GOLDEN = {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
-    # C-050h delta: f0dd12d5… -> e5a40385…, the ONLY moved digest in this table.
-    # ``_leg_digest`` hashes each stop's code and this leg's three stopping
-    # configurations now stop with ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``. Nothing
-    # started or stopped raising, no built IR changed, and B / E are identical.
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "e5a40385cbd1bbd5409928b77c25540a805bd240ab8d989b69d44e7e605351dd",
+    # C-050h delta: f0dd12d5… -> e5a40385…, then the ONLY moved digest again under
+    # C-050i: e5a40385… -> d22b58c8…. ``_leg_digest`` hashes each stop's code, and
+    # this leg's LAST TWO building configurations (B, E) now refuse post-freeze with
+    # ``PWML_IR_DUPLICATE_NAMED_ROW`` -- see GOLDEN_IR_REFUSALS. A / C / D still stop
+    # pre-freeze with ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``, unchanged.
+    #
+    # Measured under pytest over all 32 legs x 5 configurations: **this digest is
+    # the only one that moves**, and no other leg's stops change. After this move no
+    # configuration of this leg builds an IR at all, so its digest is now composed
+    # purely of configuration names and stop/refusal codes.
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "d22b58c8b308cbd83f0fd10327c7453405fd542e3d997e0c7179e4120de44bd1",
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "7954a4c9ae7a2905923b97194e620e1440888f83c4152c023ac7625a381b9e01",
     "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "f1a6a4d381e97d31cd09bbf037ed67da0e4a3fe45456906135cab736fb35603b",
     "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "bdcb0fb81a19b8c2f956a959e20fb747d60ebd87aed9ff4bb540d041c66cfa80",
@@ -512,6 +554,69 @@ GOLDEN_PREFREEZE_STOPS: Dict[str, Dict[str, str]] = {
     },
 }
 
+#: Prefix that distinguishes a POST-freeze exporter refusal from a PRE-freeze stop
+#: inside ``_leg_digest``'s single ``stops`` map. See that function's docstring.
+IR_REFUSAL_PREFIX = "ir_refusal:"
+
+#: The (leg, configuration) pairs whose **post-freeze IR build** REFUSES, by code.
+#:
+#: Introduced by **C-050i**, and the fourth deliberate move of this golden under
+#: permanent merge rule 4. Like ``GOLDEN_PREFREEZE_STOPS`` above, a refusal here is
+#: **a RESULT of that configuration, not a failure and not a digest**: C-050i made
+#: ``ir._dedupe_named_rows`` refuse a post-freeze ``_norm`` collision in an ENTITY
+#: bucket rather than drop a row first-wins on a warning.
+#:
+#: **The measured delta is exactly two slots, on one leg**, over the full 32 legs x
+#: 5 configurations sweep:
+#:
+#:   PMC12444477…/strict · B_dbdown_noindex_strict          NEW  ir_refusal
+#:   PMC12444477…/strict · E_fromenv_raises_emptyindex_…    NEW  ir_refusal
+#:
+#: Everything else is untouched, and that is asserted rather than assumed: configs
+#: A / C / D on this same leg still stop pre-freeze with
+#: ``PREFREEZE_DUPLICATE_CANONICAL_ROWS``, PMC13278307 · C_canned still stops with
+#: ``AMBIGUOUS_RENAME_TARGET``, and the other **31 legs' digests do not move**.
+#: Only this leg's digest moves, because only its two built configurations became
+#: refusals.
+#:
+#: **Why these two and no others.** The collision is rows 5 and 23,
+#: ``'lipid IV_A'`` (PathBank 40982 / ChEBI 58603) against ``'lipid IV A'``
+#: (PathBank 40738 / ChEBI 60365 / KEGG C06025) -- F-039's pair, one ``_norm`` key
+#: ``lipid iv a``. At the integration base the exporter dropped row 23 and re-bound
+#: reaction 9 ``"lipid IV A -> lipid A precursor"`` to ``cmp_6``, a **different
+#: database compound**, after the canonical hash, reporting one warning and no
+#: error: 44 committed compound rows became 43 IR compounds. Configs A / C / D
+#: never reach the exporter because pre-freeze stops them first, so only B and E
+#: can move. C-050i re-measured every committed leg across all nine buckets and
+#: found this to be the **only** ``_norm`` collision in the corpus.
+#:
+#: **Component buckets are NOT in this table and must not be added to it.** C-050i's
+#: guard binds the entity call site only; the component call site keeps its warning
+#: because ``prefreeze_resolution._canonicalize_species_rows`` deliberately
+#: converges a ``_norm`` group onto its leader and those rows share a
+#: ``taxonomy_id``. That residual is **F-046**, owned by **C-050j**.
+GOLDEN_IR_REFUSALS: Dict[str, Dict[str, str]] = {
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+        "B_dbdown_noindex_strict": "PWML_IR_DUPLICATE_NAMED_ROW",
+        "E_fromenv_raises_emptyindex_lenient": "PWML_IR_DUPLICATE_NAMED_ROW",
+    },
+}
+
+
+def _expected_outcomes(leg: str) -> Dict[str, str]:
+    """The two tables, merged the way ``_leg_digest`` reports them.
+
+    Kept as one function so a leg can never be checked against one table and
+    silently skipped by the other.
+    """
+    expected = dict(GOLDEN_PREFREEZE_STOPS.get(leg, {}))
+    for config, code in GOLDEN_IR_REFUSALS.get(leg, {}).items():
+        assert config not in expected, (
+            f"{leg}/{config} is recorded as BOTH a pre-freeze stop and an IR "
+            f"refusal; a configuration cannot stop twice")
+        expected[config] = f"{IR_REFUSAL_PREFIX}{code}"
+    return expected
+
 
 def _configs() -> List[Any]:
     """Five deterministic, wholly offline configurations.
@@ -570,9 +675,19 @@ def _nonjson(obj: Any) -> Dict[str, str]:
 def _leg_digest(payload: Dict[str, Any]) -> Tuple[str, Dict[str, str]]:
     """Digest ``build_pwml_ir`` over the five configurations, pre-freeze first.
 
-    Returns ``(digest, stops)``. ``stops`` maps a configuration name to the
-    :class:`PrefreezeResolutionError` code that stopped it -- see
-    ``GOLDEN_PREFREEZE_STOPS``.
+    Returns ``(digest, stops)`` -- **arity deliberately unchanged**, because
+    ``evidence/c045a_golden_rebaseline.py:173`` serializes this tuple whole.
+    ``stops`` maps a configuration name to the code that prevented a digest, from
+    either of **two distinct classes**:
+
+    * a bare code -- a **pre-freeze** :class:`PrefreezeResolutionError`, asserted
+      against ``GOLDEN_PREFREEZE_STOPS``;
+    * ``ir_refusal:<code>`` -- a **post-freeze** :class:`DuplicateNamedRowError`
+      from inside ``build_pwml_ir``, asserted against ``GOLDEN_IR_REFUSALS``
+      (C-050i).
+
+    The prefix is what keeps them apart in one map, so the existing
+    ``GOLDEN_PREFREEZE_STOPS`` values did not have to move.
 
     The pre-freeze call is not decoration: since C-051 ``build_pwml_ir``
     refuses a compound row that carries no resolution verdict, so a raw leg
@@ -610,7 +725,18 @@ def _leg_digest(payload: Dict[str, Any]) -> Tuple[str, Dict[str, str]]:
             stops[name] = stop.code
             digest.update(f"#prefreeze_stop:{stop.code}".encode())
             continue
-        built = build_pwml_ir(staged, **kwargs)
+        try:
+            built = build_pwml_ir(staged, **kwargs)
+        except DuplicateNamedRowError as refusal:
+            # C-050i. A POST-freeze refusal, and a different class from the
+            # pre-freeze stop above: this one happened inside the exporter, on a
+            # payload the pre-freeze stage passed. Recorded under a DISTINCT
+            # ``ir_refusal:`` prefix and hashed with a DISTINCT digest marker so
+            # the two can never be conflated -- neither by the table below nor by
+            # a digest that happened to collide.
+            stops[name] = f"{IR_REFUSAL_PREFIX}{refusal.code}"
+            digest.update(f"#ir_refusal:{refusal.code}".encode())
+            continue
         for sort_keys in (True, False):
             blob = json.dumps(list(built), sort_keys=sort_keys, indent=1, default=_nonjson)
             digest.update(hashlib.sha256(blob.encode()).hexdigest().encode())
@@ -623,9 +749,10 @@ def test_build_pwml_ir_matches_the_pre_extraction_golden() -> None:
     Asserts that nothing changed that C-051's documented delta does not
     account for: over every committed leg fixture, ``build_pwml_ir``'s output on
     the pre-freeze-routed payload is byte-identical to the re-baselined sweep,
-    and the four ``(leg, configuration)`` pairs that stop pre-freeze stop with
-    exactly the recorded code. A non-empty diff here is a drift, not a licence
-    to re-baseline.
+    the ``(leg, configuration)`` pairs that stop pre-freeze stop with exactly the
+    recorded code, and the pairs that refuse **post-freeze** refuse with exactly
+    the recorded code (``GOLDEN_IR_REFUSALS``, C-050i). A non-empty diff here is a
+    drift, not a licence to re-baseline.
     """
     mismatched = []
     for leg, expected in GOLDEN.items():
@@ -633,9 +760,10 @@ def test_build_pwml_ir_matches_the_pre_extraction_golden() -> None:
         assert path.is_file(), f"committed leg fixture is missing: {leg}"
         payload = json.loads(path.read_text(encoding="utf-8"))
         actual, stops = _leg_digest(payload)
-        if stops != GOLDEN_PREFREEZE_STOPS.get(leg, {}):
+        expected_stops = _expected_outcomes(leg)
+        if stops != expected_stops:
             mismatched.append(
-                f"{leg}\n  expected stops {GOLDEN_PREFREEZE_STOPS.get(leg, {})}"
+                f"{leg}\n  expected stops {expected_stops}"
                 f"\n  actual stops   {stops}")
         if actual != expected:
             mismatched.append(f"{leg}\n  expected {expected}\n  actual   {actual}")
