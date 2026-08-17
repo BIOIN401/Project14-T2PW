@@ -907,3 +907,57 @@ and check whether every output path is resolved before it.
 
 **Rule to carry forward:** resolve every output path **before** any `chdir`, and prefer asserting the
 artifact landed at the invocation cwd over trusting the path string.
+
+## F-046 — the component-bucket residual left by C-050i's narrowed guard
+
+**Registered 2026-08-17** by the orchestrator when C-050i hit R1's stop condition and correctly stopped
+rather than weakening the guard or narrowing scope on its own authority.
+
+**R1 as originally issued bound the post-freeze duplicate guard to *every* `_dedupe_named_rows` caller.
+That was wrong for the component call site, and C-050i measured why.**
+
+`prefreeze_resolution._canonicalize_species_rows` (`:1180-1197`) **deliberately converges a `_norm` group
+onto its leader's name precisely because the exporter dedupe collapses it.** Its own docstring:
+
+> *"`build_pwml_ir` canonicalized the output of `_dedupe_named_rows`, which keeps the **first** row of each
+> `_norm(name)` group and drops the rest … a row that stops being a duplicate becomes a **second species**
+> in the IR that the exporter never emitted. **That is inventing biology**, so the group leader is the row
+> that gets canonicalized, and the rest of its group follows it **only when the leader's rename moved the
+> group's `_norm`**, which is exactly the condition under which they would otherwise stop deduplicating."*
+
+Two rows converged this way carry the **same `taxonomy_id`**: the collapse is the *intended* outcome of an
+accepted pre-freeze identity resolution, not a spelling coincidence. **Refusing it would break C-045/D-016's
+accepted acceptance criteria** — `tests/test_prefreeze_species_resolution.py:191` and `:312`, the second of
+which exists precisely because *"a refusal on a path every species payload crosses is how a card turns a
+working export into a dead one"* — **and would itself invent biology**, in the exact direction that module
+was written to prevent.
+
+**This is the D-035 distinction, in the two buckets.** F-039's compound pair (`lipid IV A` / `lipid IV_A`)
+is **coincident spelling with conflicting identifiers** — PathBank 40738 vs 40982 — and the drop silently
+repoints a reaction to a different molecule. The species pair is **proven identity**, deliberately produced.
+D-035 permits a merge only on proven identity; the component case has it and the entity case does not.
+
+**Ruling (see `LEDGER.md`): the guard binds the entity call site (`ir.py:1049`) only. The component call
+site (`ir.py:957`) keeps its pre-existing warning.**
+
+### The residual, named so it is not inherited by proximity
+
+**A `_norm` collision in a component bucket that was NOT created by the pre-freeze converger still drops
+first-wins with only a warning**, and `component_by_name` (`ir.py:995-1000`) is keyed on the same `_norm`,
+so the same silent-repoint mechanism applies. Two genuinely different organisms whose names `_norm`-collide
+would still lose one silently.
+
+**Live exposure: zero.** C-050i re-measured all 32 committed legs across all nine buckets at its own tree and
+found **exactly one** `_norm` collision — F-039's compound pair — independently confirming the F-039 census.
+No component-bucket collision exists in the committed corpus other than the deliberate species convergence.
+
+**Proposed discriminator, recorded so the design work is not lost.** `_canonicalize_species_rows` stamps a
+**durable** marker (`ir.SPECIES_CANONICALIZATION_FIELD`) on *"every row that participated"*. A collision
+whose rows all carry that marker is a deliberate convergence and may collapse; a collision whose rows do not
+is a coincidence and should refuse. **This must NOT be built from identifier equality** — F-043 stands: `PG`,
+`PG phosphate` and `(PGP)` all carry PathBank 193, which is UDP-glucose and wrong for all three, so equal
+identifiers are not proof of identity.
+
+**Owner: a new card `C-050j`. NOT C-050i** — assigned by name, not by proximity, because that is exactly the
+failure REV-050h caught on F-039. **Not urgent**: exposure is measured at zero and the three non-species
+component buckets have no converger at all.
