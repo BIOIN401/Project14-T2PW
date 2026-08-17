@@ -46,6 +46,7 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
 )
 from test_batch_driver import (  # noqa: E402
     PAPER,
+    _RELEASE_READY,
     _artifacts,
     _lit,
     _post_pipeline_body,
@@ -69,6 +70,12 @@ _PWML = {
     "_xml": "<pathway><name>glutathione</name></pathway>",
     "pwml_ir": {"pathway": {"name": "glutathione"}},
     "counts": {"reactions": 2},
+    # C-053 / D-004: the export carries the boundary's frozen decision, and the
+    # PWML filename is derived from it. These legs are ordinary passing strict
+    # runs, so the record says so; a fixture omitting it would silently become a
+    # classification-unavailable leg, which is a different behaviour tested in
+    # ``tests/test_batch_pwml_artifact_naming.py``.
+    "quarantine_report": {"release": _RELEASE_READY},
 }
 _GATE_FAIL = {
     "status": "failed",

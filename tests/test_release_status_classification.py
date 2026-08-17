@@ -308,11 +308,28 @@ def test_the_coverage_threshold_value_is_not_moved() -> None:
     assert verdict["thresholds"]["min_core_coverage"] == 0.5
 
 
-def test_a_gate_blocked_leg_is_classified_without_moving_the_manifest_row() -> None:
-    """**NEW ACCEPTANCE.** ``_finalize_gate_failure`` now answers two questions --
-    "did the leg complete?" and "is anything releasable?" -- instead of leaving
-    the second to be re-derived from a missing ``pathway.pwml``. The manifest row
-    is untouched, which is what keeps the golden driver diff empty."""
+def test_a_gate_blocked_leg_is_classified_and_the_row_now_carries_it() -> None:
+    """**NEW ACCEPTANCE** (C-041) for the classification; **RE-PIN** (C-053) for the row.
+
+    ``_finalize_gate_failure`` answers two questions -- "did the leg complete?"
+    and "is anything releasable?" -- instead of leaving the second to be
+    re-derived from a missing ``pathway.pwml``. That half is unchanged.
+
+    **RE-PIN, merge rule 4, exact delta.** This test asserted
+    ``"release_status" not in row`` and ``sorted(row) == sorted(before)``. Both
+    pinned an INTERIM state that C-041 recorded as interim in the source it
+    tests: ``_finalize_gate_failure``'s docstring says the classification "is NOT
+    added to ``RunOutcome.to_dict``" because that "would edit ``RunOutcome``,
+    which is outside C-041's boundary", and that "promoting it into the row
+    belongs to the card that owns the row and the artifact names (D-004 /
+    C-053)". D-004 is that decision and this is that card.
+
+    The delta is **exactly one key**, ``release_status``, holding the serialized
+    form of the classification this test already asserts field by field. That
+    "and nothing else" is asserted below as a set difference rather than
+    described in prose, so it cannot rot: no other key appears, none disappears,
+    and ``pwml_artifact`` stays absent because this leg wrote no artifact.
+    """
 
     from t2pw.pipeline.release_status import (
         DIAGNOSTIC_ONLY,
@@ -341,8 +358,12 @@ def test_a_gate_blocked_leg_is_classified_without_moving_the_manifest_row() -> N
     assert status.strict_acceptance_eligible is False
 
     row = outcome.to_dict()
-    assert "release_status" not in row
-    assert sorted(row) == sorted(before)
+    assert row["release_status"] == status.to_dict()
+    assert sorted(set(row) - set(before)) == ["release_status"], "exactly one key is added"
+    assert set(before) - set(row) == set(), "and none is taken away"
+    # No PWML was written, so D-004's second key stays absent: the artifact name
+    # is recorded only when an artifact was actually named.
+    assert "pwml_artifact" not in row
 
 
 def test_both_reports_print_a_classification_the_run_actually_carries() -> None:

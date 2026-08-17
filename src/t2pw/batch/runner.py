@@ -110,11 +110,17 @@ DEFAULT_DEADLINE_HOURS = 10.0
 #: night re-runs one stale paper, fetches nothing, and exits -- forever.
 RESUME_MAX_AGE_HOURS = 24.0
 
-#: The one artifact each mode exists to produce. If the driver produced it and
-#: the *write* then failed, the run is a failure however clean the pipeline was:
-#: a "pass" with no ``.pwml`` on disk is the worst kind of lie.
+#: The artifacts each mode exists to produce. If the driver produced one and the
+#: *write* then failed, the run is a failure however clean the pipeline was: a
+#: "pass" with no ``.pwml`` on disk is the worst kind of lie.
+#:
+#: Strict mode names its export by release state (D-004), so it has TWO candidate
+#: names and this list must carry both -- a renamed deliverable missing from here
+#: would walk straight past the one check written to catch a lost write, which is
+#: the exact failure this constant exists for. Only the name the driver actually
+#: produced is required; see :func:`required_artifacts`.
 REQUIRED_ARTIFACTS: Dict[str, Tuple[str, ...]] = {
-    MODE_STRICT: ("pathway.pwml",),
+    MODE_STRICT: ("pathway.pwml", "pathway.review_required.pwml"),
     MODE_RESEARCH: ("research_pathway_report.txt",),
 }
 

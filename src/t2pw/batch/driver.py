@@ -644,6 +644,29 @@ def _resolve_mode(mode: Any) -> Tuple[str, str]:
 # ---------------------------------------------------------------------------
 # Outcome.
 # ---------------------------------------------------------------------------
+def _release_status_row(status: Any) -> Optional[Dict[str, Any]]:
+    """Serialize a release classification for the manifest, or answer ``None``.
+
+    Two shapes reach this. ``_finalize_gate_failure`` attaches a
+    :class:`~t2pw.pipeline.release_status.ReleaseStatus`; the strict PASS path
+    attaches the boundary's already-serialized record. Both are recorded as they
+    are -- nothing here re-classifies, re-orders or fills in a field, because a
+    classification produced after the freeze is a merge rule 8 defect, not a
+    convenience.
+
+    ``None`` means "this run has no classification". D-038 keeps that ABSENT from
+    the row rather than writing a placeholder into it: ``report.py:860-861``
+    renders an absent status honestly and a fabricated one would be indistinguish-
+    able from a measured one.
+    """
+
+    to_dict = getattr(status, "to_dict", None)
+    if callable(to_dict):
+        serialized = to_dict()
+        return dict(serialized) if isinstance(serialized, dict) else None
+    return dict(status) if isinstance(status, dict) and status else None
+
+
 @dataclass
 class RunOutcome:
     """Everything the batch runner needs to write one paper+mode to disk.
@@ -676,6 +699,15 @@ class RunOutcome:
     #: What Stage 0 observed (pathways / organisms / aliases / ambiguities). Kept
     #: separate from the request so neither can be mistaken for the other.
     observed_context: Dict[str, Any] = field(default_factory=dict)
+    #: The release classification this run CARRIES -- the record the quarantine
+    #: boundary froze, or the one ``_finalize_gate_failure`` built for a run the
+    #: gates blocked. ``None`` means the run has none; it never means "not
+    #: releasable", and it is never inferred from ``status`` or from a filename.
+    release_status: Any = None
+    #: The PWML filename actually written, ``""`` when none was. D-004 makes the
+    #: name a function of :attr:`release_status`, so the two travel together and a
+    #: reader never has to reconstruct one from the other.
+    pwml_artifact: str = ""
 
     @property
     def passed(self) -> bool:
@@ -734,6 +766,18 @@ class RunOutcome:
             row["scope_conflicts"] = list(self.scope_conflicts)
         if self.observed_context:
             row["observed_context"] = dict(self.observed_context)
+        # D-004 / D-038: the manifest records structured status INDEPENDENTLY of
+        # the filename, so a consumer never has to equate ``pathway.pwml`` with
+        # strict success. Exactly two keys, both conditional. D-038 struck
+        # ``pipeline_status`` and ``strict_acceptance_passed`` (neither names
+        # anything that exists) and struck top-level ``strict_acceptance_eligible``
+        # / ``completeness``, which already live INSIDE ``release_status`` -- a
+        # second copy of a benchmark-gating flag is a second source of truth.
+        release = _release_status_row(self.release_status)
+        if release:
+            row["release_status"] = release
+        if self.pwml_artifact:
+            row["pwml_artifact"] = self.pwml_artifact
         return row
 
 
@@ -1370,18 +1414,114 @@ def _add_diagnostic_artifacts(at: Any, out: Dict[str, Any]) -> None:
             out[name] = _json_text(blob)
 
 
+# ---------------------------------------------------------------------------
+# Release-state artifact naming (D-004 / D-038 / PRODUCT_CONTRACT 13).
+# ---------------------------------------------------------------------------
+#: Reserved for ``release_ready`` and for nothing else.
+PWML_RELEASE_READY_NAME = "pathway.pwml"
+#: Valid, useful PWML that a reviewer must still look at.
+PWML_REVIEW_REQUIRED_NAME = "pathway.review_required.pwml"
+
+#: Recorded when a strict leg exported but carried no usable frozen record. It is
+#: a WARNING, not a failure: the pipeline ran and produced bytes. It has to be
+#: loud, because an unclassified run and a clean release-ready one are otherwise
+#: indistinguishable in the artifact set (D-038 3).
+WARN_RELEASE_STATUS_UNAVAILABLE = (
+    "release classification unavailable on a passing strict leg: no usable record "
+    "at pwml_result['quarantine_report']['release'], so the export was written as "
+    f"{PWML_REVIEW_REQUIRED_NAME} and no release_status was recorded"
+)
+#: Recorded when the frozen record says ``diagnostic_only``. PRODUCT_CONTRACT 13
+#: defines no final PWML for that state, so bytes that DID exist were withheld --
+#: which must be stated, not left as a silent gap in the artifact set.
+WARN_PWML_WITHHELD_DIAGNOSTIC_ONLY = (
+    "PWML bytes were produced but withheld: the frozen release record classifies "
+    "this run diagnostic_only, and PRODUCT_CONTRACT 13 defines no final PWML for "
+    "that state"
+)
+
+
+def _frozen_release_record(pwml_result: Dict[str, Any]) -> Dict[str, Any]:
+    """The classification the quarantine boundary FROZE, read from memory.
+
+    ``pwml_result["quarantine_report"]["release"]`` and nothing else (D-038 2).
+    Two sources were rejected for this and both matter:
+
+    * ``outcome.artifacts["quarantine_report.json"]`` is a ``str`` --
+      ``_add_quarantine_artifacts`` stores ``Path(...).read_text(...)`` -- so the
+      subscript could not execute even if it were sound.
+    * it is not sound. The batch strict export runs through the third entry point,
+      which exports ``refinement_working_json``; the report on disk can therefore
+      describe a DIFFERENT payload than the XML being named, while the in-memory
+      record is bound to the exported graph by ``decision_matches`` on the payload
+      hash and the decision-input hash.
+
+    Re-deriving the classification here instead -- calling
+    ``classify_release_status`` on the PASS path -- would be an exporter answering
+    a biological question after the freeze, which merge rule 8 forbids outright.
+
+    An unrecognised ``status`` is discarded rather than trusted: the contract
+    defines exactly three states, and a fourth string is a record this code cannot
+    interpret, which is the same predicament as having none.
+    """
+
+    from t2pw.pipeline.release_status import RELEASE_STATES
+
+    release = _safe_dict(_safe_dict(pwml_result.get("quarantine_report")).get("release"))
+    return release if _text(release.get("status")) in RELEASE_STATES else {}
+
+
+def _pwml_artifact_name(release: Dict[str, Any]) -> str:
+    """D-004's filename for a frozen record. ``""`` means: write no final PWML.
+
+    ``release_ready`` earns the reserved name. ``diagnostic_only`` gets no final
+    PWML at all (PRODUCT_CONTRACT 13). Everything else -- ``review_required``, and
+    an ABSENT or uninterpretable record -- lands on
+    ``pathway.review_required.pwml``: merge rule 7 forbids dropping the bytes, and
+    a run that cannot produce its classification certainly cannot prove it is
+    release-ready, so "valid, needs review" is the only honest name left.
+    """
+
+    from t2pw.pipeline.release_status import DIAGNOSTIC_ONLY, RELEASE_READY
+
+    status = _text(release.get("status"))
+    if status == RELEASE_READY:
+        return PWML_RELEASE_READY_NAME
+    if status == DIAGNOSTIC_ONLY:
+        return ""
+    return PWML_REVIEW_REQUIRED_NAME
+
+
 def _add_strict_artifacts(
     artifacts: Dict[str, Any],
     pwml_result: Dict[str, Any],
     out: Dict[str, Any],
-) -> None:
+) -> str:
+    """Write the strict deliverables. Returns the PWML filename, ``""`` if none.
+
+    The name is a function of the FROZEN CLASSIFICATION, not of "some XML exists".
+    Before D-004 every strict export landed as ``pathway.pwml``, so four
+    independent readers equated that filename with strict success and a
+    ``review_required`` fragment was indistinguishable from a release-ready
+    pathway on disk. Structured status stays authoritative; the distinct names are
+    the safe migration while those readers still exist.
+    """
+
     xml = _xml_bytes(pwml_result)
-    if xml:
-        out["pathway.pwml"] = xml
+    name = _pwml_artifact_name(_frozen_release_record(pwml_result)) if xml else ""
+    if name:
+        out[name] = xml
     ir = pwml_result.get("pwml_ir")
     if isinstance(ir, dict) and ir:
         out["pwml_ir.json"] = _json_text(ir)
-    for key, name in (
+    # ``artifact_name``, NOT ``name``: this loop runs unconditionally and its
+    # target outlives it, so reusing ``name`` here silently overwrote the PWML
+    # filename this function returns with the last JSON report's filename, on
+    # every path. The bug had no live effect -- both callers re-derive the name --
+    # which is exactly why it survived: it was the one dimension of this seam
+    # nothing could observe. It is pinned now in
+    # ``tests/test_batch_pwml_artifact_naming.py``.
+    for key, artifact_name in (
         ("pwml_ir_report", "pwml_ir_report.json"),
         ("pwml_ir_validation", "pwml_ir_validation.json"),
         ("validation_report", "pwml_validation_report.json"),
@@ -1390,10 +1530,11 @@ def _add_strict_artifacts(
     ):
         value = pwml_result.get(key)
         if isinstance(value, dict) and value:
-            out[name] = _json_text(value)
+            out[artifact_name] = _json_text(value)
     # ``final_mapped.json`` is written by _add_identity_artifacts on the common
     # path, which runs on every branch including the failing ones. Re-emitting it
     # here would be a second writer for one filename with no second source.
+    return name
 
 
 def _add_research_artifacts(
@@ -1678,7 +1819,31 @@ def _finalize_pwml_export(
     joined: str,
     codes: List[str],
 ) -> None:
-    """Terminal path: strict mode produced PWML XML, so the leg is a pass."""
+    """Terminal path: strict mode produced PWML XML, so the leg is a pass.
+
+    It also RECORDS what was released, which "the leg passed" never said. A
+    technical pass is a gate result; ``release_status`` is the release decision,
+    and D-004 puts both in the row so no consumer has to re-derive the second from
+    the first or from an artifact filename.
+
+    The filename is re-derived here from the same frozen record, by the same pure
+    function ``_add_strict_artifacts`` used, rather than threaded back through
+    ``_drive``: both helpers already receive ``pwml_result``, so a shared pure
+    function costs nothing and keeps the sprint's second-largest hotspot at zero
+    changed lines.
+    """
+
+    release = _frozen_release_record(pwml_result)
+    name = _pwml_artifact_name(release)
+    outcome.release_status = release or None
+    outcome.pwml_artifact = name
+    if not release:
+        # Fail loud. The leg is still a pass -- the pipeline ran and produced
+        # bytes -- but it must never be summarised as a clean release-ready run,
+        # and ``warnings`` is the field that travels into the manifest row.
+        outcome.warnings.append(WARN_RELEASE_STATUS_UNAVAILABLE)
+    elif not name:
+        outcome.warnings.append(WARN_PWML_WITHHELD_DIAGNOSTIC_ONLY)
 
     outcome.counts["pwml_bytes"] = len(xml)
     pwml_counts = _safe_dict(pwml_result.get("counts"))
@@ -1686,7 +1851,11 @@ def _finalize_pwml_export(
         outcome.counts["pwml"] = {str(k): v for k, v in pwml_counts.items()}
     outcome.status = _STATUS_PASS
     outcome.failure_kind = ""
-    outcome.message = f"strict run completed; pathway.pwml is {len(xml)} bytes"
+    outcome.message = (
+        f"strict run completed; {name} is {len(xml)} bytes"
+        if name
+        else f"strict run completed; {len(xml)} bytes of PWML were withheld"
+    )
     outcome.detail = joined
     outcome.issue_codes = codes
 
@@ -2195,6 +2364,8 @@ __all__ = [
     "LABEL_EXTRACTION_FOCUS",
     "MODE_RESEARCH",
     "MODE_STRICT",
+    "PWML_RELEASE_READY_NAME",
+    "PWML_REVIEW_REQUIRED_NAME",
     "RESEARCH",
     "RESEARCH_GATE_FLAG_KEY",
     "RESEARCH_GATE_WARN_LIMIT",
@@ -2202,6 +2373,8 @@ __all__ = [
     "STRICT",
     "WARN_NO_FOCUS_BOX",
     "WARN_NO_RESEARCH_REPORT",
+    "WARN_PWML_WITHHELD_DIAGNOSTIC_ONLY",
+    "WARN_RELEASE_STATUS_UNAVAILABLE",
     "WARN_RESEARCH_GATE_PREFIX",
     "WARN_RUNTIME_SCHEMA_PREFIX",
     "RunOutcome",
