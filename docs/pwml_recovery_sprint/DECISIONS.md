@@ -1724,3 +1724,78 @@ gating on it alone would ship nothing, ever).
 **Sequencing is unchanged: C-056b remains blocked until C-056a is merged and accepted, and C-056b is
 chartered from the resulting live source — never from pre-C-056a assumptions. C-053 and C-056b must both
 land before T-100, and no strict benchmark-success figure may be quoted until both are merged.**
+
+---
+
+## D-038 — D-004's manifest example is not implementable; what C-053 actually ships · 2026-08-17 · LOCKED
+
+**D-004's normative content is reaffirmed unchanged.** Its three naming rules — `pathway.pwml` =
+`release_ready` only · `pathway.review_required.pwml` = valid but requiring biological review · no final
+PWML for `diagnostic_only` — match `PRODUCT_CONTRACT` §13 verbatim and are **not** amended here.
+
+**Its illustrative JSON manifest block cannot be implemented as written.** Measured at `3b56a16`:
+
+| Key in D-004's block | Measured reality |
+|---|---|
+| `pipeline_status` | **0 occurrences in `src/`.** The live row key is `status` (`driver.py:720`). |
+| `strict_acceptance_passed` | **0 occurrences in `src/` and `tests/`.** It exists only in `DECISIONS.md`. |
+| `strict_acceptance_eligible: true` beside `release_status: review_required` | **Contradicts a live invariant.** `release_status.py:317` is `strict_acceptance_eligible=status == RELEASE_READY`, commented *"review_required must never count as strict success (TRAP-1)"*, and `strict_quarantine.py:2037` names it an invariant. It also contradicts **`PRODUCT_CONTRACT` §13**, which requires `review_required` to carry `strict_acceptance_eligible=false` — *"Never strict success."* |
+
+**`PRODUCT_CONTRACT` outranks `DECISIONS`**, so where the block contradicts §13 the contract governs and the
+block yields. The other two keys are not a policy disagreement at all — they name nothing that exists.
+
+### 1. The manifest row ships exactly two new keys
+
+`release_status` — the **full serialized `ReleaseStatus`** (`release_status.py:224`) — and `pwml_artifact`,
+the filename actually written, **absent** when none was. `pipeline_status`, `strict_acceptance_passed`, and
+**top-level** `strict_acceptance_eligible` / `completeness` are **struck**: the first two do not exist, and
+the last two already live inside `ReleaseStatus.to_dict()` (`release_status.py:224-225`), where duplicating
+them would create **two sources of truth for a benchmark-gating flag**. `report.py:426` already documents
+accepting *"a state string, a serialized `ReleaseStatus`, or `None`"*.
+
+**`strict_acceptance_eligible` is authoritative only inside `release_status`, and is always
+`status == release_ready`.**
+
+### 2. The release record is read from memory, never from the artifacts dict
+
+**`outcome.artifacts["quarantine_report.json"]` is a `str`, not a dict** — `driver.py:1295` reads it with
+`Path(source).read_text(...)` and `:1299` stores `out[name] = document`. Subscripting it with `["release"]`
+**cannot execute**. Any charter or card mandating that expression is wrong.
+
+**The correct source is `pwml_result["quarantine_report"]["release"]`**, which reaches the strict path in
+memory as a dict: `streamlit_app.py:4191-4207` returns it on every branch → `:2242` stores it →
+`driver.py:1137` reads it → `:2125` binds it → `:2126` and `:2177` pass it to `_add_strict_artifacts` and
+`_finalize_pwml_export`, **both of which already declare a `pwml_result` parameter**
+(`driver.py:1373-1376`, `:1673-1679`).
+
+This is also the only **sound** source. The batch strict export runs through **EP3** (D-033), which exports
+`refinement_working_json`, not the object `freeze_canonical_payload` froze; the in-memory record is bound to
+the exported graph by `decision_matches` (`streamlit_app.py:3888`) on `resulting_payload_hash` **and** the
+decision-input hash, so it provably describes the graph that was exported. **Reading the disk artifact would
+hand C-053 a record for a different payload than the XML it is naming.**
+
+**C-053 must not call `classify_release_status` on the PASS path.** Re-deriving a classification after the
+freeze is a **merge rule 8 reject**. The existing call at `driver.py:1629` (`_finalize_gate_failure`) is out
+of scope and untouched.
+
+### 3. When the frozen record is absent or unrecognized on a passing strict leg
+
+This state — pipeline passed, classification unavailable — is enumerated nowhere. It resolves entirely from
+locked policy:
+
+* **Do not use `pathway.pwml`.** `PRODUCT_CONTRACT` §13 reserves it for `release_ready`, and a run that
+  cannot produce its classification cannot prove `release_ready`.
+* **Do not drop the bytes.** **Permanent merge rule 7** preserves incomplete-but-correct work. Write
+  **`pathway.review_required.pwml`** — §13 defines it as *"valid, needs review"*, which is exactly the state.
+* **Emit no `release_status` key**; `report.py:860-861` already renders that honestly. §13: *"Structured
+  status is authoritative; the filename is a migration aid."*
+* **Append a `RunOutcome.warnings` entry** naming the missing record. Fail loud, not silent.
+* **The strict denominator gates on an affirmative `strict_acceptance_eligible is True`**, so an absent
+  record is excluded automatically. **An unavailable classification must never be able to inflate
+  `strict_ok`** — no new strict success without measured evidence.
+
+### 4. D-004's site citations are stale and must be re-derived
+
+D-004 cites `driver.py:1319`, `:2008`; those are now `driver.py:1380` (`out["pathway.pwml"] = xml`) and
+`:1689`. Per **D-033**'s standing rule, C-053 **re-measures the site count at its own base** and does not
+inherit "four".
