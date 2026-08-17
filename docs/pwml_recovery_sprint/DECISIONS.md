@@ -1662,3 +1662,65 @@ D-033 entry points.**
    absorbed.
 5. Wrong-identity rows (row 23 carrying row 6's triple) are a **separate mapping defect**, not a
    duplicate-row concern, and must not be repaired here.
+
+---
+
+## D-037 — C-056a is granted a narrow, seam-level boundary expansion so it is buildable · 2026-08-17 · LOCKED
+
+**C-056a could not be built inside its planned `MASTER_PLAN` §9 boundary, and that had been surfaced to
+the product owner as a blocking question.** Its wiring call site is in `strict_quarantine.py`, which it does
+not own, and **A0-C3 is unsatisfiable as chartered**: the organism comparison it must fix lives in
+`semantic_production.py`, which is **C-017's file**, while A0-C3 simultaneously *requires* reusing
+`rag/eligibility.py`'s established synonym/canonicalization behaviour (`_organism_aliases`,
+`_canonical_organism`, `_taxon`, including `E. coli` ≡ `Escherichia coli`) and forbids a competing synonym
+table. A card cannot be told to reuse a symbol it is not allowed to reach.
+
+**The product owner grants the expansion. This resolves the blocking question; it is not to be asked
+again for the seams named below.**
+
+### The grant
+
+C-056a may modify **only the necessary portions** of:
+
+1. its original `MASTER_PLAN` §9 boundary;
+2. `strict_quarantine.py`, around the **measured** wiring call site near `:2080`;
+3. `semantic_production.py`, around the **measured** organism comparison near `:123-146`;
+4. the directly corresponding tests, **including C-017's exact-set pins where necessary**.
+
+**This is a function/seam-level grant, not module-wide ownership.** Line numbers above are the values of
+record at the time of the grant; the card **re-measures them** and works from the measured location, per
+D-033.
+
+### Conditions — all binding
+
+1. **Preserve all unrelated C-017 behaviour.**
+2. **No broad refactor of `semantic_production.py`.**
+3. **Measure the existing organism-comparison semantics before changing them.** Quote the current
+   predicate; do not infer it.
+4. Prefer a **shared pure predicate or a narrow adapter** over duplicated eligibility logic — A0-C3's
+   "no competing synonym table" is the whole point of the grant.
+5. **Avoid a circular dependency** between `semantic_production.py` and `rag/eligibility.py`. Trace the
+   real import graph; do not assume.
+6. If importing `rag/eligibility.py` moves C-017's exact-set assertions **only because a new authorized
+   symbol appears**: **re-pin narrowly**, preserve the behavioural contract, and add a **behavioural
+   discriminator proving the new path is necessary**.
+7. **Do not weaken an exact-set assertion merely to obtain green.** First establish whether the set is
+   **product behaviour** or only an **implementation-shape pin** — the answer decides whether re-pinning
+   is legitimate at all. Merge rule 4 governs: a pinned baseline moves only deliberately, with an exact
+   documented delta.
+8. Run **C-017's relevant regression tests** and **C-056a's cross-seam tests**.
+9. **Every line changed in the granted foreign-owned seams requires independent review.**
+10. **STOP CONDITION.** If the fix requires edits **beyond** these named functions and tests, or a broader
+    dependency refactor, **C-056a stops and reports the exact measured expansion.** It does not proceed
+    under an assumed widening.
+
+### What this grant does not do
+
+It does not give C-056a ownership of `strict_quarantine.py`, `semantic_production.py`, or C-017's suite;
+it does not authorize a synonym table of its own; and it does not relax A0-C4 (`evaluated` + `ok` +
+`inapplicable_checks` must be combined, because **`confirmed` can never be True on a production run**, so
+gating on it alone would ship nothing, ever).
+
+**Sequencing is unchanged: C-056b remains blocked until C-056a is merged and accepted, and C-056b is
+chartered from the resulting live source — never from pre-C-056a assumptions. C-053 and C-056b must both
+land before T-100, and no strict benchmark-success figure may be quoted until both are merged.**
