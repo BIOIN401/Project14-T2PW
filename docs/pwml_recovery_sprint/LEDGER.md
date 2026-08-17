@@ -416,6 +416,40 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result
   does not invalidate the guard (charter §5).
 
+**REV-053 REJECTED `57be026`, 2026-08-17 — two blocking findings, correction round 1 of 2 dispatched.**
+The reviewer verified the card's substance independently and found it sound (see the accepted list below),
+then found two things the card's own suite structurally could not.
+
+* **BLOCKER 1 — `driver.py:1499-1530`: `_add_strict_artifacts` returns the wrong string on every path.**
+  The signature became `-> str` documenting *"the PWML filename"*, but the loop at `:1517` **rebinds `name`**
+  over five unconditional iterations, so `return name` yields
+  `'pwml_required_field_gate_report.json'` on **all five** dispositions. Probed directly against the tip
+  module: naming correct on all five, return wrong on all five. **No live impact** — `_drive` discards it and
+  `_finalize_pwml_export` re-derives — but it is **the one dimension of the new seam with no test that can
+  fail**, which is why nine mutations and 212 focused tests missed it, and it ships a **measurably false
+  documented contract** on §3 hotspot 2 with **C-054 and C-056b queued directly behind on the same seam**.
+  Fix: rename the loop target, and **pin the return on every disposition** so the arm can fail.
+* **BLOCKER 2 — `tests/test_batch_pwml_artifact_naming.py:13-14` over-claims the G9 correction arm.** It
+  states *"every one of them fails at `8920371`"*; measured, **6 of 8** fail — two are **preservation** arms
+  that correctly pass at base. **G9's entire content is the accuracy of these labels.** The card's report to
+  the orchestrator was accurate (10/2); the **shipped file** is not, and the shipped file is what a future
+  auditor re-derives from. Over-claiming rather than dodging, so a correction, not a reject. **Prose only.**
+  The NEW ACCEPTANCE label is correct and stands.
+
+**Accepted from the review, not to be re-litigated or regenerated:** boundary PASS with **`_drive` proven
+byte-identical** (491 lines at both SHAs) and every tripwire clean · **the G9 base failure is REAL**,
+reproduced independently at `8920371` with only the new test file copied in (**10 failed / 2 passed**) ·
+**nine single-point mutations all killed**, the golden alone killing three · provenance PASS — `git grep`
+finds `artifacts["quarantine_report` only inside a docstring explaining why that source is wrong · no
+strict-success inflation (affirmative eligibility gate; the four struck keys not invented) · merge rule 7
+PASS (bytes kept; warnings never flip a status; `diagnostic_only` still writes all four JSON artifacts) ·
+hotspot 10 growth-only with a **derived** delta, `release_status_absent` **replaced by value** so presence
+became the invariant · the merge-rule-4 re-pin judged **stronger** than the original ·
+`test_batch_preflight.py`'s two failures re-confirmed **pre-existing and not this card's**.
+
+**Housekeeping owed:** the reviewer's base worktree `C:/t/rv53/basewt` is registered, detached, and clean;
+its removal was **permission-denied**. Leave it registered — it blocks nothing.
+
 **C-053 round 0 rulings, 2026-08-17. Ceiling ratified, two test files granted, one instrument corrected.**
 The card **stopped before committing** on a ceiling-1 overage and staged the complete patch rather than
 trimming it. That is the required behaviour (D-025), and because no commit exists the ceiling can still be
