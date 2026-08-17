@@ -385,6 +385,26 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   cutting an arm — the required behaviour. **REV-051a governs: the defect is in applying D-025, and the
   mis-set ceiling was the orchestrator's**, as it has been every time. The correction round adds test lines
   for the narrowed bucket contract and the golden table. Ceilings 2 (55/72) and 3 (4,496/20,000) stand.
+* **Correction 1 delivered at `6605066` (parent `c5cea52`, chain root `8f7514f`). Orchestrator-verified,
+  not accepted on report.** Boundary is **exactly four files** — `ir.py` (**the only production file**),
+  the new acceptance suite, the golden file, and the evidence probe; `tests/test_prefreeze_species_resolution.py`
+  is **absent from the diff**, i.e. untouched, and green. The component branch is byte-identical in behaviour
+  to base (same `"warning"` severity, same `duplicate_named_record` code, same message text, same
+  `pointer=f"{pointer_prefix}/{idx}"`, same `idx += 1; continue`), and **`refuse_duplicates` defaults to
+  `False`** — the safe direction is the default. **`refuse_duplicates=True` appears exactly once**, at
+  `ir.py:1197`, on the **entity** call site that populates `entity_by_name`; the component call site does not
+  pass it. Gates on the corrected tip: affected suites **88/88** (was 3 failed / 85 passed), focused **22**,
+  Chunk D **179/179**, SMOKE **460 exact**, G11 **exit 0** (2019 artifacts, 0 non-compliant), **zero
+  surviving owned processes across all 83 jobs**.
+* **BOTH D-025 ceilings ratified, not charged to the card.** Ceiling 1 **1,159 / 1,050** and ceiling 2
+  **98 / 72**. Ceiling 2's overage is **structural and mine**: 64 of the 98 are **two full Chunk D runs**
+  (the gate self-allocates ~32 each), and the second run exists **because I mandated a re-measure on the
+  corrected tip** — without it the count is 66, under the ceiling. Ceiling 1 grew by the +240 lines the
+  correction itself required (the `refuse_duplicates` split and its rationale, the golden table, the
+  component-warn arm). **The card deleted no evidence and cut no arm to fit a number, and refused to do so
+  when it would have brought the count under** — that is the required behaviour (D-025), and **REV-051a
+  governs: the defect is in applying D-025, and the mis-set ceilings were the orchestrator's, as they have
+  been every time.** Ceiling 3 **8,140 / 20,000** ✓.
 * **Accepted as measured, not re-run:** §5's live residual is **MEASURED, not DB-unavailable** —
   `residual_count: 0`, `created_collisions: {}` over 32 legs through EP3's second pre-freeze pass with the
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result

@@ -961,3 +961,32 @@ identifiers are not proof of identity.
 **Owner: a new card `C-050j`. NOT C-050i** — assigned by name, not by proximity, because that is exactly the
 failure REV-050h caught on F-039. **Not urgent**: exposure is measured at zero and the three non-species
 component buckets have no converger at all.
+
+## F-047 — reading the compound-resolution goldens outside pytest perturbs every IR-building leg
+
+**Registered 2026-08-17** from C-050i's correction round, where it produced a **false 32-of-32 delta** and
+was correctly diagnosed rather than worked around.
+
+**Symptom.** Capturing `tests/test_compound_resolution_extraction.py::_leg_digest` by importing the test
+module directly — the obvious way to measure a golden delta — reported **all 32 legs moved**. The granted
+delta was one leg.
+
+**Diagnosis, and why it is trustworthy.** The card measured the *same sweep at the base tree*, which also
+reported all 32 moved. A base tree cannot have moved against itself, so the perturbation is in the
+**instrument, not the code**. The mechanism: the digest folds the IR report through
+`json.dumps(..., default=_nonjson)`, i.e. `repr`, so any leg that builds an IR is sensitive to
+import-context differences. **pytest is the authority**; run under pytest, the sweep reports exactly the
+one-leg delta.
+
+**Why the granted delta was still safe to accept.** The moved leg is *immune* to the hazard: after the move
+**none of its five configs builds an IR**, so its digest is only config names plus stop/refusal codes — and
+both instruments agreed on it exactly.
+
+**Rule.** **Measure a `_leg_digest` delta under pytest, never by importing the test module.** If you must use
+a direct-import harness, **measure the base tree with the same harness first** — agreement there is the only
+thing that makes a delta claim meaningful. Recorded in-file above `GOLDEN` as well, so the next card meets it
+where it works.
+
+**Same family as F-045** (a measurement script resolved its output path after `chdir` and wrote evidence into
+the checkout it was auditing): **the instrument is part of the measurement, and it is unsurveyed elsewhere.**
+Unowned.
