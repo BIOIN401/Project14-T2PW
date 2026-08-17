@@ -391,7 +391,13 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   is **absent from the diff**, i.e. untouched, and green. The component branch is byte-identical in behaviour
   to base (same `"warning"` severity, same `duplicate_named_record` code, same message text, same
   `pointer=f"{pointer_prefix}/{idx}"`, same `idx += 1; continue`), and **`refuse_duplicates` defaults to
-  `False`** — the safe direction is the default. **`refuse_duplicates=True` appears exactly once**, at
+  `False`** — i.e. the default **preserves base behaviour**. *(Wording corrected 2026-08-17: this cell first
+  called `False` "the safe direction", which conflates two senses. It is safe against **regression** and
+  permissive against **the defect**; a fail-closed default would be `True` with an explicit
+  `refuse_duplicates=False` at the component site. REV-050i flagged the conflation and confirmed the
+  in-diff docstring makes no such claim and is accurate. Left as built — the risk is theoretical with two
+  call sites in one private helper — but the record is corrected rather than left overstating.)*
+  **`refuse_duplicates=True` appears exactly once**, at
   `ir.py:1197`, on the **entity** call site that populates `entity_by_name`; the component call site does not
   pass it. Gates on the corrected tip: affected suites **88/88** (was 3 failed / 85 passed), focused **22**,
   Chunk D **179/179**, SMOKE **460 exact**, G11 **exit 0** (2019 artifacts, 0 non-compliant), **zero
@@ -409,6 +415,51 @@ weakening the guard or narrowing scope itself. That was the right call and the r
   `residual_count: 0`, `created_collisions: {}` over 32 legs through EP3's second pre-freeze pass with the
   live resolver, run from the primary checkout, read-only, output resolved before `chdir`. A zero result
   does not invalidate the guard (charter §5).
+
+**C-050i correction round 2, ruled 2026-08-17 on REV-050i. One BLOCKING regression; a narrow boundary
+extension granted.** The independent reviewer **REJECTED** `6605066` and earned it: it proved, in two trees
+differing only in `src/`, that `tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions`
+**passes at base `8f7514f` and fails at tip** on the `[True-mixed]` and `[False-mixed]` parametrizations.
+`CARRIER_POPULATIONS["mixed"]` is `{"name": "Glycine", "pathbank_compound_id": 78}` beside
+`{"name": "gly", "kegg_id": "C00037"}`; pre-freeze renames `gly` → `Glycine`, producing two `Glycine` rows in
+the **compounds (entity)** bucket, which the new guard refuses. `_reject_ambiguous_renames` is blind to it
+(D-034 clause 5) and C-050h's refusal deliberately does not fire (nothing references the rows).
+
+**This is merge rule 4 unsatisfied — existing affected tests fail with no documented delta — and it is R1's
+stop condition hit a second time, undetected.** The card is not at fault for missing it: **the file is in no
+chunk** (zero occurrences in `TEST_MATRIX.md` and in `chunk_d_gate.py`), so none of the 83 bounded evidence
+records could contain it. That gap is **F-049**.
+
+* **The refusal is CORRECT and is not to be weakened.** At base that fixture was **silently collapsing two
+  post-freeze `Glycine` rows** — it was unknowingly exercising the exact defect C-050i removes. **Do not
+  relax the guard, do not special-case the fixture's shape, do not narrow R1 further.**
+* **Narrow boundary extension GRANTED — `tests/test_prefreeze_third_export_seam.py`, fixture only, as a
+  fifth file.** Routing the repair to the seam's owner was considered and **rejected as circular**: the
+  fixture change only makes sense with the guard present, so a separate card would have nothing to build
+  against until C-050i merges, and C-050i cannot merge until it lands.
+* **Conditions.** Change **only** `CARRIER_POPULATIONS["mixed"]` so the incidental `_norm` collision
+  disappears. **Preserve the mixture-of-carrier-types property** — one row carrying a PathBank identifier
+  beside one carrying a KEGG identifier — because that is what makes the value **carried, not inferred**
+  (the fixture's own comment: *"Any exporter that tried to infer availability from the rows would have to
+  guess here, which is why the value has to be carried"*). **Demonstrate explicitly that D-032's
+  carried-not-inferred argument survives.** **Weaken no assertion.** Ship the **exact documented delta**
+  (merge rule 4).
+* **Add the file to the affected set and re-run it.** It must pass at the corrected tip.
+* **Two false records must be corrected in the same round.** (i) The alias-residual docstring at
+  `tests/test_pwml_ir_duplicate_row_refusal.py:462-463` claims *last-writer-wins* and *"attributable instead
+  of latent"*; **measured, all of it is wrong** — binding is **first-wins by payload row order** and **no
+  `ambiguous_entity_reference` warning is emitted at all**, so the residue is exactly as latent as before.
+  That is **F-048**, owned by a new card **C-050k**; C-050i's only obligation is to stop misdescribing it.
+  (ii) The instrument note above `GOLDEN` repeats **F-047**'s `_nonjson`/`repr` mechanism, which REV-050i
+  **falsified** (`_nonjson` fires zero times) while confirming the phenomenon. Reword both to the measured
+  claim.
+* **Accepted from the review, not to be re-litigated:** boundary PASS · blocks-never-repairs PASS (no
+  consolidation, no identifier-equality trigger) · R2 PASS (raise precedes `out.append`; both production
+  call sites fail closed) · R3 PASS (base-vs-tip `ir_digest` **and** `report_digest` identical, entity and
+  all four component buckets) · guard un-bypassable (reviewer added an **NBSP** variant the suite lacked;
+  it refuses) · golden move **exactly** as granted (reviewer hand-computed the moved digest from first
+  principles and it equals the committed value) · G9 honesty PASS (mutation kills 16 of 22 arms; the 6
+  survivors are exactly the preservation pins) · one collision in the corpus, reviewer's own 32×9 census.
 
 **C-053 rulings, issued 2026-08-17 after a read-only re-derivation against live source.** The C-053 charter
 ended with seven owed rulings, **none recorded**. Re-derived, **two were already discharged and the charter

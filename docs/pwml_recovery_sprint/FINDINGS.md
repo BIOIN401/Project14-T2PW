@@ -973,10 +973,19 @@ delta was one leg.
 
 **Diagnosis, and why it is trustworthy.** The card measured the *same sweep at the base tree*, which also
 reported all 32 moved. A base tree cannot have moved against itself, so the perturbation is in the
-**instrument, not the code**. The mechanism: the digest folds the IR report through
-`json.dumps(..., default=_nonjson)`, i.e. `repr`, so any leg that builds an IR is sensitive to
-import-context differences. **pytest is the authority**; run under pytest, the sweep reports exactly the
+**instrument, not the code**. **pytest is the authority**; run under pytest, the sweep reports exactly the
 one-leg delta.
+
+> **Mechanism corrected 2026-08-17 by REV-050i — the phenomenon is real, the stated cause was not.**
+> This finding first read: *"the digest folds the IR report through `json.dumps(..., default=_nonjson)`,
+> i.e. `repr`, so any leg that builds an IR is sensitive to import-context differences."* The reviewer
+> **instrumented `_nonjson` and it fires zero times** on the leg it measured, while independently
+> reproducing the divergence (out-of-pytest digest `fc587e03…` ≠ pytest/`GOLDEN` `64038a74…` for an
+> IR-building leg, with the moved leg agreeing exactly). **So the divergence is confirmed and its cause is
+> NOT `_nonjson`; the true mechanism is unidentified.** The operational rule below is unaffected and the
+> golden delta is proven two independent ways. Recorded rather than quietly reworded, because an
+> authoritative-sounding wrong mechanism is worse than an admitted unknown — the next card would try to
+> reason from it.
 
 **Why the granted delta was still safe to accept.** The moved leg is *immune* to the hazard: after the move
 **none of its five configs builds an IR**, so its digest is only config names plus stop/refusal codes — and
@@ -990,3 +999,66 @@ where it works.
 **Same family as F-045** (a measurement script resolved its output path after `chdir` and wrote evidence into
 the checkout it was auditing): **the instrument is part of the measurement, and it is unsurveyed elsewhere.**
 Unowned.
+
+## F-048 — the alias residual binds first-wins by payload row order, and emits no warning at all
+
+**Registered 2026-08-17** by REV-050i, which measured it rather than accepting the card's description.
+**Pre-existing: base and tip behave identically**, so it was outside C-050i's boundary to fix — but the
+card's own docstring described it **wrongly**, and a false record is the failure mode this sprint keeps
+paying for.
+
+**The card claimed** (`tests/test_pwml_ir_duplicate_row_refusal.py:462-463`) that an alias-only overlap
+produces *"an ambiguous `entity_by_name` entry, resolved last-writer-wins … pinned here so the residue is
+attributable instead of latent."*
+
+**Measured, all three clauses are wrong.** `entity_by_name` is a `defaultdict(list)` populated with
+`.append`, and `resolve_entity` returns the **first** candidate of the preferred type, so:
+
+1. it is **payload row order that wins, not the last writer**;
+2. because the `preferred_order` loop **returns early**, **no `ambiguous_entity_reference` warning is
+   emitted at all**;
+3. the residue is therefore **not** "attributable" — it is exactly as latent as before.
+
+**The reviewer's decoy, reproduced:** rows `[serine (synonym "Glycine"), glycine]` with a reaction input
+`"Glycine"` bind to `cmp_1 = serine`, **silently**, with nothing in the report.
+
+**This is the same harm class C-050i exists to prevent** — a reference binding to a biologically different
+row with no diagnostic — reached through the **aliases** surface rather than the `name` surface. It sits on
+precisely the arm the card's own suite calls *"where a bypass would hide"*, and until now it had **no finding
+ID and no owner**.
+
+**Scope note.** C-050i's guard groups on `_norm(name)` and is correct not to fire here: the two rows are
+genuinely distinct entities, so refusing would be wrong. The defect is in **`resolve_entity`'s silent
+first-wins on an ambiguous alias index**, not in the dedupe.
+
+**Owner: a new card `C-050k`. NOT C-050i** — assigned by name, not by proximity (REV-050h's lesson on
+F-039). C-050i's only obligation is to **stop misdescribing it**: correct the docstring to the measured
+behaviour and cite this finding.
+
+---
+
+## F-049 — two structural gaps the C-050i review exposed in the gate set
+
+**Registered 2026-08-17** by REV-050i.
+
+### 1. `tests/test_prefreeze_third_export_seam.py` is owned by no chunk
+
+Measured: the filename occurs **zero times** in `TEST_MATRIX.md` and **zero times** in
+`evidence/chunk_d_gate.py`. It is in neither Chunk D's nor SMOKE's file list.
+
+**This is the structural reason C-050i's 83 bounded evidence records missed a live regression** that a
+reviewer found in one focused run. `LEDGER.md` names this exact test **by name** as the trip-wire C-050h
+withdrew a widening for, and in the same sentence hands the residue to C-050i — so the card inherited both
+the residue and its known trip-wire, and still could not have caught it, because **no gate it was told to
+run contains the file**.
+
+This is the **same class** as C-053's Q9 (four of five files it must change are in no chunk) and C-052's
+UNASKED-2 (five of seven). **Three cards in one pack have now hit it.** The gate set's file coverage is not
+a per-card oversight; it is a hole in `TEST_MATRIX`. **Unowned — needs a card that audits which test files
+belong to no chunk and closes the set.**
+
+### 2. `tests/test_strict_failure_replay.py::…[only_unrelated_reactions_survive]` fails at base
+
+Two parametrizations fail at `8f7514f` — **pre-existing, reproduced against base `src/`, not caused by any
+card in flight**. Another IR-building file that **no chunk runs**, so the failure has been invisible.
+**Unowned.** Do not let a later card discover this and mis-attribute it to its own diff.
