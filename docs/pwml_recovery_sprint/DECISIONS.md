@@ -1799,3 +1799,145 @@ locked policy:
 D-004 cites `driver.py:1319`, `:2008`; those are now `driver.py:1380` (`out["pathway.pwml"] = xml`) and
 `:1689`. Per **D-033**'s standing rule, C-053 **re-measures the site count at its own base** and does not
 inherit "four".
+
+---
+
+## D-039 — C-056a's rulings: the grant is buildable without moving a single exact-set pin · 2026-08-17 · LOCKED
+
+**D-037 granted the boundary. This decides how it is used.** The C-056a charter ended with eight owed
+rulings, none recorded. Re-derived against live source, the charter's own **central blocking finding was
+false**, and a cheaper path exists that moves **no** pinned assertion in `test_semantic_production_no_gold.py`.
+Two of its closeout items were already fixed. Three unlisted breakages were found.
+
+### 1. Import the PUBLIC wrapper, function-locally. `test_e` does not move.
+
+The charter asserted C-056a *"cannot add a public re-export … it must import the private names directly"* and
+that this forces a merge-rule-4 re-pin of `test_e`'s exact sets. **Both halves are false.**
+
+* **A public wrapper already exists and is already read-only sprint material.**
+  `rag/admission.py:2046` `compare_organism(requested, observed)` returns
+  `match` / `genus_level` / `mismatch` / `unknown` and delegates taxonomy to `eligibility._compare_one`
+  (`admission.py:2033-2037`). `MASTER_PLAN.md:147` lists
+  `admission.compare_requested_pathway`/`compare_organism` with disposition **`read`**. **Use it. Do not
+  import private `eligibility` names.**
+* **A function-local import provably does not move the pin, and the proof is already in the file.**
+  `semantic_production.py:166-169` already function-locally imports `t2pw.pipeline.entity_identity`, and
+  `t2pw.pipeline` appears **zero times** in `tests/test_semantic_production_no_gold.py`. The `test_e` probe
+  is a **fresh `subprocess.run`** (`:134`) that only imports the module; it never calls a function.
+
+**Therefore the import MUST be function-local, and `tests/test_semantic_production_no_gold.py::test_e`
+stays byte-identical. A module-level import is FORBIDDEN** — `graph["own"]` (`:142`) is
+`set(sys.modules) - package`, i.e. **all** modules including stdlib, so a module-level import would also drag
+in `math` (`config.py:16`, `store.py:21`) and others. **A diff containing a module-level `rag` import is a
+reject, not a re-pin request. D-037 condition 6 does not fire.**
+
+### 2. The organism widening is strictly monotone
+
+The live predicate is `semantic_production.py:134`:
+`if not norm or norm == wanted or norm.startswith(wanted + " ") or wanted.startswith(norm + " "):`
+Hand-evaluated, requested `Escherichia coli` / observed `E. coli` emits a **finding** — the false positive is
+real, and canonicalizing only the requested side cannot fix it.
+
+**A row is compatible if and only if `not norm`, OR the existing disjunction holds, OR
+`compare_organism(requested, observed) == ORGANISM_MATCH`.** The change may only **remove** findings, never
+add one.
+
+**`genus_level` is NOT newly tolerated and NOT newly penalised.** It straddles two *opposite* current
+behaviours — bare genus `Escherichia` is already tolerated by `wanted.startswith(norm + " ")`, while
+`Escherichia fergusonii` already emits a finding — so mapping it either way silently changes shipped
+behaviour in one direction. **Both existing behaviours stand unchanged.** The diff carries the
+requested/observed verdict table as its documented delta. The charter's proposed assertion that bare genus
+*must not* match is **rejected**: A0-C3 does not say it, and adopting it would be a new undocumented
+tightening.
+
+**Out of scope:** the same literal predicate is duplicated at `bench/semantic.py:753` (`_organism_conflicts`,
+the **gold** path). **Do not touch it.**
+
+### 3. The semantic gate fires on a closed set of four
+
+`evaluate_production_semantics` populates eight checks (`semantic_production.py:287`). **Gating set:**
+`CHECK_ANCHORS`, `CHECK_ORGANISM`, `CHECK_ID_CONFLICT`, `CHECK_RAG_REINTRODUCTION` — declared as a named
+constant with a test asserting it is closed.
+
+* `CHECK_PLACEHOLDER_IDENTITY` **never gates** — `PRODUCT_CONTRACT` §13 / TRAP-3; it is already explicitly
+  non-adjudicating (`semantic_production.py:159-163`).
+* `CHECK_SUPPORTED_REACTIONS` is always inapplicable in production (`semantic_production.py:278`).
+* `CHECK_SOURCE_CARRIER` and `CHECK_CONNECTED_CORE` are **recorded but NON-GATING**, revisited by C-056b
+  with measured evidence.
+
+**Why the last two do not gate.** `_check_source_carrier` documents itself as *"Hygiene only … Deliberately
+does NOT claim the reaction is supported"* (`semantic.py:485-491`). **Using a check that explicitly
+disclaims biological meaning to block a biological release would misuse it**, and it demonstrably over-fires:
+it is exactly what breaks the reachability assertion in §4. `_check_connected_core`
+(`semantic_production.py:227-244`) duplicates a floor the coverage verdict already enforced at the same seam
+(`min_core_processes`, `:1800`), so gating on it double-counts. **This decision only ever removes strict
+successes relative to today's unwired state; it creates none.**
+
+### 4. A reachability assertion breaks, and it is repaired locally — never weakened
+
+`tests/test_strict_quarantine_release_seam.py:684` asserts
+`states == {RELEASE_READY, REVIEW_REQUIRED, DIAGNOSTIC_ONLY}` — that **all three `PRODUCT_CONTRACT` §4
+states are reachable through the seam**. That is **product behaviour**, not an implementation-shape pin.
+
+It breaks on wiring: `_base()`'s reactions carry no `evidence`/`source_papers`/`rag_provenance`/`source_refs`,
+so `_has_source` (`semantic.py:454-482`) is False, `_check_source_carrier` emits findings, and the
+`RELEASE_READY` member demotes. **The file is in NO chunk**, so SMOKE and Chunks A–E all miss it.
+
+**Repair: add a file-local `_sourced_base()` that deep-copies `_base()` and adds an `evidence` string, and
+use it for the `RELEASE_READY` member. The set stays whole.**
+
+**STOP — do not edit `_base()` itself.** It lives in `tests/test_strict_quarantine_contract_alignment.py`
+with **15 in-file call sites and 3 importing files, two of them Chunk A / inside SMOKE 460**. That is a
+D-037 clause-10 expansion.
+
+### 5. No schema bump in C-056a
+
+C-056a writes **only** the two keys already in schema 4 — `semantic_evaluation` and
+`semantic_not_evaluated_reason` (`release_status.py:222-223`). Populating existing keys is not a schema
+change. **It may not touch `strict_quarantine.py:2155` (`"schema_version": 4`) and may not add a key under
+`quarantine_report["release"]`**, because `tests/test_strict_quarantine.py:894` pins `schema_version == 4`
+and is **Chunk A, inside SMOKE 460** (merge rule 10), with a second pin at
+`test_strict_quarantine_release_seam.py:695`. **`semantic_failed_checks` persistence and the 4-to-5 bump are
+deferred to C-056b**, which owns the denominator consumer anyway. Adding the schema bump here fires the
+D-037 stop condition into a SMOKE-gated pin.
+
+`decision_identifier` (`strict_quarantine.py:288-303`) hashes only `admitted_payload_hash` +
+`decision_input_hash`, so populating `release` does **not** move `decision_id`.
+
+### 6. The layering inversion is ruled explicitly, not absorbed
+
+Wiring at `strict_quarantine.py:2080` would be the **first `pipeline` to `bench` import in the codebase**
+(measured: zero today), inverting the layering `bench/__init__.py` declares. **Authorized, narrowly:** the
+import is **function-local** at the call site, matching the existing `:2004` precedent, and carries an
+in-line comment naming the inversion. It is not a cycle — the forward chain was traced and **no module on
+the `rag`/`admission` branch imports `t2pw.bench`**.
+
+### 7. Process
+
+* **Reviewer reassigned from `C-017 impl` to an independent reviewer who implemented neither C-017 nor
+  C-041/C-041a.** The grant places C-056a inside C-017's module *and* C-041a's seam; neither implementer may
+  review their own territory (`MASTER_PLAN.md:372`). Precedent: C-017's own review was reassigned.
+* **`MASTER_PLAN` §9 Chunk D column changes from a dash to `D (qb)`** — measurably wrong today, since `qb`
+  observes the seam. The focused set additionally **names** `tests/test_strict_quarantine_release_seam.py`
+  and `tests/test_release_status_classification.py`, **neither of which is in any chunk**.
+* **`qb` runs as a read-only harvest from the PRIMARY checkout**, tracked-background per D-026, with
+  `T2PW_OFFLINE_CURATOR=1` **in the bounded child**. `.env` is present only in the primary (measured absent
+  in six sampled worktrees). **A `qb` green obtained in a worktree is never a pass** — label it
+  `DB_UNAVAILABLE` and treat it as not run.
+* **Serialize against C-057** — both touch `strict_quarantine.py`.
+* **`tests/test_streamlit_quarantine_boundary.py`: no test function may be added, removed, renamed or
+  reordered** (hotspot 9; the gate addresses nodes positionally).
+* **Q4 — D-029 is NOT extended; a cross-reference suffices.** D-029's scope is explicitly narrow
+  (`prefreeze_resolution.py`). The equivalent rule already binds independently: `PRODUCT_CONTRACT` §11
+  (*"`not_evaluated` is never `false`"*) and merge rule 7, and it is already implemented at
+  `semantic_production.py:59-63`. **`DECISIONS.md` is not appended for it.**
+* **Q5 — no fabricated base failure and no separate discrimination run.** `SEMANTIC_FAILED` is defined and
+  **produced nowhere in `src/`**, and `semantic_production` has **zero `src/` consumers**, so this is
+  genuinely new capability. Every preservation invariant is written as a **self-discriminating table**
+  containing both a firing and a non-firing case, so deleting the branch *or* over-firing it turns the guard
+  red. **Three diff labels are mandatory:** `NEW ACCEPTANCE`, `REGRESSION GUARD (passes at base and tip)`,
+  and `MERGE RULE 4 BASELINE MOVE`. **Mislabelling the section 4 move as a regression guard is a reject.**
+* **First act, before any edit: measure.** The section 2 verdict table and the section 4 demotion are
+  **hand-evaluated from source predicates, not observed**. C-056a's first bounded job runs
+  `tests/test_strict_quarantine_release_seam.py` and `tests/test_semantic_production_no_gold.py` to confirm
+  both. D-033 forbids inheriting a claim that has not been re-measured.
