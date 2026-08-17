@@ -2087,3 +2087,71 @@ F-039.
   module-script** hazard and **is not a constraint on this card**.
 * **D-025 ceilings are re-derived after this decision**, not inherited: the charter's figures budget zero
   runs for the golden-fixture delta and zero for a worktree base proof, and double-count the struck A0-C7.
+
+---
+
+## D-041 — C-050k emits a diagnostic and changes no binding; the refusal question stays open until it is measured · 2026-08-17 · LOCKED
+
+C-050k's charter correctly refused to settle its own central question and stopped for a ruling. This is it.
+
+> When `resolve_entity` finds an ambiguous alias key, does it **(a)** keep today's binding and emit a
+> named machine-readable diagnostic, or **(b)** refuse?
+
+### 1. Ruling: **(a) diagnostic-only.** Refusal is not authorized on this card.
+
+Not because refusal is wrong in principle, but because every input that would justify it is currently
+unmeasured, and because (a) is the only option that is inside the contract by construction:
+
+* **Changing which entity a reference binds to is post-freeze reinterpretation of biological content.**
+  `build_pwml_ir` runs post-freeze at EP3 on a deepcopy-of-a-deepcopy taken after the hash. Merge rule 8
+  forbids exporters repairing biology after the canonical graph is frozen, and `PRODUCT_CONTRACT` §5 names
+  **process-to-entity references** as a must-remain-equivalent dimension. Option (a) touches neither.
+* **Refusal on this path is the shape that turns a working export into a dead one.** All seven call sites
+  pass a role in `preferred_order` (`ir.py:1668`, `:1740`, `:1808`, `:1901`, `:1956`, `:2001`, `:2002`), so
+  the early return at `ir.py:1530-1533` is the dominant path and every reaction reference crosses it. With
+  exposure unmeasured, the blast radius of a refusal is unknown. **Merge rule 7 preserves
+  incomplete-but-correct pathways as `review_required` rather than dropping them.**
+* **A diagnostic discharges the harm F-048 actually states** — *"the residue is not attributable"*. Making
+  it attributable is the whole finding. Nothing is invented and nothing is suppressed.
+* **Prefer a narrow measured correction over a speculative redesign.** Refusal remains fully available as a
+  follow-up card the moment §2's census produces a number.
+
+### 2. The ruling's three binding limits
+
+1. **Severity is `warning`, matching the emitter that already exists.** `ir.py:1535-1543` already calls
+   `_add_issue(report, "warning", "ambiguous_entity_reference", …)`. **Do not escalate it to `error`.**
+   `_add_issue` at `"error"` sets `report["ok"] = False` (`ir.py:375`), which would flip legs between
+   exporting and not — a production-behaviour change this card is not granted and which would create or
+   destroy strict successes without measured evidence, in both directions.
+2. **No binding may move.** `tests/test_pwml_ir_duplicate_row_refusal.py:511-512` (`bound_key == "cmp_1"`)
+   **must stay green untouched**. If it moves, the card has re-bound a reference post-freeze — reject.
+3. **`report["ok"]` may not move on any committed leg.** If adopting the existing severity nevertheless
+   moves a golden `_leg_digest`, that is a **merge rule 4 baseline move** needing an exact documented delta
+   and orchestrator ratification **before** commit — measured under pytest, never by a direct-import
+   harness (**F-047**: a direct-import harness reported a false 32-of-32 move that reproduced identically at
+   base; the instrument was the fault, and F-047's stated mechanism was itself falsified by REV-050i, so do
+   not reason from the mechanism).
+
+### 3. What still escalates
+
+**If §2's census shows any committed leg actually resolving a reference through an ambiguous key, STOP.**
+That is a live reaction bound to a possibly-wrong molecule, a `product_contract_violation` candidate under
+`PRODUCT_CONTRACT` §14, and its disposition is a product ruling — including whether (b) becomes mandatory.
+It also changes the card's G9 classification from *new capability* to a *correction of pre-existing
+observable behaviour* with a real base-failing behavioural proof. **Re-charter honestly; never re-label in
+flight.**
+
+### 4. A control-flow correction the charter transcribed wrongly
+
+The charter's §0.1 snippet indents `if len(candidates) > 1:` **inside** the `for wanted in ordered:` loop.
+Live, `ir.py:1534` is at the **same** indentation as `ir.py:1530` — the ambiguity check sits **after** the
+loop and runs at most once, not once per preferred type. **The conclusion is unaffected** (the branch is
+still unreachable whenever any preferred type matches, which is F-048's point), but do not design the
+detection against the transcribed control flow.
+
+### 5. `len(candidates) > 1` is not the ambiguity signal
+
+`ir.py:1249-1261` appends once per alias slot **with no dedupe**, so a single entity whose `name` and
+`raw_name` normalize alike appears twice under one `_norm`. Testing list length would raise a false
+ambiguity on one entity and report its `entity_type` twice. **The test is over distinct entity keys.** This
+defect is recorded by no finding and is not C-050k's to fix beyond not being fooled by it.
