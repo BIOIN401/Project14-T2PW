@@ -39,7 +39,7 @@ hung it.
 
    Prefer **one tracked bounded cohort** where splitting would change the gate's semantics or
    materially increase overhead. Use `--only` partitions only where the gate is explicitly
-   partition-safe — `chunk_d_gate.py` proves its `179 = 152 + 4 + 23` partition on every
+   partition-safe — `chunk_d_gate.py` proves its `187 = 160 + 4 + 23` partition on every
    invocation, so its partitions qualify.
 
 2. **The wrapper must** record root PID, command, start time, working directory, timeout
@@ -213,7 +213,7 @@ modify `runner.py` (that file is owned by C-032).
 | **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 123 | **12 s** |
 | **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 225 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
-| **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 152 | **0.9 s** |
+| **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 160 | **0.9 s** |
 | **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
@@ -222,8 +222,8 @@ branch. Gate G10. **457 was the INIT-001 figure and is obsolete**: C-010 moved t
 baseline deliberately, 457 → 460, with an exact documented delta, and every A0 merge from
 `72ee20f` onward measured 460. Any live instruction still saying 457 is stale.
 
-**Chunk D is excluded from the smoke gate.** Its deterministic core is 152 tests in
-**~1 s**, but the complete 179-test gate cost **9–13 min** over six runs — the 27 AppTest
+**Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
+**~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
 processes, not the core — which is too slow per merge. It is **mandatory as a focused
 test** for every branch marked ✔ below, because that is exactly where their regressions
 land and none of it appears in the smoke suite.
@@ -252,7 +252,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
   tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py
 
 # CHUNK D — AUTHORITATIVE GATE is the split-process runner, never the one-process form.
-# ONE call runs the whole gate: it proves the partition, runs the 152-test core in one
+# ONE call runs the whole gate: it proves the partition, runs the 160-test core in one
 # process, then each of the 27 AppTest node IDs ALONE in a fresh process, serially.
 # --task lets it allocate its own ~32 G11 reports; 32 paths do not fit on a CLI.
 #
@@ -288,17 +288,26 @@ T2PW_OFFLINE_CURATOR=1 \
 
 ### Chunk D — split-process gate (RECONCILE-B, execution partition superseded by H-007)
 
-The one-process form ran all 179 tests together and **flapped**, on a *different* test each
+The one-process form ran all 187 tests together and **flapped**, on a *different* test each
 time; the exact committed evidence is tabulated under § "The historical `qb` sample" below,
 which supersedes every looser count of it. Cause, documented at
 `tests/test_streamlit_quarantine_boundary.py:425-430`: several `AppTest` instances in one
 process eventually lose their `ScriptRunContext`, so `streamlit_app.py:6187` → `ui.py:26`
 raises `FragmentThreadState not initialized` and the test fails on a widget never created.
 
-`chunk_d_gate.py` runs the same 179 tests as isolated processes. **Set-identity is proven
-on every invocation** — `partition` compares node-ID *sets*: 179 = 152 + 4 + 23, missing 0,
+`chunk_d_gate.py` runs the same 187 tests as isolated processes. **Set-identity is proven
+on every invocation** — `partition` compares node-ID *sets*: 187 = 160 + 4 + 23, missing 0,
 extra 0, overlap 0 — and `run` then compares the set it EXECUTED to the set it collected,
 so a substitution fails the gate even when every job it ran was green.
+
+> **`187` holds only on a tree carrying C-050k (D-044 § 2).** The count moved twice, both
+> times as an authorized merge-rule-4 baseline move with `SETS_EQUAL=True, missing=0,
+> extra=0, overlap=0` across the move: `core` 150 → 152 (C-045b, `TOTAL` 177 → 179) and
+> `core` 152 → 160 (C-050k, `TOTAL` 179 → 187). The C-050k `+8` is exactly the eight
+> alias-ambiguity acceptance arms its charter required be added to `tests/test_pwml_ir.py`,
+> a `core` file that previously carried **zero** `resolve_entity` / `ambiguous` / `synonyms`
+> coverage. **Until C-050k merges, `179 = 152 + 4 + 23` remains correct**, and a card in
+> flight that reports 187 on a tree without C-050k is measuring the wrong thing.
 
 ### The execution partition is per NODE, not per file (H-007)
 
@@ -310,7 +319,7 @@ isolation had never been tested. It now is:
 
 | Component | Execution | Result | Runtime |
 |---|---|---|---|
-| `core` (5 files, 152 tests) | one process | **152 passed** — deterministic | ~1 s |
+| `core` (5 files, 160 tests) | one process | **160 passed** — deterministic | ~1 s |
 | `s8` (4 AppTest tests) | **4 processes, one per node** | **4 × 1 passed** | ~6 s |
 | `qb` (23 AppTest tests) | **23 processes, one per node** | see § below | ~10.5 min |
 
@@ -337,11 +346,11 @@ failure, or a traceback implicating the diff under test still blocks a merge.
 
 ### What blocks a merge today (D-022, measured by H-007's six-run matrix)
 
-**Chunk D is 179 tests, and all 179 are still mandatory to run and to report.**
+**Chunk D is 187 tests, and all 187 are still mandatory to run and to report.**
 
 | Component | Status |
 |---|---|
-| `core` 152 + `s8` 4 = **156** | **BLOCKING.** Green in all six runs, both trees |
+| `core` 160 + `s8` 4 = **164** | **BLOCKING.** Green in all six runs, both trees |
 | `qb` 23 | **Mandatory to run and report; temporarily NON-BLOCKING** |
 
 The six runs gave **base 1 green / 2 red, candidate 1 green / 2 red** on trees whose `tests/`
@@ -401,8 +410,8 @@ and no `qb` test may be weakened, deselected, retried until green or called envi
 | C-056b | B | — | — | |
 | C-057 | A, E | — | — | |
 
-**"Chunk D" here = the split-process gate** (`chunk_d_gate.py`), all 179 tests, now
-executed as the 152-test core plus 27 per-node AppTest processes — see § Chunk D and D-022.
+**"Chunk D" here = the split-process gate** (`chunk_d_gate.py`), all 187 tests, now
+executed as the 160-test core plus 27 per-node AppTest processes — see § Chunk D and D-022.
 
 ---
 
@@ -484,7 +493,7 @@ different Stage-1 draws at temperature 0 in this repository.
 ## Baseline to preserve (filled by INIT-001)
 
 Full suite per-chunk counts · smoke **460** (457 at INIT-001, moved 457→460 by C-010 with
-an exact documented delta) · chunk D 179 · `bench_acceptance.py` on
+an exact documented delta) · chunk D 187 · `bench_acceptance.py` on
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 
