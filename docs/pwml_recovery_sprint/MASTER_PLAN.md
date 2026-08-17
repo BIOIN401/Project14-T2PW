@@ -160,7 +160,7 @@ against a policy).
 
 | Rank | File :: function | Lines | Branches | Mitigation |
 |---|---|---|---|---|
-| 1 | `streamlit_app.py :: run_post_pipeline_sbml_artifacts` | **1226** | C-030, C-050, C-052 | **C-011 seam** |
+| 1 | `streamlit_app.py :: run_post_pipeline_sbml_artifacts` | **1226** | C-030, C-050, C-052, **C-030a** | **C-011 seam**; C-030a is **test-only** and **serializes against C-052** |
 | 2 | `driver.py :: _drive` | **528** | C-031, C-032, C-041, C-053 | **C-012 seam** |
 | 3 | `streamlit_app.py` module-level script body | **2550, no function** | C-055 | least-verifiable branch in the sprint; senior reviewer; AppTest-driven focused tests mandatory |
 | 4 | `pwml/ir.py :: build_pwml_ir` | 1042 | C-040, C-051 | single owner; split three ways |
@@ -401,6 +401,7 @@ row to these, and never edit a re-export shim:
 | C-020 | `agent/p06a-equiv-comparator` | A1 | C-013 | NEW `pipeline/canonical.py` :: `biological_equivalence` (parses + normalizes **JSON, PWML, SBML**) | C-013 impl | new, D | ✔ |
 | C-021 | `agent/p31-rag-graph-delta` | A1 | C-015 | NEW `rag/graph_delta.py` | C-016 impl | new, C | — |
 | C-030 | `agent/p04b-hash-wiring` | B | C-011, C-013 | `streamlit_app.py` :: `freeze_canonical_payload` | C-052 impl | D | ✔ |
+| C-030a | *(unallocated)* | D | C-011, C-030 | **A0-C7 only. Test-only.** Object-sharing assertions at the **real** sharing sites in `streamlit_app.py` :: `run_post_pipeline_sbml_artifacts` — **§3 hotspot row 1, shared with C-050 and C-052** — plus the directly corresponding tests. **Explicitly NOT C-030's boundary:** F-008 proved A0-C7 undischargeable inside `freeze_canonical_payload`, where the payload is a `deepcopy` nothing in the returned dict aliases. Discriminator re-measured `streamlit_app.py:3746` (**not** F-041's `:3748` — drifted). Must not change C-011 lifecycle semantics | non-author, **NOT** the C-052 implementer | D | — |
 | C-031 | `agent/p02-quarantine-artifacts` | B | C-012 | `driver.py` :: `_add_common_artifacts`, `_add_identity_artifacts` | C-053 impl | B | — |
 | C-032 | `agent/p03b-deadline-module` | B | C-012, C-014 | NEW `pipeline/deadline.py`; `runner.py` :: `_timeout_row`, `launch_child`, `child_command`; `_finalize_timeout` | C-042 impl | B | — |
 | C-033 | `agent/p10-identity-hydration` | B | — | `src/t2pw/mapping/map_ids.py` :: `verify_real_protein_identity`, `_enforce_shipped_identity_names`; `src/t2pw/pipeline/entity_identity.py`; NEW `src/t2pw/mapping/uniprot_evidence.py`. **Not** `src/map_ids.py` — that is a 5-line re-export shim | C-044 impl | C | — |

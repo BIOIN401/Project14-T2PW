@@ -161,10 +161,24 @@ expected · minimal reproducer or evidence · current-card impact · future owne
 - **Evidence** The documented share→copy mutant is indistinguishable from the tip on **all nine
   seam observables across all 39 legs**. The four real sharing sites are C-052's symbol.
 - **Current-card impact** C-030 merged with A0-C7 **descoped, not re-bound**. Per `LEDGER.md`,
-  *"a seam is not complete while its row is open"* — **the freeze seam is recorded incomplete
-  pending C-052.**
-- **Owner** **C-052**
+  *"a seam is not complete while its row is open"* — **the freeze seam is recorded incomplete.**
+- **Owner** **C-030a** *(amended 2026-08-17; this line read **C-052**)*
 - **Shortcut accepted** Deliberately. No vacuous assertion was written in its place.
+
+> **Owner amended 2026-08-17 — F-008 and F-041 disagreed and both were standing.** F-008 recorded
+> A0-C7's owner as **C-052**; **F-041** recorded the `LEDGER` owner column as **C-030** and A0-C7 as
+> orphaned. The product owner ruled **F-041 authoritative**: **C-052 owns A0-C8 only and must not absorb
+> A0-C7**, which is re-assigned to a new narrow follow-up card **`C-030a`**. This line is amended in place
+> so the control plane no longer carries two answers to one question.
+>
+> **F-008's technical content is unaffected and remains load-bearing.** Its proof — that A0-C7 is
+> **undischargeable inside `freeze_canonical_payload`**, because the canonical payload there is a
+> `deepcopy` nothing in the returned dict aliases, so the share→copy mutant is indistinguishable from the
+> tip on all nine seam observables across all 39 legs — is precisely why `C-030a` **cannot** inherit
+> C-030's `MASTER_PLAN` §9 boundary. The real sharing sites sit in `run_post_pipeline_sbml_artifacts`
+> (§9 row 1, shared with C-050 and C-052), so `C-030a` must declare exact functions/tests and serialize
+> against C-052. Only the sentence *"The four real sharing sites are C-052's symbol"* is superseded: they
+> are in a **jointly-owned** region, and being in it does not make the requirement C-052's.
 
 ## F-009 — SBML carries no taxonomy annotation, so T-102's organism axis may be unreachable
 
@@ -675,9 +689,21 @@ tautological and a share→copy mutant survives it"* — has **no live owner**.
 wrong**. **A0-C8 is C-052's. A0-C7 is not**, and C-052 must not silently absorb it — that would let a
 requirement change owner without a decision. A0-C7 needs an explicit re-assignment.
 
-The C-052 study did locate a genuine discriminator for it — a **share→copy mutant at
-`streamlit_app.py:3748`** that the tautological assertion survives — so re-assignment is actionable
-whenever an owner is named.
+The C-052 study did locate a genuine discriminator for it — a **share→copy mutant** that the tautological
+assertion survives — so re-assignment is actionable whenever an owner is named.
+
+> **RESOLVED 2026-08-17.** The product owner ruled **F-041 authoritative** and re-assigned A0-C7 to a new
+> narrow follow-up card **`C-030a`** (next unused suffix in the C-030 family; `C-052` is **not** broadened
+> to absorb it). **F-008's conflicting `Owner: C-052` line is amended** so the control plane carries one
+> answer. `C-030a` **cannot** inherit C-030's `MASTER_PLAN` §9 boundary (`freeze_canonical_payload`),
+> because F-008 proved A0-C7 undischargeable inside it; the real sharing sites are in
+> `run_post_pipeline_sbml_artifacts`, §9 row 1, **shared with C-050 and C-052**, so `C-030a` serializes
+> against C-052 and declares exact functions/tests. See the `C-030a` row in `LEDGER.md`.
+>
+> **Line-number correction:** this finding recorded the discriminator at `streamlit_app.py:3748`.
+> **Re-measured at `fd5afd8` it is `streamlit_app.py:3746`** — `"final_mapped": canonical_export_payload
+> or final_export_payload`. The line had drifted by two. **The charter must use the measured number**,
+> and any card quoting `:3748` is quoting a stale record.
 
 ---
 
