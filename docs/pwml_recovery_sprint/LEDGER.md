@@ -357,7 +357,58 @@ zero abandoned `g11_reserved` placeholders in the repository, zero surviving own
 
 | C-050i | post-freeze row dedupe fails closed (**F-039**) | **`READY`** 2026-08-16, awaiting the heavy-job slot. **Scope addition 2026-08-16 (REV-050h finding 4):** F-039's *unmeasured residual* — EP3's second `run_prefreeze_resolution` creating a `_norm` collision absent from the committed file — is **explicitly in C-050i's scope**, not inherited by proximity. C-050h leaves *unreferenced* created duplicates unrefused by design (D-035 clause 6 names *ambiguous connectivity*, which they do not create); C-050i owns the harm. Measured: that shape exports identically at base and tip, so C-050h changes nothing there. Measured verdict: **merge rule 8 IS violated at EP3** — `run_pwml_export` reaches `ir._dedupe_named_rows` on a deepcopy-of-a-deepcopy of the frozen payload, **after the hash**, and that is the path every committed batch leg takes (`driver.py:2085-2112`). **Live corpus exposure is ZERO of 32 legs**: the only colliding leg is D-034's, which now aborts pre-freeze. Proof it is invented biology rather than a harmless duplicate: on that leg the exporter re-bound reaction 9 from PathBank 40738 / ChEBI 60365 to PathBank 40982 / ChEBI 58603 **after the hash**, with one warning and no error; references do not dangle, they silently repoint, because `entity_by_name` keys on the same `_norm` the dedupe grouped on | F-039 ✓ measured |
 
-**C-050i scope, ruled 2026-08-16.** Promote `duplicate_named_record` (`ir.py:409-415`) from **warning to blocking error**. Chosen over deleting the dedupe because deletion changes IR key numbering (`ir.py:420`) and moves goldens, while promoting severity does not. **Group identity is `_norm`** and nothing else (**F-040 as corrected**) — `entity_by_name` (`ir.py:1105-1117`) and `resolve_entity` (`ir.py:1371`) key on it. **G9: new capability with an explicitly labelled new acceptance test** — there is no base SHA at which a behavioural probe over the tip's corpus fails, because the only leg reaching the code now aborts earlier. Fabricating a base failure here is a reject. **Out of scope:** `process_normalizer._dedupe_named_rows` (**F-044**, pre-freeze, unowned) and the unmeasured non-participant-rename residual, which needs a live pre-freeze run.
+**C-050i scope, ruled 2026-08-16.** Promote `duplicate_named_record` (`ir.py:409-415`) from **warning to blocking error**. Chosen over deleting the dedupe because deletion changes IR key numbering (`ir.py:420`) and moves goldens, while promoting severity does not. **Group identity is `_norm`** and nothing else (**F-040 as corrected**) — `entity_by_name` (`ir.py:1105-1117`) and `resolve_entity` (`ir.py:1371`) key on it. **G9: new capability with an explicitly labelled new acceptance test** — there is no base SHA at which a behavioural probe over the tip's corpus fails, because the only leg reaching the code now aborts earlier. Fabricating a base failure here is a reject. **Out of scope:** `process_normalizer._dedupe_named_rows` (**F-044**, pre-freeze, unowned).
+
+> **Correction 2026-08-17 — this paragraph contradicted the row above it.** As first written it closed
+> with "*and the unmeasured non-participant-rename residual, which needs a live pre-freeze run*" in its
+> **out-of-scope** list, while the C-050i row (`:358`) records the opposite from **REV-050h finding 4**:
+> that residual is **explicitly in C-050i's scope, assigned by name so it cannot fall between C-050h and
+> C-050i**. The row is the later and correct record; the out-of-scope clause was stale and is struck.
+> **The residual is IN SCOPE and the heavy-job slot is granted for it** (charter §5). Recorded rather than
+> silently fixed, per D-034 clause 5 — a mis-recorded guard has already cost a later card real time.
+
+**C-050i rulings R1–R5, issued 2026-08-17 by the Lead Orchestrator before dispatch.** No `C-050i-charter.md`
+existed in any session scratchpad or in the repo; the charter was reconstructed from F-039, the F-039
+measurement, and live source read at `fd5afd8`, and these five rulings — which were **never recorded** —
+were issued with it. R1–R4 are **engineering details consistent with locked policy**, decided
+autonomously; R5 restates an existing ruling because it is load-bearing.
+
+* **R1 — the guard binds every `_dedupe_named_rows` caller, not compounds only.** One shared function;
+  both call sites (`ir.py:957` components, `ir.py:1049` entities) feed a `_norm`-keyed lookup with the
+  identical silent-repoint mechanism (`entity_by_name` `:1105-1117`; `component_by_name` `:995-1000`).
+  Narrowing to compounds would need a discriminator parameter and would knowingly leave the same latent
+  hole in four component and four other entity buckets. **Fail closed** governs. Measured impact of the
+  wider scope is **zero** — F-039 replayed first-wins `_norm(_canonical(...))` across all 32 committed
+  `final_mapped.json` over all five entity and all four component buckets and found **no component-bucket
+  collision in any leg**. *Stop condition:* if an existing test or golden depends on a **silent collapse**
+  in any bucket, the card **stops and reports**; it may neither weaken the guard nor narrow scope itself.
+* **R2 — refuse by raising, not by report severity alone.** `_add_issue(report, "error", …)` sets
+  `report["ok"] = False` (`ir.py:322-325`) but **does not stop IR construction**: the row would still be
+  dropped, the reference would still repoint, and an invalid IR would still be returned. Only a raise
+  satisfies "fail before invalid IR can be emitted". Model it on the in-file precedent
+  `UnresolvedCompoundRowError` (`ir.py:59-75`, raised `:1079`), introduced by C-051 under D-021 for exactly
+  this shape of post-freeze refusal. **The structured diagnostic is preserved and must name *both*
+  conflicting rows** — survivor and intruder, with names, keys and pointers; the current message names one.
+* **R3 — key/row numbering on the non-colliding path stays byte-identical.** `record["key"] =
+  f"{key_prefix}_{len(out) + 1}"` (`ir.py:420`) is why deletion is out of scope. A payload with no
+  collision must produce a **bit-identical** IR to the base.
+* **R4 — the CLI entry point needs no separate adjudication for this card.** The F-039 measurement's open
+  question 4 (EP2 "post-freeze in the artifact sense, indeterminate in the process sense") does **not**
+  need deciding here: the guard sits in the shared IR builder and so applies uniformly wherever an IR is
+  built (EP2 `writer.py:2734`, EP3 `streamlit_app.py:4135`; EP1 builds none). **The card introduces no
+  per-entry-point discrimination.** EP2's status **remains an open finding, unowned by C-050i.**
+* **R5 — group identity is `ir._norm` and nothing else** (restated; **F-040 as corrected**).
+  `prefreeze_resolution._norm` is a **byte-identical duplicate**, not a competitor;
+  `process_normalizer._normalize` is **incomparable** (deletes where `_norm` substitutes a space). Do not
+  import, reimplement or "reconcile" any other normalizer.
+
+**C-050i D-025 ceilings, computed 2026-08-17 from the ordered gates** (full Chunk D `179 = 152 + 4 + 23` ·
+SMOKE 460 · focused runs · the G9 constructed-fixture proof · the §5 live residual run · G11 evidence ·
+provision for **at least one failing run** · headroom for **one** correction round):
+**(1) hand-authored additions+deletions ≤ 900 · (2) generated artifacts ≤ 72** (Chunk D self-allocates
+≈33, SMOKE 1, focused 4, G9 proof 1, live run 3, G11 ≈12, failing-run provision 3, correction ≈12 ⇒ ≈69) **·
+(3) generated size ≤ 20,000 lines.** Ceilings, not targets: genuine evidence is never deleted to meet a
+number, and **the adversarial bypass arm is not to be cut to fit** (REV-051a).
 
 **ID allocation note.** `C-053`, `C-054`, `C-055`, `C-056a/b` and `C-057` were **already allocated** in
 `MASTER_PLAN` §9 to other planned cards and are **not** reused here. The duplicate-row card takes the next
