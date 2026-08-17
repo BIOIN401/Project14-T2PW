@@ -1941,3 +1941,149 @@ the `rag`/`admission` branch imports `t2pw.bench`**.
   **hand-evaluated from source predicates, not observed**. C-056a's first bounded job runs
   `tests/test_strict_quarantine_release_seam.py` and `tests/test_semantic_production_no_gold.py` to confirm
   both. D-033 forbids inheriting a claim that has not been re-measured.
+
+---
+
+## D-040 — C-052: a narrow key-addition grant, and the ownership claim that was a misread · 2026-08-17 · LOCKED
+
+**The C-052 charter's central ownership claim is false.** It states *"C-052 owns that result dict
+(`MASTER_PLAN.md:163`, `DECISIONS.md:513`)"*. Measured:
+
+* **`DECISIONS.md:501`** heads D-021 §2's third column **"Not owned by"**, and **`:513`** —
+  `` `streamlit_app.py` :: the enrichment block **above** the C-011 seam, and the pre-freeze call |
+  **C-050** | C-040, C-051, C-052 `` — lists **C-052 in that column**. The citation proves the **opposite**
+  of the claim it was offered for.
+* **`MASTER_PLAN.md:161`** heads its §3 column **"Branches"** — a **collision declaration, not a grant**.
+* C-052's actual grants are `DECISIONS.md:515` (`freeze_canonical_payload`, C-030 then C-052) and `:516`
+  (`run_pwml_export` and **"the SBML binding"**, measured as `streamlit_app.py:3638`/`:3650`), echoed at
+  `MASTER_PLAN.md:424` and `LEDGER.md:222`. **None names the success-return dict at
+  `streamlit_app.py:3680-3807`, which no card owns.**
+
+D-029's closing paragraph (`DECISIONS.md:1247-1251`) nonetheless charges C-052 with persisting a report that
+is **only reachable there**, and A0-C8's observability half lives there. The grant below resolves that,
+narrowly.
+
+### 1. The grant — key-addition only
+
+C-052 **may add keys** to `streamlit_app.py:3680-3807` and **may read** the local bound at `:3587`.
+
+It **may not** change, reorder or remove an existing key · **may not** alter the `:3587-3591` call ·
+**may not** touch `freeze_canonical_payload` (`:2509-2614`), which stays at **zero lines**. The seam's
+seven-field return at `:2609-2614` already publishes `canonical_json_path`, so A0-C8's data reaches
+`:3638` with no change inside the seam.
+
+**Any key C-052 adds must NOT contain the substring `pwml`.** `driver.py:1144-1146` returns the first
+`post_pipeline_artifacts` entry whose key matches `"pwml" in key.lower()` **as the PWML export result**. No
+key of EP1's return contains `pwml` today, so this fallback never fires from EP1 — a key named
+`pwml_prefreeze_resolution_report`, the natural "converge on the CLI" instinct, would make the batch driver
+return **the prefreeze report as the PWML export result** on any leg where `pwml_export_result` is empty.
+The CLI's own key is `prefreeze_resolution_report` (`writer.py:2803`) — no `pwml` — so genuine convergence
+is already safe.
+
+**If this grant is withheld, C-052 ships EP3 only and A0-C8 re-opens under a new owner.**
+
+### 2. EP3 does not write to the CLI's filename
+
+The charter mandates EP3 write `outputs/pwml_prefreeze_resolution_report.json`. **That is the CLI's own
+default path:** `writer.py:2690` `prefreeze_report_path = out_dir / "pwml_prefreeze_resolution_report.json"`
+with `writer.py:2817` `--out-dir` defaulting to `"outputs"`. Run from the project root the two writers share
+one file and **whichever ran last wins, silently**; `tests/test_pwml_writer.py` pins the CLI's summary to
+that exact path.
+
+**EP3 writes `outputs/pwml_prefreeze_resolution_report.streamlit.json`.** Convergence with the CLI is on
+**content shape**, never on a path two writers share.
+
+### 3. EP3's record is labelled post-freeze, because it is
+
+**F-039 measured EP3 as *"unambiguously post-freeze … MERGE RULE 8 IS VIOLATED HERE"*** — it operates on a
+deepcopy-of-a-deepcopy taken after the hash (`streamlit_app.py:3869`, seam at `:4091`). EP1's report
+describes a **pre-freeze** canonicalization; EP3's describes a **post-freeze** one over a different object.
+Persisting both under one name tells the operator they are the same record.
+
+**EP3's persisted record carries a mandatory top-level `"seam": "post_freeze_refinement_reexport"`.** This
+is a **labelling** requirement, not a repair: merge rule 8 is unaffected either way, and **C-050i owns the
+violation itself**.
+
+### 4. EP3 writes before `build_pwml_ir`, so the catch-all cannot drop it
+
+`streamlit_app.py:4213-4219`'s `except Exception` wraps everything below the seam, so a failure in
+`build_pwml_ir` (`:4135`), the builder (`:4179`) or the write (`:4189`) would lose the report entirely.
+**EP3 writes the file immediately after the seam and before `build_pwml_ir`.** The on-disk record then
+survives every path and no new key is needed on the failure return.
+
+### 5. A0-C8 is discharged in three parts, and its cohort clause has a measured limit
+
+*"The actual `canonical_json_path`"* **cannot be asserted by equality**: `streamlit_app.py:2594` builds it
+under `tmp = temp_root / f"post_pipeline_{uuid4().hex}"` (`:2724`), `rmtree`'d at `:3809`, and
+`run_post_pipeline_sbml_artifacts` takes **no `tmp` parameter**, so no test can predict or supply it.
+
+1. **Path identity, unit level, no production change** — patch `build_sbml` in `streamlit_app`'s namespace,
+   call EP1 with `build_legacy_sbml=True`, and assert the captured first positional argument **`is`** the
+   `Path` the freeze returned as `canonical_json_path`. This pins `:3638` → `:3650` exactly.
+2. **Cohort level, 39 legs, no production change** — extend the existing projection in
+   `tests/test_c011_freeze_seam_golden_equivalence.py` with `canonical_json_path_name` and
+   `canonical_json_path_in_tmp` (**relative/boolean only — never the absolute UUID string**, which would
+   make the byte-pinned fixture unregenerable).
+3. **Observability** — the additive EP1 result key, under §1.
+
+**`LEDGER.md`'s "observable behaviour only" does not forbid an additive key that *creates* the observable;
+it forbids changing an established one.**
+
+**Measured limitation, recorded rather than waived.** A0-C8's clause *"including the path supplied to
+downstream SBML generation"* is **unexercised on all 39 cohort legs**: `streamlit_app.py:3648` guards the
+`build_sbml` call on `build_legacy_sbml`, and the batch driver binds five widget keys
+(`driver.py:120-122`, `:129-130`) of which **`run_legacy_sbml_export_btn` is not one**. The clause is
+discharged at unit level (part 1). **C-052 must NOT bind the driver to the legacy button** — that is a
+production-behaviour change no card owns.
+
+### 6. A0-C7 is struck from C-052 entirely
+
+The charter's clause C-8 assigns C-052 five identity relations, mutant discrimination and ~120 test lines
+for **A0-C7 — which is C-030a's** (`LEDGER.md` carried-requirement table; `MASTER_PLAN.md` §9), and whose
+implementer must **not** be C-052's. **Strike C-8 and its budget lines.** C-052 as narrowed touches none of
+the five live sharing sites (`:3694`, `:3704`, `:3746`, `:3748`, `:3749`) — it **adds** keys and **changes**
+none.
+
+### 7. C-052 does not edit `driver.py`
+
+There is no route from EP1's result dict to the 39-leg cohort artifacts without editing `driver.py`:
+`_add_common_artifacts` hard-codes its keys, `_collect_reports` filters on `_CONTRACT_SUFFIXES`, and
+`_add_diagnostic_artifacts` reads a six-name allowlist. **D-038 granted `driver.py :: _add_strict_artifacts`
+to C-053 on 2026-08-17.** A0-C8's cohort clause is therefore discharged in the golden projection (§5 part 2),
+**not** through the batch artifact set.
+
+### 8. Persist and surface only — "acting on it" gets a named owner, or none
+
+D-029's closing paragraph says the seam that can *"persist and act on"* `review_required` is C-052's.
+**That is split here.** **C-052 persists and surfaces only**: it adds no branch that changes whether a PWML
+is produced, so merge rules 6, 7 and 8 are untouched by construction.
+
+**Acting on `review_required` is assigned to no card and is registered as backlog `BL-004`.** It is **not**
+C-053's — C-053's live tripwire excludes `streamlit_app.py` and `outputs/`, and D-004 / `PRODUCT_CONTRACT`
+§13 govern `release_status`, a **quarantine** verdict, not the prefreeze verdict. **Naming the residual is
+the point**: an unnamed residual is inherited by proximity, which is the exact failure REV-050h caught on
+F-039.
+
+### 9. Execution
+
+* **Base = the integration tip at dispatch**, recorded in the LEDGER row at dispatch and **never** in the
+  charter — a charter SHA written days ahead is what produced this drift twice. The tree must carry
+  `75fbb8a` (C-050h) and `16cd3bd` (H-010).
+* **Serialize after C-050i.** Both operate on EP3's post-freeze `run_prefreeze_resolution`
+  (`streamlit_app.py:4091`); C-050i changes what that call refuses, which changes what C-052 persists.
+  **C-050i merges first.**
+* **Base and tip proofs run in a git worktree checked out at the base SHA — never in a
+  `c045b_base_tree.py` / `c051a_base_tree_batch.py` export.** `PATHSPEC` omits **`runs/`** and `.git`, so
+  `test_c011_freeze_seam_golden_equivalence.py` — which shells `git show` and replays legs from `runs/` —
+  degrades to an empty leg set and `KeyError`s against the 39-name fixture. Same class as C-053's F-042
+  ruling. **C-052 must not widen `PATHSPEC`.**
+* **Gate set: `qb` (`TEST_MATRIX.md` binds C-052 by name) + full Chunk D + SMOKE 460 + a NAMED focused file
+  gate.** **Five of the seven files C-052 changes are in no chunk** — the new seam test, the golden
+  equivalence harness and its fixture, `test_prefreeze_third_export_seam.py`, and
+  `test_prefreeze_compound_resolution.py`. Chunk D and SMOKE would surface a regression in none of them.
+* **New tests need no AppTest.** All three C-052 production surfaces — `run_pwml_export`,
+  `run_post_pipeline_sbml_artifacts`, `_json_artifact_entries` — make **zero `st.` calls**, so the
+  MagicMock-stub convention suffices. The `st.form` hazard at `streamlit_app.py:4310` is an **import-time
+  module-script** hazard and **is not a constraint on this card**.
+* **D-025 ceilings are re-derived after this decision**, not inherited: the charter's figures budget zero
+  runs for the golden-fixture delta and zero for a worktree base proof, and double-count the struck A0-C7.
