@@ -1,0 +1,232 @@
+{
+  "task": "C-030a",
+  "purpose": "literal pytest COUNTS, read verbatim off each run -- an exit code cannot certify 'SMOKE exactly 460' (merge gate 10), and bounded_run.py retains exit codes but not stdout (D-049).",
+  "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c030a-sharing\\src\\t2pw\\__init__.py",
+  "pre_existing_reds_in_this_tree": {
+    "count": 5,
+    "note": "Measured, not assumed, by run 04: the SAME focused selection in the SAME tree with the SAME .env, with the new file removed. All five reproduce identically at run 05 and run 11 with the new file present, so none is attributable to C-030a. Predicted by D-046 section 3: a worktree now carries .env, and these tests assert the database is NOT configured, so a live DB falsifies their assumption rather than the code.",
+    "nodes": [
+      "tests/test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species",
+      "tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy]",
+      "tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed]",
+      "tests/test_prefreeze_third_export_seam.py::test_an_all_legacy_population_proves_the_value_is_carried_not_inferred",
+      "tests/test_prefreeze_third_export_seam.py::test_the_same_row_still_warns_and_names_the_real_reason[not_configured]"
+    ]
+  },
+  "runs": [
+    {
+      "seq": "01",
+      "label": "newtests-r0",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/01-newtests-r0.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/01-newtests-r0.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+      "summary_line_verbatim": "1 failed, 9 passed in 4.72s",
+      "verdict": "RED, and recorded rather than hidden. The author's PREDICTED refusal-arm clause set was wrong, not the code: on a refusal the canonical key holds the seam's empty dict, so 'canonical_object_is_not_the_pre_seam_object' does not fire. The test was corrected to the MEASURED set (and now also pins why final_mapped_quarantined is absent from it). No production line was touched to make this green."
+    },
+    {
+      "seq": "02",
+      "label": "newtests-r1",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/02-newtests-r1.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/02-newtests-r1.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+      "summary_line_verbatim": "10 passed in 4.63s",
+      "verdict": "GREEN"
+    },
+    {
+      "seq": "03",
+      "label": "focused-ungated-tip",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/03-focused-ungated-tip.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/03-focused-ungated-tip.pin.json",
+      "selection": "the 11-file named focused set (F-049); every member is in NO chunk",
+      "summary_line_verbatim": "5 failed, 191 passed in 73.41s (0:01:13)",
+      "verdict": "5 pre-existing reds, 0 new"
+    },
+    {
+      "seq": "04",
+      "label": "focused-without-new-file",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/04-focused-without-new-file.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/04-focused-without-new-file.pin.json",
+      "selection": "the same 11-file set MINUS tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+      "summary_line_verbatim": "5 failed, 181 passed in 34.21s",
+      "verdict": "ATTRIBUTION CONTROL. F-051-safe: the tree and its .env are held constant and only the file under test is removed. Same 5 failures, 10 fewer passes -- C-030a contributes exactly +10 passed and +0 failed."
+    },
+    {
+      "seq": "05",
+      "label": "focused-ungated-tip-r1",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/05-focused-ungated-tip-r1.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/05-focused-ungated-tip-r1.pin.json",
+      "selection": "the 11-file named focused set",
+      "summary_line_verbatim": "5 failed, 191 passed in 38.86s",
+      "verdict": "5 pre-existing reds, 0 new; failure set identical to run 04"
+    },
+    {
+      "seq": "06",
+      "label": "smoke-460",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/06-smoke-460.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/06-smoke-460.pin.json",
+      "selection": "SMOKE = chunks A + B + C, the 20 files TEST_MATRIX lists",
+      "summary_line_verbatim": "460 passed in 35.18s",
+      "expected_per_TEST_MATRIX": 460,
+      "measured": 460,
+      "matches_expected": true,
+      "verdict": "GREEN -- merge gate 10 satisfied"
+    },
+    {
+      "seq": "07",
+      "label": "stub-coexistence-s8",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/07-stub-coexistence-s8.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/07-stub-coexistence-s8.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_streamlit_stage8_export_contract.py",
+      "summary_line_verbatim": "14 passed in 5.00s",
+      "verdict": "GREEN, but NOT the hazard check it was intended to be: test_streamlit_stage8_export_contract.py imports no streamlit at all (it is an AST-extraction test), so it cannot be poisoned by a sys.modules stub. Recorded rather than dropped, and superseded by run 08."
+    },
+    {
+      "seq": "08",
+      "label": "stub-coexistence-qb-node04",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/08-stub-coexistence-qb-node04.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/08-stub-coexistence-qb-node04.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_streamlit_quarantine_boundary.py::test_one_canonical_payload_is_gated_serialized_and_exported",
+      "summary_line_verbatim": "11 passed in 9.48s",
+      "verdict": "GREEN. THE hazard check, run in the poisoning order: the new file collects first and installs the MagicMock streamlit stub, then a real AppTest node runs in the SAME process. test_streamlit_quarantine_boundary.py's autouse real_streamlit fixture -- written for exactly this pre-existing test_rag_*/test_stage0_*/test_c052_* stub family -- restores the genuine package and asserts it loaded, so the node is not vacuous. Hotspot 9 was not edited: no test function there was added, removed, renamed or reordered."
+    },
+    {
+      "seq": "09",
+      "label": "c030a-probe",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/09-c030a-probe.json",
+      "pin_verdict": null,
+      "selection": "docs/pwml_recovery_sprint/evidence/probe_c030a_sharing.py (not a pytest run, so no pin verdict)",
+      "summary_line_verbatim": "exit code (real)        : 0",
+      "verdict": "GREEN -- wrote docs/pwml_recovery_sprint/evidence/c030a_sharing_probe.json"
+    },
+    {
+      "seq": "10",
+      "label": "newtests-final",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/10-newtests-final.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/10-newtests-final.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+      "summary_line_verbatim": "10 passed in 4.51s",
+      "verdict": "GREEN -- re-run after the prose-only tightening pass, so the committed bytes are the measured bytes"
+    },
+    {
+      "seq": "11",
+      "label": "focused-ungated-final",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/11-focused-ungated-final.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/11-focused-ungated-final.pin.json",
+      "selection": "the 11-file named focused set",
+      "summary_line_verbatim": "5 failed, 191 passed in 38.38s",
+      "verdict": "5 pre-existing reds, 0 new -- re-run after the tightening pass; failure set identical to runs 04 and 05"
+    },
+    {
+      "seq": "12",
+      "label": "newtests-committed-bytes",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-030a/12-newtests-committed-bytes.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/12-newtests-committed-bytes.pin.json",
+      "selection": "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+      "summary_line_verbatim": "10 passed in 4.39s",
+      "verdict": "GREEN on the EXACT bytes committed. The orchestrator ratified ceiling 1 700 -> 800 and directed that the prose-tightening pass be undone where it cost clarity; three docstrings were restored or strengthened (the _CopyAtSeamBinding transformer, the refusal guard, and the seam-binding mutant test, whose docstring now states WHY A0-C7's tautological form is insufficient). Docstring-only, but re-run rather than assumed: a broken triple quote would break the module, so the committed bytes are the measured bytes."
+    }
+  ],
+  "named_focused_set_f049": {
+    "note": "Every touched or consuming file, with chunk membership. All eleven are in NO chunk, so none of them is reached by SMOKE or by the Chunk D gate and each must be named.",
+    "members": [
+      {
+        "path": "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+        "chunk": null,
+        "why": "the new file"
+      },
+      {
+        "path": "tests/test_streamlit_stage2_orchestration.py",
+        "chunk": null,
+        "why": "the orchestrator harness the new file imports"
+      },
+      {
+        "path": "tests/test_c011_freeze_seam_golden_equivalence.py",
+        "chunk": null,
+        "why": "the golden equivalence harness, mandated by name; untouched by this card"
+      },
+      {
+        "path": "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py",
+        "chunk": null,
+        "why": "same orchestrator surface; also installs the streamlit stub"
+      },
+      {
+        "path": "tests/test_c030_canonical_identity_fallback.py",
+        "chunk": null,
+        "why": "names the orchestrator/seam"
+      },
+      {
+        "path": "tests/test_prefreeze_compound_resolution.py",
+        "chunk": null,
+        "why": "names the orchestrator/seam and the prefreeze module"
+      },
+      {
+        "path": "tests/test_prefreeze_species_resolution.py",
+        "chunk": null,
+        "why": "consumes the prefreeze module the new file monkeypatches; 1 pre-existing red"
+      },
+      {
+        "path": "tests/test_prefreeze_third_export_seam.py",
+        "chunk": null,
+        "why": "ungated; consumes the prefreeze module; 4 pre-existing reds"
+      },
+      {
+        "path": "tests/test_scope_membership_filter_end_to_end.py",
+        "chunk": null,
+        "why": "imports the same orchestration harness"
+      },
+      {
+        "path": "tests/test_compound_resolution_extraction.py",
+        "chunk": null,
+        "why": "consumes the prefreeze module"
+      },
+      {
+        "path": "tests/test_pwml_ir_duplicate_row_refusal.py",
+        "chunk": null,
+        "why": "consumes the prefreeze module"
+      }
+    ],
+    "in_a_chunk_and_therefore_covered_elsewhere": [
+      {
+        "path": "tests/test_research_mode_orchestration.py",
+        "chunk": "C",
+        "covered_by": "SMOKE, run 06"
+      },
+      {
+        "path": "tests/test_streamlit_quarantine_boundary.py",
+        "chunk": "D-apptest",
+        "covered_by": "run 08 for the one hazard this card could introduce; not otherwise affected, since the diff contains zero src lines"
+      },
+      {
+        "path": "tests/test_streamlit_stage8_export_contract.py",
+        "chunk": "D-apptest",
+        "covered_by": "run 07"
+      },
+      {
+        "path": "tests/test_pwml_writer.py",
+        "chunk": "D-core",
+        "covered_by": "unaffected: zero src lines changed"
+      }
+    ]
+  },
+  "ceilings": {
+    "ceiling_1_hand_authored_lines": {
+      "measured": 761,
+      "limit": 800,
+      "limit_note": "Ratified 700 -> 800 by the product owner; the seventh ceiling under-set today and the seventh ratified. 700 could not cover a card whose deliverable is a mutant matrix plus a probe.",
+      "breakdown": {
+        "tests/test_c030a_object_sharing_at_the_freeze_seam.py": 543,
+        "docs/pwml_recovery_sprint/evidence/probe_c030a_sharing.py": 218
+      },
+      "history": "759 authored -> 748 after a prose-only trim -> 761 after the ratified restoration"
+    },
+    "ceiling_2_generated_artifacts": {
+      "measured": 25,
+      "limit": 60,
+      "note": "23 under evidence/g11/**/C-030a plus c030a_sharing_probe.json and c030a_gate_counts.json"
+    },
+    "ceiling_3_generated_lines": {
+      "measured": 1803,
+      "limit": 10000
+    }
+  }
+}
