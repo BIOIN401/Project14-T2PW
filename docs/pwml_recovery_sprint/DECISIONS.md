@@ -2787,3 +2787,72 @@ of F-048 — **register, do not fix**) · moving the create-defaults rename upst
 The duplicate rows themselves are D-036 territory.
 
 **C-050j serializes against nothing now** — C-050k merged, and the two diffs do not overlap.
+
+---
+
+## D-051 — C-030a ceiling 1 raised to 800; and its G9 argument is accepted over the charter's guess · 2026-08-18 · LOCKED
+
+**Ceiling 1 `700 → 800`. Ratified.** C-030a measures **748** — 530 test source, 218 probe. My table budgeted
+700 for a card whose entire deliverable *is* a mutant matrix plus a probe. Ceilings 2 (**23**/60) and 3
+(**1,608**/10,000) are comfortable and unchanged.
+
+**Seventh ceiling under-set today; seventh ratified.** The card also spent a prose-tightening pass going
+759 → 748 chasing my bad number — work spent on my error, not on the card. It was told to restore anything
+that pass cost. **A ceiling must never buy worse evidence.**
+
+### 1. The G9 classification is the CARD'S, not the charter's, and the card is right
+
+The charter guessed "genuinely new capability". **The implementer disagreed and argued it, correctly: these
+are guards on pre-existing observable behaviour that PASS at the base SHA.** There is no production change,
+so there is no behaviour change to prove and **no base failure is claimed or fabricated**.
+
+**Certified by measurement, not by symbol absence** — the failure mode G9 names: `src_files_changed_base_to_head: []`,
+`app_source_identical: true`, and the **AST hashes of both `run_post_pipeline_sbml_artifacts` and
+`freeze_canonical_payload` identical at base and tip.** This matches C-052's ratified `test_a0c8_guard_*`
+precedent for the sibling requirement. **What is new is the discharge of a requirement, not a capability;
+calling it new functionality would have misdescribed it.**
+
+### 2. The seam-binding mutant converts F-041 from a quotation into a measurement
+
+Each mutant rebuilds `run_post_pipeline_sbml_artifacts` from its own AST with `deepcopy` at **exactly one**
+site and asserts the **exact clause set** that goes red. `pytest.raises` was **rejected** — it would pass on
+any unrelated `AssertionError` and the matrix would prove nothing. Unmutated tip: `[]`.
+
+**The decisive row: copy at the seam binding `canonical_export_payload = _freeze["payload"]` turns exactly
+ONE clause red.** All four keys still agree *with each other* — on a lookalike the seam never hashed, gated
+or serialized — so **every "the four keys agree" check is blind to it, and A0-C7's own tautological form
+still reads `True` under it.**
+
+That is F-008/F-041's *"a share→copy mutant is indistinguishable on all nine observables across all 39 legs"*
+re-established as a **live measurement on this tip**, which is exactly what A0-C7 has lacked since it was
+orphaned. **A0-C7's tautological assertion is insufficient — now demonstrated rather than asserted.**
+
+### 3. Two judgements accepted as the implementer made them
+
+* **Hotspot 11 is not entered.** A0-C7 says the tautological assertion *"is not sufficient"*, **not** that it
+  must be removed, and proving the real property elsewhere discharges it. The byte-pinned golden fixture and
+  the projection are **untouched** — strictly lower risk, and no fixture delta is needed.
+* **Calling `freeze_canonical_payload` and spying on its return** is the technique C-052's merged
+  `test_a0c8_guard_…` uses under the same ZERO-lines constraint. The function has **zero changed lines**; the
+  discharge lives in the orchestrator, not the seam.
+
+### 4. An honest red, recorded to the card's credit
+
+Run 01 was `1 failed, 9 passed` — **the implementer's predicted clause set was wrong, not the code.** On a
+refusal the canonical key holds the seam's empty dict, so `canonical_object_is_not_the_pre_seam_object` does
+not fire. **The test was corrected to the measured set and no production line was touched to turn it green.**
+That is the correct direction of correction, and it is kept in the gate-counts artifact rather than tidied away.
+
+### 5. The discriminator, re-measured — inherit these, not the older numbers
+
+**`streamlit_app.py:3762`** — `"final_mapped": canonical_export_payload or final_export_payload`.
+F-041 recorded `:3748` (**+14 stale**); this orchestrator measured `:3746` before C-052 merged (**+16
+stale**). All six sites at this tip: seam binding `:3648` · `CANONICAL_PAYLOAD_KEY` `:3710` ·
+`final_mapped_quarantined` `:3720` · `final_mapped` `:3762` · `final_mapped_enriched` `:3764` ·
+`final_export_input` `:3765`. **Every card in this sprint that inherited a line number was wrong.**
+
+### 6. Attribution held the tree constant (F-051)
+
+Named focused set over 11 ungated files: **5 failed / 191 passed** at tip; with **only the new file removed,
+same tree and same `.env`**: 5 failed / 181 passed — **+10 passed, +0 failed**. The five are exactly D-046
+§3's live-DB set. **SMOKE `460 passed in 35.18s`.** G11 exit 0, 11 artifacts, survivors 0 on all 11.
