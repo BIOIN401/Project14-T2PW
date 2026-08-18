@@ -433,8 +433,41 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: digest is composed purely of configuration names and stop/refusal codes. Both
 #: instruments agreed on it exactly, and REV-050i additionally hand-computed it from
 #: first principles and matched the committed value.
+#:
+#: (The ``64038a74…`` quoted just above is REV-050i's *historical* measurement of
+#: ``PMC12312563/strict``. C-050k moved that leg to ``69d9da7b…`` -- see below. The
+#: quotation is left as measured, because it is a record of what that instrument
+#: reported on that day.)
+#:
+#: **MOVED, DELIBERATELY, ON EIGHT LEGS by C-050k on 2026-08-17** under permanent
+#: merge rule 4, orchestrator-authorised by **D-044 §1**. Measured **under pytest**,
+#: never by a direct-import harness (F-047, above).
+#:
+#: The eight: ``PMC12312563/strict`` ``64038a74…``->``69d9da7b…`` · ``1306
+#: PMC12452463/research`` ``dd9a2f5c…``->``dbf62298…`` · ``1358 PMC12096016/research``
+#: ``f1f6ff4d…``->``20cbe56b…`` · ``1754 PMC12096016/research``
+#: ``33112778…``->``c04624aa…`` · ``1754 PMC12180156/strict``
+#: ``e28efcf1…``->``1427c040…`` · ``1754 PMC12452463/research``
+#: ``a75cb748…``->``1b503ae4…`` · ``1754 PMC12452463/strict``
+#: ``5e40a7ca…``->``219fdbfe…`` · ``1754 PMC12856317/strict``
+#: ``32ab0313…``->``a6ca91c5…``.
+#:
+#: **24 of the 32 legs are byte-identical**, and the eight that moved are **exactly**
+#: the eight C-050k's independent census identified as carrying a reference that
+#: resolves through an ambiguous alias key. That correspondence is the ratification
+#: argument (D-044 §1): the delta is the precise footprint of the change, not a
+#: diffuse drift, and two measurements taken by different instruments agree on the
+#: same set with no overlap error.
+#:
+#: **Bounded by measurement, not by assertion.** On the R3 control leg, captured with
+#: the same harness on both trees (``evidence/g11/C-050k/07-g9-base.json`` and
+#: ``08-g9-tip.json``): the **IR digest did not move**, ``errors`` is empty on both
+#: sides, ``report["ok"]`` is ``True`` on both sides -- so **no leg changes whether it
+#: exports**, which is D-041 §2 limit 3 -- and the whole delta is **two added
+#: ``ambiguous_entity_row_reference`` warnings**. No binding moved: C-050k records the
+#: choice and rebinds nothing (D-043 §4).
 GOLDEN = {
-    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "64038a74f18848499a00b3ce4ea95555b4f568f78484f5e7bab07abf54af6a8d",
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "69d9da7b65096751535d3d7ab6502e17534e57530532c7b360d776107369777c",
     # C-050h delta: f0dd12d5… -> e5a40385…, then the ONLY moved digest again under
     # C-050i: e5a40385… -> d22b58c8…. ``_leg_digest`` hashes each stop's code, and
     # this leg's LAST TWO building configurations (B, E) now refuse post-freeze with
@@ -463,19 +496,19 @@ GOLDEN = {
     "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "2432316a575c173c98ccc9abb287906bff650051b5047626059dd49fb5baf549",
     "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "c7dfe651a28eaea3729e1b38da4968c4ed8f09195aac4373397f50011896ff30",
     "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "4213f64f6f5dd6d9e0fd09b69b4e319138618b5b9fa98e259741930096ff3fce",
-    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "dd9a2f5cea146384ea45dab5667c6cdf4afaa49a0f5b59244a84c34e86e8778b",
-    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "f1f6ff4d9a235149274a1a2cec0bd51777176973f157f3761f2e5f7fd26a6615",
+    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "dbf622984a60c32144e231d7a71afa9a94afd3352d521773368f27f9a27e74a2",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "20cbe56bebbf785542688d9ec8007ac7be6d56d25bbc4586e3b5be0020c42035",
     "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "f9ac6acd6b8a9728d1cc9995594d861b7f70e4f867bcba7da3bbcb50a3b4365f",
     "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "3fa1cd47e28be8b29a3e4fc5909db94fa4daa33bb8f6c7943506ca8b535707e8",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "33112778ffac13bc18c97f4333a1b9b23b0a5d7bd44247609ee42540ddb9ea11",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "c04624aad5d6129d49a0a9e03b4405e39300336122ebf23968c133a6ca6e68a3",
     "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "7ac1c6bbfbdf9ba0c1e6b91b1e697ad373b4cdd67b5cd89eb347931405355174",
     "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "a2540f701344d92753f59b2bbcfb6122bd8c34684c427d8c2c23f5395d5f7401",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "e28efcf175ab89293e987502ab88e6513c9d530a6c078378befd55cb9d1a7d24",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "a75cb748ed26640f91db16508e1d081e0ed2207850097932fb2cc4f673de9e68",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "5e40a7cab6ee37d6d3ad265f3cb079906f041e2f7266d46d85a4973fb0fb600e",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "1427c0406ba5c5fd5b96e00263b9a26b35984d8d26e93829d9f7c10485b67fb8",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "1b503ae4622345d807f1a09539620c9b9aaac0d4542d6ac79565379cd96d6c3a",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "219fdbfedc53d2e838d3f39dd15b42ecffa7d49df3e5956c636b9f3015136c06",
     "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "2c8897c47475836b45a581258a211a6b039217b73795b6aed68b1f0085c8ad1e",
     "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "5ca749ae322a5e0b1998b934a945d3a0e41ca61a921197be66eaa9085d32dd38",
-    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "32ab0313dffd1e0b295a92256e46d0f50024d88ca7c33aa8c9b13990b171a3a6",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "a6ca91c577ead5d85e0b97d1b34e35f675fd58fabed4a930bd3d2f5f7347f02a",
 }
 
 #: The (leg, configuration) pairs whose pre-freeze stage STOPS, by code.

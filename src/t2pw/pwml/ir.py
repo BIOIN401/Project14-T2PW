@@ -391,6 +391,100 @@ def _add_issue(
         report["ok"] = False
 
 
+#: C-050k / F-048 / D-043. A process reference resolved through a ``_norm`` key that
+#: **more than one distinct entity row** claims -- typically one row's ``name``
+#: colliding with another row's alias, which :func:`_dedupe_named_rows` cannot see
+#: because it groups on ``_norm(name)`` alone and the two rows are genuinely distinct.
+#:
+#: **Deliberately NOT ``ambiguous_entity_reference``.** That code means "matched
+#: multiple entity *types*" and is emitted only from :func:`resolve_entity`'s
+#: fall-through branch. **D-043 §4 forbids folding this class into it**: all 20
+#: same-type cases the C-050k census measured return from the preferred-type branch,
+#: so the existing code is structurally unreachable for exactly the class where
+#: ``preferred_order`` cannot disambiguate, and its message would misdescribe them
+#: even where it fires. Both codes may appear on one reference; they claim different
+#: things.
+AMBIGUOUS_ENTITY_ROW_REFERENCE = "ambiguous_entity_row_reference"
+
+
+def _distinct_entity_candidates(candidates: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """One entry per distinct entity ``key``, in candidate order, first occurrence kept.
+
+    The de-duplication is the whole point (**D-041 §5**). ``entity_by_name`` is appended
+    to **once per alias slot with no dedupe**, so a single row whose ``name`` and
+    ``raw_name`` (or a synonym) normalize alike appears two or more times under one key.
+    Measured over the 32 committed legs, ``len(candidates) > 1`` is true for a
+    **single** entity under **209** ``_norm`` keys -- so list length is not the
+    ambiguity signal and testing it would raise 209 false alarms. Ambiguity is over
+    **rows**.
+    """
+
+    distinct: Dict[Any, Dict[str, Any]] = {}
+    for candidate in candidates:
+        key = candidate.get("key")
+        if key not in distinct:
+            distinct[key] = candidate
+    return list(distinct.values())
+
+
+def _note_ambiguous_entity_rows(
+    report: Dict[str, Any],
+    *,
+    name: str,
+    role: str,
+    pointer: str,
+    candidates: Sequence[Dict[str, Any]],
+    bound: Dict[str, Any],
+) -> bool:
+    """Record that ``name`` matched more than one entity **row**, and which one won.
+
+    **Records; never rebinds.** ``bound`` is what :func:`resolve_entity` has already
+    chosen and is passed in rather than recomputed here, so this function cannot move a
+    reference: ``PRODUCT_CONTRACT`` §5 names process-to-entity references a
+    must-remain-equivalent dimension and permanent merge rule 8 forbids an exporter
+    repairing biology after the canonical graph is frozen. Payload row order stays
+    authoritative.
+
+    **Severity is ``warning``, per D-041 §2.** ``"error"`` would set
+    ``report["ok"] = False`` in :func:`_add_issue` and flip legs between exporting and
+    not -- creating and destroying strict successes in both directions, which this card
+    is not granted.
+
+    **No equivalence is asserted or denied.** The candidates' own ``pathwhiz_id`` values
+    are reported *as carried* and never compared. **F-043** is the standing reason
+    identifier equality is not evidence of sameness -- ``PG``, ``PG phosphate`` and
+    ``(PGP)`` all carry PathBank 193, which is UDP-glucose and biologically wrong for
+    all three -- and **D-043 §4** forbids this diagnostic drawing that inference in
+    either direction. Adjudication happens where it is permitted; this only makes the
+    choice **traceable**, which is the ``PRODUCT_CONTRACT`` §3 obligation D-043 §2
+    identifies as the actual violation. All 20 adjudicated bindings were biologically
+    correct: the contract obligation is to record the choice, not to have been lucky.
+    """
+
+    distinct = _distinct_entity_candidates(candidates)
+    if len(distinct) < 2:
+        return False
+    _add_issue(
+        report,
+        "warning",
+        AMBIGUOUS_ENTITY_ROW_REFERENCE,
+        f"Process member '{name}' matched {len(distinct)} distinct entity rows "
+        f"({', '.join(str(row.get('key')) for row in distinct)}); payload row order "
+        f"bound it to '{bound.get('name')}' ({bound.get('key')}).",
+        pointer=pointer,
+        name=name,
+        role=role,
+        entity_keys=[row.get("key") for row in distinct],
+        entity_types=[row.get("entity_type") for row in distinct],
+        entity_names=[row.get("name") for row in distinct],
+        entity_pathwhiz_ids=[row.get("pathwhiz_id") for row in distinct],
+        bound_entity_key=bound.get("key"),
+        bound_entity_type=bound.get("entity_type"),
+        bound_entity_name=bound.get("name"),
+    )
+    return True
+
+
 def _empty_ir(
     pathway_name: str,
     pathway_subject: str,
@@ -1527,21 +1621,50 @@ def build_pwml_ir(
             return None
         ordered = [hint] if hint in ENTITY_BUCKETS else []
         ordered.extend(preferred_order.get(role, []))
+        # C-050k / F-048 / D-043. The preferred-type match below used to ``return``
+        # straight out of the loop, so the ambiguity branch underneath it was
+        # unreachable for exactly the class where ``preferred_order`` CANNOT
+        # disambiguate: every one of the 20 same-type cases the census found returned
+        # here, and all 8 affected legs carried an empty issue list. The choice is now
+        # made first and RECORDED before it is returned.
+        #
+        # **The value returned is identical to what this loop returned before**: same
+        # ``ordered`` iteration, same first match, same ``candidates[0]``
+        # fall-through. D-043 §4 -- payload row order stays authoritative and the
+        # exporter reinterprets nothing post-freeze.
+        chosen: Optional[Dict[str, Any]] = None
         for wanted in ordered:
             for candidate in candidates:
                 if candidate.get("entity_type") == wanted:
-                    return candidate
-        if len(candidates) > 1:
-            _add_issue(
-                report,
-                "warning",
-                "ambiguous_entity_reference",
-                f"Process member '{clean}' matched multiple entity types; using {candidates[0]['entity_type']}.",
-                pointer=pointer,
-                name=clean,
-                entity_types=[c["entity_type"] for c in candidates],
-            )
-        return candidates[0]
+                    chosen = candidate
+                    break
+            if chosen is not None:
+                break
+        if chosen is None:
+            if len(candidates) > 1:
+                # PRE-EXISTING and deliberately untouched -- a different claim
+                # ("multiple entity TYPES"), a different code, and the only branch it
+                # ever reached. Emitted before the row-level diagnostic so nothing
+                # already in a report moves relative to anything else already in it.
+                _add_issue(
+                    report,
+                    "warning",
+                    "ambiguous_entity_reference",
+                    f"Process member '{clean}' matched multiple entity types; using {candidates[0]['entity_type']}.",
+                    pointer=pointer,
+                    name=clean,
+                    entity_types=[c["entity_type"] for c in candidates],
+                )
+            chosen = candidates[0]
+        _note_ambiguous_entity_rows(
+            report,
+            name=clean,
+            role=role,
+            pointer=pointer,
+            candidates=candidates,
+            bound=chosen,
+        )
+        return chosen
 
     def ensure_enzyme_complex_entity(entity: Dict[str, Any], pointer: str) -> Dict[str, Any]:
         if entity.get("entity_type") == "protein_complex":

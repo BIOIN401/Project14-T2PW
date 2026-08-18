@@ -1,0 +1,282 @@
+{
+  "t2pw_file": "C:\\t\\c050kbase\\src\\t2pw\\pwml\\ir.py",
+  "label": "G9 CORRECTION PROOF: exits 1 where the diagnostic is absent",
+  "arms": {
+    "auditor_fixture_naphthoate_first": {
+      "status": "BUILT",
+      "report_ok": false,
+      "bound_entity_key": "cmp_1",
+      "bound_row_name": "1,4-dihydroxy-2-naphthoic acid",
+      "ambiguous_entity_reference": [],
+      "ambiguous_entity_row_reference": [],
+      "row_reference_severity": "none",
+      "ambiguous_severity": "none",
+      "error_codes": [
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "unresolved_entity_reference",
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "reaction_missing_left"
+      ],
+      "warning_codes": [
+        "generated_default_state",
+        "biological_state_without_components"
+      ],
+      "index": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "dhna": [
+            {
+              "entity_key": "cmp_1",
+              "entity_type": "compound",
+              "name": "1,4-dihydroxy-2-naphthoic acid",
+              "pathwhiz_id": 40747
+            },
+            {
+              "entity_key": "cmp_2",
+              "entity_type": "compound",
+              "name": "DHNA",
+              "pathwhiz_id": null
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 1,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "dhna",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "DHNA",
+            "role": "reaction_member",
+            "pointer": "/processes/reactions/0/outputs/0",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "cmp_1",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              },
+              {
+                "entity_key": "cmp_2",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_1",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 0,
+        "part4_detail": {},
+        "norm_keys_total": 2,
+        "norm_keys_with_multiple_candidate_slots": 1,
+        "resolve_entity_consultations_total": 2
+      }
+    },
+    "auditor_fixture_reversed": {
+      "status": "BUILT",
+      "report_ok": false,
+      "bound_entity_key": "cmp_1",
+      "bound_row_name": "DHNA",
+      "ambiguous_entity_reference": [],
+      "ambiguous_entity_row_reference": [],
+      "row_reference_severity": "none",
+      "ambiguous_severity": "none",
+      "error_codes": [
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "unresolved_entity_reference",
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "reaction_missing_left"
+      ],
+      "warning_codes": [
+        "generated_default_state",
+        "biological_state_without_components"
+      ],
+      "index": {
+        "part1_ambiguous_norm_keys": 1,
+        "part1_detail": {
+          "dhna": [
+            {
+              "entity_key": "cmp_1",
+              "entity_type": "compound",
+              "name": "DHNA",
+              "pathwhiz_id": null
+            },
+            {
+              "entity_key": "cmp_2",
+              "entity_type": "compound",
+              "name": "1,4-dihydroxy-2-naphthoic acid",
+              "pathwhiz_id": 40747
+            }
+          ]
+        },
+        "part2_ambiguous_consultations": 1,
+        "part2_distinct_ambiguous_keys_consulted": 1,
+        "part3_consultations": [
+          {
+            "key": "dhna",
+            "n_candidates": 2,
+            "caller": "resolve_entity",
+            "clean": "DHNA",
+            "role": "reaction_member",
+            "pointer": "/processes/reactions/0/outputs/0",
+            "hint": "",
+            "candidates": [
+              {
+                "entity_key": "cmp_1",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              },
+              {
+                "entity_key": "cmp_2",
+                "entity_type": "compound",
+                "name": "1,4-dihydroxy-2-naphthoic acid",
+                "pathwhiz_id": 40747
+              }
+            ],
+            "binding_today": {
+              "replay": "PREFERRED_TYPE_EARLY_RETURN",
+              "wanted": "compound",
+              "bound": {
+                "entity_key": "cmp_1",
+                "entity_type": "compound",
+                "name": "DHNA",
+                "pathwhiz_id": null
+              }
+            }
+          }
+        ],
+        "part4_same_key_repeat_norm_keys": 0,
+        "part4_detail": {},
+        "norm_keys_total": 2,
+        "norm_keys_with_multiple_candidate_slots": 1,
+        "resolve_entity_consultations_total": 2
+      }
+    },
+    "control_slot_duplicate_single_entity": {
+      "status": "BUILT",
+      "report_ok": false,
+      "bound_entity_key": "cmp_1",
+      "bound_row_name": "glycine",
+      "ambiguous_entity_reference": [],
+      "ambiguous_entity_row_reference": [],
+      "row_reference_severity": "none",
+      "ambiguous_severity": "none",
+      "error_codes": [
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "reaction_missing_right"
+      ],
+      "warning_codes": [
+        "generated_default_state",
+        "biological_state_without_components"
+      ],
+      "index": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 1,
+        "part4_detail": {
+          "glycine": {
+            "candidate_slots": 3,
+            "distinct_entity_keys": 1,
+            "entity_types": [
+              "compound",
+              "compound",
+              "compound"
+            ]
+          }
+        },
+        "norm_keys_total": 1,
+        "norm_keys_with_multiple_candidate_slots": 1,
+        "resolve_entity_consultations_total": 1
+      }
+    },
+    "control_single_row": {
+      "status": "BUILT",
+      "report_ok": false,
+      "bound_entity_key": "cmp_1",
+      "bound_row_name": "glycine",
+      "ambiguous_entity_reference": [],
+      "ambiguous_entity_row_reference": [],
+      "row_reference_severity": "none",
+      "ambiguous_severity": "none",
+      "error_codes": [
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "biological_state_missing_species",
+        "biological_state_missing_subcellular_location",
+        "reaction_missing_right"
+      ],
+      "warning_codes": [
+        "generated_default_state",
+        "biological_state_without_components"
+      ],
+      "index": {
+        "part1_ambiguous_norm_keys": 0,
+        "part1_detail": {},
+        "part2_ambiguous_consultations": 0,
+        "part2_distinct_ambiguous_keys_consulted": 0,
+        "part3_consultations": [],
+        "part4_same_key_repeat_norm_keys": 0,
+        "part4_detail": {},
+        "norm_keys_total": 1,
+        "norm_keys_with_multiple_candidate_slots": 0,
+        "resolve_entity_consultations_total": 1
+      }
+    }
+  },
+  "claim_1_fires_on_ambiguity": false,
+  "claim_2_binding_unchanged": true,
+  "claim_3_silent_on_slot_duplication": true,
+  "severities": {
+    "auditor_fixture_naphthoate_first": "none",
+    "auditor_fixture_reversed": "none",
+    "control_slot_duplicate_single_entity": "none",
+    "control_single_row": "none"
+  },
+  "claim_4_severity_is_warning_only": true,
+  "bindings": {
+    "auditor_fixture_naphthoate_first": "cmp_1",
+    "auditor_fixture_reversed": "cmp_1",
+    "control_slot_duplicate_single_entity": "cmp_1",
+    "control_single_row": "cmp_1"
+  },
+  "r3_control_leg": {
+    "ir_digest": "32bf7893e62fcb8ac5799cbf7d910a8076ff51ca63693f66262c9f1f7b1b8dc2",
+    "report_digest": "476e41daeb97aa593f8b4141ac3ba21879972440799d2a921fc5a0677a3ae19a",
+    "report_ok": true,
+    "error_codes": [],
+    "warning_codes": [
+      "component_inferred_from_biological_state",
+      "noncanonical_names_collision_risk"
+    ],
+    "row_reference_issues": []
+  },
+  "verdict": "FAIL",
+  "mode": "g9",
+  "tree": "C:\\t\\c050kbase",
+  "fixtures": "C:\\t\\c050kbase",
+  "dotenv": null,
+  "pin_verdict": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\docs\\pwml_recovery_sprint\\evidence\\g11\\pin\\C-050k\\07-g9-base.pin.json",
+  "resolved_t2pw": "C:\\t\\c050kbase\\src\\t2pw\\__init__.py"
+}

@@ -819,3 +819,264 @@ def test_writer_serializes_each_proteins_resolved_species() -> None:
     builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args)
     builder.build()
     assert builder.section_items["proteins"][0]["species-id"] == 9
+
+
+# ---------------------------------------------------------------------------
+# C-050k -- F-048's alias-index ambiguity is recorded. Ruling: D-041 (a); scope,
+# adjudication and constraints: D-043, which is LOCKED and is the authority --
+# cited here, not transcribed.
+#
+# G9: **CORRECTION of pre-existing observable behaviour, NOT new capability.** The
+# base records nothing at all on this path. Measured over the 32 committed legs:
+# **61 live ``resolve_entity`` consultations through an ambiguous alias key across
+# 8 legs**, 20 of them same-type, with ``ambiguous_entity_reference`` **empty on
+# all 8** (``evidence/c050k_census_prechange.json``).
+#
+# **FIVE of the eight arms below fail at base ``15f36b4`` and pass at the tip**, and
+# they are what discharges G9. They are the arms that assert the diagnostic is
+# PRESENT: ``..._is_recorded_and_the_binding_does_not_move``,
+# ``..._is_a_warning_and_never_moves_report_ok``,
+# ``..._is_recorded_in_both_payload_row_orders``,
+# ``..._cross_type_ambiguity_is_recorded_and_preference_still_decides`` and
+# ``..._row_code_is_distinct_from_the_entity_type_code``. Measured in a real git
+# worktree at the base SHA, never an export (**F-042**), and re-measured with
+# ``.env`` copied in so the DB condition matched the tip exactly (**F-051**):
+# identical either way, so the base failure is real and DB-independent.
+#
+# **The other THREE pass at base as well as at the tip and are NOT G9 proofs.** Each
+# asserts an ABSENCE, which is trivially true where the code does not exist, so
+# presenting them as base failures would be the mislabelling G9 calls an automatic
+# reject (**D-046 section 1**). They are labelled individually below.
+#
+# **CORRECTED 2026-08-17, correction round 1.** This block previously said *every*
+# arm fails at base. That was false for those three, and this card's OWN committed
+# evidence said so: ``evidence/c050k_g9_base.json`` records
+# ``claim_3_silent_on_slot_duplication: true`` measured AT BASE. The probe cited
+# here never proved what the sentence claimed, and an over-broad G9 sentence is how
+# a card's real proof stops being checkable.
+#
+# **All 20 adjudicated bindings were biologically CORRECT** (D-043 section 1).
+# Nothing here claims a mis-binding and nothing rebinds: the violation is
+# ``PRODUCT_CONTRACT`` section 3 traceability, so the obligation is to record the
+# choice, not to have been lucky.
+#
+# The DB is pinned DOWN in every arm, which is load-bearing rather than tidy:
+# ``PathBankDbResolver.from_env`` calls ``ensure_dotenv_loaded``, so an unpinned arm
+# reads the developer's real ``.env`` and stops being deterministic.
+# ``helpers_prefreeze.prefrozen``'s own docstring asks callers to do exactly this.
+# ---------------------------------------------------------------------------
+
+
+class _DownDb:
+    """A DB that is reachable-but-down, so no arm below depends on the ambient
+    environment. Same shape as the golden sweep's ``B`` configuration."""
+
+    last_error = "harvest_db_down"
+
+    def available(self) -> bool:
+        return False
+
+
+#: The regression fixture ``pwml-bio-auditor`` specified in **D-043**, transcribed
+#: exactly: the real ``PMC12312563/strict`` collision, minimal and DB-free. The
+#: frozen leg carries ``{"name": "1,4-dihydroxy-2-naphthoic acid", "synonyms":
+#: ["DHNA"], "pathbank_compound_id": 40747}`` and a bare ``{"name": "DHNA"}``, and
+#: reaction 6 (``DHNA-CoA thioesterase activity``, MenI) declares output ``"DHNA"``.
+_AUDITOR_ROWS = [
+    {"name": "1,4-dihydroxy-2-naphthoic acid", "synonyms": ["DHNA"],
+     "pathbank_compound_id": 40747},
+    {"name": "DHNA"},
+]
+
+
+def _alias_payload(compounds: list, outputs: list = None, extra_entities: dict = None) -> dict:
+    """A minimal payload whose only interesting property is its alias index."""
+
+    entities = {"compounds": compounds, "proteins": []}
+    entities.update(extra_entities or {})
+    return {
+        "metadata": {"pathway_name": "P", "pathway_subject": "Metabolic"},
+        "entities": entities,
+        "processes": {"reactions": [{
+            "name": "R1", "inputs": ["DHNA-CoA"],
+            "outputs": ["DHNA"] if outputs is None else outputs}]},
+    }
+
+
+def _alias_build(payload: dict) -> tuple:
+    down = _DownDb()
+    staged = prefrozen_when_compounded(
+        deepcopy(payload), db_resolver=down, strict_db=False, name_index=None)
+    return build_pwml_ir(staged, pathway_name="P", pathway_subject="Metabolic",
+                         db_resolver=down, strict_db=False, name_index=None)
+
+
+def _row_issues(report: dict) -> list:
+    return [issue for bucket in ("errors", "warnings")
+            for issue in report[bucket]
+            if issue.get("code") == "ambiguous_entity_row_reference"]
+
+
+def test_c050k_alias_ambiguity_is_recorded_and_the_binding_does_not_move() -> None:
+    """NEW ARM, G9 CORRECTION. D-043's regression fixture, both halves.
+
+    (a) the binding is **still the first row** -- unchanged from base;
+    (b) the report now carries an issue naming **both** candidate keys.
+    """
+
+    ir, report = _alias_build(_alias_payload(deepcopy(_AUDITOR_ROWS)))
+
+    # (a) UNCHANGED. Payload row order stays authoritative (D-043 section 4): the
+    # output "DHNA" binds the row that came FIRST -- the alias holder -- as at base.
+    bound_key = ir["processes"]["reactions"][0]["right"][0]["entity_key"]
+    bound = next(r for r in ir["entities"]["compounds"] if r["key"] == bound_key)
+    assert bound_key == "cmp_1"
+    assert bound["name"] == "1,4-dihydroxy-2-naphthoic acid"
+
+    # (b) RECORDED. This is what fails at base, where the list is empty.
+    issues = _row_issues(report)
+    assert len(issues) == 1, issues
+    issue = issues[0]
+    assert issue["entity_keys"] == ["cmp_1", "cmp_2"], issue
+    assert issue["bound_entity_key"] == "cmp_1"
+    assert issue["name"] == "DHNA"
+    assert issue["role"] == "reaction_member"
+    assert issue["pointer"] == "/processes/reactions/0/outputs/0"
+    # The ids are carried, NEVER compared: F-043 forbids inferring sameness from
+    # identifier equality and D-043 section 4 forbids this diagnostic making that call.
+    assert issue["entity_names"] == ["1,4-dihydroxy-2-naphthoic acid", "DHNA"]
+    assert len(issue["entity_pathwhiz_ids"]) == 2
+
+
+def test_c050k_alias_ambiguity_is_a_warning_and_never_moves_report_ok() -> None:
+    """NEW ARM. **D-041 section 2 limit 1.** ``error`` would set
+    ``report["ok"] = False`` and flip legs between exporting and not; the diagnostic
+    must never do that."""
+
+    _ir, report = _alias_build(_alias_payload(deepcopy(_AUDITOR_ROWS)))
+
+    codes = {issue["code"] for issue in report["errors"]}
+    assert "ambiguous_entity_row_reference" not in codes, report["errors"]
+    assert any(issue["code"] == "ambiguous_entity_row_reference"
+               for issue in report["warnings"])
+
+    # And on a payload whose only new finding is the ambiguity, ``ok`` stays exactly
+    # where the base left it: the diagnostic contributes nothing to the verdict.
+    clean = _base_payload()
+    clean["entities"]["compounds"][0]["synonyms"] = ["Glucose 6-phosphate"]
+    down = _DownDb()
+    _clean_ir, clean_report = build_pwml_ir(
+        prefrozen_when_compounded(clean, db_resolver=down, strict_db=False,
+                                  name_index=None),
+        db_resolver=down, strict_db=False, name_index=None)
+    assert _row_issues(clean_report), "arm is vacuous unless the ambiguity fired"
+    assert clean_report["ok"] is True
+
+
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
+def test_c050k_slot_duplicated_single_entity_raises_no_ambiguity() -> None:
+    """NEW ARM, and the arm that makes the guard NON-VACUOUS.
+
+    **D-041 section 5 / D-043 section 4.** ``entity_by_name`` is appended to once
+    per alias slot with no dedupe, so ONE row whose ``name``, ``raw_name`` and
+    ``synonyms`` all normalize alike occupies several slots under one key and
+    ``len(candidates) > 1`` is true for a single entity. Measured on the committed
+    corpus that shape holds for **209** ``_norm`` keys. A length-based test would
+    raise 209 false alarms; the test is over distinct ``entity_key``s, so this
+    must stay silent.
+    """
+
+    ir, report = _alias_build(_alias_payload([
+        {"name": "DHNA", "raw_name": "dhna", "short_name": "DHNA",
+         "common_name": "D.H.N.A.", "synonyms": ["dhna", "DHNA"]},
+    ]))
+
+    assert len(ir["entities"]["compounds"]) == 1
+    assert ir["processes"]["reactions"][0]["right"][0]["entity_key"] == "cmp_1"
+    assert _row_issues(report) == []
+
+
+def test_c050k_alias_ambiguity_is_recorded_in_both_payload_row_orders() -> None:
+    """NEW ARM. One order alone cannot tell "first wins" from "last wins", and the
+    diagnostic must name both candidates whichever row happens to be first."""
+
+    for rows, expected_name in (
+        (deepcopy(_AUDITOR_ROWS), "1,4-dihydroxy-2-naphthoic acid"),
+        (list(reversed(deepcopy(_AUDITOR_ROWS))), "DHNA"),
+    ):
+        ir, report = _alias_build(_alias_payload(rows))
+        bound_key = ir["processes"]["reactions"][0]["right"][0]["entity_key"]
+        bound = next(r for r in ir["entities"]["compounds"] if r["key"] == bound_key)
+        assert bound_key == "cmp_1"
+        assert bound["name"] == expected_name
+        issues = _row_issues(report)
+        assert len(issues) == 1
+        assert sorted(issues[0]["entity_keys"]) == ["cmp_1", "cmp_2"]
+        assert issues[0]["bound_entity_key"] == "cmp_1"
+        assert issues[0]["bound_entity_name"] == expected_name
+
+
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
+def test_c050k_no_overlap_emits_no_ambiguity_at_all() -> None:
+    """NEW ARM, control. Two rows that share nothing must stay silent, so a green
+    arm above is not just "the diagnostic fires on everything"."""
+
+    _ir, report = _alias_build(_alias_payload([
+        {"name": "1,4-dihydroxy-2-naphthoic acid", "pathbank_compound_id": 40747},
+        {"name": "DHNA"},
+    ]))
+
+    assert _row_issues(report) == []
+
+
+def test_c050k_cross_type_ambiguity_is_recorded_and_preference_still_decides() -> None:
+    """NEW ARM. 41 of the census's 61 consultations were CROSS-type, where
+    ``preferred_order`` does disambiguate deterministically. The choice is still an
+    arbitrary-looking one from the reader's side, so section 3 still wants it
+    recorded -- and the type preference must keep deciding exactly as at base."""
+
+    payload = _alias_payload(
+        [{"name": "enterobactin synthase", "pathbank_compound_id": 1}],
+        outputs=["enterobactin synthase"],
+        extra_entities={
+            "proteins": [{"name": "enterobactin synthase", "species": "Homo sapiens",
+                          "pathbank_protein_id": 6301,
+                          "mapped_ids": {"uniprot": "P10378"}}],
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}]})
+
+    ir, report = _alias_build(payload)
+
+    # ``preferred_order["reaction_member"]`` puts ``compound`` first, and it still does.
+    member = ir["processes"]["reactions"][0]["right"][0]
+    assert member["entity_type"] == "compound"
+    issues = _row_issues(report)
+    assert len(issues) == 1
+    assert sorted(issues[0]["entity_types"]) == ["compound", "protein"]
+    assert issues[0]["bound_entity_type"] == "compound"
+
+
+def test_c050k_row_code_is_distinct_from_the_entity_type_code() -> None:
+    """NEW ARM. **D-043 section 4 forbids folding the two codes.** On the same-type
+    early-return path the pre-existing ``ambiguous_entity_reference`` -- which claims
+    "multiple entity TYPES" -- must stay silent, or the census's own distinction is
+    destroyed and 20 same-type cases get described as type ambiguity."""
+
+    _ir, report = _alias_build(_alias_payload(deepcopy(_AUDITOR_ROWS)))
+
+    assert _row_issues(report)
+    assert not any(issue.get("code") == "ambiguous_entity_reference"
+                   for issue in report["errors"] + report["warnings"])
+
+
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
+def test_c050k_unresolved_reference_path_is_unchanged() -> None:
+    """NEW ARM, boundary. A name matching nothing must still produce exactly the
+    pre-existing ``unresolved_entity_reference`` error and no row diagnostic: this
+    card added a branch, it did not move the ones already there."""
+
+    _ir, report = _alias_build(_alias_payload([{"name": "DHNA"}],
+                                              outputs=["nothing here"]))
+
+    assert any(issue["code"] == "unresolved_entity_reference"
+               for issue in report["errors"])
+    assert _row_issues(report) == []

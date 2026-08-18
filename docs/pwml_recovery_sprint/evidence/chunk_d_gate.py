@@ -1,7 +1,9 @@
 """Deterministic split-process Chunk D gate (authorization CONTROL-PLANE-RECONCILE-001).
 
-Chunk D's monolithic definition runs 179 tests across seven files in ONE process
-(177 until C-045b's authorized ``core`` 150 -> 152 move; see ``TOTAL`` below).
+Chunk D's monolithic definition runs 187 tests across seven files in ONE process
+(177, then 179 after C-045b's authorized ``core`` 150 -> 152 move, then 187 after
+C-050k's authorized 152 -> 160; see ``TOTAL`` below. **187 holds only on a tree
+carrying C-050k** -- 179 remains correct everywhere else until it merges).
 Two of those files drive Streamlit ``AppTest``, and several ``AppTest`` instances
 in one process eventually leave a worker thread without a ``ScriptRunContext``:
 the run dies with ``RuntimeError: FragmentThreadState not initialized``
@@ -68,20 +70,33 @@ S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
 #: ``(name, files, expected_count)`` -- ENFORCED by ``run``; ``collect`` only reports.
 COMPONENTS: List[Tuple[str, List[str], int]] = [
-    ("core", CORE, 152), ("s8", S8, 4), ("qb", QB, 23)]
+    ("core", CORE, 160), ("s8", S8, 4), ("qb", QB, 23)]
 #: The original monolithic selection, verbatim -- what the split must equal.
 MONOLITHIC = CORE + S8 + QB
-#: 152 + 4 + 23 = 179. MOVED ONCE, DELIBERATELY, by C-045b on 2026-08-15 under
-#: permanent merge rule 4, orchestrator-authorized: ``core`` 150 -> 152, so the
-#: derived ``TOTAL`` follows 177 -> 179. The two added tests are
-#: ``tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_
-#: keeps_its_provenance`` and ``::test_cli_export_runs_every_registered_prefreeze_
-#: canonicalizer``, which C-045b's charter mandated and whose correct home is a
-#: ``CORE`` file. This is a baseline move, not a weakened gate: the substantive
-#: check is ``partition``'s SET equality, which passed unchanged across the move
-#: (``SETS_EQUAL=True``, ``overlap=0``, ``missing=0``, ``extra=0``, no
-#: deselection). The integer is derived from that set and has nowhere for a
-#: silent regression to hide. Chunk D is 179 tests and stays 179 tests.
+#: 160 + 4 + 23 = 187. MOVED TWICE, DELIBERATELY, both times under permanent merge
+#: rule 4 with orchestrator authorization.
+#:
+#: 1. **C-045b, 2026-08-15:** ``core`` 150 -> 152, so the derived ``TOTAL`` followed
+#:    177 -> 179. The two added tests are
+#:    ``tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_
+#:    keeps_its_provenance`` and ``::test_cli_export_runs_every_registered_prefreeze_
+#:    canonicalizer``, which C-045b's charter mandated and whose correct home is a
+#:    ``CORE`` file.
+#: 2. **C-050k, 2026-08-17 (D-044 §2):** ``core`` 152 -> 160, ``TOTAL`` 179 -> 187.
+#:    The ``+8`` is exactly the eight alias-ambiguity acceptance arms added to
+#:    ``tests/test_pwml_ir.py``, a ``CORE`` file, which the C-050k charter *required*
+#:    be placed there: measured by literal occurrence, that file previously contained
+#:    **zero** ``resolve_entity`` / ``ambiguous`` / ``synonyms`` coverage, so the whole
+#:    alias surface had no Chunk D coverage at all.
+#:
+#: Neither is a weakened gate: the substantive check is ``partition``'s SET equality,
+#: which passed unchanged across BOTH moves (``SETS_EQUAL=True``, ``overlap=0``,
+#: ``missing=0``, ``extra=0``, no deselection). The integer is derived from that set
+#: and has nowhere for a silent regression to hide.
+#:
+#: **187 is correct ONLY on a tree carrying C-050k.** Until that merge lands, 179
+#: remains correct, and a card in flight reporting 187 on a tree without C-050k is
+#: measuring the wrong thing (D-044 §2).
 TOTAL = sum(expect for _n, _f, expect in COMPONENTS)
 #: The two AppTest components. ``run`` executes each of their 27 node IDs ALONE.
 APPTEST = ("s8", "qb")

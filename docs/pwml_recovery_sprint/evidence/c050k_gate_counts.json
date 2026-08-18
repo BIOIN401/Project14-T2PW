@@ -1,0 +1,42 @@
+{
+  "card": "C-050k",
+  "purpose": "Merge-gate counts read off the runs themselves. bounded_run records exit codes, not stdout, so a PASS is checkable from g11 but the INTEGER is not; this file carries the verbatim pytest summary lines. Precedent: C-056a's evidence/c056a_gate_counts.json.",
+  "tip": "ce5761ad96c1aab02fcc46b881d6588392b520da",
+  "smoke": {
+    "pytest_summary_verbatim": "460 passed in 27.92s",
+    "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\src\\t2pw\\__init__.py",
+    "failed_node_ids": [],
+    "bounded_report": "g11/C-050k/64-smoke.json",
+    "gate": "SMOKE (merge rule 10)",
+    "expected": "exactly 460"
+  },
+  "chunk_e": {
+    "pytest_summary_verbatim": "174 passed in 48.57s",
+    "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\src\\t2pw\\__init__.py",
+    "failed_node_ids": [],
+    "bounded_report": "g11/C-050k/65-chunk-e.json",
+    "gate": "Chunk E strict-quarantine real artifact replay"
+  },
+  "chunk_d_core": {
+    "pytest_summary_verbatim": "1 failed, 159 passed in 10.01s",
+    "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\src\\t2pw\\__init__.py",
+    "failed_node_ids": [
+      "FAILED tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance"
+    ],
+    "bounded_report": "g11/C-050k/66-dcore.json",
+    "gate": "Chunk D 'core' component, 5 files",
+    "note": "The single failure is the F-051 environment failure already attributed away from this diff by the same-tree swap at g11/C-050k/20: with src/t2pw/pwml/ir.py checked out at 15f36b4 inside this same tree it fails identically. 159 passed is the verbatim source of the 159/160 figure."
+  },
+  "chunk_d_full_run": {
+    "jobs_recorded": 36,
+    "jobs_exit_zero": 34,
+    "jobs_nonzero": [
+      "chunkd-run-core",
+      "chunkd-node15"
+    ],
+    "survivors_anywhere": false,
+    "cleanup_failures": [],
+    "VERIFIABLE_FROM_COMMITTED_ARTIFACTS": "Per-job exit codes, survivor counts and cleanup results above are read from the committed bounded reports and are independently checkable.",
+    "NOT_VERIFIABLE_FROM_COMMITTED_ARTIFACTS": "The test-count figures 185/187 and the partition proof (SETS_EQUAL=True, missing=0, extra=0, overlap=0; 187 = core 160 + s8 4 + qb 23) were printed to chunk_d_gate.py stdout, which bounded_run does not retain. They are NOT recoverable from any committed artifact. Re-deriving them verbatim needs a fresh chunk_d_gate.py collect (5 artifacts) plus a full run (33), which D-025 ceiling 2 does not permit and the orchestrator forbade. Reported as transcription, flagged as such, and NOT presented as measured-and-checkable. The 160 denominator IS independently corroborated by chunk_d_core above."
+  }
+}
