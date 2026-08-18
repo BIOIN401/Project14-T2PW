@@ -1,0 +1,77 @@
+{
+  "label": "c050k-node15-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/docs/pwml_recovery_sprint/evidence/g11/pin/C-050k/60-node15-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/c050k/n1",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity",
+  "started_at": "2026-08-18T01:15:48+00:00",
+  "finished_at": "2026-08-18T01:15:54+00:00",
+  "duration_seconds": 6.144741400000157,
+  "timeout_seconds": 900.0,
+  "root_pid": 19988,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 21164,
+      "name": "python.exe",
+      "ppid": 19988
+    }
+  ],
+  "descendants_terminated": [
+    21164
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 33716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 37536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 37936,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050k-alias-ambiguity/docs/pwml_recovery_sprint/evidence/g11/C-050k/60-node15-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050k-alias-ambiguity",
+    "repo_head": "9909d4ed0a23b0daa0023a9a1dc0b9e9e9b5a7f1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
