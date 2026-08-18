@@ -1,0 +1,219 @@
+{
+  "label": "affected-cohort",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056a-semantic-gating",
+    "--pin-verdict",
+    "C:/t/c056a/aff_pin.json",
+    "-q",
+    "--basetemp=C:/t/c056a/aff",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+  "started_at": "2026-08-17T20:54:46+00:00",
+  "finished_at": "2026-08-17T20:55:13+00:00",
+  "duration_seconds": 26.83545640000375,
+  "timeout_seconds": 1200.0,
+  "root_pid": 1264344,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1267172,
+      "name": "python.exe",
+      "ppid": 1264344
+    },
+    {
+      "pid": 1266076,
+      "name": "git.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1267280,
+      "name": "git.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1263560,
+      "name": "git.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1264240,
+      "name": "python.exe",
+      "ppid": 1267412
+    },
+    {
+      "pid": 1267412,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1264372,
+      "name": "python.exe",
+      "ppid": 1266072
+    },
+    {
+      "pid": 1266072,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1260880,
+      "name": "python.exe",
+      "ppid": 1264840
+    },
+    {
+      "pid": 1264840,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1265124,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1267088,
+      "name": "python.exe",
+      "ppid": 1265124
+    },
+    {
+      "pid": 1266548,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1267216,
+      "name": "python.exe",
+      "ppid": 1266548
+    },
+    {
+      "pid": 1259816,
+      "name": "python.exe",
+      "ppid": 1267216
+    },
+    {
+      "pid": 1260452,
+      "name": "python.exe",
+      "ppid": 1259816
+    },
+    {
+      "pid": 1263788,
+      "name": "python.exe",
+      "ppid": 1267172
+    },
+    {
+      "pid": 1265232,
+      "name": "python.exe",
+      "ppid": 1263788
+    },
+    {
+      "pid": 1265320,
+      "name": "python.exe",
+      "ppid": 1265232
+    },
+    {
+      "pid": 1265784,
+      "name": "python.exe",
+      "ppid": 1265320
+    }
+  ],
+  "descendants_terminated": [
+    1259816,
+    1260452,
+    1260880,
+    1263560,
+    1263788,
+    1264240,
+    1264372,
+    1264840,
+    1265124,
+    1265232,
+    1265320,
+    1265784,
+    1266072,
+    1266076,
+    1266548,
+    1267088,
+    1267172,
+    1267216,
+    1267280,
+    1267412
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1263348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1266956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1266984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1267348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1267360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1267628,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-056a/10-affected-cohort.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+    "repo_head": "a5174fa56e0165a36fb35e70ec43b8056168f86a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}

@@ -122,6 +122,15 @@ def _check_requested_organism(
 
     if not _s.normalize_name(requested_organism):
         return _not_evaluated(_s.CHECK_ORGANISM, NO_ORGANISM_CONTEXT), 0
+    # FUNCTION-LOCAL, and it must STAY function-local (D-039 section 1). ``test_e``
+    # in ``tests/test_semantic_production_no_gold.py`` pins this module's import
+    # graph as ``set(sys.modules) - package``, i.e. EVERY module including stdlib,
+    # so a module-level ``rag`` import would drag ``math`` and others into a pinned
+    # exact set. Deferring it to call time keeps that set byte-identical -- the
+    # same reason ``_audit_entities`` defers ``t2pw.pipeline.entity_identity``.
+    # The PUBLIC wrapper only: ``rag.eligibility``'s private names are not imported.
+    from t2pw.rag.admission import ORGANISM_MATCH, compare_organism
+
     wanted = _s.normalize_name(requested_organism)
     findings: List[Dict[str, Any]] = []
     for bucket, rows in processes.items():
@@ -132,6 +141,21 @@ def _check_requested_organism(
             # ``pipeline.propagate_context_organism`` fills it later. Only a stated,
             # conflicting organism is a semantic defect.
             if not norm or norm == wanted or norm.startswith(wanted + " ") or wanted.startswith(norm + " "):
+                continue
+            # The disjunction above is literal string prefixing, so an ABBREVIATED
+            # BINOMIAL is a false positive: ``E. coli`` shares no prefix with
+            # ``escherichia coli`` and was reported as a cross-organism reaction.
+            # ``rag.admission.compare_organism`` is the established taxonomy
+            # wrapper -- consulting it is what stops this check and the paper-level
+            # eligibility screen disagreeing about whether two names are one
+            # organism, and A0-C3 forbids a competing synonym table of our own.
+            #
+            # STRICTLY MONOTONE: an extra ``continue`` can only REMOVE a finding,
+            # never add one. Only an exact ``match`` clears; ``genus_level`` does
+            # not, so ``Escherichia fergusonii`` STAYS a finding, while bare genus
+            # ``Escherichia`` stays tolerated by ``wanted.startswith`` above.
+            # Both pre-existing behaviours are unchanged (D-039 section 2).
+            if compare_organism(requested_organism, observed) == ORGANISM_MATCH:
                 continue
             findings.append({
                 "pointer": f"/processes/{bucket}/{index}", "observed_organism": observed,

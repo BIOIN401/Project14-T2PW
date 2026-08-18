@@ -25,18 +25,20 @@ Two shapes live here.
     separate fields. ``semantic_evaluation`` is a THREE-valued string, never a
     bool, because "not evaluated" is never ``False``.
 
-What this module deliberately does NOT do: it does not evaluate semantics and it
-takes no semantic argument -- that input is C-056a's (``MASTER_PLAN.md:379``), so
-every status here carries ``SEMANTIC_NOT_EVALUATED`` with a stated reason and
-C-056a adds the input and the gating without reshaping anything. It also does not
-name artifacts (D-004 / C-053): structured status is authoritative and a filename
-is never an input here.
+What this module deliberately does NOT do: it does not **evaluate** semantics --
+that is ``bench.semantic_production``'s, and this module never imports it. What
+C-056a added is the *input* and the gating: :func:`semantic_verdict` reduces an
+already-computed report to one of PRODUCT_CONTRACT 11's three semantic states, and
+:func:`classify_release_status` accepts that verdict and applies D-042's one-step
+cap. A caller that passes nothing still gets ``SEMANTIC_NOT_EVALUATED`` with a
+stated reason, exactly as before. It also does not name artifacts (D-004 /
+C-053): structured status is authoritative and a filename is never an input here.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 #: PRODUCT_CONTRACT 4 output states. There is deliberately no fourth.
 RELEASE_READY = "release_ready"
@@ -50,10 +52,48 @@ SEMANTIC_PASSED = "passed"
 SEMANTIC_FAILED = "failed"
 SEMANTIC_NOT_EVALUATED = "not_evaluated"
 
-#: Why no semantic verdict is attached yet. A reason, not a failure.
+#: Why no semantic verdict is attached yet. A reason, not a failure. Still the
+#: default: a caller that passes no semantic input gets exactly the pre-C-056a
+#: record, which is what keeps every unwired consumer byte-identical.
 SEMANTIC_INPUT_NOT_WIRED = (
     "no semantic evaluation is wired into the runtime classification yet; this is "
     "a missing input (C-056a), NOT a semantic failure and NOT a pass"
+)
+
+#: No report reached the classifier at all -- distinct from a report that ran and
+#: could not evaluate anything.
+SEMANTIC_NO_REPORT = "no semantic report was produced for this run"
+
+#: A report ran, but every GATING check was inapplicable, so there is no semantic
+#: evidence either way. PRODUCT_CONTRACT 11 forbids calling that a pass: a verdict
+#: with nothing behind it is exactly the "not performed" state, and reporting it
+#: as ``passed`` would let an unevaluable run count as semantically confirmed.
+SEMANTIC_NO_GATING_CHECK_EVALUABLE = (
+    "no gating semantic check could be evaluated on this run; the gating set is "
+    "closed at four and every member was inapplicable"
+)
+
+#: The semantic checks that may GATE the release status, closed at exactly four
+#: (D-039 section 3). ``CHECK_PLACEHOLDER_IDENTITY`` never gates (PRODUCT_CONTRACT
+#: 13 / TRAP-3 -- it is explicitly non-adjudicating); ``CHECK_SUPPORTED_REACTIONS``
+#: is always inapplicable in production; and ``CHECK_SOURCE_CARRIER`` and
+#: ``CHECK_CONNECTED_CORE`` are RECORDED BUT NON-GATING -- the first documents
+#: itself as hygiene that "deliberately does NOT claim the reaction is supported",
+#: so blocking a biological release on it would misuse it, and the second
+#: duplicates a floor the coverage verdict already enforced at this same seam.
+#:
+#: LOCAL RESTATEMENT of ``bench.semantic``'s ``CHECK_*`` names, the same house
+#: pattern ``semantic_production._contains_token`` uses for ``goldset``: this is
+#: ``t2pw.pipeline`` and a module-level ``t2pw.bench`` import here would invert the
+#: layering for every importer of this module, not just the one seam that is
+#: authorized to. Kept in step BY TEST, not by comment --
+#: ``tests/test_semantic_release_gating.py`` asserts this tuple equals the four
+#: constants and that the set is CLOSED.
+SEMANTIC_GATING_CHECKS: Tuple[str, ...] = (
+    "requested_pathway_anchors_present",       # bench.semantic.CHECK_ANCHORS
+    "organism_compatible",                     # bench.semantic.CHECK_ORGANISM
+    "no_real_id_or_name_conflict",             # bench.semantic.CHECK_ID_CONFLICT
+    "no_rejected_rag_reaction_reintroduced",   # bench.semantic.CHECK_RAG_REINTRODUCTION
 )
 
 #: Reason vocabulary. Grouped so a report can say WHY without parsing prose.
@@ -62,6 +102,7 @@ REASON_STRICT_GATES_BLOCKED = "strict_technical_gates_blocked_export"
 REASON_SERIALIZATION_REQUIRES_INVENTION = "serialization_would_require_invention"
 REASON_NO_DEFENSIBLE_CONNECTED_CORE = "no_defensible_connected_core"
 REASON_COVERAGE_NOT_EVALUATED = "requested_core_coverage_not_evaluated"
+REASON_SEMANTIC_EVALUATION_FAILED = "semantic_evaluation_failed"
 
 #: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
 #: consumer has to re-type the string it string-matches on.
@@ -248,6 +289,58 @@ def coverage_verdict(value: Any) -> Optional[CoverageVerdict]:
     return None
 
 
+def semantic_verdict(report: Any) -> Tuple[str, str, Tuple[str, ...]]:
+    """Reduce a semantic report to ``(evaluation, reason, failed_gating_checks)``.
+
+    Duck-typed on purpose. This is ``t2pw.pipeline``; importing
+    ``t2pw.bench.semantic`` to name the type would invert the layering for every
+    importer of this module. What is read is the shape D-006 fixed and C-017
+    shipped -- ``evaluated``, ``not_evaluated_reason`` and a ``checks`` mapping of
+    name to a result carrying ``ok`` and ``applicable``.
+
+    A0-C4, unrelaxed: ``confirmed`` is deliberately NOT consulted. It can never be
+    ``True`` on a production run -- ``retained_reactions_match_supported_signatures``
+    needs quote-verified gold signatures -- so gating on it would ship nothing,
+    ever. ``evaluated``, ``ok`` and applicability are combined instead, and only
+    over :data:`SEMANTIC_GATING_CHECKS`.
+
+    The three outcomes, kept apart exactly as PRODUCT_CONTRACT 11 requires:
+
+    * no report, or a report that did not evaluate -> ``not_evaluated`` with the
+      report's own stated reason;
+    * at least one gating check applicable and failing -> ``failed``, naming them;
+    * at least one gating check applicable and all such passing -> ``passed``.
+
+    The fourth case is the one that is easy to get wrong: a report that ran but in
+    which **every** gating check was inapplicable. That is ``not_evaluated``, never
+    ``passed`` -- there is no evidence behind a pass, and PRODUCT_CONTRACT 11's
+    "not_evaluated is never false" cuts the other way too. A NON-GATING check
+    cannot reach any branch here, so its failure can never demote a run.
+    """
+
+    if report is None:
+        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_REPORT, ()
+    if not getattr(report, "evaluated", False):
+        reason = str(getattr(report, "not_evaluated_reason", "") or "") or SEMANTIC_NO_REPORT
+        return SEMANTIC_NOT_EVALUATED, reason, ()
+
+    checks = getattr(report, "checks", None) or {}
+    failed: List[str] = []
+    evaluable = 0
+    for name in SEMANTIC_GATING_CHECKS:
+        result = checks.get(name) if isinstance(checks, Mapping) else None
+        if result is None or not getattr(result, "applicable", False):
+            continue
+        evaluable += 1
+        if not getattr(result, "ok", False):
+            failed.append(name)
+    if failed:
+        return SEMANTIC_FAILED, "", tuple(failed)
+    if not evaluable:
+        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_GATING_CHECK_EVALUABLE, ()
+    return SEMANTIC_PASSED, "", ()
+
+
 def classify_release_status(
     coverage: Any = None,
     *,
@@ -257,6 +350,9 @@ def classify_release_status(
     retrieval_attempts: Optional[int] = None,
     expansion_blocked_reason: str = "",
     extra_reasons: Sequence[str] = (),
+    semantic_evaluation: str = SEMANTIC_NOT_EVALUATED,
+    semantic_not_evaluated_reason: str = SEMANTIC_INPUT_NOT_WIRED,
+    semantic_failed_checks: Sequence[str] = (),
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
 
@@ -274,9 +370,25 @@ def classify_release_status(
        never counted as strict success.
     6. otherwise -> ``release_ready``.
 
-    ``semantic_evaluation`` is ``not_evaluated`` on every path (see the module
-    docstring): reported, never folded into ``status``, so C-056a can start
-    failing a run on semantics without any consumer changing shape.
+    Then, and only then, the SEMANTIC CAP (D-042 section 3). A failing gating
+    semantic check **caps** the status at ``review_required``. It is a cap, not a
+    move:
+
+    * it never produces ``diagnostic_only`` -- PRODUCT_CONTRACT 13 defines
+      ``review_required`` as "valid, needs review", which is exactly a pathway
+      whose semantics did not confirm, and merge rule 7 preserves
+      incomplete-but-correct work rather than dropping it;
+    * it never touches a status already ``review_required`` or
+      ``diagnostic_only``, so a technical refusal is never restated as a
+      biological one.
+
+    Because a cap is monotone it can only ever **remove** strict successes, never
+    create one -- no new strict success without measured evidence.
+
+    ``semantic_evaluation`` still defaults to ``not_evaluated`` with the unwired
+    reason, so a caller that passes no semantic input gets byte-identically the
+    record it got before this input existed. ``not_evaluated`` is never ``False``
+    and never demotes: an unevaluable check produces NO status change.
     """
 
     verdict = coverage_verdict(coverage)
@@ -306,12 +418,30 @@ def classify_release_status(
     else:
         status = RELEASE_READY
 
+    # The semantic cap. Applied AFTER the technical chain and only downward from
+    # release_ready, so it can never manufacture a status the rules above refused
+    # and can never deepen one they already reached.
+    evaluation = str(semantic_evaluation or SEMANTIC_NOT_EVALUATED)
+    if evaluation == SEMANTIC_FAILED and status == RELEASE_READY:
+        status = REVIEW_REQUIRED
+        failed = [str(name) for name in semantic_failed_checks or ()]
+        reasons.append(
+            f"{REASON_SEMANTIC_EVALUATION_FAILED}:{','.join(failed)}" if failed
+            else REASON_SEMANTIC_EVALUATION_FAILED
+        )
+
     return ReleaseStatus(
         status=status,
         pipeline_executed=bool(pipeline_executed),
         strict_gates_passed=bool(strict_gates_passed),
-        semantic_evaluation=SEMANTIC_NOT_EVALUATED,
-        semantic_not_evaluated_reason=SEMANTIC_INPUT_NOT_WIRED,
+        semantic_evaluation=evaluation,
+        # A reason belongs to ``not_evaluated`` alone: carrying the unwired
+        # placeholder beside a real ``passed``/``failed`` verdict would tell a
+        # reader the evaluation never happened.
+        semantic_not_evaluated_reason=(
+            str(semantic_not_evaluated_reason or "")
+            if evaluation == SEMANTIC_NOT_EVALUATED else ""
+        ),
         # A run may only enter the STRICT denominator when it is release-ready.
         # review_required must never count as strict success (TRAP-1).
         strict_acceptance_eligible=status == RELEASE_READY,
@@ -369,12 +499,15 @@ __all__ = [
     "RELEASE_READY", "REVIEW_REQUIRED", "DIAGNOSTIC_ONLY", "RELEASE_STATES",
     "SEMANTIC_PASSED", "SEMANTIC_FAILED", "SEMANTIC_NOT_EVALUATED",
     "SEMANTIC_INPUT_NOT_WIRED", "SEMANTIC_LABELS",
+    "SEMANTIC_NO_REPORT", "SEMANTIC_NO_GATING_CHECK_EVALUABLE",
+    "SEMANTIC_GATING_CHECKS",
     "NOT_RECORDED", "NOT_RELEASE_READY_NOTE",
     "COVERAGE_REASON_EMPTY", "COVERAGE_REASON_COUNT_BELOW_MINIMUM",
     "COVERAGE_REASON_BELOW_MINIMUM",
     "REASON_PIPELINE_DID_NOT_EXECUTE", "REASON_STRICT_GATES_BLOCKED",
     "REASON_SERIALIZATION_REQUIRES_INVENTION",
     "REASON_NO_DEFENSIBLE_CONNECTED_CORE", "REASON_COVERAGE_NOT_EVALUATED",
+    "REASON_SEMANTIC_EVALUATION_FAILED",
     "CoverageVerdict", "ReleaseStatus",
-    "coverage_verdict", "classify_release_status", "describe",
+    "coverage_verdict", "classify_release_status", "semantic_verdict", "describe",
 ]

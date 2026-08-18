@@ -1,0 +1,115 @@
+{
+  "label": "wiring-sanity",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056a-semantic-gating",
+    "--pin-verdict",
+    "C:/t/c056a/sanity_pin.json",
+    "-q",
+    "--basetemp=C:/t/c056a/sanity",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+  "started_at": "2026-08-17T20:47:37+00:00",
+  "finished_at": "2026-08-17T20:47:49+00:00",
+  "duration_seconds": 10.931405899988022,
+  "timeout_seconds": 900.0,
+  "root_pid": 1255580,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1251600,
+      "name": "python.exe",
+      "ppid": 1255580
+    },
+    {
+      "pid": 1261180,
+      "name": "python.exe",
+      "ppid": 1261880
+    },
+    {
+      "pid": 1261880,
+      "name": "python.exe",
+      "ppid": 1251600
+    }
+  ],
+  "descendants_terminated": [
+    1251600,
+    1261180,
+    1261880
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1216036,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1218408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1249040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1256896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1257284,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1258196,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1261520,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-056a/04-wiring-sanity.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+    "repo_head": "c0ffb92c367d127bd30459553802419ec342207b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
