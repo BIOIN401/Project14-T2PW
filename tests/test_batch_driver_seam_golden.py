@@ -171,12 +171,43 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 #:   with value ``[]``; zero keys removed; zero value changes on any shared key.**
 #:   ``fields_added`` and ``fields_dropped`` are both empty and the capture's own
 #:   GROWTH-ONLY guard is True -- no digest was stabilised by dropping a field.
+#:
+#: **RE-BASELINED AGAIN by C-056c under merge rule 4**, authorized in advance by
+#: D-054 section 8. ``ReleaseStatus.to_dict`` grew ``semantic_check_evaluability``
+#: (quarantine report schema 5 -> 6), and the row carries the record verbatim, so
+#: the same two legs move for the same reason. Derived, not asserted: base capture
+#: ``evidence/c056c_golden_base.json`` (taken in a real git worktree at the base
+#: SHA ``1cbfa01``, with ``.env`` copied in as an F-051 control on BOTH sides),
+#: tip capture ``c056c_golden_tip.json``, slot-by-slot difference
+#: ``c056c_golden_delta.json``. The base capture reproduced all seven digests
+#: above BYTE-IDENTICALLY before the tip was taken, which is what makes the move
+#: attributable. The exact delta:
+#:
+#: * **slot 0** (``status|stage|failure_kind``) moves on **0 of 7** legs.
+#: * **slot 1** (``message``) moves on **0 of 7** legs.
+#: * **slot 2** (digest) moves on **exactly 2 of 7** -- ``strict_contract_failure``
+#:   (``b1a7a743…`` -> ``d102035d…``) and ``strict_gate_failure``
+#:   (``50d3c8f5…`` -> ``a55b08af…``). They are the only two fixtures reaching
+#:   ``_finalize_gate_failure``, so the only two whose row carries a
+#:   ``release_status``. The other five carry none and are byte-identical --
+#:   measured, not assumed: the capture reports ``release_status`` as ``None`` on
+#:   ``input_timeout``, ``research_pass``, ``strict_export_not_ok``,
+#:   ``strict_no_pwml_button`` and ``strict_pwml_export``.
+#: * on both moving legs the ONLY differing observable field is ``release_status``
+#:   (and ``row``, which contains it): **one key added,
+#:   ``semantic_check_evaluability``, with value ``[]``; zero keys removed; zero
+#:   value changes on any shared key.** ``[]`` is right there and not a gap:
+#:   ``driver.py:1770`` classifies a gate failure without the new input, taking
+#:   the byte-preserving default, and the field's documented meaning for empty is
+#:   "not recorded" -- which is exactly true of a run that never reached the
+#:   semantic seam. ``fields_added``/``fields_dropped`` are both empty and the
+#:   capture's own GROWTH-ONLY guard is True.
 GOLDEN: dict = {
     "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"),
     "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
-    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "b1a7a743b2d4a138c89daa72f06a823164fd0784d90de4b9c0e30ea8239c7bfb"),
+    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "d102035df954736fa85dec18239518eecbfdc1704329b73cd5e6500234d0b13e"),
     "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),
-    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "50d3c8f5487add1a1c42d3acb44acd7a5db584b28e36b57e26a18786b4c6f7a8"),
+    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "a55b08af3c3db132ad2069e9659e3b24448ca399c950006ff098c79cc76bc4bf"),
     "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"),
     "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"),
 }

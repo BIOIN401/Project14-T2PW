@@ -1,0 +1,94 @@
+{
+  "base_pre_existing_reds": {
+    "closes_a_record_gap": "the record said WHICH TWO of test_strict_failure_replay.py's three candidate node IDs fail was UNVERIFIED. Now pinned: both carry parametrization [only_unrelated_reactions_survive] and fail IDENTICALLY at base 1cbfa01 and at the C-056c tip, so neither is attributable to this diff.",
+    "failed_node_ids": [
+      "tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]",
+      "tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]",
+      "tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight",
+      "tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure"
+    ],
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056c/13-base-preexisting-reds.json",
+    "summary_line_verbatim": "4 failed, 67 passed, 12 skipped in 8.40s",
+    "tree": "C:/t/c56cbase (git worktree at 1cbfa01, .env copied in as an F-051 control on BOTH sides)",
+    "tree_line_verbatim": "T2PW: C:\\t\\c56cbase\\src\\t2pw\\__init__.py"
+  },
+  "base_sha": "1cbfa01779fff9410858e28158999fb42dfc533e",
+  "chunk_d": {
+    "expected_per_TEST_MATRIX": 187,
+    "measured": null,
+    "status": "PENDING -- heavy mutex released and yielded to C-054 on the orchestrator's instruction"
+  },
+  "focused_no_chunk": {
+    "chunk_membership": "all ten are in NO chunk, verified by STEM-EXACT membership against TEST_MATRIX.md:213-218 + :242-252 and chunk_d_gate.py:63-70 -- not the unsound substring heuristic, which wrongly chunks test_map_ids via test_map_ids_name_gate",
+    "failed_node_ids": [
+      "tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]",
+      "tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]"
+    ],
+    "failures_are_pre_existing": true,
+    "files": 10,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056c/12-focused-nochunk-2.json",
+    "summary_line_verbatim": "2 failed, 149 passed, 8 skipped in 20.25s"
+  },
+  "golden_rebaseline": {
+    "base_capture": "docs/pwml_recovery_sprint/evidence/c056c_golden_base.json",
+    "base_reproduced_all_seven_committed_digests_byte_identically": true,
+    "delta": "docs/pwml_recovery_sprint/evidence/c056c_golden_delta.json",
+    "fields_added": [],
+    "fields_dropped": [],
+    "growth_only": true,
+    "legs_moved": {
+      "strict_contract_failure": {
+        "base": "b1a7a743b2d4a138c89daa72f06a823164fd0784d90de4b9c0e30ea8239c7bfb",
+        "tip": "d102035df954736fa85dec18239518eecbfdc1704329b73cd5e6500234d0b13e"
+      },
+      "strict_gate_failure": {
+        "base": "50d3c8f5487add1a1c42d3acb44acd7a5db584b28e36b57e26a18786b4c6f7a8",
+        "tip": "a55b08af3c3db132ad2069e9659e3b24448ca399c950006ff098c79cc76bc4bf"
+      }
+    },
+    "legs_unmoved": [
+      "input_timeout",
+      "research_pass",
+      "strict_export_not_ok",
+      "strict_no_pwml_button",
+      "strict_pwml_export"
+    ],
+    "per_moved_leg": {
+      "keys_added": [
+        "semantic_check_evaluability"
+      ],
+      "keys_dropped": [],
+      "new_key_value": [],
+      "shared_values_changed": []
+    },
+    "slot_0_status_stage_kind_moved_on": 0,
+    "slot_1_message_moved_on": 0,
+    "slot_2_digest_moved_on": 2,
+    "tip_capture": "docs/pwml_recovery_sprint/evidence/c056c_golden_tip.json",
+    "unauthorized_removals": [],
+    "why_empty_is_right": "driver.py:1770 classifies a gate failure WITHOUT the new input, taking the byte-preserving default; the field's documented meaning for empty is 'not recorded', which is exactly true of a run that never reached the semantic seam",
+    "why_unmoved": "measured, not assumed: the capture reports release_status as None on all five -- they never reach _finalize_gate_failure, so their row carries no classification for the new key to appear in"
+  },
+  "measurement_note": "every run used evidence/pinned_pytest.py, which REFUSES before collection if t2pw resolves outside the tree under measurement. The FIRST focused attempt was refused exactly that way (report 11, exit 98, T2PW_FROM_WRONG_TREE) because the venv's editable .pth names the PRIMARY checkout's src; PYTHONPATH=<tree>/src fixed it and every run below carries its own pin verdict.",
+  "purpose": "literal pytest COUNTS and verbatim summary lines -- bounded_run keeps exit codes but NOT stdout, so an exit code cannot certify 'SMOKE exactly 460' (merge gate 10) or 'the 2 reds are pre-existing'",
+  "schema_version_bump": {
+    "decision_id_unaffected": "canonical_decision_inputs (strict_quarantine.py:246-278) contains neither schema_version nor any release/semantic field, so decision_input_hash and decision_id do not move",
+    "from": 5,
+    "pins_moved": [
+      "tests/test_strict_quarantine_release_seam.py (the pin D-054 section 8 named)",
+      "tests/test_strict_quarantine.py:897 (a SECOND pin D-054 did NOT name; C-056b moved this same line for its own 4 -> 5 bump in 8eee549)"
+    ],
+    "site": "src/t2pw/pipeline/strict_quarantine.py:2219",
+    "to": 6
+  },
+  "smoke": {
+    "expected_per_TEST_MATRIX": 460,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056c/14-smoke-460.json",
+    "matches_expected": true,
+    "measured": 460,
+    "note": "C-056c edits tests/test_strict_quarantine.py, which IS one of the 20 SMOKE files. COLLECTION COUNT UNCHANGED: 32 'def test_' both sides, 0 parametrize both sides. One assertion VALUE changed (schema_version 5 -> 6) inside test_all_four_artifacts_are_written_even_when_nothing_was_quarantined (:872), plus comment lines. Nothing weakened -- it is still an exact equality pin, and the two adjacent assertions are untouched.",
+    "summary_line_verbatim": "460 passed in 37.02s",
+    "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability\\src\\t2pw\\__init__.py"
+  },
+  "task": "C-056c"
+}
