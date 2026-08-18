@@ -2492,3 +2492,72 @@ the ceiling, never let the card mutilate its work to fit it.**
 **Unchanged and still binding:** no second full Chunk D — node15 attribution runs **node15 alone** (1–2
 artifacts). If a second full Chunk D ever becomes necessary, that is a fresh ceiling decision, not an
 overage.
+
+---
+
+## D-046 — C-052 ceiling 1 raised to 950; and F-051 has a mirror image that is worse · 2026-08-18 · LOCKED
+
+### 1. Ceiling 1 `900 → 950`. Ratified.
+
+C-052 measures **921**. It stopped before spending mutex time rather than run three heavy gates on a card
+whose scope I might change — the right order of operations.
+
+**The overage bought a G9 correction, which is the opposite of padding.** At `36d8b68` the card was at 894.
+Splitting the A0-C8 guard cost +40/−13 = 53 lines, because the original single test asserted **both** the
+pre-existing `build_sbml`-path identity **and** the two new result keys — so it failed at base, and would
+have presented **a guard on unchanged behaviour as though it carried a base failure**. That is precisely the
+mislabelling G9 calls an automatic reject. Paying 21 lines to avoid it is a bargain.
+
+The split is now visible in the base proof and lands exactly on the naming: at base **11 failed / 2 passed**,
+at tip **13 passed** — every `test_new_acceptance_*` fails at base, both `test_a0c8_guard_*` pass at base.
+**No fabricated base failure.** Ceilings 2 (21/90) and 3 (1,375/20,000) are comfortable and unchanged.
+
+**This is the fourth ceiling I have under-set today.** D-045's rule stands and is reaffirmed.
+
+### 2. The `pwml` trap was discharged BEHAVIOURALLY, and that is the standard
+
+C-052 did not prove "no added key contains `pwml`" with a string check. It called
+**`driver._find_pwml_result` on the real EP1 result with an empty `pwml_export_result`** and showed it
+returns `("", {})`. The trap in D-040 §2(a) is about what the driver *does*, so the proof must exercise the
+driver. **Prefer this shape over a grep in every future card.**
+
+Likewise the `"seam"` label is written **after** the dict spread — `{**report, "seam": …}` — and tested with
+a deliberately shadowing report key, so a colliding report key cannot silently win. Added EP1 keys are
+`prefreeze_resolution_report`, `prefreeze_review_required`, `canonical_json_path_name`,
+`sbml_input_path_name`; EP3 adds `prefreeze_resolution_report_path`. `freeze_canonical_payload`,
+`driver.py`, `writer.py`: **zero lines**.
+
+### 3. F-051's mirror image: five tests assert that the database is NOT configured
+
+Measured by C-052 on the **base** tree, with `.env` as the only variable:
+
+| Base tree | Result |
+|---|---|
+| **without** `.env` | **0 failed** |
+| **with** `.env` | **5 failed** / 95 passed |
+
+The five — 4 in `tests/test_prefreeze_third_export_seam.py`, 1 in
+`tests/test_prefreeze_species_resolution.py` — **assert on a DB that is not configured. A live DB falsifies
+their assumption, not the code.**
+
+**This inverts the usual reading of F-051 and is the more dangerous direction.** F-051 as first registered
+says a worktree without `.env` can *hide* a failure. This says the reverse is also true: **a correctly
+configured developer machine makes green tests red**, and a card running its gates in the primary checkout
+will see five failures it did not cause. C-052 controlled for it correctly — `.env` copied into the base
+worktree so **both sides were equal** — which is the point: the hazard is the two sides *differing*, not the
+presence or absence of `.env` as such. That is compatible with C-050i's refusal to copy `.env` as a *fix*;
+copying it as a *control*, on both sides, is sound.
+
+**Registered under F-051. Do not "fix" these five tests as part of any current card** — the correct owner is
+whoever takes F-051, and the fix is a decision about whether the suite may assume an unconfigured DB at all.
+
+### 4. A0-C8's measured limitation is accepted as reported
+
+The clause *"including the path supplied to downstream SBML generation"* is **unexercised on all 39 legs** —
+`build_sbml` is guarded on `build_legacy_sbml` and the batch driver never binds that widget. Discharged at
+unit level, and **the card did not bind the driver to the legacy button**; instead it added a test that fails
+if anyone ever does. That is the correct disposition of a limitation no card owns: pin it so it cannot be
+crossed silently.
+
+**Authorized to proceed to `qb` · full Chunk D (`179` — its tree does not carry C-050k) · SMOKE 460**, then
+independent non-author review. The scratch base worktree at `C:\t\c052base` **stays** until after review.
