@@ -2856,3 +2856,79 @@ stale**). All six sites at this tip: seam binding `:3648` · `CANONICAL_PAYLOAD_
 Named focused set over 11 ungated files: **5 failed / 191 passed** at tip; with **only the new file removed,
 same tree and same `.env`**: 5 failed / 181 passed — **+10 passed, +0 failed**. The five are exactly D-046
 §3's live-DB set. **SMOKE `460 passed in 35.18s`.** G11 exit 0, 11 artifacts, survivors 0 on all 11.
+
+---
+
+## D-052 — C-056b's two widenings are ratified; the evaluability gap becomes F-053 with an owner · 2026-08-18 · LOCKED
+
+C-056b is merged (`69928eb`, reviewed tip `8eee549`). Its reviewer asked that two disclosed widenings be
+ratified explicitly rather than absorbed, and that the card's named gap be given an owner. Both are done here.
+
+### 1. Two boundary widenings, RATIFIED
+
+**(a) `acceptance.py` module-level import plus three read-only `ModeResult` properties (`:199-256`).** Inside a
+file the card owns, serving the owned function, **adding no `to_dict` key and changing no existing symbol**.
+`strict_eligible` (`:183-197`) is the in-file precedent. Ratified.
+
+**(b) The `GOLDEN` re-baseline in `tests/test_batch_driver_seam_golden.py` (hotspot 10, owner C-053, merged).**
+This is **the unavoidable mechanism of a granted change** — any key added to `ReleaseStatus.to_dict()` moves
+those digests, and D-039 §5 contemplated the bump moving pins. It named two; this is an **unmeasured third**
+the card found, **reported red, and moved under merge rule 4** with a derived delta.
+
+Hotspot 10's two hard guards were verified **by the reviewer, not from the card's report**: `_observable` is
+byte-identical base↔tip (`sha256:438cb7f1…` both sides) and the `def` list is identical in name and order.
+Ratified.
+
+**Standing rule:** a widening that is the *mechanism* of an already-granted change is ratifiable, but it must
+be **disclosed and ratified in the record** — never absorbed silently. That is the D-044 pattern.
+
+### 2. F-053 — evaluability does not travel beside the verdict. Owner: **C-056c** (new, BLOCKED)
+
+**The gap.** A serialized `semantic_evaluation: "passed"` is **indistinguishable from a four-of-four pass** to
+anyone reading the manifest. Measured over the 32 committed payload legs: under the seam's own derivation
+**every leg had exactly ONE evaluable gating check and 25 answered `passed`**; under a request-carrying
+derivation 31 reached three; **none ever reached four**, because `CHECK_RAG_REINTRODUCTION` is unevaluable at
+this seam.
+
+**Why it is not C-056b's to fix.** It is **inherited, not created** — C-056a (`93594aa`) already wrote that
+value, and C-056b's diff neither creates nor widens the ambiguity. Fixing it needs a fourth return value from
+`semantic_verdict` (`release_status.py:339-356`, which computes `evaluable` and **discards** it) plus a new
+`classify_release_status` argument threaded through `strict_quarantine.py:2132` — and **D-042 §4 already ruled
+a new parameter on that seam is NOT granted and needs its own card.**
+
+**Why it is currently harmless, and exactly when it stops being harmless.** Nothing consumes it
+affirmatively: the one affirmative accessor `ReleaseStatus.semantic_confirmed` (`release_status.py:264`) has
+**zero `src/` consumers**, and 0 of 143 committed manifest rows carry a `release_status`, so **no historical
+figure can move.** The ambiguity reaches a reader's eyes, never a rate.
+
+**BINDING PROHIBITION, and the reason F-053 exists.** **No card may be chartered to read
+`semantic_evaluation == "passed"` affirmatively — or to build any denominator, numerator or rate on it — until
+F-053 is discharged.** The moment a reader does, the ambiguity becomes an **inflation**, and
+`PRODUCT_CONTRACT` §11's distinction between `passed`, `failed` and `not_evaluated` is only honestly
+*serialized* once evaluability travels beside the verdict. C-056b's subtractive-only design is what holds the
+line today; it is a discipline, not a guarantee, and F-053 is the guarantee.
+
+**C-056c's boundary, when chartered:** carry the evaluated/applicable set alongside the verdict, and only
+then permit an affirmative reader. It inherits D-042 §4's stop condition: **an `admission` parameter on
+`quarantine_and_close` remains ungranted** — C-057 also touches that seam and they serialize.
+
+### 3. Three low findings recorded, none blocking, none C-056b's to fix now
+
+* **`acceptance.py:200`** — `runtime_semantic_evaluation` **is** a public accessor returning the raw
+  three-valued string, so the docstrings at `:234` and `:739` claiming a runtime `passed` *"has no accessor"*
+  are **looser than the code**; `== "passed"` is one comparison away. Substantively fine — there is no
+  affirmative *predicate* and nothing consumes it — but **a later reader could quote the comment as a
+  guarantee it does not give.** Correct the wording in the next card that touches the file.
+* **`acceptance.py:215`** — `runtime_semantic_failed_checks` has **zero `src/` consumers**. Harmless: the
+  names travel in `to_dict()["release_status"]`, but neither `bench/render.py:179` nor `batch/report.py:860`
+  surfaces them, so *"which checks failed"* is JSON-only today.
+* **`evidence/c056b_tip_reachability.json`** carries `"task": "C-056a"` — cosmetic mislabel in a C-056b
+  artifact.
+
+### 4. A reviewer claim corrected so it does not propagate
+
+C-030a's reviewer reported that **`g11_evidence.py` "does not exist anywhere in the repo."** That is **false**:
+`git ls-files docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py` returns it, it is present on disk in the
+primary checkout **and in that reviewer's own worktree**, and it is not gitignored. Its `git ls-files | grep g11`
+was mis-scoped. The approval stands on measurements the reviewer made itself; **the tooling claim is struck so
+no later session inherits it.**
