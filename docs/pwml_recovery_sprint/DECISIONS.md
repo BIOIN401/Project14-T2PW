@@ -2455,3 +2455,40 @@ DB-dependent failure to a card without a same-tree swap.**
 across five acquisition attempts. The card stopped both background waiters rather than leave one armed to
 seize a lock with nobody to release it, which is right. **These two gates, plus full Chunk D on the updated
 partition, remain outstanding before C-050k can be reviewed for merge.**
+
+---
+
+## D-045 — C-050k ceiling 3 raised to 15,000; the census is the evidence base of D-043 and is not cuttable · 2026-08-18 · LOCKED
+
+C-050k reported **C3 = 14,156 / 12,000**, and in the same breath **corrected its own previous figure** — the
+`9556` it reported earlier was measured *before* it committed the Chunk D evidence, so it understated the
+truth. Self-correcting an under-report that nobody had challenged is the behaviour this sprint runs on.
+
+**Ratified: ceiling 3 `12,000 → 15,000`.** Projected final is ~14,640 including the four remaining runs.
+C1 stands at 1,200 (measured 1171) and C2 at 90 (measured 84, projected 88).
+
+**Why the overage is structural and not padding:**
+
+| Item | Lines | Status |
+|---|---|---|
+| 32-leg four-part census | **5,348** | charter budgeted **~500** — a 10× under-estimate by the orchestrator |
+| full Chunk D's 32 auto-allocated reports | **3,154** | mandated by the gate the charter itself required |
+| remaining `g11/C-050k` bounded reports | ~4,023 | one report per required job |
+| probe output beyond the census | ~917 | differential + G9 proof |
+| pin verdicts | 714 | one per measured run |
+
+**The census is not compressible without destroying the evidence base of a LOCKED decision.** It records
+every consultation with its full candidate list, and that is precisely what made the **8-leg golden
+correspondence checkable** and what the `pwml-bio-auditor` read to adjudicate all 20 bindings in **D-043**.
+Cutting it to fit a number I set would retroactively unfound D-043.
+
+**This is the third ceiling I have under-set today** — C-056a's C1 (budgeted zero for `evidence/*.py` while
+the corrected F-050 command counts it), C-050k's C1 (probe budgeted 250 against a real 616), and now C-050k's
+C3. The pattern is consistent and one-directional: **evidence-generation is systematically under-budgeted,
+and the corrected F-050 command counts it.** Every future ceiling table must derive an explicit line for
+probe source, probe output JSON, and per-gate auto-allocated reports. **REV-051a governs throughout: ratify
+the ceiling, never let the card mutilate its work to fit it.**
+
+**Unchanged and still binding:** no second full Chunk D — node15 attribution runs **node15 alone** (1–2
+artifacts). If a second full Chunk D ever becomes necessary, that is a fresh ceiling decision, not an
+overage.
