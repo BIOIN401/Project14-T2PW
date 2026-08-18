@@ -11,12 +11,15 @@ unreachable from the UI while the CLI persisted the same document. Nothing was
 SHA (no key, no file, no entry), and that is stated as a fact about a new
 capability, **not** offered as a regression proof.
 
-*Part 5 is a GUARD ON PRE-EXISTING BEHAVIOUR (A0-C8), and it PASSES AT BASE by
-design.* ``LEDGER.md`` binds A0-C7/A0-C8 to *"test observable behaviour only"*:
-the ``_freeze["canonical_json_path"] or sbml_input_path`` binding and the file
-it names are unchanged by this card, and A0-C8 asks for them to be captured and
-asserted rather than repaired. Claiming a base failure for them would be
-fabricating one.
+*Part 5 is A0-C8, and it is deliberately mixed.* Every ``test_a0c8_guard_*``
+there is a GUARD ON PRE-EXISTING BEHAVIOUR and **passes at the base SHA**:
+``LEDGER.md`` binds A0-C7/A0-C8 to *"test observable behaviour only"*, the
+``_freeze["canonical_json_path"] or sbml_input_path`` binding and the file it
+names are unchanged by this card, and claiming a base failure for them would be
+fabricating one. The ``test_new_acceptance_*`` tests beside them pin the two new
+result keys and do fail at base. **The naming is the label** -- reading a
+guard's green at base as a weak regression proof, or a new key's red as one, are
+the two mistakes the split exists to prevent.
 
 **What is deliberately NOT here.** ``run_pwml_export``'s seam is post-freeze --
 it operates on a deepcopy taken after the hash -- and this card only *labels*
@@ -561,7 +564,13 @@ def test_new_acceptance_the_artifact_panel_offers_the_prefreeze_report() -> None
     ]
 
 
-# ══ Part 5 — A0-C8 GUARD on pre-existing behaviour. PASSES AT BASE. ════════
+# ══ Part 5 — A0-C8. Two guards that PASS AT BASE, and three new keys ═══════
+#
+# The two ``test_a0c8_guard_*`` names below pin behaviour the base already had
+# and pass at the base SHA. Everything named ``test_new_acceptance_*`` in this
+# part pins keys the base does not have and fails there. The split is the point:
+# a guard on unchanged behaviour has no base failure to offer, and manufacturing
+# one for it would be a fabrication.
 
 
 def test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned(
@@ -613,20 +622,38 @@ def test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned(
     assert supplied is canonical
     assert Path(supplied).name == "final.canonical.json"
     assert result["sbml_input_source"] == CANONICAL_PAYLOAD_KEY
-    # The observability half of the same requirement: both names are published.
+
+
+def test_new_acceptance_the_post_pipeline_seam_publishes_both_path_names(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A0-C8's observability half, which IS new and DOES fail at base.
+
+    Kept apart from the guard above on purpose: that guard pins behaviour the
+    base already had and passes there, this one pins keys the base does not have
+    and fails there. Folding them into one test would make a new-capability
+    failure look like a regression proof for the guard.
+    """
+
+    _offline_prefreeze_spy(monkeypatch, name_index=_collapsing_index())
+    payload = _collapsing_payload()
+    function = _ep1(tmp_path, payload)
+    function.__globals__["build_sbml"] = lambda *_a, **_k: {}
+
+    result = function(payload, **_ep1_kwargs(tmp_path, build_legacy_sbml=True))
+
     assert result["canonical_json_path_name"] == "final.canonical.json"
     assert result["sbml_input_path_name"] == "final.canonical.json"
 
 
-def test_a0c8_guard_the_published_names_follow_the_freeze_not_a_constant(
+def test_new_acceptance_the_published_names_follow_the_freeze_not_a_constant(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """The two published names are read off the freeze, not hard-coded.
 
-    **Not a regression proof; the keys are new and this only pins how they are
-    computed.** A refusing freeze publishes no canonical name and the SBML input
-    falls back to the enriched file, and the pair must say so -- otherwise the
-    keys would assert ``final.canonical.json`` on a run that never wrote one.
+    A refusing freeze publishes no canonical name and the SBML input falls back
+    to the enriched file, and the pair must say so -- otherwise the keys would
+    assert ``final.canonical.json`` on a run that never wrote one.
     """
 
     _offline_prefreeze_spy(monkeypatch, name_index=_collapsing_index())
