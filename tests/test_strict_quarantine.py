@@ -894,7 +894,17 @@ def test_all_four_artifacts_are_written_even_when_nothing_was_quarantined(tmp_pa
         assert document["schema_version"] >= 1
 
     quarantine = json.loads((tmp_path / QUARANTINE_REPORT_FILENAME).read_text(encoding="utf-8"))
-    assert quarantine["schema_version"] == 5
+    # MERGE RULE 4 BASELINE MOVE (C-056c): 5 -> 6, ``release`` grew
+    # ``semantic_check_evaluability`` (F-053 / D-054 section 8). Additive in the
+    # same sense again; no schema-5 key changed name, type or meaning and
+    # ``decision_id`` does not move -- ``canonical_decision_inputs`` (:246-278)
+    # contains neither this key nor ``schema_version``.
+    #
+    # DISCLOSED: D-054 section 8 named only the pin at
+    # ``test_strict_quarantine_release_seam.py:699``. There are TWO pins of this
+    # one fact, and this is the second; C-056b moved this same line for its own
+    # 4 -> 5 bump (``8eee549``). The record was incomplete, not wrong.
+    assert quarantine["schema_version"] == 6
     assert quarantine["counts"][CORE_ACCEPTED] == 2
     assert quarantine["quarantined"] == []
 

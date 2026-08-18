@@ -2127,7 +2127,15 @@ def quarantine_and_close(
         mode=coerce_mode(mode),
         min_connected_reactions=min_core_processes,
     )
-    semantic_state, semantic_reason, semantic_failed = semantic_verdict(semantic_report)
+    # ``semantic_evaluable`` is F-053's carrier (C-056c): per gating check, whether
+    # it was applicable here and, when not, the reason the check itself gave. At
+    # THIS seam that is never four of four -- the comment above says why
+    # CHECK_RAG_REINTRODUCTION cannot be evaluated without an admission report --
+    # so the record travels rather than the shortfall staying invisible behind a
+    # bare ``passed``. Nothing below branches on it.
+    semantic_state, semantic_reason, semantic_failed, semantic_evaluable = semantic_verdict(
+        semantic_report
+    )
 
     release = classify_release_status(
         coverage,
@@ -2141,6 +2149,7 @@ def quarantine_and_close(
         semantic_evaluation=semantic_state,
         semantic_not_evaluated_reason=semantic_reason,
         semantic_failed_checks=semantic_failed,
+        semantic_check_evaluability=semantic_evaluable,
     )
 
     # ── Research mode: decide, then apply nothing ────────────────────────────
@@ -2216,7 +2225,19 @@ def quarantine_and_close(
         # ``decision_input_hash``) does not move. The version still bumps, because
         # the house rule that produced 4 for an additive change is what lets a
         # reader trust the number at all.
-        "schema_version": 5,
+        #
+        # 6 (C-056c, F-053 / D-054 section 8): ``release`` grew ONE key,
+        # ``semantic_check_evaluability`` -- a list of one record per gating
+        # check, empty only when no evaluation ran. Additive in exactly the same
+        # sense again: no schema-5 key changed name, type or meaning, and
+        # ``decision_id`` does not move, because it hashes only
+        # ``admitted_payload_hash`` + ``decision_input_hash`` and neither is a
+        # function of this key. The bump is the house rule above applied a third
+        # time: an additive change still bumps, or the number stops meaning
+        # anything. What it buys: ``semantic_evaluation: "passed"`` on this
+        # report could not previously be told apart from a four-of-four pass,
+        # and here it is never four of four.
+        "schema_version": 6,
         "stage": "pre_export_strict_quarantine",
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),

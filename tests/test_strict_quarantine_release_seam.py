@@ -696,7 +696,13 @@ def test_the_report_schema_is_additive_over_schema_three() -> None:
     # ``semantic_failed_checks`` and D-039 section 5 deferred the bump here. The
     # containment checks below are unchanged and still pass, which is the point:
     # the move is additive, so no schema-3 or schema-4 key is disturbed.
-    assert report["schema_version"] == 5
+    #
+    # MERGE RULE 4 BASELINE MOVE (C-056c): 5 -> 6, authorized in advance by
+    # D-054 section 8. ``release`` grew ``semantic_check_evaluability``, which is
+    # what makes a ``passed`` on this report readable as "three of four gating
+    # checks were evaluable" instead of an unqualified pass. Additive again: the
+    # containment list below is untouched and still passes.
+    assert report["schema_version"] == 6
     for key in (
         "stage", "strict_db", "export_mode", "policy_version", "admitted_payload_hash",
         "resulting_payload_hash", "decision_inputs", "decision_input_hash", "ok",
