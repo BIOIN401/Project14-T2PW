@@ -150,12 +150,33 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 #:   add ``release_status`` to the row, which C-041 built and deliberately left out
 #:   of it; and ``strict_pwml_export`` additionally moves its artifact name, hence
 #:   ``artifact_*``, ``relocated_files`` and ``pwml_artifact``.
+#:
+#: **RE-BASELINED AGAIN by C-056b under merge rule 4.** ``ReleaseStatus.to_dict``
+#: grew ``semantic_failed_checks`` (schema 4 -> 5, D-039 section 5), and the row
+#: carries the record verbatim, so any leg whose row HAS a classification moves its
+#: digest. The move is derived, not asserted: base capture
+#: ``evidence/c056b_golden_base.json`` (taken in a real worktree at ``01bb7ef``),
+#: tip capture ``c056b_golden_tip.json``, slot-by-slot difference
+#: ``c056b_golden_delta.json``. The exact delta:
+#:
+#: * **slot 0** (``status|stage|failure_kind``) moves on **0 of 7** legs.
+#: * **slot 1** (``message``) moves on **0 of 7** legs.
+#: * **slot 2** (digest) moves on **exactly 2 of 7** -- ``strict_gate_failure`` and
+#:   ``strict_contract_failure``, the only two fixtures that reach
+#:   ``_finalize_gate_failure`` and therefore the only two whose row carries a
+#:   ``release_status`` at all. The other five never produce a classification and
+#:   are byte-identical.
+#: * on both moving legs the ONLY differing observable field is ``release_status``
+#:   (and ``row``, which contains it): **one key added, ``semantic_failed_checks``,
+#:   with value ``[]``; zero keys removed; zero value changes on any shared key.**
+#:   ``fields_added`` and ``fields_dropped`` are both empty and the capture's own
+#:   GROWTH-ONLY guard is True -- no digest was stabilised by dropping a field.
 GOLDEN: dict = {
     "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"),
     "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
-    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "b3d1afbd99d051da3da2563312a432cc091c69eed24c0a6b6c3a98568686520f"),
+    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "b1a7a743b2d4a138c89daa72f06a823164fd0784d90de4b9c0e30ea8239c7bfb"),
     "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),
-    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "501fe47b98e8ebfbd1d3a142926d757afe814a4965e68bc19901a19dfc94a0f1"),
+    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "50d3c8f5487add1a1c42d3acb44acd7a5db584b28e36b57e26a18786b4c6f7a8"),
     "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"),
     "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"),
 }

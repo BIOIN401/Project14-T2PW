@@ -692,7 +692,11 @@ def test_the_report_schema_is_additive_over_schema_three() -> None:
 
     report = _report(_reference_result())
 
-    assert report["schema_version"] == 4
+    # MERGE RULE 4 BASELINE MOVE (C-056b): 4 -> 5. ``release`` grew
+    # ``semantic_failed_checks`` and D-039 section 5 deferred the bump here. The
+    # containment checks below are unchanged and still pass, which is the point:
+    # the move is additive, so no schema-3 or schema-4 key is disturbed.
+    assert report["schema_version"] == 5
     for key in (
         "stage", "strict_db", "export_mode", "policy_version", "admitted_payload_hash",
         "resulting_payload_hash", "decision_inputs", "decision_input_hash", "ok",
@@ -701,3 +705,6 @@ def test_the_report_schema_is_additive_over_schema_three() -> None:
     ):
         assert key in report, key
     assert set(report) >= {"review_reasons", "release"}
+    # The schema-5 addition, end to end through the seam: the key is present on
+    # every release record and empty unless the verdict is FAILED (C-056b).
+    assert report["release"]["semantic_failed_checks"] == []

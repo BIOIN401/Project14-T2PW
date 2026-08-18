@@ -888,10 +888,13 @@ def test_all_four_artifacts_are_written_even_when_nothing_was_quarantined(tmp_pa
         # being a refusal and the report grew ``review_reasons`` and the
         # ``release`` classification beside the ``ok`` it can no longer be read
         # off. 3 -> 4 is additive: every schema-3 key kept its name and meaning.
+        # MERGE RULE 4 BASELINE MOVE (C-056b): 4 -> 5, ``release`` grew
+        # ``semantic_failed_checks``. Additive in the same sense; no schema-4 key
+        # changed name, type or meaning and ``decision_id`` does not move.
         assert document["schema_version"] >= 1
 
     quarantine = json.loads((tmp_path / QUARANTINE_REPORT_FILENAME).read_text(encoding="utf-8"))
-    assert quarantine["schema_version"] == 4
+    assert quarantine["schema_version"] == 5
     assert quarantine["counts"][CORE_ACCEPTED] == 2
     assert quarantine["quarantined"] == []
 
