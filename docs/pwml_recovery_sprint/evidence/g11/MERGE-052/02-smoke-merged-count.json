@@ -1,0 +1,144 @@
+{
+  "label": "smoke-merged-count",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW",
+    "--pin-verdict",
+    "C:/t/m052/smoke_pin2.json",
+    "-q",
+    "--basetemp=C:/t/m052/smoke2",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-18T01:49:15+00:00",
+  "finished_at": "2026-08-18T01:49:43+00:00",
+  "duration_seconds": 27.730579500000204,
+  "timeout_seconds": 1800.0,
+  "root_pid": 12756,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 70172,
+      "name": "python.exe",
+      "ppid": 12756
+    },
+    {
+      "pid": 45124,
+      "name": "python.exe",
+      "ppid": 70172
+    },
+    {
+      "pid": 74248,
+      "name": "python.exe",
+      "ppid": 45124
+    },
+    {
+      "pid": 72880,
+      "name": "python.exe",
+      "ppid": 75048
+    },
+    {
+      "pid": 75048,
+      "name": "python.exe",
+      "ppid": 70172
+    },
+    {
+      "pid": 64112,
+      "name": "python.exe",
+      "ppid": 69512
+    },
+    {
+      "pid": 69512,
+      "name": "python.exe",
+      "ppid": 70172
+    },
+    {
+      "pid": 67044,
+      "name": "python.exe",
+      "ppid": 73940
+    },
+    {
+      "pid": 73940,
+      "name": "python.exe",
+      "ppid": 70172
+    }
+  ],
+  "descendants_terminated": [
+    45124,
+    64112,
+    67044,
+    69512,
+    70172,
+    72880,
+    73940,
+    74248,
+    75048
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 33716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 75064,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\MERGE-052\\02-smoke-merged-count.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "c0df0d06c826ea20ec353912878c3d3e3e7338bf",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
