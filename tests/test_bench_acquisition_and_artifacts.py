@@ -41,7 +41,11 @@ if str(SRC) not in sys.path:
 
 from t2pw.batch.fetch import BatchPaper, TopicSpec, parse_topics  # noqa: E402
 from t2pw.bench.acceptance import score_run  # noqa: E402
-from t2pw.bench.goldset import load_gold_set  # noqa: E402
+from t2pw.bench.goldset import (  # noqa: E402
+    EXPORT_STRICT,
+    load_gold_set,
+    pinned_gold_set_path,
+)
 from t2pw.bench.metrics import (  # noqa: E402
     BLOCKERS_EXTRACTION,
     BLOCKERS_RESEARCH,
@@ -399,6 +403,36 @@ def test_gold_relevance_prevalence_is_not_called_an_eligibility_yield(tmp_path):
     assert "GOLD SET" in prevalence.question
     # It is a property of the gold set, so it does not move with what ran.
     assert prevalence.denominator == len(gold)
+
+
+def test_the_strict_denominator_is_authored_never_inferred():
+    """No pinned case may enter or leave the strict denominator by default.
+
+    ``expected_export`` is what puts a paper in :data:`DENOM_STRICT`, and it used
+    to be read with a silent fallback: a case that lost the key was graded
+    ``partial_only`` and dropped out of the denominator without a word, so the
+    strict rate would improve because gold data went missing. The loader now
+    refuses an omitted classification outright; this pins the data half, that the
+    shipped set states both classifications itself rather than inheriting them.
+
+    Measured, not assumed: at the time of writing all ten pinned cases declare
+    both fields, so the loader change removes a latent fail-open and changes no
+    score. If a future case is added without them, this fails here rather than
+    quietly moving a denominator.
+    """
+    raw = json.loads(pinned_gold_set_path().read_text(encoding="utf-8"))
+    undeclared = sorted(
+        c.get("paper_id") for c in raw["cases"]
+        if not str(c.get("expected_export") or "").strip()
+        or not str(c.get("mechanistic_relevance") or "").strip()
+    )
+    assert undeclared == [], "every pinned case must state its own classification"
+
+    gold = load_gold_set()
+    assert len(gold) == len(raw["cases"])
+    assert set(gold.strict_expected_ids) == {
+        c["paper_id"] for c in raw["cases"] if c["expected_export"] == EXPORT_STRICT
+    }
 
 
 # ---------------------------------------------------------------------------

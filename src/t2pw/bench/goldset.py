@@ -641,10 +641,21 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
         raise GoldSetError(f"cases[{index}]: missing 'paper_id'")
     where = f"cases[{index}] ({paper_id})"
 
-    relevance = canonical_text(raw.get("mechanistic_relevance")) or RELEVANCE_PARTIAL
+    # Both classification fields are REQUIRED, and the "missing" check has to come
+    # before the membership check. Reading them as ``canonical_text(...) or CONST``
+    # made an omitted key indistinguishable from a declared default: a case that
+    # lost 'expected_export' was silently graded 'partial_only' and dropped out of
+    # the strict-PWML denominator, so the rate it feeds would improve because a
+    # field went missing. A present-but-invalid value was already refused; an
+    # absent one must be refused for the same reason, not defaulted.
+    relevance = canonical_text(raw.get("mechanistic_relevance"))
+    if not relevance:
+        raise GoldSetError(f"{where}: missing 'mechanistic_relevance'")
     if relevance not in RELEVANCE_VALUES:
         raise GoldSetError(f"{where}: mechanistic_relevance must be one of {RELEVANCE_VALUES}")
-    export = canonical_text(raw.get("expected_export")) or EXPORT_PARTIAL
+    export = canonical_text(raw.get("expected_export"))
+    if not export:
+        raise GoldSetError(f"{where}: missing 'expected_export'")
     if export not in EXPORT_VALUES:
         raise GoldSetError(f"{where}: expected_export must be one of {EXPORT_VALUES}")
 
