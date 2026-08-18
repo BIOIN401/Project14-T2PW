@@ -2626,3 +2626,44 @@ C-050k (6 of 9 focused failures), C-052 (5 base failures that appear **only with
 (an invalid base control it caught itself). **F-051 is no longer a hypothesis about one card's tooling; it
 is the dominant measurement hazard of this pack, and it runs in both directions.** Every base-vs-tip claim
 in this sprint that did not control for database reachability should be treated as unmeasured until it does.
+
+---
+
+## D-048 — C-050k ceiling 2 raised to 100; card complete and routed for review · 2026-08-18 · LOCKED
+
+**Ceiling 2 `90 → 100`. Ratified.** C-050k measures **92**: 63 G11 reports + 25 pin verdicts + 4 probe JSONs.
+**39 of the 63 reports are full Chunk D's auto-allocation**, and the four final runs (node15 ×2, SMOKE,
+Chunk E) took it 88 → 92 because each carries a pin verdict *as well as* a report — a coupling no ceiling
+table in this sprint has ever accounted for.
+
+**This is the fifth ceiling I have under-set today** and the fourth on this one card's family. D-045's rule
+is reaffirmed and extended: a ceiling-2 derivation must count **one report *and* one pin verdict per measured
+run**, not one artifact per run. Every one of the 92 is a genuine measurement, including the two committed
+**failing** runs and the node15 pair that closed the last open question. **Nothing was cut** (REV-051a).
+
+C1 **1171/1200** ✓ · C3 **14,666/15,000** ✓.
+
+### The card is complete at `ce5761a`
+
+Gates: **SMOKE 460 exactly** · **Chunk E 174** · **full Chunk D 185/187** (core 159/160, 26 of 27 AppTest) ·
+golden suite **14** after the D-044 re-baseline · **G11 exit 0, 63 artifacts, 0 non-compliant, survivors 0
+and `cleanup_success` true on all 63**.
+
+Both Chunk D failures are attributed away by same-tree swap and neither is the card's:
+`test_cli_export_emits_the_canonical_organism…` (`g11/C-050k/20`) and **node15** (`60` tip / `61` base
+`ir.py` swapped in) — identical assertion at `test_streamlit_quarantine_boundary.py:1109`, with the swapped
+tree verified to contain **zero** occurrences of `ambiguous_entity_row_reference`.
+
+### Two things the writer did that set a standard
+
+1. **It confirmed D-047 from a second base tree without over-claiming.** Its control varied **only the diff**
+   under a live DB throughout, so it establishes **diff-independence** — and it said explicitly that it does
+   **not** re-derive **DB-dependence**, which is C-056a's three-condition control, and that F-052's
+   canonicalization root cause is C-056a's finding rather than its own. **Stating the exact reach of your own
+   evidence, and declining credit for a neighbouring result, is the behaviour to imitate.**
+2. **It retracted an unobserved assertion unprompted.** It had stated "C-056a took the lock at 19:10:59" as
+   fact, had not observed it, noticed, and withdrew it. The measured sequence is a **normal acquisition of a
+   free lock** at 19:15:00, held in three short windows with a release between each so C-052 could cut in.
+   **That is not a stale-hold clearance and is not charged as one.**
+
+**Routed to an independent non-author reviewer at `ce5761a`.** Merge requires an exact bare `APPROVE`.
