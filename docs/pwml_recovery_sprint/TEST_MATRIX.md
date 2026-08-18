@@ -217,10 +217,19 @@ modify `runner.py` (that file is owned by C-032).
 | **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
-**SMOKE = A + B + C = 460 tests, ~40 s.** Runs after **every** merge, on the integration
-branch. Gate G10. **457 was the INIT-001 figure and is obsolete**: C-010 moved the pinned
-baseline deliberately, 457 → 460, with an exact documented delta, and every A0 merge from
-`72ee20f` onward measured 460. Any live instruction still saying 457 is stale.
+**SMOKE = A + B + C = 465 tests, ~40 s.** Runs after **every** merge, on the integration
+branch. Gate G10. **457 and 460 are both obsolete**: C-010 moved the pinned baseline
+deliberately, 457 → 460, with an exact documented delta, and every A0 merge from
+`72ee20f` onward measured 460; **C-054 then moved it 460 → 465** under the same merge
+rule 4, ratified in advance by the orchestrator. That delta is exactly five ADDED tests,
+nothing removed and nothing renamed — four in `test_bench_goldset_and_semantic.py`
+(`test_a_case_omitting_expected_export_is_refused_not_silently_downgraded`,
+`test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded`,
+`test_a_blank_or_invalid_classification_names_the_defect_it_actually_is`,
+`test_a_declared_classification_loads_and_survives_verbatim`) and one in
+`test_bench_acquisition_and_artifacts.py`
+(`test_the_strict_denominator_is_authored_never_inferred`). Any live instruction still
+saying 457 or 460 is stale.
 
 **Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
 **~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
@@ -237,7 +246,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 460 passed
+# SMOKE (every merge) — expect 465 passed
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -492,8 +501,8 @@ different Stage-1 draws at temperature 0 in this repository.
 
 ## Baseline to preserve (filled by INIT-001)
 
-Full suite per-chunk counts · smoke **460** (457 at INIT-001, moved 457→460 by C-010 with
-an exact documented delta) · chunk D 187 · `bench_acceptance.py` on
+Full suite per-chunk counts · smoke **465** (457 at INIT-001, moved 457→460 by C-010 and
+460→465 by C-054, each with an exact documented delta) · chunk D 187 · `bench_acceptance.py` on
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 

@@ -57,7 +57,14 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
 
 #: Bumped whenever the *schema* changes in a way that invalidates stored results.
 #: Adding a case does not bump it; adding a required field does.
-GOLD_SET_VERSION = "2026-08-01.1"
+#:
+#: ``2026-08-18.1`` (C-054): ``mechanistic_relevance`` and ``expected_export`` became
+#: REQUIRED. They were read with a silent fallback, so an omitted key was graded by
+#: default instead of refused. That is a schema change by the rule above, hence the bump.
+#: The pinned data is untouched and byte-identical -- ``pinned_v1.json`` carries its own
+#: ``version`` field, which identifies the DATA and stays at ``2026-08-01.1``. This
+#: constant is only the fallback at :func:`load_gold_set` for a file that declares none.
+GOLD_SET_VERSION = "2026-08-18.1"
 
 #: Mechanistic relevance, most relevant first. ``core`` means the paper's subject
 #: IS the requested pathway's chemistry; ``partial`` means it covers a genuine

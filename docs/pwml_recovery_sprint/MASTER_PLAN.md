@@ -278,7 +278,7 @@ Everything else is interface-separable and must not be scheduled as serial.
 | G7 | Incomplete-but-correct pathways still exported as `review_required`, never dropped |
 | G8 | No exporter repairs biology after the freeze |
 | G9 | A **claimed correction or preservation of pre-existing observable behaviour** carries a proof that **fails behaviourally on the base SHA** and passes at the tip; **symbol absence is not proof**. A genuinely **new** capability or module carries an **explicitly labelled new acceptance test** instead, with no fabricated base failure. Mislabelling a regression as new functionality is a reject. Full statement: `TEST_MATRIX.md` § Regression-test standard |
-| G10 | Smoke suite (460 tests, ~40 s) passes after the merge, on the integration branch |
+| G10 | Smoke suite (465 tests, ~40 s) passes after the merge, on the integration branch. **465 since C-054** moved it 460→465 under merge rule 4; 457 and 460 are stale. Delta and per-test names: `TEST_MATRIX.md` § Chunks |
 | **G11** | **Test-process lifecycle.** Every test/benchmark/pipeline/LLM command in the branch's evidence ran through the bounded foreground wrapper, and the cleanup report shows **final surviving count = 0**. A run with surviving owned processes is an **infrastructure failure**, not a test result, and cannot satisfy G3, G4 or G10. Full policy: `TEST_MATRIX.md` § 0 |
 
 **Reject** when: an earlier merge invalidated the branch's assumptions — now proven by
