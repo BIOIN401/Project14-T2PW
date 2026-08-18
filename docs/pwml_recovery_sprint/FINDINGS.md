@@ -1193,3 +1193,320 @@ chunkless file.**
 **Repaired in the same commit as this finding:** `.claude/agents/pwml-test-runner.md:52-54` said Chunk D =
 177 with a core of 150. The gate says **187 = 160 + 4 + 23**. Every test-runner dispatch since C-050k merged
 was reading a stale count.
+
+---
+
+## F-055 — the gate-failure path re-classifies from nothing and discards the boundary's computed semantic verdict
+
+- **Severity** **HIGH** · **Registered 2026-08-18** from `runs_verify/2026-08-18_1328`, integration `ad64e86`
+- **Reproduced on BOTH gate-failed legs.** Not incidental.
+
+The same leg produces two release records that disagree. `PMC12452463/strict`:
+
+| field | `quarantine_report.json` → `release` | manifest row → `release_status` |
+|---|---|---|
+| `semantic_evaluation` | **`failed`** | **`not_evaluated`** |
+| `semantic_failed_checks` | **`['no_real_id_or_name_conflict']`** | `[]` |
+| `completeness` | `0.5625` | `None` |
+| `missing_anchors` | 7 anchors | `[]` |
+| `coverage_evaluated` | `True` | `False` |
+| key count | 17 | 13 |
+
+`PMC12096016/strict` is identical in shape: `failed` → `not_evaluated`, `completeness 0.823529` → `None`,
+3 missing anchors → `[]`.
+
+**Mechanism.** `batch/driver.py` has two terminal paths. The strict PASS path (`_finalize_strict_pass`,
+~`:1837`) carries the boundary's record — `release = _frozen_release_record(pwml_result)`. The gate-failure
+path (`:1770`) instead **constructs a fresh classification from nothing**:
+
+```python
+outcome.release_status = classify_release_status(
+    pipeline_executed=True, strict_gates_passed=False)
+```
+
+No semantic argument is passed, so `classify_release_status`'s defaults fire
+(`release_status.py:368-369`). `_release_status_row` (`:647-667`) then faithfully serializes whatever it was
+handed — its own docstring states the principle the caller breaks: *"nothing here re-classifies … because a
+classification produced after the freeze is a merge rule 8 defect, not a convenience."*
+
+**Consequence.** `acceptance.py:256` derives `runtime_semantic_refuted` from `== SEMANTIC_FAILED`. With the
+manifest carrying `not_evaluated`, it is `False` even though the runtime wrote `failed` — so **C-056b's
+subtractive rule never fires on any gate-failed leg.** A second inflation path, in the driver, that C-056b's
+seam never sees. The scorer's own comment (`acceptance.py:744-751`) says `semantic_failed_checks` *"travels
+per leg, verbatim"*; it arrives empty.
+
+**Second symptom, one root cause.** Every gate-failed manifest carries
+`"no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT
+a semantic failure and NOT a pass"` (`release_status.py:58-61`) — **C-056a merged at `93594aa`**, and the
+leg's runtime recorded exactly a semantic failure. D-032 clause 6 class, same as REV-051's F-1.
+
+- **Owner** a new card **C-056d**: `driver.py :: _finalize_gate_failure` + the `SEMANTIC_INPUT_NOT_WIRED`
+  constant. Lands **after C-056c** so the restored carry includes evaluability. `_finalize_gate_failure` was
+  C-041's; `LEDGER.md:437` already records its docstring as stale with no current owner — same card.
+- **Not C-056c's.** `batch/driver.py` is outside its boundary and D-054 §2 records it needs zero driver edits.
+- **No historical figure moves** — verified: 143 committed rows, **0** carrying a `release_status`.
+
+## F-056 — T-102 is runnable but not green-able; two blockers nobody owns
+
+- **Severity** MEDIUM · **Registered 2026-08-18**. **Closes the question F-009 opened on 2026-08-05.**
+
+**F-009 CONFIRMED on both claims.** `grep -rn "taxonom" src/t2pw/sbml/` → **zero hits across all seven
+modules**; the MIRIAM map (`json_to_sbml.py:760-765`) has no taxonomy. And `canonical.py:226` `_KINDS` omits
+species. Traced on the committed `PMC12856317` artifacts: JSON `("9606",)`, PWML `pathway.pwml:32`
+`<taxonomy-id>9606</taxonomy-id>` → `("9606",)`, SBML `()`. At `canonical.py:801` that becomes a
+`Difference`, and **one `Difference` forces `verdict = not_equivalent`** (`:855`). Already pinned by a
+committed passing test (`test_canonical_biological_equivalence.py:447-448`). The failing axis is exactly
+`organism_context`, only on `(json, sbml)` and `(pwml, sbml)`; `(json, pwml)` passes (`:421`).
+
+**The product owner already ruled** — `LEDGER.md:821`, PACK 2, 2026-08-13, verbatim: *"if T-102's organism
+dimension is unreachable solely because SBML lacks taxonomy annotation, that exact limitation is recorded
+truthfully and the other benchmark dimensions continue"*. **This is not a narrowing of D-016.** T-102's
+terminal status must be **`MEASURED — organism/SBML axis structurally unreachable (F-009)`**, never `PASS`.
+
+**Two blockers independent of F-009, both UNOWNED:**
+1. **No `canonical_graph_sha256` baseline exists.** `grep -rl` over `runs/` and `runs_verify/` → 0 files, and
+   `stamp_report` has **zero call sites in `pwml/writer.py`**, so the CLI re-export emits none. T-102's
+   *"identical `canonical_graph_sha256`"* clause has no stored comparand and must compute both sides.
+2. **Nothing drives `biological_equivalence` end to end** — its only caller in the tree is its own test file.
+   An offline evidence probe (~80 lines) must be written; that is unowned work needing a grant.
+
+**No SBML artifact has ever existed for any leg** (`build_legacy_sbml: bool = False`,
+`streamlit_app.py:2636`; production passes `False` at `:6015`). The existing `outputs/pathway.sbml` is a
+*clove leaves/buds* pathway — comparing PMC12856317 against it would be nonsense.
+
+**Resolvers with NO disable switch** (matters for *"all resolvers disabled"*): pre-freeze compound resolution
+(no env var, no flag); **`db_resolver=None` ENABLES the DB** rather than disabling it
+(`compound_resolution.py:476-480`) — the same trap as F-051, one layer down; species canonicalization
+(`prefreeze_resolution.py:1253-1276` accepts and ignores `db_resolver`/`strict_db`); enrichment
+(`enrich_entities.py:1862-1867` — *"there is none"*). **`--non-strict-db` is severity-only
+(`writer.py:2825`) and using it to satisfy "resolvers disabled" would be a merge-rule-6 violation.**
+
+**Three more stale records; code wins.** `canonical.py:20-21` calls C-045 *"planning-only and undispatched"*
+— it is merged **and wired** (`prefreeze_resolution.py:1410-1413`). `canonical.py:12-13` says C-052 wires the
+comparator — C-052 merged and did not; it is still unwired. `DECISIONS.md:546-549`'s T-102/C-045 scheduling
+blocker is **discharged**.
+
+## F-057 — RAG gap-filler re-imports an existing reaction under an alias enzyme name, creating the duplicate-identity orphan that refused BOTH strict legs
+
+- **Severity** **HIGH** · `product_contract_violation` (§2, §7) · adjudicated by `pwml-bio-auditor`
+
+**This is the single proximate cause of both strict refusals.** Both legs:
+`quarantine_report.json → /refusal_reasons = ["degree_zero_export:1"]`, and
+`/strict_invariants/degree_zero_exports = [{"bucket": "proteins", "name": "Isochorismatase (EntB)"}]`.
+
+The RAG carrier attributes it precisely. `PMC12096016/strict/rag_admission_report.json → /counts =
+{accepted: 2, rejected: 337}` — **both** accepted records are the *same* reaction, `enzymes:
+["Isochorismatase (EntB)"]`, `source_paper.source_id: "PMC12452463"`, identical span, `reasons:
+["fills_named_gap_directly: via isochorismate"]`, two different gap ids. Leg A is the same shape.
+
+Effect: a duplicate protein `/entities/proteins/6` `Isochorismatase (EntB)` bearing **the same UniProt
+`P0ADI4` as `/entities/proteins/1` EntB**, a duplicate compound, and a duplicate reaction.
+`normalization_stats`: `n_entities_deduped: 0`.
+
+**The gap it "filled" was not a gap** — the paper's own `/processes/reactions/1` already covers
+isochorismate → 2,3-diDHB. The detector fired twice on one dangling edge and admitted the same span twice.
+
+**Gold warned about this exact alias.** PMC12452463 `notes`: *"The review calls EntB both 'isochorismatase'
+and 'isochorismate lyase' in different sections; these are one protein, not two."*
+
+- **Affected** `rag/admission.py` (a "gap" already covered by an existing locked reaction is not a gap);
+  alias canonicalization (two protein rows sharing one accession must collapse).
+- **Confidence** High on mechanism and attribution, carrier-backed on both legs. **UNVERIFIED**: why the row
+  survived `_prune_entities` (name+synonym keys, `strict_quarantine.py:1325-1326`) but failed
+  `_degree_zero_exports` (name-only, `:1741-1745`) — that needs the quarantine *input* payload, which is
+  hashed (`admitted_payload_hash`) but **written nowhere**.
+
+## F-058 — `EntE` fabricated as the transporter on every transport, contradicting the evidence span it cites
+
+- **Severity** **HIGH** · `product_contract_violation` (§1 hard limit; §2)
+
+`PMC12096016/strict/stage1_payload.json → /processes/transports/0/transporters = null` and `/1 = null`.
+After merge: both read `{"protein_complex": "EntE", "provenance": "inferred", "confidence": 0.9,
+"source_refs": ["secreted to the extracellular environment by a TolC-dependent process"]}` and one citing
+TonB. **The evidence span names TolC and TonB; the entity asserted is EntE**, an adenylation enzyme.
+
+Leg A is worse: Stage 1 had one transport with the correct `FepA`; the merged payload adds an `EntE`
+transporter to it **and** an entirely new `enterobactin secretion` transport with `EntE`.
+
+**Gold**: PMC12452463 `notes` — *"Export of enterobactin from the cytoplasm is never described at all, so no
+efflux step may be emitted."* PMC12096016 `export_rationale` — *"Export must exclude MenD, LDH and the
+transport mentions."*
+
+- **Affected** the transporter-attachment site between the Stage-1 boundary and `merge_additions` —
+  **UNVERIFIED which.** `transporters_attached: 0` rules out `process_normalizer`; no `rag_provenance`
+  carrier rules out RAG import. **Instrumentation gap**: actor sub-entries (`enzymes[]`, `modifiers[]`,
+  `transporters[]`) carry a bare `provenance: "inferred"` string with **no stage**, so attribution stops at
+  "between Stage-1 and merge". Do not guess a stage.
+
+## F-059 — RyhB: an sRNA sits in the `proteins` bucket, and the identity gate keys on bucket, not on declared `class`
+
+- **Severity** **HIGH** · `product_contract_violation` (§2)
+
+Paper: *"the RyhB sRNA (small RNA)"* — never called a protein. Stage 1 typed it
+`/entities/proteins/7.class = "protein"`. **The audit corrected the class and did not move the row**:
+`final_mapped.json → /entities/proteins/6.class = "rna"`, rationale *"reclassified RyhB to RNA based on
+explicit evidence"*. The gate then fired **against a row it had itself labelled `rna`** —
+`contract_reports.json → errors/0`: `path: /entities/proteins/6`, `detail.class: "rna"`, reason demands a
+UniProt/DrugBank id.
+
+The relocation surface exists and correctly abstained: `nucleic_acid_name_verdict`
+(`process_normalizer.py:804`) is **name-shape only** and a bare sRNA symbol matches neither pattern.
+`nucleic_acid_named_entities_relocated: 0`, `entity_type_mismatches_flagged: 0`.
+
+**Gold agrees with the auditor, not the pipeline.** PMC12452463 `forbidden_identifiers[RyhB]`: *"A small RNA,
+not a protein and never an enzyme."*
+
+- **Cost** two real, paper-quoted regulatory relations lost — `RyhB inhibits EntC` and `RyhB inhibits EntF`
+  quarantined as `quarantined_unmapped_entity`.
+- **Affected** `process_normalizer.py` — the relocation needs a **class-declared** trigger, not just a
+  name-shape one.
+
+## F-060 — a `not_evaluated` identity outcome is rendered as `implausible_name_match` and the accession is stripped
+
+- **Severity** **HIGH** · `product_contract_violation` (§8)
+
+Identity resolution **did produce the correct accession**. `PMC12096016/strict/final_mapped.json →
+/entities/proteins/5/mapping_meta`: `unverified_identity_claim.identifiers.uniprot = "P0A9A9"` — the exact
+UniProt for E. coli Fur — with `identity_evidence = {status: "not_evaluated", lookup: "", detail:
+"no_identity_evidence_source"}`, then `rejected_mapped_ids = {"uniprot": "P0A9A9"}` and `resolution.issue =
+"implausible_name_match"` with `name_gate = {}`.
+
+Three §8 problems:
+1. **The ladder never ran.** `no_identity_evidence_source` is returned only when `provider is None`
+   (`uniprot_evidence.py:450-462`); the source is *"off by default on purpose"*, gated on
+   `T2PW_IDENTITY_EVIDENCE`. PathBank's evidence was manifestly inadequate — the rejected candidates are
+   `sdhB, iscS, glpE, tusA, fdnH, fdoH, tusE, frdB`, all score 0.65, **none named Fur**.
+2. **`not_evaluated` was rendered as a refutation.** `map_ids.py:5539-5571` files the claim (§8-compliant)
+   then **falls through** to `_strip_rejected_identifiers` and writes `_NAME_GATE_ISSUE`. §8: `not_evaluated`
+   is *"never treated as `false`"*; stripping is permitted only on `rejected`. No rung judged the name.
+3. **The run configuration is not recorded** — `T2PW_IDENTITY_EVIDENCE` appears in no manifest, plan or log.
+   Whether it was off by default or deliberately disabled is **UNVERIFIED**.
+
+**Divergence:** the same protein got `P0A9A6` in the other leg. Two legs, two accessions, neither verified —
+distinguishing them is exactly what the §8 ladder exists for.
+
+**Do not materialize P0A9A9 without verification** — §2 forbids false real identifiers. The stripping is the
+finding, not the drop: gold lists Fur under `acceptable_enzymes`, not `expected_enzymes`.
+
+## F-061 — the coverage matcher false-negatives on abbreviations and complex components, and false-positives on substring collisions
+
+- **Severity** MEDIUM · `product_contract_violation` (§4, §7) — **reporting only; non-decisive in this run**
+
+`unmatched_terms` lists `ATP` while the admitted process carries `"adenosine triphosphate"` and the row's own
+`synonyms: ["ATP"]` holds the answer. `_term_matches` (`strict_quarantine.py:825-836`) is bidirectional
+substring over normalized strings and never consults synonyms or `mapping_meta.resolved_name`.
+
+**It errs in both directions.** `MenD (competitive isochorismate-utilizing enzyme)` is reported **matched**
+though MenD is absent from the payload entirely — because the normalized term *contains* `isochorismate`. So
+the report simultaneously declares a present participant missing and a gold-**forbidden** entity covered.
+
+Leg A is understated far more: its unmatched `EntC, EntB, EntD, EntF` are all present with accessions inside
+PathBank complex wrappers, and `_process_core_terms` (`:806-822`) collects the complex **name** but not its
+**components**. Leg A's published `completeness = 0.5625` sits against a `min_core_coverage` of `0.5` — one
+more name substitution from a **false** `requested_core_coverage_below_minimum`.
+
+**Fix the matcher, not the gold set.** Gold's ATP entry is quote-backed and correct. **The threshold value
+does not move** (§7).
+
+## F-062 — structural refusal reasons bypass C-041a's D-002 seam, making `review_required` unreachable after any quarantine refusal
+
+- **Severity** **HIGH** · `product_contract_violation` (§4, §7, **§13**, merge rule 7)
+- **⚠ THIS CONTRADICTS A LOCKED CONTRACT POSITION.**
+
+`strict_quarantine.py:2025-2034`: coverage reasons are converted to `review_reasons` when `defensible_core`
+holds, but `structural_reasons` are appended to `refusal_reasons` **unconditionally**. Both legs had
+`defensible_core = True` (`minimum_core_satisfied: true`, `coverage.reasons: []`, `core_accepted` 6 and 9)
+and `coverage_reasons = []` — yet `ok = false`, which drives `release_status.py:417-419`
+`elif not strict_gates_passed: status = DIAGNOSTIC_ONLY`.
+
+A degree-zero orphan is a **removable row**, not an unsupportable biological requirement — the pruner already
+owns that reason code (`degree_zero_after_quarantine`) and applied it to Fur, EntF, RyhB and
+`enterobactin synthase` in the same run.
+
+**`PRODUCT_CONTRACT.md:341` (§13, LOCKED), verified verbatim:** *"PMC12452463 — … Correct outcome **after the
+index fix** is `review_required` with `strict_acceptance_eligible=false`. **Never strict success.**"*
+
+The run produced `diagnostic_only` with `strict_acceptance_eligible: false`. **The eligibility flag matches
+the contract; the status does not.**
+
+**⚠ ONE QUALIFICATION, AND IT IS THE ORCHESTRATOR'S CORRECTION TO THE ADJUDICATION.** The clause is
+conditioned on *"after the index fix"*, and **that phrase occurs exactly once in the entire control plane,
+with no antecedent anywhere** — `grep -rn "index fix" docs/pwml_recovery_sprint/*.md` returns that single
+line and nothing else. So whether the condition is satisfied is **UNVERIFIED**, and this finding must **not**
+be quoted as a settled contradiction of a locked position until the referent is named.
+
+**What is verified and does not depend on the referent:** the mechanism below is read directly from the code
+and reproduces on both legs — `review_required` is unreachable after any quarantine refusal, however
+defensible the core. That stands on its own.
+
+**The undefined referent is itself a control-plane defect** and is registered here: a locked contract row
+conditions a required outcome on an event the control plane never defines, so no agent can determine whether
+the row is currently binding.
+
+- **⚠ BLOCKING SEQUENCING — merge rule 6.** **F-062 must NOT be fixed before F-057 and F-058.** Repairing the
+  refusal seam in isolation would ship leg B's fabricated `EntE` transporters and its LDH-derived NAD+/NADH.
+  The duplicate-identity orphan and the transporter fabrication land first.
+
+## F-063 — Stage-1 emits a dangling interaction endpoint, and the audit "resolves" it by deleting the relation
+
+- **Severity** MEDIUM · `product_contract_violation` (§2) · **owner is Stage 1, NOT C-060**
+
+`stage1_payload.json → /processes/interactions/1/entity_2 = "ent gene clusters"` with no matching row in any
+`entities` bucket — a **dangling reference**, not a hallucination: the phrase is verbatim in the source.
+
+**C-060's gate WAS reached and correctly abstained.** `merged_payload.json → /entity_admission_report` is
+present (`{removed: 0, demoted: 4, admitted: 0}`), so `screen_additions` ran. It must not fire: the span *is*
+locatable, and `entity_admission.py:44-46` confines removals to `entities.compounds` and `processes.*` under
+two rules, neither of which addresses an undeclared participant. **C-060 is not the owning surface.**
+
+The vocabulary that recognises the string already exists — `process_normalizer.py:242-245`
+`NUCLEIC_ACID_TAIL_RE` matches `gene\s+clusters?` — but is applied only to existing protein-bucket rows,
+never to unregistered process participants.
+
+**Instead the audit deleted the biology**: *"Removed the invalid interaction that referenced an undefined
+entity 'ent gene clusters'"*. That deletion is the sole reason Fur ends up degree-zero and pruned. The
+relation is gold-acceptable and paper-explicit.
+
+- **Affected** `stage_one_boundary.py` — every process participant is a declared entity, or the process does
+  not cross the boundary.
+
+## F-064 — the ID-mapping cache is saved by a non-atomic unlocked whole-file overwrite, and a failure there destroys a completed leg
+
+- **Severity** MEDIUM · **Registered 2026-08-18**
+
+`mapping/map_ids.py:780-783`:
+
+```python
+def save(self) -> None:
+    if not self.enabled:
+        return
+    self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
+```
+
+A truncate-and-rewrite of a **4.4 MB shared cache** — no temp file, no `os.replace`, no lock, no error
+containment. `PMC12452463/research` died at `post_pipeline` after **456.8 s** with `[Errno 22] Invalid
+argument` on that path, **after producing 5 reactions and 20 entities**.
+
+**Attribution: NOT a reproducible code defect.** The discriminating experiment came back negative —
+`PMC12096016/research`, same mode and same code, **PASSED**. Three `git worktree add` invocations by the
+orchestrator ran during the run, each writing ~4,230 files, one at 13:50 inside leg 2's window. **Recorded as
+an orchestrator-induced infrastructure failure.** Do not cite leg 2 as evidence about the pipeline.
+
+**The fragility is still real and independent of what triggered it**: research mode is fail-open by design,
+so a cache write must not be able to fail a leg that has already completed its science. No committed run has
+ever recorded an `Errno 22`.
+
+**Standing operational rule adopted:** no worktree creation or heavy filesystem work in the primary checkout
+while a pipeline leg is running.
+
+## Instrumentation gaps blocking firmer attribution (all three UNOWNED)
+
+1. **The quarantine input payload is not persisted.** `admitted_payload_hash` names a payload written to no
+   file, so F-057's survival/condemnation asymmetry cannot be closed.
+2. **Actor sub-entries carry no lineage** — `enzymes[]`, `modifiers[]`, `transporters[]` carry a bare
+   `provenance` string with no stage. This is why F-058 cannot name a stage.
+3. **Run configuration is not recorded** — `T2PW_IDENTITY_EVIDENCE` appears in no manifest, plan or log.
+
+Also noted, non-blocking: `cofactor_policy.py:3-4` still says *"UNWIRED BY DESIGN: nothing calls this"* —
+stale, `entity_admission.py:66` imports it. And leg B ran the audit at `temperature = 0.14` (leg A: `0.0`) —
+a reproducibility hazard worth a product-owner note; no contract clause found that it breaches.

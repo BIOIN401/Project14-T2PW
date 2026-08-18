@@ -3179,3 +3179,122 @@ C-057's charter must be written against the resulting live source.
 `TEST_MATRIX.md`'s chunk tables and **zero** times in `evidence/chunk_d_gate.py`. **SMOKE contains none of
 them.** C-056c must name all six as its focused set and run them explicitly; no chunk it is told to run will
 contain any of them.
+
+---
+
+## D-055 — T-100 is NOT discharged; its fresh legs are accepted as evidence and its acceptance criterion failed · 2026-08-18 · LOCKED
+
+Four product-owner-authorized curator-enabled Wave B legs ran against integration `ad64e86` into
+`runs_verify/2026-08-18_1328` (committed `8ea52c4`). This records the verdict, the sequencing constraint the
+findings impose, and the one figure that may be quoted (none).
+
+### 1. The run is a valid instrument
+
+G11 on the bounded wrapper: `final_surviving_count 0`, `cleanup_success true`, 11 descendants observed and
+all 11 terminated, `forced false`, 4 pre-existing processes reported and never killed. 63.3 min, well inside
+the 9000 s ceiling. Exit 1 is `batch_run.py`'s documented *"something did not pass"*, not an infrastructure
+failure. `cache_snapshot/` stayed out per D-011.
+
+**One leg is disqualified as evidence.** `PMC12452463/research` died at `post_pipeline` on
+`[Errno 22]` against `data/id_mapping_cache.json` after producing 5 reactions and 20 entities. The
+discriminating experiment — `PMC12096016/research`, same mode, same code — **PASSED**. Three
+`git worktree add` invocations by the orchestrator ran during the window, one inside leg 2's. **Recorded as
+an orchestrator-induced infrastructure failure (F-064). Leg 2 must not be cited as evidence about the
+pipeline.** Standing rule adopted: **no worktree creation or heavy filesystem work in the primary checkout
+while a pipeline leg runs.**
+
+### 2. NO FIGURE IS QUOTABLE, and no re-run of these four legs changes that
+
+```
+scripts/bench_acceptance.py --run-dir runs_verify/2026-08-18_1328   -> exit 1
+NOT ACCEPTED: this run is INCOMPLETE (2/10 papers, 4/20 legs)
+```
+
+`bench/acceptance.py:397` computes `complete = complete_cases == planned`, where `planned =
+len(self.papers)` is **the gold-set size, 10** — not the number of papers in the run. A two-paper run is
+structurally incomplete. Its source comment is correct: *"a run that attempted 19 of 20 is the same failure
+in miniature."*
+
+**The previous handoff's standing instruction is corrected here.** It held that fresh Wave B legs are what
+*"produces a quotable strict figure"*. They are **necessary** — only rows carrying `release_status` score
+strict at all, and `driver.py:778` writes it, so fresh rows do carry one where **0 of 143** historical rows
+did. They are **not sufficient**. A quotable strict pass **rate** requires all 20 gold legs, which is
+**T-104** (~7 h) and outside this authorization. **Do not weaken the completeness gate to obtain a number.**
+
+### 3. T-100's acceptance criterion FAILED, and the mechanism is located
+
+`TEST_MATRIX.md:477`: *"both pass the quarantine boundary; **PMC12452463 → `review_required`, not strict
+success** (TRAP-1)"*.
+
+Both strict legs **reached** the quarantine boundary and wrote a `quarantine_report.json`, but both carry
+`ok: false` and both classified `diagnostic_only`. **`review_required` was not reachable.**
+`release_status.py:414-419` tests `strict_gates_passed` **before** any coverage branch, and
+`strict_quarantine.py:2025-2034` appends `structural_reasons` to `refusal_reasons` **unconditionally**, while
+converting only coverage reasons into review reasons. Both legs had `defensible_core = True`
+(`minimum_core_satisfied: true`, `coverage.reasons: []`, `core_accepted` 6 and 9). See **F-062**.
+
+**T-100 is NOT discharged.** It remains open pending the corrections below.
+
+### 4. Adjudicated under §14 — seven violations, none of them the ones first suspected
+
+`pwml-bio-auditor` classified every strict-leg failure. **Both legs failed for the same proximate cause**: a
+RAG-imported alias-duplicate of EntB (`Isochorismatase (EntB)`, sharing UniProt `P0ADI4` with the real EntB
+row) that becomes a degree-zero orphan and refuses the whole export (**F-057**).
+
+**Neither leg is an incomplete-but-correct pathway wrongly dropped.** Both payloads carry content the
+contract forbids shipping — `EntE` fabricated as the transporter on spans that name TolC and TonB
+(**F-058**), and leg B's LDH coupled-assay reporters NAD+/NADH carried as pathway metabolites with a
+`paper_explicit: explicit` provenance claim. **The refusals prevented contract-forbidden content from
+shipping: the right outcome by the wrong route.**
+
+Registered **F-055** … **F-064**. Three hypotheses in the dispatch brief were **wrong**, and the record says
+so:
+
+* **ATP is not a gold defect and not a policy disagreement.** Gold does not feed `requested_core` at runtime
+  — `decision_inputs.requested_core: null`, `requested_core_source: "pathway_context"`. The cofactor policy
+  demoted ATP in a **ledger-only** entry that mutates no row; ATP is a live participant in
+  `/processes/reactions/3`. The cause is a name-resolution asymmetry in the coverage matcher (**F-061**).
+  **Gold's ATP entry is quote-backed and correct. Fix the matcher, not the gold set.**
+* **The `enterobactin synthase` accession demand is not a category error to relax.** The correctly resolved
+  four-subunit PathBank complex was already in the payload; the bare protein row is synthetic, with no
+  `paper_extraction` lineage. Gold forbids the identifier outright. **Do not weaken that gate — merge rule 6.**
+* **C-060's admission gate was reached, ran, and correctly abstained.** `entity_admission_report` is present
+  with `{removed: 0, demoted: 4, admitted: 0}`. The `ent gene clusters` dangling endpoint is **Stage 1's**,
+  not C-060's (**F-063**).
+
+### 5. ⚠ BLOCKING SEQUENCING — merge rule 6
+
+**F-062 (the refusal seam) MUST NOT be fixed before F-057 (the RAG alias-duplicate) and F-058 (the
+fabricated transporters).** Repairing the seam in isolation would make both legs exportable and thereby
+**ship** the fabricated `EntE` transporters and the LDH-derived NAD+/NADH. That is precisely the
+"weaken a biological gate to increase PWML production" failure merge rule 6 forbids.
+
+**Order: F-057 and F-058 first, F-062 after.** No card may be chartered against F-062 until both land.
+
+### 6. One correction to the adjudication, issued by the orchestrator
+
+The adjudication reported F-062 as contradicting `PRODUCT_CONTRACT.md:341` (§13), which fixes PMC12452463's
+correct outcome at `review_required` / `strict_acceptance_eligible=false`, *"never strict success"*. The run
+produced `diagnostic_only` with `strict_acceptance_eligible: false` — the flag matches, the status does not.
+
+**But that contract row is conditioned on *"after the index fix"*, and that phrase occurs exactly once in the
+entire control plane with no antecedent** — `grep -rn "index fix" docs/pwml_recovery_sprint/*.md` returns
+that single line. **Whether the condition is satisfied is UNVERIFIED, so this must not be quoted as a settled
+contradiction of a locked position.** F-062's *mechanism* is read from the code and reproduces on both legs;
+that stands independently.
+
+**The undefined referent is itself a control-plane defect**: a locked row conditions a required outcome on an
+event the control plane never names, so no agent can determine whether the row currently binds. **The product
+owner should name the referent or strike the condition.**
+
+### 7. What T-100 established, and it is not nothing
+
+* **C-053's `release_status` carry works in production.** Fresh rows carry it; 0 of 143 historical rows did.
+  The structural cause of the historical `0/2` strict score is confirmed and is not a regression.
+* **C-056a's semantic wiring works at the quarantine boundary** — it computed `semantic_evaluation: failed`
+  with a named failed check on both strict legs.
+* **And the batch driver throws that verdict away** (**F-055**), disarming C-056b's subtractive rule on every
+  gate-failed leg. **No historical figure moves**, because no historical row carries a `release_status`.
+
+**Ten findings, seven of them `product_contract_violation` with artifact evidence, gold citations, affected
+files, expected corrections and regression fixtures. That is what the milestone was for.**
