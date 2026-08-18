@@ -2716,3 +2716,74 @@ it. **Registered as an instrument gap for a later card: `bounded_run` retains ex
 no pytest summary line is recoverable from a G11 report.** C-056a's `c056a_gate_counts.json` and C-050k's
 `c050k_gate_counts.json` are the workaround — **every future card must capture verbatim summary lines into a
 committed artifact, because `SMOKE exactly 460` is merge gate 10 and an exit code cannot certify it.**
+
+---
+
+## D-050 — F-046's discriminator is measurably wrong; C-050j is re-scoped onto the path no record names · 2026-08-18 · LOCKED
+
+C-050j has been undispatchable because **its central design input is false**. This corrects it and makes the
+card buildable. Measured in the primary checkout; **re-measure every line number after today's three merges.**
+
+### 1. F-046's proposed discriminator would fire NEVER. Struck.
+
+F-046 says the species marker is stamped on *"every row that participated"* and proposes **marker-presence**
+as the discriminator. Live, `prefreeze_resolution.py:1215-1245` stamps **every named species row that reaches
+the stage** — the only `continue` is for non-dicts and unnamed rows (`:1216-1217`); leaders at `:1230`, all
+others at `:1245`.
+
+So two genuinely different organisms that already `_norm`-collide are **leader + follower, both stamped,
+neither renamed** — and marker-presence **clears them to collapse**, which is the exact case F-046 says must
+refuse. **Built as written the guard fires never in the species bucket.**
+
+**The correct positive marker is `marker["followed_leader"]`** (`prefreeze_resolution.py:1242`), written
+**only** when the leader's rename moved the group's `_norm` (`:1236`).
+
+**F-043 still binds and is not weakened by this correction:** the discriminator must **not** be built from
+identifier equality. `PG`, `PG phosphate` and `(PGP)` all carry PathBank 193, which is UDP-glucose and wrong
+for all three. The durable species-canonicalization marker is the discriminator; a shared identifier is
+evidence, never proof.
+
+### 2. F-046 overstates the residual on one axis and misses the real one entirely
+
+**Overstated:** most of the "two different organisms whose names `_norm`-collide" shape is **already refused
+pre-freeze** by `_reject_ambiguous_species_renames` (`prefreeze_resolution.py:1086-1177`) — distinct sources
+→ one target (`:1106-1116`), and rename onto an occupied-and-kept name (`:1142-1158`). Its own comment
+(`:1130-1136`) names `build_pwml_ir`'s dedupe as the harm it prevents. What is genuinely open is narrower: a
+**payload-authored collision with no rename at all** (the guard is called only `if rename_map`, `:1354`),
+plus the three buckets with **no pre-freeze canonicalizer at all** (`PREFREEZE_CANONICALIZERS` `:1410-1413`
+is compounds + species only).
+
+**Missed, and it is the card's strongest case: the exporter manufactures the collision itself, post-freeze.**
+`_apply_create_defaults` **renames a component row inside `build_pwml_ir`** — `ir.py:344`
+`record["name"] = default_name` — applied at `ir.py:1085-1096`, **immediately before** the unguarded
+component dedupe at `:1097`. The pre-freeze ladder never applies that table as a rename (`ir.py:934-935`
+only *recognises* an already-canonical default and returns early). A payload carrying both
+`Narcissus sp. aff. pseudonarcissus` and `Narcissus aff. pseudonarcissus MK-2014` (`ir.py:230-238`) clears
+every pre-freeze guard, is then **renamed after the hash**, and one row is dropped with a warning.
+
+**No record contains this path, and C-050i's zero-of-32 census structurally could not have seen it** — that
+census replayed `_norm(_canonical(...))` over committed `final_mapped.json`, i.e. **before**
+`_apply_create_defaults` runs.
+
+### 3. Exposure is UNMEASURED and the card measures it first
+
+Payload-authored: **zero of 32** (C-050i's census plus REV-050i's independent 32×9 re-census).
+**Create-defaults-manufactured: unmeasured.** The card's first act is a bounded read-only census of that
+path, reproducing EP3 exactly. **If it is non-zero, the card's G9 classification changes from new capability
+to a correction with a real base-failing proof, and it stops for a fresh ruling — exactly as C-050k did.**
+Deliberate convergences that must keep collapsing have never been enumerated; do not assume the set is empty.
+
+### 4. Boundary and posture
+
+**In scope:** `ir.py :: _dedupe_named_rows` component branch and the component call site `:1097-1102`
+(pass a discriminator through) · `tests/test_pwml_ir_duplicate_row_refusal.py` · `tests/test_pwml_ir.py` ·
+a probe under `evidence/`.
+**Out:** `prefreeze_resolution.py` (**read-only**) · `tests/test_prefreeze_species_resolution.py`
+(**zero lines** — C-045/D-016's accepted criteria) · the **entity** call site and `resolve_entity`
+(**C-050k's, merged today**) · the `component_by_name` LAST-wins residual (`ir.py:1140`, the component twin
+of F-048 — **register, do not fix**) · moving the create-defaults rename upstream · any consolidation.
+
+**D-035 unamended and D-036's deferral of the consolidation engine intact — do not propose reopening it.**
+The duplicate rows themselves are D-036 territory.
+
+**C-050j serializes against nothing now** — C-050k merged, and the two diffs do not overlap.
