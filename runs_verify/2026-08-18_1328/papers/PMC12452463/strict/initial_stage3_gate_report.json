@@ -1,0 +1,439 @@
+{
+  "status": "failed",
+  "stage": "post_normalization_hard_gates",
+  "error": "Hard-gate validation failed after normalization.",
+  "errors": [
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Fur",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "ambiguous_unverified",
+          "confidence": 0.65,
+          "reviewed": false,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "no_candidate_passed_identity_verification",
+            "order_step": "ambiguous_identity_verification"
+          },
+          "ambiguity": {
+            "candidate_count": 10,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 5917,
+              "name": "Succinate dehydrogenase iron-sulfur subunit",
+              "gene_name": "sdhB",
+              "uniprot": "P07014",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 5979,
+              "name": "Cysteine desulfurase",
+              "gene_name": "iscS",
+              "uniprot": "P0A6B7",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6015,
+              "name": "Thiosulfate sulfurtransferase glpE",
+              "gene_name": "glpE",
+              "uniprot": "P0A6V5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6079,
+              "name": "Sulfurtransferase tusA",
+              "gene_name": "tusA",
+              "uniprot": "P0A890",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6151,
+              "name": "Formate dehydrogenase, nitrate-inducible, iron-sulfur subunit",
+              "gene_name": "fdnH",
+              "uniprot": "P0AAJ3",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6152,
+              "name": "Formate dehydrogenase-O iron-sulfur subunit",
+              "gene_name": "fdoH",
+              "uniprot": "P0AAJ5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6154,
+              "name": "Sulfurtransferase tusE",
+              "gene_name": "tusE",
+              "uniprot": "P0AB18",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6201,
+              "name": "Fumarate reductase iron-sulfur subunit",
+              "gene_name": "frdB",
+              "uniprot": "P0AC47",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "identity_status": "unresolved"
+        }
+      }
+    },
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'RyhB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "RyhB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "RyhB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "score_below_minimum"
+          },
+          "queries_tried": [
+            "(protein_name:\"RyhB\" OR gene:\"RyhB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"RyhB\" OR gene:\"RyhB\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "score_below_minimum",
+            "entity_name": "RyhB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "below_minimum:0.25<0.5"
+            },
+            "score": 0.25,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:B7UKW5",
+            "judged_candidate": {
+              "accession": "B7UKW5",
+              "protein_name": "RyhB-regulted fur leader peptide",
+              "gene_names": "1 item(s), 7 chars elided",
+              "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+              "reviewed": false,
+              "score": 0.25,
+              "matched_query": "RyhB",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 254 chars elided",
+              "8 key(s), 226 chars elided",
+              "8 key(s), 228 chars elided",
+              "8 key(s), 226 chars elided",
+              "8 key(s), 226 chars elided",
+              "8 key(s), 227 chars elided",
+              "8 key(s), 236 chars elided",
+              "8 key(s), 232 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "RyhB",
+              "kind": "protein",
+              "resolved_name": "RyhB-regulted fur leader peptide",
+              "identity": "uniprot:B7UKW5",
+              "compared_names": "1 item(s), 36 chars elided"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'enterobactin synthase' is missing species/organism.",
+      "detail": {
+        "name": "enterobactin synthase"
+      }
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "enterobactin synthase"
+      }
+    },
+    {
+      "path": "/entities/protein_complexes/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' is missing species/organism.",
+      "detail": {
+        "name": "enterobactin synthase complex",
+        "class": "protein_complex",
+        "generated": true,
+        "generation_reason": "complex_named_source_entity_wrapper",
+        "confidence": 0.8,
+        "provenance": "inferred",
+        "components": [
+          {
+            "name": "enterobactin synthase",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.",
+      "detail": {
+        "pointer": "/entities/proteins/8/name",
+        "name": "enterobactin synthase"
+      }
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "pointer": "/entities/proteins/8/name",
+        "name": "enterobactin synthase"
+      }
+    }
+  ],
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 1,
+    "entities_added_as_proteins": 1,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "enterobactin synthase complex"
+    ],
+    "n_autostate_created": 1,
+    "n_entities_assigned_to_autostate": 2,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 15,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "no_op_quarantined_count": 0,
+    "locked_no_op_quarantined_count": 0,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 1,
+    "n_aliases_rewritten": 2,
+    "n_entities_deduped": 1,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 1,
+    "nucleic_acid_named_entities_relocated": 0,
+    "entity_type_mismatches_flagged": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [
+      {
+        "alias": "Fe3+",
+        "canonical": "Fe3"
+      }
+    ],
+    "false_protein_promotions_blocked": 0,
+    "unused_proteins_quarantined": 1,
+    "unused_proteins_flagged_for_review": 0,
+    "n_reactions_compartment_backfilled": 0,
+    "non_protein_catalysts_dropped": 0,
+    "orphan_proteins_dropped": 1,
+    "alias_canonicalization": {
+      "n_same_as_groups": 1,
+      "n_aliases_rewritten": 2,
+      "n_entities_deduped": 1,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": [
+        {
+          "alias": "Fe3+",
+          "canonical": "Fe3"
+        }
+      ]
+    },
+    "gate_error_count": 7
+  },
+  "connectivity": {
+    "n_reactions": 6,
+    "n_transports": 2,
+    "n_interactions": 3,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 39,
+    "n_edges": 53,
+    "n_components": 1,
+    "main_component_size": 39,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 1,
+    "proteins_attached_pct": 88.89
+  },
+  "report_schema_version": 1,
+  "phase": "initial_post_normalization"
+}

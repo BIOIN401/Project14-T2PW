@@ -1,0 +1,253 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-08-18T13:28:39
+finished : 2026-08-18T14:31:53
+papers attempted : 2
+strict PWML      : 0 pass / 2 fail
+research relaxed : 1 pass / 1 fail
+timeouts         : 0
+skipped          : 0
+ineligible       : 0  (screened out, not failures)
+pass, no deliv.  : 1  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 4 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 1
+
+  PMC12452463 -- (untitled)
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=post_pipeline after 456.8s (7m36s)
+    failure_kind: crash
+      message: Post-pipeline conversion failed: [Errno 22] Invalid argument:
+               'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\data\\id_mapping_cache.json'
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 1
+
+  PMC12096016 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein
+      'Fur' is missing a UniProt or DrugBank identifier.
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            1  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC12452463
+format-blocked    1  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+    PMC12096016
+incomplete        0  (a mode is missing, skipped or unrecognised)
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12452463
+    slug   : PMC12452463
+    uri    : (none)
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1151.9s (19m11s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/0/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking): and 4 more finding(s);
+                       all of them are in contract_reports.json
+        failure_kind : contract
+        message      : post-pipeline validation failed: 4 blocking issue(s) at
+                       final_pre_export_gate_lifecycle [final_gate_report_missing]
+        issue_codes  : gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_enterobactin_synthase_is_missing_a_uniprot_or_drugbank_i,
+                       gate.generated_protein_complex_enterobactin_synthase_complex_componen,
+                       gate.gate_lifecycle
+        counts       : reactions=6 entities=28 proteins=9 compounds=10 blocking_issues=4
+                       contract_errors=3 gate_errors=1 runtime_schema_findings=14
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=2
+        files        : 13
+            - papers/PMC12452463/strict/audit_iteration_summary.json (1.4 kB)
+            - papers/PMC12452463/strict/contract_reports.json (33.4 kB)
+            - papers/PMC12452463/strict/coverage_summary.json (2.8 kB)
+            - papers/PMC12452463/strict/final_mapped.json (164.6 kB)
+            - papers/PMC12452463/strict/gap_iteration_summary.json (210 B)
+            - papers/PMC12452463/strict/gate_fail_report.json (14.6 kB)
+            - papers/PMC12452463/strict/graph_closure_iterations.json (3.6 kB)
+            - papers/PMC12452463/strict/initial_stage3_gate_report.json (14.6 kB)
+            - papers/PMC12452463/strict/merged_payload.json (42.8 kB)
+            - papers/PMC12452463/strict/quarantine_report.json (31.1 kB)
+            - papers/PMC12452463/strict/rag_admission_report.json (363.1 kB)
+            - papers/PMC12452463/strict/removed_entity_report.json (3.2 kB)
+            - papers/PMC12452463/strict/stage1_payload.json (21.7 kB)
+
+    research : FAIL | stage=post_pipeline | time=456.8s (7m36s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : crash
+        message      : Post-pipeline conversion failed: [Errno 22] Invalid argument: 'C:\\Users\\Ang
+                       ad\\Desktop\\SummerBIOIN\\Project14-T2PW\\data\\id_mapping_cache.json'
+        issue_codes  : (none reported)
+        counts       : reactions=5 entities=20 proteins=8 compounds=8 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=1
+        files        : 4
+            - papers/PMC12452463/research/mapped_failure_snapshot.json (567 B)
+            - papers/PMC12452463/research/merged_payload.json (21.3 kB)
+            - papers/PMC12452463/research/rag_admission_report.json (353.2 kB)
+            - papers/PMC12452463/research/stage1_payload.json (18.8 kB)
+
+----------------------------------------------------------------------------------------------------
+[2] (untitled) -> format-blocked
+    id     : PMC12096016
+    slug   : PMC12096016
+    uri    : (none)
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=908.3s (15m08s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation NOT
+                       PERFORMED]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 1 blocking issue(s) at
+                       final_pre_export_gate_lifecycle [final_gate_report_missing]
+        issue_codes  : gate.gate_lifecycle
+        counts       : reactions=6 entities=30 proteins=7 compounds=14 blocking_issues=1
+                       gate_errors=1 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=2
+        files        : 13
+            - papers/PMC12096016/strict/audit_iteration_summary.json (1.3 kB)
+            - papers/PMC12096016/strict/contract_reports.json (6.3 kB)
+            - papers/PMC12096016/strict/coverage_summary.json (3.9 kB)
+            - papers/PMC12096016/strict/final_mapped.json (194.9 kB)
+            - papers/PMC12096016/strict/gap_iteration_summary.json (65.2 kB)
+            - papers/PMC12096016/strict/gate_fail_report.json (8.8 kB)
+            - papers/PMC12096016/strict/graph_closure_iterations.json (1.5 kB)
+            - papers/PMC12096016/strict/initial_stage3_gate_report.json (8.8 kB)
+            - papers/PMC12096016/strict/merged_payload.json (47.5 kB)
+            - papers/PMC12096016/strict/quarantine_report.json (15.7 kB)
+            - papers/PMC12096016/strict/rag_admission_report.json (377.0 kB)
+            - papers/PMC12096016/strict/removed_entity_report.json (1.1 kB)
+            - papers/PMC12096016/strict/stage1_payload.json (26.0 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1275.0s (21m15s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank
+                       identifier.
+        counts       : reactions=5 entities=18 proteins=7 compounds=8 tier.a=8 tier.b=0 tier.c=6
+                       tier.d=0 review_flags=1 skipped_format_rules=0 normalization_actions=4
+                       citations=1 blocking_issues=0 gate_errors=1 gate_errors_not_blocking=1
+                       gate_review_flags=1 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=1 unsourced=0
+        files        : 18
+            - papers/PMC12096016/research/audit_iteration_summary.json (939 B)
+            - papers/PMC12096016/research/contract_reports.json (22.8 kB)
+            - papers/PMC12096016/research/coverage_summary.json (3.2 kB)
+            - papers/PMC12096016/research/final_mapped.json (151.6 kB)
+            - papers/PMC12096016/research/final_stage3_gate_report.json (8.5 kB)
+            - papers/PMC12096016/research/gap_iteration_summary.json (210 B)
+            - papers/PMC12096016/research/gate_fail_report.json (8.4 kB)
+            - papers/PMC12096016/research/graph_closure_iterations.json (1.3 kB)
+            - papers/PMC12096016/research/initial_stage3_gate_report.json (8.4 kB)
+            - papers/PMC12096016/research/merged_payload.json (21.7 kB)
+            - papers/PMC12096016/research/quarantine_report.json (14.0 kB)
+            - papers/PMC12096016/research/rag_admission_report.json (361.6 kB)
+            - papers/PMC12096016/research/removed_entity_report.json (241 B)
+            - papers/PMC12096016/research/research_pathway_citations.json (37.0 kB)
+            - papers/PMC12096016/research/research_pathway_elements.csv (3.8 kB)
+            - papers/PMC12096016/research/research_pathway_report.txt (11.0 kB)
+            - papers/PMC12096016/research/review_flags.json (7.4 kB)
+            - papers/PMC12096016/research/stage1_payload.json (17.2 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC12452463: post_pipeline -- no codes
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC12452463: contract
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     - gate.gate_lifecycle (1 paper(s)): PMC12096016
+
+====================================================================================================

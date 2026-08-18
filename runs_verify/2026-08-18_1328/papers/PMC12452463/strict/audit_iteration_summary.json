@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        4,
+        7,
+        3,
+        -10,
+        13
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 7,
+      "warning_count": 8,
+      "patch_count": 13,
+      "accepted_patch_count": 10,
+      "rejected_patch_count": 3,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Added missing UniProt identifiers for Fur and complex components, added species/organism to bare entities, reclassified RyhB to RNA based on explicit evidence, and removed erroneous modifier references to EntE in transport steps where it ha… (+33 chars elided)",
+      "top_errors": [
+        "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+        "Protein 'RyhB' is missing a UniProt or DrugBank identifier.",
+        "Protein 'enterobactin synthase' is missing species/organism."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

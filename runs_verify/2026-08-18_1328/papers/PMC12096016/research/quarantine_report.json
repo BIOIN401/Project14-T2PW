@@ -1,0 +1,549 @@
+{
+  "schema_version": 5,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:f09c15518978b96d",
+  "resulting_payload_hash": "sha256:f09c15518978b96d",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate 23didhb",
+      "23dihydroxybenzoic acid 23dhb",
+      "atp",
+      "chorismate",
+      "enta",
+      "entb",
+      "entc",
+      "entd",
+      "ente",
+      "enterobactin",
+      "entf",
+      "enth",
+      "fur",
+      "isochorismate",
+      "ldh",
+      "lserine",
+      "mend",
+      "nadh",
+      "pyruvate"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:43048aac4d1d8788",
+  "ok": true,
+  "counts": {
+    "core_accepted": 8,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed chorismate isomerization",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entccatalyzed chorismate isomerization",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate 23didhb",
+        "entb",
+        "entb isochorismatase reaction",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate 23didhb",
+        "23dihydroxybenzoic acid 23dhb",
+        "enta",
+        "enta dehydrogenase reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE-catalyzed adenylation of 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid 23dhb",
+        "adenosine triphosphate",
+        "ente",
+        "entecatalyzed adenylation of 23dhb",
+        "enterobactin",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF-catalyzed enterobactin assembly with L-serine",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid 23dhb",
+        "adenosine triphosphate",
+        "ente",
+        "enterobactin",
+        "entf",
+        "entfcatalyzed enterobactin assembly with lserine",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ente",
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb",
+        "23dihydroxybenzoic acid 23dhb",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntC-EntB interaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entcentb interaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed chorismate isomerization",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entccatalyzed chorismate isomerization",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate 23didhb",
+        "entb",
+        "entb isochorismatase reaction",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate 23didhb",
+        "23dihydroxybenzoic acid 23dhb",
+        "enta",
+        "enta dehydrogenase reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE-catalyzed adenylation of 2,3-DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid 23dhb",
+        "adenosine triphosphate",
+        "ente",
+        "entecatalyzed adenylation of 23dhb",
+        "enterobactin",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF-catalyzed enterobactin assembly with L-serine",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid 23dhb",
+        "adenosine triphosphate",
+        "ente",
+        "enterobactin",
+        "entf",
+        "entfcatalyzed enterobactin assembly with lserine",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ente",
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb",
+        "23dihydroxybenzoic acid 23dhb",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntC-EntB interaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entc",
+        "entcentb interaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "release_ready",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "strict_acceptance_eligible": true,
+    "completeness": 0.631579,
+    "missing_anchors": [
+      "NADH",
+      "ATP",
+      "EntD",
+      "EntH",
+      "MenD",
+      "Fur",
+      "LDH"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "7 requested-core anchor(s) matched no admitted process: NADH, ATP, EntD, EntH, MenD, Fur, LDH",
+    "coverage_evaluated": true,
+    "reasons": [],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 3,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "enterobactin",
+      "pyruvate",
+      "NADH",
+      "ATP",
+      "L-serine",
+      "EntC",
+      "EntB",
+      "EntA",
+      "EntE",
+      "EntF",
+      "EntD",
+      "EntH",
+      "MenD",
+      "Fur",
+      "LDH"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+        "2,3-dihydroxybenzoic acid (2,3-DHB)",
+        "enterobactin",
+        "pyruvate",
+        "NADH",
+        "ATP",
+        "L-serine"
+      ],
+      "key_proteins": [
+        "EntC",
+        "EntB",
+        "EntA",
+        "EntE",
+        "EntF",
+        "EntD",
+        "EntH",
+        "MenD",
+        "Fur",
+        "LDH"
+      ],
+      "likely_compartments": [
+        "cytoplasm"
+      ],
+      "main_subprocesses": [
+        "isochorismate synthase (EntC)",
+        "isochorismatase (EntB N-terminal domain)",
+        "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase (EntA)",
+        "2,3-DHB adenylation (EntE)",
+        "non-ribosomal peptide synthesis (EntF)"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results and discussion",
+        "conclusions",
+        "materials and methods"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 2,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:cd637a10d6ea5563",
+        "response_hash": "sha256:240ea290dee5f08f",
+        "raw_chars": 1178,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "empty",
+            "content_chars": 0,
+            "finish_reason": "length",
+            "error": "empty completion from deepseek/deepseek-v4-flash (finish_reason=length)"
+          },
+          {
+            "attempt": 2,
+            "status": "ok",
+            "content_chars": 1178,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "enterobactin",
+      "pyruvate",
+      "L-serine",
+      "EntC",
+      "EntB",
+      "EntA",
+      "EntE",
+      "EntF"
+    ],
+    "unmatched_terms": [
+      "NADH",
+      "ATP",
+      "EntD",
+      "EntH",
+      "MenD",
+      "Fur",
+      "LDH"
+    ],
+    "coverage_ratio": 0.631579,
+    "core_accepted_processes": 8,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 8,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:f09c15518978b96d.sha256:43048aac4d1d8788",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

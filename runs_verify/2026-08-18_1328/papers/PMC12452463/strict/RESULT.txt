@@ -1,0 +1,66 @@
+RESULT: FAIL
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1151.9s (19m11s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are in contract_reports.json
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 4 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]
+issue codes  : gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_enterobactin_synthase_is_missing_a_uniprot_or_drugbank_i, gate.generated_protein_complex_enterobactin_synthase_complex_componen, gate.gate_lifecycle
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: degree_zero_export:1
+[post_normalization_contract_report] gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'RyhB' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_enterobactin_synthase_is_missing_a_uniprot_or_drugbank_i @ /entities/proteins/8: Protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.generated_protein_complex_enterobactin_synthase_complex_componen @ /entities/protein_complexes/0/components/0: Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  blocking_issues = 4
+  compounds = 10
+  contract_errors = 3
+  entities = 28
+  gate_errors = 1
+  proteins = 9
+  reactions = 6
+  runtime_schema_findings = 14
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1391 B)
+  - contract_reports.json  (34250 B)
+  - coverage_summary.json  (2881 B)
+  - final_mapped.json  (168524 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (14921 B)
+  - graph_closure_iterations.json  (3682 B)
+  - initial_stage3_gate_report.json  (14921 B)
+  - merged_payload.json  (43800 B)
+  - quarantine_report.json  (31821 B)
+  - rag_admission_report.json  (371857 B)
+  - removed_entity_report.json  (3318 B)
+  - stage1_payload.json  (22182 B)

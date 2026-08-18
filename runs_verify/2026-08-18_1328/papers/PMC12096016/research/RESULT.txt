@@ -1,0 +1,59 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1275.0s (21m15s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 8
+  entities = 18
+  gate_errors = 1
+  gate_errors_not_blocking = 1
+  gate_review_flags = 1
+  normalization_actions = 4
+  proteins = 7
+  reactions = 5
+  review_flags = 1
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 8, 'b': 0, 'c': 6, 'd': 0}
+  transports = 1
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (939 B)
+  - contract_reports.json  (23352 B)
+  - coverage_summary.json  (3289 B)
+  - final_mapped.json  (155223 B)
+  - final_stage3_gate_report.json  (8658 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (8587 B)
+  - graph_closure_iterations.json  (1324 B)
+  - initial_stage3_gate_report.json  (8587 B)
+  - merged_payload.json  (22217 B)
+  - quarantine_report.json  (14348 B)
+  - rag_admission_report.json  (370284 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (37900 B)
+  - research_pathway_elements.csv  (3941 B)
+  - research_pathway_report.txt  (11220 B)
+  - review_flags.json  (7567 B)
+  - stage1_payload.json  (17612 B)

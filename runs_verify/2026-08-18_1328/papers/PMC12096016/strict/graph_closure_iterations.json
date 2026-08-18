@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "proteins",
+          "name": "Fur",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "EntD",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "Fur",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_escherichia_colicytosol"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "outer membrane state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_escherichia_colicytosol",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+RESULT: FAIL
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : research
+status     : error
+stage      : post_pipeline
+wall time  : 456.8s (7m36s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : Post-pipeline conversion failed: [Errno 22] Invalid argument: 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\data\\id_mapping_cache.json'
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Post-pipeline conversion failed: [Errno 22] Invalid argument: 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\data\\id_mapping_cache.json'
+[Errno 22] Invalid argument: 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\data\\id_mapping_cache.json'
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+
+COUNTS
+----------------------------------------
+  compounds = 8
+  entities = 20
+  proteins = 8
+  reactions = 5
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - mapped_failure_snapshot.json  (567 B)
+  - merged_payload.json  (21859 B)
+  - rag_admission_report.json  (361628 B)
+  - stage1_payload.json  (19224 B)

@@ -1,0 +1,53 @@
+RESULT: FAIL
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 908.3s (15m08s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]
+issue codes  : gate.gate_lifecycle
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: degree_zero_export:1
+
+COUNTS
+----------------------------------------
+  blocking_issues = 1
+  compounds = 14
+  entities = 30
+  gate_errors = 1
+  proteins = 7
+  reactions = 6
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1366 B)
+  - contract_reports.json  (6415 B)
+  - coverage_summary.json  (4026 B)
+  - final_mapped.json  (199583 B)
+  - gap_iteration_summary.json  (66793 B)
+  - gate_fail_report.json  (8965 B)
+  - graph_closure_iterations.json  (1512 B)
+  - initial_stage3_gate_report.json  (8965 B)
+  - merged_payload.json  (48639 B)
+  - quarantine_report.json  (16075 B)
+  - rag_admission_report.json  (386056 B)
+  - removed_entity_report.json  (1174 B)
+  - stage1_payload.json  (26617 B)

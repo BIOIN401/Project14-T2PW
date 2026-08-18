@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "2,3-dihydroxybenzoate",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "DHB-AMP",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "Fe2+",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "EntF",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": true,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "RyhB",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "enterobactin synthase",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase complex",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "2,3-dihydroxybenzoate",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "DHB-AMP",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "Fe2+",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "EntD",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "EntF",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "Escherichia coli cytosol",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "Escherichia coli inner membrane",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 9,
+    "locations": 6,
+    "biological_states": 1
+  }
+}
