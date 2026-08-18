@@ -2561,3 +2561,68 @@ crossed silently.
 
 **Authorized to proceed to `qb` · full Chunk D (`179` — its tree does not carry C-050k) · SMOKE 460**, then
 independent non-author review. The scratch base worktree at `C:\t\c052base` **stays** until after review.
+
+---
+
+## D-047 — `qb` node15 is pre-existing-red under a live database; F-052 registered; it blocks no card · 2026-08-18 · LOCKED
+
+C-056a's `qb` returned **red**: `jobs=23 executed=22/23 additions=0 failed=['node15']`. Outer job 141.29 s,
+125 descendants observed, **125 terminated, 0 survivors**, cleanup success — clean infrastructure, so this is
+a **true test result**, not an infrastructure failure. It was reported red and **not retried**.
+
+`node15` = `tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`.
+
+### 1. It is pre-existing at base. Proven by a three-condition control.
+
+| Condition | node15 |
+|---|---|
+| base `a662c3f`, **no** DB | **passes** |
+| base `a662c3f`, **live** DB | **FAILS** — identical assertion, identical diff |
+| C-056a tip, **live** DB | **FAILS** — identical assertion, identical diff |
+
+**The failure tracks database availability, not the diff.** C-056a's *first* base run passed and it
+**caught that the control was invalid itself** — `C:/t/c056a-base` had no `.env`, so the DB was absent — and
+re-ran it properly. That self-catch is the whole value of F-051 being written down: the invalid control was
+the one that would have produced the comfortable answer.
+
+Payload mutation is excluded as a mechanism by direct measurement: `evaluate_production_semantics` does
+**not** mutate the payload it receives, and `quarantine_and_close` deepcopies before the seam regardless.
+
+### 2. F-052 — a standing tension between D-015 and node15's invariant, visible only with a reachable DB
+
+Node15 asserts the pre-freeze invariant *"processes moved pre-freeze"*. What actually differs between the
+compared artifacts is **compound-name canonicalization** performed by **D-015 pre-freeze compound
+resolution**, rewriting names out of the PathBank database:
+
+* `L-cysteine` → `L-Cysteine`
+* `gamma-glutamylcysteine` → `γ-Glutamylcysteine`
+* `OPC-8:0` → `8-[(1R,2R)-3-oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate`
+
+That stage runs **before** the quarantine seam, and the seam cannot reach either compared artifact. So
+D-015 doing its job is what breaks node15's invariant — **a real product-level tension, not a test bug and
+not a card's regression.** It is invisible on any machine without a configured database, which is why no
+card has ever been charged with it.
+
+**Registered as F-052, UNOWNED.** Neither C-056a nor C-050k may fix it:
+`tests/test_streamlit_quarantine_boundary.py` is **hotspot 9** (no test function may be added, removed,
+renamed or reordered — the gate addresses nodes positionally), and `pwml/compound_resolution.py` is outside
+both boundaries. **Do not let a later card "fix" node15 by weakening the invariant** — the invariant may well
+be right and D-015's scope may be what needs stating.
+
+### 3. Consequence for merges
+
+**A red node15 does not block C-056a or C-050k**, provided each carries its own control showing the failure
+is present at its base under the same database condition. This is merge rule 4's *"failures measured red at
+base"*, not a regression. The `qb` result is otherwise clean: 22 of 23 executed, **additions=0**.
+
+**The accepted pre-existing-red set therefore grows from four to five**, and the fifth is conditional:
+`test_strict_failure_replay.py` ×2 and `test_batch_preflight.py` ×2 unconditionally, plus **`qb` node15
+whenever the database is reachable**. Any card reporting `qb` green on a machine without `.env` has measured
+nothing.
+
+### 4. Three independent cards have now hit F-051
+
+C-050k (6 of 9 focused failures), C-052 (5 base failures that appear **only with** `.env`), and now C-056a
+(an invalid base control it caught itself). **F-051 is no longer a hypothesis about one card's tooling; it
+is the dominant measurement hazard of this pack, and it runs in both directions.** Every base-vs-tip claim
+in this sprint that did not control for database reachability should be treated as unmeasured until it does.
