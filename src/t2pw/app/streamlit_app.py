@@ -2276,6 +2276,22 @@ def _json_artifact_entries(
                 "quarantined_locked_reactions.json",
                 "locked_reaction_quarantine_artifact",
             ),
+            # C-052's ONE rendering entry. It is placed on the post-pipeline side
+            # deliberately: that seam persists nothing (its working directory is
+            # swept before it returns), so this panel is the operator's only route
+            # to its PRE-freeze resolution record. The third export seam's own,
+            # POST-freeze record is reachable as a file on disk and is a different
+            # document, which is why it is not folded in beside this one.
+            #
+            # The download name carries no ``pwml`` prefix, so it cannot be
+            # confused with the CLI's ``pwml_prefreeze_resolution_report.json`` or
+            # with the third seam's ``...streamlit.json``. Three records, three
+            # names, one shape.
+            (
+                "Pre-freeze resolution report",
+                "prefreeze_resolution_report.json",
+                "prefreeze_resolution_report",
+            ),
         ]:
             value = post_artifacts.get(key)
             if value not in (None, "", [], {}):
@@ -3804,6 +3820,53 @@ def run_post_pipeline_sbml_artifacts(
                 "stop_reason": stop_reason,
                 "duration_seconds": loop_duration,
             },
+            # ── C-052 (D-040 §1): ADDITIVE keys, appended. ──────────────────
+            #
+            # Nothing above is renamed, reordered, re-valued or removed -- the
+            # grant is key-ADDITION only, and appending at the end is what makes
+            # that mechanically checkable rather than merely claimed.
+            #
+            # The pre-freeze report was captured above and then DISCARDED, so
+            # ``rename_sources_collapsed`` and every compound-resolution
+            # diagnostic this seam produced were unreachable from the UI while
+            # the CLI (``writer.py``) persisted the same document. These
+            # converge on the CLI's OWN key names -- ``prefreeze_resolution_report``
+            # and ``prefreeze_review_required``.
+            #
+            # THE NAMES MATTER, and not for taste. ``batch/driver.py`` ::
+            # ``_find_pwml_result`` returns the first ``post_pipeline_artifacts``
+            # entry whose key satisfies ``"pwml" in key.lower()`` AS THE PWML
+            # EXPORT RESULT. No key of this dict contains ``pwml`` today, so that
+            # fallback has never fired from here; a key named
+            # ``pwml_prefreeze_resolution_report`` -- the natural "converge on the
+            # CLI's filename" instinct -- would make the batch driver report this
+            # report as the export on every leg whose ``pwml_export_result`` is
+            # empty. The CLI's key carries no ``pwml`` either, so converging on it
+            # is safe by construction rather than by luck.
+            #
+            # The value is the report OBJECT, not a path: this function persists
+            # nothing (its ``tmp`` is swept in ``finally`` below) and every other
+            # ``*_report`` key here is likewise the document itself. The CLI
+            # returns a path under the same name because the CLI writes a file.
+            "prefreeze_resolution_report": prefreeze_resolution_report,
+            "prefreeze_review_required": _safe_dict(
+                prefreeze_resolution_report.get("review_required")
+            ),
+            # A0-C8's observability half. The canonical path cannot be published
+            # as a string a consumer could use: it is built under
+            # ``temp_root / f"post_pipeline_{uuid4().hex}"`` and ``rmtree``'d in
+            # the ``finally`` below, so the absolute value is both unpredictable
+            # and dead by the time anyone reads it. Its NAME and the name of the
+            # file actually handed to the SBML build are the two observables that
+            # outlive the directory -- and A0-C8 records that ``sbml_input_source``
+            # alone is insufficient precisely because it says which *kind* of
+            # payload was used and not which *file* was read.
+            "canonical_json_path_name": (
+                _freeze["canonical_json_path"].name
+                if _freeze["canonical_json_path"] is not None
+                else ""
+            ),
+            "sbml_input_path_name": Path(sbml_input_path).name,
         })
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -4132,6 +4195,49 @@ def run_pwml_export(
         # ``build_pwml_ir`` reads below.
         assert isinstance(prefreeze_resolution_report, dict)
 
+        # ── C-052 (D-040 §§2-4): the record is PERSISTED, right here ────────
+        #
+        # WHERE. Immediately after the seam and BEFORE ``build_pwml_ir``. The
+        # ``except Exception`` at the bottom of this function wraps everything
+        # below, so a failure in the IR build, in the deterministic builder or in
+        # the PWML write would otherwise lose the report entirely -- and the
+        # export that most needs a resolution record is exactly the one that
+        # failed. Written here, the on-disk record survives every return path in
+        # this function, which is why none of the failure returns needs a new key.
+        #
+        # FILENAME. NOT the CLI's. ``writer.py`` writes
+        # ``<out_dir>/pwml_prefreeze_resolution_report.json`` with ``--out-dir``
+        # defaulting to ``outputs``; run from the project root the two writers
+        # would share one file and whichever ran last would win, silently, while
+        # a CLI test pins that exact path. Convergence with the CLI is on the
+        # record's SHAPE, never on a path two writers share.
+        #
+        # ``"seam"``. Mandatory, top level, and applied AFTER the spread so the
+        # label cannot be shadowed by a future report key of the same name. This
+        # call is unambiguously POST-freeze -- it runs on a deepcopy taken after
+        # the hash -- whereas ``run_post_pipeline_sbml_artifacts``'s report
+        # describes a PRE-freeze canonicalization of a different object.
+        # Persisting both under one undifferentiated name would tell the operator
+        # they are the same record. This is LABELLING, not repair: it changes
+        # nothing about what this seam does or is allowed to do, and the
+        # post-freeze placement itself is owned elsewhere.
+        prefreeze_report_path = outputs_dir / "pwml_prefreeze_resolution_report.streamlit.json"
+        prefreeze_report_path.write_text(
+            json.dumps(
+                {**prefreeze_resolution_report, "seam": "post_freeze_refinement_reexport"},
+                indent=2,
+                ensure_ascii=False,
+                default=str,
+            ),
+            encoding="utf-8",
+        )
+        # D-029, as split by D-040 §8: this seam PERSISTS and SURFACES the
+        # verdict. It does not act on it -- no branch here changes whether a PWML
+        # is produced -- so merge rules 6, 7 and 8 are untouched by construction.
+        prefreeze_review_required = _safe_dict(
+            prefreeze_resolution_report.get("review_required")
+        )
+
         pwml_ir, ir_report = build_pwml_ir(
             payload,
             pathway_name=pathway_name,
@@ -4209,6 +4315,16 @@ def run_pwml_export(
             "quarantine_reused": quarantine_reused,
             "reaction_preservation_before_final_export": before_export_report,
             "reaction_preservation_after_final_export": after_export_report,
+            # C-052: SURFACE the record this seam now persists. The CLI's two
+            # key names, carried verbatim, with this function's own established
+            # ``<x>_report`` / ``<x>_report_path`` pairing (the same shape
+            # ``required_gate_report`` / ``required_gate_report_path`` uses above)
+            # so a reader does not have to guess whether a value is a document or
+            # a path. Neither name contains ``pwml`` -- see the note on the
+            # additive keys of ``run_post_pipeline_sbml_artifacts``.
+            "prefreeze_resolution_report": prefreeze_resolution_report,
+            "prefreeze_resolution_report_path": str(prefreeze_report_path),
+            "prefreeze_review_required": prefreeze_review_required,
         }
     except Exception as exc:
         return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,

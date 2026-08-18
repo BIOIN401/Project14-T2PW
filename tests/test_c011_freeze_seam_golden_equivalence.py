@@ -152,6 +152,24 @@ def _leg_projection(seam: Any, leg: Path, work: Path) -> dict[str, Any]:
         "sbml_input_source": result["sbml_input_source"],
         "final_mapped_is_final_mapped_quarantined": final_mapped is result["payload"],
         "tmp_final_canonical_json_written": canonical.exists(),
+        # ── C-052 / A0-C8, cohort half (D-040 §5 part 2) ───────────────────
+        # The projection is GROWTH-ONLY: nothing above is removed, renamed or
+        # re-valued. A0-C8 asks for "the actual ``canonical_json_path`` for all
+        # 39 legs", and ``sbml_input_source`` -- which says which *kind* of
+        # payload was used -- is recorded there as insufficient for it.
+        #
+        # NOT the absolute path. It lives under
+        # ``temp_root / f"post_pipeline_{uuid4().hex}"`` in production and under
+        # a ``TemporaryDirectory`` here, so the string is different on every run
+        # and recording it would make this byte-pinned fixture unregenerable --
+        # it would stop being a fixture and become a nonce. The NAME and the
+        # containment fact are the parts that are properties of the seam.
+        "canonical_json_path_name": (
+            "" if result["canonical_json_path"] is None
+            else Path(result["canonical_json_path"]).name),
+        "canonical_json_path_in_tmp": (
+            result["canonical_json_path"] is not None
+            and Path(result["canonical_json_path"]).parent == tmp),
     }
 
 
@@ -240,11 +258,71 @@ def _with_c030_hash_keys(before: dict[str, Any], after: dict[str, Any]) -> dict[
     return document
 
 
+#: C-052's PROJECTION delta, stated here for the same reason ``_C030_KEYS`` is:
+#: so the fixture stays the document it is named for instead of being quietly
+#: rewritten. The two keys are read off ``canonical_json_path`` -- data the
+#: seam's seven-field return has published since C-011 -- so the SEAM did not
+#: move; only what this harness looks at did. That distinction is the whole
+#: point of writing it as a delta: a fixture regenerated to absorb it would look
+#: identical whether the seam had changed or not.
+#:
+#: Unlike C-030's, this delta appears in BOTH documents -- the base blob writes
+#: ``tmp / "final.canonical.json"`` and assigns it to ``sbml_input_path`` exactly
+#: as the extracted seam assigns it to ``canonical_json_path`` -- so both callers
+#: below go through it, and a base blob that produced a different name or put the
+#: file somewhere else would fail here rather than being papered over.
+_C052_KEYS = ("canonical_json_path_name", "canonical_json_path_in_tmp")
+#: 35 legs freeze a canonical payload; the other 4 are quarantine refusals that
+#: write no file and must therefore report ``""`` / ``False``. Same split as
+#: ``_C030_LEGS``, and asserted rather than assumed.
+_C052_LEGS = 35
+
+
+def _with_c052_path_keys(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    """``before`` plus exactly C-052's projection delta, leg by leg."""
+
+    document = copy.deepcopy(before)
+    written = 0
+    for name, leg in document["legs"].items():
+        produced = after["legs"][name]
+        assert set(produced) - set(leg) == set(_C052_KEYS), name
+        # Not merely "two new keys": the path the seam returns must be the file
+        # it wrote, under the tmp it was given, on exactly the legs that wrote
+        # one. A seam that returned some other path, or the right name from the
+        # wrong directory, or a path on a refusal leg, passes a key-name check
+        # and fails these.
+        wrote = leg["tmp_final_canonical_json_written"]
+        assert produced["canonical_json_path_in_tmp"] is wrote, name
+        assert produced["canonical_json_path_name"] == (
+            "final.canonical.json" if wrote else ""), name
+        assert (produced["sbml_input_source"] == CANONICAL_PAYLOAD_KEY) is wrote, name
+        leg.update({key: produced[key] for key in _C052_KEYS})
+        written += bool(wrote)
+    assert written == _C052_LEGS, written
+    return document
+
+
+def _without_c052_path_keys(document: dict[str, Any]) -> dict[str, Any]:
+    """``document`` reduced to the 9-field projection the FIXTURE stores.
+
+    The regeneration path below writes this, so ``__main__`` can never silently
+    move the fixture by the delta above -- which is precisely the "regenerate to
+    absorb it" failure the delta exists to prevent.
+    """
+
+    stripped = copy.deepcopy(document)
+    for leg in stripped["legs"].values():
+        for key in _C052_KEYS:
+            leg.pop(key, None)
+    return stripped
+
+
 def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> None:
     after = _document(None)
     before = json.loads(_fixture_bytes())
     assert _serialize(before) == _fixture_bytes(), "the fixture is no longer its own bytes"
-    expected = _serialize(_with_c030_hash_keys(before, after))
+    expected = _serialize(
+        _with_c052_path_keys(_with_c030_hash_keys(before, after), after))
     assert _serialize(after) == expected
     declared = [e["path"] for e in json.loads(MANIFEST.read_text(encoding="utf-8"))["legs"]]
     assert sorted(after["legs"]) == sorted(declared) == sorted(set(declared))
@@ -261,10 +339,16 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
 
 
 def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
-    first = _serialize(_document(BASE_SHA))
+    base = _document(BASE_SHA)
+    before = json.loads(_fixture_bytes())
+    # The base blob's own document IS the fixture plus exactly C-052's projection
+    # delta -- proved through the same helper the tip goes through, so the two
+    # sides cannot drift apart -- and the fixture bytes themselves never move.
+    assert _serialize(base) == _serialize(_with_c052_path_keys(before, base))
+    first = _serialize(_without_c052_path_keys(base))
     assert first == _fixture_bytes()
-    assert _serialize(_document(BASE_SHA)) == first
+    assert _serialize(_without_c052_path_keys(_document(BASE_SHA))) == first
 
 
 if __name__ == "__main__":  # regeneration, documented in the module docstring
-    FIXTURE.write_bytes(_serialize(_document(BASE_SHA)))
+    FIXTURE.write_bytes(_serialize(_without_c052_path_keys(_document(BASE_SHA))))
