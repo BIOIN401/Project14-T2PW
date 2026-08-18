@@ -1303,6 +1303,20 @@ Effect: a duplicate protein `/entities/proteins/6` `Isochorismatase (EntB)` bear
 `P0ADI4` as `/entities/proteins/1` EntB**, a duplicate compound, and a duplicate reaction.
 `normalization_stats`: `n_entities_deduped: 0`.
 
+**ORCHESTRATOR RE-DERIVATION 2026-08-18, independent of the adjudication.** Read directly from
+`runs_verify/2026-08-18_1328/papers/PMC12096016/strict/rag_admission_report.json`:
+`counts = {considered: 339, rejected: 337, accepted: 2}`, and the two accepted records are identical in
+substance — same reaction `"Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)"`, same
+`enzymes: ["Isochorismatase (EntB)"]`, same `source_paper.source_id: "PMC12452463"`, same
+`reasons: ["fills_named_gap_directly: via isochorismate"]` — **differing only in `gap_id`**:
+`gap-dangling_reaction-555124de` and `gap-dangling_reaction-7e0b4a06`.
+
+**That sharpens the affected surface.** The defect is in two places, not one: the **gap detector** minted
+**two distinct gap ids for a single dangling edge**, and the **admission gate has no cross-gap dedup**, so
+one span satisfying two ids is admitted twice. A card fixing only the admission gate would still leave the
+detector double-counting gaps; a card fixing only the detector would leave the gate admissible to any future
+duplicate-id case. **Both halves must be named in the charter.**
+
 **The gap it "filled" was not a gap** — the paper's own `/processes/reactions/1` already covers
 isochorismate → 2,3-diDHB. The detector fired twice on one dangling edge and admitted the same span twice.
 
