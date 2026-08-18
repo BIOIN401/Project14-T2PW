@@ -830,10 +830,30 @@ def test_writer_serializes_each_proteins_resolved_species() -> None:
 # base records nothing at all on this path. Measured over the 32 committed legs:
 # **61 live ``resolve_entity`` consultations through an ambiguous alias key across
 # 8 legs**, 20 of them same-type, with ``ambiguous_entity_reference`` **empty on
-# all 8** (``evidence/c050k_census_prechange.json``). Every arm below therefore
-# fails at base ``15f36b4`` and passes at the tip, proved by
-# ``probe_c050k_alias_ambiguity.py --mode g9`` run in a real git worktree at the
-# base SHA, never an export (**F-042**).
+# all 8** (``evidence/c050k_census_prechange.json``).
+#
+# **FIVE of the eight arms below fail at base ``15f36b4`` and pass at the tip**, and
+# they are what discharges G9. They are the arms that assert the diagnostic is
+# PRESENT: ``..._is_recorded_and_the_binding_does_not_move``,
+# ``..._is_a_warning_and_never_moves_report_ok``,
+# ``..._is_recorded_in_both_payload_row_orders``,
+# ``..._cross_type_ambiguity_is_recorded_and_preference_still_decides`` and
+# ``..._row_code_is_distinct_from_the_entity_type_code``. Measured in a real git
+# worktree at the base SHA, never an export (**F-042**), and re-measured with
+# ``.env`` copied in so the DB condition matched the tip exactly (**F-051**):
+# identical either way, so the base failure is real and DB-independent.
+#
+# **The other THREE pass at base as well as at the tip and are NOT G9 proofs.** Each
+# asserts an ABSENCE, which is trivially true where the code does not exist, so
+# presenting them as base failures would be the mislabelling G9 calls an automatic
+# reject (**D-046 section 1**). They are labelled individually below.
+#
+# **CORRECTED 2026-08-17, correction round 1.** This block previously said *every*
+# arm fails at base. That was false for those three, and this card's OWN committed
+# evidence said so: ``evidence/c050k_g9_base.json`` records
+# ``claim_3_silent_on_slot_duplication: true`` measured AT BASE. The probe cited
+# here never proved what the sentence claimed, and an over-broad G9 sentence is how
+# a card's real proof stops being checkable.
 #
 # **All 20 adjudicated bindings were biologically CORRECT** (D-043 section 1).
 # Nothing here claims a mis-binding and nothing rebinds: the violation is
@@ -953,6 +973,7 @@ def test_c050k_alias_ambiguity_is_a_warning_and_never_moves_report_ok() -> None:
     assert clean_report["ok"] is True
 
 
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
 def test_c050k_slot_duplicated_single_entity_raises_no_ambiguity() -> None:
     """NEW ARM, and the arm that makes the guard NON-VACUOUS.
 
@@ -995,6 +1016,7 @@ def test_c050k_alias_ambiguity_is_recorded_in_both_payload_row_orders() -> None:
         assert issues[0]["bound_entity_name"] == expected_name
 
 
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
 def test_c050k_no_overlap_emits_no_ambiguity_at_all() -> None:
     """NEW ARM, control. Two rows that share nothing must stay silent, so a green
     arm above is not just "the diagnostic fires on everything"."""
@@ -1046,6 +1068,7 @@ def test_c050k_row_code_is_distinct_from_the_entity_type_code() -> None:
                    for issue in report["errors"] + report["warnings"])
 
 
+# REGRESSION GUARD (passes at base and tip) -- not a G9 proof.
 def test_c050k_unresolved_reference_path_is_unchanged() -> None:
     """NEW ARM, boundary. A name matching nothing must still produce exactly the
     pre-existing ``unresolved_entity_reference`` error and no row diagnostic: this
