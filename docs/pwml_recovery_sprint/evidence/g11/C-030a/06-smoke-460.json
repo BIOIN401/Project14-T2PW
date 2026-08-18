@@ -1,0 +1,136 @@
+{
+  "label": "smoke-460",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c030a-sharing/docs/pwml_recovery_sprint/evidence/g11/pin/C-030a/06-smoke-460.pin.json",
+    "-q",
+    "--basetemp=C:/t/c30a/sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c030a-sharing",
+  "started_at": "2026-08-18T14:46:11+00:00",
+  "finished_at": "2026-08-18T14:46:48+00:00",
+  "duration_seconds": 36.583221500000036,
+  "timeout_seconds": 1800.0,
+  "root_pid": 33692,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 39452,
+      "name": "python.exe",
+      "ppid": 33692
+    },
+    {
+      "pid": 43712,
+      "name": "python.exe",
+      "ppid": 39452
+    },
+    {
+      "pid": 12736,
+      "name": "python.exe",
+      "ppid": 43748
+    },
+    {
+      "pid": 43748,
+      "name": "python.exe",
+      "ppid": 39452
+    },
+    {
+      "pid": 42388,
+      "name": "python.exe",
+      "ppid": 42584
+    },
+    {
+      "pid": 42584,
+      "name": "python.exe",
+      "ppid": 39452
+    },
+    {
+      "pid": 30748,
+      "name": "python.exe",
+      "ppid": 43348
+    },
+    {
+      "pid": 43348,
+      "name": "python.exe",
+      "ppid": 39452
+    }
+  ],
+  "descendants_terminated": [
+    12736,
+    30748,
+    39452,
+    42388,
+    42584,
+    43348,
+    43712,
+    43748
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 2868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 10760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 43380,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c030a-sharing/docs/pwml_recovery_sprint/evidence/g11/C-030a/06-smoke-460.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c030a-sharing\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c030a-sharing",
+    "repo_head": "01bb7eff2d1fb07e7ab7a7ebfe4e3403e71757c5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "boundary": "src/t2pw/app/streamlit_app.py::run_post_pipeline_sbml_artifacts. NOT freeze_canonical_payload: F-008 proved A0-C7 undischargeable there, so a test written against it would be vacuous by construction.",
+  "mutant_matrix": [
+    {
+      "case": "copy_at_final_mapped",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "final_mapped_aliases_the_canonical_object"
+      ]
+    },
+    {
+      "case": "copy_at_final_mapped_quarantined",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "final_mapped_quarantined_aliases_the_canonical_object"
+      ]
+    },
+    {
+      "case": "copy_at_final_export_input",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "final_export_input_aliases_the_canonical_object"
+      ]
+    },
+    {
+      "case": "copy_at_canonical_payload_key",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "artifact_set_publishes_the_object_the_seam_returned",
+        "final_export_input_aliases_the_canonical_object",
+        "final_mapped_aliases_the_canonical_object",
+        "final_mapped_quarantined_aliases_the_canonical_object"
+      ]
+    },
+    {
+      "case": "copy_at_seam_binding",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "artifact_set_publishes_the_object_the_seam_returned"
+      ]
+    },
+    {
+      "case": "unmutated_tip",
+      "refusal_arm": false,
+      "refusal_arm_clauses_broken": [
+        "a_refusal_is_reported_as_one",
+        "a_refusal_publishes_no_canonical_payload",
+        "refusal_final_export_input_is_the_pre_seam_object",
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": []
+    },
+    {
+      "case": "refusal_arm_unmutated",
+      "refusal_arm": true,
+      "refusal_arm_clauses_broken": [],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "final_export_input_aliases_the_canonical_object",
+        "final_mapped_aliases_the_canonical_object"
+      ]
+    },
+    {
+      "case": "refusal_arm_copy_at_final_mapped",
+      "refusal_arm": true,
+      "refusal_arm_clauses_broken": [
+        "refusal_final_mapped_is_the_pre_seam_object"
+      ],
+      "success_arm_clauses_broken": [
+        "a_mutation_through_one_alias_is_visible_through_all",
+        "final_export_input_aliases_the_canonical_object",
+        "final_mapped_aliases_the_canonical_object"
+      ]
+    }
+  ],
+  "requirement": "A0-C7 -- object sharing across the freeze seam, proved not assumed",
+  "sites": {
+    "discriminator": {
+      "delta_vs_f041": 14,
+      "delta_vs_orchestrator_pre_c052": 16,
+      "f041_recorded_line": 3748,
+      "line": 3762,
+      "note": "C-052 merged 116 lines into this file after the orchestrator's re-measurement, so both prior figures are stale. This is the value measured in this worktree.",
+      "orchestrator_pre_c052_line": 3746,
+      "source": "\"final_mapped\": canonical_export_payload or final_export_payload,"
+    },
+    "measured_lines": {
+      "canonical_payload_key": 3710,
+      "enriched_republication": 3764,
+      "final_export_input": 3765,
+      "final_mapped": 3762,
+      "final_mapped_quarantined": 3720,
+      "seam_binding": 3648
+    }
+  },
+  "task": "C-030a",
+  "test_only_certification": {
+    "app_source_identical": true,
+    "base_sha": "01bb7eff2d1fb07e7ab7a7ebfe4e3403e71757c5",
+    "function_ast_hashes": {
+      "freeze_canonical_payload": {
+        "base": "fa43abb6c3e22632df086ef7883aff99a53d62c4dfead24f5d6db02e2c7c48af",
+        "equal": true,
+        "tip": "fa43abb6c3e22632df086ef7883aff99a53d62c4dfead24f5d6db02e2c7c48af"
+      },
+      "run_post_pipeline_sbml_artifacts": {
+        "base": "c19f506fb789e0734d09bc1157e0cf2a96711bac435d2bb216c4af00fcef0bc9",
+        "equal": true,
+        "tip": "c19f506fb789e0734d09bc1157e0cf2a96711bac435d2bb216c4af00fcef0bc9"
+      }
+    },
+    "g9_classification": "guard_on_pre_existing_behaviour_passing_at_base",
+    "g9_note": "No base failure is claimed or offered. The production source is identical at base and tip, so every green here is a green at base by construction; manufacturing a base failure would be a fabrication. What is new is the DISCHARGE of A0-C7, not a capability. Same split as C-052's test_a0c8_guard_* names.",
+    "src_files_changed_base_to_head": [],
+    "src_is_untouched": true
+  }
+}
