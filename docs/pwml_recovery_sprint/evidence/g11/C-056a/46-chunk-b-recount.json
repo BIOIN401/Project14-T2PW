@@ -1,0 +1,131 @@
+{
+  "label": "chunk-b-recount",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056a-semantic-gating",
+    "--pin-verdict",
+    "C:/t/c056a/chunkb_recount_pin.json",
+    "-q",
+    "--basetemp=C:/t/c056a/chunkb2",
+    "--no-header",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+  "started_at": "2026-08-18T01:24:01+00:00",
+  "finished_at": "2026-08-18T01:24:27+00:00",
+  "duration_seconds": 26.030364599999984,
+  "timeout_seconds": 1800.0,
+  "root_pid": 51640,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 52848,
+      "name": "python.exe",
+      "ppid": 51640
+    },
+    {
+      "pid": 53036,
+      "name": "python.exe",
+      "ppid": 53048
+    },
+    {
+      "pid": 53048,
+      "name": "python.exe",
+      "ppid": 52848
+    },
+    {
+      "pid": 49128,
+      "name": "python.exe",
+      "ppid": 52848
+    },
+    {
+      "pid": 52756,
+      "name": "python.exe",
+      "ppid": 49128
+    },
+    {
+      "pid": 46156,
+      "name": "python.exe",
+      "ppid": 52848
+    },
+    {
+      "pid": 53168,
+      "name": "python.exe",
+      "ppid": 46156
+    },
+    {
+      "pid": 41976,
+      "name": "python.exe",
+      "ppid": 52848
+    },
+    {
+      "pid": 44756,
+      "name": "python.exe",
+      "ppid": 41976
+    }
+  ],
+  "descendants_terminated": [
+    41976,
+    44756,
+    46156,
+    49128,
+    52756,
+    52848,
+    53036,
+    53048,
+    53168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 33716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 52580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 52620,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-056a/46-chunk-b-recount.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056a-semantic-gating",
+    "repo_head": "b1369736b6a9906b576a967ab02709b83ae9c218",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
