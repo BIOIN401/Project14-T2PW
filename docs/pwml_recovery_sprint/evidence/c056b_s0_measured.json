@@ -1,0 +1,1216 @@
+{
+  "claim_1_and_2_tally": {
+    "gold_derived": {
+      "connected_core_failing_legs": 0,
+      "gating_evaluable_count_distribution": {
+        "1": 1,
+        "3": 31
+      },
+      "legs": 32,
+      "live_verdict_distribution": {
+        "failed": 9,
+        "passed": 23
+      },
+      "newly_demoted_if_connected_core_gated": [],
+      "newly_demoted_if_source_carrier_gated": [
+        "runs_verify/2026-08-04_1358/papers/PMC12096016/research"
+      ],
+      "rule_restatement_agrees_everywhere": true,
+      "source_carrier_failing_legs": 1
+    },
+    "pathway_context_none": {
+      "connected_core_failing_legs": 0,
+      "gating_evaluable_count_distribution": {
+        "1": 32
+      },
+      "legs": 32,
+      "live_verdict_distribution": {
+        "failed": 7,
+        "passed": 25
+      },
+      "newly_demoted_if_connected_core_gated": [],
+      "newly_demoted_if_source_carrier_gated": [
+        "runs_verify/2026-08-04_1358/papers/PMC12096016/research"
+      ],
+      "rule_restatement_agrees_everywhere": true,
+      "source_carrier_failing_legs": 1
+    }
+  },
+  "claim_3_manifest_census": {
+    "manifest_rows": 143,
+    "rows_carrying_release_status": 0,
+    "semantic_evaluation_distribution": {},
+    "strict_acceptance_eligible_distribution": {}
+  },
+  "claim_4_classifier_invariant": {
+    "cases": 32,
+    "failed_semantics_never_strict_eligible": true,
+    "note": "the half of the hazard that already holds at base: a FAILED verdict caps at review_required, and strict_acceptance_eligible == (status == release_ready)",
+    "violations": []
+  },
+  "gating_set_measured": [
+    "requested_pathway_anchors_present",
+    "organism_compatible",
+    "no_real_id_or_name_conflict",
+    "no_rejected_rag_reaction_reintroduced"
+  ],
+  "min_core_processes_used": 1,
+  "payload_legs_measured": 32,
+  "per_leg": [
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "requested_pathway_anchors_present",
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "mode": "strict",
+      "paper_id": "PMC12312563"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+      "mode": "strict",
+      "paper_id": "PMC12444477"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+      "mode": "strict",
+      "paper_id": "PMC13278307"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/research",
+      "mode": "research",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+      "mode": "strict",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/research",
+      "mode": "research",
+      "paper_id": "PMC12180156"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+      "mode": "strict",
+      "paper_id": "PMC12180156"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/research",
+      "mode": "research",
+      "paper_id": "PMC12444477"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+      "mode": "strict",
+      "paper_id": "PMC12444477"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12452463/research",
+      "mode": "research",
+      "paper_id": "PMC12452463"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+      "mode": "strict",
+      "paper_id": "PMC12782028"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/research",
+      "mode": "research",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+      "mode": "strict",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "requested_pathway_anchors_present"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+      "mode": "strict",
+      "paper_id": "PMC13231680"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "requested_pathway_anchors_present"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1148/papers/PMC13231680/research",
+      "mode": "research",
+      "paper_id": "PMC13231680"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+      "mode": "strict",
+      "paper_id": "PMC12452463"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+      "mode": "strict",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12856317/strict",
+      "mode": "strict",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+      "mode": "research",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+      "mode": "research",
+      "paper_id": "PMC12452463"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": false,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": false,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+      "mode": "research",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1504/papers/PMC12856317/strict",
+      "mode": "strict",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1647/papers/PMC12856317/strict",
+      "mode": "strict",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+      "mode": "research",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+      "mode": "strict",
+      "paper_id": "PMC12096016"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/research",
+      "mode": "research",
+      "paper_id": "PMC12180156"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+      "mode": "strict",
+      "paper_id": "PMC12180156"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+      "mode": "research",
+      "paper_id": "PMC12452463"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [
+            "no_real_id_or_name_conflict"
+          ],
+          "live_verdict": "failed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "failed",
+          "verdict_if_source_carrier_gated": "failed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+      "mode": "strict",
+      "paper_id": "PMC12452463"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+      "mode": "research",
+      "paper_id": "PMC12782028"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/research",
+      "mode": "research",
+      "paper_id": "PMC12856317"
+    },
+    {
+      "arms": {
+        "gold_derived": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "requested_pathway_anchors_present",
+            "organism_compatible",
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 3,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        },
+        "pathway_context_none": {
+          "connected_core_ok": true,
+          "counterfactual_rule_agrees_with_live": true,
+          "gating_evaluable": [
+            "no_real_id_or_name_conflict"
+          ],
+          "gating_evaluable_count": 1,
+          "live_failed_checks": [],
+          "live_verdict": "passed",
+          "source_carrier_ok": true,
+          "verdict_if_connected_core_gated": "passed",
+          "verdict_if_source_carrier_gated": "passed"
+        }
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict",
+      "mode": "strict",
+      "paper_id": "PMC12856317"
+    }
+  ],
+  "purpose": "section 0 measurement, before any edit (D-033)",
+  "release_ready_constant": "release_ready",
+  "root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators",
+  "task": "C-056b"
+}

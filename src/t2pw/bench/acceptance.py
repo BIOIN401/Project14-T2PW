@@ -71,6 +71,13 @@ from t2pw.bench.semantic import (
     SemanticReport,
     validate_semantic_coverage,
 )
+# The runtime verdict's own vocabulary, single-sourced. ``bench`` sits ABOVE
+# ``pipeline``, so this is the layering's forward direction, not the inversion
+# ``strict_quarantine`` had to declare; ``bench/render.py:23`` already imports
+# from here at module level. Only the FAILED constant is taken: the affirmative
+# states are deliberately not named in this module (see
+# ``ModeResult.runtime_semantic_refuted``).
+from t2pw.pipeline.release_status import SEMANTIC_FAILED as _RUNTIME_SEMANTIC_FAILED
 
 
 MODE_STRICT = "strict"
@@ -188,6 +195,65 @@ class ModeResult:
 
         record = self.release_status
         return isinstance(record, dict) and record.get("strict_acceptance_eligible") is True
+
+    @property
+    def runtime_semantic_evaluation(self) -> str:
+        """The RUNTIME semantic verdict this leg recorded at freeze time, or ``""``.
+
+        Three-valued (``passed`` / ``failed`` / ``not_evaluated``) and read
+        verbatim -- this module scores runs, it does not classify them. ``""``
+        means the row carried no classification at all, which is a fourth thing
+        and never any of the three.
+        """
+
+        record = self.release_status
+        if not isinstance(record, dict):
+            return ""
+        return str(record.get("semantic_evaluation") or "")
+
+    @property
+    def runtime_semantic_failed_checks(self) -> List[str]:
+        """The gating checks the runtime recorded as FAILED, by name.
+
+        C-056b persisted these (``release_status.ReleaseStatus``); before that
+        they existed only inside a ``reasons`` string. They are the EVIDENCE
+        behind a missed confirmation, never the trigger for one -- see
+        :attr:`runtime_semantic_refuted`, which is what the denominators read.
+        """
+
+        record = self.release_status
+        if not isinstance(record, dict):
+            return []
+        return [str(name) for name in (record.get("semantic_failed_checks") or []) if name]
+
+    @property
+    def runtime_semantic_refuted(self) -> bool:
+        """The runtime measured a gating semantic check as FAILED on this leg.
+
+        THERE IS DELIBERATELY NO AFFIRMATIVE TWIN OF THIS PROPERTY, and that
+        absence is the whole safeguard. A runtime ``passed`` is NOT evidence that
+        a pathway is semantically right: the gating set is closed at four, but
+        ``CHECK_RAG_REINTRODUCTION`` is structurally unevaluable at the
+        quarantine seam (``quarantine_and_close`` takes no ``admission``
+        parameter, D-042 section 4), and ``CHECK_ANCHORS`` / ``CHECK_ORGANISM``
+        evaluate only under a derivation that supplies them. Measured on the 32
+        committed payload legs (``evidence/c056b_s0_measured.json``): under the
+        seam's own ``pathway_context`` derivation **every one of the 32 had
+        exactly ONE evaluable gating check**, and 25 of them answered ``passed``
+        on that single check. Serialized as a bare string, that ``passed`` is
+        indistinguishable from a four-of-four pass.
+
+        So the runtime verdict enters the benchmark in ONE direction only. It
+        can REMOVE a success -- a leg the product itself recorded as
+        semantically refuted is not confirmed, whatever a re-scoring says -- and
+        it can never ADD one. The affirmative case has no accessor to reach for,
+        so a later reader cannot turn a one-of-four pass into a numerator by
+        picking the convenient property. ``bench.semantic``'s ``confirmed``
+        stays the only source of a semantic PASS, and it already requires that
+        every check was evaluable.
+        """
+
+        return self.runtime_semantic_evaluation == _RUNTIME_SEMANTIC_FAILED
 
     @property
     def extracted(self) -> bool:
@@ -657,7 +723,33 @@ def _build_denominators(report: AcceptanceReport, gold_set: GoldSet) -> None:
                 # run at all counts as a success. `confirmed` additionally
                 # requires that every check WAS evaluable, which is the only
                 # honest reading of "this pathway is semantically right".
-                if chosen.semantic.confirmed:
+                #
+                # AND the run's own recorded verdict, in the SUBTRACTIVE
+                # direction only (C-056b). Two evaluations exist now and they can
+                # disagree: this one re-scores the stored payload against the
+                # gold case, while `runtime_semantic_refuted` reports what the
+                # pipeline measured on the reduced strict graph at freeze time,
+                # under its own pinned request derivation. A leg the product
+                # itself classified as semantically refuted is not "confirmed",
+                # whatever a re-scoring concludes -- PRODUCT_CONTRACT 11 makes
+                # the runtime `release_status` the place the semantic states
+                # live, and a benchmark that overrode it upward would be scoring
+                # a pathway the product declined to vouch for.
+                #
+                # It can only ever REMOVE a success. A runtime `passed` is not
+                # consulted anywhere and has no accessor: measured, every one of
+                # the 32 committed payload legs had exactly ONE of the four
+                # gating checks evaluable at this seam, so `passed` there means
+                # "the one check that could run, ran clean" and reading it as a
+                # numerator would inflate this rate outright. `not_evaluated`
+                # neither adds nor removes -- it is never `false`.
+                #
+                # The paper STAYS in the population either way: a refuted leg is
+                # a miss, not an exclusion, and moving it out of the denominator
+                # would improve the rate by deleting the evidence against it.
+                # Which checks the runtime named travels per leg, verbatim, in
+                # ``ModeResult.to_dict()["release_status"]["semantic_failed_checks"]``.
+                if chosen.semantic.confirmed and not chosen.runtime_semantic_refuted:
                     semantic_ok.append(pid)
             else:
                 excluded_semantic.append(
@@ -708,7 +800,16 @@ def _build_denominators(report: AcceptanceReport, gold_set: GoldSet) -> None:
             if research_leg.deliverable:
                 research_produced.append(pid)
             semantic = research_leg.semantic
-            if research_leg.deliverable and semantic is not None and semantic.confirmed:
+            # Same subtractive rule as the semantic denominator above, on the
+            # same grounds and in the same direction: a leg the runtime recorded
+            # as semantically refuted is not "scientifically confirmed", and a
+            # runtime pass is not consulted.
+            if (
+                research_leg.deliverable
+                and semantic is not None
+                and semantic.confirmed
+                and not research_leg.runtime_semantic_refuted
+            ):
                 priority_errors = (
                     semantic.scientific_errors.get(ERR_FALSE_REAL_IDENTIFIERS, 0)
                     + semantic.scientific_errors.get(ERR_UNSUPPORTED_REACTIONS, 0)
@@ -738,7 +839,12 @@ def _build_denominators(report: AcceptanceReport, gold_set: GoldSet) -> None:
     )
     report.denominators[DENOM_SEMANTIC] = Denominator(
         key=DENOM_SEMANTIC,
-        question="Of the relevant papers with a scorable payload, how many were CONFIRMED -- every check passed and every check was evaluable?",
+        question=(
+            "Of the relevant papers with a scorable payload, how many were CONFIRMED -- every "
+            "check passed, every check was evaluable, and the run itself did not record a "
+            "FAILED runtime semantic verdict? The runtime verdict can only REMOVE a "
+            "confirmation here; a runtime pass is never counted as one."
+        ),
         population="relevant gold cases with at least one scorable payload",
         numerator_names=semantic_ok,
         denominator_names=semantic_pool,
@@ -762,7 +868,11 @@ def _build_denominators(report: AcceptanceReport, gold_set: GoldSet) -> None:
     )
     report.denominators[DENOM_RESEARCH_CONFIRMED] = Denominator(
         key=DENOM_RESEARCH_CONFIRMED,
-        question="Of those, how many are scientifically CONFIRMED -- deliverable produced, every semantic check passed AND evaluable, and no priority-1..3 error?",
+        question=(
+            "Of those, how many are scientifically CONFIRMED -- deliverable produced, every "
+            "semantic check passed AND evaluable, no priority-1..3 error, and no FAILED "
+            "runtime semantic verdict recorded by the run itself?"
+        ),
         population="relevant gold cases with an attempted research leg",
         numerator_names=research_ok,
         denominator_names=research_pool,

@@ -1,0 +1,128 @@
+{
+  "task": "C-056b",
+  "purpose": "literal pytest COUNTS and verbatim summary lines for every gate -- bounded_run records exit codes but NOT stdout (D-049), and 'SMOKE exactly 460' is merge gate 10, which an exit code cannot certify",
+  "base_sha": "01bb7eff2d1fb07e7ab7a7ebfe4e3403e71757c5",
+  "gates": {
+    "smoke": {
+      "expected_per_TEST_MATRIX": 460,
+      "measured": 460,
+      "matches_expected": true,
+      "failures": 0,
+      "summary_line_verbatim": "460 passed in 27.49s",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/13-smoke-460-final.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/13-smoke-460-final.pin.json",
+      "note": "run twice; the earlier run at 06-smoke-460.json also measured 460 ('460 passed in 27.97s'). The final run is at the exact committed tree."
+    },
+    "chunk_b": {
+      "expected_per_TEST_MATRIX": 225,
+      "measured": 225,
+      "matches_expected": true,
+      "failures": 0,
+      "summary_line_verbatim": "225 passed in 22.82s",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/14-chunk-b-final.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/14-chunk-b-final.pin.json",
+      "note": "run twice; the earlier run at 05-chunk-b.json also measured 225 ('225 passed in 22.79s')."
+    },
+    "chunk_e": {
+      "expected_per_TEST_MATRIX": "parameterized over runs/; D-049 records the figure 174",
+      "measured": 174,
+      "matches_expected": true,
+      "failures": 0,
+      "summary_line_verbatim": "174 passed in 100.20s (0:01:40)",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/12-chunk-e.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/12-chunk-e.pin.json",
+      "note": "NOT a mandated gate for this card. Run anyway because strict_quarantine.py changed and Chunk E replays committed quarantine artifacts; no production code validates the report schema_version, and the replay is green."
+    },
+    "focused_no_chunk": {
+      "measured": 127,
+      "failures": 0,
+      "summary_line_verbatim": "127 passed in 12.73s",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/11-focused-nochunk-2.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/11-focused-nochunk-2.pin.json",
+      "files": [
+        "tests/test_c056b_semantic_denominators.py",
+        "tests/test_release_status_classification.py",
+        "tests/test_semantic_release_gating.py",
+        "tests/test_strict_quarantine_release_seam.py",
+        "tests/test_semantic_production_no_gold.py",
+        "tests/test_batch_driver_seam_golden.py",
+        "tests/test_batch_pwml_artifact_naming.py",
+        "tests/test_batch_driver_quarantine_artifacts.py",
+        "tests/test_deadline_leg_timeout.py",
+        "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py"
+      ],
+      "chunk_membership": "all ten belong to NO chunk (F-049). Verified mechanically: each filename occurs 0 times in TEST_MATRIX.md and 0 times in evidence/chunk_d_gate.py.",
+      "contains_c053_regression_suite": [
+        "tests/test_batch_driver_seam_golden.py",
+        "tests/test_batch_pwml_artifact_naming.py"
+      ],
+      "contains_c056a_regression_suite": [
+        "tests/test_semantic_release_gating.py",
+        "tests/test_strict_quarantine_release_seam.py"
+      ],
+      "first_run": {
+        "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/07-focused-nochunk.json",
+        "summary_line_verbatim": "1 failed, 126 passed in 13.63s",
+        "the_one_failure": "tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha",
+        "disposition": "REPORTED RED, then resolved as a merge rule 4 baseline move with an exact documented delta -- see c056b_golden_delta.json. Not hidden, not deselected, not retried for green."
+      }
+    },
+    "new_tests_at_tip": {
+      "measured": 9,
+      "failures": 0,
+      "summary_line_verbatim": "9 passed in 0.87s",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/02-g9-tip.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/02-g9-tip.pin.json"
+    }
+  },
+  "g9_base_measurement": {
+    "method": "TWO independent controls, both holding .env constant (F-051).",
+    "control_1_real_base_worktree": {
+      "tree": "C:/t/c56bbase",
+      "sha": "01bb7eff2d1fb07e7ab7a7ebfe4e3403e71757c5",
+      "env_control": ".env COPIED IN so both arms are equal (D-046 section 3 blesses copying it as a control, never as a fix). A worktree cut from a SHA never carries .env.",
+      "summary_line_verbatim": "5 failed, 4 passed in 1.39s",
+      "tree_line_verbatim": "T2PW: C:\\t\\c56bbase\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/03-g9-base-worktree.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/03-g9-base-worktree.pin.json"
+    },
+    "control_2_same_tree_file_swap": {
+      "tree": "the card's own worktree, unchanged",
+      "method": "F-051's standing remedy: hold the tree constant and swap ONLY the files under test. git checkout 01bb7ef -- src/t2pw/bench/acceptance.py src/t2pw/pipeline/release_status.py src/t2pw/pipeline/strict_quarantine.py, run, restore.",
+      "summary_line_verbatim": "5 failed, 4 passed in 0.91s",
+      "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056b-denominators\\src\\t2pw\\__init__.py",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056b/04-g9-sametree-swap.json",
+      "pin_verdict": "docs/pwml_recovery_sprint/evidence/g11/pin/C-056b/04-g9-sametree-swap.pin.json"
+    },
+    "controls_agree": true,
+    "per_node_at_base": {
+      "test_g9_a_runtime_refuted_leg_is_not_a_semantic_success": "FAILED -- AssertionError: assert 'PMC12657337' not in ['PMC12657337']. G9 CORRECTION PROOF: a real behavioural failure, every symbol present, NOT a collection error and NOT symbol absence.",
+      "test_g9_a_runtime_refuted_research_leg_is_not_scientifically_confirmed": "FAILED -- AssertionError: assert 'PMC12444477' not in ['PMC12444477']. G9 CORRECTION PROOF, same class.",
+      "test_regression_guard_a_runtime_pass_never_creates_a_semantic_success": "PASSED at base",
+      "test_regression_guard_not_evaluated_and_an_absent_record_never_demote": "PASSED at base",
+      "test_regression_guard_the_strict_denominator_stays_affirmative_and_unmoved": "PASSED at base",
+      "test_regression_guard_a_non_gating_check_still_cannot_demote": "PASSED at base",
+      "test_new_acceptance_the_failed_gating_checks_are_persisted_by_name": "FAILED at base with AttributeError (ReleaseStatus has no semantic_failed_checks). NEW ACCEPTANCE -- symbol absence, explicitly NOT offered as a G9 proof.",
+      "test_new_acceptance_the_names_are_coherent_with_the_verdict": "FAILED at base with AttributeError. NEW ACCEPTANCE -- not offered as proof.",
+      "test_new_acceptance_the_scorer_reads_the_persisted_names": "FAILED at base with AttributeError. NEW ACCEPTANCE -- not offered as proof."
+    },
+    "label_honesty": "The four REGRESSION GUARD labels say 'passes at base and tip' and that is literally true, measured. The module imports only base-existing symbols at module level so it COLLECTS at base -- the trap C-056a hit is avoided by construction, not by assertion."
+  },
+  "known_pre_existing_reds": {
+    "expected_and_not_in_any_gate_this_card_ran": [
+      "tests/test_strict_failure_replay.py x2 (unconditional)",
+      "tests/test_batch_preflight.py x2 (unconditional)",
+      "qb node15 whenever the database is reachable (D-047 / F-052)"
+    ],
+    "observed_in_this_card_s_gates": "none -- none of those files is in Chunk B, SMOKE, Chunk E or the focused no-chunk set."
+  },
+  "chunk_d_qb": {
+    "run": false,
+    "reason": "Not in this card's mandated gate list. strict_quarantine.py changed only by one integer and comments; the release dict gains one additive key and tests/test_streamlit_quarantine_boundary.py asserts release['status'] and release['strict_acceptance_eligible'] by key, neither of which moves. Declared, not assumed: this is a gap for the reviewer to weigh, not a claim that qb was measured."
+  }
+}

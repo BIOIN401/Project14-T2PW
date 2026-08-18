@@ -1,0 +1,828 @@
+{
+  "capture": "tests/test_batch_driver_seam_golden.py :: _observable, per leg",
+  "legs": {
+    "input_timeout": {
+      "golden_slots": [
+        "timeout|input|timeout",
+        "extraction did not finish inside the time budget",
+        "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"
+      ],
+      "observable": {
+        "artifact_digests": {},
+        "artifact_keys_sorted": [],
+        "artifact_write_order": [],
+        "canonical_payload_sha256": null,
+        "pwml_artifact": null,
+        "release_status": null,
+        "relocated_files": [],
+        "row": {
+          "counts": {},
+          "detail": "AppTest script run timed out after 1.0(s)",
+          "failure_kind": "timeout",
+          "files": [],
+          "issue_codes": [],
+          "message": "extraction did not finish inside the time budget",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "stage": "input",
+          "status": "timeout",
+          "warnings": []
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "research_pass": {
+      "golden_slots": [
+        "pass|research_report|",
+        "research run completed; no RAG synthesis in this run, so no citation report was produced",
+        "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            99,
+            "ed0b28d7c50677560f403195898dfd425e9dd3bc298d4a42869b428a7cddebab"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "review_flags.json": [
+            163,
+            "74a6b0d214a4079d5ed2240a21a4fbd3b14ffcff934e4454e99f15b05d76d3d6"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "merged_payload.json",
+          "review_flags.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "contract_reports.json",
+          "final_mapped.json",
+          "review_flags.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": null,
+        "release_status": null,
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/research/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/research/merged_payload.json"
+          },
+          {
+            "bytes": 99,
+            "name": "papers/pmc1/research/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/research/final_mapped.json"
+          },
+          {
+            "bytes": 163,
+            "name": "papers/pmc1/research/review_flags.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 0,
+            "compounds": 2,
+            "entities": 3,
+            "gate_errors": 0,
+            "normalization_actions": 0,
+            "proteins": 1,
+            "reactions": 1,
+            "review_flags": 0,
+            "skipped_format_rules": 0,
+            "transports": 0
+          },
+          "detail": "",
+          "failure_kind": "",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 99,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            },
+            {
+              "bytes": 163,
+              "name": "review_flags.json"
+            }
+          ],
+          "issue_codes": [],
+          "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+          "mode": "research",
+          "paper_id": "PMC1",
+          "stage": "research_report",
+          "status": "pass",
+          "warnings": [
+            "no research report: RAG did not trigger for this paper"
+          ]
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "strict_contract_failure": {
+      "golden_slots": [
+        "fail|post_pipeline|contract",
+        "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary",
+        "b3d1afbd99d051da3da2563312a432cc091c69eed24c0a6b6c3a98568686520f"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            277,
+            "4c9a3b72802bce11cb533d56b343cbc76f6e17605987d894b6cb17240efbb37a"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "merged_payload.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "contract_reports.json",
+          "final_mapped.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": null,
+        "release_status": {
+          "completeness": null,
+          "coverage_evaluated": false,
+          "expansion_blocked_reason": "",
+          "missing_anchors": [],
+          "pipeline_executed": true,
+          "reasons": [
+            "strict_technical_gates_blocked_export"
+          ],
+          "retrieval_attempts": null,
+          "semantic_evaluation": "not_evaluated",
+          "semantic_not_evaluated_reason": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass",
+          "status": "diagnostic_only",
+          "strict_acceptance_eligible": false,
+          "strict_gates_passed": false
+        },
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/strict/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/strict/merged_payload.json"
+          },
+          {
+            "bytes": 277,
+            "name": "papers/pmc1/strict/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/strict/final_mapped.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 1,
+            "compounds": 2,
+            "contract_errors": 1,
+            "entities": 3,
+            "gate_errors": 0,
+            "proteins": 1,
+            "reactions": 1,
+            "transports": 0
+          },
+          "detail": "[post_extraction_contract_report] reaction_enzyme_unresolved @ /processes/reactions/0: no identity",
+          "failure_kind": "contract",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 277,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            }
+          ],
+          "issue_codes": [
+            "reaction_enzyme_unresolved"
+          ],
+          "message": "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "release_status": {
+            "completeness": null,
+            "coverage_evaluated": false,
+            "expansion_blocked_reason": "",
+            "missing_anchors": [],
+            "pipeline_executed": true,
+            "reasons": [
+              "strict_technical_gates_blocked_export"
+            ],
+            "retrieval_attempts": null,
+            "semantic_evaluation": "not_evaluated",
+            "semantic_not_evaluated_reason": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass",
+            "status": "diagnostic_only",
+            "strict_acceptance_eligible": false,
+            "strict_gates_passed": false
+          },
+          "stage": "post_pipeline",
+          "status": "fail",
+          "warnings": []
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "strict_export_not_ok": {
+      "golden_slots": [
+        "fail|pwml_export|unknown",
+        "PWML export failed: the gate rejected the payload",
+        "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            99,
+            "ed0b28d7c50677560f403195898dfd425e9dd3bc298d4a42869b428a7cddebab"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "merged_payload.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "contract_reports.json",
+          "final_mapped.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": null,
+        "release_status": null,
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/strict/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/strict/merged_payload.json"
+          },
+          {
+            "bytes": 99,
+            "name": "papers/pmc1/strict/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/strict/final_mapped.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 0,
+            "compounds": 2,
+            "entities": 3,
+            "gate_errors": 0,
+            "proteins": 1,
+            "reactions": 1,
+            "transports": 0
+          },
+          "detail": "pwml result read from pwml_export_result\n{\n  \"ok\": false,\n  \"error\": \"the gate rejected the payload\"\n}",
+          "failure_kind": "unknown",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 99,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            }
+          ],
+          "issue_codes": [],
+          "message": "PWML export failed: the gate rejected the payload",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "stage": "pwml_export",
+          "status": "fail",
+          "warnings": []
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "strict_gate_failure": {
+      "golden_slots": [
+        "fail|post_pipeline|contract",
+        "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates",
+        "501fe47b98e8ebfbd1d3a142926d757afe814a4965e68bc19901a19dfc94a0f1"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            99,
+            "ed0b28d7c50677560f403195898dfd425e9dd3bc298d4a42869b428a7cddebab"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "gate_fail_report.json": [
+            209,
+            "c81d59959d4917ba6468c5da1eca2e8ae8bd8b84fb52d133522887e809752272"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "gate_fail_report.json",
+          "merged_payload.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "gate_fail_report.json",
+          "contract_reports.json",
+          "final_mapped.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": null,
+        "release_status": {
+          "completeness": null,
+          "coverage_evaluated": false,
+          "expansion_blocked_reason": "",
+          "missing_anchors": [],
+          "pipeline_executed": true,
+          "reasons": [
+            "strict_technical_gates_blocked_export"
+          ],
+          "retrieval_attempts": null,
+          "semantic_evaluation": "not_evaluated",
+          "semantic_not_evaluated_reason": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass",
+          "status": "diagnostic_only",
+          "strict_acceptance_eligible": false,
+          "strict_gates_passed": false
+        },
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/strict/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/strict/merged_payload.json"
+          },
+          {
+            "bytes": 209,
+            "name": "papers/pmc1/strict/gate_fail_report.json"
+          },
+          {
+            "bytes": 99,
+            "name": "papers/pmc1/strict/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/strict/final_mapped.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 1,
+            "compounds": 2,
+            "entities": 3,
+            "gate_errors": 1,
+            "proteins": 1,
+            "reactions": 1,
+            "transports": 0
+          },
+          "detail": "{\n  \"gate_verdict\": {\n    \"failed\": true,\n    \"source\": \"legacy_artifacts\",\n    \"reason\": \"legacy_artifact_set\",\n    \"stage\": \"post_normalization_hard_gates\"\n  },\n  \"final_stage3_gate_report\": {},\n  \"superseded_gate_fail_report\": {\n    \"status\": \"failed\",\n    \"stage\": \"post_normalization_hard_gates\",\n    \"errors\": [\n      {\n        \"path\": \"/entities/protein_complexes/0/name\",\n        \"reason\": \"Forbidden complex reference detected: x\"\n      }\n    ]\n  }\n}",
+          "failure_kind": "contract",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 209,
+              "name": "gate_fail_report.json"
+            },
+            {
+              "bytes": 99,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            }
+          ],
+          "issue_codes": [
+            "gate.forbidden_complex_reference_detected"
+          ],
+          "message": "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "release_status": {
+            "completeness": null,
+            "coverage_evaluated": false,
+            "expansion_blocked_reason": "",
+            "missing_anchors": [],
+            "pipeline_executed": true,
+            "reasons": [
+              "strict_technical_gates_blocked_export"
+            ],
+            "retrieval_attempts": null,
+            "semantic_evaluation": "not_evaluated",
+            "semantic_not_evaluated_reason": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass",
+            "status": "diagnostic_only",
+            "strict_acceptance_eligible": false,
+            "strict_gates_passed": false
+          },
+          "stage": "post_pipeline",
+          "status": "fail",
+          "warnings": []
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "strict_no_pwml_button": {
+      "golden_slots": [
+        "fail|pwml_export|unknown",
+        "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached",
+        "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            99,
+            "ed0b28d7c50677560f403195898dfd425e9dd3bc298d4a42869b428a7cddebab"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "merged_payload.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "contract_reports.json",
+          "final_mapped.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": null,
+        "release_status": null,
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/strict/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/strict/merged_payload.json"
+          },
+          {
+            "bytes": 99,
+            "name": "papers/pmc1/strict/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/strict/final_mapped.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 0,
+            "compounds": 2,
+            "entities": 3,
+            "gate_errors": 0,
+            "proteins": 1,
+            "reactions": 1,
+            "transports": 0
+          },
+          "detail": "",
+          "failure_kind": "unknown",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 99,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            }
+          ],
+          "issue_codes": [],
+          "message": "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "stage": "pwml_export",
+          "status": "fail",
+          "warnings": []
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    },
+    "strict_pwml_export": {
+      "golden_slots": [
+        "pass|pwml_export|",
+        "strict run completed; pathway.review_required.pwml is 43 bytes",
+        "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"
+      ],
+      "observable": {
+        "artifact_digests": {
+          "contract_reports.json": [
+            99,
+            "ed0b28d7c50677560f403195898dfd425e9dd3bc298d4a42869b428a7cddebab"
+          ],
+          "final_mapped.json": [
+            183,
+            "ee88b03c41856722e4ad0706308b52f7f5e0dc5b2b34d02e5ff39635e47a433b"
+          ],
+          "merged_payload.json": [
+            439,
+            "d92243b94780a27e73ca8c8839a0b9c499916fd8b0d97208fbf2bdc47d93aeaa"
+          ],
+          "pathway.review_required.pwml": [
+            43,
+            "7d841d4f879d84439e23210a87b3eb65fd1402e7d2ad44b2d1f1bd78753f2020"
+          ],
+          "pwml_ir.json": [
+            48,
+            "b8cd26eb3f51636e2e6293ce2531a8470dcc63dda679738bb5fae8e3bebb1986"
+          ],
+          "stage1_payload.json": [
+            265,
+            "c0af7f45653e1af3da70ec0feb05736917055661565dc8e49925f482a180eb1a"
+          ]
+        },
+        "artifact_keys_sorted": [
+          "contract_reports.json",
+          "final_mapped.json",
+          "merged_payload.json",
+          "pathway.review_required.pwml",
+          "pwml_ir.json",
+          "stage1_payload.json"
+        ],
+        "artifact_write_order": [
+          "stage1_payload.json",
+          "merged_payload.json",
+          "contract_reports.json",
+          "final_mapped.json",
+          "pathway.review_required.pwml",
+          "pwml_ir.json"
+        ],
+        "canonical_payload_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "pwml_artifact": "pathway.review_required.pwml",
+        "release_status": null,
+        "relocated_files": [
+          {
+            "bytes": 265,
+            "name": "papers/pmc1/strict/stage1_payload.json"
+          },
+          {
+            "bytes": 439,
+            "name": "papers/pmc1/strict/merged_payload.json"
+          },
+          {
+            "bytes": 99,
+            "name": "papers/pmc1/strict/contract_reports.json"
+          },
+          {
+            "bytes": 183,
+            "name": "papers/pmc1/strict/final_mapped.json"
+          },
+          {
+            "bytes": 43,
+            "name": "papers/pmc1/strict/pathway.review_required.pwml"
+          },
+          {
+            "bytes": 48,
+            "name": "papers/pmc1/strict/pwml_ir.json"
+          }
+        ],
+        "row": {
+          "counts": {
+            "blocking_issues": 0,
+            "compounds": 2,
+            "entities": 3,
+            "gate_errors": 0,
+            "proteins": 1,
+            "pwml": {
+              "reactions": 1
+            },
+            "pwml_bytes": 43,
+            "reactions": 1,
+            "transports": 0
+          },
+          "detail": "",
+          "failure_kind": "",
+          "files": [
+            {
+              "bytes": 265,
+              "name": "stage1_payload.json"
+            },
+            {
+              "bytes": 439,
+              "name": "merged_payload.json"
+            },
+            {
+              "bytes": 99,
+              "name": "contract_reports.json"
+            },
+            {
+              "bytes": 183,
+              "name": "final_mapped.json"
+            },
+            {
+              "bytes": 43,
+              "name": "pathway.review_required.pwml"
+            },
+            {
+              "bytes": 48,
+              "name": "pwml_ir.json"
+            }
+          ],
+          "issue_codes": [],
+          "message": "strict run completed; pathway.review_required.pwml is 43 bytes",
+          "mode": "strict",
+          "paper_id": "PMC1",
+          "pwml_artifact": "pathway.review_required.pwml",
+          "stage": "pwml_export",
+          "status": "pass",
+          "warnings": [
+            "release classification unavailable on a passing strict leg: no usable record at pwml_result['quarantine_report']['release'], so the export was written as pathway.review_required.pwml and no release_status was recorded"
+          ]
+        }
+      },
+      "observable_fields": [
+        "artifact_digests",
+        "artifact_keys_sorted",
+        "artifact_write_order",
+        "canonical_payload_sha256",
+        "pwml_artifact",
+        "release_status",
+        "relocated_files",
+        "row"
+      ]
+    }
+  },
+  "t2pw_file": "C:\\t\\c56bbase\\src\\t2pw\\__init__.py"
+}

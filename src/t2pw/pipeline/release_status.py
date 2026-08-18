@@ -232,6 +232,20 @@ class ReleaseStatus:
     #: 11(c)/(d)/(e) as ONE three-valued field. ``not_evaluated`` is never False.
     semantic_evaluation: str = SEMANTIC_NOT_EVALUATED
     semantic_not_evaluated_reason: str = SEMANTIC_INPUT_NOT_WIRED
+    #: WHICH gating checks failed, as names (C-056b). Before this the names
+    #: survived only inside a ``reasons`` entry -- ``semantic_evaluation_failed:a,b``
+    #: -- so a consumer wanting them had to split a prose string on two
+    #: separators, which is exactly what the reason VOCABULARY exists to stop.
+    #: The benchmark is that consumer: the record travels verbatim into the
+    #: manifest row, so ``bench.acceptance`` can say WHICH checks the run recorded
+    #: as failed on a leg it did not count as semantically confirmed
+    #: (``ModeResult.runtime_semantic_failed_checks``). "The runtime said no" is
+    #: not a usable finding without the checks behind it.
+    #:
+    #: COHERENT BY CONSTRUCTION: non-empty here IFF ``semantic_evaluation`` is
+    #: ``failed``. A pass or a non-evaluation has no failing checks to name, so a
+    #: reader never has to decide which of two fields to believe.
+    semantic_failed_checks: Tuple[str, ...] = ()
     #: Whether this run may count toward the STRICT benchmark denominator.
     #: ``review_required`` never may -- TRAP-1 / PRODUCT_CONTRACT 13.
     strict_acceptance_eligible: bool = False
@@ -262,6 +276,7 @@ class ReleaseStatus:
             "strict_gates_passed": self.strict_gates_passed,
             "semantic_evaluation": self.semantic_evaluation,
             "semantic_not_evaluated_reason": self.semantic_not_evaluated_reason,
+            "semantic_failed_checks": list(self.semantic_failed_checks),
             "strict_acceptance_eligible": self.strict_acceptance_eligible,
             "completeness": self.completeness,
             "missing_anchors": list(self.missing_anchors),
@@ -422,9 +437,17 @@ def classify_release_status(
     # release_ready, so it can never manufacture a status the rules above refused
     # and can never deepen one they already reached.
     evaluation = str(semantic_evaluation or SEMANTIC_NOT_EVALUATED)
+    # Recorded whenever the verdict is FAILED, cap or no cap: a run the technical
+    # chain already put in review_required whose semantics ALSO failed must still
+    # say which checks failed. Tying the names to the verdict rather than to the
+    # cap is what makes the field coherent -- a pass or a non-evaluation carries
+    # none, so a consumer never reads a failing check name beside "passed".
+    failed = (
+        tuple(str(name) for name in semantic_failed_checks or ())
+        if evaluation == SEMANTIC_FAILED else ()
+    )
     if evaluation == SEMANTIC_FAILED and status == RELEASE_READY:
         status = REVIEW_REQUIRED
-        failed = [str(name) for name in semantic_failed_checks or ()]
         reasons.append(
             f"{REASON_SEMANTIC_EVALUATION_FAILED}:{','.join(failed)}" if failed
             else REASON_SEMANTIC_EVALUATION_FAILED
@@ -442,6 +465,7 @@ def classify_release_status(
             str(semantic_not_evaluated_reason or "")
             if evaluation == SEMANTIC_NOT_EVALUATED else ""
         ),
+        semantic_failed_checks=failed,
         # A run may only enter the STRICT denominator when it is release-ready.
         # review_required must never count as strict success (TRAP-1).
         strict_acceptance_eligible=status == RELEASE_READY,

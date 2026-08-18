@@ -2207,7 +2207,16 @@ def quarantine_and_close(
         # grew ``review_reasons`` and the ``release`` classification beside the
         # ``ok`` it can no longer be read off. Additive: every schema-3 key keeps
         # its name, its type and its meaning.
-        "schema_version": 4,
+        #
+        # 5 (C-056b, D-039 section 5): ``release`` grew ONE key,
+        # ``semantic_failed_checks`` -- a list, empty unless
+        # ``semantic_evaluation == "failed"``. Additive in exactly the same sense:
+        # no schema-4 key changed name, type or meaning, and ``decision_id``
+        # (``decision_identifier``, hashing only ``admitted_payload_hash`` +
+        # ``decision_input_hash``) does not move. The version still bumps, because
+        # the house rule that produced 4 for an additive change is what lets a
+        # reader trust the number at all.
+        "schema_version": 5,
         "stage": "pre_export_strict_quarantine",
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),
