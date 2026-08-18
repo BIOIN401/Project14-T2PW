@@ -1,0 +1,3821 @@
+{
+  "run_dir": "runs_verify\\2026-08-04_1754",
+  "gold_set": {
+    "version": "2026-08-01.1",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\src\\t2pw\\bench\\gold\\pinned_v1.json"
+  },
+  "legs_attempted": 12,
+  "legs_scored": 9,
+  "completion": {
+    "planned_gold_cases": 10,
+    "papers_attempted": 6,
+    "strict_legs_attempted": 6,
+    "research_legs_attempted": 6,
+    "legs_attempted": 12,
+    "legs_planned": 20,
+    "payloads_available": 9,
+    "semantically_scorable_legs": 9,
+    "fully_completed_cases": 6,
+    "papers_with_no_attempted_leg": [
+      "PMC13231680",
+      "PMC12657337",
+      "PMC12421875",
+      "PMC12312563"
+    ],
+    "papers_with_only_one_mode_attempted": [],
+    "complete": false,
+    "rendered": "6/10 papers, 12/20 legs"
+  },
+  "acceptance_priorities": [
+    {
+      "rank": 1,
+      "name": "zero known false real identifiers",
+      "ok": false,
+      "observed": 13,
+      "papers": [
+        "PMC12096016",
+        "PMC12180156",
+        "PMC12782028",
+        "PMC12856317"
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "zero unsupported retained reactions",
+      "ok": false,
+      "observed": 2,
+      "papers": [
+        "PMC12180156"
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "zero referential-integrity violations",
+      "ok": true,
+      "observed": 0,
+      "papers": []
+    },
+    {
+      "rank": 4,
+      "name": "meaningful requested-pathway coverage",
+      "ok": false,
+      "observed": "0/4 = 0%",
+      "papers": []
+    },
+    {
+      "rank": 5,
+      "name": "maximize strict PWML pass rate among eligible/exportable papers",
+      "ok": false,
+      "observed": "0/2 = 0%",
+      "papers": []
+    }
+  ],
+  "denominators": {
+    "gold_relevance_prevalence": {
+      "key": "gold_relevance_prevalence",
+      "question": "What fraction of the pinned gold set is mechanistically relevant to its requested pathway? This is a property of the GOLD SET, not a measurement of the screener.",
+      "population": "every paper in the pinned gold set",
+      "numerator": 8,
+      "denominator": 10,
+      "rate": 0.8,
+      "rendered": "8/10 = 80%",
+      "numerator_papers": [
+        "PMC12096016",
+        "PMC12312563",
+        "PMC12421875",
+        "PMC12444477",
+        "PMC12452463",
+        "PMC12657337",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12180156",
+        "PMC12312563",
+        "PMC12421875",
+        "PMC12444477",
+        "PMC12452463",
+        "PMC12657337",
+        "PMC12782028",
+        "PMC12856317",
+        "PMC13231680"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC13231680",
+          "reason": "mechanistic_relevance=context_only (negative control)"
+        },
+        {
+          "paper_id": "PMC12180156",
+          "reason": "mechanistic_relevance=context_only"
+        }
+      ]
+    },
+    "extraction_success": {
+      "key": "extraction_success",
+      "question": "Of the relevant papers whose legs were attempted, how many produced a payload with at least one reaction?",
+      "population": "relevant gold cases with at least one attempted leg",
+      "numerator": 4,
+      "denominator": 5,
+      "rate": 0.8,
+      "rendered": "4/5 = 80%",
+      "numerator_papers": [
+        "PMC12096016",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12444477",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC12657337",
+          "reason": "no leg was attempted in this run"
+        },
+        {
+          "paper_id": "PMC12421875",
+          "reason": "no leg was attempted in this run"
+        },
+        {
+          "paper_id": "PMC12312563",
+          "reason": "no leg was attempted in this run"
+        }
+      ]
+    },
+    "semantic_pathway_success": {
+      "key": "semantic_pathway_success",
+      "question": "Of the relevant papers with a scorable payload, how many were CONFIRMED -- every check passed, every check was evaluable, and the run itself did not record a FAILED runtime semantic verdict? The runtime verdict can only REMOVE a confirmation here; a runtime pass is never counted as one.",
+      "population": "relevant gold cases with at least one scorable payload",
+      "numerator": 0,
+      "denominator": 4,
+      "rate": 0.0,
+      "rendered": "0/4 = 0%",
+      "numerator_papers": [],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC12444477",
+          "reason": "no leg produced a payload the validator could score"
+        },
+        {
+          "paper_id": "PMC12657337",
+          "reason": "no leg produced a payload the validator could score"
+        },
+        {
+          "paper_id": "PMC12421875",
+          "reason": "no leg produced a payload the validator could score"
+        },
+        {
+          "paper_id": "PMC12312563",
+          "reason": "no leg produced a payload the validator could score"
+        }
+      ]
+    },
+    "strict_pwml_success": {
+      "key": "strict_pwml_success",
+      "question": "Of the strict-exportable papers whose strict leg was attempted, how many exported PWML?",
+      "population": "strict_exportable gold cases with an attempted strict leg",
+      "numerator": 0,
+      "denominator": 2,
+      "rate": 0.0,
+      "rendered": "0/2 = 0%",
+      "numerator_papers": [],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12782028"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC12444477",
+          "reason": "expected_export=partial_only: The enzyme roster and reaction order are fully extractable, but a complete ID-resolvable pathway cannot be built from this paper: it contains zero Uni"
+        },
+        {
+          "paper_id": "PMC13231680",
+          "reason": "expected_export=partial_only: Nothing lipid-A-related is exportable at any level of partiality. The correct pipeline outcome is an empty pathway plus a rejection reason."
+        },
+        {
+          "paper_id": "PMC12657337",
+          "reason": "strict-exportable, but its strict leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12421875",
+          "reason": "strict-exportable, but its strict leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12312563",
+          "reason": "expected_export=partial_only: A single reaction cannot form a connected pathway, and no second reaction anywhere in the text shares a metabolite with it. Any strict-exportable path"
+        },
+        {
+          "paper_id": "PMC12856317",
+          "reason": "expected_export=partial_only: A single reaction cannot constitute an exportable multi-step pathway. Emitting a strict heme biosynthesis pathway from this paper requires importing s"
+        },
+        {
+          "paper_id": "PMC12180156",
+          "reason": "expected_export=partial_only: With zero heme-biosynthesis reactions recoverable, nothing about heme biosynthesis is exportable. At most the paper supports regulatory edges (SFXN4 i"
+        },
+        {
+          "paper_id": "PMC12452463",
+          "reason": "expected_export=partial_only: A narrative review with no primary data, whose route is chemically BROKEN: with EntA absent, nothing converts 2,3-dihydro-2,3-dihydroxybenzoate onward"
+        }
+      ]
+    },
+    "research_deliverable_produced": {
+      "key": "research_deliverable_produced",
+      "question": "Of the relevant papers whose research leg was attempted, how many PRODUCED a reviewable deliverable? (output only -- says nothing about correctness)",
+      "population": "relevant gold cases with an attempted research leg",
+      "numerator": 4,
+      "denominator": 5,
+      "rate": 0.8,
+      "rendered": "4/5 = 80%",
+      "numerator_papers": [
+        "PMC12096016",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12444477",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC13231680",
+          "reason": "mechanistic_relevance=context_only"
+        },
+        {
+          "paper_id": "PMC12657337",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12421875",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12312563",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12180156",
+          "reason": "mechanistic_relevance=context_only"
+        }
+      ]
+    },
+    "research_semantically_confirmed": {
+      "key": "research_semantically_confirmed",
+      "question": "Of those, how many are scientifically CONFIRMED -- deliverable produced, every semantic check passed AND evaluable, no priority-1..3 error, and no FAILED runtime semantic verdict recorded by the run itself?",
+      "population": "relevant gold cases with an attempted research leg",
+      "numerator": 0,
+      "denominator": 5,
+      "rate": 0.0,
+      "rendered": "0/5 = 0%",
+      "numerator_papers": [],
+      "denominator_papers": [
+        "PMC12096016",
+        "PMC12444477",
+        "PMC12452463",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "excluded": [
+        {
+          "paper_id": "PMC13231680",
+          "reason": "mechanistic_relevance=context_only"
+        },
+        {
+          "paper_id": "PMC12657337",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12421875",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12312563",
+          "reason": "eligible, but its research leg was never attempted"
+        },
+        {
+          "paper_id": "PMC12180156",
+          "reason": "mechanistic_relevance=context_only"
+        }
+      ]
+    }
+  },
+  "scientific_errors": {
+    "totals": {
+      "false_real_identifiers": 13,
+      "placeholder_backed_proteins": 2,
+      "unsupported_reactions": 2,
+      "reactions_missing_source_carrier": 0,
+      "cross_organism_reactions": 0,
+      "orphaned_references": 0,
+      "missing_pathway_anchors": 3,
+      "missing_supported_reactions": 6,
+      "quarantined_processes": 0
+    },
+    "papers_affected": {
+      "false_real_identifiers": [
+        "PMC12096016",
+        "PMC12180156",
+        "PMC12782028",
+        "PMC12856317"
+      ],
+      "placeholder_backed_proteins": [
+        "PMC12856317"
+      ],
+      "unsupported_reactions": [
+        "PMC12180156"
+      ],
+      "reactions_missing_source_carrier": [],
+      "cross_organism_reactions": [],
+      "orphaned_references": [],
+      "missing_pathway_anchors": [
+        "PMC12452463",
+        "PMC12782028"
+      ],
+      "missing_supported_reactions": [
+        "PMC12096016",
+        "PMC12452463"
+      ],
+      "quarantined_processes": []
+    },
+    "by_paper_mode": {
+      "PMC12856317:strict": {
+        "false_real_identifiers": 1,
+        "placeholder_backed_proteins": 2,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12856317:research": {
+        "false_real_identifiers": 1,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12180156:strict": {
+        "false_real_identifiers": 1,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 1,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12180156:research": {
+        "false_real_identifiers": 2,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 1,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12096016:strict": {
+        "false_real_identifiers": 2,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 3,
+        "quarantined_processes": 0
+      },
+      "PMC12096016:research": {
+        "false_real_identifiers": 2,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 0,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12452463:strict": {
+        "false_real_identifiers": 0,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 1,
+        "missing_supported_reactions": 3,
+        "quarantined_processes": 0
+      },
+      "PMC12452463:research": {
+        "false_real_identifiers": 0,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 1,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      },
+      "PMC12782028:research": {
+        "false_real_identifiers": 4,
+        "placeholder_backed_proteins": 0,
+        "unsupported_reactions": 0,
+        "reactions_missing_source_carrier": 0,
+        "cross_organism_reactions": 0,
+        "orphaned_references": 0,
+        "missing_pathway_anchors": 1,
+        "missing_supported_reactions": 0,
+        "quarantined_processes": 0
+      }
+    }
+  },
+  "strict_failures_by_boundary": {
+    "stage1_extraction": 1,
+    "stage3_normalization_gate": 2,
+    "timeout": 1,
+    "not_attempted": 4
+  },
+  "research_failures_by_cause": {
+    "timeout": 1
+  },
+  "identity": {
+    "totals": {
+      "verified": 66,
+      "placeholder": 2,
+      "unresolved": 25,
+      "pathbank_unknown_sentinel": 1
+    },
+    "by_paper_mode": {
+      "PMC12856317:strict": {
+        "payload_source": "final_mapped.json",
+        "verified": 0,
+        "placeholder": 2,
+        "unresolved": 0,
+        "pathbank_unknown_sentinel": 1,
+        "proteins_total": 2,
+        "proteins_with_organism": 2
+      },
+      "PMC12856317:research": {
+        "payload_source": "final_mapped.json",
+        "verified": 2,
+        "placeholder": 0,
+        "unresolved": 3,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 5,
+        "proteins_with_organism": 5
+      },
+      "PMC12180156:strict": {
+        "payload_source": "final_mapped.json",
+        "verified": 6,
+        "placeholder": 0,
+        "unresolved": 4,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 10,
+        "proteins_with_organism": 10
+      },
+      "PMC12180156:research": {
+        "payload_source": "final_mapped.json",
+        "verified": 8,
+        "placeholder": 0,
+        "unresolved": 2,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 10,
+        "proteins_with_organism": 10
+      },
+      "PMC12096016:strict": {
+        "payload_source": "final_mapped.json",
+        "verified": 7,
+        "placeholder": 0,
+        "unresolved": 6,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 13,
+        "proteins_with_organism": 13
+      },
+      "PMC12096016:research": {
+        "payload_source": "final_mapped.json",
+        "verified": 8,
+        "placeholder": 0,
+        "unresolved": 2,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 10,
+        "proteins_with_organism": 10
+      },
+      "PMC12452463:strict": {
+        "payload_source": "final_mapped.json",
+        "verified": 8,
+        "placeholder": 0,
+        "unresolved": 5,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 13,
+        "proteins_with_organism": 13
+      },
+      "PMC12452463:research": {
+        "payload_source": "final_mapped.json",
+        "verified": 7,
+        "placeholder": 0,
+        "unresolved": 3,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 10,
+        "proteins_with_organism": 10
+      },
+      "PMC12782028:research": {
+        "payload_source": "final_mapped.json",
+        "verified": 20,
+        "placeholder": 0,
+        "unresolved": 0,
+        "pathbank_unknown_sentinel": 0,
+        "proteins_total": 20,
+        "proteins_with_organism": 20
+      }
+    },
+    "payload_sources": {
+      "final_mapped.json": 9
+    },
+    "caveat": "Counts sourced from merged_payload.json are pre-mapping: that payload carries no accessions at all, so 'verified: 0' there means 'mapping had not run yet', NOT 'mapping failed'. Only counts sourced from final_mapped.json measure real resolution."
+  },
+  "blockers_by_scope": {
+    "strict_export": [
+      {
+        "root_cause": "other",
+        "explanation": "unclassified issue code: gate.gate_lifecycle",
+        "papers_blocked": [
+          "PMC12096016"
+        ],
+        "papers_blocked_count": 1,
+        "sole_blocker_for": [
+          "PMC12096016"
+        ],
+        "expected_benefit": 1,
+        "issue_codes": [
+          "gate.gate_lifecycle"
+        ],
+        "boundaries": [
+          "stage3_normalization_gate"
+        ]
+      }
+    ],
+    "research_deliverable": [],
+    "extraction": [
+      {
+        "root_cause": "other",
+        "explanation": "unclassified issue code: timeout",
+        "papers_blocked": [
+          "PMC12444477",
+          "PMC12782028"
+        ],
+        "papers_blocked_count": 2,
+        "sole_blocker_for": [
+          "PMC12444477",
+          "PMC12782028"
+        ],
+        "expected_benefit": 2,
+        "issue_codes": [
+          "stage1_extraction",
+          "timeout"
+        ],
+        "boundaries": [
+          "stage1_extraction",
+          "timeout"
+        ]
+      }
+    ]
+  },
+  "papers": [
+    {
+      "paper_id": "PMC12444477",
+      "title": "The regulation of lipid A biosynthesis",
+      "slug": "PMC12444477",
+      "requested_pathway": "lipid A biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "expected_export": "partial_only",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12444477",
+          "mode": "strict",
+          "attempted": true,
+          "status": "timeout",
+          "stage": "unknown",
+          "failure_kind": "timeout",
+          "message": "the child process was still running after 1800s and was killed, so this paper+mode produced nothing",
+          "issue_codes": [],
+          "boundary": "timeout",
+          "boundary_label": "wall-clock timeout",
+          "boundary_evidence": "the child process was still running after 1800s and was killed, so this paper+mode produced nothing",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 1800.64,
+          "semantic": {
+            "paper_id": "PMC12444477",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12444477",
+          "mode": "research",
+          "attempted": true,
+          "status": "timeout",
+          "stage": "unknown",
+          "failure_kind": "timeout",
+          "message": "the child process was still running after 1800s and was killed, so this paper+mode produced nothing",
+          "issue_codes": [],
+          "boundary": "timeout",
+          "boundary_label": "wall-clock timeout",
+          "boundary_evidence": "the child process was still running after 1800s and was killed, so this paper+mode produced nothing",
+          "research_failure": "timeout",
+          "research_failure_label": "timeout",
+          "research_failure_evidence": "status=timeout kind=timeout",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 1800.76,
+          "semantic": {
+            "paper_id": "PMC12444477",
+            "mode": "research",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC13231680",
+      "title": "Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity",
+      "slug": "",
+      "requested_pathway": "lipid A biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli (NDM-1-positive clinical isolate) and Mus musculus",
+      "mechanistic_relevance": "context_only",
+      "expected_export": "partial_only",
+      "is_negative_control": true,
+      "paper_text_available": false,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC13231680",
+          "mode": "strict",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC13231680",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC13231680",
+          "mode": "research",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC13231680",
+            "mode": "research",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12657337",
+      "title": "High-level production of vitamin K2 in Escherichia coli via modular metabolic engineering",
+      "slug": "",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "expected_export": "strict_exportable",
+      "is_negative_control": false,
+      "paper_text_available": false,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12657337",
+          "mode": "strict",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12657337",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12657337",
+          "mode": "research",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12657337",
+            "mode": "research",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12421875",
+      "title": "The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism",
+      "slug": "",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Lactococcus lactis",
+      "mechanistic_relevance": "core",
+      "expected_export": "strict_exportable",
+      "is_negative_control": false,
+      "paper_text_available": false,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12421875",
+          "mode": "strict",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12421875",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12421875",
+          "mode": "research",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12421875",
+            "mode": "research",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12312563",
+      "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate states",
+      "slug": "",
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Bacillus subtilis",
+      "actual_organism": "Listeria monocytogenes",
+      "mechanistic_relevance": "partial",
+      "expected_export": "partial_only",
+      "is_negative_control": false,
+      "paper_text_available": false,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12312563",
+          "mode": "strict",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12312563",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12312563",
+          "mode": "research",
+          "attempted": false,
+          "status": "",
+          "stage": "",
+          "failure_kind": "",
+          "message": "",
+          "issue_codes": [],
+          "boundary": "not_attempted",
+          "boundary_label": "never attempted",
+          "boundary_evidence": "no manifest row for this paper+mode",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 0.0,
+          "semantic": {
+            "paper_id": "PMC12312563",
+            "mode": "research",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12856317",
+      "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis",
+      "slug": "PMC12856317",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens",
+      "mechanistic_relevance": "partial",
+      "expected_export": "partial_only",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12856317",
+          "mode": "strict",
+          "attempted": true,
+          "status": "pass",
+          "stage": "pwml_export",
+          "failure_kind": "",
+          "message": "strict run completed; pathway.pwml is 34878 bytes",
+          "issue_codes": [],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12856317\\strict\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 1083.45,
+          "semantic": {
+            "paper_id": "PMC12856317",
+            "mode": "strict",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "no_real_id_or_name_conflict",
+              "placeholder_identities_distinguished"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "4/4 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 2 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 2/2 (100%), recall 1/1 (100%)",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 false real identifier(s); 1 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/4",
+                    "name": "pyridoxal 5'-phosphate",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "cofactor_as_protein",
+                    "identifiers": {
+                      "drugbank": "DB00114",
+                      "hmdb": "HMDB0001491",
+                      "kegg": "C00018",
+                      "chebi": "CHEBI:18405",
+                      "pubchem": "1051"
+                    },
+                    "reason": "The ALAS2 cofactor. Never a substrate, never a product, never a protein."
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 5 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 2 reaction(s); this case requires 1",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2 placeholder identity problem(s); 0 verified / 2 Unknown-backed placeholder / 0 unresolved, of 2 protein row(s)",
+                "findings": [
+                  {
+                    "pointer": "/entities/proteins/0",
+                    "name": "Unknown",
+                    "kind": "unknown_backed_protein_not_acceptable",
+                    "reason": "this case expects every protein to resolve to a real identity; 'Unknown' is Unknown-backed"
+                  },
+                  {
+                    "pointer": "/entities/protein_complexes/0",
+                    "name": "ALAS2",
+                    "kind": "unknown_backed_protein_not_acceptable",
+                    "reason": "this case expects every protein to resolve to a real identity; 'ALAS2' is Unknown-backed"
+                  }
+                ]
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 4,
+                "found": 4,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "heme biosynthesis",
+                    "matched": "heme",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "aminolevulinic acid synthase",
+                    "matched": "aminolevulinic acid",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "ALAS2",
+                    "matched": "ALAS2",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "mitochondrial matrix",
+                    "matched": "mitochondrial matrix",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 1,
+                "found": 1,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "ALAS2",
+                    "matched": "ALAS2",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 3,
+                "found": 3,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "succinyl-CoA",
+                    "matched": "succinyl-CoA",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "aminolevulinic acid",
+                    "matched": "aminolevulinic acid",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 1,
+              "placeholder_backed_proteins": 2,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 0,
+              "placeholder": 2,
+              "unresolved": 0,
+              "pathbank_unknown_sentinel": 1,
+              "proteins_total": 2,
+              "proteins_with_organism": 2,
+              "compounds_total": 8
+            },
+            "graph": {
+              "n_reactions": 2,
+              "n_components": 1,
+              "largest_core_size": 2,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1"
+              ],
+              "isolated_reactions": 0,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 1,
+              "signatures_quote_verified": 1,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 1,
+              "retained_reactions": 2,
+              "true_positives": 2,
+              "unattributed_reactions": 0,
+              "false_positives": null,
+              "false_negatives": 0,
+              "attribution_rate": 1.0,
+              "precision": null,
+              "recall": 1.0,
+              "matched": [
+                {
+                  "signature": "glycine + succinyl-CoA -> aminolevulinic acid [ALAS2]",
+                  "quote_hash": "383f531a2467e944",
+                  "matched_by": [
+                    "/processes/reactions/0",
+                    "/processes/reactions/1"
+                  ]
+                }
+              ],
+              "missing": [],
+              "unverifiable_quotes": []
+            }
+          }
+        },
+        "research": {
+          "paper_id": "PMC12856317",
+          "mode": "research",
+          "attempted": true,
+          "status": "pass",
+          "stage": "research_report",
+          "failure_kind": "",
+          "message": "research run completed with a citation report",
+          "issue_codes": [],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12856317\\research\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 813.36,
+          "semantic": {
+            "paper_id": "PMC12856317",
+            "mode": "research",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "4/4 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 1/1 (100%), recall 1/1 (100%)",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 false real identifier(s); 1 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/4",
+                    "name": "pyridoxal 5-phosphate",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "cofactor_as_protein",
+                    "identifiers": {
+                      "drugbank": "DB00114",
+                      "hmdb": "HMDB0001491",
+                      "kegg": "C00018",
+                      "chebi": "CHEBI:18405",
+                      "pubchem": "1051"
+                    },
+                    "reason": "The ALAS2 cofactor. Never a substrate, never a product, never a protein."
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 12 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 1 reaction(s); this case requires 1",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2 verified / 0 Unknown-backed placeholder / 3 unresolved, of 5 protein row(s); no placeholder forged an identity, but 3 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 4,
+                "found": 4,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "heme biosynthesis",
+                    "matched": "heme",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "aminolevulinic acid synthase",
+                    "matched": "aminolevulinic acid",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "ALAS2",
+                    "matched": "ALAS2",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "mitochondrial matrix",
+                    "matched": "mitochondrial matrix",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 1,
+                "found": 1,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "ALAS2",
+                    "matched": "ALAS2",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 3,
+                "found": 3,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "succinyl-CoA",
+                    "matched": "succinyl-CoA",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "aminolevulinic acid",
+                    "matched": "aminolevulinic acid",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 1,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 2,
+              "placeholder": 0,
+              "unresolved": 3,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 5,
+              "proteins_with_organism": 5,
+              "compounds_total": 5
+            },
+            "graph": {
+              "n_reactions": 1,
+              "n_components": 1,
+              "largest_core_size": 1,
+              "largest_core_pointers": [
+                "/processes/reactions/0"
+              ],
+              "isolated_reactions": 1,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 1,
+              "signatures_quote_verified": 1,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 1,
+              "retained_reactions": 1,
+              "true_positives": 1,
+              "unattributed_reactions": 0,
+              "false_positives": null,
+              "false_negatives": 0,
+              "attribution_rate": 1.0,
+              "precision": null,
+              "recall": 1.0,
+              "matched": [
+                {
+                  "signature": "glycine + succinyl-CoA -> aminolevulinic acid [ALAS2]",
+                  "quote_hash": "383f531a2467e944",
+                  "matched_by": [
+                    "/processes/reactions/0"
+                  ]
+                }
+              ],
+              "missing": [],
+              "unverifiable_quotes": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12180156",
+      "title": "Update of the sideroflexin (SLC56) gene family",
+      "slug": "PMC12180156",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens (comparative review across fourteen species)",
+      "mechanistic_relevance": "context_only",
+      "expected_export": "partial_only",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12180156",
+          "mode": "strict",
+          "attempted": true,
+          "status": "pass",
+          "stage": "pwml_export",
+          "failure_kind": "",
+          "message": "strict run completed; pathway.pwml is 46295 bytes",
+          "issue_codes": [],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12180156\\strict\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 1214.89,
+          "semantic": {
+            "paper_id": "PMC12180156",
+            "mode": "strict",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "no_real_id_or_name_conflict",
+              "minimum_connected_core"
+            ],
+            "inapplicable_checks": [
+              "retained_reactions_match_supported_signatures"
+            ],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2/2 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 3 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": false,
+                "inapplicable_reason": "the gold case carries no supported_reactions to audit against",
+                "summary": "not evaluated: this gold case states no supported reaction signatures",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 false real identifier(s); 1 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/2",
+                    "name": "5,10-methylene-THF",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "hmdb": "HMDB0001533",
+                      "kegg": "C00143",
+                      "chebi": "CHEBI:15636",
+                      "pubchem": "439175"
+                    },
+                    "reason": "One-carbon-metabolism and TCA metabolites. Correct for their own pathways, forbidden as heme-biosynthesis metabolites."
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 15 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "negative control: 3 reaction(s) retained where the paper supports 2",
+                "findings": [
+                  {
+                    "ceiling": 2,
+                    "retained": 3,
+                    "reason": "this paper contains no reaction of the requested pathway, so every retained reaction is unsupported by the source",
+                    "examples": [
+                      "/processes/reactions/0",
+                      "/processes/reactions/1",
+                      "/processes/reactions/2"
+                    ]
+                  }
+                ]
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "6 verified / 0 Unknown-backed placeholder / 4 unresolved, of 10 protein row(s); no placeholder forged an identity, but 4 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 2,
+                "found": 2,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "heme biosynthesis",
+                    "matched": "heme",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 0,
+                "found": 0,
+                "fraction": 1.0,
+                "matched": [],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 2,
+                "found": 2,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "heme",
+                    "matched": "heme",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 1,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 1,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 6,
+              "placeholder": 0,
+              "unresolved": 4,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 10,
+              "proteins_with_organism": 10,
+              "compounds_total": 6
+            },
+            "graph": {
+              "n_reactions": 3,
+              "n_components": 1,
+              "largest_core_size": 3,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2"
+              ],
+              "isolated_reactions": 0,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12180156",
+          "mode": "research",
+          "attempted": true,
+          "status": "pass",
+          "stage": "research_report",
+          "failure_kind": "",
+          "message": "research run completed with a citation report",
+          "issue_codes": [],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12180156\\research\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 1111.48,
+          "semantic": {
+            "paper_id": "PMC12180156",
+            "mode": "research",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "no_real_id_or_name_conflict",
+              "minimum_connected_core"
+            ],
+            "inapplicable_checks": [
+              "retained_reactions_match_supported_signatures"
+            ],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2/2 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 3 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": false,
+                "inapplicable_reason": "the gold case carries no supported_reactions to audit against",
+                "summary": "not evaluated: this gold case states no supported reaction signatures",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2 false real identifier(s); 4 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/2",
+                    "name": "5,10-methylene-THF",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "hmdb": "HMDB0001533",
+                      "kegg": "C00143",
+                      "chebi": "CHEBI:15636",
+                      "pubchem": "439175"
+                    },
+                    "reason": "One-carbon-metabolism and TCA metabolites. Correct for their own pathways, forbidden as heme-biosynthesis metabolites."
+                  },
+                  {
+                    "pointer": "/entities/compounds/3",
+                    "name": "formate",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "drugbank": "DB01942",
+                      "hmdb": "HMDB0000142",
+                      "kegg": "C00058",
+                      "chebi": "CHEBI:30751",
+                      "pubchem": "18971002"
+                    },
+                    "reason": "One-carbon-metabolism and TCA metabolites. Correct for their own pathways, forbidden as heme-biosynthesis metabolites."
+                  },
+                  {
+                    "pointer": "/entities/compounds/7",
+                    "name": "citrate",
+                    "kind": "forbidden_identity_present_unmapped",
+                    "forbidden_kind": "placeholder_product",
+                    "reason": "One-carbon-metabolism and TCA metabolites. Correct for their own pathways, forbidden as heme-biosynthesis metabolites."
+                  },
+                  {
+                    "pointer": "/entities/protein_complexes/1",
+                    "name": "MCIA complex",
+                    "kind": "forbidden_identity_present_unmapped",
+                    "forbidden_kind": "heading_or_prose",
+                    "reason": "Multi-protein complexes and a subunit descriptor; none is a single heme-pathway identity."
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 6 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "negative control: 3 reaction(s) retained where the paper supports 2",
+                "findings": [
+                  {
+                    "ceiling": 2,
+                    "retained": 3,
+                    "reason": "this paper contains no reaction of the requested pathway, so every retained reaction is unsupported by the source",
+                    "examples": [
+                      "/processes/reactions/0"
+                    ]
+                  }
+                ]
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "8 verified / 0 Unknown-backed placeholder / 2 unresolved, of 10 protein row(s); no placeholder forged an identity, but 2 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 2,
+                "found": 2,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "heme biosynthesis",
+                    "matched": "heme",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 0,
+                "found": 0,
+                "fraction": 1.0,
+                "matched": [],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 2,
+                "found": 2,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "glycine",
+                    "matched": "glycine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "heme",
+                    "matched": "heme",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 2,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 1,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 8,
+              "placeholder": 0,
+              "unresolved": 2,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 10,
+              "proteins_with_organism": 10,
+              "compounds_total": 8
+            },
+            "graph": {
+              "n_reactions": 3,
+              "n_components": 3,
+              "largest_core_size": 1,
+              "largest_core_pointers": [
+                "/processes/reactions/0"
+              ],
+              "isolated_reactions": 3,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {}
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12096016",
+      "title": "The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a competitive inhibitor of EntB",
+      "slug": "PMC12096016",
+      "requested_pathway": "enterobactin biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli",
+      "mechanistic_relevance": "core",
+      "expected_export": "strict_exportable",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12096016",
+          "mode": "strict",
+          "attempted": true,
+          "status": "fail",
+          "stage": "post_pipeline",
+          "failure_kind": "contract",
+          "message": "post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]",
+          "issue_codes": [
+            "gate.gate_lifecycle"
+          ],
+          "boundary": "stage3_normalization_gate",
+          "boundary_label": "Stage-3 post-normalization hard gate",
+          "boundary_evidence": "gate.gate_lifecycle",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12096016\\strict\\final_mapped.json",
+          "deliverable": false,
+          "seconds": 1510.65,
+          "semantic": {
+            "paper_id": "PMC12096016",
+            "mode": "strict",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "retained_reactions_match_supported_signatures",
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "5/5 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 8 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 0/8 (0%), recall 0/3 (0%)",
+                "findings": [
+                  {
+                    "signature": "chorismate -> isochorismate [EntC]",
+                    "quote": "isomerization of chorismate to isochorismate",
+                    "quote_hash": "919b408857bf1fb5",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  },
+                  {
+                    "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate [EntB]",
+                    "quote": "isochorismate is converted to 2,3",
+                    "quote_hash": "fa17eda89639ec52",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  },
+                  {
+                    "signature": "2,3-DHB + L-serine -> enterobactin [EntF]",
+                    "quote": "cycles of condensation with L",
+                    "quote_hash": "7be16a685d3bcbff",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  }
+                ]
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2 false real identifier(s); 3 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/5",
+                    "name": "NADH",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "drugbank": "DB00157",
+                      "hmdb": "HMDB0001487",
+                      "kegg": "C00004",
+                      "chebi": "CHEBI:16908",
+                      "pubchem": "439153"
+                    },
+                    "reason": "Coupled-assay reporter species from the LDH readout, not pathway metabolites."
+                  },
+                  {
+                    "pointer": "/entities/compounds/6",
+                    "name": "NAD+",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "hmdb": "HMDB0000902",
+                      "kegg": "C00003",
+                      "chebi": "CHEBI:15846",
+                      "pubchem": "5893"
+                    },
+                    "reason": "Coupled-assay reporter species from the LDH readout, not pathway metabolites."
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p0adi4",
+                    "entities": [
+                      "EntB",
+                      "Isochorismatase (EntB)"
+                    ],
+                    "reason": "uniprot:p0adi4 is claimed by 2 differently-named entities"
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 18 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 6 reaction(s); this case requires 4",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "7 verified / 0 Unknown-backed placeholder / 6 unresolved, of 13 protein row(s); no placeholder forged an identity, but 6 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin biosynthesis",
+                    "matched": "enterobactin",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "isochorismate synthase",
+                    "matched": "Isochorismate synthase",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismatase",
+                    "matched": "isochorismatase",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydroxybenzoic acid",
+                    "matched": "2,3-dihydroxybenzoic acid",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "EntC",
+                    "matched": "EntC",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntB",
+                    "matched": "EntB",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntA",
+                    "matched": "EntA",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntE",
+                    "matched": "EntE",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntF",
+                    "matched": "EntF",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 8,
+                "found": 8,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate",
+                    "matched": "isochorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "L-serine",
+                    "matched": "L-serine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "ATP",
+                    "matched": "ATP",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "matched": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "pyruvate",
+                    "matched": "pyruvate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydroxybenzoic acid",
+                    "matched": "2,3-dihydroxybenzoic acid",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 2,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 3,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 7,
+              "placeholder": 0,
+              "unresolved": 6,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 13,
+              "proteins_with_organism": 13,
+              "compounds_total": 13
+            },
+            "graph": {
+              "n_reactions": 8,
+              "n_components": 3,
+              "largest_core_size": 6,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2",
+                "/processes/reactions/3",
+                "/processes/reactions/4",
+                "/processes/reactions/5"
+              ],
+              "isolated_reactions": 2,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 3,
+              "signatures_quote_verified": 3,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 0,
+              "retained_reactions": 8,
+              "true_positives": 0,
+              "unattributed_reactions": 8,
+              "false_positives": null,
+              "false_negatives": 3,
+              "attribution_rate": 0.0,
+              "precision": null,
+              "recall": 0.0,
+              "matched": [],
+              "missing": [
+                {
+                  "signature": "chorismate -> isochorismate [EntC]",
+                  "quote": "isomerization of chorismate to isochorismate",
+                  "quote_hash": "919b408857bf1fb5",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                },
+                {
+                  "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate [EntB]",
+                  "quote": "isochorismate is converted to 2,3",
+                  "quote_hash": "fa17eda89639ec52",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                },
+                {
+                  "signature": "2,3-DHB + L-serine -> enterobactin [EntF]",
+                  "quote": "cycles of condensation with L",
+                  "quote_hash": "7be16a685d3bcbff",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                }
+              ],
+              "unverifiable_quotes": []
+            }
+          }
+        },
+        "research": {
+          "paper_id": "PMC12096016",
+          "mode": "research",
+          "attempted": true,
+          "status": "pass",
+          "stage": "research_report",
+          "failure_kind": "",
+          "message": "research run completed with a citation report",
+          "issue_codes": [
+            "gate.protein_enth_is_missing_a_uniprot_or_drugbank_identifier"
+          ],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12096016\\research\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 945.8,
+          "semantic": {
+            "paper_id": "PMC12096016",
+            "mode": "research",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "5/5 requested-pathway anchors present",
+                "findings": []
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 8 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 3/8 (38%), recall 3/3 (100%)",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "2 false real identifier(s); 5 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/compounds/5",
+                    "name": "NADH",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "drugbank": "DB00157",
+                      "hmdb": "HMDB0001487",
+                      "kegg": "C00004",
+                      "chebi": "CHEBI:16908",
+                      "pubchem": "439153"
+                    },
+                    "reason": "Coupled-assay reporter species from the LDH readout, not pathway metabolites."
+                  },
+                  {
+                    "pointer": "/entities/compounds/6",
+                    "name": "NAD+",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "placeholder_product",
+                    "identifiers": {
+                      "hmdb": "HMDB0000902",
+                      "kegg": "C00003",
+                      "chebi": "CHEBI:15846",
+                      "pubchem": "5893"
+                    },
+                    "reason": "Coupled-assay reporter species from the LDH readout, not pathway metabolites."
+                  },
+                  {
+                    "pointer": "/entities/proteins/6",
+                    "name": "EntH",
+                    "kind": "forbidden_identity_present_unmapped",
+                    "forbidden_kind": "heading_or_prose",
+                    "reason": "Appears only as a lowercase gene token inside a list with no stated function; the capitalised protein form never appears. It should be dropped, not exported."
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p0adi4",
+                    "entities": [
+                      "EntB",
+                      "Isochorismatase (EntB)"
+                    ],
+                    "reason": "uniprot:p0adi4 is claimed by 2 differently-named entities"
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p10378",
+                    "entities": [
+                      "EntE",
+                      "enterobactin synthase"
+                    ],
+                    "reason": "uniprot:p10378 is claimed by 2 differently-named entities"
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 14 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 6 reaction(s); this case requires 4",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "8 verified / 0 Unknown-backed placeholder / 2 unresolved, of 10 protein row(s); no placeholder forged an identity, but 2 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin biosynthesis",
+                    "matched": "enterobactin",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "isochorismate synthase",
+                    "matched": "isochorismate",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "isochorismatase",
+                    "matched": "Isochorismatase (EntB)",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "2,3-dihydroxybenzoic acid",
+                    "matched": "2,3-dihydroxybenzoic acid",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "EntC",
+                    "matched": "EntC",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntB",
+                    "matched": "EntB",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntA",
+                    "matched": "EntA",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntE",
+                    "matched": "EntE",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntF",
+                    "matched": "EntF",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 8,
+                "found": 8,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate",
+                    "matched": "isochorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "L-serine",
+                    "matched": "L-serine",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "ATP",
+                    "matched": "ATP",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "matched": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "pyruvate",
+                    "matched": "pyruvate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydroxybenzoic acid",
+                    "matched": "2,3-dihydroxybenzoic acid",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 2,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 8,
+              "placeholder": 0,
+              "unresolved": 2,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 10,
+              "proteins_with_organism": 10,
+              "compounds_total": 14
+            },
+            "graph": {
+              "n_reactions": 8,
+              "n_components": 3,
+              "largest_core_size": 6,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2",
+                "/processes/reactions/3",
+                "/processes/reactions/4",
+                "/processes/reactions/5"
+              ],
+              "isolated_reactions": 2,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 3,
+              "signatures_quote_verified": 3,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 3,
+              "retained_reactions": 8,
+              "true_positives": 3,
+              "unattributed_reactions": 5,
+              "false_positives": null,
+              "false_negatives": 0,
+              "attribution_rate": 0.375,
+              "precision": null,
+              "recall": 1.0,
+              "matched": [
+                {
+                  "signature": "chorismate -> isochorismate [EntC]",
+                  "quote_hash": "919b408857bf1fb5",
+                  "matched_by": [
+                    "/processes/reactions/0"
+                  ]
+                },
+                {
+                  "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate [EntB]",
+                  "quote_hash": "fa17eda89639ec52",
+                  "matched_by": [
+                    "/processes/reactions/1"
+                  ]
+                },
+                {
+                  "signature": "2,3-DHB + L-serine -> enterobactin [EntF]",
+                  "quote_hash": "7be16a685d3bcbff",
+                  "matched_by": [
+                    "/processes/reactions/4"
+                  ]
+                }
+              ],
+              "missing": [],
+              "unverifiable_quotes": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12452463",
+      "title": "Enterobactin: A key player in bacterial iron acquisition and virulence",
+      "slug": "PMC12452463",
+      "requested_pathway": "enterobactin biosynthesis",
+      "requested_organism": "Escherichia coli",
+      "actual_organism": "Escherichia coli (review ranging over many enteric species)",
+      "mechanistic_relevance": "partial",
+      "expected_export": "partial_only",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12452463",
+          "mode": "strict",
+          "attempted": true,
+          "status": "fail",
+          "stage": "post_pipeline",
+          "failure_kind": "contract",
+          "message": "post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]",
+          "issue_codes": [
+            "gate.gate_lifecycle"
+          ],
+          "boundary": "stage3_normalization_gate",
+          "boundary_label": "Stage-3 post-normalization hard gate",
+          "boundary_evidence": "gate.gate_lifecycle",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12452463\\strict\\final_mapped.json",
+          "deliverable": false,
+          "seconds": 1308.12,
+          "semantic": {
+            "paper_id": "PMC12452463",
+            "mode": "strict",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "requested_pathway_anchors_present",
+              "retained_reactions_match_supported_signatures",
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 of 4 requested-pathway anchors absent: ent operon",
+                "findings": [
+                  {
+                    "missing_anchor": "ent operon",
+                    "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+                  }
+                ]
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 8 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 0/8 (0%), recall 0/3 (0%)",
+                "findings": [
+                  {
+                    "signature": "chorismate -> isochorismate [EntC]",
+                    "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase",
+                    "quote_hash": "63aee1a8104316c0",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  },
+                  {
+                    "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate [EntB]",
+                    "quote": "converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate",
+                    "quote_hash": "6a4da84e159cced5",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  },
+                  {
+                    "signature": "DHB -> DHB-AMP [EntE]",
+                    "quote": "activates DHB by adenylation, forming DHB-AMP",
+                    "quote_hash": "315204a63402c6cd",
+                    "reason": "the paper states this reaction and the payload does not contain it",
+                    "kind": "missing_supported_reaction"
+                  }
+                ]
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "0 false real identifier(s); 3 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/protein_complexes/0",
+                    "name": "enterobactin synthase complex",
+                    "kind": "forbidden_identity_present_unmapped",
+                    "forbidden_kind": "heading_or_prose",
+                    "reason": "A complex name explicitly denoting three proteins: 'catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF'."
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p0adi4",
+                    "entities": [
+                      "EntB",
+                      "Isochorismatase (EntB)"
+                    ],
+                    "reason": "uniprot:p0adi4 is claimed by 2 differently-named entities"
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p10378",
+                    "entities": [
+                      "EntE",
+                      "enterobactin synthase"
+                    ],
+                    "reason": "uniprot:p10378 is claimed by 2 differently-named entities"
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 14 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 6 reaction(s); this case requires 2",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "8 verified / 0 Unknown-backed placeholder / 5 unresolved, of 13 protein row(s); no placeholder forged an identity, but 5 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 4,
+                "found": 3,
+                "fraction": 0.75,
+                "matched": [
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate synthase",
+                    "matched": "Isochorismate synthase",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": [
+                  {
+                    "expected": "ent operon",
+                    "quote": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+                  }
+                ]
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 3,
+                "found": 3,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "EntC",
+                    "matched": "EntC",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntB",
+                    "matched": "EntB",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntE",
+                    "matched": "EntE",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate",
+                    "matched": "isochorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "matched": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "DHB-AMP",
+                    "matched": "DHB-AMP",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 1,
+              "missing_supported_reactions": 3,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 8,
+              "placeholder": 0,
+              "unresolved": 5,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 13,
+              "proteins_with_organism": 13,
+              "compounds_total": 9
+            },
+            "graph": {
+              "n_reactions": 8,
+              "n_components": 3,
+              "largest_core_size": 6,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2",
+                "/processes/reactions/3",
+                "/processes/reactions/4",
+                "/processes/reactions/5"
+              ],
+              "isolated_reactions": 2,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 3,
+              "signatures_quote_verified": 3,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 0,
+              "retained_reactions": 8,
+              "true_positives": 0,
+              "unattributed_reactions": 8,
+              "false_positives": null,
+              "false_negatives": 3,
+              "attribution_rate": 0.0,
+              "precision": null,
+              "recall": 0.0,
+              "matched": [],
+              "missing": [
+                {
+                  "signature": "chorismate -> isochorismate [EntC]",
+                  "quote": "The pathway begins with the conversion of chorismate to isochorismate, catalyzed by isochorismate synthase",
+                  "quote_hash": "63aee1a8104316c0",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                },
+                {
+                  "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate [EntB]",
+                  "quote": "converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate",
+                  "quote_hash": "6a4da84e159cced5",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                },
+                {
+                  "signature": "DHB -> DHB-AMP [EntE]",
+                  "quote": "activates DHB by adenylation, forming DHB-AMP",
+                  "quote_hash": "315204a63402c6cd",
+                  "reason": "the paper states this reaction and the payload does not contain it"
+                }
+              ],
+              "unverifiable_quotes": []
+            }
+          }
+        },
+        "research": {
+          "paper_id": "PMC12452463",
+          "mode": "research",
+          "attempted": true,
+          "status": "pass",
+          "stage": "research_report",
+          "failure_kind": "",
+          "message": "research run completed with a citation report",
+          "issue_codes": [
+            "gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier",
+            "gate.protein_enterobactin_synthase_is_missing_a_uniprot_or_drugbank_i",
+            "gate.generated_protein_complex_enterobactin_synthase_complex_componen"
+          ],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12452463\\research\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 792.92,
+          "semantic": {
+            "paper_id": "PMC12452463",
+            "mode": "research",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "requested_pathway_anchors_present",
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 of 4 requested-pathway anchors absent: ent operon",
+                "findings": [
+                  {
+                    "missing_anchor": "ent operon",
+                    "paper_says": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+                  }
+                ]
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 5 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 4/5 (80%), recall 3/3 (100%)",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "0 false real identifier(s); 2 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/protein_complexes/0",
+                    "name": "enterobactin synthase complex",
+                    "kind": "forbidden_identity_present_unmapped",
+                    "forbidden_kind": "heading_or_prose",
+                    "reason": "A complex name explicitly denoting three proteins: 'catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF'."
+                  },
+                  {
+                    "kind": "accession_claimed_by_multiple_entities",
+                    "namespace": "uniprot",
+                    "identifier": "p0adi4",
+                    "entities": [
+                      "EntB",
+                      "Isochorismatase (EntB)"
+                    ],
+                    "reason": "uniprot:p0adi4 is claimed by 2 differently-named entities"
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 10 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 5 reaction(s); this case requires 2",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "7 verified / 0 Unknown-backed placeholder / 3 unresolved, of 10 protein row(s); no placeholder forged an identity, but 3 row(s) carry no identity at all -- this is NOT 'every protein resolved'",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 4,
+                "found": 3,
+                "fraction": 0.75,
+                "matched": [
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate synthase",
+                    "matched": "isochorismate",
+                    "rule": "contains"
+                  }
+                ],
+                "missing": [
+                  {
+                    "expected": "ent operon",
+                    "quote": "The ent (enterobactin) operon in Escherichia coli comprises six genes ( entA , entB , entC , entD , entE , and entF )"
+                  }
+                ]
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 3,
+                "found": 3,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "EntC",
+                    "matched": "EntC",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntB",
+                    "matched": "EntB",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "EntE",
+                    "matched": "EntE",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "chorismate",
+                    "matched": "chorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "isochorismate",
+                    "matched": "isochorismate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "matched": "2,3-dihydro-2,3-dihydroxybenzoate",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "DHB-AMP",
+                    "matched": "DHB-AMP",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "enterobactin",
+                    "matched": "enterobactin",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 1,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 7,
+              "placeholder": 0,
+              "unresolved": 3,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 10,
+              "proteins_with_organism": 10,
+              "compounds_total": 7
+            },
+            "graph": {
+              "n_reactions": 5,
+              "n_components": 1,
+              "largest_core_size": 5,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2",
+                "/processes/reactions/3",
+                "/processes/reactions/4"
+              ],
+              "isolated_reactions": 0,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 3,
+              "signatures_quote_verified": 3,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 3,
+              "retained_reactions": 5,
+              "true_positives": 4,
+              "unattributed_reactions": 1,
+              "false_positives": null,
+              "false_negatives": 0,
+              "attribution_rate": 0.8,
+              "precision": null,
+              "recall": 1.0,
+              "matched": [
+                {
+                  "signature": "chorismate -> isochorismate [EntC]",
+                  "quote_hash": "63aee1a8104316c0",
+                  "matched_by": [
+                    "/processes/reactions/0"
+                  ]
+                },
+                {
+                  "signature": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate [EntB]",
+                  "quote_hash": "6a4da84e159cced5",
+                  "matched_by": [
+                    "/processes/reactions/1",
+                    "/processes/reactions/4"
+                  ]
+                },
+                {
+                  "signature": "DHB -> DHB-AMP [EntE]",
+                  "quote_hash": "315204a63402c6cd",
+                  "matched_by": [
+                    "/processes/reactions/2"
+                  ]
+                }
+              ],
+              "missing": [],
+              "unverifiable_quotes": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "paper_id": "PMC12782028",
+      "title": "Cholesterol and steroid synthesis pathways may be involved in the inhibition of osteosarcoma",
+      "slug": "PMC12782028",
+      "requested_pathway": "cholesterol biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "actual_organism": "Homo sapiens",
+      "mechanistic_relevance": "partial",
+      "expected_export": "strict_exportable",
+      "is_negative_control": false,
+      "paper_text_available": true,
+      "legs": {
+        "strict": {
+          "paper_id": "PMC12782028",
+          "mode": "strict",
+          "attempted": true,
+          "status": "fail",
+          "stage": "stage1",
+          "failure_kind": "unknown",
+          "message": "Extraction failed: Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.",
+          "issue_codes": [],
+          "boundary": "stage1_extraction",
+          "boundary_label": "Stage-1 extraction produced nothing usable",
+          "boundary_evidence": "extraction failed: extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "none",
+          "payload_path": "",
+          "deliverable": false,
+          "seconds": 24.46,
+          "semantic": {
+            "paper_id": "PMC12782028",
+            "mode": "strict",
+            "evaluated": false,
+            "not_evaluated_reason": "the run produced no payload to score",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [],
+            "inapplicable_checks": [],
+            "checks": {},
+            "coverage": {},
+            "scientific_errors": {
+              "false_real_identifiers": 0,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 0,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {},
+            "graph": {},
+            "support": {}
+          }
+        },
+        "research": {
+          "paper_id": "PMC12782028",
+          "mode": "research",
+          "attempted": true,
+          "status": "pass",
+          "stage": "research_report",
+          "failure_kind": "",
+          "message": "research run completed with a citation report",
+          "issue_codes": [],
+          "boundary": "passed",
+          "boundary_label": "no failure",
+          "boundary_evidence": "",
+          "research_failure": "",
+          "research_failure_label": "",
+          "research_failure_evidence": "",
+          "payload_source": "final_mapped.json",
+          "payload_path": "runs_verify\\2026-08-04_1754\\papers\\PMC12782028\\research\\final_mapped.json",
+          "deliverable": true,
+          "seconds": 928.88,
+          "semantic": {
+            "paper_id": "PMC12782028",
+            "mode": "research",
+            "evaluated": true,
+            "not_evaluated_reason": "",
+            "ok": false,
+            "confirmed": false,
+            "failed_checks": [
+              "requested_pathway_anchors_present",
+              "no_real_id_or_name_conflict"
+            ],
+            "inapplicable_checks": [],
+            "checks": {
+              "requested_pathway_anchors_present": {
+                "name": "requested_pathway_anchors_present",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "1 of 4 requested-pathway anchors absent: mevalonate pathway",
+                "findings": [
+                  {
+                    "missing_anchor": "mevalonate pathway",
+                    "paper_says": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+                  }
+                ]
+              },
+              "reaction_source_carrier_present": {
+                "name": "reaction_source_carrier_present",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "all 4 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)",
+                "findings": []
+              },
+              "retained_reactions_match_supported_signatures": {
+                "name": "retained_reactions_match_supported_signatures",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "attribution rate (signature set is a SUBSET) 3/4 (75%), recall 3/3 (100%)",
+                "findings": []
+              },
+              "organism_compatible": {
+                "name": "organism_compatible",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)",
+                "findings": []
+              },
+              "no_real_id_or_name_conflict": {
+                "name": "no_real_id_or_name_conflict",
+                "ok": false,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "4 false real identifier(s); 4 identity conflict finding(s) total",
+                "findings": [
+                  {
+                    "pointer": "/entities/proteins/13",
+                    "name": "LIPA",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "heading_or_prose",
+                    "identifiers": {
+                      "uniprot": "P38571"
+                    },
+                    "reason": "A degradative lysosomal acid lipase appearing in the steroid-biosynthesis KEGG list. Directionally the opposite of biosynthesis."
+                  },
+                  {
+                    "pointer": "/entities/proteins/14",
+                    "name": "LBR",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "heading_or_prose",
+                    "identifiers": {
+                      "uniprot": "Q14739"
+                    },
+                    "reason": "Lamin B receptor, a nuclear envelope protein in the enrichment list with no catalytic role stated."
+                  },
+                  {
+                    "pointer": "/entities/proteins/18",
+                    "name": "SREBF1",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "regulator_as_metabolite",
+                    "identifiers": {
+                      "uniprot": "P36956"
+                    },
+                    "reason": "Transcription factors that appear in the Reactome cholesterol-biosynthesis gene list but catalyse nothing. The list is a membership set from enrichment statistics, not a reaction participant set."
+                  },
+                  {
+                    "pointer": "/entities/proteins/19",
+                    "name": "SREBF2",
+                    "kind": "false_real_identifier",
+                    "forbidden_kind": "regulator_as_metabolite",
+                    "identifiers": {
+                      "uniprot": "Q12772"
+                    },
+                    "reason": "Transcription factors that appear in the Reactome cholesterol-biosynthesis gene list but catalyse nothing. The list is a membership set from enrichment statistics, not a reaction participant set."
+                  }
+                ]
+              },
+              "no_rejected_rag_reaction_reintroduced": {
+                "name": "no_rejected_rag_reaction_reintroduced",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "none of the 2 rejected RAG claim(s) reappear in the payload",
+                "findings": []
+              },
+              "minimum_connected_core": {
+                "name": "minimum_connected_core",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "largest chemically connected core is 4 reaction(s); this case requires 2",
+                "findings": []
+              },
+              "placeholder_identities_distinguished": {
+                "name": "placeholder_identities_distinguished",
+                "ok": true,
+                "applicable": true,
+                "inapplicable_reason": "",
+                "summary": "20 verified / 0 Unknown-backed placeholder / 0 unresolved, of 20 protein row(s); every protein row carries a real external identity",
+                "findings": []
+              }
+            },
+            "coverage": {
+              "pathway_anchors": {
+                "label": "pathway_anchors",
+                "expected": 4,
+                "found": 3,
+                "fraction": 0.75,
+                "matched": [
+                  {
+                    "expected": "cholesterol biosynthesis",
+                    "matched": "cholesterol",
+                    "rule": "contains"
+                  },
+                  {
+                    "expected": "lanosterol",
+                    "matched": "lanosterol",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "cholesterol",
+                    "matched": "cholesterol",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": [
+                  {
+                    "expected": "mevalonate pathway",
+                    "quote": "catalyzes the final step in the cholesterol biosynthesis pathway (mevalonate pathway), converting desmosterol to cholesterol"
+                  }
+                ]
+              },
+              "expected_enzymes": {
+                "label": "expected_enzymes",
+                "expected": 4,
+                "found": 4,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "LSS",
+                    "matched": "LSS",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "CYP51A1",
+                    "matched": "CYP51A1",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "MSMO1",
+                    "matched": "MSMO1",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "DHCR24",
+                    "matched": "DHCR24",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              },
+              "expected_metabolites": {
+                "label": "expected_metabolites",
+                "expected": 5,
+                "found": 5,
+                "fraction": 1.0,
+                "matched": [
+                  {
+                    "expected": "2,3-oxidosqualene",
+                    "matched": "2,3-oxidosqualene",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "lanosterol",
+                    "matched": "lanosterol",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "desmosterol",
+                    "matched": "desmosterol",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "lanosterol",
+                    "matched": "lanosterol",
+                    "rule": "exact"
+                  },
+                  {
+                    "expected": "cholesterol",
+                    "matched": "cholesterol",
+                    "rule": "exact"
+                  }
+                ],
+                "missing": []
+              }
+            },
+            "scientific_errors": {
+              "false_real_identifiers": 4,
+              "placeholder_backed_proteins": 0,
+              "unsupported_reactions": 0,
+              "reactions_missing_source_carrier": 0,
+              "cross_organism_reactions": 0,
+              "orphaned_references": 0,
+              "missing_pathway_anchors": 1,
+              "missing_supported_reactions": 0,
+              "quarantined_processes": 0
+            },
+            "identity_census": {
+              "verified": 20,
+              "placeholder": 0,
+              "unresolved": 0,
+              "pathbank_unknown_sentinel": 0,
+              "proteins_total": 20,
+              "proteins_with_organism": 20,
+              "compounds_total": 5
+            },
+            "graph": {
+              "n_reactions": 4,
+              "n_components": 1,
+              "largest_core_size": 4,
+              "largest_core_pointers": [
+                "/processes/reactions/0",
+                "/processes/reactions/1",
+                "/processes/reactions/2",
+                "/processes/reactions/3"
+              ],
+              "isolated_reactions": 0,
+              "cofactors_excluded": 29,
+              "orphaned_reference_examples": []
+            },
+            "support": {
+              "signature_set_complete": false,
+              "signatures_declared": 3,
+              "signatures_quote_verified": 3,
+              "signatures_unverifiable": 0,
+              "signatures_matched": 3,
+              "retained_reactions": 4,
+              "true_positives": 3,
+              "unattributed_reactions": 1,
+              "false_positives": null,
+              "false_negatives": 0,
+              "attribution_rate": 0.75,
+              "precision": null,
+              "recall": 1.0,
+              "matched": [
+                {
+                  "signature": "2,3-oxidosqualene -> lanosterol [LSS]",
+                  "quote_hash": "62766688c06eb41a",
+                  "matched_by": [
+                    "/processes/reactions/0"
+                  ]
+                },
+                {
+                  "signature": "lanosterol -> 4,4-dimethylcholesta-8(9),14,24-trien-3b-ol [CYP51A1]",
+                  "quote_hash": "5678823fe8c3baed",
+                  "matched_by": [
+                    "/processes/reactions/1"
+                  ]
+                },
+                {
+                  "signature": "desmosterol -> cholesterol [DHCR24]",
+                  "quote_hash": "f43d58029291b540",
+                  "matched_by": [
+                    "/processes/reactions/2"
+                  ]
+                }
+              ],
+              "missing": [],
+              "unverifiable_quotes": []
+            }
+          }
+        }
+      }
+    }
+  ],
+  "notes": [
+    "PARTIAL RUN -- this is NOT a complete benchmark report. 6/10 papers, 12/20 legs. Every rate below is computed over what was actually attempted, so an unattempted paper is never counted as a pipeline failure; but the run cannot be quoted as a benchmark result until the missing legs exist.",
+    "gold cases with NO attempted leg (4): PMC13231680, PMC12657337, PMC12421875, PMC12312563",
+    "2 check(s) across all legs could not be evaluated (most likely the RAG admission report, which the driver did not previously persist). They are excluded from 'confirmed' and are NOT counted as passes."
+  ]
+}

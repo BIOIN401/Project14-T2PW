@@ -2932,3 +2932,75 @@ C-030a's reviewer reported that **`g11_evidence.py` "does not exist anywhere in 
 primary checkout **and in that reviewer's own worktree**, and it is not gitignored. Its `git ls-files | grep g11`
 was mis-scoped. The approval stands on measurements the reviewer made itself; **the tooling claim is struck so
 no later session inherits it.**
+
+---
+
+## D-053 — T-100 is RUN and NOT DISCHARGED; strict benchmark figures still may NOT be quoted · 2026-08-18 · LOCKED
+
+T-100's code-card prerequisites (**C-053**, **C-056b**) are merged, so the milestone was run at integration
+tip `3a83b15` using the **prescribed** tool — `scripts/bench_acceptance.py`, which by its own docstring
+*"touches no network or LLM"*. **No new benchmark procedure was invented.**
+
+### 1. What ran, and what it returned
+
+| Job | Result | Evidence |
+|---|---|---|
+| `--validate-gold` | **exit 0** — gold set `2026-08-01.1`, 10 cases (9 mechanistic, 1 negative control), 4 strict-exportable | `evidence/g11/T-100/01-validate-gold.json` |
+| `--run-dir runs_verify/2026-08-04_1754` | **exit 1** | `evidence/g11/T-100/02-score-verify-1754.json`, `evidence/t100_score_verify_1754.json` |
+
+```
+  1. [FAIL] zero known false real identifiers        observed: 13
+  2. [FAIL] zero unsupported retained reactions      observed: 2
+  3. [PASS] zero referential-integrity violations    observed: 0
+  4. [FAIL] meaningful requested-pathway coverage    0/4 = 0%
+  5. [FAIL] strict PWML pass rate                    0/2 = 0%
+  status: PARTIAL -- not a quotable benchmark result   (6/10 papers, 12/20 legs)
+```
+
+### 2. **T-100 is NOT DISCHARGED, and strict figures may NOT be quoted.** Two independent reasons.
+
+**(a) The tool itself refuses.** `status: PARTIAL -- not a quotable benchmark result`. Four gold cases have
+**no attempted leg** (`PMC13231680`, `PMC12657337`, `PMC12421875`, `PMC12312563`). *"An unattempted or
+unscorable paper is missing coverage, NOT a pipeline failure."* **Weakening that judgement to quote a number
+is exactly what this decision forbids.**
+
+**(b) Strict `0/2` on historical artifacts is BY DESIGN, not a regression.** The strict gate requires
+`strict_acceptance_eligible` **affirmatively**, which requires a `release_status` record on the manifest row.
+**C-056b measured 0 of 143 committed rows carry one** — they predate C-053. So historical runs score **zero
+strict successes structurally**, which the control plane already warned must not be misread as a regression.
+It is a property of the *artifacts*, not of the code.
+
+**T-100 therefore requires FRESH Wave B legs.** `TEST_MATRIX.md:477`: `PMC12452463 ×2, PMC12096016 ×2`, ~1.5 h,
+expecting both to pass the quarantine boundary and **`PMC12452463 → review_required`, not strict success
+(TRAP-1)**. That leg production is LLM-backed and was **not run** — deferred for quota, not skipped silently.
+
+### 3. Priorities 1, 2 and 4 are NOT attributable to any card merged today
+
+`git diff --stat a662c3f..HEAD -- src/t2pw/bench/semantic.py src/t2pw/bench/goldset.py` is **empty**. The
+priority 1–3 scorer and the gold set are **byte-identical across all five merges** (C-052, C-050k, C-056a,
+C-030a, C-056b), and the run artifacts are from **2026-08-04**. So the 13 false real identifiers
+(`PMC12096016`, `PMC12180156`, `PMC12782028`, `PMC12856317`) and the 2 unsupported retained reactions
+(`PMC12180156`) are **pre-existing properties of an August partial run, measured by untouched code.**
+
+**Classified under `PRODUCT_CONTRACT` §14: NOT a `product_contract_violation` caused by this sprint's merges.**
+Whether each is a genuine pipeline defect or a `gold_data_defect` is **unadjudicated and out of today's
+scope** — and **a benchmark failure does not by itself justify a code change.** No correction campaign is
+opened on it.
+
+### 4. What T-100 DID establish — C-056b is live and correct in the shipped report
+
+The `SEMANTIC PATHWAY SUCCESS` question now reads, verbatim in the generated report:
+
+> *"…and the run itself did not record a FAILED runtime semantic verdict? **The runtime verdict can only
+> REMOVE a confirmation here; a runtime pass is never counted as one.**"*
+
+That is C-056b's subtractive-only rule **observable in production output**, not merely in a test — the
+strongest available confirmation that the 1-of-4 inflation hazard is closed at the seam that would have
+inflated. Separated denominators also hold: extraction 4/5 = 80% and gold relevance 8/10 = 80% are reported
+**without sharing a denominator** with the failing rates, which is the whole point of the C-041 split.
+
+### 5. Standing prohibition, restated
+
+**No strict benchmark-success figure may be quoted from this run or any historical run.** The next quotable
+figure requires the fresh Wave B legs of §2. **Do not weaken the PARTIAL judgement, the affirmative
+`strict_acceptance_eligible` gate, or priorities 1–3 to obtain one.**
