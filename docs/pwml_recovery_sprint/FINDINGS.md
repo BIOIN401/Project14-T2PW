@@ -1099,3 +1099,97 @@ It measures exactly what ceiling 1 names: production code, tests, and hand-writt
 Generated evidence is counted by ceilings 2 and 3, where it belongs. **Charters already dispatched carry the
 old command; when ratifying an overage, re-measure with the corrected one before concluding anything.**
 Unowned as a control-plane cleanup; the corrected command is usable immediately.
+
+---
+
+## F-054 — F-049's enumeration is closed: 119 of 147 test files belong to no chunk, and the predicate three cards used to certify coverage is unsound
+
+**Registered 2026-08-18** by an independent read-only audit at `1c06918`. **This closes the enumeration
+F-049 asked for.** F-049 stands; it was right about the shape and understated the size by an order of
+magnitude.
+
+### 1. The measured partition
+
+`tests/` holds **155 files**, of which **147 are collectable `test_*.py` modules** (plus 2 helper modules,
+1 `test_`-prefixed JSON data file, and 5 fixture JSONs).
+
+**28 of 147 are in a chunk. 119 — 81% of the suite — are in none.**
+
+| Chunk | Files | Source |
+|---|---|---|
+| A | 6 | `TEST_MATRIX.md:213` |
+| B | 6 | `:214` |
+| C | 8 | `:215` |
+| D-core | 5 | `chunk_d_gate.py:63-67` |
+| D-s8 | 1 | `:69` |
+| D-qb | 1 | `:70` |
+| E | 1 | `TEST_MATRIX.md:218` |
+
+Static `def test_` across the 119 chunkless files is **1843**, and static counts run ~88% of collected node
+IDs on calibrated samples (the 20 SMOKE files give 415 static against 460 collected), so roughly **2100
+collected node IDs are covered by no standing gate**.
+
+**The two membership sources agree exactly** — symmetric difference is empty for both Chunk D and SMOKE, no
+file is in two chunks, and no chunk names a file that does not exist. There is **no marker, no glob, no
+`conftest.py`** anywhere in the repo; membership is two hand-maintained literal lists.
+`evidence/baseline_suite.py:48-53` globs all 147 for the `BASELINE.md` full-suite capture, which proves a
+residual glob is cheap to write — it is simply not a merge gate.
+
+### 2. ⚠ The certification predicate three cards used is measurably unsound
+
+`c056b_gate_counts.json:58` and `c030a_gate_counts.json:40` certify a file as chunkless by *"the filename
+occurs 0 times in `TEST_MATRIX.md` and 0 times in `chunk_d_gate.py`"* — the predicate F-049 itself states.
+
+Measured against the real partition it produces **no false negatives and exactly one false positive:
+`tests/test_map_ids.py`**. `grep -c test_map_ids TEST_MATRIX.md` returns **2**, both substring hits inside
+`test_map_ids_name_gate` (Chunk C). `test_map_ids.py` itself carries **42 test functions and is in no
+chunk**. A card running the published heuristic on it would have concluded, wrongly, that it was covered.
+
+**The sound predicate is stem-exact membership** in `TEST_MATRIX.md:213-218` ∪ `:242-252` ∪
+`chunk_d_gate.py:63-70`. Every future card and reviewer uses that.
+
+### 3. Two of F-049's three worked examples were understated
+
+* **C-053: five of five, not four of five.** As merged (`3fde1f1`) it touched exactly five test files and
+  **all five are chunkless**. `LEDGER.md:620-622` names a different five and phrases
+  `test_batch_driver_seam_golden` as though it were the chunked one; it is not — zero hits in both sources.
+* **C-052: the claim was 5 of 7 at planning time; the merged diff (`c0df0d0`) touched 2 test files and
+  both are chunkless.** The substance holds and is in fact absolute rather than 5/7.
+* `tests/test_prefreeze_third_export_seam.py` — **confirmed** at zero and zero. It reaches **two** card
+  seams directly (`pwml/ir.py` → C-050j, `app/streamlit_app.py` → C-055).
+
+### 4. Minimum focused sets for the five open cards, by direct coupling
+
+| Card | Seam | Chunkless files directly coupled | static test fns |
+|---|---|---|---|
+| C-050j | `pwml/ir.py` | **14** | 220 |
+| C-055 | `app/streamlit_app.py`, `rag/controller.py` | **13** | 146 |
+| C-056c | `release_status.py`, `strict_quarantine.py` | **7** | 74 |
+| C-057 | `strict_quarantine.py` | **6** | 65 |
+| C-054 | `bench/goldset.py` | **5** | 58 |
+
+Union: **32 distinct files, ~440 static test functions (~500 collected)**. Second-order reach roughly
+doubles it. **Seven of C-055's thirteen load `streamlit_app.py` by file path for AST extraction or exec** —
+so a module-level script-body edit hits them hardest, and none of them is in a chunk.
+
+### 5. Two specific exposures worth naming
+
+* **`tests/test_measurement_tree_pin.py` is in no chunk and guards the G11 measurement-pin infrastructure
+  itself** — `evidence/tree_pin.py` and `evidence/pinned_pytest.py`. A regression in the exit-98 wrong-tree
+  launcher would be caught by **nothing** in the mandated gate set. That is the instrument that certifies
+  every other measurement.
+* **`tests/helpers_eligibility.py` has no chunked consumer at all.** Its only consumer,
+  `test_paper_eligibility_corrections.py:72`, is itself chunkless, so a change to that helper is invisible
+  to every chunk. (`helpers_prefreeze.py` is better off — six chunked files reach it.)
+
+### 6. Owner and remedy
+
+**Still unowned, and the per-card focused set is a workaround, not the fix.** The durable remedy is a
+residual gate — a chunk F, or a glob over `tests/` minus the 28 — added to `TEST_MATRIX.md`, since
+`baseline_suite.py` already demonstrates the glob. **Until that exists, every card names its own set by the
+stem-exact predicate and runs it explicitly, and no reviewer accepts a chunk result as evidence about a
+chunkless file.**
+
+**Repaired in the same commit as this finding:** `.claude/agents/pwml-test-runner.md:52-54` said Chunk D =
+177 with a core of 150. The gate says **187 = 160 + 4 + 23**. Every test-runner dispatch since C-050k merged
+was reading a stale count.

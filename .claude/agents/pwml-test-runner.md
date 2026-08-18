@@ -49,9 +49,17 @@ surviving count (**must be 0**) · cleanup success/failure.
 - `--basetemp=<unique dir>` on **every** pytest invocation. Without it 83 tests error
   with `PermissionError` and you will report a false regression.
 - **Never** run the full suite unchunked — it approaches 16 GB. Use `TEST_MATRIX.md`.
-- Smoke = chunks A+B+C = **460** tests, ~40 s. Chunk D = **177** tests: the deterministic
-  core is 150 tests in ~1 s, the **complete 177-test gate 9–13 min**, dominated by the 27
-  per-node AppTest processes. Chunk E skips silently when `runs/` is absent — **report the
+- Smoke = chunks A+B+C = **460** tests, ~40 s. Chunk D = **187** tests: the deterministic
+  core is 160 tests in ~1 s, the **complete 187-test gate 9–13 min**, dominated by the 27
+  per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
+  carrying C-050k** (merged `d8de94d`; D-044 § 2) — the integration branch does. Anything
+  saying 177 or 179, or a core of 150 or 152, is stale.
+- **Chunk membership covers only 28 of the 147 test files.** The other 119 belong to no
+  chunk (F-049), so a green chunk run is not evidence about them. Certify membership by
+  **stem-exact** match against `TEST_MATRIX.md:213-218`, its SMOKE block `:242-252`, and
+  `evidence/chunk_d_gate.py:63-70` — **never by grepping the filename**, which wrongly
+  reports `tests/test_map_ids.py` as covered through a substring collision with
+  `test_map_ids_name_gate`. Chunk E skips silently when `runs/` is absent — **report the
   skip**, never treat it as a pass.
 - Never launch a full pinned benchmark (~7 h) unless the prompt is `T-104`/`T-105`.
   Milestone runs are scheduled by the orchestrator, never by you.
