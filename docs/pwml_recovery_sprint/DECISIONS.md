@@ -3004,3 +3004,178 @@ inflated. Separated denominators also hold: extraction 4/5 = 80% and gold releva
 **No strict benchmark-success figure may be quoted from this run or any historical run.** The next quotable
 figure requires the fresh Wave B legs of §2. **Do not weaken the PARTIAL judgement, the affirmative
 `strict_acceptance_eligible` gate, or priorities 1–3 to obtain one.**
+
+---
+
+## D-054 — Three of D-052's F-053 claims are wrong; C-056c's real boundary is four functions, not two · 2026-08-18 · LOCKED
+
+**F-053 stands. Its binding prohibition stands unchanged. Its stated mechanism does not.** An independent
+read-only measurement of the live tip (`1c06918`) confirmed two of D-052's six load-bearing claims, refuted
+one, found one incomplete, found one over-read, and found one mislabelled. C-056c must be chartered off the
+corrected facts below, **not** off D-052 §2 as written.
+
+This is the fourth time in this sprint that a record's cited mechanism proved false while its conclusion
+survived. The conclusion surviving is why the prohibition is not touched here.
+
+### 1. REFUTED — `semantic_verdict` does not discard `evaluable`
+
+D-052 says `semantic_verdict` *"computes `evaluable` and **discards** it"*. Live, at
+`src/t2pw/pipeline/release_status.py:344-356`, it is **consumed**:
+
+```
+344:    evaluable = 0
+...
+349:            evaluable += 1
+...
+353:        return SEMANTIC_FAILED, "", tuple(failed)
+354:    if not evaluable:
+355:        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_GATING_CHECK_EVALUABLE, ()
+356:    return SEMANTIC_PASSED, "", ()
+```
+
+**The accurate statement:** `evaluable` is consumed **only as a boolean at `:354`**. The *count*, and the
+*identities* of the checks that were evaluable, are dropped at the returns `:353` and `:356`, which carry no
+evaluability payload. The loop never records the evaluable names at all — only `failed` names survive
+(`:351`).
+
+**The gap F-053 names is therefore real and unchanged**: nothing in the return distinguishes "1 of 4
+evaluable, that one passed" from "4 of 4 evaluable, all passed". But it is not a discarded value; it is a
+**boolean collapse that was the value's only use**. A card told to "stop discarding it" would look for a
+deletion that does not exist.
+
+D-052's line cite `:339-356` is also mis-ended. The function head is **`:307`**; `:339` is a `reason =`
+assignment mid-guard.
+
+### 2. INCOMPLETE — the minimum is four sites in two files, not two
+
+D-052 names two changes: a fourth return value from `semantic_verdict`, and a new `classify_release_status`
+argument. **Both are necessary and neither is sufficient.** With only those two, the evaluability reaches
+`classify_release_status` and stops there — it never reaches a manifest, so **F-053 would not be
+discharged**. The minimum boundary is:
+
+| # | File :: symbol | Change |
+|---|---|---|
+| 1 | `release_status.py :: semantic_verdict` `:307-356` | widen the return to carry the evaluable set. **Exactly one `src/` caller** (`strict_quarantine.py:2130`), so migration cost is bounded |
+| 2 | `release_status.py :: ReleaseStatus` `:223-259` **and `to_dict()` `:275-290`** | one new field with a default, one new key. **D-052 does not name this and it is mandatory** |
+| 3 | `release_status.py :: classify_release_status` `:359-478` | one keyword-only parameter with a byte-preserving default, mirroring `semantic_failed_checks` `:370` |
+| 4 | `strict_quarantine.py :: quarantine_and_close` — **statements `:2130` and `:2132-2144` only** | unpack the wider return, pass the new argument |
+
+`batch/driver.py` needs **zero** edits: `_release_status_row` (`:647-667`) copies the dict wholesale, so a
+new `to_dict()` key propagates to the manifest by itself.
+
+### 3. OVER-READ — D-042 §4 withholds one parameter on one function from one card
+
+D-052 paraphrases D-042 §4 as *"a new parameter on that seam is NOT granted and needs its own card"*, and
+attaches it to `classify_release_status`. D-042 §4's actual sentence (`DECISIONS.md:2277`) is:
+
+> **Giving `quarantine_and_close` an `admission` parameter is NOT granted to C-056a**; it is a signature
+> change on a seam C-057 also touches, and it needs its own card.
+
+It names one parameter, one function, one card. It says nothing about `classify_release_status`. And **new
+`classify_release_status` parameters have already been granted twice and shipped** — `semantic_evaluation`
+and `semantic_not_evaluated_reason` (`:368-369`) under C-056a, `semantic_failed_checks` (`:370`) under
+C-056b. Three keyword-only parameters with byte-preserving defaults already exist on that signature; a
+fourth is **precedented, not prohibited**.
+
+**D-052's own later, narrower restatement is faithful and is the one that binds:** *"an `admission`
+parameter on `quarantine_and_close` remains ungranted"*. **C-056c charters off that restatement.** It may
+add a keyword-only parameter to `classify_release_status`. It may **not** touch `quarantine_and_close`'s
+signature, and it may not touch the `evaluate_production_semantics` argument list at `:2123-2129`.
+
+### 4. MISLABELLED — the 1-of-4 figure is the null-context arm, not "the seam's own derivation"
+
+The numbers in D-052 are right and reproduce from `evidence/c056b_s0_measured.json` over 32 payload legs:
+
+| Arm | evaluable-count distribution | verdicts |
+|---|---|---|
+| `pathway_context_none` | `{"1": 32}` | 7 failed / 25 passed |
+| `gold_derived` | `{"1": 1, "3": 31}` | 9 failed / 23 passed |
+
+**None ever reached four — confirmed.** But D-052 labels the 1-of-4 arm *"the seam's own derivation"*, and
+the measurement script names it `pathway_context_none` (`c056b_s0_measure.py:213`). The seam's actual
+derivation is `strict_quarantine.py:2116` `requested = pathway_context_from_stage_zero(pathway_context)`,
+and **both live callers pass a real context** (`streamlit_app.py:1139` and `:3993`). Under a
+context-carrying production run the seam sees the `gold_derived` shape — **three** evaluable, not one.
+
+The null-context arm is correct **for the committed artifacts**, whose payloads carry no context exactly as
+`quarantine_and_close`'s docstring warns at `:1822-1828`. It is not the production derivation. D-052's next
+clause does report the 3-of-4 figure, so the record holds both numbers; only the label is wrong.
+
+**Consequence for C-056c:** the shortfall it must make visible is **3 of 4 in production**, and 1 of 4 only
+when replaying context-free artifacts. A card that hard-codes "one evaluable" would be wrong in production.
+
+### 5. CONFIRMED, exhaustively — the two claims the prohibition rests on
+
+* **`ReleaseStatus.semantic_confirmed` (`release_status.py:261-264`) has ZERO `src/` consumers.** Exactly
+  four repo-wide hits: the definition, one `tests/` assertion
+  (`test_release_status_classification.py:255`), one *different* symbol
+  (`test_c056b_semantic_denominators.py:389` asserts `ModeResult` has no `runtime_semantic_confirmed`), and
+  D-052 itself. It is unreferenced, not unreachable.
+* **`CHECK_RAG_REINTRODUCTION` is structurally unevaluable at this seam.** Three links:
+  `strict_quarantine.py:2123-2129` never passes `admission=`; `semantic_production.py:278` defaults it to
+  `None`; `semantic.py:940-949` then sets a non-empty `inapplicable_reason`, so
+  `release_status.py:347` `continue`s past it before `ok` is read. **There is no admission report to pass** —
+  `quarantine_and_close` has no such parameter and `strict_quarantine.py` contains zero
+  `AdmissionReport` / `admission_report` / `rag_admission` tokens. The seam says so itself at `:2120-2122`.
+
+**Every predicate on `semantic_evaluation` in `src/` today is either `== SEMANTIC_FAILED` (subtractive, two
+live denominator uses at `acceptance.py:752` and `:807-811`) or `== SEMANTIC_PASSED` (affirmative, zero live
+uses).** The only affirmative escape is `describe()`'s rendering at `release_status.py:513-518`, which
+reaches a reader's eyes and never a rate — exactly as F-053 says.
+
+**THE BINDING PROHIBITION IS UNCHANGED AND UNWEAKENED.** No card may read `semantic_evaluation == "passed"`
+affirmatively, or build any denominator, numerator or rate on it, until F-053 is discharged.
+
+### 6. RULING — the serialized shape of evaluability
+
+The record never specified **what** travels beside the verdict. Three shapes were available: the names of
+the evaluable checks, a bare count, or the full four-way applicable/inapplicable map. **This ruling picks
+the third**, because it is the only one from which a reader can reconstruct *why* a check did not count, and
+because `semantic.py` already computes the `inapplicable_reason` strings that make it free.
+
+**C-056c serializes, beside the verdict: for each of the four `SEMANTIC_GATING_CHECKS`, whether it was
+applicable, and when it was not, the `inapplicable_reason` already produced.** A count is derivable from it;
+the reverse is not.
+
+### 7. Out of scope, and each already ungranted
+
+* **Four-of-four evaluability is unreachable and stays out of scope.** Making `CHECK_RAG_REINTRODUCTION`
+  evaluable needs the `admission` parameter — ungranted at `DECISIONS.md:2277`, and colliding with C-057.
+  **C-056c makes the shortfall visible; it never closes it.**
+* **Lifting the prohibition is a separate product decision.** C-056c builds the carrier. Authorizing an
+  evaluability-aware affirmative predicate, or any rate built on one, is a later ruling and not an
+  implementation choice.
+* `bench/semantic.py`, `bench/semantic_production.py`, `bench/acceptance.py`, `streamlit_app.py` and
+  `batch/driver.py` are **not** C-056c's.
+
+### 8. Two consequences that must be disclosed, not absorbed
+
+* **`quarantine_report["schema_version"]` 5 → 6** (`strict_quarantine.py:2219`), with its pin at
+  `tests/test_strict_quarantine_release_seam.py:699`. The house rule mandating the bump is stated in-file
+  at `:2214-2218`. **Authorized, and it must be stated in the card's report.**
+* **`tests/test_batch_driver_seam_golden.py`'s GOLDEN digests move.** `:112` folds
+  `row.get("release_status")` into a per-leg digest and `:174-182` pins seven sha256s, so **any** new
+  `to_dict()` key moves at least the two release-status-carrying legs. **Authorized as a deliberate baseline
+  move under merge rule 4, with an exact documented delta** — the same mechanism D-052 §1(b) ratified for
+  C-056b. **It is disclosed and ratified, never absorbed silently.**
+
+### 9. C-057 serialization — confirmed at file level, unverified at function level
+
+C-056c touches exactly one function in `strict_quarantine.py`: `quarantine_and_close`, and within it only
+`:2130` and `:2132-2144`. **C-057 has no charter and no prompt file**, so its functions are UNVERIFIED; its
+lineage writes would most naturally land in `_admit_processes` (`:1095`), `_prune_entities` (`:1294`),
+`_prune_locations` (`:1349`), `_prune_biological_states` (`:1419`) or `_drop_quarantined_processes`
+(`:1519`) — in which case the two are merely same-file — but could land in `quarantine_and_close`'s ~530-line
+body, in which case they are the same function.
+
+**They serialize regardless**, as `MASTER_PLAN.md:417` and `:430` already mandate. **C-056c goes first**, and
+C-057's charter must be written against the resulting live source.
+
+### 10. F-049 exposure — six files, 72 tests, zero chunk coverage
+
+`test_strict_quarantine_release_seam.py` (24), `test_batch_pwml_artifact_naming.py` (13),
+`test_release_status_classification.py` (12), `test_semantic_release_gating.py` (12),
+`test_c056b_semantic_denominators.py` (9) and `test_batch_driver_seam_golden.py` (2) appear **zero** times in
+`TEST_MATRIX.md`'s chunk tables and **zero** times in `evidence/chunk_d_gate.py`. **SMOKE contains none of
+them.** C-056c must name all six as its focused set and run them explicitly; no chunk it is told to run will
+contain any of them.
