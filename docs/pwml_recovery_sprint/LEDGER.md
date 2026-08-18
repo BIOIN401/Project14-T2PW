@@ -767,11 +767,11 @@ C-040/C-050/C-051 ownership lock that governs the surrounding seams.
 
 | ID | Milestone | Status | After | Legs | Wall clock |
 |---|---|---|---|---|---|
-| T-100 | M1 | `BLOCKED` | Wave B | PMC12452463 ×2, PMC12096016 ×2 | ~1.5 h |
-| T-101 | M2 | `BLOCKED` | Wave C | + PMC12444477 ×2, PMC12782028, PMC12312563 | ~2 h |
-| T-102 | M3 | `BLOCKED` | C-052 | PMC12856317 equivalence | ~25 min |
-| T-103 | M4 | `BLOCKED` | C-055 | 4 RAG legs | ~1.5 h |
-| T-104 | M5 first RC | `BLOCKED` | Wave E | full pinned, 20 legs | ~7 h |
+| T-100 | M1 | **`IN PROGRESS` 2026-08-18.** Prerequisite Wave B complete. First scoring run on historical artifacts returned **`PARTIAL` — not a quotable benchmark result** (D-053): 6/10 papers, 12/20 legs, four gold cases with no attempted leg, and strict `0/2` **structurally** because 0 of 143 committed rows carry a `release_status` (they predate C-053). **Fresh curator-enabled legs authorized by the product owner and RUNNING** — `runs_verify/2026-08-18_1328`, topics `topics_t100.txt`, G11 report `evidence/g11/T-100/03-waveb-fresh-legs.json`. **Quote no strict figure until `bench_acceptance.py` itself declares the result complete.** | Wave B | PMC12452463 ×2, PMC12096016 ×2 | ~1.5 h |
+| T-101 | M2 | **`PREREQUISITE SATISFIED`, not started.** **RECONCILED 2026-08-18:** Wave C is complete — C-040 `334ad88`, C-041 `b5bbf08`, C-042 `8917349`, C-043 `3c04d4b`, C-044 `8f1a692`, C-045 in composite `beddcdd`. Runnable once T-100 discharges and the heavy slot frees. | Wave C | + PMC12444477 ×2, PMC12782028, PMC12312563 | ~2 h |
+| T-102 | M3 | **`PREREQUISITE SATISFIED`, not started.** **RECONCILED 2026-08-18:** its sole prerequisite **C-052 is merged** (`c0df0d0`). The cheapest unrun milestone (~25 min). Acceptance: reload + re-export with **all resolvers disabled** must give an identical `canonical_graph_sha256`, with equivalence proven by parsing and normalizing JSON, PWML **and** SBML — C-020 binds: comparing one JSON hash to itself is not acceptable evidence. | C-052 | PMC12856317 equivalence | ~25 min |
+| T-103 | M4 | **`BLOCKED` on C-055 — the only remaining card that gates a milestone.** C-055 is `DEPENDENCY-READY, NOT STARTED` (all three deps merged). | C-055 | 4 RAG legs | ~1.5 h |
+| T-104 | M5 first RC | **`PREREQUISITE SATISFIED` on paper, not started.** **RECONCILED 2026-08-18:** Wave E is complete — C-060 `f2f7599`, C-060a `6c98508`, C-061 + C-061a `afcbf1d`. A full 20-leg RC is ~7 h and should follow T-101/T-102/T-103, not precede them. | Wave E | full pinned, 20 legs | ~7 h |
 | T-105 | M5 second RC | `BLOCKED` | Day 6 corrections | full pinned, 20 legs | ~7 h |
 
 ---
