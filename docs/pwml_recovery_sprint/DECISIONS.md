@@ -2667,3 +2667,52 @@ tree verified to contain **zero** occurrences of `ambiguous_entity_row_reference
    **That is not a stale-hold clearance and is not charged as one.**
 
 **Routed to an independent non-author reviewer at `ce5761a`.** Merge requires an exact bare `APPROVE`.
+
+---
+
+## D-049 — C-050k's three ceilings raised together; the correction that breached them was one I ordered · 2026-08-18 · LOCKED
+
+**Ratified: C1 `1,200 → 1,250` · C2 `100 → 105` · C3 `15,000 → 15,500`.** C-050k measures 1194 / 99 / 15,145.
+
+**All three are raised together, deliberately.** The card reported that every ceiling now sits within ~1% of
+its limit, so **any correction round 2 of any size would breach at least one** — and it flagged that before
+starting a round rather than discovering it mid-flight. Leaving three ceilings at 99% while authorising two
+correction rounds is a trap of my own construction. Raised now so a reviewer-ordered fix is never blocked by
+a number I set.
+
+**The +145 that breached C3 is entirely artifacts I ordered.** The reviewer could not verify the integers
+`SMOKE 460` and `Chunk E 174` — `bounded_run` records exit code, not stdout — so I required verbatim-count
+artifacts on C-056a's precedent. The three new bounded reports, their three pin verdicts and
+`c050k_gate_counts.json` *are* that requirement. **Charging the card for satisfying it would be incoherent.**
+
+**This is the sixth ceiling under-set today** (C-056a C1; C-050k C1, C3, C2, and now all three; C-052 C1).
+D-045's and D-048's rules stand and are extended once more: **a ceiling table must budget the cost of
+answering a reviewer, not merely the cost of building the card.**
+
+### What the correction round established
+
+The blocker was a **false G9 header**: `tests/test_pwml_ir.py:833` claimed *every* arm fails at base; five
+do, three do not. The three assert an **absence** (`_row_issues(report) == []`), trivially true where the
+code does not exist. **The card's own committed evidence had already contradicted the sentence** —
+`evidence/c050k_g9_base.json` records `claim_3_silent_on_slot_duplication: true` measured at base — and the
+writer said so in the header rather than quietly dropping the claim. **D-046 §1 governs: presenting a guard
+on unchanged behaviour as though it carried a base failure is the mislabelling G9 rejects outright.**
+
+The fix is documentation-only and mechanically provable: **zero non-comment changed lines and zero touched
+`def` lines** in `tests/test_pwml_ir.py`, and `git diff b80cffa HEAD -- src` **empty** — production
+byte-identical to the reviewed code. The three guards were **relabelled, not deleted**; they are what makes
+the guard non-vacuous against the 209-key false positive.
+
+### An accurately labelled transcription is acceptable evidence; a number dressed as measured is not
+
+Chunk D's `185/187` and the partition proof (`SETS_EQUAL=True, missing=0, extra=0, overlap=0`) went to
+`chunk_d_gate.py` **stdout, which `bounded_run` does not retain**, and re-deriving them costs a collect plus
+a full run that ceiling 2 forbids. The card labelled them **transcription, not measured**, *inside the
+artifact*, and recorded what is checkable: all 36 Chunk D jobs with per-job exit code, survivors and cleanup
+— 34 exit 0, 2 nonzero, zero survivors throughout.
+
+**Ruled acceptable.** The reviewer was invited to disagree and to say so plainly rather than approve around
+it. **Registered as an instrument gap for a later card: `bounded_run` retains exit codes but not stdout, so
+no pytest summary line is recoverable from a G11 report.** C-056a's `c056a_gate_counts.json` and C-050k's
+`c050k_gate_counts.json` are the workaround — **every future card must capture verbatim summary lines into a
+committed artifact, because `SMOKE exactly 460` is merge gate 10 and an exit code cannot certify it.**
