@@ -11,7 +11,7 @@
       <position>Center</position>
       <id>PathwayVisualizationContext1</id>
       <pathway-visualization>
-        <height type="integer">1460</height>
+        <height type="integer">1400</height>
         <width type="integer">3200</width>
         <background-color>#FFFFFF</background-color>
         <id>PathwayVisualization1</id>
@@ -33,6 +33,13 @@
             <classification>Eukaryote</classification>
             <common-name>Human</common-name>
           </species>
+          <species>
+            <id type="integer">4</id>
+            <name>Arabidopsis thaliana</name>
+            <taxonomy-id>3702</taxonomy-id>
+            <classification nil="true"/>
+            <common-name nil="true"/>
+          </species>
         </species>
         <subcellular-locations>
           <subcellular-location>
@@ -42,53 +49,64 @@
           </subcellular-location>
           <subcellular-location>
             <id type="integer">2</id>
-            <name>mitochondrion</name>
-            <ontology-id nil="true"/>
-          </subcellular-location>
-          <subcellular-location>
-            <id type="integer">3</id>
             <name>cell</name>
             <ontology-id>GO:0005623</ontology-id>
-          </subcellular-location>
-          <subcellular-location>
-            <id type="integer">4</id>
-            <name>cytosol</name>
-            <ontology-id nil="true"/>
           </subcellular-location>
         </subcellular-locations>
         <tissues/>
         <biological-states>
           <biological-state>
-            <id type="integer">5</id>
+            <id type="integer">3</id>
             <tissue-id nil="true" type="integer"/>
             <subcellular-location-id type="integer">1</subcellular-location-id>
             <species-id type="integer">1</species-id>
             <cell-type-id nil="true" type="integer"/>
             <name>mitochondrial matrix state</name>
           </biological-state>
-          <biological-state>
-            <id type="integer">6</id>
-            <tissue-id nil="true" type="integer"/>
-            <subcellular-location-id type="integer">4</subcellular-location-id>
-            <species-id type="integer">1</species-id>
-            <cell-type-id nil="true" type="integer"/>
-            <name>cytosolic state</name>
-          </biological-state>
         </biological-states>
         <bounds/>
         <compounds>
           <compound>
-            <id type="integer">1799</id>
-            <name>heme</name>
-            <hmdb-id>HMDB0003178</hmdb-id>
+            <id type="integer">78</id>
+            <name>glycine</name>
+            <hmdb-id nil="true"/>
             <description nil="true"/>
-            <cas>14875-96-8</cas>
-            <kegg-id>C00032</kegg-id>
-            <pubchem-cid>3334</pubchem-cid>
-            <chebi-id>17627</chebi-id>
-            <biocyc-id>HEME_A</biocyc-id>
-            <chemspider-id>24604415</chemspider-id>
-            <drugbank-id>DB02577</drugbank-id>
+            <cas nil="true"/>
+            <kegg-id nil="true"/>
+            <pubchem-cid nil="true"/>
+            <chebi-id nil="true"/>
+            <biocyc-id nil="true"/>
+            <chemspider-id nil="true"/>
+            <drugbank-id nil="true"/>
+            <moldb-smiles/>
+            <moldb-formula/>
+            <moldb-inchi/>
+            <moldb-inchikey/>
+            <moldb-iupac/>
+            <moldb-average-mass/>
+            <moldb-mono-mass/>
+            <moldb-alogps-logs/>
+            <moldb-donor-count/>
+            <moldb-traditional-iupac/>
+            <moldb-formal-charge type="integer"/>
+            <moldb-physiological-charge type="integer"/>
+            <drugbank-metabolite-id nil="true"/>
+            <foodb-id/>
+            <synonyms/>
+            <element-states/>
+          </compound>
+          <compound>
+            <id type="integer">808</id>
+            <name>succinyl-CoA</name>
+            <hmdb-id>HMDB0001022</hmdb-id>
+            <description nil="true"/>
+            <cas>604-98-8</cas>
+            <kegg-id>C00091</kegg-id>
+            <pubchem-cid>439161</pubchem-cid>
+            <chebi-id>15380</chebi-id>
+            <biocyc-id>3-METHYLBENZYLSUCCINYL-COA</biocyc-id>
+            <chemspider-id>388307</chemspider-id>
+            <drugbank-id nil="true"/>
             <moldb-smiles/>
             <moldb-formula/>
             <moldb-inchi/>
@@ -136,17 +154,17 @@
             <element-states/>
           </compound>
           <compound>
-            <id type="integer">78</id>
-            <name>Glycine</name>
-            <hmdb-id>HMDB0000123</hmdb-id>
+            <id type="integer">1799</id>
+            <name>heme</name>
+            <hmdb-id>HMDB0003178</hmdb-id>
             <description nil="true"/>
-            <cas>56-40-6</cas>
-            <kegg-id>C00037</kegg-id>
-            <pubchem-cid>5257127</pubchem-cid>
-            <chebi-id>15428</chebi-id>
-            <biocyc-id>GLY</biocyc-id>
-            <chemspider-id>730</chemspider-id>
-            <drugbank-id>DB00145</drugbank-id>
+            <cas>14875-96-8</cas>
+            <kegg-id>C00032</kegg-id>
+            <pubchem-cid>3334</pubchem-cid>
+            <chebi-id>17627</chebi-id>
+            <biocyc-id>HEME_A</biocyc-id>
+            <chemspider-id>24604415</chemspider-id>
+            <drugbank-id>DB02577</drugbank-id>
             <moldb-smiles/>
             <moldb-formula/>
             <moldb-inchi/>
@@ -163,19 +181,106 @@
             <foodb-id/>
             <synonyms/>
             <element-states/>
-            <short-name>Gly</short-name>
           </compound>
           <compound>
-            <id type="integer">808</id>
-            <name>succinyl-CoA</name>
-            <hmdb-id>HMDB0001022</hmdb-id>
+            <id type="integer">1148</id>
+            <name>Pyridoxal 5'-phosphate</name>
+            <hmdb-id>HMDB0001491</hmdb-id>
             <description nil="true"/>
-            <cas>604-98-8</cas>
-            <kegg-id>C00091</kegg-id>
-            <pubchem-cid>439161</pubchem-cid>
-            <chebi-id>15380</chebi-id>
-            <biocyc-id>3-METHYLBENZYLSUCCINYL-COA</biocyc-id>
-            <chemspider-id>388307</chemspider-id>
+            <cas>54-47-7</cas>
+            <kegg-id>C00018</kegg-id>
+            <pubchem-cid>1051</pubchem-cid>
+            <chebi-id>18405</chebi-id>
+            <biocyc-id>PYRIDOXAL_PHOSPHATE</biocyc-id>
+            <chemspider-id>1022</chemspider-id>
+            <drugbank-id>DB00114</drugbank-id>
+            <moldb-smiles/>
+            <moldb-formula/>
+            <moldb-inchi/>
+            <moldb-inchikey/>
+            <moldb-iupac/>
+            <moldb-average-mass/>
+            <moldb-mono-mass/>
+            <moldb-alogps-logs/>
+            <moldb-donor-count/>
+            <moldb-traditional-iupac/>
+            <moldb-formal-charge type="integer"/>
+            <moldb-physiological-charge type="integer"/>
+            <drugbank-metabolite-id nil="true"/>
+            <foodb-id/>
+            <synonyms/>
+            <element-states/>
+            <short-name>Pyr-5'P</short-name>
+          </compound>
+          <compound>
+            <id type="integer">1316</id>
+            <name>carbon dioxide</name>
+            <hmdb-id nil="true"/>
+            <description nil="true"/>
+            <cas nil="true"/>
+            <kegg-id nil="true"/>
+            <pubchem-cid nil="true"/>
+            <chebi-id nil="true"/>
+            <biocyc-id nil="true"/>
+            <chemspider-id nil="true"/>
+            <drugbank-id nil="true"/>
+            <moldb-smiles/>
+            <moldb-formula/>
+            <moldb-inchi/>
+            <moldb-inchikey/>
+            <moldb-iupac/>
+            <moldb-average-mass/>
+            <moldb-mono-mass/>
+            <moldb-alogps-logs/>
+            <moldb-donor-count/>
+            <moldb-traditional-iupac/>
+            <moldb-formal-charge type="integer"/>
+            <moldb-physiological-charge type="integer"/>
+            <drugbank-metabolite-id nil="true"/>
+            <foodb-id/>
+            <synonyms/>
+            <element-states/>
+          </compound>
+          <compound>
+            <id type="integer">282377</id>
+            <name>CoA-SH</name>
+            <hmdb-id nil="true"/>
+            <description nil="true"/>
+            <cas nil="true"/>
+            <kegg-id nil="true"/>
+            <pubchem-cid nil="true"/>
+            <chebi-id>57287</chebi-id>
+            <biocyc-id nil="true"/>
+            <chemspider-id nil="true"/>
+            <drugbank-id nil="true"/>
+            <moldb-smiles/>
+            <moldb-formula/>
+            <moldb-inchi/>
+            <moldb-inchikey/>
+            <moldb-iupac/>
+            <moldb-average-mass/>
+            <moldb-mono-mass/>
+            <moldb-alogps-logs/>
+            <moldb-donor-count/>
+            <moldb-traditional-iupac/>
+            <moldb-formal-charge type="integer"/>
+            <moldb-physiological-charge type="integer"/>
+            <drugbank-metabolite-id nil="true"/>
+            <foodb-id/>
+            <synonyms/>
+            <element-states/>
+          </compound>
+          <compound>
+            <id type="integer">1099</id>
+            <name>coenzyme A</name>
+            <hmdb-id>HMDB0001423</hmdb-id>
+            <description nil="true"/>
+            <cas>85-61-0</cas>
+            <kegg-id>C00010</kegg-id>
+            <pubchem-cid>6816</pubchem-cid>
+            <chebi-id>1146900</chebi-id>
+            <biocyc-id>CO-A</biocyc-id>
+            <chemspider-id>6557</chemspider-id>
             <drugbank-id nil="true"/>
             <moldb-smiles/>
             <moldb-formula/>
@@ -199,19 +304,17 @@
         <nucleic-acids/>
         <proteins>
           <protein>
-            <id type="integer">30000</id>
-            <name>ALAS2</name>
-            <uniprot-id>P22557</uniprot-id>
+            <id type="integer">9659</id>
+            <name>Unknown</name>
+            <uniprot-id>Unknown</uniprot-id>
             <description/>
             <hmdbp-id/>
             <gene-name/>
             <locus/>
             <drugbank-id nil="true"/>
             <genbank-id/>
-            <species-id type="integer">1</species-id>
-            <ec-numbers>
-              <ec-number>2.3.1.37</ec-number>
-            </ec-numbers>
+            <species-id type="integer">4</species-id>
+            <ec-numbers/>
             <synonyms nil="true"/>
             <element-states/>
           </protein>
@@ -219,13 +322,13 @@
         <protein-complexes>
           <protein-complex>
             <id type="integer">40000</id>
-            <name>ALAS2 complex</name>
+            <name>ALAS2</name>
             <species-id type="integer">1</species-id>
             <pwp-id>PW_P040000</pwp-id>
             <protein_complex-proteins>
               <protein-complex-protein>
-                <id type="integer">7</id>
-                <protein-id type="integer">30000</protein-id>
+                <id type="integer">4</id>
+                <protein-id type="integer">9659</protein-id>
                 <stoichiometry type="integer">1</stoichiometry>
               </protein-complex-protein>
             </protein_complex-proteins>
@@ -241,14 +344,14 @@
             <direction>Right</direction>
             <reaction-left-elements>
               <reaction-left-element>
-                <id type="integer">8</id>
+                <id type="integer">5</id>
                 <element-id type="integer">78</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-left-element>
               <reaction-left-element>
-                <id type="integer">9</id>
+                <id type="integer">6</id>
                 <element-id type="integer">808</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
@@ -257,7 +360,7 @@
             </reaction-left-elements>
             <reaction-right-elements>
               <reaction-right-element>
-                <id type="integer">10</id>
+                <id type="integer">7</id>
                 <element-id type="integer">894</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
@@ -266,7 +369,59 @@
             </reaction-right-elements>
             <reaction-enzymes>
               <reaction-enzyme>
+                <id type="integer">8</id>
+                <protein-complex-id type="integer">40000</protein-complex-id>
+                <enzyme-class nil="true"/>
+              </reaction-enzyme>
+            </reaction-enzymes>
+          </reaction>
+          <reaction>
+            <id type="integer">50001</id>
+            <spontaneous type="boolean">false</spontaneous>
+            <pwr-id>PW_R050001</pwr-id>
+            <direction>Right</direction>
+            <reaction-left-elements>
+              <reaction-left-element>
+                <id type="integer">9</id>
+                <element-id type="integer">78</element-id>
+                <stoichiometry type="integer">1</stoichiometry>
+                <element-type>Compound</element-type>
+                <currency type="boolean">false</currency>
+              </reaction-left-element>
+              <reaction-left-element>
+                <id type="integer">10</id>
+                <element-id type="integer">808</element-id>
+                <stoichiometry type="integer">1</stoichiometry>
+                <element-type>Compound</element-type>
+                <currency type="boolean">false</currency>
+              </reaction-left-element>
+            </reaction-left-elements>
+            <reaction-right-elements>
+              <reaction-right-element>
                 <id type="integer">11</id>
+                <element-id type="integer">894</element-id>
+                <stoichiometry type="integer">1</stoichiometry>
+                <element-type>Compound</element-type>
+                <currency type="boolean">false</currency>
+              </reaction-right-element>
+              <reaction-right-element>
+                <id type="integer">12</id>
+                <element-id type="integer">1316</element-id>
+                <stoichiometry type="integer">1</stoichiometry>
+                <element-type>Compound</element-type>
+                <currency type="boolean">false</currency>
+              </reaction-right-element>
+              <reaction-right-element>
+                <id type="integer">13</id>
+                <element-id type="integer">282377</element-id>
+                <stoichiometry type="integer">1</stoichiometry>
+                <element-type>Compound</element-type>
+                <currency type="boolean">false</currency>
+              </reaction-right-element>
+            </reaction-right-elements>
+            <reaction-enzymes>
+              <reaction-enzyme>
+                <id type="integer">14</id>
                 <protein-complex-id type="integer">40000</protein-complex-id>
                 <enzyme-class nil="true"/>
               </reaction-enzyme>
@@ -274,31 +429,7 @@
           </reaction>
         </reactions>
         <reaction-coupled-transports/>
-        <transports>
-          <transport>
-            <id type="integer">12</id>
-            <pwt-id>PW_T000012</pwt-id>
-            <transport-type nil="true"/>
-            <transport-elements>
-              <transport-element>
-                <id type="integer">13</id>
-                <element-id type="integer">30000</element-id>
-                <stoichiometry type="integer">1</stoichiometry>
-                <element-type>Protein</element-type>
-                <left-biological-state-id type="integer">6</left-biological-state-id>
-                <right-biological-state-id type="integer">5</right-biological-state-id>
-                <direction>Right</direction>
-              </transport-element>
-            </transport-elements>
-            <transport-transporters>
-              <transport-transporter>
-                <id type="integer">14</id>
-                <biological-state-id type="integer">5</biological-state-id>
-                <protein-id type="integer">30000</protein-id>
-              </transport-transporter>
-            </transport-transporters>
-          </transport>
-        </transports>
+        <transports/>
         <interactions>
           <interaction>
             <id>15</id>
@@ -307,37 +438,27 @@
           </interaction>
           <interaction>
             <id>16</id>
-            <name>heme binds ALAS2</name>
-            <interaction-type>binds</interaction-type>
+            <name>ALAS2 cofactor PLP</name>
+            <interaction-type>cofactor</interaction-type>
           </interaction>
         </interactions>
         <bound-visualizations>
           <bound-visualization>
             <id>17</id>
-            <biological-state-id>5</biological-state-id>
+            <biological-state-id>3</biological-state-id>
             <x>0</x>
             <y>0</y>
             <width>3200</width>
-            <height>760</height>
-            <zindex>1</zindex>
-            <hidden type="boolean">false</hidden>
-          </bound-visualization>
-          <bound-visualization>
-            <id>18</id>
-            <biological-state-id>6</biological-state-id>
-            <x>0</x>
-            <y>760</y>
-            <width>3200</width>
-            <height>700</height>
+            <height>1400</height>
             <zindex>1</zindex>
             <hidden type="boolean">false</hidden>
           </bound-visualization>
         </bound-visualizations>
         <compound-locations>
           <compound-location>
-            <id type="integer">24</id>
+            <id type="integer">23</id>
             <compound-id type="integer">1799</compound-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <visualization-template-id type="integer">157</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">240</x>
@@ -348,10 +469,36 @@
             <height>60</height>
           </compound-location>
           <compound-location>
-            <id type="integer">27</id>
-            <compound-id type="integer">78</compound-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <id type="integer">24</id>
+            <compound-id type="integer">1148</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <visualization-template-id type="integer">157</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">440</x>
+            <y type="integer">1050</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>160</width>
+            <height>60</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">25</id>
+            <compound-id type="integer">1099</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">85</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">640</x>
+            <y type="integer">1050</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>160</width>
+            <height>60</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">29</id>
+            <compound-id type="integer">78</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">81</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">109</x>
             <y type="integer">175</y>
@@ -361,9 +508,9 @@
             <height>190</height>
           </compound-location>
           <compound-location>
-            <id type="integer">28</id>
+            <id type="integer">30</id>
             <compound-id type="integer">808</compound-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <visualization-template-id type="integer">81</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">109</x>
@@ -374,9 +521,9 @@
             <height>190</height>
           </compound-location>
           <compound-location>
-            <id type="integer">29</id>
+            <id type="integer">31</id>
             <compound-id type="integer">894</compound-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <visualization-template-id type="integer">157</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">556</x>
@@ -386,34 +533,85 @@
             <width>200</width>
             <height>190</height>
           </compound-location>
+          <compound-location>
+            <id type="integer">32</id>
+            <compound-id type="integer">78</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">81</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">909</x>
+            <y type="integer">175</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>200</width>
+            <height>190</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">33</id>
+            <compound-id type="integer">808</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">81</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">909</x>
+            <y type="integer">395</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>200</width>
+            <height>190</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">34</id>
+            <compound-id type="integer">894</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">157</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">1356</x>
+            <y type="integer">201</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>200</width>
+            <height>190</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">35</id>
+            <compound-id type="integer">1316</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">52</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">1356</x>
+            <y type="integer">421</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>78</width>
+            <height>78</height>
+          </compound-location>
+          <compound-location>
+            <id type="integer">36</id>
+            <compound-id type="integer">282377</compound-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <visualization-template-id type="integer">85</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">1356</x>
+            <y type="integer">529</y>
+            <zindex type="integer">10</zindex>
+            <font-size>regular</font-size>
+            <width>50</width>
+            <height>30</height>
+          </compound-location>
         </compound-locations>
         <element-collection-locations/>
         <nucleic-acid-locations/>
         <protein-locations>
           <protein-location>
-            <id type="integer">22</id>
-            <protein-id type="integer">30000</protein-id>
-            <biological-state-id type="integer">6</biological-state-id>
+            <id type="integer">27</id>
+            <protein-id type="integer">9659</protein-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <visualization-template-id type="integer">2</visualization-template-id>
             <hidden type="boolean">false</hidden>
-            <x type="integer">775</x>
-            <y type="integer">489</y>
-            <zindex type="integer">8</zindex>
-            <label-type>subunit</label-type>
-            <font-size>regular</font-size>
-            <width>150</width>
-            <height>70</height>
-          </protein-location>
-          <protein-location>
-            <id type="integer">23</id>
-            <protein-id type="integer">30000</protein-id>
-            <biological-state-id type="integer">5</biological-state-id>
-            <visualization-template-id type="integer">2</visualization-template-id>
-            <hidden type="boolean">false</hidden>
-            <x type="integer">355</x>
+            <x type="integer">1155</x>
             <y type="integer">345</y>
             <zindex type="integer">8</zindex>
-            <label-type>subunit</label-type>
+            <label-type>protein</label-type>
             <font-size>regular</font-size>
             <width>150</width>
             <height>70</height>
@@ -421,14 +619,14 @@
         </protein-locations>
         <protein-complex-visualizations>
           <protein-complex-visualization>
-            <id type="integer">25</id>
+            <id type="integer">26</id>
             <protein-complex-id type="integer">40000</protein-complex-id>
             <pathway-visualization-id type="integer">1</pathway-visualization-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <protein_complex_protein_visualizations>
               <protein-complex-protein-visualization>
-                <id type="integer">26</id>
-                <protein-location-id type="integer">23</protein-location-id>
+                <id type="integer">28</id>
+                <protein-location-id type="integer">27</protein-location-id>
               </protein-complex-protein-visualization>
             </protein_complex_protein_visualizations>
             <protein_complex_compound_visualizations/>
@@ -436,104 +634,170 @@
         </protein-complex-visualizations>
         <edges>
           <edge>
-            <id type="integer">30</id>
-            <path>M309 345 C324 356 339 368 355 380</path>
+            <id type="integer">37</id>
+            <path>M309 282 C591 314 873 347 1155 380</path>
             <visualization-template-id type="integer">5</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
             <options>{"end_arrow": false, "end_flat_arrow": false, "start_arrow": false, "start_flat_arrow": false}</options>
           </edge>
           <edge>
-            <id type="integer">31</id>
-            <path>M309 415 C324 403 339 391 355 380</path>
+            <id type="integer">38</id>
+            <path>M309 478 C591 445 873 412 1155 380</path>
             <visualization-template-id type="integer">5</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
             <options>{"end_arrow": false, "end_flat_arrow": false, "start_arrow": false, "start_flat_arrow": false}</options>
           </edge>
           <edge>
-            <id type="integer">32</id>
-            <path>M556 380 C539 380 522 380 505 380</path>
+            <id type="integer">39</id>
+            <path>M756 380 C939 380 1122 380 1305 380</path>
             <visualization-template-id type="integer">5</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
-            <options>{"start_arrow": true, "start_flat_arrow": false, "end_arrow": false, "end_flat_arrow": false, "start_arrow_path": "M 530.019237886 395 L 556 380 L 530.019237886 365"}</options>
+            <options>{"start_arrow": true, "start_flat_arrow": false, "end_arrow": false, "end_flat_arrow": false, "start_arrow_path": "M 781.980762114 365 L 756 380 L 781.980762114 395"}</options>
           </edge>
           <edge>
-            <id type="integer">33</id>
+            <id type="integer">40</id>
             <path>M380 369 L380 489</path>
             <visualization-template-id type="integer">83</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
           </edge>
           <edge>
-            <id type="integer">34</id>
-            <path>M835 509 L920 489</path>
+            <id type="integer">41</id>
+            <path>M1109 345 C1124 356 1139 368 1155 380</path>
             <visualization-template-id type="integer">5</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
+            <options>{"end_arrow": false, "end_flat_arrow": false, "start_arrow": false, "start_flat_arrow": false}</options>
           </edge>
           <edge>
-            <id type="integer">35</id>
-            <path>M920 489 L1125 509</path>
+            <id type="integer">42</id>
+            <path>M1109 415 C1124 403 1139 391 1155 380</path>
             <visualization-template-id type="integer">5</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <zindex type="integer">18</zindex>
+            <options>{"end_arrow": false, "end_flat_arrow": false, "start_arrow": false, "start_flat_arrow": false}</options>
+          </edge>
+          <edge>
+            <id type="integer">43</id>
+            <path>M1356 352 C1339 361 1322 370 1305 380</path>
+            <visualization-template-id type="integer">5</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <zindex type="integer">18</zindex>
+            <options>{"start_arrow": true, "start_flat_arrow": false, "end_arrow": false, "end_flat_arrow": false, "start_arrow_path": "M 1340.05683219 377.412898305 L 1356 352 L 1326.02020058 350.899260815"}</options>
+          </edge>
+          <edge>
+            <id type="integer">44</id>
+            <path>M1356 425 C1339 410 1322 395 1305 380</path>
+            <visualization-template-id type="integer">5</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <zindex type="integer">18</zindex>
+            <options>{"start_arrow": true, "start_flat_arrow": false, "end_arrow": false, "end_flat_arrow": false, "start_arrow_path": "M 1326.5943165 419.058133468 L 1356 425 L 1346.44296561 396.562997807"}</options>
+          </edge>
+          <edge>
+            <id type="integer">45</id>
+            <path>M1374 529 C1351 479 1328 429 1305 380</path>
+            <visualization-template-id type="integer">5</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <zindex type="integer">18</zindex>
+            <options>{"start_arrow": true, "start_flat_arrow": false, "end_arrow": false, "end_flat_arrow": false, "start_arrow_path": "M 1349.51513702 511.66530979 L 1374 529 L 1376.7698506 499.128141543"}</options>
+          </edge>
+          <edge>
+            <id type="integer">46</id>
+            <path>M380 369 L920 489</path>
+            <visualization-template-id type="integer">83</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <zindex type="integer">18</zindex>
           </edge>
         </edges>
         <reaction-visualizations>
           <reaction-visualization>
-            <id type="integer">36</id>
+            <id type="integer">47</id>
             <pathway-visualization-id type="integer">1</pathway-visualization-id>
             <reaction-id type="integer">50000</reaction-id>
-            <biological-state-id type="integer">5</biological-state-id>
+            <biological-state-id type="integer">3</biological-state-id>
             <reaction_compound_visualizations>
               <reaction-compound-visualization>
-                <id type="integer">37</id>
-                <compound-location-id type="integer">27</compound-location-id>
-                <edge-id type="integer">30</edge-id>
-                <side>Left</side>
-              </reaction-compound-visualization>
-              <reaction-compound-visualization>
-                <id type="integer">38</id>
-                <compound-location-id type="integer">28</compound-location-id>
-                <edge-id type="integer">31</edge-id>
-                <side>Left</side>
-              </reaction-compound-visualization>
-              <reaction-compound-visualization>
-                <id type="integer">39</id>
+                <id type="integer">48</id>
                 <compound-location-id type="integer">29</compound-location-id>
-                <edge-id type="integer">32</edge-id>
+                <edge-id type="integer">37</edge-id>
+                <side>Left</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">49</id>
+                <compound-location-id type="integer">30</compound-location-id>
+                <edge-id type="integer">38</edge-id>
+                <side>Left</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">50</id>
+                <compound-location-id type="integer">31</compound-location-id>
+                <edge-id type="integer">39</edge-id>
                 <side>Right</side>
               </reaction-compound-visualization>
             </reaction_compound_visualizations>
             <reaction_nucleic_acid_visualizations/>
             <reaction_enzyme_visualizations>
               <reaction-enzyme-visualization>
-                <id type="integer">40</id>
-                <reaction-enzyme-id type="integer">11</reaction-enzyme-id>
-                <protein-complex-visualization-id type="integer">25</protein-complex-visualization-id>
+                <id type="integer">51</id>
+                <reaction-enzyme-id type="integer">8</reaction-enzyme-id>
+                <protein-complex-visualization-id type="integer">26</protein-complex-visualization-id>
+              </reaction-enzyme-visualization>
+            </reaction_enzyme_visualizations>
+            <reaction_element_collection_visualizations/>
+          </reaction-visualization>
+          <reaction-visualization>
+            <id type="integer">52</id>
+            <pathway-visualization-id type="integer">1</pathway-visualization-id>
+            <reaction-id type="integer">50001</reaction-id>
+            <biological-state-id type="integer">3</biological-state-id>
+            <reaction_compound_visualizations>
+              <reaction-compound-visualization>
+                <id type="integer">53</id>
+                <compound-location-id type="integer">32</compound-location-id>
+                <edge-id type="integer">41</edge-id>
+                <side>Left</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">54</id>
+                <compound-location-id type="integer">33</compound-location-id>
+                <edge-id type="integer">42</edge-id>
+                <side>Left</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">55</id>
+                <compound-location-id type="integer">34</compound-location-id>
+                <edge-id type="integer">43</edge-id>
+                <side>Right</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">56</id>
+                <compound-location-id type="integer">35</compound-location-id>
+                <edge-id type="integer">44</edge-id>
+                <side>Right</side>
+              </reaction-compound-visualization>
+              <reaction-compound-visualization>
+                <id type="integer">57</id>
+                <compound-location-id type="integer">36</compound-location-id>
+                <edge-id type="integer">45</edge-id>
+                <side>Right</side>
+              </reaction-compound-visualization>
+            </reaction_compound_visualizations>
+            <reaction_nucleic_acid_visualizations/>
+            <reaction_enzyme_visualizations>
+              <reaction-enzyme-visualization>
+                <id type="integer">58</id>
+                <reaction-enzyme-id type="integer">14</reaction-enzyme-id>
+                <protein-complex-visualization-id type="integer">26</protein-complex-visualization-id>
               </reaction-enzyme-visualization>
             </reaction_enzyme_visualizations>
             <reaction_element_collection_visualizations/>
           </reaction-visualization>
         </reaction-visualizations>
         <reaction-coupled-transport_visualizations/>
-        <transport-visualizations>
-          <transport-visualization>
-            <id type="integer">41</id>
-            <transport-id type="integer">12</transport-id>
-            <pathway-visualization-id type="integer">1</pathway-visualization-id>
-            <transport_compound_visualizations/>
-            <transport_transporter_visualizations>
-              <transport-transporter-visualization>
-                <id type="integer">42</id>
-                <transport-transporter-id type="integer">14</transport-transporter-id>
-                <protein-location-id type="integer">23</protein-location-id>
-              </transport-transporter-visualization>
-            </transport_transporter_visualizations>
-          </transport-visualization>
-        </transport-visualizations>
+        <transport-visualizations/>
         <interaction-visualizations/>
         <sub-pathway-visualizations/>
         <vacuous-compound-visualizations/>

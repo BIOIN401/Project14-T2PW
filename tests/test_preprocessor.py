@@ -390,17 +390,28 @@ def _capture_chat_kwargs(monkeypatch, reply: Any) -> list[dict[str, Any]]:
     return seen
 
 
-def test_preprocess_requests_a_large_enough_output_budget(monkeypatch) -> None:
+def test_preprocess_uses_global_env_output_budget(monkeypatch) -> None:
     """
-    The Case B contract (selected_example + up to 10 fully described
-    candidate_examples + every standard field) does not fit in 500 tokens; a
-    short budget truncates a *correct* answer mid-JSON.
+    The user's global LLM budget must reach Stage 0 instead of being silently
+    replaced by a smaller hard-coded default.
     """
+    monkeypatch.delenv("OPENROUTER_PREPROCESSOR_MAX_TOKENS", raising=False)
+    monkeypatch.setenv("LLM_MAX_TOKENS", "10000")
     seen = _capture_chat_kwargs(monkeypatch, json.dumps({"pathway_name": "P"}))
 
     preprocess(DOC_TEXT)
 
-    assert seen[0]["max_tokens"] == 2000
+    assert seen[0]["max_tokens"] == 10000
+
+
+def test_preprocess_stage_specific_budget_wins_over_global(monkeypatch) -> None:
+    monkeypatch.setenv("OPENROUTER_PREPROCESSOR_MAX_TOKENS", "12000")
+    monkeypatch.setenv("LLM_MAX_TOKENS", "10000")
+    seen = _capture_chat_kwargs(monkeypatch, json.dumps({"pathway_name": "P"}))
+
+    preprocess(DOC_TEXT)
+
+    assert seen[0]["max_tokens"] == 12000
 
 
 def test_preprocess_max_tokens_is_still_overridable(monkeypatch) -> None:

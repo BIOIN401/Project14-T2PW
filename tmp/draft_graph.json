@@ -2,130 +2,202 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 18,
-    "edge_count": 14
+    "node_count": 24,
+    "edge_count": 29
   },
   "nodes": [
     {
-      "id": "compound:heme",
-      "label": "heme",
+      "id": "compound:chorismate",
+      "label": "chorismate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:hemin",
-      "label": "hemin",
+      "id": "compound:isochorismate",
+      "label": "isochorismate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:aminolevulinic acid",
-      "label": "aminolevulinic acid",
+      "id": "compound:2,3-dihydro-2,3-dihydroxybenzoate (2,3-didhb)",
+      "label": "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:glycine",
-      "label": "glycine",
+      "id": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "label": "2,3-dihydroxybenzoic acid (2,3-DHB)",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:succinyl-coa",
-      "label": "succinyl-CoA",
+      "id": "compound:pyruvate",
+      "label": "pyruvate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:pyridoxal 5-phosphate",
-      "label": "pyridoxal 5-phosphate",
+      "id": "compound:enterobactin",
+      "label": "enterobactin",
       "kind": "compound",
-      "cls": "cofactor",
-      "compartment": "mitochondrial matrix state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:alas2",
-      "label": "ALAS2",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "mitochondrial matrix state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:alas1",
-      "label": "ALAS1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "mitochondrial matrix state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:clpxp",
-      "label": "CLPXP",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "mitochondrial matrix state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:lonp1",
-      "label": "LONP1",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "mitochondrial matrix state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein_complex:alas2 homodimer",
-      "label": "ALAS2 homodimer",
-      "kind": "protein_complex",
-      "cls": "",
+      "cls": "compound",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
-      "label": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
+      "id": "compound:l-serine",
+      "label": "L-serine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:atp",
+      "label": "ATP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:entc",
+      "label": "EntC",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:entb",
+      "label": "EntB",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:enta",
+      "label": "EntA",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:ente",
+      "label": "EntE",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:entf",
+      "label": "EntF",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:entd",
+      "label": "EntD",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:fur",
+      "label": "Fur",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:entc-catalyzed chorismate isomerization",
+      "label": "EntC-catalyzed chorismate isomerization",
       "kind": "reaction",
       "cls": "",
-      "compartment": "mitochondrial matrix state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "transport:alas2 import into mitochondrial matrix",
-      "label": "ALAS2 import into mitochondrial matrix",
+      "id": "reaction:entb isochorismatase reaction",
+      "label": "EntB isochorismatase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:enta dehydrogenase reaction",
+      "label": "EntA dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "label": "EntE-catalyzed adenylation of 2,3-DHB",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "label": "EntF-catalyzed enterobactin assembly with L-serine",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:enterobactin secretion",
+      "label": "enterobactin secretion",
       "kind": "transport",
       "cls": "",
-      "compartment": "cytosolic state → mitochondrial matrix state",
+      "compartment": "cytoplasmic state → unspecified",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "interaction:heme inhibits alas2",
-      "label": "heme inhibits ALAS2",
+      "id": "interaction:2,3-dhb competitive inhibition of entb",
+      "label": "2,3-DHB competitive inhibition of EntB",
       "kind": "interaction",
       "cls": "inhibits",
       "compartment": "",
@@ -133,35 +205,17 @@
       "provenance": "extracted"
     },
     {
-      "id": "interaction:heme binds alas2",
-      "label": "heme binds ALAS2",
+      "id": "interaction:entc-entb interaction",
+      "label": "EntC-EntB interaction",
       "kind": "interaction",
-      "cls": "binds",
+      "cls": "interacts_with",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "interaction:heme binds alas mitochondrial targeting sequence",
-      "label": "heme binds ALAS mitochondrial targeting sequence",
-      "kind": "interaction",
-      "cls": "binds",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:alas mitochondrial targeting sequence",
-      "label": "ALAS mitochondrial targeting sequence",
-      "kind": "compound",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "interaction:heme is reversible mixed inhibitor of alas2",
-      "label": "heme is reversible mixed inhibitor of ALAS2",
+      "id": "interaction:2,3-dhb competitive inhibition of entb_3",
+      "label": "2,3-DHB competitive inhibition of EntB",
       "kind": "interaction",
       "cls": "inhibits",
       "compartment": "",
@@ -171,86 +225,176 @@
   ],
   "edges": [
     {
-      "source": "compound:glycine",
-      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
+      "source": "compound:chorismate",
+      "target": "reaction:entc-catalyzed chorismate isomerization",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:succinyl-coa",
-      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
-      "target": "compound:aminolevulinic acid",
+      "source": "reaction:entc-catalyzed chorismate isomerization",
+      "target": "compound:isochorismate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:alas2",
-      "target": "reaction:alas2-catalyzed condensation of glycine and succinyl-coa",
+      "source": "protein:entc",
+      "target": "reaction:entc-catalyzed chorismate isomerization",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "protein:alas2",
-      "target": "transport:alas2 import into mitochondrial matrix",
+      "source": "compound:isochorismate",
+      "target": "reaction:entb isochorismatase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:entb isochorismatase reaction",
+      "target": "compound:2,3-dihydro-2,3-dihydroxybenzoate (2,3-didhb)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:entb isochorismatase reaction",
+      "target": "compound:pyruvate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:entb",
+      "target": "reaction:entb isochorismatase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:2,3-dihydro-2,3-dihydroxybenzoate (2,3-didhb)",
+      "target": "reaction:enta dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:enta dehydrogenase reaction",
+      "target": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:enta",
+      "target": "reaction:enta dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "target": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:atp",
+      "target": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "target": "compound:enterobactin",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:ente",
+      "target": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "role": "catalyst",
+      "confidence": 0.95
+    },
+    {
+      "source": "protein:entf",
+      "target": "reaction:ente-catalyzed adenylation of 2,3-dhb",
+      "role": "catalyst",
+      "confidence": 0.9
+    },
+    {
+      "source": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "target": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:l-serine",
+      "target": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:atp",
+      "target": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "target": "compound:enterobactin",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:entf",
+      "target": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "role": "catalyst",
+      "confidence": 0.9
+    },
+    {
+      "source": "protein:ente",
+      "target": "reaction:entf-catalyzed enterobactin assembly with l-serine",
+      "role": "catalyst",
+      "confidence": 0.9
+    },
+    {
+      "source": "compound:enterobactin",
+      "target": "transport:enterobactin secretion",
       "role": "cargo",
       "confidence": 1.0
     },
     {
-      "source": "protein:alas2",
-      "target": "transport:alas2 import into mitochondrial matrix",
+      "source": "protein:ente",
+      "target": "transport:enterobactin secretion",
       "role": "transporter",
       "confidence": 1.0
     },
     {
-      "source": "compound:heme",
-      "target": "interaction:heme inhibits alas2",
+      "source": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "target": "interaction:2,3-dhb competitive inhibition of entb",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:heme inhibits alas2",
-      "target": "protein:alas2",
+      "source": "interaction:2,3-dhb competitive inhibition of entb",
+      "target": "protein:entb",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "compound:heme",
-      "target": "interaction:heme binds alas2",
+      "source": "protein:entc",
+      "target": "interaction:entc-entb interaction",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:heme binds alas2",
-      "target": "protein:alas2",
+      "source": "interaction:entc-entb interaction",
+      "target": "protein:entb",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "compound:heme",
-      "target": "interaction:heme binds alas mitochondrial targeting sequence",
+      "source": "compound:2,3-dihydroxybenzoic acid (2,3-dhb)",
+      "target": "interaction:2,3-dhb competitive inhibition of entb_3",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:heme binds alas mitochondrial targeting sequence",
-      "target": "compound:alas mitochondrial targeting sequence",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:heme",
-      "target": "interaction:heme is reversible mixed inhibitor of alas2",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "interaction:heme is reversible mixed inhibitor of alas2",
-      "target": "protein:alas2",
+      "source": "interaction:2,3-dhb competitive inhibition of entb_3",
+      "target": "protein:entb",
       "role": "participant",
       "confidence": 1.0
     }

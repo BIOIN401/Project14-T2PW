@@ -1,0 +1,18 @@
+# T-100 (M1) fresh Wave B legs -- product-owner authorized 2026-08-18.
+#
+# TEST_MATRIX.md milestone table: "PMC12452463 x2, PMC12096016 x2, ~1.5 h".
+# Two papers x two modes (strict, research) = 4 legs.
+#
+# Scope is MANDATORY. A bare id stages a scopeless, invalid run
+# (runs/INVALID-scopeless-2026-08-01_1724).
+#
+# Both scopes are taken verbatim from topics_verify_subset.txt so the paper
+# scoping matches every earlier committed leg for these two ids.
+#
+# ACCEPTANCE (TEST_MATRIX.md T-100): both pass the quarantine boundary;
+# PMC12452463 -> review_required, NOT strict success (TRAP-1).
+#
+# These legs run with the REAL curator (T2PW_OFFLINE_CURATOR unset) because
+# only manifests carrying release_status can produce a quotable strict figure.
+PMC12452463 | enterobactin biosynthesis | Escherichia coli
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
