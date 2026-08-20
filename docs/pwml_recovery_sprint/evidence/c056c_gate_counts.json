@@ -15,8 +15,21 @@
   "base_sha": "1cbfa01779fff9410858e28158999fb42dfc533e",
   "chunk_d": {
     "attribution": {
+      "differential_is_two_way_and_complete": {
+        "C-054 arm (reported by the orchestrator)": "hold production constant, swap the .env: '1 passed' at both base and tip WITHOUT .env -> environment-dependent.",
+        "C-056c arm (this card, F-051 standing remedy)": "hold the tree AND its .env constant, swap only the production under test: FAILS at base 1cbfa01 with .env AND at the C-056c tip with .env -> NOT diff-dependent. Evidence: evidence/g11/C-056c/49-base-pwmlwriter-attribution.json (base) and 15-chunkd-outer.json + report 20-run-core (tip).",
+        "together": "the two arms are orthogonal and jointly establish that the failure is caused by the presence of .env and by nothing in either card's diff."
+      },
       "node15": "PRE-CHARGED by the shared execution block section 7: 'Red whenever the PathBank DB is reachable: qb node15'. Name confirmed.",
-      "test_pwml_writer": "NOT pre-charged, and it is a RECORD GAP this card closes. Reproduced IDENTICALLY at base 1cbfa01 with .env present: same line, same assertion, 'assert report[\"db_resolution\"][\"available\"] is False' -> 'assert True is False'. Evidence: evidence/g11/C-056c/49-base-pwmlwriter-attribution.json. It belongs to the shared block's 'asserts the DB is NOT configured' class, which the block enumerates as FIVE tests (four in test_prefreeze_third_export_seam.py, one in test_prefreeze_species_resolution.py). This is a SIXTH, and unlike those five it sits in CHUNK D CORE -- so Chunk D core is 159/160, not 160/160, on any tree carrying .env. Neither this test nor pwml_writer.py is in C-056c's seam."
+      "test_pwml_writer": "NOT pre-charged, and it is a RECORD GAP this card closes. Reproduced IDENTICALLY at base 1cbfa01 with .env present: same line, same assertion, 'assert report[\"db_resolution\"][\"available\"] is False' -> 'assert True is False'. Evidence: evidence/g11/C-056c/49-base-pwmlwriter-attribution.json. It belongs to the shared block's 'asserts the DB is NOT configured' class, which the block enumerates as FIVE tests (four in test_prefreeze_third_export_seam.py, one in test_prefreeze_species_resolution.py). This is a SIXTH, and unlike those five it sits in CHUNK D CORE -- so Chunk D core is 159/160, not 160/160, on any tree carrying .env. Neither this test nor pwml_writer.py is in C-056c's seam.",
+      "test_pwml_writer_predicate": {
+        "assertion_line": 1833,
+        "assertion_line_correction": "the pre-charge cited :1834; the assertion is at :1833 (the # P4-01 comment at :1829 is correct). Verified by reading the file, and test_pwml_writer.py is BYTE-IDENTICAL from 1cbfa01 to af5c3d2, so :1833 holds on base, tip and integration alike.",
+        "file": "tests/test_pwml_writer.py",
+        "premise_comment_line": 1829,
+        "premise_verbatim": "# P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()`` answers ``None`` and this leg is offline. Asserted rather than assumed -- a reachable DB would make the preflight below silently absent instead of wrong, and a vacuous assertion is not evidence.",
+        "why_it_fails_now": "the premise 'no worktree carries a .env' is FALSE for this sprint's card worktrees, which were instructed to copy .env in for F-051 control parity. The test is behaving exactly as written: it asserted its premise rather than assuming it, which is why a stale premise surfaces as a loud failure instead of a silently vacuous pass."
+      }
     },
     "executed_count_note": "'executed=26/187 omissions=161' is a BOOKKEEPING artifact, not a coverage gap: the 160 core tests run as ONE job so they are not counted as individually-named executed node IDs, only the 26 AppTest nodes are. The authoritative statement is the partition proof above (187 = 160+4+23, zero overlap, additions=0).",
     "expected_per_TEST_MATRIX": 187,
@@ -35,7 +48,11 @@
       "qb": "node04..node26 all ok except node15 (22/23)",
       "s8": "node00..node03 all ok (4/4)"
     },
-    "summary_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']"
+    "sets_equal": true,
+    "sets_equal_note": "SETS_EQUAL=True with 187 node IDs, verbatim from the runner's partition proof",
+    "summary_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "third_failure": null,
+    "third_failure_note": "there is NO third failure. Exactly two, both attributed below; nothing in this run is attributable to C-056c's diff."
   },
   "focused_no_chunk": {
     "chunk_membership": "all ten are in NO chunk, verified by STEM-EXACT membership against TEST_MATRIX.md:213-218 + :242-252 and chunk_d_gate.py:63-70 -- not the unsound substring heuristic, which wrongly chunks test_map_ids via test_map_ids_name_gate",
