@@ -1,20 +1,39 @@
 {
-  "label": "diff-tip-prod-tip-tests",
+  "label": "smoke-collect-base",
   "command": [
     "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
     "-m",
     "pytest",
     "-q",
-    "--basetemp=C:/t/c54tp",
+    "--collect-only",
+    "--basetemp=C:/t/c54cb",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
     "tests/test_bench_goldset_and_semantic.py",
-    "tests/test_bench_acquisition_and_artifacts.py"
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
   ],
-  "cwd": "C:\\t\\c054tip",
-  "started_at": "2026-08-19T00:51:07+00:00",
-  "finished_at": "2026-08-19T00:51:09+00:00",
-  "duration_seconds": 2.199524499999825,
+  "cwd": "C:\\t\\c054base",
+  "started_at": "2026-08-18T23:22:55+00:00",
+  "finished_at": "2026-08-18T23:22:58+00:00",
+  "duration_seconds": 2.978838499999256,
   "timeout_seconds": 900.0,
-  "root_pid": 277600,
+  "root_pid": 251644,
   "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
   "process_group": null,
   "exit_reason": "completed",
@@ -22,13 +41,13 @@
   "returned_code": 0,
   "descendants_observed": [
     {
-      "pid": 277612,
+      "pid": 248068,
       "name": "python.exe",
-      "ppid": 277600
+      "ppid": 251644
     }
   ],
   "descendants_terminated": [
-    277612
+    248068
   ],
   "graceful_attempted": false,
   "forced": false,
@@ -44,17 +63,17 @@
       "name": "python.exe"
     },
     {
-      "pid": 276764,
+      "pid": 252628,
       "name": "python.exe"
     },
     {
-      "pid": 277444,
+      "pid": 252644,
       "name": "python.exe"
     }
   ],
   "cleanup_success": true,
   "notes": [],
-  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c054-goldset-required/docs/pwml_recovery_sprint/evidence/g11/C-054/07-diff-tip-prod-tip-tests.json",
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c054-goldset-required/docs/pwml_recovery_sprint/evidence/g11/C-054/13-smoke-collect-base.json",
   "json_report_written": true,
   "json_report_error": "",
   "schema_version": 1,
@@ -69,7 +88,7 @@
     "repo_head": "8374275e337f620c5ab11ac4dd25e668e2903e15",
     "repo_source": "git",
     "wrapper_vs_head": "clean",
-    "repo_tracked_files_dirty": true,
+    "repo_tracked_files_dirty": false,
     "repo_error": ""
   }
 }

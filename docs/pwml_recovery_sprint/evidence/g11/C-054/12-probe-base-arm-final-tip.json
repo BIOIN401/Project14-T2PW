@@ -1,34 +1,35 @@
 {
-  "label": "diff-tip-prod-tip-tests",
+  "label": "probe-base-arm-final-tip",
   "command": [
     "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
-    "-m",
-    "pytest",
-    "-q",
-    "--basetemp=C:/t/c54tp",
-    "tests/test_bench_goldset_and_semantic.py",
-    "tests/test_bench_acquisition_and_artifacts.py"
+    "docs/pwml_recovery_sprint/evidence/c054_required_classification_probe.py",
+    "--tree",
+    ".",
+    "--label",
+    "base",
+    "--out",
+    "docs/pwml_recovery_sprint/evidence/c054_g9_base_arm_on_tip.json"
   ],
-  "cwd": "C:\\t\\c054tip",
-  "started_at": "2026-08-19T00:51:07+00:00",
-  "finished_at": "2026-08-19T00:51:09+00:00",
-  "duration_seconds": 2.199524499999825,
-  "timeout_seconds": 900.0,
-  "root_pid": 277600,
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c054-goldset-required",
+  "started_at": "2026-08-20T18:15:12+00:00",
+  "finished_at": "2026-08-20T18:15:12+00:00",
+  "duration_seconds": 0.3415853999904357,
+  "timeout_seconds": 300.0,
+  "root_pid": 558520,
   "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
   "process_group": null,
-  "exit_reason": "completed",
-  "exit_code": 0,
-  "returned_code": 0,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
   "descendants_observed": [
     {
-      "pid": 277612,
+      "pid": 558604,
       "name": "python.exe",
-      "ppid": 277600
+      "ppid": 558520
     }
   ],
   "descendants_terminated": [
-    277612
+    558604
   ],
   "graceful_attempted": false,
   "forced": false,
@@ -36,25 +37,57 @@
   "survivors": [],
   "preexisting_reported": [
     {
-      "pid": 161404,
+      "pid": 299444,
       "name": "python.exe"
     },
     {
-      "pid": 161564,
+      "pid": 299512,
       "name": "python.exe"
     },
     {
-      "pid": 276764,
+      "pid": 557208,
       "name": "python.exe"
     },
     {
-      "pid": 277444,
+      "pid": 557240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558092,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 559088,
       "name": "python.exe"
     }
   ],
   "cleanup_success": true,
   "notes": [],
-  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c054-goldset-required/docs/pwml_recovery_sprint/evidence/g11/C-054/07-diff-tip-prod-tip-tests.json",
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-054/12-probe-base-arm-final-tip.json",
   "json_report_written": true,
   "json_report_error": "",
   "schema_version": 1,

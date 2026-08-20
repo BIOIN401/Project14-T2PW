@@ -1,0 +1,124 @@
+{
+  "base_sha": "1cbfa01779fff9410858e28158999fb42dfc533e",
+  "chunk_membership_stem_exact": {
+    "tests/test_bench_acquisition_and_artifacts.py": {
+      "chunk": "B",
+      "in_smoke": true
+    },
+    "tests/test_bench_goldset_and_semantic.py": {
+      "chunk": "B",
+      "in_smoke": true
+    },
+    "tests/test_preprocessor.py": {
+      "chunk": null,
+      "in_chunk_d_gate": false,
+      "in_smoke": false,
+      "note": "touched by intervening integration commit 868a254; covered by NO gate this card runs"
+    }
+  },
+  "exposure_on_pinned_set": {
+    "cases": 10,
+    "declaring_both_fields": 10,
+    "exposure": "ZERO",
+    "meaning": "hardening against a latent fail-open, not a live defect; no score moves"
+  },
+  "failures": 0,
+  "focused": {
+    "tests/test_bench_acquisition_and_artifacts.py": {
+      "chunk": "B",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/09-focused-acquisition-artifacts.json",
+      "in_smoke": true,
+      "measured": 25,
+      "summary_line_verbatim": "25 passed in 1.02s"
+    },
+    "tests/test_bench_goldset_and_semantic.py": {
+      "chunk": "B",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/08-focused-goldset-semantic.json",
+      "in_smoke": true,
+      "measured": 62,
+      "summary_line_verbatim": "62 passed in 1.34s"
+    }
+  },
+  "g9_one_file_differential": {
+    "arm": "G9 CORRECTION",
+    "base_production": {
+      "failed_node_ids": [
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_expected_export_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_blank_or_invalid_classification_names_the_defect_it_actually_is"
+      ],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/06-diff-base-prod-tip-tests.json",
+      "goldset_blob": "cb5a9bc4a7dd4f74dfb50acf3eb7ce6e4347b9a4",
+      "summary_line_verbatim": "3 failed, 84 passed in 1.54s",
+      "tree": "C:/t/c054mix"
+    },
+    "method": "two frozen trees identical in every byte except src/t2pw/bench/goldset.py; neither carries .env, so F-051 reachability cannot differ between them",
+    "only_differing_file": "src/t2pw/bench/goldset.py",
+    "tip_production": {
+      "failed_node_ids": [],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/07-diff-tip-prod-tip-tests.json",
+      "goldset_blob": "3b6e1cae377ef5be9b78d0e63c9065f4bb19717f",
+      "summary_line_verbatim": "87 passed in 1.46s",
+      "tree": "C:/t/c054tip"
+    }
+  },
+  "g9_value_probe_matrix": {
+    "base_arm_on_base_tree": {
+      "exit": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/02-g9-base-arm-on-base.json",
+      "observed": "omitted expected_export LOADED as 'partial_only', is_strict_expected False; omitted mechanistic_relevance LOADED as 'partial'"
+    },
+    "base_arm_on_final_tip": {
+      "exit": 1,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/12-probe-base-arm-final-tip.json",
+      "observed": "FAILED: base: omitting expected_export was refused, expected a silent load"
+    },
+    "note": "asserts the VALUE the loader invented, not merely 'no exception'. Exit 1 on the crossed arms is the point.",
+    "tip_arm_on_base_tree": {
+      "exit": 1,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/04-g9-tip-arm-on-base.json",
+      "observed": "FAILED: tip: omitting expected_export loaded as 'partial_only' instead of being refused"
+    },
+    "tip_arm_on_final_tip": {
+      "exit": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/11-probe-tip-arm-final-tip.json",
+      "observed": "both refused: cases[0] (PROBE1): missing '<field>'"
+    }
+  },
+  "process_lifecycle_g11": {
+    "cleanup": "success",
+    "final_surviving_count": 0,
+    "runs": "every run above"
+  },
+  "purpose": "literal pytest COUNTS and verbatim summary lines. bounded_run retains exit codes but NOT stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10).",
+  "smoke": {
+    "baseline_move": {
+      "added_node_ids": [
+        "tests/test_bench_acquisition_and_artifacts.py::test_the_strict_denominator_is_authored_never_inferred",
+        "tests/test_bench_goldset_and_semantic.py::test_a_blank_or_invalid_classification_names_the_defect_it_actually_is",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_expected_export_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_declared_classification_loads_and_survives_verbatim"
+      ],
+      "base_collected": 460,
+      "extra_at_tip": 5,
+      "from": 460,
+      "g11_reports": [
+        "docs/pwml_recovery_sprint/evidence/g11/C-054/13-smoke-collect-base.json",
+        "docs/pwml_recovery_sprint/evidence/g11/C-054/14-smoke-collect-tip.json"
+      ],
+      "method": "pytest --collect-only -q on the 20-file SMOKE selection, node-ID SET difference; base side is the hash-verified base tree C:/t/c054base at 1cbfa01",
+      "missing_at_tip": 0,
+      "nothing_removed_or_renamed": true,
+      "tip_collected": 465,
+      "to": 465
+    },
+    "expected_per_TEST_MATRIX": 465,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/10-smoke-465.json",
+    "matches_expected": true,
+    "measured": 465,
+    "note": "465 since C-054 moved the pinned baseline 460 -> 465 under merge rule 4, ratified in advance. 457 and 460 are both stale.",
+    "summary_line_verbatim": "465 passed in 27.19s"
+  },
+  "task": "C-054"
+}
