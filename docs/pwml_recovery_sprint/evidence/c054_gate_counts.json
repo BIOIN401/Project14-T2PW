@@ -56,6 +56,65 @@
       "note": "touched by intervening integration commit 868a254; covered by NO gate this card runs"
     }
   },
+  "chunk_row_recount": {
+    "arithmetic": {
+      "base": "126 + 225 + 109 = 460",
+      "before_fix": "123 + 225 + 109 = 457, contradicting the table's own 465 by 8",
+      "matches_base_collection": true,
+      "matches_measured_smoke": true,
+      "tip": "126 + 230 + 109 = 465"
+    },
+    "cross_checks": [
+      "row B's test_bench_goldset_and_semantic = 62 equals the focused run's '62 passed in 1.34s'",
+      "row B's test_bench_acquisition_and_artifacts = 25 equals the focused run's '25 passed in 1.02s'",
+      "row totals reproduce both the 465 SMOKE pass line and the 460 base collection"
+    ],
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/13-smoke-collect-base.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/14-smoke-collect-tip.json"
+    ],
+    "method": "per-file partition of the pytest --collect-only node IDs already captured at BASE 1cbfa01 and at the C-054 tip, both collected under .venv/Scripts/python.exe through bounded_run",
+    "row_A": {
+      "attribution": "the 3-test gap predates C-054 -- row A is identical at base 1cbfa01 and at the tip. C-010 residue, NOT authored by this card.",
+      "corrected_to": 126,
+      "measured_base": 126,
+      "measured_tip": 126,
+      "moved_by_C054": 0,
+      "per_file_tip": {
+        "test_empty_extraction_payload": 13,
+        "test_reference_repair": 20,
+        "test_strict_quarantine": 32,
+        "test_strict_quarantine_contract_alignment": 19,
+        "test_strict_quarantine_locks_and_scope": 17,
+        "test_strict_quarantine_versioning": 25
+      },
+      "table_said": 123
+    },
+    "row_B": {
+      "attribution": "exactly C-054's five added tests, and they land ONLY in the two files C-054 edits",
+      "corrected_to": 230,
+      "measured_base": 225,
+      "measured_tip": 230,
+      "moved_by_C054": 5,
+      "per_file_base_to_tip": {
+        "test_batch_driver": "58 (unchanged)",
+        "test_bench_acquisition_and_artifacts": "24 -> 25 (+1)",
+        "test_bench_controls": "24 (unchanged)",
+        "test_bench_goldset_and_semantic": "58 -> 62 (+4)",
+        "test_completeness_audit": "33 (unchanged)",
+        "test_stage3_gate_report_lifecycle": "28 (unchanged)"
+      },
+      "table_said": 225
+    },
+    "row_C": {
+      "corrected_to": "unchanged",
+      "measured_base": 109,
+      "measured_tip": 109,
+      "moved_by_C054": 0,
+      "table_said": 109
+    },
+    "why": "REV round 1 FIX 1: TEST_MATRIX's per-chunk rows summed to 457 while its own total said 465 -- the table contradicted itself by 8"
+  },
   "exposure_on_pinned_set": {
     "cases": 10,
     "declaring_both_fields": 10,
@@ -184,6 +243,32 @@
     "measured": 465,
     "note": "465 since C-054 moved the pinned baseline 460 -> 465 under merge rule 4, ratified in advance. 457 and 460 are both stale.",
     "summary_line_verbatim": "465 passed in 27.19s"
+  },
+  "stale_records_enumerated_not_edited": {
+    "historical_correctly_untouched": [
+      "prompts/C-060a.md:76",
+      "prompts/H-007.md:97",
+      "prompts/H-007.md:134",
+      "prompts/H-007.md:137",
+      "prompts/C-011.md:117",
+      "prompts/C-011.md:122",
+      "prompts/INIT-001.md:144",
+      "FINDINGS.md:1129",
+      "LEDGER.md (21 hits)",
+      "DECISIONS.md:799-802 (append-only, product owner)"
+    ],
+    "note": "orchestrator named five; measured at the merged tree there are seven live mis-instructing lines plus one standing rule. FINDINGS.md:302 holds in both my branch tree and the merged tree; FINDINGS.md:1129 is merged-tree-specific because integration edited that file.",
+    "standing_rule_citing_the_value": "FINDINGS.md:302 (F-018) -- 'that moves the pinned 460 baseline'; true as a rule, wrong as a number",
+    "where": "TEST_MATRIX.md, appended at end-of-file (this file's line addresses are pinned by citation up to :477, so nothing may be inserted above that)",
+    "would_mis_instruct_a_live_gate": [
+      "prompts/_TEMPLATE_INTEGRATE.md:72 -- 'expect 460 passed' (the checklist G10 is run from at every merge)",
+      "prompts/_TEMPLATE_INTEGRATE.md:33 -- 'SMOKE SUITE (460 tests, ~40 s)'",
+      "prompts/_SHARED_BLOCKS.md:35 -- 'Smoke = 460', 'Chunk D = 177' (pasted into every charter; Chunk D is 187)",
+      "prompts/_SHARED_BLOCKS.md:36 -- 'core is 150', '177-test gate'",
+      "prompts/_TEMPLATE_INTEGRATE.md:36 -- 'gate (177 tests, 9-13 min)'",
+      "CLAUDE.md:52 -- 'smoke suite (460 tests, ~40 s)'",
+      "prompts/PROMPT-000-orchestrator.md:75 -- 'G10 smoke suite (460 tests, ~40 s)'"
+    ]
   },
   "task": "C-054"
 }

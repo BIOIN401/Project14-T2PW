@@ -210,8 +210,8 @@ modify `runner.py` (that file is owned by C-032).
 
 | Chunk | Files | Tests | Runtime |
 |---|---|---|---|
-| **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 123 | **12 s** |
-| **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 225 | **25 s** |
+| **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 126 | **12 s** |
+| **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 230 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
 | **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 160 | **0.9 s** |
 | **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
@@ -504,3 +504,38 @@ currently pinned. See `BASELINE.md`.
 > the two and record both SHAs plus the result in
 > `evidence/c011_freeze_seam_before.json`, its one authorized artifact. Inequality is a
 > hard stop. No other card's obligation changes.
+
+
+---
+
+## Stale SMOKE / Chunk D counts still live elsewhere — enumerated by C-054, deliberately NOT edited
+
+C-054 moved SMOKE 460 → 465 under merge rule 4 and updated every record inside its
+bounds: this file, `MASTER_PLAN.md:281`, and `.claude/agents/pwml-test-runner.md:52`.
+The entries below are **outside an implementer's bounds** — `prompts/` and `CLAUDE.md`
+are the orchestrator's, `DECISIONS.md` is append-only and the product owner's. They are
+listed rather than changed so they can be routed. **Verified at the C-054 + integration
+merged tree, not assumed.** *(Appended at end-of-file on purpose: this file's line
+addresses are pinned by citation up to `:477`, so nothing may be inserted above that.)*
+
+**Would actively mis-instruct a live gate — route first:**
+
+| Location | Reads | Why it bites |
+|---|---|---|
+| `prompts/_TEMPLATE_INTEGRATE.md:72` | `expect 460 passed` | the checklist G10 is executed from at **every** merge — it tells the next integrator to expect 460 and they will measure 465 |
+| `prompts/_TEMPLATE_INTEGRATE.md:33` | `SMOKE SUITE (460 tests, ~40 s)` | same checklist |
+| `prompts/_SHARED_BLOCKS.md:35` | `Smoke = 460`, `Chunk D = 177` | pasted verbatim into every card charter; **doubly stale — Chunk D has been 187 since C-050k** |
+| `prompts/_SHARED_BLOCKS.md:36` | `core is 150`, `177-test gate` | same block, same paste path |
+| `prompts/_TEMPLATE_INTEGRATE.md:36` | `gate (177 tests, 9-13 min)` | Chunk D, same integrate checklist |
+| `CLAUDE.md:52` | `smoke suite (460 tests, ~40 s)` | merge rule 10 as stated to every agent on entry |
+| `prompts/PROMPT-000-orchestrator.md:75` | `G10 smoke suite (460 tests, ~40 s)` | the orchestrator's own gate list |
+
+**A standing rule that cites the baseline by value** — still correct as a rule, wrong as a
+number: `FINDINGS.md:302` (F-018), *"Do not fix by adding files to a chunk — that moves the
+pinned 460 baseline."*
+
+**Historical records, correctly left alone.** These state what a past run *measured* and
+rewriting them would falsify the record: `prompts/C-060a.md:76`, `prompts/H-007.md:97`,
+`:134`, `:137`, `prompts/C-011.md:117`, `:122`, `prompts/INIT-001.md:144`,
+`FINDINGS.md:1129`, and `LEDGER.md`'s 21 hits. `DECISIONS.md:799-802` states the 460
+decision itself and only the product owner may amend it.
