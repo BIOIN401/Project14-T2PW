@@ -2716,7 +2716,11 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     whether the name appears in a reaction name/evidence or a transport name/evidence.
     - Reactions: inject as a catalyst modifier if missing, but only when the name
       sits inside a catalysis-cue window and is the *only* actor that qualifies.
-    - Transports: inject as a transporter entry (protein_complex field) if missing.
+    - Transports: inject as a transporter entry if missing, under the same
+      discipline -- the name has to be a whole token sitting inside a
+      transport-role cue window and be the *only* actor that qualifies -- and
+      under the key that matches the bucket the actor was declared in
+      (``protein`` for a protein, ``protein_complex`` for a complex).
     Catches cases where Stage-1 and Stage-2 omit these links.
 
     The reaction branch used to accept a bare substring hit anywhere in the row's
@@ -2802,8 +2806,14 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
         for reaction in reactions
         if isinstance(reaction, dict)
     ]
+    # The row name is kept in its original case, exactly as ``reaction_rows``
+    # above keeps it. The ``.lower()`` that used to sit here existed only to feed
+    # the bare ``pname_lower in tname`` substring test the transport branch has
+    # stopped using; the replacement matcher is case-insensitive by regex flag,
+    # and it stores the matched window as the attachment's evidence, so folding
+    # the row name to lower case would now corrupt the text a reviewer reads.
     transport_rows = [
-        (transport, (transport.get("name") or "").lower(), _row_evidence(transport))
+        (transport, (transport.get("name") or ""), _row_evidence(transport))
         for transport in transports
         if isinstance(transport, dict)
     ]
@@ -2877,41 +2887,188 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
             "source_refs": [snippet],
         })
 
-    for pname, entity_type in actors:
-        pname_lower = pname.lower()
+    # --- Transports: inject at most one missing transporter per transport row ---
+    #
+    # This branch was still the bare substring test the reaction branch above was
+    # hardened out of: ``pname_lower in tname or pname_lower in tevidence``, with
+    # no word boundary, no cue window and no exactly-one-actor test. Run
+    # 2026-08-18_1328 measured what that costs. ``EntE`` -- an adenylation enzyme,
+    # declared in ``entities.proteins`` -- was attached as the transporter of
+    # every transport row on four legs across two papers, purely because "ente"
+    # is a prefix of "ent"+"erobactin":
+    #
+    #   PMC12096016/strict    "enterobactin export"                 <- EntE
+    #   PMC12096016/strict    "ferric enterobactin import"          <- EntE
+    #   PMC12096016/research  "enterobactin secretion"              <- EntE
+    #   PMC12452463/strict    "ferric-enterobactin import via FepA" <- EntE,
+    #   PMC12452463/research  (same row)                               appended
+    #                         *beside* the correct Stage-1 ``FepA`` entry
+    #
+    # Each fabricated row cited a span naming TolC or TonB and never naming EntE,
+    # so the attachment contradicted its own evidence. Three guards, in the order
+    # they fire:
+    #
+    # 1. a whole-token match -- "EntE" is not a mention inside "enterobactin";
+    # 2. a transport-role cue inside the same 80-character window the reaction
+    #    branch uses, so a protein merely *named* in a transport sentence is not
+    #    promoted to being its transporter; and
+    # 3. exactly one qualifying actor, mirroring the reaction branch's refusal
+    #    above -- ambiguity is refused, not guessed at; and
+    # 4. the row's own declared ``cargo`` is never promoted to being its
+    #    transporter -- a fifth fabrication the corpus replay surfaced, on
+    #    PMC12856317/strict, which is not caused by the substring test.
+    #
+    # The reaction branch's own cue vocabulary is deliberately NOT reused: none
+    # of "catalyz/enzyme/mediated/dependent/activity/..." occurs anywhere near
+    # ``FepA`` in its own evidence sentence, so borrowing it would refuse the one
+    # transporter attachment on these legs that is biologically correct.
+    transporter_role_cue_re = re.compile(
+        r"(transport|translocat|import|export|efflux|influx|uptake|secret|"
+        r"excret|permease|porin|channel|pump|carrier|receptor|symport|"
+        r"antiport|uniport|shuttl|extrud|flippase)",
+        flags=re.IGNORECASE,
+    )
+    ascii_alnum_re = re.compile(r"[0-9A-Za-z]")
 
-        # --- Transports: inject missing transporter protein_complex entries ---
-        for transport, tname, tevidence_text in transport_rows:
-            tevidence = tevidence_text.lower()
-            if pname_lower not in tname and pname_lower not in tevidence:
+    def _transporter_cue_near_name(
+        text: str, name: str, *, window: int = 80
+    ) -> Optional[str]:
+        """The transport-role cue window around a *whole-token* ``name``.
+
+        The same window scanner as ``enzyme_cues.cue_near_name``, with the two
+        differences this branch needs: the occurrence has to be a whole token,
+        and the cue vocabulary is transport roles rather than catalysis. The
+        boundary assertion is applied only on a side whose own edge character is
+        alphanumeric, so an entity name that itself begins or ends in
+        punctuation is not refused for its own punctuation.
+        """
+        evidence = collapse_whitespace(text)
+        actor_name = collapse_whitespace(name)
+        if not evidence or not actor_name:
+            return None
+        left = r"(?<![0-9A-Za-z])" if ascii_alnum_re.match(actor_name[0]) else ""
+        right = r"(?![0-9A-Za-z])" if ascii_alnum_re.match(actor_name[-1]) else ""
+        pattern = re.compile(left + re.escape(actor_name) + right, flags=re.IGNORECASE)
+        for match in pattern.finditer(evidence):
+            start = max(0, match.start() - window)
+            end = min(len(evidence), match.end() + window)
+            snippet = evidence[start:end].strip()
+            if transporter_role_cue_re.search(snippet):
+                return snippet
+        return None
+
+    def _attached_transporter_names(row: Dict[str, Any]) -> set:
+        """Names already credited as a transporter on this row.
+
+        Reads every key shape ``process_normalizer._actor_name_from_row`` will
+        resolve an actor name from, not only the two the old ``already_present``
+        test knew about: a row naming its transporter under the typed ``entity``
+        key was invisible to that test, so the same protein could be injected a
+        second time under a legacy key.
+        """
+        names: set = set()
+        for item in _sl(row.get("transporters", [])):
+            if isinstance(item, str):
+                value = item.strip().lower()
+                if value:
+                    names.add(value)
                 continue
-            existing_transporters = _sl(transport.get("transporters", []))
-            already_present = any(
-                isinstance(t, dict) and (
-                    (t.get("protein_complex") or "").strip().lower() == pname_lower
-                    or (t.get("protein") or "").strip().lower() == pname_lower
-                )
-                for t in existing_transporters
+            if not isinstance(item, dict):
+                continue
+            for key in ("entity", "protein", "protein_name", "protein_complex", "name"):
+                value = (item.get(key) or "").strip().lower()
+                if value:
+                    names.add(value)
+        return names
+
+    for transport, tname, tevidence_text in transport_rows:
+        haystack = collapse_whitespace(f"{tname} {tevidence_text}")
+        if not haystack:
+            continue
+        attached = _attached_transporter_names(transport)
+        # A row's declared cargo is the thing being moved, not the thing moving
+        # it, and a cargo name is guaranteed to sit inside a transport-role cue
+        # window because the row is *about* transporting it. Replaying this pass
+        # over the 64 committed legs found the case: PMC12856317/strict declares
+        # ``{"name": "ALAS2 import into mitochondrial matrix", "cargo": "ALAS2"}``
+        # and shipped ``ALAS2`` as its own transporter. The row carries its own
+        # refutation, so read it.
+        cargo_names = {
+            value.strip().lower()
+            for value in (transport.get("cargo"), transport.get("cargo_complex"))
+            if isinstance(value, str) and value.strip()
+        }
+        qualified: List[tuple] = []
+        seen_transport_actors: set = set()
+        for pname, entity_type in actors:
+            pname_lower = pname.lower()
+            if pname_lower in seen_transport_actors:
+                continue
+            seen_transport_actors.add(pname_lower)
+            if pname_lower in attached or pname_lower in cargo_names:
+                continue
+            snippet = _transporter_cue_near_name(haystack, pname)
+            if snippet:
+                qualified.append((pname, entity_type, snippet))
+        # The same containment collapse the reaction branch applies: "FepA" and
+        # "FepA receptor" are one claim about the sentence, not two, and left
+        # uncollapsed such a pair would trip the exactly-one test below and
+        # silently disable the heuristic. ``actors`` lists complexes first, so a
+        # complex still wins a tie against an identically named protein.
+        qualified = [
+            candidate
+            for candidate in qualified
+            if not any(
+                other[0].lower() != candidate[0].lower()
+                and candidate[0].lower() in other[0].lower()
+                for other in qualified
             )
-            if already_present:
+        ]
+        if len(qualified) != 1:
+            continue
+        pname, entity_type, snippet = qualified[0]
+        # The bucket the actor was collected from decides the key. Writing
+        # ``protein_complex`` unconditionally mistyped every protein transporter
+        # this pass emitted: ``EntE`` lives in ``entities.proteins`` yet shipped
+        # as a complex, which ``map_ids`` then had to rewrite back to
+        # ``"entity_type": "protein"`` downstream.
+        actor_key = "protein_complex" if entity_type == "protein_complex" else "protein"
+        rows = transport.get("transporters")
+        if not isinstance(rows, list):
+            rows = []
+        # Fill the first transporter entry that names no actor at all, under any
+        # key shape; otherwise append. The old test looked only at
+        # ``protein``/``protein_complex``, so an entry carrying a typed
+        # ``entity`` name counted as empty and had a second name written into it.
+        patched = False
+        for t in rows:
+            if not isinstance(t, dict):
                 continue
-            # Patch the first transporter entry that is missing a protein_complex,
-            # or append a new one if all existing entries already have one.
-            patched = False
-            for t in existing_transporters:
-                if isinstance(t, dict) and not t.get("protein_complex") and not t.get("protein"):
-                    t["protein_complex"] = pname
-                    patched = True
-                    break
-            if not patched:
-                transport.setdefault("transporters", [])
-                transport["transporters"].append({
-                    "protein_complex": pname,
-                    "evidence": (transport.get("evidence") or "")[:120],
-                    "confidence": 0.9,
-                    "provenance": "inferred",
-                    "source_refs": [(transport.get("evidence") or "")[:120]],
-                })
+            if any(
+                (t.get(key) or "").strip()
+                for key in ("entity", "protein", "protein_name", "protein_complex", "name")
+            ):
+                continue
+            t[actor_key] = pname
+            patched = True
+            break
+        if not patched:
+            rows.append({
+                actor_key: pname,
+                # The matched cue window, never a blind prefix of the row's
+                # evidence. ``(transport.get("evidence") or "")[:120]`` read the
+                # row's *raw* evidence, bypassing the
+                # ``MAX_INJECTOR_EVIDENCE_CHARS`` bound ``_row_evidence``
+                # applies to the text the match is made against -- so a row
+                # matched on its name while carrying a flattened RAG corpus
+                # cited 120 characters of a corpus that took no part in the
+                # match.
+                "evidence": snippet,
+                "confidence": 0.9,
+                "provenance": "inferred",
+                "source_refs": [snippet],
+            })
+        transport["transporters"] = rows
 
 
 def _reaction_io_key(r: Any) -> frozenset:
