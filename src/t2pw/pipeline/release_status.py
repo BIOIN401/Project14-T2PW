@@ -246,6 +246,29 @@ class ReleaseStatus:
     #: ``failed``. A pass or a non-evaluation has no failing checks to name, so a
     #: reader never has to decide which of two fields to believe.
     semantic_failed_checks: Tuple[str, ...] = ()
+    #: HOW MUCH was evaluable behind the verdict (C-056c, F-053 / D-054 section 6).
+    #: One entry per :data:`SEMANTIC_GATING_CHECKS` name, in that order, as
+    #: ``(check, applicable, inapplicable_reason)``.
+    #:
+    #: Why it exists: ``semantic_evaluation == "passed"`` alone cannot tell a
+    #: manifest reader "one of four gating checks was evaluable and that one
+    #: passed" from "four of four were evaluable and all passed". Measured, the
+    #: production seam reaches THREE -- ``CHECK_RAG_REINTRODUCTION`` is
+    #: structurally inapplicable there because no admission report exists to pass
+    #: it (``strict_quarantine.py`` says so at its own call site) -- and a replay
+    #: of context-free committed artifacts reaches one. Neither figure is written
+    #: down anywhere; both are DERIVED from this record, per run.
+    #:
+    #: DELIBERATELY UNGATED BY THE VERDICT, unlike ``semantic_failed_checks``
+    #: above. Failing check names are meaningful only on a ``failed``, but
+    #: evaluability is the missing context of a ``passed`` most of all, so gating
+    #: it on any one state would reintroduce exactly the blind spot it closes.
+    #:
+    #: EMPTY MEANS NOT RECORDED, never "nothing was applicable": a run whose
+    #: report did not evaluate has no per-check applicability, and a measured
+    #: all-inapplicable report records four entries each naming its own reason.
+    #: A reader distinguishes the two by length, never by guessing.
+    semantic_check_evaluability: Tuple[Tuple[str, bool, str], ...] = ()
     #: Whether this run may count toward the STRICT benchmark denominator.
     #: ``review_required`` never may -- TRAP-1 / PRODUCT_CONTRACT 13.
     strict_acceptance_eligible: bool = False
@@ -277,6 +300,13 @@ class ReleaseStatus:
             "semantic_evaluation": self.semantic_evaluation,
             "semantic_not_evaluated_reason": self.semantic_not_evaluated_reason,
             "semantic_failed_checks": list(self.semantic_failed_checks),
+            # F-053's carrier, as records rather than a bare count: a reader can
+            # recover the count from the map but never the map from a count, and
+            # only the map says WHY a check did not answer.
+            "semantic_check_evaluability": [
+                {"check": check, "applicable": applicable, "inapplicable_reason": reason}
+                for check, applicable, reason in self.semantic_check_evaluability
+            ],
             "strict_acceptance_eligible": self.strict_acceptance_eligible,
             "completeness": self.completeness,
             "missing_anchors": list(self.missing_anchors),
@@ -304,8 +334,10 @@ def coverage_verdict(value: Any) -> Optional[CoverageVerdict]:
     return None
 
 
-def semantic_verdict(report: Any) -> Tuple[str, str, Tuple[str, ...]]:
-    """Reduce a semantic report to ``(evaluation, reason, failed_gating_checks)``.
+def semantic_verdict(
+    report: Any,
+) -> Tuple[str, str, Tuple[str, ...], Tuple[Tuple[str, bool, str], ...]]:
+    """Reduce a report to ``(evaluation, reason, failed_checks, evaluability)``.
 
     Duck-typed on purpose. This is ``t2pw.pipeline``; importing
     ``t2pw.bench.semantic`` to name the type would invert the layering for every
@@ -331,29 +363,62 @@ def semantic_verdict(report: Any) -> Tuple[str, str, Tuple[str, ...]]:
     ``passed`` -- there is no evidence behind a pass, and PRODUCT_CONTRACT 11's
     "not_evaluated is never false" cuts the other way too. A NON-GATING check
     cannot reach any branch here, so its failure can never demote a run.
+
+    THE FOURTH RETURN VALUE (C-056c, F-053 / D-054 section 6). ``evaluable`` below
+    was, and still is, consumed only as a BOOLEAN at the ``not evaluable`` guard.
+    How MANY of the four gating checks answered, and WHICH, were dropped at every
+    return -- so a downstream ``passed`` was indistinguishable from a four-of-four
+    pass. That is what the fourth value carries: one entry per name in
+    :data:`SEMANTIC_GATING_CHECKS`, in that order, as
+    ``(check, applicable, inapplicable_reason)``.
+
+    The reason string is RELOCATED, never invented: it is ``bench.semantic``'s own
+    ``CheckResult.inapplicable_reason``, read through the same duck-typed accessor
+    as ``applicable`` and ``ok``. A check the report never carried, or one carrying
+    no reason, records ``""`` -- writing a synthetic reason there would make an
+    absence indistinguishable from a measured one (the D-038 rule).
+
+    A count is derivable from this map; the map is not derivable from a count,
+    which is why a count is not what travels. And it is a CARRIER only: no verdict
+    changes, no branch reads it, and nothing here turns a pass into a numerator --
+    F-053's prohibition on affirmative readers of ``passed`` is untouched.
     """
 
     if report is None:
-        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_REPORT, ()
+        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_REPORT, (), ()
     if not getattr(report, "evaluated", False):
         reason = str(getattr(report, "not_evaluated_reason", "") or "") or SEMANTIC_NO_REPORT
-        return SEMANTIC_NOT_EVALUATED, reason, ()
+        # No evaluation happened, so there is no per-check applicability to
+        # report. Empty means "not recorded" and is never confused with a
+        # measured four-way map, every entry of which names a real check.
+        return SEMANTIC_NOT_EVALUATED, reason, (), ()
 
     checks = getattr(report, "checks", None) or {}
     failed: List[str] = []
     evaluable = 0
+    evaluability: List[Tuple[str, bool, str]] = []
     for name in SEMANTIC_GATING_CHECKS:
         result = checks.get(name) if isinstance(checks, Mapping) else None
-        if result is None or not getattr(result, "applicable", False):
+        # Exactly the negation of the guard this replaced -- a missing result and
+        # a non-applicable one are still both non-evaluable, and the arithmetic
+        # below is byte-for-byte the arithmetic that was here before.
+        applicable = result is not None and bool(getattr(result, "applicable", False))
+        evaluability.append((
+            name,
+            applicable,
+            "" if applicable else str(getattr(result, "inapplicable_reason", "") or ""),
+        ))
+        if not applicable:
             continue
         evaluable += 1
         if not getattr(result, "ok", False):
             failed.append(name)
+    applicability = tuple(evaluability)
     if failed:
-        return SEMANTIC_FAILED, "", tuple(failed)
+        return SEMANTIC_FAILED, "", tuple(failed), applicability
     if not evaluable:
-        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_GATING_CHECK_EVALUABLE, ()
-    return SEMANTIC_PASSED, "", ()
+        return SEMANTIC_NOT_EVALUATED, SEMANTIC_NO_GATING_CHECK_EVALUABLE, (), applicability
+    return SEMANTIC_PASSED, "", (), applicability
 
 
 def classify_release_status(
@@ -368,6 +433,7 @@ def classify_release_status(
     semantic_evaluation: str = SEMANTIC_NOT_EVALUATED,
     semantic_not_evaluated_reason: str = SEMANTIC_INPUT_NOT_WIRED,
     semantic_failed_checks: Sequence[str] = (),
+    semantic_check_evaluability: Sequence[Any] = (),
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
 
@@ -404,6 +470,14 @@ def classify_release_status(
     reason, so a caller that passes no semantic input gets byte-identically the
     record it got before this input existed. ``not_evaluated`` is never ``False``
     and never demotes: an unevaluable check produces NO status change.
+
+    ``semantic_check_evaluability`` (C-056c, F-053) is the same kind of input and
+    defaults the same way: omit it and the record is byte-identical to the one
+    this function produced before the parameter existed, apart from the one new
+    ``to_dict`` key, which is then an empty list meaning "not recorded". It is
+    RECORDED AND NEVER READ here -- it changes no status, no cap and no
+    eligibility, because a carrier that could move a verdict would be a second
+    gate wearing a record's name.
     """
 
     verdict = coverage_verdict(coverage)
@@ -446,6 +520,23 @@ def classify_release_status(
         tuple(str(name) for name in semantic_failed_checks or ())
         if evaluation == SEMANTIC_FAILED else ()
     )
+    # Recorded on ALL THREE verdicts, unlike ``failed`` directly above. F-053 is
+    # about a ``passed`` whose evaluability nobody can see, so conditioning this
+    # on the verdict would drop it exactly where it is needed. Tolerant of both
+    # shapes the record travels in -- the in-memory triple and the serialized
+    # mapping ``to_dict`` writes -- so a classification rebuilt from JSON keeps
+    # its evaluability instead of silently flattening to "not recorded".
+    evaluability: List[Tuple[str, bool, str]] = []
+    for entry in semantic_check_evaluability or ():
+        if isinstance(entry, Mapping):
+            check, applicable, reason = (
+                entry.get("check"),
+                entry.get("applicable"),
+                entry.get("inapplicable_reason"),
+            )
+        else:
+            check, applicable, reason = entry
+        evaluability.append((str(check or ""), bool(applicable), str(reason or "")))
     if evaluation == SEMANTIC_FAILED and status == RELEASE_READY:
         status = REVIEW_REQUIRED
         reasons.append(
@@ -466,6 +557,7 @@ def classify_release_status(
             if evaluation == SEMANTIC_NOT_EVALUATED else ""
         ),
         semantic_failed_checks=failed,
+        semantic_check_evaluability=tuple(evaluability),
         # A run may only enter the STRICT denominator when it is release-ready.
         # review_required must never count as strict success (TRAP-1).
         strict_acceptance_eligible=status == RELEASE_READY,

@@ -421,12 +421,14 @@ def test_regression_guard_not_evaluated_is_never_false_and_never_demotes() -> No
         not_evaluated_reason = ""
         checks = {name: _Check() for name in SEMANTIC_GATING_CHECKS}
 
-    state, reason, failed = semantic_verdict(_AllInapplicable())
+    # C-056c widened this return from three values to four; the assertions below
+    # are the ones that were here before and are unchanged.
+    state, reason, failed, _evaluability = semantic_verdict(_AllInapplicable())
     assert (state, failed) == (SEMANTIC_NOT_EVALUATED, ())
     assert reason == SEMANTIC_NO_GATING_CHECK_EVALUABLE
 
     # No payload at all -> not_evaluated with the payload reason, never a failure.
-    absent_state, absent_reason, _ = semantic_verdict(sp.evaluate_production_semantics(None))
+    absent_state, absent_reason, _, _ = semantic_verdict(sp.evaluate_production_semantics(None))
     assert absent_state == SEMANTIC_NOT_EVALUATED
     assert absent_reason == sp.NO_PAYLOAD
     # ...and None itself is tolerated rather than raising.

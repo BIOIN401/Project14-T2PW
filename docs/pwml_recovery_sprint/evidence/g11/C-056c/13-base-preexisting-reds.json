@@ -1,0 +1,179 @@
+{
+  "label": "base-preexisting-reds",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c56cbase/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056c-evaluability/docs/pwml_recovery_sprint/evidence/g11/pin/C-056c/base-preexisting-reds.pin.json",
+    "-q",
+    "--basetemp=C:/t/c56c/br",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\c56cbase",
+  "started_at": "2026-08-18T23:15:37+00:00",
+  "finished_at": "2026-08-18T23:15:47+00:00",
+  "duration_seconds": 9.188469300002907,
+  "timeout_seconds": 1800.0,
+  "root_pid": 206936,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 248308,
+      "name": "python.exe",
+      "ppid": 206936
+    },
+    {
+      "pid": 244940,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 208196,
+      "name": "python.exe",
+      "ppid": 244940
+    },
+    {
+      "pid": 242476,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 246720,
+      "name": "python.exe",
+      "ppid": 242476
+    },
+    {
+      "pid": 246096,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 248232,
+      "name": "python.exe",
+      "ppid": 246096
+    },
+    {
+      "pid": 246888,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 237072,
+      "name": "python.exe",
+      "ppid": 242512
+    },
+    {
+      "pid": 242512,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 245140,
+      "name": "python.exe",
+      "ppid": 247632
+    },
+    {
+      "pid": 247632,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 246824,
+      "name": "python.exe",
+      "ppid": 246868
+    },
+    {
+      "pid": 246868,
+      "name": "python.exe",
+      "ppid": 245140
+    },
+    {
+      "pid": 245864,
+      "name": "python.exe",
+      "ppid": 246432
+    },
+    {
+      "pid": 246432,
+      "name": "python.exe",
+      "ppid": 248308
+    },
+    {
+      "pid": 246880,
+      "name": "python.exe",
+      "ppid": 245864
+    },
+    {
+      "pid": 14704,
+      "name": "python.exe",
+      "ppid": 246880
+    }
+  ],
+  "descendants_terminated": [
+    14704,
+    208196,
+    237072,
+    242476,
+    242512,
+    244940,
+    245140,
+    245864,
+    246096,
+    246432,
+    246720,
+    246824,
+    246868,
+    246880,
+    246888,
+    247632,
+    248232,
+    248308
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 161404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 161564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 246956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 248316,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-056c\\13-base-preexisting-reds.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability",
+    "repo_head": "9dc2726faa62ac2fdc79a936dfc40837b8a7d63a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

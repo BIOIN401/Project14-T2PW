@@ -1,0 +1,162 @@
+{
+  "base_capture": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability\\docs\\pwml_recovery_sprint\\evidence\\c056c_golden_base.json",
+  "fields_added": [],
+  "fields_dropped": [],
+  "growth_only": true,
+  "legs": {
+    "input_timeout": {
+      "observable_fields_that_differ": [],
+      "slot_0_status_stage_kind": {
+        "base": "timeout|input|timeout",
+        "moved": false,
+        "tip": "timeout|input|timeout"
+      },
+      "slot_1_message": {
+        "base": "extraction did not finish inside the time budget",
+        "moved": false,
+        "tip": "extraction did not finish inside the time budget"
+      },
+      "slot_2_digest": {
+        "base": "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5",
+        "moved": false,
+        "tip": "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"
+      }
+    },
+    "research_pass": {
+      "observable_fields_that_differ": [],
+      "slot_0_status_stage_kind": {
+        "base": "pass|research_report|",
+        "moved": false,
+        "tip": "pass|research_report|"
+      },
+      "slot_1_message": {
+        "base": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+        "moved": false,
+        "tip": "research run completed; no RAG synthesis in this run, so no citation report was produced"
+      },
+      "slot_2_digest": {
+        "base": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3",
+        "moved": false,
+        "tip": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"
+      }
+    },
+    "strict_contract_failure": {
+      "observable_fields_that_differ": [
+        "release_status",
+        "row"
+      ],
+      "slot_0_status_stage_kind": {
+        "base": "fail|post_pipeline|contract",
+        "moved": false,
+        "tip": "fail|post_pipeline|contract"
+      },
+      "slot_1_message": {
+        "base": "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary",
+        "moved": false,
+        "tip": "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary"
+      },
+      "slot_2_digest": {
+        "base": "b1a7a743b2d4a138c89daa72f06a823164fd0784d90de4b9c0e30ea8239c7bfb",
+        "moved": true,
+        "tip": "d102035df954736fa85dec18239518eecbfdc1704329b73cd5e6500234d0b13e"
+      }
+    },
+    "strict_export_not_ok": {
+      "observable_fields_that_differ": [],
+      "slot_0_status_stage_kind": {
+        "base": "fail|pwml_export|unknown",
+        "moved": false,
+        "tip": "fail|pwml_export|unknown"
+      },
+      "slot_1_message": {
+        "base": "PWML export failed: the gate rejected the payload",
+        "moved": false,
+        "tip": "PWML export failed: the gate rejected the payload"
+      },
+      "slot_2_digest": {
+        "base": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4",
+        "moved": false,
+        "tip": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"
+      }
+    },
+    "strict_gate_failure": {
+      "observable_fields_that_differ": [
+        "release_status",
+        "row"
+      ],
+      "slot_0_status_stage_kind": {
+        "base": "fail|post_pipeline|contract",
+        "moved": false,
+        "tip": "fail|post_pipeline|contract"
+      },
+      "slot_1_message": {
+        "base": "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates",
+        "moved": false,
+        "tip": "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates"
+      },
+      "slot_2_digest": {
+        "base": "50d3c8f5487add1a1c42d3acb44acd7a5db584b28e36b57e26a18786b4c6f7a8",
+        "moved": true,
+        "tip": "a55b08af3c3db132ad2069e9659e3b24448ca399c950006ff098c79cc76bc4bf"
+      }
+    },
+    "strict_no_pwml_button": {
+      "observable_fields_that_differ": [],
+      "slot_0_status_stage_kind": {
+        "base": "fail|pwml_export|unknown",
+        "moved": false,
+        "tip": "fail|pwml_export|unknown"
+      },
+      "slot_1_message": {
+        "base": "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached",
+        "moved": false,
+        "tip": "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached"
+      },
+      "slot_2_digest": {
+        "base": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14",
+        "moved": false,
+        "tip": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"
+      }
+    },
+    "strict_pwml_export": {
+      "observable_fields_that_differ": [],
+      "slot_0_status_stage_kind": {
+        "base": "pass|pwml_export|",
+        "moved": false,
+        "tip": "pass|pwml_export|"
+      },
+      "slot_1_message": {
+        "base": "strict run completed; pathway.review_required.pwml is 43 bytes",
+        "moved": false,
+        "tip": "strict run completed; pathway.review_required.pwml is 43 bytes"
+      },
+      "slot_2_digest": {
+        "base": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027",
+        "moved": false,
+        "tip": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"
+      }
+    }
+  },
+  "observable_fields_base": [
+    "artifact_digests",
+    "artifact_keys_sorted",
+    "artifact_write_order",
+    "canonical_payload_sha256",
+    "pwml_artifact",
+    "release_status",
+    "relocated_files",
+    "row"
+  ],
+  "observable_fields_tip": [
+    "artifact_digests",
+    "artifact_keys_sorted",
+    "artifact_write_order",
+    "canonical_payload_sha256",
+    "pwml_artifact",
+    "release_status",
+    "relocated_files",
+    "row"
+  ],
+  "tip_capture": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056c-evaluability\\docs\\pwml_recovery_sprint\\evidence\\c056c_golden_tip.json",
+  "unauthorized_removals": []
+}

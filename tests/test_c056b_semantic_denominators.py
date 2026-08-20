@@ -296,7 +296,10 @@ def test_regression_guard_a_non_gating_check_still_cannot_demote() -> None:
     assert report.checks[CHECK_SOURCE_CARRIER].ok is False
     assert CHECK_SOURCE_CARRIER in report.failed_checks
     # ...and the verdict is untouched by it, because it does not gate.
-    state, _reason, failed = semantic_verdict(report)
+    # C-056c widened this return from three values to four. Arity only: every
+    # assertion below is C-056b's, unchanged, and still about the SUBTRACTIVE
+    # design -- a non-gating check cannot demote the verdict.
+    state, _reason, failed, _evaluability = semantic_verdict(report)
     assert state != SEMANTIC_FAILED, (state, failed)
     assert CHECK_SOURCE_CARRIER not in SEMANTIC_GATING_CHECKS
     assert not failed
