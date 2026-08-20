@@ -218,18 +218,9 @@ modify `runner.py` (that file is owned by C-032).
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
 **SMOKE = A + B + C = 465 tests, ~40 s.** Runs after **every** merge, on the integration
-branch. Gate G10. **457 and 460 are both obsolete**: C-010 moved the pinned baseline
-deliberately, 457 → 460, with an exact documented delta, and every A0 merge from
-`72ee20f` onward measured 460; **C-054 then moved it 460 → 465** under the same merge
-rule 4, ratified in advance by the orchestrator. That delta is exactly five ADDED tests,
-nothing removed and nothing renamed — four in `test_bench_goldset_and_semantic.py`
-(`test_a_case_omitting_expected_export_is_refused_not_silently_downgraded`,
-`test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded`,
-`test_a_blank_or_invalid_classification_names_the_defect_it_actually_is`,
-`test_a_declared_classification_loads_and_survives_verbatim`) and one in
-`test_bench_acquisition_and_artifacts.py`
-(`test_the_strict_denominator_is_authored_never_inferred`). Any live instruction still
-saying 457 or 460 is stale.
+branch. Gate G10. **457 and 460 are both stale**: C-010 moved the baseline 457 → 460 and
+C-054 moved it 460 → 465, each under merge rule 4 with an exact documented delta — C-054's
+is five ADDED tests, named in `evidence/c054_gate_counts.json`; nothing was ever removed.
 
 **Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
 **~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
