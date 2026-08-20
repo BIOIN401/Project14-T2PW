@@ -32,8 +32,8 @@ DO NOT
 
 ## S2 — Test commands
 
-See `TEST_MATRIX.md` § Commands. Smoke = **460** tests, ~40 s. Chunk D = **177** tests: the
-deterministic core is 150 tests in ~1 s, and the **complete 177-test gate costs 9–13 min**,
+See `TEST_MATRIX.md` § Commands. Smoke = **465** tests, ~40 s. Chunk D = **187** tests: the
+deterministic core is 160 tests in ~1 s, and the **complete 187-test gate costs 9–13 min**,
 dominated by the 27 per-node AppTest processes. The older ~222 s figure is stale and must
 not be used for the complete gate.
 

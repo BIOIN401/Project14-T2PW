@@ -72,7 +72,7 @@ MERGE GATES -- all must hold, no exceptions
       symbol absence is not proof. A genuinely NEW capability or module instead
       carries an EXPLICITLY LABELLED new acceptance test, with no fabricated base
       failure. Mislabelling a regression as new functionality is a REJECT.
-  G10 smoke suite (460 tests, ~40 s) passes after the merge, on the integration
+  G10 smoke suite (465 tests, ~40 s) passes after the merge, on the integration
       branch
   G11 TEST-PROCESS LIFECYCLE. Every test/benchmark/pipeline/LLM command in the
       branch's evidence ran through the bounded foreground wrapper, and the

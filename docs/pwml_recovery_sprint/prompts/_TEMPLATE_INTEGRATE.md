@@ -30,10 +30,10 @@ merge integration back into a worker branch.
      and report the affected lane. Do NOT reset, abort destructively, rewrite
      the worker branch, or commit a failing merge.
   5. If they pass, commit the merge with the required message.
-  6. Run the SMOKE SUITE (460 tests, ~40 s) on the integration branch.
+  6. Run the SMOKE SUITE (465 tests, ~40 s) on the integration branch.
      If it fails -> revert the merge immediately, send to CORRECTION.
   7. If the branch is chunk-D-marked in TEST_MATRIX.md, run the COMPLETE chunk D
-     gate (177 tests, 9-13 min). TEST_MATRIX.md § Chunk D cadence says which
+     gate (187 tests, 9-13 min). TEST_MATRIX.md § Chunk D cadence says which
      cards may defer the 23-node qb cohort to a pack-level checkpoint.
   8. Record the new integration SHA in LEDGER.md and set the row to ACCEPTED.
   9. Move every branch whose last dependency this was from BLOCKED to READY.
@@ -69,7 +69,7 @@ REPORT
                                owned-path first-parent..merge diff == the
                                reviewed card diff from its dispatch base
   ## FOCUSED TESTS ON THE PROSPECTIVE MERGE STATE   pasted
-  ## SMOKE POST-MERGE          pasted (expect 460 passed)
+  ## SMOKE POST-MERGE          pasted (expect 465 passed)
   ## CHUNK D                   pasted, if applicable
   ## GATES                     G1..G11, one line each
   ## BRANCHES NOW UNBLOCKED

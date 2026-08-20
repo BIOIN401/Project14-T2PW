@@ -49,7 +49,7 @@ No patch merges unless **all** of these hold:
    **symbol absence is not proof**. A genuinely new capability or module instead carries an
    **explicitly labelled new acceptance test** and needs no fabricated base failure.
    Mislabelling a regression as new functionality is a reject.
-10. The integration smoke suite (460 tests, ~40 s) passes after the merge.
+10. The integration smoke suite (465 tests, ~40 s) passes after the merge.
 11. **Test-process lifecycle holds.** Every test, benchmark, pipeline leg and LLM-backed
     command ran through the bounded foreground wrapper, and the cleanup report shows
     **zero surviving owned processes**. A run with survivors is an *infrastructure
