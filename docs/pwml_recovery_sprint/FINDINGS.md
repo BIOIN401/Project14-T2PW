@@ -2034,3 +2034,91 @@ measurement.
 Registered. **The historical censuses are NOT invalidated as evidence of what they measured** — they are
 accurate over the corpus that existed. Only their *coverage claim* over "the committed corpus" has decayed.
 No accepted card is reopened.
+
+## F-069 — three committed legs are outside the export golden, two tripwires fired, and nothing was listening
+
+- **Severity** **HIGH** · **Registered 2026-08-20**, integration `cbeaa84`
+- Surfaced by **REV-050j** (finding 1), **verified independently by the orchestrator**, and it corrects a
+  misclassification the C-050j writer made in good faith.
+
+### Two committed tests fail UNCONDITIONALLY on the integration branch
+
+| test | assertion | why it fails |
+|---|---|---|
+| `tests/test_c030_canonical_identity_fallback.py:176` `test_the_census_reproduces_over_the_committed_corpus` | `assert len(_corpus()) == 32` | the corpus is **35** (F-068) → `AssertionError: assert 35 == 32` |
+| `tests/test_compound_resolution_extraction.py:806` `test_the_golden_covers_every_committed_leg_fixture` | every `final_mapped.json` under `runs`/`runs_verify` must appear in `GOLDEN` | **three** legs are missing from `GOLDEN` |
+
+The three missing legs are exactly the T-100 survivors:
+`runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json`,
+`.../PMC12096016/strict/final_mapped.json`, `.../PMC12452463/strict/final_mapped.json`.
+
+**Both reproduce identically at base and at tip**, so **neither is attributable to C-050j** — and its merge
+does not change them. Both were red before C-050j existed.
+
+### ⚠ The classification correction, and it matters
+
+C-050j's report listed both among *"three additional `.env`-conditional reds"*. **The load-bearing half of
+that claim is true and was verified — they reproduce identically at base.** But **the mechanism is wrong:
+they are red with or without `.env`.** They have nothing to do with the PathBank DB.
+
+That distinction is not pedantic. An `.env`-conditional red is an artefact of the measurement environment
+and is correctly pre-charged and ignored. **These two are the code telling the truth**, and filing them
+under the `.env` family is how a real signal gets permanently silenced.
+
+**Only the third of the writer's three is genuinely `.env`-conditional** —
+`tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index`,
+which asserts on `db_resolution.available`. **It is a seventh member of the `.env` family** and is added to
+the standing pre-charge list.
+
+### The tripwire fired correctly. That is the finding.
+
+`test_the_golden_covers_every_committed_leg_fixture`'s own docstring reads:
+
+> *"NEW ACCEPTANCE. A new committed leg must be added to `GOLDEN` deliberately."*
+
+**It is not broken. It did exactly its job** — it detected that the T-100 run committed three legs into the
+corpus without adding them to the C-040/C-045 export golden, and it has been red ever since `8ea52c4`.
+
+**The consequence: `build_pwml_ir`'s output is unenforced on three committed legs**, including **both**
+strict legs of the two T-100 papers — the same legs every open finding from F-055 to F-064 is reasoned
+about. Any card that reads those artifacts is reasoning about output that no golden pins.
+
+### Why no gate caught it — and this is F-054 again
+
+**Both files are in NO chunk.** Certified stem-exactly against `TEST_MATRIX.md`'s chunk tables and
+`evidence/chunk_d_gate.py`. Neither is in SMOKE. **So no gate any card is told to run contains either one.**
+They surfaced only because C-050j's charter named 14 chunkless files by hand and one reviewer read the
+output carefully instead of pattern-matching it to the pre-charge list.
+
+**This is the second-order cost of F-054 made concrete:** 119 of 147 test files sit outside every gate, so a
+genuine unconditional red can stay red indefinitely and be mistaken for pre-charged noise.
+
+### Owner and remedy — UNOWNED, and deliberately not fixed here
+
+The remedy is **not** to re-point either assertion. `assert len(_corpus()) == 32` becoming `== 35` is a
+one-character edit that would silence the alarm without answering the question it raised. **The question is
+whether the three T-100 legs belong in `GOLDEN`**, and answering it means generating their expected
+`build_pwml_ir` output and reviewing it — which is precisely the deliberate act the test exists to force.
+
+**REV-051's precedent binds the shape of any fix**: re-pointing an assertion so it passes in both
+configurations destroys the property it guards (that is why F-065 must not be "fixed" casually).
+
+**Needs a card.** It must decide, with biological review, whether each of the three legs enters `GOLDEN`,
+and it must move the corpus pin **deliberately, with an exact documented delta** under merge rule 4 — never
+absorbed. **Registered, not fixed. No accepted card is reopened.**
+
+### Added to the standing pre-charge list — with its mechanism, not just its name
+
+**Unconditional, and NOT `.env`-related** (these are the two above; they are **real** and must not be
+silently ignored — cite F-069 when you see them):
+`test_c030_canonical_identity_fallback.py::test_the_census_reproduces_over_the_committed_corpus` ·
+`test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture`
+
+**`.env`-conditional family, now SEVEN** (four in `test_prefreeze_third_export_seam.py`, one in
+`test_prefreeze_species_resolution.py`, **F-065** in `test_pwml_writer.py`, and the newly confirmed
+`test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index`).
+
+**Line-number drift measured today** (predicate text exact, addresses stale):
+`test_prefreeze_species_resolution.py`'s `db_available is False` predicate is at **`:146`**, not `:131`;
+`test_prefreeze_third_export_seam.py`'s live `db_resolution` assertions are at **`:378, :383, :414, :436,
+:441, :468, :494`**, not `:365/:394/:452`.

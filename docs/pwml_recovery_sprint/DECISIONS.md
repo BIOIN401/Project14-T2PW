@@ -2738,6 +2738,41 @@ refuse. **Built as written the guard fires never in the species bucket.**
 **The correct positive marker is `marker["followed_leader"]`** (`prefreeze_resolution.py:1242`), written
 **only** when the leader's rename moved the group's `_norm` (`:1236`).
 
+> ### ⚠ AMENDMENT 2026-08-20 — this nomination does NOT transfer to the create-defaults path
+>
+> **Scope this clause to the pre-freeze species residual it was written about. It cannot serve as C-050j's
+> discriminator, and a card built on it would have shipped an unreachable no-op node.**
+>
+> Established by C-050j and **confirmed independently by REV-050j**, read against
+> `prefreeze_resolution.py`:
+>
+> * `:1211-1213` — `leaders.setdefault(_norm(row.get("name")), index)`: leaders are keyed by `_norm`.
+> * `:1218` — a row finds its leader by its **own** `_norm`, so leader and follower **necessarily share one
+>   pre-rename key**.
+> * `:1235`/`:1242` — the value stored is the follower's own pre-rename name, whose `_norm` **is** that same
+>   group key.
+>
+> So `marker["followed_leader"]` is **structurally confined to a single pre-rename `_norm` group** and
+> carries no information about a merge *across* two of them — which is exactly the question C-050j's
+> component call site had to answer.
+>
+> **A second, independent reason it cannot serve:** a renamed **leader with no followers** carries no
+> `followed_leader` at all (`:1224-1231`), so marker-presence would **miss a single-row create-defaults
+> rename entirely** — the commonest shape of the very case.
+>
+> **What replaced it, and it satisfies F-043 more strictly.** C-050j's discriminator is a structural
+> pre-group identity test: build `post-rename _norm -> the distinct pre-rename _norm keys it merged` over
+> `entities[source_key]`, and refuse iff a post-rename key was reached from **more than one** pre-rename
+> key. It reads **only `name`**, on both sides of the rename — no `taxonomy_id`, no `pathbank_species_id`,
+> no accession. It also **subsumes the marker**: a group the pre-freeze converger built arrives under one
+> pre-rename key and is cleared by construction, marker or no marker. Pinned parametrized over
+> marker-present and marker-absent at `tests/test_pwml_ir_duplicate_row_refusal.py:759`, so the verdict is
+> proved not to depend on it.
+>
+> **D-050's conclusion, its boundary and its census-first stop condition are all unchanged.** Only this one
+> nominated mechanism is corrected — the fourth time this sprint a record's cited mechanism proved false
+> while its conclusion survived. Merged in `cbeaa84`; F-046's original proposal remains struck.
+
 **F-043 still binds and is not weakened by this correction:** the discriminator must **not** be built from
 identifier equality. `PG`, `PG phosphate` and `(PGP)` all carry PathBank 193, which is UDP-glucose and wrong
 for all three. The durable species-canonicalization marker is the discriminator; a shared identifier is
