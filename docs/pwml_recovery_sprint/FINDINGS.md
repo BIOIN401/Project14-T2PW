@@ -1754,3 +1754,228 @@ missing distribution; F-066 is a path defect where the module is present and imp
 `python -c "import httpx"` versus `PYTHONPATH=src python -c "import t2pw"`.
 
 Registered, unowned, not fixed.
+
+## ⚠ CORRECTIONS to F-057 and F-058 — 2026-08-20, measured at `ee266ce`
+
+Established by read-only measurement **and byte-exact replay of production functions against the committed
+`runs_verify/2026-08-18_1328` artifacts**. Both findings' *conclusions* survive. F-057's stated **mechanism
+does not**, and F-058 is **no longer UNVERIFIED**. This is the fifth time this sprint that a record's cited
+mechanism proved false while its conclusion held.
+
+### F-057 half (i) is **FALSE as written**. The gap detector is not defective.
+
+F-057 states *"the **gap detector** minted **two distinct gap ids for a single dangling edge**."* It did not.
+
+`make_gap_id` (`rag/retrieve.py:200-213`) is `sha1(f"{kind}|{label}")[:8]`, casefolded, and nothing else.
+Both suffixes were recovered by replaying it:
+
+| gap id | recovered `label` |
+|---|---|
+| `gap-dangling_reaction-555124de` | **`EntC reaction`** |
+| `gap-dangling_reaction-7e0b4a06` | **`EntB isochorismatase reaction`** |
+
+**Two ids exist because two ADJACENT REACTIONS were each independently dangling, on different open
+metabolites** — `EntC reaction` on unfed substrate `chorismate`, `EntB isochorismatase reaction` on terminal
+product `pyruvate` (`retrieve.py:958-964`, `:990-1003`). Neither is a cofactor, so `_is_open`
+(`retrieve.py:945-947`) returns `True` for both. Replaying `_connectivity_gaps` (`retrieve.py:910-1004`) on
+the committed `PMC12096016/strict/stage1_payload.json` reproduces **all four** `dangling_reaction` ids
+exactly.
+
+**The per-edge dedup demonstrably WORKS.** `detect_gaps._add` (`retrieve.py:706-711`) drops a repeat
+`gap.key()`. Proof it fires: `EntF enterobactin synthase reaction` is dangling on **two** open ends
+(terminal `enterobactin`, unfed `L-serine`), `_connectivity_gaps` emits it **twice**, and `by_gap` carries
+**one** id — `gap-dangling_reaction-8b584237`.
+
+**The actual mechanism, and the one a charter must name:** `Gap.target_names()`
+(`rag/retrieve.py:316-347`) falls through to `target_symbols`, which `detect_gaps` fills from
+`_reaction_participants(row)` (`retrieve.py:548-563`, set at `:749` and `:1001`). Replayed:
+
+```
+gap-dangling_reaction-555124de 'EntC reaction'                 -> ['chorismate', 'isochorismate']
+gap-dangling_reaction-7e0b4a06 'EntB isochorismatase reaction' -> ['isochorismate', '2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvate']
+```
+
+`isochorismate` is a participant of **both** because it is the shared metabolite of two adjacent reactions.
+One candidate therefore satisfies both gaps' target tokens and is accepted twice, `fills_named_gap_directly:
+via isochorismate` — exactly the `reasons` string on both accepted records.
+
+**This is a structural property of every linear pathway: each internal metabolite lies in two adjacent gaps'
+target sets.** A card that "fixes the detector" would be fixing correct code.
+
+### F-057 half (ii) — confirmed, and narrowed
+
+**Confirmed: there is no cross-gap dedup.** `admit_candidates` (`rag/admission.py:3115`) partitions **by gap
+id** (`:3226`) and loops the ids independently (`:3229-3242`); `_admit_for_gap` (`:3253-3390`) allocates a
+fresh `accepted`/`frontier`/`reachable` per call (`:3292-3296`). **No set of already-admitted claim
+identities is shared across iterations, and no key on `(reaction, enzymes, span)` exists.**
+
+The relevant keys all *include* the gap id, which is what keeps the two apart:
+* `RagReactionCandidate.merge_key` (`admission.py:1917-1918`) = `(self.gap_id, self.claim_identity())` —
+  and it has **zero call sites repo-wide**.
+* `synthesize._dedupe_candidates` (`synthesize.py:1792-1824`) keys on
+  `(candidate.gap_id, claim_identity(), provenance_identity())` at `:1815-1819`. **Both accepted records are
+  identical on the last two** — same chunk `262953bcb3a53769e2cd36e4ba0a3c35`, same span. **Only
+  `gap_id` at `synthesize.py:1816` separates them.**
+
+The one rule keyed *without* gap id — `graph_delta.RULE_DUPLICATE_CLAIM`
+(`rag/graph_delta.py:373-375`) — is an **inter-round** check whose only production caller is
+`controller.py:297` inside `run_rag_loop`. `maybe_run_rag` calls `synthesize_with_report` directly
+(`streamlit_app.py:682`), so **it never ran on this leg**. (C-055 wires the controller; that changes what
+runs in round 2+, never within a round.)
+
+**NARROWED: "admitted twice" is true of the REPORT and false of the PAYLOAD.** The two candidates collapse
+to **one** row downstream at `synthesize._resolve_reactions` (`synthesize.py:1058-1121`), which groups by
+`conflict_key`. `merged_payload.json` carries **one** duplicate reaction, `/processes/reactions/5`, not two.
+**The harm is the row existing at all, not existing twice.**
+
+### F-057 A-3 — the "gap" was already covered, and NOTHING checks for that
+
+**No already-covered check exists anywhere.** Established four ways:
+
+1. The complete rejection vocabulary (`admission.py:136-174`, `REASON_NO_GAP_ID` … `REASON_CONFLICTING_RESOLUTION`) contains **no reason code** for "already present in the seed graph".
+2. The seed graph is used **only to admit**: `_pathway_metabolites(seed_payload, token)` (`admission.py:2228`, consumed `:3166`, `:3265`) makes seed metabolites **anchors that widen the frontier**. It is an admission enabler, never a refusal.
+3. **No lock-manifest coupling.** `rag/admission.py` imports exactly one non-stdlib non-rag module — `from t2pw.pipeline.lineage import LineageEntry, LineageSource` (`:57`). Neither it nor `rag/retrieve.py` imports `reaction_lock_manifest` or `reaction_preservation_validator`. Lock reconciliation is post-hoc at `strict_quarantine.py:1939`.
+4. The nearest thing, `synthesize._payload_closes_gap` (`synthesize.py:2957-3068`, `GAP_DANGLING_REACTION` branch `:2976-2984`), runs **after** synthesis for the unfilled-gap report. It does not gate admission.
+
+**Why the row was not caught as a duplicate of the locked seed reaction:** seed `/processes/reactions/1` is
+`isochorismate -> {2,3-dihydro-2,3-dihydroxybenzoate, pyruvate}`; the RAG row is `isochorismate ->
+{2,3-dihydro-2,3-dihydroxybenzoate (DHB)}`. **Different output name, missing `pyruvate` ⇒ different
+`conflict_key`** ⇒ `_resolve_reactions` (`synthesize.py:1079-1095`) never grouped them. Both survive, and
+`quarantine_report.json → /admissions` shows all six reactions `core_accepted`.
+
+### F-057 A-4 — no accession-keyed collapse exists, and `n_entities_deduped: 0` is NOT an anomaly
+
+**Artifact fact re-read and CONFIRMED:** in `PMC12096016/strict/final_mapped.json`, `/entities/proteins/1`
+(`EntB`) and `/entities/proteins/6` (`Isochorismatase (EntB)`) carry **byte-identical**
+`mapped_ids = {"uniprot": "P0ADI4", "pathbank_protein_id": "6224", "gene_name": "entB"}`.
+
+**Every dedup in the tree keys on a NAME:** `process_normalizer._dedupe_named_rows` (`:706-721`, counter
+bumped `:2736` inside `canonicalize_same_as_aliases` `:2332`, wired `:5445`) · `ir._dedupe_named_rows`
+(`:551`, keying `:596-599`) · `strict_quarantine._prune_entities` (name ∪ synonyms, `:1325-1326`) ·
+`_degree_zero_exports` (name only, `:1741-1743`). The only accession-keyed structures are **component
+lookups that silently last-wins overwrite** — `ir.py:1369`/`:1379-1383`, `writer.py:1171`/`:1203`,
+`process_normalizer.py:4456`, `map_ids.py:6074-6089`.
+
+**So `n_entities_deduped: 0` is exactly what the code predicts:** different name norms, no `same_as` link,
+no pass could have collapsed them. It is not evidence of a broken deduper.
+
+### ⚠ F-057's UNVERIFIED prune/degree-zero asymmetry — RESOLVED, and it is NOT the cause
+
+F-057 flags as UNVERIFIED *"why the row survived `_prune_entities` (name+synonym) but failed
+`_degree_zero_exports` (name-only)"*. **Both cited ranges are accurate against the code.** But **neither
+protein row carries a `synonyms` key at all** — the full key list on `/6` is `mapped_ids, mapping_meta, name,
+organism, pathbank_protein_id, pathbank_species_id, provenance_lineage, rag_confidence, rag_provenance,
+source_papers, source_refs, species, species_id, species_name, species_ref, taxonomy_id`. With no synonyms,
+`_entity_name_norms` (`process_normalizer.py:626-636`) degenerates to name-only and **the two predicates are
+identical on these rows.**
+
+**A THIRD, previously unrecorded mechanism is the actual cause.** The reference that kept the row alive was
+destroyed by identifier mapping. In `merged_payload.json`, `/processes/reactions/5/enzymes[0]` reads
+`{"protein": "Isochorismatase (EntB)", ...}`; in `final_mapped.json` the same actor reads
+`{"entity": "isochorismatase", "entity_type": "protein_complex", "role": "catalyst", ...}`. **The enzyme was
+renamed and retyped, so no surviving process references the protein row named `Isochorismatase (EntB)`** —
+hence `degree_zero_exports = [{"bucket": "proteins", "name": "Isochorismatase (EntB)"}]` and
+`refusal_reasons = ["degree_zero_export:1"]`.
+
+The rewrite site is `map_ids._rewrite_reaction_protein_enzymes_to_complexes` (referenced at
+`tests/test_rag_payload_gate_guardrails.py:66`). **Its exact line range is UNVERIFIED and it is outside both
+cards' boundaries.** Registered here; **do not fix it under F-057.**
+
+**Still genuinely UNVERIFIED, as F-057 says:** the quarantine *input* payload is written nowhere (only hashed
+as `admitted_payload_hash`), so the state between `final_mapped.json` and the degree-zero verdict cannot be
+read.
+
+---
+
+### F-058 — the site is PINNED, byte-exactly reproduced, and the record's scope was off by one
+
+F-058 records the affected site as *"the transporter-attachment site **between** the Stage-1 boundary and
+`merge_additions` — **UNVERIFIED which**."* **It is now verified, and it is INSIDE `merge_additions`.**
+
+**The site:** `pipeline/pipeline.py :: _inject_name_based_modifiers` (defined `:2713`), **transports branch
+`:2880-2914`**, appending at `:2907-2914`. Called at **`pipeline.py:1218`**, immediately after the additions
+merge (`:1192-1216`) and before `screen_additions` (`:1219`).
+
+**Byte-exact replay.** Running `_inject_name_based_modifiers` on a deep copy of each committed
+`stage1_payload.json`, with no Stage-2 additions and no RAG, reproduces the committed `merged_payload.json`
+transporter entries **character for character on all three affected legs** — `PMC12096016/strict` transports
+0 and 1, `PMC12096016/research` transport 0, and `PMC12452463` strict + research transport 0 (the correct
+`FepA` entry **plus** an appended `EntE` entry).
+
+**The cause, one statement** (`pipeline.py:2884-2886`):
+
+```python
+for transport, tname, tevidence_text in transport_rows:
+    tevidence = tevidence_text.lower()
+    if pname_lower not in tname and pname_lower not in tevidence:
+        continue
+```
+
+**A bare substring test — no word boundary, no cue window, no exactly-one-candidate guard.** `pname_lower =
+"ente"` is a substring of `"ent`**erobactin**` export"`, `"ferric ent`**erobactin**` import"` and
+`"ent`**erobactin**` secretion"`. **The guards the REACTION branch already has —  the cue window at
+`:2840-2842` and the exactly-one-candidate refusal at `:2853-2863` — were never extended to the transport
+branch.**
+
+**A second defect on the same statement:** `:2909` writes the key `"protein_complex"` unconditionally, though
+`EntE` was collected as a **protein** (`:2744-2746`) and lives in `entities.proteins` — which is why
+`final_mapped.json` shows mapping rewriting it back to `"entity_type": "protein"`.
+
+**This also explains F-058's own "Leg A is worse" observation:** on `PMC12452463` the new
+`enterobactin secretion` transport row comes from Stage-2 additions via `_extend_unique`
+(`pipeline.py:1202`), and `_inject_name_based_modifiers` at `:1218` then attaches `EntE` to it **in the same
+call**.
+
+**Eight other candidate sites were enumerated and EXCLUDED**, each with a cited basis — most usefully:
+`process_normalizer.attach_transporters_from_evidence` (`:3290`, append `:3390`, counter `:3392`) is excluded
+three ways (the counter is bumped on the same statement as the append, so `transporters_attached: 0` ⇔ zero
+appends; it runs post-pipeline at `:5437-5438`, outside the window; and its row shape lacks
+`provenance`/`confidence`/`source_refs`); and **RAG import is excluded structurally — `grep -c transport
+src/t2pw/rag/conform.py` → 0**, so the conform envelope cannot carry a transport row at all. That is a
+stronger exclusion than F-058's original "no `rag_provenance` carrier" argument.
+
+### F-058's instrumentation gap — CONFIRMED at the type level, consequence no longer holds
+
+Actor sub-entries genuinely carry a bare provenance string with **no stage**: `schema.py:340-358`
+`PayloadReactionActor` has no `stage` and no `provenance_lineage` field (`PayloadProvenance` is a 4-value
+`Literal` at `:30`); `payload_models.py:313-324` `ActorModel` has `provenance: str | None = None` at `:323`.
+Every construction site writes the bare string — `pipeline.py:2866-2878`, `:2908-2914`,
+`process_normalizer.py:3525-3534`, `:3676-3683`, `:3390`. The structured `provenance_lineage` carrier exists
+on **rows** but on **no actor sub-entry** in any leg.
+
+**But F-058's consequence — *"attribution stops at 'between Stage-1 and merge'"* — is now superseded.** It was
+narrowed by **replay**, not by instrumentation: the writer's field set (`protein_complex` + `confidence: 0.9`
++ `provenance: "inferred"` + `source_refs == [evidence]`) is a **unique fingerprint of
+`pipeline.py:2908-2914`**, emitted by no other site in the tree.
+
+### Ownership consequence — the two cards are DISJOINT at source, NOT at test
+
+**Source: intersection is empty.** F-057 = `{rag/retrieve.py, rag/admission.py, rag/synthesize.py}`;
+F-058 = `{pipeline/pipeline.py}`. The two touch points are one-directional and need no edit on the other
+side.
+
+**Tests: three files are in both sets** — `test_rag_gap_admission.py` (18), `test_rag_payload_gate_guardrails.py`
+(16) and `test_rag_seed_entity_reimport.py` (14). Whichever card lands second must re-run all three.
+
+**Two collisions the charters must AVOID, both live:**
+* an accession-keyed collapse placed in `ir._dedupe_named_rows` (`:551`) **collides with C-050j**;
+* any change to `strict_quarantine._prune_entities` (`:1294`) **collides with C-057**.
+
+**Per A-4 above, F-057 needs neither** — the prune predicates are not the cause. Both are excluded from its
+boundary.
+
+**Two untested seams, named so no one assumes coverage:** `_admit_for_gap` and `_dedupe_candidates` have
+**zero direct references anywhere in `tests/`**; and **nothing asserts on the transport branch of
+`_inject_name_based_modifiers` at all** — all three of its name-heuristic tests
+(`test_rag_payload_gate_guardrails.py:330`, `:402`, `:428`) are on the **reaction** branch.
+
+### Three more F-054 traps, found in these sets
+
+1. **`test_rag_admission_adversarial` (54 tests) is NOT Chunk C** — only `test_rag_admission_production_path`
+   is. A substring predicate on `test_rag_admission` pulls a 54-test file into a chunk documented at 109.
+   The largest mis-certification available in this set.
+2. **`test_entity_admission` (23) is NOT Chunk C** — a substring on `admission` matches it against Chunk C's
+   `test_rag_gap_admission`.
+3. **`test_rag_provenance_gates` (Chunk C) vs `test_rag_payload_gate_guardrails` (no chunk)** — both match a
+   `gate` substring; only the first is in C. Likewise `test_pipeline_reaction_rag_provenance` (Chunk C) vs
+   `test_pipeline_lineage_*` (no chunk).
