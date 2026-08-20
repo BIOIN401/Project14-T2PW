@@ -96,8 +96,10 @@ class DuplicateNamedRowError(RuntimeError):
     merge rule 8 forbid the exporter to "add, remove, resolve or reinterpret
     biological content" there. Dropping the second row is exactly that.
 
-    **Entity buckets only** -- see :func:`_dedupe_named_rows` for why the component
-    call site keeps a warning instead (F-046, owned by C-050j).
+    **Entity buckets, plus the one component class C-050j / D-050 names** -- see
+    :func:`_dedupe_named_rows` for why every *other* component collision keeps a
+    warning instead (F-046), and :class:`PostFreezeComponentMergeError` for the
+    exception.
 
     It is **not** a dangling reference some later gate would catch:
     :func:`_dedupe_named_rows` groups on :func:`_norm` and ``entity_by_name`` is
@@ -150,6 +152,56 @@ class DuplicateNamedRowError(RuntimeError):
             f"silently repoints every reference to the survivor, which carries "
             f"different identifiers. Resolve the collision in the payload before the "
             f"freeze -- see t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution."
+        )
+
+
+class PostFreezeComponentMergeError(DuplicateNamedRowError):
+    """The **exporter itself** merged two component rows, after the freeze.
+
+    C-050j / **D-050**. :func:`_apply_create_defaults` *renames* a component row
+    (``record["name"] = default_name``), and ``build_pwml_ir`` applies it to the
+    ``species`` and ``subcellular_locations`` rows **downstream of the canonical
+    hash**. When that rename lands one frozen row on the :func:`_norm` key another
+    frozen row already occupies, the collision is **manufactured here**: the frozen
+    payload holds two distinct rows, and the unguarded dedupe was about to keep one
+    and drop the other with a warning.
+
+    That is not a duplicate the payload authored. It is the exporter
+    *reinterpreting biological content after the canonical graph is frozen*, which
+    ``PRODUCT_CONTRACT`` section 5 forbids outright and which names **organism
+    context** among the properties an export must preserve. The correct repair is
+    to move the rename upstream of the freeze; **D-050 puts that explicitly out of
+    scope**, so this refuses instead of choosing.
+
+    A subclass rather than a separate exception, so that every caller already
+    written as ``except DuplicateNamedRowError`` keeps catching it -- the harm is
+    the same class of harm, and only the *author* of the collision differs. The
+    inherited message is reused verbatim and extended with that authorship, which
+    is the one fact a reader needs and cannot recover from the payload.
+    """
+
+    code = "PWML_IR_POST_FREEZE_COMPONENT_MERGE"
+
+    def __init__(
+        self,
+        *,
+        norm_key: str,
+        pointer_prefix: str,
+        rows: Sequence[Dict[str, Any]],
+        origin_norm_keys: Sequence[str],
+    ) -> None:
+        #: The **distinct** exporter name keys these rows arrived under, before
+        #: ``_apply_create_defaults`` ran. Two or more, by construction: one is
+        #: the diagnostic's whole point.
+        self.origin_norm_keys = sorted({str(key) for key in origin_norm_keys})
+        super().__init__(norm_key=norm_key, pointer_prefix=pointer_prefix, rows=rows)
+        RuntimeError.__init__(
+            self,
+            f"{self.args[0]} These rows did NOT collide in the frozen payload: they "
+            f"arrived under the distinct exporter name keys {self.origin_norm_keys}, "
+            f"and ir._apply_create_defaults renamed one onto the other AFTER the "
+            f"canonical hash. The collision is the exporter's own, so collapsing it "
+            f"would drop a row the frozen graph still contains.",
         )
 
 
@@ -555,6 +607,7 @@ def _dedupe_named_rows(
     report: Dict[str, Any],
     pointer_prefix: str,
     refuse_duplicates: bool = False,
+    refuse_post_freeze_merges: Optional[Dict[str, List[str]]] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Dict[str, Any]]]:
     """Group rows by :func:`_norm` and key the survivors.
 
@@ -576,10 +629,40 @@ def _dedupe_named_rows(
     there would break C-045/D-016 and cause the very harm this guard exists to
     prevent.
 
-    The residual is named, not silently absorbed: a component collision that the
-    pre-freeze converger did **not** create still drops first-wins with only a
-    warning. That is **F-046**, owned by **C-050j**, and its measured live exposure
-    across all 32 committed legs and all nine buckets is **zero**.
+    ``refuse_post_freeze_merges`` -- **C-050j / D-050**, and the *only* collision
+    class the component branch refuses. ``build_pwml_ir`` runs
+    :func:`_apply_create_defaults` over the ``species`` and
+    ``subcellular_locations`` rows **after the canonical hash**, and that call
+    *renames* rows. When the rename lands one **frozen** row on a ``_norm`` another
+    **frozen** row already holds, the collision is the exporter's own: the frozen
+    payload has two rows and the dedupe was about to keep one. The mapping is
+    ``post-rename _norm -> the distinct pre-rename _norm keys it merged``, built at
+    the call site because that is the only place that can see both states.
+
+    **The discriminator is structural and never identifier equality (F-043).** It
+    asks *who merged these rows*, not whether they look alike: ``PG``, ``PG
+    phosphate`` and ``(PGP)`` all carry PathBank 193 -- UDP-glucose, and wrong for
+    all three -- so a shared identifier is evidence, never proof. It equally does
+    **not** read ``marker["followed_leader"]``
+    (``prefreeze_resolution.py:1242``). That marker is written only on a row that
+    followed a leader **inside one ``_norm`` group** (leaders are keyed by ``_norm``
+    at ``:1211-1213`` and looked up by the row's own ``_norm`` at ``:1218``), so it
+    is structurally confined to a single pre-rename group and can neither confirm
+    nor refuse a merge *across* two of them. It is not needed here: a group the
+    pre-freeze converger built arrives under **one** pre-rename key and is
+    therefore cleared by construction, marker or no marker.
+
+    Rows the exporter itself invented -- ``_hydrate_component_rows_from_biological_states``
+    placeholders -- are deliberately **excluded** from that map: the frozen graph
+    does not contain them, so collapsing one into a frozen row destroys nothing,
+    and refusing it would break a collapse the pipeline depends on.
+
+    The rest of the residual is still named, not silently absorbed: a component
+    collision the payload itself authored -- present *before*
+    :func:`_apply_create_defaults` ran and not created by it -- still drops
+    first-wins with only a warning. That is what remains of **F-046**, and its
+    measured live exposure across all 35 committed legs, both production
+    ``strict_db`` arms and all nine buckets is **zero**.
     """
 
     out: List[Dict[str, Any]] = []
@@ -597,7 +680,12 @@ def _dedupe_named_rows(
             continue
         n = _norm(name)
         if n in by_norm:
-            if not refuse_duplicates:
+            # C-050j: a collision the EXPORTER manufactured, post-freeze, out of
+            # two rows the frozen payload kept apart. Everything else on the
+            # component side still takes the warning branch below.
+            merges = refuse_post_freeze_merges or {}
+            manufactured = n in merges
+            if not refuse_duplicates and not manufactured:
                 # Byte-identical to the pre-C-050i behaviour, deliberately: this
                 # is the branch the species converger depends on (F-046).
                 _add_issue(
@@ -630,9 +718,21 @@ def _dedupe_named_rows(
                     "pointer": f"{pointer_prefix}/{idx}",
                 },
             ]
-            error = DuplicateNamedRowError(
-                norm_key=n, pointer_prefix=pointer_prefix, rows=conflicting
-            )
+            if manufactured:
+                # C-050j / D-050. Same harm, different author: the payload did not
+                # collide, ``_apply_create_defaults`` collided it after the hash.
+                # A subclass, so every existing ``except DuplicateNamedRowError``
+                # still catches it.
+                error: DuplicateNamedRowError = PostFreezeComponentMergeError(
+                    norm_key=n,
+                    pointer_prefix=pointer_prefix,
+                    rows=conflicting,
+                    origin_norm_keys=merges[n],
+                )
+            else:
+                error = DuplicateNamedRowError(
+                    norm_key=n, pointer_prefix=pointer_prefix, rows=conflicting
+                )
             # The structured diagnostic is preserved, and promoted from warning
             # to error. ``build_pwml_ir`` builds its report locally so the raise
             # carries it away, but a caller that owns the report dict -- and any
@@ -1176,15 +1276,41 @@ def build_pwml_ir(
             raw_states=raw_states_for_components,
             report=report,
         )
+        create_defaults: Optional[Dict[str, Dict[str, Any]]] = None
         if source_key == "species":
-            component_rows = [
-                _apply_create_defaults(row, SPECIES_CREATE_DEFAULTS)
-                for row in component_rows
-                if isinstance(row, dict)
-            ]
+            create_defaults = SPECIES_CREATE_DEFAULTS
         elif source_key == "subcellular_locations":
+            create_defaults = SUBCELLULAR_LOCATION_CREATE_DEFAULTS
+
+        # C-050j / D-050. ``_apply_create_defaults`` RENAMES a row, and it runs
+        # here -- after the canonical hash. Two rows the frozen payload kept apart
+        # can therefore be renamed onto one ``_norm`` and silently collapsed by the
+        # dedupe below, which drops the second with a warning while
+        # ``component_by_name`` repoints every reference to the survivor.
+        #
+        # The map is built over ``entities[source_key]`` -- the rows the canonical
+        # hash actually covers -- and NOT over ``component_rows``. The difference
+        # is deliberate: ``_hydrate_component_rows_from_biological_states`` invents
+        # placeholder rows the frozen graph does not contain, and collapsing one of
+        # those into a frozen row destroys nothing. Refusing it would break a
+        # collapse the pipeline depends on, which is the failure D-050 section 3
+        # warns about. Reading the payload rows excludes them by construction, with
+        # no assumption about hydration order.
+        post_freeze_merges: Dict[str, List[str]] = {}
+        if create_defaults is not None:
+            origin_keys: Dict[str, set] = defaultdict(set)
+            for frozen_row in _safe_list(entities.get(source_key)):
+                if not isinstance(frozen_row, dict):
+                    continue
+                before = _norm(frozen_row.get("name"))
+                after = _norm(_apply_create_defaults(frozen_row, create_defaults).get("name"))
+                if before and after:
+                    origin_keys[after].add(before)
+            post_freeze_merges = {
+                norm: sorted(keys) for norm, keys in origin_keys.items() if len(keys) > 1
+            }
             component_rows = [
-                _apply_create_defaults(row, SUBCELLULAR_LOCATION_CREATE_DEFAULTS)
+                _apply_create_defaults(row, create_defaults)
                 for row in component_rows
                 if isinstance(row, dict)
             ]
@@ -1193,6 +1319,7 @@ def build_pwml_ir(
             key_prefix=prefix,
             report=report,
             pointer_prefix=f"/entities/{source_key}",
+            refuse_post_freeze_merges=post_freeze_merges,
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
         if source_key == "species":
@@ -1285,9 +1412,11 @@ def build_pwml_ir(
             key_prefix=prefix,
             report=report,
             pointer_prefix=f"/entities/{source_key}",
-            # C-050i: the entity call site refuses a post-freeze name collision.
-            # The component call site above deliberately does not -- see
-            # :func:`_dedupe_named_rows` and F-046.
+            # C-050i: the entity call site refuses EVERY post-freeze name
+            # collision. The component call site above deliberately does not: it
+            # refuses only the one class C-050j / D-050 names, via
+            # ``refuse_post_freeze_merges``, and keeps its warning for the rest --
+            # see :func:`_dedupe_named_rows` and F-046.
             refuse_duplicates=True,
         )
         if source_key == "compounds":

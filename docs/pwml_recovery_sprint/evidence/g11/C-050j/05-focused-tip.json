@@ -1,0 +1,115 @@
+{
+  "label": "focused-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/c050j/ft",
+    "tests/test_protein_export_policy.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_entity_type_gate.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_canonicalization_preflight_and_species.py",
+    "tests/test_enrich_entities_promotion.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050j-component-dedupe",
+  "started_at": "2026-08-20T20:30:48+00:00",
+  "finished_at": "2026-08-20T20:32:11+00:00",
+  "duration_seconds": 82.57017880000058,
+  "timeout_seconds": 2400.0,
+  "root_pid": 636460,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 642180,
+      "name": "python.exe",
+      "ppid": 636460
+    },
+    {
+      "pid": 643168,
+      "name": "git.exe",
+      "ppid": 642180
+    },
+    {
+      "pid": 642144,
+      "name": "git.exe",
+      "ppid": 642180
+    }
+  ],
+  "descendants_terminated": [
+    642144,
+    642180,
+    643168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 299444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 299512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 636012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 641768,
+      "name": "python.exe"
+    },
+    {
+      "pid": 642152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 642352,
+      "name": "python.exe"
+    },
+    {
+      "pid": 642844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 642976,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c050j-component-dedupe/docs/pwml_recovery_sprint/evidence/g11/C-050j/05-focused-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050j-component-dedupe\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050j-component-dedupe",
+    "repo_head": "32f3a57558ae6a85c333ebddaaa6db77cd4e4dfd",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

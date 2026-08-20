@@ -1,0 +1,141 @@
+{
+  "task": "C-050j",
+  "base_sha": "32f3a57558ae6a85c333ebddaaa6db77cd4e4dfd",
+  "purpose": "literal pytest COUNTS for every gate C-050j ran -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10). Every summary line below is verbatim.",
+  "tree_measured": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c050j-component-dedupe",
+  "dotenv_present": true,
+  "invocation_notes": [
+    "T2PW_OFFLINE_CURATOR=1 in every bounded child.",
+    "--basetemp under C:/t/c050j/* on every pytest invocation.",
+    "PYTHONPATH=src on the focused selections ONLY, orchestrator-directed: 4 of the 14 chunkless files import t2pw without a sys.path insert and fail at COLLECTION in an isolated selection. Disclosed, not silent."
+  ],
+
+  "smoke": {
+    "expected_per_COUNT_CORRECTIONS": 465,
+    "measured": 465,
+    "matches_expected": true,
+    "failures": 0,
+    "summary_line_verbatim": "465 passed in 50.06s",
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-050j/40-smoke.json"
+  },
+
+  "chunk_d": {
+    "expected_total": 187,
+    "partition_proof_verbatim": "union=187 monolithic=187 missing=0 extra=0 SETS_EQUAL=True",
+    "components_verbatim": [
+      "core : exit=0 parsed=160 pytest_said=160 expected=160 overlap_with_earlier=0",
+      "s8   : exit=0 parsed=4 pytest_said=4 expected=4 overlap_with_earlier=0",
+      "qb   : exit=0 parsed=23 pytest_said=23 expected=23 overlap_with_earlier=0"
+    ],
+    "core_summary_line_verbatim": "1 failed, 159 passed in 45.46s",
+    "core_measured": "159/160",
+    "total_measured": "185/187",
+    "expected_on_a_dotenv_carrying_tree": "185/187, core 159/160 (_COUNT_CORRECTIONS.md)",
+    "matches_expected": true,
+    "final_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "executed_omissions_explained": "chunk_d_gate.py:293-303 accumulates `executed` ONLY for jobs that pass, so a failing core job withdraws all 160 of its node IDs and node15 withdraws 1: 187-160-1 = 26 executed, 161 omissions. Every one of the 187 was collected and RUN; the omission figure is an artifact of the pass-only accounting, not a coverage gap.",
+    "failures": [
+      {
+        "node": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance",
+        "component": "core",
+        "classification": "PRE-CHARGED, F-065",
+        "why": "its own comment at :1829-1832 asserts 'no worktree carries a .env'; sprint worktrees copy .env in for F-051 control parity, so :1833's `assert report['db_resolution']['available'] is False` fails on a live DB. NOT fixed: REV-051 established that re-pointing that assertion makes the following assertion pass in BOTH configurations."
+      },
+      {
+        "node": "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block",
+        "component": "qb node15",
+        "classification": "PRE-CHARGED, D-047 / F-052",
+        "why": "red whenever the PathBank DB is reachable. Hotspot 9: the file is not touched, and the gate addresses its nodes positionally."
+      }
+    ],
+    "g11_reports": "docs/pwml_recovery_sprint/evidence/g11/C-050j/07-chunkd-outer.json plus 08..39 (self-allocated by chunk_d_gate.py --task C-050j)"
+  },
+
+  "focused_chunkless_14_files": {
+    "membership_certified": "stem-exactly against the SMOKE file list (20 stems), chunk_d_gate.CORE+S8+QB (7 stems) and Chunk E (1 stem). All 14 are chunkless. F-054's trap reproduced: a SUBSTRING predicate wrongly reports tests/test_pwml_ir_duplicate_row_refusal.py as covered by Chunk D's tests/test_pwml_ir.py, and tests/test_map_ids.py as covered by SMOKE's tests/test_map_ids_name_gate.py.",
+    "tip_summary_line_verbatim": "10 failed, 339 passed, 8 skipped in 80.20s (0:01:20)",
+    "base_summary_line_verbatim": "10 failed, 325 passed, 8 skipped in 71.72s (0:01:11)",
+    "reproduction_summary_line_verbatim": "10 failed, 339 passed, 8 skipped in 45.35s",
+    "control_method": "F-051's standing remedy: the SAME worktree, the SAME .env, the SAME selection, the SAME interpreter -- only the files under test swapped, via `git stash push -- src tests` and `git stash pop`. No base tree was exported and none was needed.",
+    "delta": "+14 passed, 0 new failures. The +14 is exactly this card's 13 new acceptance functions, one of them parametrized x2. The failing node-ID SET is byte-identical at base and at tip.",
+    "per_file_tip": {
+      "tests/test_protein_export_policy.py": {"collected": 63, "passed": 63, "failed": 0, "skipped": 0},
+      "tests/test_rag_typed_resolution_integrity.py": {"collected": 39, "passed": 39, "failed": 0, "skipped": 0},
+      "tests/test_rag_typed_gap_resolution.py": {"collected": 24, "passed": 24, "failed": 0, "skipped": 0},
+      "tests/test_rag_payload_gate_guardrails.py": {"collected": 16, "passed": 16, "failed": 0, "skipped": 0},
+      "tests/test_pathbank_unknown_fallback.py": {"collected": 15, "passed": 15, "failed": 0, "skipped": 0},
+      "tests/test_compound_resolution_extraction.py": {"collected": 14, "passed": 13, "failed": 1, "skipped": 0},
+      "tests/test_entity_type_gate.py": {"collected": 39, "passed": 39, "failed": 0, "skipped": 0},
+      "tests/test_prefreeze_species_resolution.py": {"collected": 12, "passed": 11, "failed": 1, "skipped": 0},
+      "tests/test_c030_canonical_identity_fallback.py": {"collected": 32, "passed": 31, "failed": 1, "skipped": 0},
+      "tests/test_pwml_ir_duplicate_row_refusal.py": {"collected": 36, "passed": 36, "failed": 0, "skipped": 0},
+      "tests/test_prefreeze_third_export_seam.py": {"collected": 12, "passed": 8, "failed": 4, "skipped": 0},
+      "tests/test_strict_failure_replay.py": {"collected": 47, "passed": 37, "failed": 2, "skipped": 8},
+      "tests/test_canonicalization_preflight_and_species.py": {"collected": 5, "passed": 4, "failed": 1, "skipped": 0},
+      "tests/test_enrich_entities_promotion.py": {"collected": 3, "passed": 3, "failed": 0, "skipped": 0}
+    },
+    "failing_node_ids_identical_at_base_and_tip": [
+      "tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture",
+      "tests/test_prefreeze_species_resolution.py::test_new_acceptance_the_preflight_still_receives_the_at_risk_species",
+      "tests/test_c030_canonical_identity_fallback.py::test_the_census_reproduces_over_the_committed_corpus",
+      "tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy]",
+      "tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed]",
+      "tests/test_prefreeze_third_export_seam.py::test_an_all_legacy_population_proves_the_value_is_carried_not_inferred",
+      "tests/test_prefreeze_third_export_seam.py::test_the_same_row_still_warns_and_names_the_real_reason[not_configured]",
+      "tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]",
+      "tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]",
+      "tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index"
+    ],
+    "pre_charged_classification": {
+      "unconditional": "tests/test_strict_failure_replay.py x2 -- charter section 7, reproduced identically at base.",
+      "dotenv_conditional_charter_named": "4 in tests/test_prefreeze_third_export_seam.py + 1 in tests/test_prefreeze_species_resolution.py -- all five reproduced identically at base. A live DB falsifies the tests' assumption (compound_resolution.py:476-485: db_resolver=None means 'resolve from .env', not 'no DB'), not the code.",
+      "dotenv_conditional_NOT_named_by_the_charter": "3 more, all reproduced identically at base: tests/test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index (fails with `assert 'preflight' in {... 'db_resolution': {'available': True ...}}`), tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture and tests/test_c030_canonical_identity_fallback.py::test_the_census_reproduces_over_the_committed_corpus. REGISTERED HERE as an addition to the .env-conditional red list."
+    },
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-050j/05-focused-tip.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-050j/06-focused-base.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-050j/41-focused-perfile.json"
+    ]
+  },
+
+  "acceptance_file_delta": {
+    "file": "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "collected_at_base": 22,
+    "collected_at_tip": 36,
+    "delta": "+14, all new, none removed or renamed",
+    "arm10_only_summary_line_verbatim": "36 passed in 0.18s",
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-050j/04-arm10-second.json"
+  },
+
+  "census": {
+    "artifact": "docs/pwml_recovery_sprint/evidence/c050j_component_collision_census.json",
+    "instrument_control": "docs/pwml_recovery_sprint/evidence/c050j_census_instrument_control.json",
+    "legs_measured": 35,
+    "measurements": 70,
+    "manufactured_merge_count": 0,
+    "preexisting_collision_count": 0,
+    "rows_renamed_post_freeze_total": 0,
+    "statuses": {"BUILT": 68, "PREFREEZE_STOP": 2},
+    "prefreeze_stops": "runs/2026-07-28_0919/.../PMC12444477.../strict -- PREFREEZE_DUPLICATE_CANONICAL_ROWS, BOTH strict_db arms",
+    "summary_lines_verbatim": [
+      "legs measured        : 35",
+      "measurements         : 70",
+      "rows renamed (total) : 0",
+      "PREEXISTING          : 0",
+      "MANUFACTURED MERGES  : 0   <== THE CENSUS NUMBER",
+      "CONTROL sees a merge : True"
+    ],
+    "g9_arm_selected": "new capability",
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-050j/01-census-control.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-050j/02-census.json"
+    ]
+  },
+
+  "g11": {
+    "artifacts": 41,
+    "non_compliant": 0,
+    "surviving_processes_across_every_job": 0,
+    "checker_line_verbatim": "G11 evidence: 41 artifact(s), 0 non-compliant (spec v1)"
+  }
+}
