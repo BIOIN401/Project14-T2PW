@@ -1,44 +1,20 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: EntC-catalyzed chorismate isomerization
-  Reactants: chorismate [cytoplasmic state]
-  Products:  isochorismate [cytoplasmic state]
-  Modifier:  EntC [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 1: ALAS2-catalyzed condensation of glycine and succinyl-CoA
+  Reactants: glycine [mitochondrial matrix state], succinyl-CoA [mitochondrial matrix state]
+  Products:  aminolevulinic acid [mitochondrial matrix state]
+  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: EntB isochorismatase reaction
-  Reactants: isochorismate [cytoplasmic state]
-  Products:  2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) [cytoplasmic state], pyruvate [cytoplasmic state]
-  Modifier:  EntB [cytoplasmic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 3: EntA dehydrogenase reaction
-  Reactants: 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) [cytoplasmic state]
-  Products:  2,3-dihydroxybenzoic acid (2,3-DHB) [cytoplasmic state]
-  Modifier:  EntA [cytoplasmic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 4: EntE-catalyzed adenylation of 2,3-DHB
-  Reactants: 2,3-dihydroxybenzoic acid (2,3-DHB) [cytoplasmic state], ATP [unknown]
-  Products:  enterobactin [unknown]
-  Modifier:  EntE [cytoplasmic state] (role=catalyst, confidence=0.9) [inferred], EntF [cytoplasmic state] (role=catalyst, confidence=0.9) [inferred]
-  QA flags:  none
-
-REACTION 5: EntF-catalyzed enterobactin assembly with L-serine
-  Reactants: 2,3-dihydroxybenzoic acid (2,3-DHB) [cytoplasmic state], L-serine [cytoplasmic state], ATP [unknown]
-  Products:  enterobactin [unknown]
-  Modifier:  EntF [cytoplasmic state] (role=catalyst, confidence=0.9) [inferred], EntE [cytoplasmic state] (role=catalyst, confidence=0.9) [inferred]
-  QA flags:  none
-
-TRANSPORT 1: enterobactin secretion
-  From: cytoplasmic state
-  To:   unspecified
-  Cargo: enterobactin [unknown]
-  Transporter: EntE [cytoplasmic state] (role=transporter, confidence=1.0)
+TRANSPORT 1: ALAS2 import into mitochondrial matrix
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: ALAS2 [mitochondrial matrix state]
+  Transporter: ALAS2 [mitochondrial matrix state] (role=transporter, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-3 locked reactions found
-3 exported
+1 locked reaction found
+1 exported
 0 quarantined reactions due to unresolved compound reference
