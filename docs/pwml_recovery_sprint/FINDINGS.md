@@ -1524,3 +1524,73 @@ while a pipeline leg is running.
 Also noted, non-blocking: `cofactor_policy.py:3-4` still says *"UNWIRED BY DESIGN: nothing calls this"* —
 stale, `entity_admission.py:66` imports it. And leg B ran the audit at `temperature = 0.14` (leg A: `0.0`) —
 a reproducibility hazard worth a product-owner note; no contract clause found that it breaches.
+
+---
+
+## F-065 — the `.env`-dependent red family has a SIXTH member, it sits in Chunk D core, and the standing register understates the core count
+
+**Registered 2026-08-19.** Found independently by **two cards in the same session** — C-054 by attribution during
+its Chunk D sweep, and C-056c by refusing to assume a pre-charge covered an unlisted failure. Verified
+directly by the orchestrator.
+
+### The test, and its own false premise
+
+`tests/test_pwml_writer.py :: test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance`
+(def at `:1791`):
+
+```
+:1829    # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``...
+:1833    assert report["db_resolution"]["available"] is False
+```
+
+**The comment states the premise the assertion rests on, and that premise is now false.** With `.env`
+present, `PathBankDbResolver.from_env()` succeeds, `available` is `True`, and the assertion fails as
+`assert True is False`. The mechanism is the one F-051 already named at
+`compound_resolution.py:476-480` — `db_resolver=None` means *"resolve from `.env`"*, not *"no DB"*.
+
+**Proven environment-dependent, not diff-dependent**, two ways independently:
+* C-054's one-file differential — `1 passed` at **both** base and tip production without `.env`.
+* C-056c reproduced it **identically at base `1cbfa01`** with `.env` present, same line, same message.
+
+### Why it matters more than the other five
+
+The standing register (shared execution block §7, and the pre-charge lists carried in
+`c056b_gate_counts.json` and `c030a_gate_counts.json`) enumerates the *"asserts the DB is NOT configured"*
+class as **five** tests — four in `tests/test_prefreeze_third_export_seam.py` and one in
+`tests/test_prefreeze_species_resolution.py`. **All five are chunkless**, so they are invisible to every
+standing gate and cost nothing in a gate count.
+
+**This sixth is inside Chunk D core** (`chunk_d_gate.py:63-67` lists `test_pwml_writer.py` among the five
+CORE files). So it changes a mandated number:
+
+> **Chunk D core is 159/160, and the total is 185/187, on any worktree carrying `.env`.**
+
+Both C-054 and C-056c measured exactly that — `SETS_EQUAL=True`, 187 node IDs, `core=159/160`, `s8=4/4`,
+`qb=22/23`, the two failures being this test and `qb` node15.
+
+### The orchestrator caused the exposure, and the instruction was still right
+
+`.env` is in these worktrees because **I instructed every card to copy it in for F-051 control parity.**
+That is the correct standing remedy — *hold the tree and its `.env` constant and swap only the file under
+test* — and copying it as a control on both sides is explicitly sound. The consequence is simply that a test
+asserting the absence of `.env` now fails, and **the register failed to anticipate a member of that family
+inside a chunked file.**
+
+**Do not "fix" the test to make Chunk D green.** It is C-045b's own guard, and `REV-051` already recorded
+that re-pointing it would make the following `preflight` assertion pass in **both** configurations,
+destroying the property it exists to protect — the reviewer there endorsed the refusal to re-point it. The
+same reasoning binds here: this is a **pre-charge to record**, not a defect to repair.
+
+### Binding on every future card
+
+1. **Expect Chunk D 185/187 with `core=159/160`** on any `.env`-carrying tree, and pre-charge this node ID by
+   name alongside `qb` node15.
+2. **A third failure is the card's own** and must be named.
+3. Still reproduce both at your own base before claiming them (F-051).
+4. The *"five tests"* phrasing in the shared execution block and in the two committed `*_gate_counts.json`
+   pre-charge lists is **superseded by this finding**. It is six, and one of them is chunked.
+
+### Related, and not fixed here
+
+`test_pwml_writer.py:1829`'s comment is a **measurably false committed sentence** of the same class C-051d
+was chartered to correct. It is not in any current card's seam. **Register, do not fix** — it needs an owner.
