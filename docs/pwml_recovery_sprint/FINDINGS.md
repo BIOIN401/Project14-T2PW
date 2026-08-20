@@ -1286,6 +1286,56 @@ terminal status must be **`MEASURED — organism/SBML axis structurally unreacha
 comparator — C-052 merged and did not; it is still unwired. `DECISIONS.md:546-549`'s T-102/C-045 scheduling
 blocker is **discharged**.
 
+### ⚠ CORRECTION 2026-08-20 — blocker 1 became false, and blocker 2 sharpened. Re-measured at `32f3a57`.
+
+**Blocker 1 as written is now FALSE, and was true when written.** F-056 stated *"No `canonical_graph_sha256`
+baseline exists … `grep -rl` over `runs/` and `runs_verify/` → 0 files."* Today that grep returns **one**:
+
+```
+runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_stage3_gate_report.json
+  "canonical_graph_sha256": "2597ca91faea3baa0d02b066b3fc1250baa6a6a9b7714c35a515f3ea964f2335"
+```
+
+It arrived with the T-100 run committed at `8ea52c4` — **after** F-056 was registered on 2026-08-18. The
+record was accurate at the time and decayed, exactly the pattern this sprint keeps paying for.
+
+**But T-102's blocker survives on narrower and now-accurate grounds:** T-102 is specified on **PMC12856317**
+(`TEST_MATRIX.md:479`), and the one baseline that exists is **PMC12096016**, **research** mode. It is the
+wrong paper and the wrong mode. `stamp_report` still has **0 call sites in `pwml/writer.py`** (re-verified),
+so a CLI re-export still emits none. **Restate blocker 1 as: no `canonical_graph_sha256` baseline exists for
+PMC12856317.**
+
+**Blocker 2 re-confirmed unchanged.** `biological_equivalence` is defined at `canonical.py:827` and its
+**only** callers repo-wide are inside `tests/test_canonical_biological_equivalence.py`. Zero production
+callers. The ~80-line offline probe remains unowned work needing a grant.
+
+**F-009's axis re-confirmed on all four legs:** `grep -rn "taxonom" src/t2pw/sbml/` → **0 hits across 7
+modules**; `canonical.py:226` `_KINDS = ("compound", "protein", "protein_complex", "nucleic_acid",
+"element_collection")` — **omits species**; `canonical.py:855-856`
+`verdict=(VERDICT_NOT_EQUIVALENT if diffs else VERDICT_INCOMPLETE if gaps else VERDICT_EQUIVALENT)` — **one
+`Difference` forces `not_equivalent`**; and `find runs/ runs_verify/ -iname '*sbml*'` → **0 files**, so no
+SBML artifact exists for any leg.
+
+**One REFINEMENT to F-056's SBML claim.** F-056 says production passes `build_legacy_sbml=False` at
+`streamlit_app.py:6015` — true. It does not mention that **`:6472` passes `True`**. Read at the committed
+tip, `:6463-6472` is a manual Streamlit UI control:
+
+```
+with st.expander("Legacy SBML Export", expanded=False):
+    st.caption("SBML is a legacy export path. Use PWML above for primary output.")
+    if st.button("Run legacy SBML export", key="run_legacy_sbml_export_btn"):
+        ... run_post_pipeline_sbml_artifacts(final_payload, build_legacy_sbml=True, ...)
+```
+
+So SBML is **not absent from the code** — it is absent from every **automated** leg, reachable only by a
+human clicking a button the batch driver never clicks. **The conclusion is unchanged and the mechanism is
+sharper:** the organism/SBML axis is unreachable for any benchmark leg, not because SBML cannot be built,
+but because nothing in the automated path ever builds it.
+
+Evidence: `evidence/g11/T-102/01-canonical-axis.json`, `02-canonical-axis-pythonpath.json`.
+**See also F-066** — the isolated run of `tests/test_canonical_biological_equivalence.py` is what exposed the
+`sys.path` defect.
+
 ## F-057 — RAG gap-filler re-imports an existing reaction under an alias enzyme name, creating the duplicate-identity orphan that refused BOTH strict legs
 
 - **Severity** **HIGH** · `product_contract_violation` (§2, §7) · adjudicated by `pwml-bio-auditor`
@@ -1594,3 +1644,113 @@ same reasoning binds here: this is a **pre-charge to record**, not a defect to r
 
 `test_pwml_writer.py:1829`'s comment is a **measurably false committed sentence** of the same class C-051d
 was chartered to correct. It is not in any current card's seam. **Register, do not fix** — it needs an owner.
+
+## F-066 — 21 test files cannot be collected in isolation, and the failure reads as a broken environment
+
+- **Severity** **HIGH** (process, not product) · **Registered 2026-08-20**, integration `32f3a57` · orchestrator-measured
+- **Discovered while running T-102's canonical-equivalence evidence.** Not hypothetical: it was hit on the
+  first isolated run of the first file tried.
+
+### The mechanism, verified four ways
+
+There is **no `conftest.py` anywhere in the repository** (`ls conftest.py tests/conftest.py` — neither
+exists), **`t2pw` is not installed into the venv** (`.venv/Scripts/python.exe -c "import t2pw"` →
+`ModuleNotFoundError`; no `t2pw*` and no `.pth` in `.venv/Lib/site-packages/`), and **`pytest.ini` carries
+only `testpaths` and `norecursedirs`** — no `pythonpath`.
+
+Instead, **each test file inserts `src` into `sys.path` itself**, e.g. `tests/test_reference_repair.py:57-58`:
+
+```python
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+```
+
+**21 of 148 test files import `t2pw` and do NOT perform that insert.** They import the package directly at
+module scope — e.g. `tests/test_canonical_biological_equivalence.py:21` `from t2pw.pipeline import canonical`
+— so they collect **only** when pytest happens to import a path-inserting file first in the same process.
+
+Measured, at `32f3a57`, same interpreter and same tree:
+
+| invocation | result |
+|---|---|
+| `pytest -q tests/test_canonical_biological_equivalence.py` | **`ModuleNotFoundError: No module named 't2pw'`**, `Interrupted: 1 error during collection`, exit 2 |
+| `PYTHONPATH=src pytest -q tests/…same file…` | **`29 passed in 0.19s`**, exit 0 |
+
+G11 reports: `evidence/g11/T-102/01-canonical-axis.json` (the failure) and
+`02-canonical-axis-pythonpath.json` (the pass). Both retained — the failing one is genuine evidence and is
+not deleted.
+
+### The 21 files
+
+`test_attempt_cap_termination_reason` · `test_baseline_regression_2026_07_28` ·
+`test_canonical_biological_equivalence` · `test_cofactor_policy` · `test_completeness_audit` ·
+`test_entity_admission` · `test_entity_identity_contracts` · `test_failure_detail` ·
+`test_locked_noop_quarantine_policy` · `test_pathbank_unknown_fallback` · `test_payload_models` ·
+`test_pipeline_lineage_schema` · `test_prefreeze_compound_resolution` · `test_prefreeze_species_resolution` ·
+`test_protein_export_policy` · `test_rag_graph_delta` · `test_rag_loop_controller` · `test_rag_loop_policy` ·
+`test_reaction_lock_manifest` · `test_stage2_mapping_boundary` · `test_streamlit_stage8_export_contract`
+
+### Why it has stayed invisible, and why it stops being invisible NOW
+
+**SMOKE and every chunk gate are unaffected** — each runs a multi-file selection that always contains a
+path-inserting file, so the import succeeds by accident of ordering. `test_completeness_audit.py` is in
+SMOKE and is on this list; it has never failed there.
+
+**F-054 is what makes this bite.** 119 of 147 test files are in no chunk, so every card is now instructed to
+**name its chunkless files and run them explicitly** — which is exactly the isolated selection that breaks.
+The two cards live at the time of writing were both affected:
+
+* **C-055** — 4 of the 6 chunkless files its charter names: `test_rag_loop_controller`,
+  `test_rag_loop_policy`, `test_rag_graph_delta`, `test_attempt_cap_termination_reason`.
+* **C-050j** — 4 of the files its § 6 names: `test_protein_export_policy` (45),
+  `test_prefreeze_compound_resolution` (50), `test_pathbank_unknown_fallback` (15),
+  `test_prefreeze_species_resolution` (12).
+
+Both were notified with the remedy before they reached their focused runs.
+
+### ⚠ The reason this is HIGH and not a nuisance
+
+The failure surfaces as `ModuleNotFoundError: No module named 't2pw'` at collection — **indistinguishable, to
+an agent that has not measured it, from the `httpx` under-declaration (F-067) that really was an environment
+defect.** The tempting responses are all wrong and two of them are destructive:
+
+* pip-installing something (masks the real cause, mutates a shared venv);
+* adding a `sys.path` insert to a file outside the card's boundary — and
+  `tests/test_prefreeze_species_resolution.py` is **zero lines** for C-050j under C-045/D-016;
+* creating a `conftest.py`, which changes collection for **all 148 files** at once;
+* concluding the venv is broken and rebuilding it — which is what destroyed `.venv` once already.
+
+**Standing remedy until this is owned and fixed: `PYTHONPATH=src` in the bounded child**, for any selection
+containing one of the 21. It is exactly equivalent to the insert the other 127 files perform on themselves,
+it changes no file, and it must be **disclosed in the card's report** as an orchestrator-directed invocation
+change.
+
+### Owner and remedy — UNOWNED, and deliberately not fixed here
+
+The durable fix is one of: a repo-root `conftest.py`, `pythonpath = src` in `pytest.ini`, or installing the
+package. **All three change collection semantics for every test file in the repository**, which is a
+sprint-wide gate change and needs its own card and its own baseline re-measure — SMOKE and all four chunks
+would have to be re-pinned. **It must not be absorbed by a card that merely tripped over it.**
+
+Registered, not fixed. The 21-file list above is the exposure.
+
+## F-067 — `httpx` is undeclared in both dependency files, and an unpinned rebuild silently drops it
+
+- **Severity** MEDIUM (process) · **Registered 2026-08-20** · previously recorded only in a session handoff
+
+`httpx` appears in **neither `requirements.txt` nor `pyproject.toml`**. It arrived transitively via `openai`;
+the current `openai` requires **`httpx2`** instead, so a fresh unpinned rebuild drops it and **five SMOKE
+files fail collection** with `ModuleNotFoundError`. It was installed manually when `.venv` was rebuilt on
+2026-08-19 and is present today (`httpx 0.28.1`, Python 3.13.6, pytest 9.0.3).
+
+`requirements.txt` carries **19 dependencies with zero pinned versions**.
+
+**Binding on every environment rebuild: install `httpx` explicitly, then drift-check SMOKE against the pinned
+baseline before trusting any gate.** That drift check is what caught this before it could masquerade as a
+card regression.
+
+**Do not confuse this with F-066.** Both present as `ModuleNotFoundError` at collection. This one is a real
+missing distribution; F-066 is a path defect where the module is present and importable. The discriminator:
+`python -c "import httpx"` versus `PYTHONPATH=src python -c "import t2pw"`.
+
+Registered, unowned, not fixed.
