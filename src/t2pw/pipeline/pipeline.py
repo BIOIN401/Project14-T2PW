@@ -2976,7 +2976,7 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
             if not isinstance(item, dict):
                 continue
             for key in ("entity", "protein", "protein_name", "protein_complex", "name"):
-                value = (item.get(key) or "").strip().lower()
+                value = str(item.get(key) or "").strip().lower()
                 if value:
                     names.add(value)
         return names
@@ -3045,7 +3045,7 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
             if not isinstance(t, dict):
                 continue
             if any(
-                (t.get(key) or "").strip()
+                str(t.get(key) or "").strip()
                 for key in ("entity", "protein", "protein_name", "protein_complex", "name")
             ):
                 continue

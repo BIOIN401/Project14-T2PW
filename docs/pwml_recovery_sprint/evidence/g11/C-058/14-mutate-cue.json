@@ -1,0 +1,106 @@
+{
+  "label": "mutate-cue",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/c058m_cue",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\t\\c058mut",
+  "started_at": "2026-08-20T21:10:31+00:00",
+  "finished_at": "2026-08-20T21:10:34+00:00",
+  "duration_seconds": 2.301217500003986,
+  "timeout_seconds": 300.0,
+  "root_pid": 674600,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 674664,
+      "name": "python.exe",
+      "ppid": 674600
+    }
+  ],
+  "descendants_terminated": [
+    674664
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 655348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 656404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 666380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 667292,
+      "name": "python.exe"
+    },
+    {
+      "pid": 670076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 671796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 672532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 672616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 674020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 674152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 674576,
+      "name": "python.exe"
+    },
+    {
+      "pid": 674748,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c058-transport-guards\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-058\\14-mutate-cue.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c058mut\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c058mut",
+    "repo_head": "04baa38b8fce778cb964fa16f3442aa3da8274e1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
