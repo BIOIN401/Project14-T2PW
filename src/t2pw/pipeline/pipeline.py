@@ -3035,6 +3035,12 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
         actor_key = "protein_complex" if entity_type == "protein_complex" else "protein"
         rows = transport.get("transporters")
         if not isinstance(rows, list):
+            if rows:
+                # Schema-invalid, and not something this pass may silently
+                # discard: refuse the injection rather than overwrite whatever
+                # is there. (The old branch reached ``None.append`` here and
+                # raised, aborting the whole merge.)
+                continue
             rows = []
         # Fill the first transporter entry that names no actor at all, under any
         # key shape; otherwise append. The old test looked only at

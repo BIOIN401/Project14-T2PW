@@ -410,6 +410,30 @@ def test_a_transporter_already_credited_under_the_typed_key_is_not_rewritten() -
     assert _transporters(payload) == [seeded]
 
 
+def test_a_malformed_transporters_value_is_refused_not_overwritten() -> None:
+    """The pass never destroys what it cannot read.
+
+    ``transporters`` is ``List[ActorModel] | None``; anything else is
+    schema-invalid. The old branch reached ``None.append`` on such a row and
+    raised, aborting the whole merge. Refusing the injection keeps the merge
+    alive without discarding the row's own content.
+    """
+    payload = _payload(
+        proteins=["FepA"],
+        transports=[
+            {
+                "name": "ferric-enterobactin import",
+                "evidence": "the FepA receptor transports ferric enterobactin into the cell",
+                "transporters": "FepA",
+            }
+        ],
+    )
+
+    _inject_name_based_modifiers(payload)
+
+    assert payload["processes"]["transports"][0]["transporters"] == "FepA"
+
+
 # --------------------------------------------------------------------------
 # The reaction branch is out of this card's boundary and must not move
 # --------------------------------------------------------------------------
