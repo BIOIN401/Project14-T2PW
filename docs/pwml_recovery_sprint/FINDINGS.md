@@ -1979,3 +1979,58 @@ boundary.
 3. **`test_rag_provenance_gates` (Chunk C) vs `test_rag_payload_gate_guardrails` (no chunk)** — both match a
    `gate` substring; only the first is in C. Likewise `test_pipeline_reaction_rag_provenance` (Chunk C) vs
    `test_pipeline_lineage_*` (no chunk).
+
+## F-068 — the committed leg corpus is 35, not 32, and every census figure in the sprint cites 32
+
+- **Severity** MEDIUM (record integrity) · **Registered 2026-08-20**, integration `f6e856b`
+- Surfaced by C-050j's census, then **independently re-measured by the orchestrator**.
+
+### The measurement
+
+`find runs runs_verify -name final_mapped.json` → **35**, split **`runs/` 14 + `runs_verify/` 21**, which
+reproduces C-050j's reported split exactly. By run directory:
+
+| run | legs |
+|---|---|
+| `runs/2026-07-27_1623` | 1 |
+| `runs/2026-07-28_0919` | 2 |
+| `runs/2026-08-02_2130` | 11 |
+| `runs_verify/2026-08-04_1148` · `_1207` · `_1358` · `_1504` · `_1647` | 1 each |
+| `runs_verify/2026-08-04_1234` · `_1306` | 2 each |
+| `runs_verify/2026-08-04_1754` | 9 |
+| **`runs_verify/2026-08-18_1328`** | **3** |
+
+### The delta is fully accounted for, and it is exactly the T-100 run
+
+**32 + 3 = 35.** The T-100 Wave B run (`runs_verify/2026-08-18_1328`, committed `8ea52c4`) authorized **four**
+legs and contributes **three** `final_mapped.json` files — the fourth is F-064's casualty,
+`PMC12452463/research`, which died on the unlocked 4.4 MB `id_mapping_cache.json` write at
+`stage: post_pipeline` after 456.8 s and never reached a mapped payload.
+
+**So every "32" record was true when written and went stale on 2026-08-18.** Same class as F-056's blocker 1
+and the seven `460` records: no record was wrong, the corpus moved.
+
+### What this makes stale — and the one consequence that actually matters
+
+Records citing 32 include **F-014** (*"all 32 committed `final_mapped.json`"*), **C-050i's census**,
+**REV-050i's independent 32×9 re-census**, and **D-050**, which carries the *"zero of 32"* figure into
+C-050j's own charter.
+
+**The consequence that matters: C-050i's zero-of-32 census no longer covers the corpus.** Three legs — all
+three surviving T-100 legs — postdate it and were never censused by it. Anyone re-quoting *"payload-authored
+exposure is zero of 32"* is quoting a census that is **three legs short of the committed corpus**.
+
+**C-050j's census is therefore strictly stronger and supersedes it for this question:** it covers all **35**
+legs across **both** production `strict_db` arms — 70 measurements — and returns zero on the full corpus.
+
+### Binding on every future census
+
+**Measure the corpus, never cite its size from a record.** The command is
+`find runs runs_verify -name final_mapped.json | wc -l`. It has changed once mid-sprint and will change again
+the moment T-103 or T-104 runs — **T-104 alone would add up to 20 legs and make every figure here stale in a
+single night.** A census that reports a total without having counted it is reporting a record, not a
+measurement.
+
+Registered. **The historical censuses are NOT invalidated as evidence of what they measured** — they are
+accurate over the corpus that existed. Only their *coverage claim* over "the committed corpus" has decayed.
+No accepted card is reopened.
