@@ -62,8 +62,12 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from t2pw.pwml.ir import (  # noqa: E402
+    SPECIES_CREATE_DEFAULTS,
+    SUBCELLULAR_LOCATION_CREATE_DEFAULTS,
     DuplicateNamedRowError,
+    PostFreezeComponentMergeError,
     _canonical,
+    _create_default_key,
     _dedupe_named_rows,
     _new_report,
     _norm,
@@ -585,3 +589,332 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
         assert len(row_issues) == 1, row_issues
         assert sorted(row_issues[0]["entity_keys"]) == ["cmp_1", "cmp_2"]
         assert row_issues[0]["bound_entity_key"] == "cmp_1"
+
+
+# ---------------------------------------------------------------------------
+# Arm 10 -- C-050j / D-050: the EXPORTER's own post-freeze rename may not merge
+#           two rows the frozen payload kept apart
+# ---------------------------------------------------------------------------
+#
+# EVERY TEST BELOW IS AN EXPLICITLY LABELLED NEW ACCEPTANCE TEST.
+#
+# G9 arm, decided by measurement and not by assertion. C-050j's chartered first
+# act was a bounded read-only census of the create-defaults-manufactured collision
+# path, reproducing EP3 exactly over the whole committed corpus:
+# ``evidence/probe_c050j_component_collision_census.py --mode census``, pinned in
+# ``evidence/c050j_component_collision_census.json``. Result, 35 legs x both
+# production ``strict_db`` arms = 70 measurements:
+#
+#     manufactured merges ............... 0
+#     pre-existing component collisions . 0
+#     rows renamed post-freeze .......... 0
+#
+# so the path is **latent**: this is the **new capability** arm of G9, it carries
+# no fabricated base-SHA failure, and none is claimed. The same probe's
+# ``--mode control`` demonstrates the instrument can see a manufactured merge, so
+# that zero is a measurement rather than a broken sensor.
+#
+# STILL OPEN, deliberately, and registered rather than fixed here:
+#   * F-046's payload-authored component collision -- a ``_norm`` group the payload
+#     itself authored still collapses first-wins on a warning. Pinned below.
+#   * the ``component_by_name`` LAST-wins residual (``ir.py``'s ``by_name[norm] = row``
+#     in the alias loop), the component twin of F-048. D-050 section 4: register,
+#     do not fix.
+#   * moving the create-defaults rename upstream of the freeze -- which is the real
+#     repair -- and any consolidation of the two rows. D-035 unamended, D-036's
+#     deferral of the consolidation engine intact.
+
+#: The two spellings ``SPECIES_CREATE_DEFAULTS`` folds together. Neither is the
+#: other's ``_norm``, so nothing pre-freeze sees a collision; it exists only after
+#: ``_apply_create_defaults`` renames the first, downstream of the canonical hash.
+NARCISSUS_RAW = "Narcissus sp. aff. pseudonarcissus"
+NARCISSUS_DEFAULT = "Narcissus aff. pseudonarcissus MK-2014"
+
+
+def _species_payload(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    return _payload([_compound("glycine")], {"species": rows})
+
+
+def _duplicate_issues(report: Dict[str, Any], severity: str) -> List[Dict[str, Any]]:
+    """Scoped to THIS code. A minimal payload legitimately raises unrelated
+    ``biological_state_*`` issues and asserting on the whole bucket would pin them
+    by accident -- the same scoping Arm 6 uses."""
+
+    return [i for i in report[severity] if i.get("code") == "duplicate_named_record"]
+
+
+def test_new_acceptance_c050j_the_two_names_do_not_collide_before_the_exporter() -> None:
+    """NEW ACCEPTANCE. The premise, measured rather than assumed.
+
+    If these two spellings already shared a ``_norm``, the collision would be
+    payload-authored and every other test in this arm would pass for the wrong
+    reason. They do not; ``_apply_create_defaults`` is what makes them equal.
+    """
+
+    assert _norm(NARCISSUS_RAW) != _norm(NARCISSUS_DEFAULT)
+    assert _create_default_key(NARCISSUS_RAW) in SPECIES_CREATE_DEFAULTS
+    assert SPECIES_CREATE_DEFAULTS[_create_default_key(NARCISSUS_RAW)]["name"] == (
+        NARCISSUS_DEFAULT)
+
+
+def test_new_acceptance_c050j_a_manufactured_component_merge_is_refused() -> None:
+    """NEW ACCEPTANCE. **The card, in one test.**
+
+    Two species rows the frozen payload holds apart, carrying **different**
+    taxonomy ids. ``build_pwml_ir`` renames the first onto the second's name after
+    the canonical hash, and the unguarded dedupe dropped one with a warning --
+    silently changing the organism context ``PRODUCT_CONTRACT`` section 5 names
+    among the properties an export must preserve. It now refuses.
+    """
+
+    payload = _species_payload([
+        {"name": NARCISSUS_RAW, "taxonomy_id": "1540222"},
+        {"name": NARCISSUS_DEFAULT, "taxonomy_id": "999999"},
+    ])
+
+    with pytest.raises(PostFreezeComponentMergeError) as excinfo:
+        _build(payload)
+
+    error = excinfo.value
+    assert error.code == "PWML_IR_POST_FREEZE_COMPONENT_MERGE"
+    assert error.pointer_prefix == "/entities/species"
+    assert error.norm_key == _norm(NARCISSUS_DEFAULT)
+    # Both rows are named, and BOTH pre-rename keys are named: without the second
+    # the operator cannot tell a manufactured merge from a payload duplicate.
+    assert error.names == [NARCISSUS_DEFAULT, NARCISSUS_DEFAULT]
+    assert error.origin_norm_keys == sorted({_norm(NARCISSUS_RAW), _norm(NARCISSUS_DEFAULT)})
+    assert error.pointers == ["/entities/species/0", "/entities/species/1"]
+    assert "AFTER the canonical hash" in str(error)
+
+
+def test_new_acceptance_c050j_no_ir_is_emitted_when_the_merge_guard_fires() -> None:
+    """NEW ACCEPTANCE. Nothing usable comes back -- the property arm 2 pins for the
+    entity guard. A blocking report issue would not do: ``_add_issue`` sets
+    ``ok = False`` without stopping construction, so the row would still be dropped
+    and an invalid IR still returned to a caller free to ignore ``ok``."""
+
+    produced: Any = NOTHING
+    try:
+        produced = _build(_species_payload([
+            {"name": NARCISSUS_RAW}, {"name": NARCISSUS_DEFAULT}]))
+    except PostFreezeComponentMergeError:
+        pass
+    assert produced is NOTHING
+
+
+def test_new_acceptance_c050j_the_refusal_is_caught_by_existing_handlers() -> None:
+    """NEW ACCEPTANCE. It is a :class:`DuplicateNamedRowError` **subclass**, so every
+    caller already written as ``except DuplicateNamedRowError`` -- for instance
+    ``tests/test_compound_resolution_extraction.py``'s ``ir_refusal:<code>``
+    classifier -- keeps catching it, and reports the new code rather than
+    crashing."""
+
+    assert issubclass(PostFreezeComponentMergeError, DuplicateNamedRowError)
+    with pytest.raises(DuplicateNamedRowError) as excinfo:
+        _build(_species_payload([
+            {"name": NARCISSUS_RAW}, {"name": NARCISSUS_DEFAULT}]))
+    assert excinfo.value.code == "PWML_IR_POST_FREEZE_COMPONENT_MERGE"
+
+
+def test_new_acceptance_c050j_a_lone_create_default_row_still_renames() -> None:
+    """NEW ACCEPTANCE. **The guard costs nothing off the merged path.**
+
+    One row matching the table is renamed and exported exactly as before -- the
+    behaviour ``test_pwml_ir.py`` pins in
+    ``test_create_defaults_fill_unmatched_species_and_cell_location``. A rename is
+    not a merge."""
+
+    ir, report = _build(_species_payload([{"name": NARCISSUS_RAW}]))
+
+    assert [row["name"] for row in ir["species"]] == [NARCISSUS_DEFAULT]
+    assert ir["species"][0]["taxonomy_id"] == "1540222"
+    assert NARCISSUS_RAW in ir["species"][0]["aliases"]
+    assert not _duplicate_issues(report, "errors")
+    assert not _duplicate_issues(report, "warnings")
+
+
+def test_new_acceptance_c050j_a_payload_authored_collision_still_only_warns() -> None:
+    """NEW ACCEPTANCE. **The over-fire arm, and F-046's residual pinned unchanged.**
+
+    Same bucket, same call site, create-defaults still applied -- but these two rows
+    already shared a ``_norm`` in the frozen payload, so the exporter merged
+    nothing. C-050i's narrowed boundary is preserved byte-for-byte: warning, first
+    wins, no refusal. Measured live exposure of this class over 35 legs: zero.
+    """
+
+    ir, report = _build(_species_payload([
+        {"name": "Escherichia coli"}, {"name": "escherichia  coli"}]))
+
+    assert [row["name"] for row in ir["species"]] == ["Escherichia coli"]
+    assert not _duplicate_issues(report, "errors")
+    warned = _duplicate_issues(report, "warnings")
+    assert len(warned) == 1
+    assert warned[0]["pointer"] == "/entities/species/1"
+
+
+@pytest.mark.parametrize(
+    "marker",
+    [None, {"status": "deterministic", "followed_leader": "Narcissus sp aff pseudonarcissus"}],
+)
+def test_new_acceptance_c050j_a_prefreeze_convergence_still_collapses(marker: Any) -> None:
+    """NEW ACCEPTANCE. **The clause D-050 section 3 exists to protect.**
+
+    ``prefreeze_resolution._canonicalize_species_rows`` converges a ``_norm`` group
+    onto its leader **because this dedupe collapses it**; a row that stopped being a
+    duplicate would become a second species the exporter never emitted, which is
+    inventing biology. Such a group reaches the exporter under **one** pre-rename
+    key, so create-defaults renames the whole group together and the discriminator
+    clears it by construction.
+
+    Parametrized over ``species_canonicalization`` present and absent on purpose:
+    the verdict must not depend on the marker. D-050 section 1 nominated
+    ``marker["followed_leader"]`` as the positive discriminator, and on this path it
+    cannot serve -- leaders are keyed by ``_norm``
+    (``prefreeze_resolution.py:1211-1213``) and looked up by the row's own ``_norm``
+    (``:1218``), so the marker is structurally confined to ONE pre-rename group and
+    says nothing about a merge across two. The pre-group identity test subsumes it.
+    """
+
+    follower: Dict[str, Any] = {"name": NARCISSUS_RAW, "taxonomy_id": "1540222"}
+    if marker is not None:
+        follower["species_canonicalization"] = marker
+    ir, report = _build(_species_payload([
+        {"name": NARCISSUS_RAW, "taxonomy_id": "1540222"}, follower]))
+
+    assert [row["name"] for row in ir["species"]] == [NARCISSUS_DEFAULT]
+    assert not _duplicate_issues(report, "errors")
+    assert len(_duplicate_issues(report, "warnings")) == 1
+
+
+def test_new_acceptance_c050j_a_hydrated_placeholder_still_collapses() -> None:
+    """NEW ACCEPTANCE. **The second collapse the pipeline depends on.**
+
+    ``_hydrate_component_rows_from_biological_states`` invents a species row from a
+    biological state. The frozen graph does not contain it, so when create-defaults
+    renames it onto a real frozen row, collapsing it destroys nothing and must keep
+    working. This is why the discriminator is built over ``entities['species']`` and
+    not over the hydrated list: the hydrated row is excluded by construction.
+    """
+
+    payload = _species_payload([{"name": NARCISSUS_DEFAULT, "taxonomy_id": "1540222"}])
+    payload["entities"]["subcellular_locations"] = [{"name": "cell"}]
+    payload["biological_states"] = [
+        {"name": "__auto_state__", "species": NARCISSUS_RAW, "subcellular_location": "cell"}]
+
+    ir, report = _build(payload)
+
+    # The hydrated placeholder was renamed onto the frozen row and collapsed into
+    # it; the FROZEN row is the survivor and keeps its identifiers.
+    assert [row["name"] for row in ir["species"]] == [NARCISSUS_DEFAULT]
+    assert ir["species"][0]["taxonomy_id"] == "1540222"
+    assert not _duplicate_issues(report, "errors")
+    assert len(_duplicate_issues(report, "warnings")) == 1
+
+
+def test_new_acceptance_c050j_buckets_without_a_defaults_table_are_untouched() -> None:
+    """NEW ACCEPTANCE. ``cell_types`` and ``tissues`` have no create-defaults table,
+    so no rename can happen there and the discriminator is empty by construction --
+    their behaviour is byte-identical to base."""
+
+    ir, report = _build(_payload([_compound("glycine")], {
+        "cell_types": [{"name": NARCISSUS_RAW}],
+        "tissues": [{"name": "Escherichia coli"}, {"name": "escherichia  coli"}],
+    }))
+
+    # Not renamed: the table is never consulted for these buckets, so the row that
+    # WOULD be renamed in ``species`` keeps the name the payload froze.
+    assert [row["name"] for row in ir["cell_types"]] == [NARCISSUS_RAW]
+    # And a collision there still warns, exactly as before.
+    assert [row["name"] for row in ir["tissues"]] == ["Escherichia coli"]
+    assert not _duplicate_issues(report, "errors")
+    assert len(_duplicate_issues(report, "warnings")) == 1
+
+
+def test_new_acceptance_c050j_the_exposed_surface_is_one_table_entry() -> None:
+    """NEW ACCEPTANCE. Which create-default entries can move a ``_norm`` at all.
+
+    ``SUBCELLULAR_LOCATION_CREATE_DEFAULTS`` maps ``cell`` to the name ``cell``, so
+    it can never move a row's key and can never manufacture a merge. Exactly one
+    species entry can. Pinned so that adding a renaming entry to either table --
+    which would widen this guard's live surface -- shows up as a test change and not
+    as a silent behavioural expansion.
+    """
+
+    def renaming(table: Dict[str, Dict[str, Any]]) -> List[str]:
+        return sorted(key for key, default in table.items()
+                      if _create_default_key(default.get("name")) != key)
+
+    assert renaming(SUBCELLULAR_LOCATION_CREATE_DEFAULTS) == []
+    assert renaming(SPECIES_CREATE_DEFAULTS) == [_create_default_key(NARCISSUS_RAW)]
+
+
+def test_new_acceptance_c050j_the_guard_is_not_vacuous() -> None:
+    """NEW ACCEPTANCE (non-vacuity, shared execution block section 6).
+
+    Strip the discriminator the call site computes and the identical rows collapse
+    silently again, which is the defect. The guard node is therefore load-bearing
+    and not a no-op: it is the mapping, not the row contents, that decides.
+    """
+
+    rows = [{"name": "Organism A"}, {"name": "Organism A"}]
+
+    # Without the map -- the pre-existing behaviour, first wins on a warning.
+    report = _new_report()
+    kept, _ = _dedupe_named_rows(
+        [dict(row) for row in rows], key_prefix="sp", report=report,
+        pointer_prefix="/entities/species")
+    assert [row["name"] for row in kept] == ["Organism A"]
+    assert len(_duplicate_issues(report, "warnings")) == 1
+
+    # With it -- refused, and the origin keys travel into the diagnostic.
+    with pytest.raises(PostFreezeComponentMergeError) as excinfo:
+        _dedupe_named_rows(
+            [dict(row) for row in rows], key_prefix="sp", report=_new_report(),
+            pointer_prefix="/entities/species",
+            refuse_post_freeze_merges={_norm("Organism A"): ["organism a", "organism b"]})
+    assert excinfo.value.origin_norm_keys == ["organism a", "organism b"]
+
+    # And a map naming a key that does NOT collide changes nothing.
+    report = _new_report()
+    kept, _ = _dedupe_named_rows(
+        [{"name": "Organism A"}, {"name": "Organism B"}], key_prefix="sp",
+        report=report, pointer_prefix="/entities/species",
+        refuse_post_freeze_merges={_norm("Organism A"): ["x", "y"]})
+    assert [row["name"] for row in kept] == ["Organism A", "Organism B"]
+    assert not _duplicate_issues(report, "warnings")
+
+
+def test_new_acceptance_c050j_the_entity_guard_is_unchanged() -> None:
+    """NEW ACCEPTANCE. C-050i's merged entity refusal still fires under its own
+    code, and is not re-labelled by this card: the two classes stay separable in the
+    diagnostic, because they need different repairs."""
+
+    with pytest.raises(DuplicateNamedRowError) as excinfo:
+        _build(_payload([_compound("lipid IV_A", pathbank_compound_id=40982),
+                         _compound("lipid IV A", pathbank_compound_id=40738)]))
+    assert type(excinfo.value) is DuplicateNamedRowError
+    assert excinfo.value.code == "PWML_IR_DUPLICATE_NAMED_ROW"
+
+
+def test_new_acceptance_c050j_the_discriminator_reads_no_identifier() -> None:
+    """NEW ACCEPTANCE (**F-043**, and the reason F-046's own proposal was struck).
+
+    The verdict must come from *who renamed the rows*, never from whether their
+    identifiers agree: ``PG``, ``PG phosphate`` and ``(PGP)`` all carry PathBank
+    193 -- UDP-glucose, and wrong for all three. Both directions are exercised:
+    give the merged rows **identical** identifiers and it still refuses; give the
+    converged rows **conflicting** ones and it still collapses. An implementation
+    that consulted identifiers would flip at least one of these.
+    """
+
+    identical = {"taxonomy_id": "1540222", "pathbank_species_id": 193}
+    with pytest.raises(PostFreezeComponentMergeError):
+        _build(_species_payload([
+            dict(identical, name=NARCISSUS_RAW), dict(identical, name=NARCISSUS_DEFAULT)]))
+
+    ir, report = _build(_species_payload([
+        {"name": NARCISSUS_RAW, "taxonomy_id": "1540222", "pathbank_species_id": 193},
+        {"name": NARCISSUS_RAW, "taxonomy_id": "999999", "pathbank_species_id": 40738},
+    ]))
+    assert [row["name"] for row in ir["species"]] == [NARCISSUS_DEFAULT]
+    assert len(_duplicate_issues(report, "warnings")) == 1
