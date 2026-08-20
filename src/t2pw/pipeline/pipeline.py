@@ -2905,7 +2905,7 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     #                         *beside* the correct Stage-1 ``FepA`` entry
     #
     # Each fabricated row cited a span naming TolC or TonB and never naming EntE,
-    # so the attachment contradicted its own evidence. Three guards, in the order
+    # so the attachment contradicted its own evidence. Four guards, in the order
     # they fire:
     #
     # 1. a whole-token match -- "EntE" is not a mention inside "enterobactin";
@@ -2915,8 +2915,9 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     # 3. exactly one qualifying actor, mirroring the reaction branch's refusal
     #    above -- ambiguity is refused, not guessed at; and
     # 4. the row's own declared ``cargo`` is never promoted to being its
-    #    transporter -- a fifth fabrication the corpus replay surfaced, on
-    #    PMC12856317/strict, which is not caused by the substring test.
+    #    transporter -- a second fabrication CLASS, surfaced by the corpus
+    #    replay on PMC12856317/strict, which the substring test did not cause
+    #    and which guards 1-3 cannot refuse.
     #
     # The reaction branch's own cue vocabulary is deliberately NOT reused: none
     # of "catalyz/enzyme/mediated/dependent/activity/..." occurs anywhere near
