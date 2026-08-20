@@ -45,6 +45,7 @@ from t2pw.bench.goldset import (  # noqa: E402
     MATCH_NONE,
     RELEVANCE_CONTEXT_ONLY,
     RELEVANCE_CORE,
+    RELEVANCE_PARTIAL,
     contains_term,
     load_gold_set,
     normalize_name,
@@ -181,8 +182,27 @@ def _write_gold(tmp_path: Path, cases: list) -> Path:
     return target
 
 
+#: The classification fields every raw gold case must now declare. ``_case``
+#: refuses a case that omits either instead of grading it by default, so the
+#: fixtures below have to carry them even when the test is about duplicate ids or
+#: anchors. The values are exactly what the removed silent fallback substituted,
+#: so each of those tests still loads the case it always loaded and still fails
+#: for the reason it always failed. One dict, so the next required field is one
+#: edit rather than five.
+_RAW_CASE_REQUIRED = {
+    "mechanistic_relevance": RELEVANCE_PARTIAL,
+    "expected_export": EXPORT_PARTIAL,
+}
+
+
+def _raw_case(**fields) -> dict:
+    """A raw gold-case dict carrying the required classification fields."""
+
+    return {**_RAW_CASE_REQUIRED, **fields}
+
+
 def test_case_without_anchors_is_refused(tmp_path):
-    path = _write_gold(tmp_path, [{"paper_id": "P1", "requested_pathway": "x"}])
+    path = _write_gold(tmp_path, [_raw_case(paper_id="P1", requested_pathway="x")])
     with pytest.raises(GoldSetError, match="expected_pathway_anchor"):
         load_gold_set(path)
 
@@ -191,13 +211,13 @@ def test_negative_control_may_omit_anchors_but_must_be_context_only(tmp_path):
     ok = _write_gold(
         tmp_path,
         [
-            {
-                "paper_id": "P1",
-                "requested_pathway": "x",
-                "mechanistic_relevance": "context_only",
-                "min_connected_reactions": 0,
-                "max_retained_reactions": 0,
-            }
+            _raw_case(
+                paper_id="P1",
+                requested_pathway="x",
+                mechanistic_relevance="context_only",
+                min_connected_reactions=0,
+                max_retained_reactions=0,
+            )
         ],
     )
     gold = load_gold_set(ok)
@@ -208,13 +228,13 @@ def test_negative_control_may_omit_anchors_but_must_be_context_only(tmp_path):
         json.dumps(
             {
                 "cases": [
-                    {
-                        "paper_id": "P1",
-                        "requested_pathway": "x",
-                        "mechanistic_relevance": "core",
-                        "min_connected_reactions": 0,
-                        "max_retained_reactions": 0,
-                    }
+                    _raw_case(
+                        paper_id="P1",
+                        requested_pathway="x",
+                        mechanistic_relevance="core",
+                        min_connected_reactions=0,
+                        max_retained_reactions=0,
+                    )
                 ]
             }
         ),
@@ -228,13 +248,13 @@ def test_unsatisfiable_bounds_are_refused(tmp_path):
     path = _write_gold(
         tmp_path,
         [
-            {
-                "paper_id": "P1",
-                "requested_pathway": "x",
-                "expected_pathway_anchors": ["a term"],
-                "min_connected_reactions": 5,
-                "max_retained_reactions": 2,
-            }
+            _raw_case(
+                paper_id="P1",
+                requested_pathway="x",
+                expected_pathway_anchors=["a term"],
+                min_connected_reactions=5,
+                max_retained_reactions=2,
+            )
         ],
     )
     with pytest.raises(GoldSetError, match="no result could satisfy both"):
@@ -242,10 +262,96 @@ def test_unsatisfiable_bounds_are_refused(tmp_path):
 
 
 def test_duplicate_paper_ids_are_refused(tmp_path):
-    entry = {"paper_id": "P1", "requested_pathway": "x", "expected_pathway_anchors": ["a term"]}
+    entry = _raw_case(paper_id="P1", requested_pathway="x", expected_pathway_anchors=["a term"])
     path = _write_gold(tmp_path, [entry, dict(entry)])
     with pytest.raises(GoldSetError, match="duplicate paper_id"):
         load_gold_set(path)
+
+
+def test_a_case_omitting_expected_export_is_refused_not_silently_downgraded(tmp_path):
+    """An omitted classification must not read as a declared one.
+
+    ``expected_export`` decides whether a paper sits in the strict-PWML
+    denominator. Read as ``canonical_text(...) or EXPORT_PARTIAL`` an absent key
+    was indistinguishable from an authored ``partial_only``, so a case that lost
+    the field left the strict denominator silently and the rate measured against
+    that denominator improved because data went missing. A present-but-invalid
+    value was always refused; an absent one has to be refused for the same reason.
+    """
+    raw = _raw_case(paper_id="P1", requested_pathway="x", expected_pathway_anchors=["a term"])
+    raw.pop("expected_export")
+    path = _write_gold(tmp_path, [raw])
+
+    try:
+        gold = load_gold_set(path)
+    except GoldSetError as exc:
+        assert "missing 'expected_export'" in str(exc)
+    else:
+        # Naming the invented value is the point: the case did not merely load,
+        # it acquired a classification nobody wrote, and that value is the one
+        # that removes it from the strict denominator.
+        raise AssertionError(
+            "a gold case omitting 'expected_export' loaded and was classified "
+            f"{gold.cases[0].expected_export!r}, which no author declared"
+        )
+
+
+def test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded(tmp_path):
+    """The identical fail-open one field up, and it feeds the relevance denominator."""
+
+    raw = _raw_case(paper_id="P1", requested_pathway="x", expected_pathway_anchors=["a term"])
+    raw.pop("mechanistic_relevance")
+    path = _write_gold(tmp_path, [raw])
+
+    try:
+        gold = load_gold_set(path)
+    except GoldSetError as exc:
+        assert "missing 'mechanistic_relevance'" in str(exc)
+    else:
+        raise AssertionError(
+            "a gold case omitting 'mechanistic_relevance' loaded and was classified "
+            f"{gold.cases[0].mechanistic_relevance!r}, which no author declared"
+        )
+
+
+def test_a_blank_or_invalid_classification_names_the_defect_it_actually_is(tmp_path):
+    """Blank reads as missing; wrong reads as invalid. Both refused, distinctly.
+
+    ``canonical_text`` strips, so a blanked field arrives empty and the fallback
+    swallowed it exactly like an absent key. The new missing check must catch that
+    without shadowing the membership check a wrong value still has to trip.
+    """
+    for field in ("expected_export", "mechanistic_relevance"):
+        blank = _raw_case(
+            paper_id="P1", requested_pathway="x",
+            expected_pathway_anchors=["a term"], **{field: "   "},
+        )
+        with pytest.raises(GoldSetError, match=f"missing '{field}'"):
+            load_gold_set(_write_gold(tmp_path, [blank]))
+
+        wrong = _raw_case(
+            paper_id="P1", requested_pathway="x",
+            expected_pathway_anchors=["a term"], **{field: "probably"},
+        )
+        with pytest.raises(GoldSetError, match=f"{field} must be one of"):
+            load_gold_set(_write_gold(tmp_path, [wrong]))
+
+
+def test_a_declared_classification_loads_and_survives_verbatim(tmp_path):
+    """The requirement must refuse omission without refusing declaration.
+
+    A guard that made every case unloadable would pass every refusal test above by
+    accident. This pins the other side: both fields authored, both preserved, and
+    the strict membership they decide still derived from what was written.
+    """
+    path = _write_gold(tmp_path, [_raw_case(
+        paper_id="P1", requested_pathway="x", expected_pathway_anchors=["a term"],
+        mechanistic_relevance=RELEVANCE_CORE, expected_export=EXPORT_STRICT,
+    )])
+    case = load_gold_set(path).cases[0]
+    assert case.mechanistic_relevance == RELEVANCE_CORE
+    assert case.expected_export == EXPORT_STRICT
+    assert case.is_strict_expected
 
 
 def test_forbidden_match_is_exact_not_substring():

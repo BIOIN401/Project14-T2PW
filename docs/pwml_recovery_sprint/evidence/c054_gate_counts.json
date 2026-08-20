@@ -1,0 +1,274 @@
+{
+  "base_sha": "1cbfa01779fff9410858e28158999fb42dfc533e",
+  "chunk_d": {
+    "additions": 0,
+    "c050k_ancestor_of_tip": true,
+    "collected": 187,
+    "component_summaries_verbatim": {
+      "core": "1 failed, 159 passed in 55.07s",
+      "qb": "23 nodes, 22 ok, node15 '1 failed in 5.12s'",
+      "s8": "4 nodes, each '1 passed'"
+    },
+    "expected_per_TEST_MATRIX": 187,
+    "failed": 2,
+    "failures_attributed": {
+      "method": "F-051 one-file differential: the same node run in C:/t/c054mix (BASE goldset.py) and C:/t/c054tip (TIP goldset.py), trees identical except that one file and NEITHER carrying .env",
+      "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance": {
+        "RECORD_DEFECT": "the shared block / TEST_MATRIX pre-existing-red list enumerates the '.env present' family as FOUR in tests/test_prefreeze_third_export_seam.py plus ONE in tests/test_prefreeze_species_resolution.py. This Chunk D CORE test is a SIXTH member and is not listed. Consequence: Chunk D core is 159/160, not 160/160, on ANY worktree carrying .env.",
+        "assertion": "assert report['db_resolution']['available'] is False  ->  assert True is False",
+        "base_production_no_env": "1 passed in 0.65s",
+        "g11_reports": [
+          "docs/pwml_recovery_sprint/evidence/g11/C-054/51-writer-node-base-prod-no-env.json",
+          "docs/pwml_recovery_sprint/evidence/g11/C-054/52-writer-node-tip-prod-no-env.json"
+        ],
+        "premise_now_false": "card worktrees DO carry .env (the orchestrator copies it in), so the DB is reachable and available is True",
+        "test_own_comment": "P4-01: no worktree carries a .env, so PathBankDbResolver.from_env() answers None and this leg is offline",
+        "tip_production_no_env": "1 passed in 0.58s"
+      },
+      "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block": {
+        "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/53-qb-node15-tip-prod-no-env.json",
+        "status": "PRE-CHARGED: shared block section 7 names qb node15 as red whenever the PathBank DB is reachable; hotspot 9 forbids touching the file",
+        "tip_production_no_env": "1 passed in 4.13s"
+      },
+      "verdict": "BOTH failures are .env / PathBank-DB reachability, NOT this diff"
+    },
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/18-chunkd-outer.json",
+    "gate_exit": 1,
+    "partition_proof_verbatim": "union=187 monolithic=187 missing=0 extra=0 SETS_EQUAL=True",
+    "passed": 185,
+    "process_lifecycle": "164 descendants observed, 164 terminated, FINAL SURVIVING COUNT 0, cleanup success",
+    "run_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "set_identity_holds": true
+  },
+  "chunk_membership_stem_exact": {
+    "tests/test_bench_acquisition_and_artifacts.py": {
+      "chunk": "B",
+      "in_smoke": true
+    },
+    "tests/test_bench_goldset_and_semantic.py": {
+      "chunk": "B",
+      "in_smoke": true
+    },
+    "tests/test_preprocessor.py": {
+      "chunk": null,
+      "in_chunk_d_gate": false,
+      "in_smoke": false,
+      "note": "touched by intervening integration commit 868a254; covered by NO gate this card runs"
+    }
+  },
+  "chunk_row_recount": {
+    "arithmetic": {
+      "base": "126 + 225 + 109 = 460",
+      "before_fix": "123 + 225 + 109 = 457, contradicting the table's own 465 by 8",
+      "matches_base_collection": true,
+      "matches_measured_smoke": true,
+      "tip": "126 + 230 + 109 = 465"
+    },
+    "cross_checks": [
+      "row B's test_bench_goldset_and_semantic = 62 equals the focused run's '62 passed in 1.34s'",
+      "row B's test_bench_acquisition_and_artifacts = 25 equals the focused run's '25 passed in 1.02s'",
+      "row totals reproduce both the 465 SMOKE pass line and the 460 base collection"
+    ],
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/13-smoke-collect-base.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/14-smoke-collect-tip.json"
+    ],
+    "method": "per-file partition of the pytest --collect-only node IDs already captured at BASE 1cbfa01 and at the C-054 tip, both collected under .venv/Scripts/python.exe through bounded_run",
+    "row_A": {
+      "attribution": "the 3-test gap predates C-054 -- row A is identical at base 1cbfa01 and at the tip. C-010 residue, NOT authored by this card.",
+      "corrected_to": 126,
+      "measured_base": 126,
+      "measured_tip": 126,
+      "moved_by_C054": 0,
+      "per_file_tip": {
+        "test_empty_extraction_payload": 13,
+        "test_reference_repair": 20,
+        "test_strict_quarantine": 32,
+        "test_strict_quarantine_contract_alignment": 19,
+        "test_strict_quarantine_locks_and_scope": 17,
+        "test_strict_quarantine_versioning": 25
+      },
+      "table_said": 123
+    },
+    "row_B": {
+      "attribution": "exactly C-054's five added tests, and they land ONLY in the two files C-054 edits",
+      "corrected_to": 230,
+      "measured_base": 225,
+      "measured_tip": 230,
+      "moved_by_C054": 5,
+      "per_file_base_to_tip": {
+        "test_batch_driver": "58 (unchanged)",
+        "test_bench_acquisition_and_artifacts": "24 -> 25 (+1)",
+        "test_bench_controls": "24 (unchanged)",
+        "test_bench_goldset_and_semantic": "58 -> 62 (+4)",
+        "test_completeness_audit": "33 (unchanged)",
+        "test_stage3_gate_report_lifecycle": "28 (unchanged)"
+      },
+      "table_said": 225
+    },
+    "row_C": {
+      "corrected_to": "unchanged",
+      "measured_base": 109,
+      "measured_tip": 109,
+      "moved_by_C054": 0,
+      "table_said": 109
+    },
+    "why": "REV round 1 FIX 1: TEST_MATRIX's per-chunk rows summed to 457 while its own total said 465 -- the table contradicted itself by 8"
+  },
+  "exposure_on_pinned_set": {
+    "cases": 10,
+    "declaring_both_fields": 10,
+    "exposure": "ZERO",
+    "meaning": "hardening against a latent fail-open, not a live defect; no score moves"
+  },
+  "failures": 2,
+  "failures_note": "both in Chunk D, both proven to be .env/DB reachability and green at BOTH base and tip production without .env; zero failures attributable to this diff",
+  "focused": {
+    "tests/test_bench_acquisition_and_artifacts.py": {
+      "chunk": "B",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/09-focused-acquisition-artifacts.json",
+      "in_smoke": true,
+      "measured": 25,
+      "summary_line_verbatim": "25 passed in 1.02s"
+    },
+    "tests/test_bench_goldset_and_semantic.py": {
+      "chunk": "B",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/08-focused-goldset-semantic.json",
+      "in_smoke": true,
+      "measured": 62,
+      "summary_line_verbatim": "62 passed in 1.34s"
+    }
+  },
+  "g9_one_file_differential": {
+    "arm": "G9 CORRECTION",
+    "base_production": {
+      "failed_node_ids": [
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_expected_export_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_blank_or_invalid_classification_names_the_defect_it_actually_is"
+      ],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/06-diff-base-prod-tip-tests.json",
+      "goldset_blob": "cb5a9bc4a7dd4f74dfb50acf3eb7ce6e4347b9a4",
+      "summary_line_verbatim": "3 failed, 84 passed in 1.54s",
+      "tree": "C:/t/c054mix"
+    },
+    "method": "two frozen trees identical in every byte except src/t2pw/bench/goldset.py; neither carries .env, so F-051 reachability cannot differ between them",
+    "only_differing_file": "src/t2pw/bench/goldset.py",
+    "tip_production": {
+      "failed_node_ids": [],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/07-diff-tip-prod-tip-tests.json",
+      "goldset_blob": "3b6e1cae377ef5be9b78d0e63c9065f4bb19717f",
+      "summary_line_verbatim": "87 passed in 1.46s",
+      "tree": "C:/t/c054tip"
+    }
+  },
+  "g9_value_probe_matrix": {
+    "base_arm_on_base_tree": {
+      "exit": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/02-g9-base-arm-on-base.json",
+      "observed": "omitted expected_export LOADED as 'partial_only', is_strict_expected False; omitted mechanistic_relevance LOADED as 'partial'"
+    },
+    "base_arm_on_final_tip": {
+      "exit": 1,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/12-probe-base-arm-final-tip.json",
+      "observed": "FAILED: base: omitting expected_export was refused, expected a silent load"
+    },
+    "note": "asserts the VALUE the loader invented, not merely 'no exception'. Exit 1 on the crossed arms is the point.",
+    "tip_arm_on_base_tree": {
+      "exit": 1,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/04-g9-tip-arm-on-base.json",
+      "observed": "FAILED: tip: omitting expected_export loaded as 'partial_only' instead of being refused"
+    },
+    "tip_arm_on_final_tip": {
+      "exit": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/11-probe-tip-arm-final-tip.json",
+      "observed": "both refused: cases[0] (PROBE1): missing '<field>'"
+    }
+  },
+  "process_lifecycle_g11": {
+    "cleanup": "success",
+    "final_surviving_count": 0,
+    "runs": "every run above"
+  },
+  "prospective_combined_state": {
+    "env": ".env copied in, so the combined state is measured under the same DB reachability as the card worktree",
+    "focused_pair_summary_verbatim": "87 passed in 2.45s",
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/15-comb-focused-pair.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/16-comb-smoke-465.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/17-comb-preprocessor.json"
+    ],
+    "integration_tip": "af5c3d2",
+    "line_address_stability": "C-054's TEST_MATRIX edit is 7 added / 7 deleted, so chunk rows stay :213-218, the SMOKE marker stays :240 and the SMOKE file list stays :242-252 -- the addresses pwml-test-runner.md:59 and FINDINGS.md:1148 cite by number",
+    "merge_conflict": {
+      "cause": "integration 868a254-era edit fixed Chunk D 177->187 / core 150->160 on the SAME line C-054 edits for SMOKE 460->465",
+      "file": ".claude/agents/pwml-test-runner.md",
+      "orchestrator_must_apply_this_resolution": true,
+      "resolution": "take the integration side verbatim and change ONLY '**460** tests' to '**465** tests'; both fixes survive"
+    },
+    "method": "git worktree add --detach C:/t/c054comb af5c3d2, then merge agent/p16-goldset-required INTO it. My branch was never rebased and never moved.",
+    "my_branch_tip": "e836d15",
+    "scratch_merge_commit": "f7f277b",
+    "smoke_summary_verbatim": "465 passed in 42.79s",
+    "test_preprocessor_note": "in NO chunk (stem-exact) and touched by intervening commit 868a254, so no standing gate covers it; run explicitly for this reason",
+    "test_preprocessor_summary_verbatim": "44 passed in 2.23s",
+    "why": "merge gates require the focused tests to pass on the state that will exist AFTER the merge, not only on the branch"
+  },
+  "purpose": "literal pytest COUNTS and verbatim summary lines. bounded_run retains exit codes but NOT stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10).",
+  "smoke": {
+    "baseline_move": {
+      "added_node_ids": [
+        "tests/test_bench_acquisition_and_artifacts.py::test_the_strict_denominator_is_authored_never_inferred",
+        "tests/test_bench_goldset_and_semantic.py::test_a_blank_or_invalid_classification_names_the_defect_it_actually_is",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_expected_export_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_case_omitting_mechanistic_relevance_is_refused_not_silently_downgraded",
+        "tests/test_bench_goldset_and_semantic.py::test_a_declared_classification_loads_and_survives_verbatim"
+      ],
+      "base_collected": 460,
+      "extra_at_tip": 5,
+      "from": 460,
+      "g11_reports": [
+        "docs/pwml_recovery_sprint/evidence/g11/C-054/13-smoke-collect-base.json",
+        "docs/pwml_recovery_sprint/evidence/g11/C-054/14-smoke-collect-tip.json"
+      ],
+      "method": "pytest --collect-only -q on the 20-file SMOKE selection, node-ID SET difference; base side is the hash-verified base tree C:/t/c054base at 1cbfa01",
+      "missing_at_tip": 0,
+      "nothing_removed_or_renamed": true,
+      "tip_collected": 465,
+      "to": 465
+    },
+    "expected_per_TEST_MATRIX": 465,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/10-smoke-465.json",
+    "matches_expected": true,
+    "measured": 465,
+    "note": "465 since C-054 moved the pinned baseline 460 -> 465 under merge rule 4, ratified in advance. 457 and 460 are both stale.",
+    "summary_line_verbatim": "465 passed in 27.19s"
+  },
+  "stale_records_enumerated_not_edited": {
+    "historical_correctly_untouched": [
+      "prompts/C-060a.md:76",
+      "prompts/H-007.md:97",
+      "prompts/H-007.md:134",
+      "prompts/H-007.md:137",
+      "prompts/C-011.md:117",
+      "prompts/C-011.md:122",
+      "prompts/INIT-001.md:144",
+      "FINDINGS.md:1129",
+      "LEDGER.md (21 hits)",
+      "DECISIONS.md:799-802 (append-only, product owner)"
+    ],
+    "note": "orchestrator named five; measured at the merged tree there are seven live mis-instructing lines plus one standing rule. FINDINGS.md:302 holds in both my branch tree and the merged tree; FINDINGS.md:1129 is merged-tree-specific because integration edited that file.",
+    "standing_rule_citing_the_value": "FINDINGS.md:302 (F-018) -- 'that moves the pinned 460 baseline'; true as a rule, wrong as a number",
+    "where": "TEST_MATRIX.md, appended at end-of-file (this file's line addresses are pinned by citation up to :477, so nothing may be inserted above that)",
+    "would_mis_instruct_a_live_gate": [
+      "prompts/_TEMPLATE_INTEGRATE.md:72 -- 'expect 460 passed' (the checklist G10 is run from at every merge)",
+      "prompts/_TEMPLATE_INTEGRATE.md:33 -- 'SMOKE SUITE (460 tests, ~40 s)'",
+      "prompts/_SHARED_BLOCKS.md:35 -- 'Smoke = 460', 'Chunk D = 177' (pasted into every charter; Chunk D is 187)",
+      "prompts/_SHARED_BLOCKS.md:36 -- 'core is 150', '177-test gate'",
+      "prompts/_TEMPLATE_INTEGRATE.md:36 -- 'gate (177 tests, 9-13 min)'",
+      "CLAUDE.md:52 -- 'smoke suite (460 tests, ~40 s)'",
+      "prompts/PROMPT-000-orchestrator.md:75 -- 'G10 smoke suite (460 tests, ~40 s)'"
+    ]
+  },
+  "task": "C-054"
+}

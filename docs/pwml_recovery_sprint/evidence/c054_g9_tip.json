@@ -1,0 +1,38 @@
+{
+  "arm": "G9 CORRECTION",
+  "control_declared": {
+    "expected_export": "strict_exportable",
+    "is_strict_expected": true,
+    "mechanistic_relevance": "core",
+    "outcome": "loaded"
+  },
+  "goldset_module": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c054-goldset-required\\src\\t2pw\\bench\\goldset.py",
+  "label": "tip",
+  "omitted": {
+    "expected_export": {
+      "error": "cases[0] (PROBE1): missing 'expected_export'",
+      "outcome": "refused"
+    },
+    "mechanistic_relevance": {
+      "error": "cases[0] (PROBE1): missing 'mechanistic_relevance'",
+      "outcome": "refused"
+    }
+  },
+  "pinned": {
+    "cases": 10,
+    "declaring_both_fields": 10,
+    "exposure": "zero -- every pinned case declares both fields, so this change removes a latent fail-open and moves no score",
+    "strict_expected_ids": [
+      "PMC12096016",
+      "PMC12421875",
+      "PMC12657337",
+      "PMC12782028"
+    ]
+  },
+  "task": "C-054",
+  "tree": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c054-goldset-required",
+  "verdict": {
+    "failures": [],
+    "ok": true
+  }
+}

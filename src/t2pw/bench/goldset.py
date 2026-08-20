@@ -57,7 +57,14 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
 
 #: Bumped whenever the *schema* changes in a way that invalidates stored results.
 #: Adding a case does not bump it; adding a required field does.
-GOLD_SET_VERSION = "2026-08-01.1"
+#:
+#: ``2026-08-18.1`` (C-054): ``mechanistic_relevance`` and ``expected_export`` became
+#: REQUIRED. They were read with a silent fallback, so an omitted key was graded by
+#: default instead of refused. That is a schema change by the rule above, hence the bump.
+#: The pinned data is untouched and byte-identical -- ``pinned_v1.json`` carries its own
+#: ``version`` field, which identifies the DATA and stays at ``2026-08-01.1``. This
+#: constant is only the fallback at :func:`load_gold_set` for a file that declares none.
+GOLD_SET_VERSION = "2026-08-18.1"
 
 #: Mechanistic relevance, most relevant first. ``core`` means the paper's subject
 #: IS the requested pathway's chemistry; ``partial`` means it covers a genuine
@@ -641,10 +648,21 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
         raise GoldSetError(f"cases[{index}]: missing 'paper_id'")
     where = f"cases[{index}] ({paper_id})"
 
-    relevance = canonical_text(raw.get("mechanistic_relevance")) or RELEVANCE_PARTIAL
+    # Both classification fields are REQUIRED, and the "missing" check has to come
+    # before the membership check. Reading them as ``canonical_text(...) or CONST``
+    # made an omitted key indistinguishable from a declared default: a case that
+    # lost 'expected_export' was silently graded 'partial_only' and dropped out of
+    # the strict-PWML denominator, so the rate it feeds would improve because a
+    # field went missing. A present-but-invalid value was already refused; an
+    # absent one must be refused for the same reason, not defaulted.
+    relevance = canonical_text(raw.get("mechanistic_relevance"))
+    if not relevance:
+        raise GoldSetError(f"{where}: missing 'mechanistic_relevance'")
     if relevance not in RELEVANCE_VALUES:
         raise GoldSetError(f"{where}: mechanistic_relevance must be one of {RELEVANCE_VALUES}")
-    export = canonical_text(raw.get("expected_export")) or EXPORT_PARTIAL
+    export = canonical_text(raw.get("expected_export"))
+    if not export:
+        raise GoldSetError(f"{where}: missing 'expected_export'")
     if export not in EXPORT_VALUES:
         raise GoldSetError(f"{where}: expected_export must be one of {EXPORT_VALUES}")
 

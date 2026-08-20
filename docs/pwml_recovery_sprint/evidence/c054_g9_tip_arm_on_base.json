@@ -1,0 +1,45 @@
+{
+  "arm": "G9 CORRECTION",
+  "control_declared": {
+    "expected_export": "strict_exportable",
+    "is_strict_expected": true,
+    "mechanistic_relevance": "core",
+    "outcome": "loaded"
+  },
+  "goldset_module": "C:\\t\\c054base\\src\\t2pw\\bench\\goldset.py",
+  "label": "tip",
+  "omitted": {
+    "expected_export": {
+      "expected_export": "partial_only",
+      "is_strict_expected": false,
+      "mechanistic_relevance": "core",
+      "outcome": "loaded"
+    },
+    "mechanistic_relevance": {
+      "expected_export": "strict_exportable",
+      "is_strict_expected": true,
+      "mechanistic_relevance": "partial",
+      "outcome": "loaded"
+    }
+  },
+  "pinned": {
+    "cases": 10,
+    "declaring_both_fields": 10,
+    "exposure": "zero -- every pinned case declares both fields, so this change removes a latent fail-open and moves no score",
+    "strict_expected_ids": [
+      "PMC12096016",
+      "PMC12421875",
+      "PMC12657337",
+      "PMC12782028"
+    ]
+  },
+  "task": "C-054",
+  "tree": "C:\\t\\c054base",
+  "verdict": {
+    "failures": [
+      "tip: omitting expected_export loaded as 'partial_only' instead of being refused",
+      "tip: omitting mechanistic_relevance loaded as 'partial' instead of being refused"
+    ],
+    "ok": false
+  }
+}

@@ -49,7 +49,7 @@ surviving count (**must be 0**) · cleanup success/failure.
 - `--basetemp=<unique dir>` on **every** pytest invocation. Without it 83 tests error
   with `PermissionError` and you will report a false regression.
 - **Never** run the full suite unchunked — it approaches 16 GB. Use `TEST_MATRIX.md`.
-- Smoke = chunks A+B+C = **460** tests, ~40 s. Chunk D = **187** tests: the deterministic
+- Smoke = chunks A+B+C = **465** tests, ~40 s. Chunk D = **187** tests: the deterministic
   core is 160 tests in ~1 s, the **complete 187-test gate 9–13 min**, dominated by the 27
   per-node AppTest processes. **187 = core 160 + s8 4 + qb 23, and it holds only on a tree
   carrying C-050k** (merged `d8de94d`; D-044 § 2) — the integration branch does. Anything
