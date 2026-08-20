@@ -1,0 +1,64 @@
+{
+  "task": "C-058",
+  "purpose": "literal pytest COUNTS, read off runs -- an exit code cannot certify 'SMOKE exactly 465' (merge gate 10). bounded_run retains exit codes but not stdout, so the summary lines are captured here verbatim as the job produced them.",
+  "base_sha": "6f9b4993f05c9131b7d30b5e4b984a2f17630414",
+  "tree": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c058-transport-guards",
+  "env_present": true,
+  "env_note": "copied in from the primary checkout for F-051 control parity; the base worktree C:/t/c058base carries the same file",
+  "g9_arm": "CORRECTION",
+  "g9_proof": {
+    "file": "tests/test_transport_actor_guards.py",
+    "base_worktree": "C:/t/c058base (git worktree at the base SHA, NOT an export: PATHSPEC omits runs_verify/, which this proof reads)",
+    "base_summary_line_verbatim": "10 failed, 5 passed in 1.14s",
+    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/21-new-tests-base-v3.json",
+    "tip_summary_line_verbatim": "15 passed in 1.02s",
+    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/20-new-tests-tip-v3.json",
+    "symbol_absence_excluded": "_inject_name_based_modifiers exists at the base SHA; every base failure is an assertion on payload content, not an ImportError or AttributeError"
+  },
+  "replay_pin": {
+    "probe": "docs/pwml_recovery_sprint/evidence/c058_transport_injection_replay.py",
+    "corpus": "runs/ + runs_verify/, 64 legs, 44 transport rows",
+    "base": {
+      "artifact": "docs/pwml_recovery_sprint/evidence/c058_corpus_base.json",
+      "rows_reproducing_committed": 44,
+      "total_injected_transporter_rows": 24,
+      "rows_losing_a_stage1_transporter": 0
+    },
+    "tip": {
+      "artifact": "docs/pwml_recovery_sprint/evidence/c058_corpus_tip.json",
+      "total_injected_transporter_rows": 0,
+      "rows_losing_a_stage1_transporter": 0
+    },
+    "refused": "23 EntE attachments plus 1 ALAS2 cargo-as-transporter",
+    "reaction_actor_digests_identical_on_legs": 64
+  },
+  "guard_mutations": {
+    "note": "each guard deleted on its own at the tip, in a throwaway worktree, focused file re-run",
+    "boundary": "3 failed, 11 passed in 1.49s",
+    "cue_window": "1 failed, 13 passed in 1.21s",
+    "exactly_one": "1 failed, 13 passed in 1.19s",
+    "cargo": "1 failed, 13 passed in 1.25s"
+  },
+  "focused": {
+    "note": "run one file per process, PYTHONPATH=src in the bounded child for F-066 (test_entity_admission and test_payload_models carry no sys.path insert). 'declared' is the charter's def-test_ count; 'collected' is the pytest node count -- four files are parameterized.",
+    "total_collected": 226,
+    "failures": 0,
+    "files": {
+      "test_rag_payload_gate_guardrails": {"declared": 16, "summary_line_verbatim": "16 passed in 0.65s", "chunk": null},
+      "test_entity_admission": {"declared": 23, "summary_line_verbatim": "33 passed in 1.00s", "chunk": null},
+      "test_rag_seed_entity_reimport": {"declared": 14, "summary_line_verbatim": "14 passed in 0.42s", "chunk": null},
+      "test_c060a_requested_pathway_wiring": {"declared": 11, "summary_line_verbatim": "11 passed in 2.33s", "chunk": null},
+      "test_streamlit_stage2_orchestration": {"declared": 11, "summary_line_verbatim": "12 passed in 24.70s", "chunk": null},
+      "test_adversarial_actor_entity_type": {"declared": 18, "summary_line_verbatim": "29 passed in 0.07s", "chunk": null},
+      "test_rag_conform_merge": {"declared": 3, "summary_line_verbatim": "3 passed in 0.24s", "chunk": null},
+      "test_payload_models": {"declared": 13, "summary_line_verbatim": "19 passed in 0.15s", "chunk": "D-core"},
+      "test_process_normalizer": {"declared": 49, "summary_line_verbatim": "49 passed in 1.90s", "chunk": "D-core"},
+      "test_rag_gap_admission": {"declared": 18, "summary_line_verbatim": "18 passed in 0.41s", "chunk": "C"},
+      "test_pipeline_reaction_rag_provenance": {"declared": 7, "summary_line_verbatim": "7 passed in 0.26s", "chunk": "C"},
+      "test_transport_actor_guards": {"declared": 15, "summary_line_verbatim": "15 passed in 0.85s", "chunk": null, "new_in_this_card": true}
+    }
+  },
+  "chunk_c": {"expected_per_TEST_MATRIX": 109, "status": "PENDING -- heavy mutex held by C-055 since 20:41:59Z"},
+  "smoke": {"expected_per_TEST_MATRIX": 465, "status": "PENDING -- heavy mutex held by C-055 since 20:41:59Z"},
+  "chunk_d": {"expected_per_TEST_MATRIX": 187, "expected_on_env_tree": "185/187, core 159/160 (F-065 + qb node15)", "status": "PENDING -- heavy mutex held by C-055 since 20:41:59Z"}
+}
