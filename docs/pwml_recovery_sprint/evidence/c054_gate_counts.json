@@ -1,5 +1,45 @@
 {
   "base_sha": "1cbfa01779fff9410858e28158999fb42dfc533e",
+  "chunk_d": {
+    "additions": 0,
+    "c050k_ancestor_of_tip": true,
+    "collected": 187,
+    "component_summaries_verbatim": {
+      "core": "1 failed, 159 passed in 55.07s",
+      "qb": "23 nodes, 22 ok, node15 '1 failed in 5.12s'",
+      "s8": "4 nodes, each '1 passed'"
+    },
+    "expected_per_TEST_MATRIX": 187,
+    "failed": 2,
+    "failures_attributed": {
+      "method": "F-051 one-file differential: the same node run in C:/t/c054mix (BASE goldset.py) and C:/t/c054tip (TIP goldset.py), trees identical except that one file and NEITHER carrying .env",
+      "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance": {
+        "RECORD_DEFECT": "the shared block / TEST_MATRIX pre-existing-red list enumerates the '.env present' family as FOUR in tests/test_prefreeze_third_export_seam.py plus ONE in tests/test_prefreeze_species_resolution.py. This Chunk D CORE test is a SIXTH member and is not listed. Consequence: Chunk D core is 159/160, not 160/160, on ANY worktree carrying .env.",
+        "assertion": "assert report['db_resolution']['available'] is False  ->  assert True is False",
+        "base_production_no_env": "1 passed in 0.65s",
+        "g11_reports": [
+          "docs/pwml_recovery_sprint/evidence/g11/C-054/51-writer-node-base-prod-no-env.json",
+          "docs/pwml_recovery_sprint/evidence/g11/C-054/52-writer-node-tip-prod-no-env.json"
+        ],
+        "premise_now_false": "card worktrees DO carry .env (the orchestrator copies it in), so the DB is reachable and available is True",
+        "test_own_comment": "P4-01: no worktree carries a .env, so PathBankDbResolver.from_env() answers None and this leg is offline",
+        "tip_production_no_env": "1 passed in 0.58s"
+      },
+      "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block": {
+        "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/53-qb-node15-tip-prod-no-env.json",
+        "status": "PRE-CHARGED: shared block section 7 names qb node15 as red whenever the PathBank DB is reachable; hotspot 9 forbids touching the file",
+        "tip_production_no_env": "1 passed in 4.13s"
+      },
+      "verdict": "BOTH failures are .env / PathBank-DB reachability, NOT this diff"
+    },
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-054/18-chunkd-outer.json",
+    "gate_exit": 1,
+    "partition_proof_verbatim": "union=187 monolithic=187 missing=0 extra=0 SETS_EQUAL=True",
+    "passed": 185,
+    "process_lifecycle": "164 descendants observed, 164 terminated, FINAL SURVIVING COUNT 0, cleanup success",
+    "run_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "set_identity_holds": true
+  },
   "chunk_membership_stem_exact": {
     "tests/test_bench_acquisition_and_artifacts.py": {
       "chunk": "B",
@@ -22,7 +62,8 @@
     "exposure": "ZERO",
     "meaning": "hardening against a latent fail-open, not a live defect; no score moves"
   },
-  "failures": 0,
+  "failures": 2,
+  "failures_note": "both in Chunk D, both proven to be .env/DB reachability and green at BOTH base and tip production without .env; zero failures attributable to this diff",
   "focused": {
     "tests/test_bench_acquisition_and_artifacts.py": {
       "chunk": "B",
@@ -89,6 +130,30 @@
     "cleanup": "success",
     "final_surviving_count": 0,
     "runs": "every run above"
+  },
+  "prospective_combined_state": {
+    "env": ".env copied in, so the combined state is measured under the same DB reachability as the card worktree",
+    "focused_pair_summary_verbatim": "87 passed in 2.45s",
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/15-comb-focused-pair.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/16-comb-smoke-465.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-054/17-comb-preprocessor.json"
+    ],
+    "integration_tip": "af5c3d2",
+    "line_address_stability": "C-054's TEST_MATRIX edit is 7 added / 7 deleted, so chunk rows stay :213-218, the SMOKE marker stays :240 and the SMOKE file list stays :242-252 -- the addresses pwml-test-runner.md:59 and FINDINGS.md:1148 cite by number",
+    "merge_conflict": {
+      "cause": "integration 868a254-era edit fixed Chunk D 177->187 / core 150->160 on the SAME line C-054 edits for SMOKE 460->465",
+      "file": ".claude/agents/pwml-test-runner.md",
+      "orchestrator_must_apply_this_resolution": true,
+      "resolution": "take the integration side verbatim and change ONLY '**460** tests' to '**465** tests'; both fixes survive"
+    },
+    "method": "git worktree add --detach C:/t/c054comb af5c3d2, then merge agent/p16-goldset-required INTO it. My branch was never rebased and never moved.",
+    "my_branch_tip": "e836d15",
+    "scratch_merge_commit": "f7f277b",
+    "smoke_summary_verbatim": "465 passed in 42.79s",
+    "test_preprocessor_note": "in NO chunk (stem-exact) and touched by intervening commit 868a254, so no standing gate covers it; run explicitly for this reason",
+    "test_preprocessor_summary_verbatim": "44 passed in 2.23s",
+    "why": "merge gates require the focused tests to pass on the state that will exist AFTER the merge, not only on the branch"
   },
   "purpose": "literal pytest COUNTS and verbatim summary lines. bounded_run retains exit codes but NOT stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10).",
   "smoke": {
