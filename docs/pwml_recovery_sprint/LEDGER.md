@@ -772,7 +772,7 @@ C-040/C-050/C-051 ownership lock that governs the surrounding seams.
 | T-102 | M3 | **`MEASURED — organism/SBML axis structurally unreachable (F-009)` 2026-08-20 at `32f3a57`. NEVER record this as `PASS`** — the product owner already ruled at `LEDGER.md:821` (PACK 2): *"if T-102's organism dimension is unreachable solely because SBML lacks taxonomy annotation, that exact limitation is recorded truthfully and the other benchmark dimensions continue."* **Measured, all re-verified today, not quoted:** `grep -rn "taxonom" src/t2pw/sbml/` → **0 hits across 7 modules** · `canonical.py:226` `_KINDS` **omits species** · `canonical.py:855-856` — **one `Difference` forces `not_equivalent`** · `find runs/ runs_verify/ -iname '*sbml*'` → **0 SBML artifacts for any leg**. The axis is pinned by a committed passing test: `tests/test_canonical_biological_equivalence.py` **29 passed in 0.19 s**, G11 0 survivors (`evidence/g11/T-102/02-canonical-axis-pythonpath.json`). **REFINEMENT to F-056:** SBML is not absent from the code — `streamlit_app.py:6472` passes `build_legacy_sbml=True` from a **manual UI button** (`:6463-6472`) that the batch driver never clicks; `:6015`, the automated path, passes `False`. Conclusion unchanged, mechanism sharper. **TWO LIMITATIONS REMAIN EXPLICIT AND UNOWNED — the milestone is NOT discharged:** (1) **no `canonical_graph_sha256` baseline exists for PMC12856317**. F-056's *"0 files anywhere"* became **false** — one now exists, `runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_stage3_gate_report.json` = `2597ca91…`, arrived with `8ea52c4` after F-056 was written — but it is the **wrong paper and the wrong mode**; `stamp_report` still has **0 call sites in `pwml/writer.py`**, so a CLI re-export emits none. (2) **nothing drives `biological_equivalence` end to end**: defined `canonical.py:827`, its only repo-wide callers are in its own test file; the ~80-line offline probe is **unowned work needing a grant**. **No unowned production functionality was created to make this green, and none may be.** Acceptance as specified (`TEST_MATRIX.md:479`) additionally requires SBML, which no leg has ever produced. | C-052 | PMC12856317 equivalence | measured ~15 min |
 | T-103 | M4 | **`BLOCKED` on C-055 — the only remaining card that gates a milestone.** C-055 is `DEPENDENCY-READY, NOT STARTED` (all three deps merged). | C-055 | 4 RAG legs | ~1.5 h |
 | T-104 | M5 first RC | **`PREREQUISITE SATISFIED` on paper, not started.** **RECONCILED 2026-08-18:** Wave E is complete — C-060 `f2f7599`, C-060a `6c98508`, C-061 + C-061a `afcbf1d`. A full 20-leg RC is ~7 h and should follow T-101/T-102/T-103, not precede them. | Wave E | full pinned, 20 legs | ~7 h |
-| T-105 | M5 second RC | `BLOCKED` | Day 6 corrections | full pinned, 20 legs | ~7 h |
+| T-105 | M5 second RC | **`BLOCKED` — correct verdict, but the recorded blocker was a CALENDAR reference. Determined 2026-08-20 (PACK 9):** `TEST_MATRIX.md:482` gives T-105's *After* as *"Day 6"* and its acceptance as *"remaining failures explained and classified"*; `MASTER_PLAN.md:363-366` places Day 6 as *"results ~01:00; full day of triage and narrow benchmark-proven corrections; second RC ~18:00"*. **"Day 6 corrections" is a position in the original 7-day calendar, not a code dependency**, and the sprint is no longer on that calendar. **The accurate blocker is: T-104 has not run.** T-105 is the *second* RC; there are no *remaining* failures to explain because no first RC exists to produce them. **Real prerequisite chain: (1) T-104 runs (20 legs, ~7 h, live-curator authorization); (2) its failures are triaged and corrected; (3) T-105 re-runs the same 20 legs (~7 h, live-curator authorization again).** Two separate ~7 h authorized runs, not one. | **T-104, then its corrections** (was: "Day 6 corrections") | full pinned, 20 legs | ~7 h |
 
 ---
 
@@ -964,3 +964,37 @@ so the id was used rather than discarded. **T-106 = session takeover SMOKE drift
 
 **Control plane and evidence only in `ee266ce`:** no `src/`, no `tests/`, no fixture, no cache, no protected
 file touched; no verdict re-litigated; no accepted history rewritten; no historical entry rewritten.
+
+### ⚠ MILESTONE SEQUENCING — determined 2026-08-20 (PACK 9), and it bears directly on the T-104 authorization
+
+**Running T-104 before C-058 and C-059 land would burn ~7 h of billed live-curator time on a run that is
+guaranteed to fail acceptance for reasons already known.**
+
+The reasoning, from records already accepted:
+
+* **T-104's acceptance is the full matrix vs `BASELINE.md`** (`TEST_MATRIX.md:481`), which includes
+  `TEST_MATRIX.md:477`'s requirement that **PMC12452463 classify `review_required`**.
+* **T-100 already failed exactly that**, on both strict legs, because `release_status.py:414-419` tests
+  `strict_gates_passed` **before** any coverage branch and `strict_quarantine.py:2025-2034` appends
+  structural reasons to `refusal_reasons` unconditionally (**F-062**). Nothing about that mechanism is
+  leg-count-dependent — **a 20-leg run reproduces it 20 times.**
+* **F-062 must not be repaired before C-058 and C-059 are accepted** (merge rule 6): repairing the refusal
+  seam first makes both strict legs exportable and thereby **ships** the fabricated `EntE` transporters and
+  the LDH-derived NAD+/NADH.
+
+**Therefore the dependency order for a quotable strict rate is:**
+
+```
+C-058 (F-058) ─┐
+               ├─► F-062 refusal-seam correction ─► T-104 (20 legs, ~7 h) ─► triage ─► T-105 (20 legs, ~7 h)
+C-059 (F-057) ─┘
+```
+
+**This is a scheduling conclusion, not a new decision** — it follows from D-055, F-062's blocking clause and
+merge rule 6, all already locked. It is recorded here so the T-104 authorization is asked for at the point
+where the run can actually succeed, rather than twice.
+
+**T-103 is NOT subject to this.** Its acceptance (`TEST_MATRIX.md:480`) is *"every RAG round re-entered
+normalization, mapping, gates, persistence, classification"* — a **structural** property of the loop, not a
+strict-rate or release-classification claim. **F-062 does not gate it.** T-103 becomes runnable the moment
+C-055 merges, and needs only its own live-curator authorization for 4 RAG legs (~1.5 h).
