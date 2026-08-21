@@ -2486,3 +2486,67 @@ earlier tip. **That closes the instance, not the class.**
 The class remedy is a line in `_SHARED_EXECUTION_BLOCK.md` § 3, beside the existing stdout gap: **evidence
 about production output comes from the production entry point, or carries an explicit scope limit.**
 Registered, unowned, not fixed — the shared block is not a card's to edit.
+
+## F-075 — C-059 removes the trigger of the only structural refusal on the F-062 leg, so F-062's own proof fixture may no longer demonstrate it
+
+- **Severity** **HIGH** (sequencing) · **Registered 2026-08-20**, integration `a0bcc0c`
+- Measured by the orchestrator directly from the committed T-100 artifacts. **Registered BEFORE the F-062
+  charter is written, because it changes what that card can use as evidence.**
+
+### The measurement
+
+`runs_verify/2026-08-18_1328/papers/PMC12096016/strict/quarantine_report.json`:
+
+```
+refusal_reasons     : ['degree_zero_export:1']
+degree_zero_exports : [{'bucket': 'proteins', 'name': 'Isochorismatase (EntB)'}]
+release.status      : diagnostic_only
+minimum_core_satisfied : True
+```
+
+**`degree_zero_export:1` is the leg's ONLY structural reason, and the single row producing it is
+`Isochorismatase (EntB)`** — the duplicate protein created by the RAG re-import that **C-059 now refuses**
+(`REASON_ALREADY_COVERED`, which takes `counts.accepted` on that leg from **2 to 0**).
+
+### The consequence, and why it is not good news for F-062
+
+**F-062's mechanism remains real and remains wrong.** `strict_quarantine.py:2013-2034` builds
+`structural_reasons` and appends them to `refusal_reasons` **unconditionally** — `review_reasons` receives
+only `coverage_reasons`, and only when `defensible_core` holds. So `ok = false`, and
+`classify_release_status` pins the leg at `diagnostic_only` before any coverage branch can be reached.
+**That is a code defect independent of any leg**, and this finding does not soften it.
+
+**But the leg that demonstrated it may stop demonstrating it.** With `Isochorismatase (EntB)` never
+imported, this leg should produce **no `degree_zero_export` at all**, hence no structural reason, hence
+`ok = true` — and it would then classify through the coverage branch on its own, with
+`minimum_core_satisfied: True`.
+
+**Three things follow, and an F-062 card must not assume any of them away:**
+
+1. **F-062 cannot use this leg as its base-failing G9 proof without re-measuring.** The committed artifact
+   was produced *before* C-058 and C-059. A card that replays it and finds `diagnostic_only` will be
+   measuring pre-C-059 state; a card that re-runs the leg may find the refusal simply gone. **Neither is a
+   proof of the refusal-seam fix.** It will likely need a **synthetic** fixture that produces a structural
+   reason on a leg with a defensible core — which is exactly the shape the seam mishandles.
+2. **The T-100 acceptance failure attributed to F-062 may resolve without touching the refusal seam.**
+   `TEST_MATRIX.md:477` requires PMC12452463 → `review_required`; D-055 recorded both strict legs landing on
+   `diagnostic_only` *because of* this seam. If C-059 removes the structural reason, the classification may
+   change on its own. **Do not quote that as F-062 being fixed — it would be the trigger removed, not the
+   seam corrected.** The next leg with a genuine structural reason and a defensible core hits it again.
+3. **This does not unblock T-104, and it does not weaken the merge-rule-6 lock.** The lock existed so the
+   fabricated `EntE` and the LDH-derived NAD+/NADH would not ship on a newly-exportable leg. **C-058 and
+   C-059 have now landed, which is what discharges it** — not this finding.
+
+### What the F-062 card must do first
+
+**Re-measure the leg on merged integration before writing a single line.** Specifically: does
+`degree_zero_export` still appear once C-058 and C-059 are in? If it does not, say so, and build the proof
+on a fixture that isolates *the seam* rather than *this leg's biology*.
+
+**And the standing product-owner block still applies:** `PRODUCT_CONTRACT.md:341` conditions PMC12452463's
+required outcome on *"after the index fix"*, a phrase occurring **exactly once in the whole control plane
+with no antecedent**. Until it is named or struck, **no card can determine whether that locked row binds**,
+and F-062 cannot be quoted as contradicting a locked position. **F-062 is therefore blocked on a product
+decision, not only on C-058 and C-059.**
+
+Registered, not fixed. No accepted card is reopened.
