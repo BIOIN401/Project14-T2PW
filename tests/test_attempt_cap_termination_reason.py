@@ -246,9 +246,18 @@ def test_a7_two_three_and_four_signals_at_once_resolve_to_the_ruled_winner() -> 
 def test_a7_the_ranking_is_exactly_the_ruled_order_and_decide_cannot_key_error() -> None:
     """Every precedence member has a condition key, so ``decide`` is total."""
     assert lp.TERMINATION_PRECEDENCE.index(CAP) == 4
+    # BASELINE MOVED, C-064 / F-070 (merge rule 4: deliberate, exact delta).
+    # The tuple grew 7 -> 8: ``round_cap_reached`` was APPENDED as the eighth
+    # member. Nothing was removed, renamed or reordered, so ``attempt_cap_reached``
+    # keeps rank 5 -- which is why the ``.index(CAP) == 4`` line above is
+    # UNMODIFIED and still passes, and that is the evidence D-024 did not move.
+    # The new member is ranked LAST and is NOT in the D-005 operational-failure
+    # set: a configured round ceiling being honoured is a policy success, not the
+    # resource exhaustion ``budget_exhausted`` names.
     assert lp.TERMINATION_PRECEDENCE == (
         "budget_exhausted", "operation_timeout", "identical_empty_response",
-        "scientifically_unrecoverable", CAP, "retrieval_exhausted", "no_new_claims")
+        "scientifically_unrecoverable", CAP, "retrieval_exhausted", "no_new_claims",
+        "round_cap_reached")
     held = lp._conditions(state(attempt_cap_reached=True))
     assert set(held) == set(lp.TERMINATION_PRECEDENCE)      # no KeyError is possible
     assert lp.TERMINATION_REASONS == frozenset(lp.TERMINATION_PRECEDENCE)

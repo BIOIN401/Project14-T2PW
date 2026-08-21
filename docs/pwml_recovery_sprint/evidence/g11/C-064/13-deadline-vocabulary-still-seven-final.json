@@ -1,0 +1,72 @@
+{
+  "label": "deadline-vocabulary-still-seven-final",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "import t2pw.pipeline.deadline as dl, t2pw.rag.loop_policy as lp, t2pw.pipeline.extraction_ladder as el\nprint('deadline.TERMINATION_REASONS      n =', len(dl.TERMINATION_REASONS), sorted(dl.TERMINATION_REASONS))\nprint('deadline.OPERATIONAL              n =', len(dl.OPERATIONAL_TERMINATION_REASONS), sorted(dl.OPERATIONAL_TERMINATION_REASONS))\nprint('loop_policy.TERMINATION_REASONS   n =', len(lp.TERMINATION_REASONS), sorted(lp.TERMINATION_REASONS))\nprint('loop_policy MINUS deadline        =', sorted(set(lp.TERMINATION_REASONS) - set(dl.TERMINATION_REASONS)))\nprint('deadline MINUS loop_policy        =', sorted(set(dl.TERMINATION_REASONS) - set(lp.TERMINATION_REASONS)))\nprint('SKIP_CAUSES intersect deadline    =', sorted(set(el.SKIP_CAUSES) & set(dl.TERMINATION_REASONS)))\nprint('round_cap_reached in deadline vocabulary:', lp.ROUND_CAP_REACHED in dl.TERMINATION_REASONS)\ntry:\n    dl.require_reason(lp.ROUND_CAP_REACHED); print('require_reason ACCEPTED it -- UNEXPECTED')\nexcept ValueError as exc:\n    print('deadline.require_reason REFUSES it:', type(exc).__name__)\nassert len(dl.TERMINATION_REASONS) == len(set(dl.TERMINATION_REASONS)) == 7\nassert dl.OPERATIONAL_TERMINATION_REASONS == frozenset({'budget_exhausted', 'operation_timeout'})\nassert len(lp.TERMINATION_REASONS) == 8\nassert set(lp.TERMINATION_REASONS) - set(dl.TERMINATION_REASONS) == {'round_cap_reached'}\nassert set(dl.TERMINATION_REASONS) - set(lp.TERMINATION_REASONS) == set()\nassert sorted(set(el.SKIP_CAUSES) & set(dl.TERMINATION_REASONS)) == ['attempt_cap_reached']\nprint('ALL ASSERTIONS HELD')"
+  ],
+  "cwd": "C:\\t\\c064",
+  "started_at": "2026-08-21T16:38:09+00:00",
+  "finished_at": "2026-08-21T16:38:09+00:00",
+  "duration_seconds": 0.2472775999995065,
+  "timeout_seconds": 200.0,
+  "root_pid": 337144,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 327560,
+      "name": "python.exe",
+      "ppid": 337144
+    }
+  ],
+  "descendants_terminated": [
+    327560
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 333328,
+      "name": "python.exe"
+    },
+    {
+      "pid": 337200,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c064/docs/pwml_recovery_sprint/evidence/g11/C-064/13-deadline-vocabulary-still-seven-final.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c064\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c064",
+    "repo_head": "f9f5bea043b04094d62c5b8c3d30b3a2d421609a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
