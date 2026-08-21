@@ -2645,3 +2645,109 @@ row deleted by a closure prune is not in it — the same argument that made C-05
 correct (PACK 9 RULING 10). These are completeness gaps in the *attribution*, not gaps in the contract.
 
 Registered, not fixed, unowned. No accepted card is reopened.
+
+## F-078 — an adenylation reaction emits `AMP` as a co-product, which is chemically impossible, and the row claims the paper said so
+
+- **Severity** MEDIUM · `product_contract_violation` (§2) · **Registered 2026-08-21**, integration `931c065`
+- Surfaced by the **F-069 biological adjudication** (read-only lane), verified unregistered by the
+  orchestrator: `grep -rn -i "DHB-AMP|adenylat|pyrophosphate|\bAMP\b"` over `FINDINGS.md` and `DECISIONS.md`
+  returns **one** hit, `FINDINGS.md:1402`, which is F-058 describing EntE as *"an adenylation enzyme"*.
+  **The chemistry defect itself has never been filed.**
+
+### The mechanism
+
+`runs_verify/2026-08-18_1328/papers/PMC12096016/strict/final_mapped.json`, the `EntE` reaction:
+
+```
+2,3-dihydroxybenzoic acid + ATP  ->  2,3-dihydroxybenzoyl-AMP + AMP
+```
+
+**One ATP cannot yield both an adenylylated product and free AMP** — that requires two adenosines. EntE
+transfers the adenylyl group to DHB and releases **pyrophosphate**. The emitted co-product is wrong, and the
+correct one is absent.
+
+### Why it is more than a stoichiometry slip
+
+The `AMP` compound row carries `provenance_lineage[0] = (paper_extraction, paper_stated, explicit)` — an
+assertion that **the paper stated it**. `AMP` occurs in the source text exactly once, inside the enzyme name
+*"2,3-dihydroxybenzoyl-AMP ligase"*. **It was never named as a discrete metabolite**, and the gold set
+anticipated exactly this shape at `src/t2pw/bench/gold/pinned_v1.json:1852`:
+
+> *"The EntE adenylation is excluded from the connected floor because its product is never named as a
+> discrete metabolite."*
+
+So this is the same failure mode as F-058's fabricated `EntE` transporter and the NAD+/NADH rows on the same
+leg: **a species derived from an enzyme name or an EC number, then stamped `explicit` as though the span
+carried it.** Three instances now share that mechanism on one leg.
+
+### Scope, and what is NOT claimed
+
+Observed on **one** committed leg. **Not measured against current source** — the artifact is historical output
+from the 2026-08-18 T-100 run. Whether the current pipeline still emits it is unmeasured, and a card must
+establish that before treating it as live. Registered, not fixed, unowned.
+
+## F-079 — a payload asserting a reaction that does not occur was classified `release_ready` with `semantic_evaluation: passed`
+
+- **Severity** **HIGH** · `product_contract_violation` (§13, `PRODUCT_CONTRACT.md:343`) · **Registered
+  2026-08-21**, integration `931c065`
+- Surfaced by the **F-069 biological adjudication**. Verified unregistered:
+  `grep -rn -i "release_ready.*semantic|semantic_evaluation.*passed" docs/pwml_recovery_sprint/FINDINGS.md`
+  returns **nothing**.
+- **Distinct from F-055**, which concerns the batch driver discarding the verdict on **gate-failed** legs.
+  **This leg failed no gate.**
+
+### The mechanism
+
+`runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json` is the structurally healthy leg of
+the three F-069 legs — `quarantine_report.json -> ok: true`, `refusal_reasons: []`, `strict_invariants.ok:
+true`, fully accessioned (EntC `P0AEJ2`, EntB `P0ADI4`, EntA `P15047`, EntE `P10378`, EntF `P11454`,
+EntD `P19925`). Its `release` block reads:
+
+```
+status: "release_ready"          strict_gates_passed: true
+semantic_evaluation: "passed"    strict_acceptance_eligible: true
+```
+
+`review_flags.json` contains **exactly one** flag: `Fur`'s missing accession.
+
+**The payload nonetheless contains, unflagged:**
+
+1. **A named enzyme asserted to make a product it does not make.** `EntE-catalyzed adenylation of 2,3-DHB`
+   has `inputs: ["2,3-dihydroxybenzoic acid (2,3-DHB)", "Adenosine triphosphate"]` and
+   `outputs: ["enterobactin"]`. Adenylation produces DHB-AMP. The reaction's own name says *"adenylation"*
+   and its own evidence says *"in order to facilitate its covalent attachment"* — and the row then
+   short-circuits the entire NRPS assembly into one step.
+2. **A fabricated transporter** — `enterobactin secretion` carries
+   `transporters: [{entity: "EntE", provenance: "inferred"}]` on a span reading *"secreted to the
+   extracellular environment by a **TolC**-dependent process"*. This instance is **F-058**; its being
+   unflagged while the leg is `release_ready` is **this** finding.
+3. **A degenerate self-referential evidence string** — the `EntF` assembly reaction lists `EntE` as a second
+   catalyst whose entire `evidence` is the reaction's own name concatenated with a truncated fragment.
+
+### Why HIGH
+
+`PRODUCT_CONTRACT.md:343` makes **structured status authoritative** and reserves `release_ready` for
+shippable output. **A payload asserting a reaction that does not occur was classified shippable, and the
+semantic evaluator passed it.** Merge rule 6 exists to stop gates being weakened to increase PWML production;
+this is the same wound from the other side — **a gate that was never sensitive to the defect in the first
+place.**
+
+### The one qualification, and it is why nothing shipped
+
+`SUMMARY.txt` for that leg records *"PASSED BUT PRODUCED NO DELIVERABLE"* — **the run wrote no PWML.** So the
+violation is in the **classification**, not in a released file. That limits the blast radius; it does not
+reduce the severity, because the classification is what `PRODUCT_CONTRACT.md:343` makes authoritative.
+
+### ⚠ Interaction with the F-053 prohibition
+
+F-053 prohibits an affirmative reader of `semantic_evaluation == "passed"`. **This finding is evidence that
+the prohibition is correct and should stay.** A `passed` verdict has now been observed on a payload carrying
+a false product assignment and a fabricated transporter, so any consumer treating `passed` as positive
+evidence would be consuming a value that has demonstrably not earned it. **Do not read this finding as a
+reason to lift F-053. It is a reason to keep it.**
+
+### Scope, and what is NOT claimed
+
+Observed on **one** committed leg, and it is **historical output**, not current-pipeline evidence. Whether
+today's classifier still passes this payload is **unmeasured**. A card must establish that first —
+re-measuring under current source is the first obligation, not the fix. Registered, not fixed, unowned.
