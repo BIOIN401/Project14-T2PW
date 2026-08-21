@@ -3004,3 +3004,78 @@ real connectivity**. Then the pruner and `_build_registry:632-634` are the defec
 duplicate-identity dedupe (F-057, partly delivered by C-059's `REASON_ALREADY_COVERED`), and
 `degree_zero_export` stays `keep_refusing` for a different reason. **Either way the routing seam is not the
 surface to change** — which is the most confident part of the adjudication.
+
+## F-082 — the G11 credential scanner has no left word boundary, so an ordinary label word ending in "sk" fails merge gate 10
+
+- **Severity** MEDIUM (infrastructure, **live merge-gate hazard**) · **Registered 2026-08-21**, integration `6938cd8`
+- **Surfaced by REV-068**, which had two of its **own** evidence artifacts fail the scan, diagnosed the cause
+  correctly, and disclosed it rather than quietly renaming the files. **Independently measured by the
+  orchestrator before filing.**
+- **Assigned to C-063**, which already owns `g11_evidence.py` and had an open correction round. **It does not
+  consume that card's second round** — the defect was surfaced after its charter was written.
+
+### The mechanism
+
+`docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py:100`:
+
+```python
+("openai_style_key", re.compile(r"sk-[A-Za-z0-9_\-]{16,}")),
+```
+
+**There is no left boundary.** REV-068's job labels were `ondisk-nonvacuity-control-green` and
+`ondisk-nonvacuity-new-leg-red`; the substring `sk-nonvacuity-control-green` matches, and `check_report`
+returns `possible_credential:openai_style_key`.
+
+```
+FAIL .../evidence/g11/REV-068/02-ondisk-nonvacuity-control-green.json
+     possible_credential:openai_style_key
+FAIL .../evidence/g11/REV-068/03-ondisk-nonvacuity-new-leg-red.json
+     possible_credential:openai_style_key
+```
+
+### Why it is a hazard rather than a curiosity
+
+**Whole-tree G11 is merge gate 10.** Any committed report whose label contains an ordinary English word
+ending in `sk`, followed by a hyphen and 16 or more label characters, turns that gate red — and the failure
+names a *credential*, which is the most alarming possible way to be wrong. **`disk-`, `task-`, `risk-`,
+`mask-`, `desk-`** are all realistic in a job label; `task-` especially so in a sprint whose allocator takes
+a `--task` argument.
+
+### The fix, measured rather than assumed
+
+```
+string                             current   with \b   expected
+ondisk-nonvacuity-control-green    True      False     FALSE POSITIVE (label)
+task-reconciliation-evidence       True      False     FALSE POSITIVE (label)
+risk-assessment-baseline-run       True      False     FALSE POSITIVE (label)
+sk-abcdefghij0123456789ABCD        True      True      TRUE POSITIVE (real key shape)
+key=sk-abcdefghij0123456789ABCD    True      True      TRUE POSITIVE (assigned)
+```
+
+`\bsk-` removes all three false positives and keeps both true-positive shapes — including the assigned form,
+because `=` is a non-word character and therefore supplies the boundary.
+
+**The card was asked to audit the other six patterns for the same class of defect and to change only what is
+actually wrong** — `aws_access_key_id` already carries `\b` on both ends and `bearer_token` has
+`(?i)\bbearer`, so the defect is not uniform.
+
+**A one-directional regression test would be worse than none here**: a pattern loosened until it matches
+nothing would pass a false-positive-only test. The required arm asserts **both** that the label shapes are
+clean and that the true-positive shapes are still caught.
+
+### Disposition of the two non-compliant artifacts
+
+`REV-068/02` and `03` are **compliant records of real runs** whose *labels* trip the scanner; the runs
+themselves are sound and are **superseded by `08` and `09` under a clean label**, which the reviewer
+allocated once it understood the cause.
+
+**They were never committed.** They are left uncommitted rather than deleted, and this record is why — no
+completed G11 report has been moved, deleted or altered in this sprint, and that record stands. Once F-082 is
+fixed they would pass unchanged, so nothing about them needs correcting.
+
+### Scope note
+
+**This is a scanner defect, not a leak.** No credential appears in any evidence artifact. The scan is doing
+its job in the sense that matters — it has never been shown to miss a real key — and this finding narrows a
+false positive without weakening it. The measured table above is the evidence for that claim, and any fix
+must reproduce it.

@@ -1,0 +1,76 @@
+{
+  "label": "rev068-ondi-newleg-red",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture",
+    "tests/test_compound_resolution_extraction.py::test_the_coverage_tripwire_fires_on_an_unaccounted_leg",
+    "--basetemp=C:/t/rev068tmp/nv09",
+    "-q",
+    "--no-header"
+  ],
+  "cwd": "C:/t/rev068nv",
+  "started_at": "2026-08-21T17:27:18+00:00",
+  "finished_at": "2026-08-21T17:27:19+00:00",
+  "duration_seconds": 1.1456551000010222,
+  "timeout_seconds": 200.0,
+  "root_pid": 377680,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 368584,
+      "name": "python.exe",
+      "ppid": 377680
+    }
+  ],
+  "descendants_terminated": [
+    368584
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 371260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 374948,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-068/09-ondi-nonvacuity-new-leg-red.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "414368cdabeefbb257027314d434e1385655fddb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

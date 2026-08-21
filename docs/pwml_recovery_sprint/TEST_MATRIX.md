@@ -133,8 +133,8 @@ hung it.
 ```bash
 # The pinned form of any focused / G9 / baseline pytest run. Sets cwd and sys.path[0]
 # to the tree under measurement exactly as `python -m pytest` from the repo root does,
-# then REFUSES with exit 98 if t2pw or scripts resolve elsewhere.
-<py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label <l> --timeout <s> \
+# then REFUSES with exit 98 if t2pw resolves elsewhere. PYTHONPATH IS REQUIRED (F-076):
+PYTHONPATH=<tree>/src <py> docs/pwml_recovery_sprint/evidence/bounded_run.py --label <l> --timeout <s> \
      --json docs/pwml_recovery_sprint/evidence/g11/<ID>/<SEQ>-<l>.json -- \
      <py> -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py \
        --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/<ID>/<SEQ>-<l>.pin.json \
