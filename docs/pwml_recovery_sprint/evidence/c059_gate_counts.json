@@ -32,26 +32,27 @@
     "command": "git diff --numstat 87dbcca2a3f0608a6550736b9dc60030afc36c9d HEAD -- src tests 'docs/pwml_recovery_sprint/evidence/*.py' | sum cols 1+2",
     "evidence_bytes": {
       "ceiling": 5242880,
-      "measured": 173399,
-      "measured_mb": 0.17
+      "measured": 213347,
+      "measured_mb": 0.2
     },
     "generated_artifacts": {
       "ceiling": 110,
-      "measured": 50
+      "measured": 59
     },
     "hand_authored_lines": {
-      "OVER_BY": 525,
+      "OVER_BY": 775,
       "breakdown": {
-        "docs/pwml_recovery_sprint/evidence/c059_already_covered_probe.py": 337,
+        "docs/pwml_recovery_sprint/evidence/c059_already_covered_probe.py": 399,
         "src/t2pw/rag/admission.py": 343,
         "src/t2pw/rag/synthesize.py": 34,
-        "tests/test_rag_already_covered_gap.py": 905,
+        "tests/test_rag_already_covered_gap.py": 1093,
         "tests/test_rag_gap_admission.py": 6
       },
       "ceiling": 1100,
-      "measured": 1625,
-      "note": "OVER CEILING -- reported, not absorbed. No adversarial arm was cut and no evidence deleted to fit the number (D-025 / REV-051a). Every line is additive; nothing was deleted anywhere."
-    }
+      "measured": 1875,
+      "note": "OVER CEILING -- reported, not absorbed. Was 1625 before the REV-059 correction round, which added +188 test lines (the required real-path arm plus the self-found replica correction) and +62 probe lines (the lineage append and the corrected note). No adversarial arm was cut and no evidence deleted to fit the number (D-025 / REV-051a). Product code is 377 of the 1875; the rest is the test suite, the offline replay probe and their documentation. Every line is additive -- the diff deletes nothing anywhere in the tree."
+    },
+    "measured_at": "54943fc, the REV-059 correction tip"
   },
   "chunk_c": {
     "expected_per_TEST_MATRIX": 109,
