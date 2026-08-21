@@ -929,7 +929,7 @@ def test_apptest_rag_off_takes_the_untouched_single_paper_path(monkeypatch, offl
     assert "rag_result" not in at.session_state
     # Not one round-scoped stage ran. ``persistence`` is the exception that proves it:
     # the ONE call recorded is the app's own authoritative ``build_and_save_draft_graph``
-    # at :5615, which passes no ``output_path`` — a round's call always passes one.
+    # at :5659, which passes no ``output_path`` — a round's call always passes one.
     for name in ("normalization", "mapping", "gates", "classification"):
         assert offline_stages[name] == [], f"{name} ran with RAG off"
     assert offline_stages["persistence"] == [None]

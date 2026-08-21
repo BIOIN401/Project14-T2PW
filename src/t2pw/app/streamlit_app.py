@@ -856,7 +856,7 @@ def maybe_run_rag(
 # That is exactly what round N+1 needs. ``retrieve.detect_gaps`` reads THREE
 # report channels (``rag/retrieve.py:699-701`` — ``qa``, ``gate``, ``mapping``)
 # and at base only ``qa_graph`` was ever populated, from the Stage-1 payload, once
-# (``:5476``). A second round reusing that frozen report detects the identical gap
+# (``:5520``). A second round reusing that frozen report detects the identical gap
 # set and converges for the wrong reason. Re-entering the five stages is what
 # recomputes all three channels from the PREVIOUS round's merged payload.
 #
@@ -870,10 +870,14 @@ def maybe_run_rag(
 #
 # Every per-round side effect is confined to ``tmp/rag_rounds/``. The authoritative
 # draft graph / QA report / reaction summary stay the ones the existing flow writes
-# at ``:5615``, and the authoritative classification stays the one the quarantine
-# boundary writes — which is why ``quarantine_and_close`` is called directly rather
-# than ``run_quarantine_boundary`` (:1746), whose extra job is writing those
-# artifacts and six session-state keys.
+# at ``:5659``, and the authoritative classification stays the one the quarantine
+# boundary writes. The round path therefore calls ``run_quarantine_boundary``
+# (``:1790``) -- NOT ``quarantine_and_close``, which would add callers that
+# ``tests/test_streamlit_quarantine_boundary.py:761-779`` forbids, and that file is
+# hotspot 9. Its two extra effects are neutralized rather than inherited: artifacts
+# go to the ROUND's directory, never ``outputs/``, and the FIVE session keys it
+# writes (``:1839-1843``, and :data:`QUARANTINE_SESSION_KEYS` below) are saved and
+# restored in a ``finally``, so a round leaves no trace. See ``:1120``.
 #
 # The LLM audit is NOT re-entered per round: it lives inside
 # ``run_post_pipeline_sbml_artifacts``, and calling the five concrete stage
@@ -898,7 +902,7 @@ _MISSING = object()
 #: Every ``st.session_state`` key ``run_quarantine_boundary`` writes. The round
 #: restores each one, so a per-round classification cannot leave a boundary decision
 #: in the session for a payload version that is not the one the boundary judged.
-#: (Measured: FIVE keys at ``:1835-1845``, not the six a record claimed.)
+#: (Measured: FIVE keys at ``:1839-1849``, not the six a record claimed.)
 QUARANTINE_SESSION_KEYS = (
     "quarantine_report", "quarantine_artifacts", "quarantine_coverage",
     "quarantine_ok", "quarantine_decision_controls",
@@ -1090,7 +1094,7 @@ def build_rag_round_stages(
         # ``output_path`` is round-scoped on purpose: build_and_save_draft_graph
         # writes draft_graph.json, qa_report.json and reaction_summary.txt next to
         # it, and those three are protected scratch files whose authoritative write
-        # is the one at :5615.
+        # is the one at :5659.
         _graph, qa_report, _summary = build_and_save_draft_graph(
             graph, output_path=_round_dir() / "draft_graph.json"
         )
@@ -5595,7 +5599,7 @@ if submit:
     # structurally; this site supplies only ``stages=``, ``round_runner=``,
     # ``deadline=`` and ``checkpoint=``, per the separation invariant at :161.
     #
-    # WHY THE CHAIN STAYS AT :5470 AND THE MERGE HAPPENS HERE. Round 0's chain must
+    # WHY THE CHAIN STAYS AT :5514 AND THE MERGE HAPPENS HERE. Round 0's chain must
     # run BEFORE Stage 2, because its ``evidence_context`` is folded into Stage 2's
     # prompt through S1/S2; the merge must run AFTER it, because the merge base is
     # Stage 1 PLUS Stage 2 whenever inference ran. So round 0 REUSES the result
