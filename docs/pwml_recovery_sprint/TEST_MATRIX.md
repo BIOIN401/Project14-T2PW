@@ -539,3 +539,40 @@ rewriting them would falsify the record: `prompts/C-060a.md:76`, `prompts/H-007.
 `:134`, `:137`, `prompts/C-011.md:117`, `:122`, `prompts/INIT-001.md:144`,
 `FINDINGS.md:1129`, and `LEDGER.md`'s 21 hits. `DECISIONS.md:799-802` states the 460
 decision itself and only the product owner may amend it.
+
+---
+
+## Isolated collection (F-066 / C-070) — appended 2026-08-21 under D-061
+
+**⚠ Why this sits at the end of the file and not in § Chunks, where a reader would look for
+it.** The standing constraint pins citations through **line 477**, and § Chunks begins at
+line 209. Inserting there would shift every line between 209 and 477 and break those
+citations. **D-061 authorized the file to grow; it did not authorize moving pinned lines.**
+So the entry is appended and § Chunks is left byte-identical. Cross-referenced, not relocated.
+
+`tests/test_isolated_collection.py` runs **two sub-second arms** in any selection that
+includes it:
+
+* `test_pytest_ini_places_src_on_sys_path` — the mechanism.
+* `test_a_naive_new_test_file_collects_alone` — a **generated** canary, not a named list, so
+  test file 157 is covered the day it is written without touching this file.
+
+Its **complete sweep** — every `tests/test_*.py` collected alone in a fresh interpreter,
+**~95 s for 156 files**, 156 interpreter starts — is opt-in via **`T2PW_ISOLATED_COLLECT_ALL=1`**
+and **skips by default**. It belongs at **release-gate / pre-merge-window cadence, not per
+merge**: 94 seconds per merge is a test someone later deletes.
+
+Set **`T2PW_ISOLATED_COLLECT_REPORT=<path>`** for a machine-readable per-file census. **Use it
+rather than the rendered assertion**, which truncates and under-reports.
+
+**The file is in no chunk and not in SMOKE**, deliberately — it is a repo-wide property, not a
+subsystem's. It cannot enter Chunk D: `chunk_d_gate.py:62-70` hard-codes its file list, so
+187 = 160 + 4 + 23 is structurally safe.
+
+**Known export-only failure (F-089).** On a tree exported by `c045b_base_tree.py`, the sweep
+reports **one** failure that is not a real defect: `tests/test_c030_canonical_identity_fallback.py:88`
+shells out to `git ls-files` at **import** time, and the export's `PATHSPEC` excludes `.git`.
+A base sweep reporting 22 rather than 21 is this, and only this.
+
+**Pinned line count after this entry: 578** (was 541). D-061 requires the new value be
+recorded here so the tripwire keeps working at its new value rather than being abandoned.

@@ -3333,3 +3333,292 @@ owner should name the referent or strike the condition.**
 
 **Ten findings, seven of them `product_contract_violation` with artifact evidence, gold citations, affected
 files, expected corrections and regression fixtures. That is what the milestone was for.**
+
+---
+
+## D-056 — "after the index fix" means C-010, merged as `72ee20f` · 2026-08-21 · LOCKED
+
+**Ratified by the product owner**, PACK 11, integration `0f27f72`. This is the naming that
+`DECISIONS.md` D-055 §6 asked for — *"name the referent or strike the condition."* **D-055 is
+not reopened, amended or contradicted**; its request is discharged.
+
+`PRODUCT_CONTRACT.md:341` (§13, LOCKED) conditions PMC12452463's required outcome on *"after
+the index fix"*:
+
+> *"Correct outcome **after the index fix** is `review_required` with
+> `strict_acceptance_eligible=false`. **Never strict success.**"*
+
+**The referent is C-010, "p01 stale positional index", merged at `72ee20f`.** The condition is
+therefore **already satisfied**, and `PRODUCT_CONTRACT.md:341` **binds today**.
+
+### ⚠ The SHA in F-080 is WRONG and must not be propagated
+
+F-080 records C-010 as *"`MERGED` at `9e06360`"*, and the PACK 11 takeover brief inherited it.
+**`9e06360` is C-010's BASE, and is C-012's merge.** The error is a misread of the LEDGER's
+14-column card table, which carries `Base SHA` and `Merge SHA` five columns apart. Registered
+as **F-085**, verified four ways:
+
+* `git log -1 72ee20f` → *"Merge C-010 (agent/p01-stale-index): degree zero answered against
+  the pre-prune snapshot"*
+* `git log -1 9e06360` → *"Merge **C-012** (agent/p00b-driver-seam)"*
+* `git merge-base --is-ancestor 9e06360 72ee20f` → true, the base→merge relation
+* `git show --stat 72ee20f` touches precisely C-010's declared ownership
+  (`strict_quarantine.py`, its two test files, `docs/change_log.md`), while `9e06360` touches
+  `driver.py` and writes `evidence/g11/**C-012**/`
+
+**The correction strengthens the reading.** F-080's load-bearing claim was that no competing
+candidate exists; that is now measured rather than argued —
+`git log --oneline --all --merges | grep -i index` returns **exactly one commit in the entire
+repository**, and it is C-010's merge.
+
+### Consequences, all of which take effect immediately
+
+1. **T-104's acceptance row is now well-defined and quotable.**
+2. **F-062 may be quoted as a live contradiction of a locked position**, which D-055 §6
+   previously forbade.
+3. **F-062 requires NO code card.** Its mechanism was correctly read and the routing seam is
+   byte-identical at tip, but its proposed remedy was refused on evidence by F-081, and the
+   correct repair merged as C-067. The four remaining structural reasons are each adjudicated
+   `keep_refusing`, so the unconditional append is now **correct** behaviour. See
+   `F-062-DISPOSITION.md`.
+4. **The confirming measurement is T-104, not a card**, because the quarantine input payload is
+   not persisted and neither committed file matches `admitted_payload_hash`. **F-081's own
+   MEDIUM caveat must be carried into T-104 triage:** *"If the flagged row's synonym set is
+   disjoint from `keep_norms`, the theorem is wrong and there is a third divergence not yet
+   found."*
+
+**Standing rule adopted, from F-085 and PACK 11 RULING 1:** before citing any sprint SHA, run
+`git log -1 --format="%s" <sha>` and confirm the subject names the card you think it does. A
+citation lifted from a wide Markdown table must name the column it came from.
+
+---
+
+## D-057 — `round_cap_reached`, an eighth termination reason · 2026-08-21 · LOCKED
+
+**Authority note, stated plainly because the record should show what actually happened.** The
+product owner was presented with this entry as drafted and replied *"idk what this means do
+whatever you need to"* — an **explicit delegation to the orchestrator**, not an independent
+adjudication. It is entered on that delegation. **A later product-owner review may amend or
+strike it without treating this as reopening a contested decision.**
+
+**Extends D-005 and D-024. Neither is reopened, amended or contradicted** — D-005's six named
+reasons and D-024's seventh keep their exact meanings, their exact strings and their exact
+denominator rule. D-005 goes from seven named termination reasons to **eight**.
+
+C-055 built the RAG loop's round controller. When the configured ceiling of rounds is spent the
+loop stops, and — correctly, since none of the seven fitted — reported **no termination reason
+at all**. `round_cap_reached` genuinely *ends* the loop, so the one stop that reliably
+terminates it was the one stop that said nothing. C-064 (merged `d0b5d51`) closed F-070.
+
+**The reason.** `round_cap_reached`. Used when **all** of these hold:
+
+* the configured maximum number of RAG rounds has been consumed;
+* the loop has not otherwise terminated;
+* **no** deadline or timeout caused termination;
+* **no** explicit refusal caused termination;
+* **no** separate resource / token / budget exhaustion caused termination;
+* **no** stronger existing terminal reason truthfully describes the outcome.
+
+**Precedence, mandatory: rank 8** — below `budget_exhausted`, `operation_timeout`,
+`identical_empty_response`, `scientifically_unrecoverable`, `retrieval_exhausted`,
+`no_new_claims` and `attempt_cap_reached`. A round cap is the weakest true statement about why
+a loop stopped: any of the seven above it, when true, is more informative.
+
+**Never mislabel a round cap as timeout, refusal, success, or generic budget exhaustion.**
+Equally, never mislabel it as `retrieval_exhausted` or `no_new_claims`: those require the
+configured loop to have actually completed, and a loop cut off by the ceiling is precisely one
+that did not. It is claimed on the controller's **recorded cap refusal**, not on
+`rounds_remaining == 0` — the ceiling must actually have stopped a round that wanted to run.
+
+**`OPERATIONAL_TERMINATION_REASONS` is UNCHANGED** — it stays exactly
+`{budget_exhausted, operation_timeout}`. `round_cap_reached` is **not** added to it, for the
+same reason D-024 kept `attempt_cap_reached` out: a configured ceiling is a safety limit, not a
+promise, and that is a different fact from a leg that ran out of clock. **Whether the round cap
+should count in the pipeline-completion and end-to-end strict-success denominators is a product
+decision that has not been made; until it is, the denominator does not move.**
+
+---
+
+## D-058 — T-101 and T-103 are AUTHORIZED to run live · 2026-08-21 · LOCKED
+
+**Authorized by the product owner**, PACK 11, together with one free read-only
+`GET https://openrouter.ai/api/v1/key`.
+
+Approximately **3.8 h combined wall clock**. T-101 is a deliberate 6-leg superset
+(`scripts/batch_run.py --modes` is per-run, not per-paper; a superset satisfies the acceptance
+criteria in one invocation). T-103 runs 4 legs with **`T2PW_SPECIES_LLM=0` MANDATORY**
+(PACK 9 RULING 3 — **T-104 must NOT inherit it**) and `T2PW_OFFLINE_CURATOR=1` recommended.
+
+### ⚠ The cost premise was checked and it holds — but NOT for the reason on record
+
+The authorization package stated *"approximately $0 marginal cost, all-free-tier"*. **The
+authorized key check partly contradicted that and was worth running:**
+
+```
+is_free_tier        False
+limit               75
+limit_remaining     71.809565116
+usage               158.722468024
+is_provisioning_key False
+```
+
+**The KEY is not a free-tier key.** It carries a real $75 limit with $71.81 remaining and
+$158.72 of historical spend. So *"all-free-tier"* was true of the **model slots** and false of
+the **account**, and those are different claims.
+
+**The ≈$0 conclusion nevertheless stands, on a re-derived basis.** All nine configured
+OpenRouter slots are `openrouter/free`, and a read-only `GET /api/v1/models` confirms that is a
+**real advertised model** — *"Free Models Router"*, `pricing.prompt = 0`,
+`pricing.completion = 0`. Zero-priced models on a non-free account still cost zero.
+
+**Standing caution:** because the account is not free-tier, **any fallback to a non-free model
+would spend real money against $71.81 of remaining limit.** No fallback is configured — no
+`OPENROUTER_*_FALLBACK` variable exists in `.env`, verified — but a run that changes a model
+slot is no longer a $0 run, and the run record must state which slots were used.
+
+### Sequencing, mandatory
+
+Serially, **T-101 then T-103**, each holding the wrapper-owned heavy mutex via
+`bounded_run.py --heavy-lock`. **Never concurrently** — two live-curator legs at once risks
+free-tier rate-limit corruption and shared-cache races. Offline work continues in other lanes
+while a milestone runs.
+
+**Command form corrected and measured:** `bounded_run.py` has **no `--env` flag**, and the child
+inherits the wrapper's environment. Environment variables go in the **shell prefix**, not as
+`env VAR=x` after the `--`, which would make `env` the child executable. Verified by execution.
+This supersedes `T101_T103_AUTHORIZATION.md:169-179`.
+
+**Explicitly NOT authorized here: T-104 and T-105.** Each is a separate ~7 h, 20-leg release
+candidate, and **they must never be collapsed into one run** — T-105 is the second candidate and
+requires a triage and correction pass between the two.
+
+---
+
+## D-059 — an unmarked Stage-1 row's `paper_explicit` claim is RECORDED, not VERIFIED · 2026-08-21 · LOCKED
+
+**Authority note.** As with D-057, the product owner delegated this one to the orchestrator
+(*"do whatever you need to"*) rather than adjudicating it. Entered on that delegation and
+**amendable on review without treating it as a reopened contest.**
+
+**The question.** Does `PRODUCT_CONTRACT.md:85-102` §3's requirement that every entity identify
+*"whether it was paper-explicit"* require that claim to be **VERIFIED**, or merely **RECORDED**
+as the extraction asserted it?
+
+**The ruling: RECORDED.** F-078's provenance half (Half B) closes **with no card**, and the
+residual is documented as accepted behaviour.
+
+**Reasoning.** §3's stated purpose is *"so that false content can be attributed empirically to
+Stage 1, RAG, inference, audit, mapping, gap resolution or another stage."* **Attribution to
+Stage 1 is exactly what the current stamp achieves** — it says *this came from the extraction,
+and the extraction did not flag it*. Changing an unmarked row to `not_evaluated` would make the
+field **less** informative about origin while buying no verification, because the verification
+capability §3 would need does not exist at that seam and cannot be added narrowly:
+`settle_stage_one` (`stage_one_boundary.py:411-418`) takes **no source-text parameter**, and its
+only production call site is `streamlit_app.py:5476`.
+
+**The accepted residual, stated so it is not rediscovered as a defect.** `_paper_entry`
+(`:311-315`) stamps `paper_explicit="explicit"`, `review_required=False` on **any** row the
+extraction did not self-mark as `inferred`/`enriched` or carrying an `inference`/`rag_provenance`
+mark. The seam has no paper text with which to check, and its own docstring concedes this
+(`:168-171`): *"this seam receives a payload, not the paper it was drawn from."* **The `explicit`
+claim is structurally unearnable at this seam, and that is now accepted rather than open.**
+
+**F-078's Half A — the chemistry — is NOT closed by this entry.** An adenylation reaction
+emitting free `AMP` is chemically impossible and the paper text confirms `AMP` appears only
+inside an enzyme name. But that row is Stage-1 **LLM extraction output**: no deterministic
+function in `src/` produced it, there is no `file:line` predicate to own, and **owning it
+requires an authorised LLM leg**, which is a separate authorization and not a card.
+
+---
+
+## D-060 — `SEMANTIC_GATING_CHECKS` goes from four to five · 2026-08-21 · LOCKED
+
+**Ratified by the product owner**, PACK 11, **with the measured blast radius in front of them**.
+
+**The addition:** `"actor_named_in_its_own_cited_span"`, one named member. C-071 (F-079).
+
+**What it is the mechanism of.** `PRODUCT_CONTRACT.md:343`, LOCKED — *"Structured status is
+authoritative."* F-079 measured a payload carrying a fabricated transporter — an `EntE` actor
+whose only cited evidence is a span naming **TolC** — classified `release_ready`,
+`semantic_evaluation: passed`, `strict_acceptance_eligible: True`, and still reproducing
+byte-identically at tip.
+
+**This is the D-044 / D-052 §1 pattern**: a widening that is the mechanism of an
+already-granted change is ratifiable, but **must be disclosed and ratified in the record, never
+absorbed silently.** `tests/test_semantic_release_gating.py` exists precisely to force this
+decision and it did its job; it is renamed to assert five, its closure property intact, and a
+**sixth** silent addition remains impossible — proven by mutation, and it now also catches
+silent **removal**.
+
+### The blast radius, ratified deliberately
+
+> **13 of 21 committed `runs_verify` legs and 8 of 14 `runs/` legs move from `release_ready` to
+> `review_required` with `strict_acceptance_eligible=false`.**
+
+The independent review judged the failures dominated by genuine fabrications — `EntE` cited by
+spans naming TolC, TonB or EntF (20 of 221 actor rows corpus-wide are `Ent*` symbols a naive
+substring test would accept because they sit inside the word *enterobactin*); `ALAS2 complex`
+cited by a span naming no protein; `SFXN4 complex` cited by a span naming ALAS. **Marginal cases
+land at `review_required`, which is the contract's answer for an uncertain identity** — flagged
+for a human, not dropped.
+
+**Not adjudicated here, and explicitly left open:** whether `review_required` is the
+*biologically* right call for the marginal rows (`ALAS2` vs `ALAS`, `enterobactin synthase` for
+`EntE`) is a `pwml-bio-auditor` question. The review judged them as **lexical evidence**
+questions, which is what the check asks. **A read-only bio-audit of the demoted legs remains
+available and blocks nothing.**
+
+### Two design residuals, recorded as accepted, NOT fixed
+
+1. **A payload where every actor row lacks a usable span makes the check `applicable=False`**,
+   and an inapplicable gating check cannot demote — so such a payload still reaches
+   `release_ready`, visible only as `NO_ACTOR_SPANS` in `semantic_check_evaluability`. This
+   follows from the pre-existing D-006 architecture plus `CHECK_SOURCE_CARRIER` being
+   deliberately non-gating. **Closing it would change how `release_status` treats inapplicable
+   gating checks and is a separate product decision.**
+2. **The multi-token hole**, quantified: ~**14 of 373 passing rows (3.8 %)** are corroborated by
+   a single non-identifying token (`complex`, `homodimer`, `synthase`, `deacetylase`,
+   `disaccharide`, `udp`). It points **only** in the under-reporting direction — it never
+   demotes correct output. Closing it needs a hand-built stopword vocabulary with its own drift.
+
+**F-053 is NOT touched by this entry and remains UNDISCHARGED.** C-071 respects it by
+construction: it never reads `passed` affirmatively, it produces `SEMANTIC_FAILED` through a
+gating check and lets the pre-existing subtractive cap at `release_status.py:542` demote.
+**F-079 is itself fresh evidence F-053 should stay** — a `passed` verdict was measured on a
+payload carrying a fabricated actor, with `strict_acceptance_eligible=True`, which is a
+denominator-entry authorisation.
+
+---
+
+## D-061 — `TEST_MATRIX.md` may grow past 541 lines for the C-070 entry · 2026-08-21 · LOCKED
+
+**Authority note.** Delegated to the orchestrator with D-057 and D-059.
+
+The standing constraint reads: *"`TEST_MATRIX.md` has citations pinned through line 477. Patch
+it in place and preserve its 541-line count **unless a separately authorized migration changes
+that requirement**."* **This is that authorization**, and it is narrow.
+
+**Granted:** `TEST_MATRIX.md` may grow to accommodate C-070's isolated-collection entry in
+§ Chunks, describing `tests/test_isolated_collection.py` — two sub-second routine arms plus an
+opt-in full sweep behind `T2PW_ISOLATED_COLLECT_ALL=1`, ~95 s for 156 files, belonging at
+release-gate cadence rather than per merge.
+
+**Two constraints survive unchanged:**
+
+1. **Citations pinned through line 477 must not move.** The entry goes **after** line 477.
+   Verified: placing it there preserves every pinned citation.
+2. **The new line count must be recorded** in this entry once applied, so the tripwire keeps
+   working at its new value rather than being abandoned.
+
+**Explicitly refused: consuming the 14 blank lines after line 477 to keep the count at 541.**
+That would have let the entry land without asking. **Using slack to keep a tripwire quiet is
+precisely what the tripwire exists to prevent**, and a count that stays at 541 while the file
+grows is a worse record than one that visibly moved with permission.
+
+**APPLIED 2026-08-21 at integration `0f27f72`.** The entry was appended at the **end of the
+file**, not in § Chunks — inserting at § Chunks (line 209) would have shifted every line
+between 209 and 477 and broken exactly the citations this constraint protects. **D-061
+authorized the file to grow; it did not authorize moving pinned lines.** Line 477 verified
+byte-identical after the change.
+
+**New pinned line count: 578** (was 541). That figure now binds in place of 541.
