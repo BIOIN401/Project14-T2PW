@@ -1,0 +1,531 @@
+{
+  "task": "C-063",
+  "findings": [
+    "F-071",
+    "F-072"
+  ],
+  "provenance": {
+    "base_sha": "ac776682d36012b0b583952d78ac8f0cf02115a3",
+    "base_bounded_run": {
+      "path": "C:\\t\\c063work\\g9\\base_modules\\bounded_run.py",
+      "digest": "sha256:ffd5b424cfce0d1123d633393ff8803dd86b06ab690757e6d5f170f385c7fd98"
+    },
+    "base_g11_evidence": {
+      "path": "C:\\t\\c063work\\g9\\base_reports\\g11_evidence.py",
+      "digest": "sha256:0aba8a31d3a3865a2ff6b54f9a1f7bb0eb91a3fed934c84be57dd3a66fb2cf24"
+    },
+    "tip_bounded_run": {
+      "path": "C:\\t\\c063\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+      "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0"
+    },
+    "tip_g11_evidence": {
+      "path": "C:\\t\\c063work\\g9\\tip_reports\\g11_evidence.py",
+      "digest": "sha256:f654e8ee3be3d519c15304171f880024d6261f69beb2dac3511a809cf9ce248f",
+      "source": "C:\\t\\c063\\docs\\pwml_recovery_sprint\\evidence\\g11\\g11_evidence.py"
+    },
+    "base_and_tip_wrappers_differ": true,
+    "base_and_tip_g11_differ": true,
+    "bash": "C:\\Program Files\\Git\\usr\\bin\\bash.EXE"
+  },
+  "arms": [
+    {
+      "arm": "F-072a base @ ac77668 -- shell protocol, real base wrapper",
+      "kind": "base reproduces the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the job RAN while another holder held the lock",
+          "held": true
+        },
+        {
+          "assertion": "the foreign holder's lock was REMOVED",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "child_ran": true,
+        "lock_survives": false,
+        "holder_unchanged": false,
+        "holder_now": "",
+        "exit_code": 0,
+        "shell_stdout_tail": [],
+        "acquire_echoed": false,
+        "stderr_tail": [
+          "pre-existing (reported, NEVER killed): 8",
+          "================================================"
+        ]
+      }
+    },
+    {
+      "arm": "F-072a tip -- --heavy-lock on the real tip wrapper",
+      "kind": "tip removes the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the job did NOT run",
+          "held": true
+        },
+        {
+          "assertion": "the lock SURVIVED",
+          "held": true
+        },
+        {
+          "assertion": "it still names the foreign holder, byte for byte",
+          "held": true
+        },
+        {
+          "assertion": "exit 95 (EXIT_HEAVY_LOCK_UNAVAILABLE)",
+          "held": true
+        },
+        {
+          "assertion": "the holder was printed, not merely refused",
+          "held": true
+        },
+        {
+          "assertion": "no cleanup report certifies a job that never started",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "child_ran": false,
+        "lock_survives": true,
+        "holder_unchanged": true,
+        "holder_now": "{\r\n  \"token\": \"C-999-SOMEONE-ELSE:4242:ffffffffffffffff\",\r\n  \"holder\": \"C-999-SOMEONE-ELSE\",\r\n  \"label\": \"a-heavy-job-that-is-still-running\",\r\n  \"pid\": 4242,\r\n  \"command\": [\r\n    \"<the other card's heavy job>\"\r\n  ],\r\n  \"cwd\": \"<elsewhere>\",\r\n  \"acquired_at\": \"2026-08-21T00:00:00+00:00\"\r\n}",
+        "exit_code": 95,
+        "held_marker_printed": true,
+        "other_holder_named": true,
+        "report_written_for_a_job_that_never_ran": false
+      }
+    },
+    {
+      "arm": "F-072a NEUTRALIZED -- 'a failed acquire stops the job' removed",
+      "kind": "RULING 13: the harness must go red",
+      "expect_red": true,
+      "checks": [
+        {
+          "assertion": "the job did NOT run",
+          "held": false
+        },
+        {
+          "assertion": "the lock SURVIVED",
+          "held": true
+        },
+        {
+          "assertion": "it still names the foreign holder, byte for byte",
+          "held": true
+        },
+        {
+          "assertion": "exit 95 (EXIT_HEAVY_LOCK_UNAVAILABLE)",
+          "held": false
+        },
+        {
+          "assertion": "the holder was printed, not merely refused",
+          "held": false
+        },
+        {
+          "assertion": "no cleanup report certifies a job that never started",
+          "held": false
+        }
+      ],
+      "assertions_that_went_red": [
+        "the job did NOT run",
+        "exit 95 (EXIT_HEAVY_LOCK_UNAVAILABLE)",
+        "the holder was printed, not merely refused",
+        "no cleanup report certifies a job that never started"
+      ],
+      "verdict": "PASS",
+      "observations": {
+        "child_ran": true,
+        "lock_survives": true,
+        "holder_unchanged": true,
+        "holder_now": "{\r\n  \"token\": \"C-999-SOMEONE-ELSE:4242:ffffffffffffffff\",\r\n  \"holder\": \"C-999-SOMEONE-ELSE\",\r\n  \"label\": \"a-heavy-job-that-is-still-running\",\r\n  \"pid\": 4242,\r\n  \"command\": [\r\n    \"<the other card's heavy job>\"\r\n  ],\r\n  \"cwd\": \"<elsewhere>\",\r\n  \"acquired_at\": \"2026-08-21T00:00:00+00:00\"\r\n}",
+        "exit_code": 0,
+        "held_marker_printed": false,
+        "other_holder_named": false,
+        "report_written_for_a_job_that_never_ran": true,
+        "neutralization": {
+          "module": "bounded_run.py",
+          "removed": "if not lock.acquire():",
+          "replaced_with": "if lock.acquire() and False:  # NEUTRALIZED (RULING 13)",
+          "occurrences_substituted": 1,
+          "neutralized_digest": "sha256:6b0feb3f602f5b0c886f266d1ddba96794142e67183e32e1ce4c000ba8e4f352"
+        }
+      }
+    },
+    {
+      "arm": "F-072b base @ ac77668 -- unconditional rm -rf",
+      "kind": "base reproduces the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the lock was removed although it named someone else",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "acquire_echoed": true,
+        "lock_survives": false,
+        "foreign_holder_still_named": false,
+        "exit_code": 0
+      }
+    },
+    {
+      "arm": "F-072b tip -- release checks the holder file first",
+      "kind": "tip removes the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the lock was LEFT IN PLACE",
+          "held": true
+        },
+        {
+          "assertion": "it still names the other holder",
+          "held": true
+        },
+        {
+          "assertion": "exit 96 (EXIT_HEAVY_LOCK_RELEASE_REFUSED)",
+          "held": true
+        },
+        {
+          "assertion": "the refusal was announced",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "acquire_echoed": true,
+        "lock_survives": true,
+        "foreign_holder_still_named": true,
+        "refusal_marker_printed": true,
+        "exit_code": 96
+      }
+    },
+    {
+      "arm": "F-072b NEUTRALIZED -- the holder-identity check removed",
+      "kind": "RULING 13: the harness must go red",
+      "expect_red": true,
+      "checks": [
+        {
+          "assertion": "the lock was LEFT IN PLACE",
+          "held": false
+        },
+        {
+          "assertion": "it still names the other holder",
+          "held": false
+        },
+        {
+          "assertion": "exit 96 (EXIT_HEAVY_LOCK_RELEASE_REFUSED)",
+          "held": false
+        },
+        {
+          "assertion": "the refusal was announced",
+          "held": false
+        }
+      ],
+      "assertions_that_went_red": [
+        "the lock was LEFT IN PLACE",
+        "it still names the other holder",
+        "exit 96 (EXIT_HEAVY_LOCK_RELEASE_REFUSED)",
+        "the refusal was announced"
+      ],
+      "verdict": "PASS",
+      "observations": {
+        "acquire_echoed": true,
+        "lock_survives": false,
+        "foreign_holder_still_named": false,
+        "refusal_marker_printed": false,
+        "exit_code": 0,
+        "neutralization": {
+          "module": "bounded_run.py",
+          "removed": "if not isinstance(data, dict) or data.get(\"token\") != self.token:",
+          "replaced_with": "if False:  # NEUTRALIZED (RULING 13)",
+          "occurrences_substituted": 1,
+          "neutralized_digest": "sha256:7471c231a40b189ad1e0997a086a0b97ec1b07282d8ec266bb862f22c69c3a32"
+        }
+      }
+    },
+    {
+      "arm": "F-071 base @ ac77668 -- real base allocator + wrapper",
+      "kind": "base reproduces the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the killed job really was in flight",
+          "held": true
+        },
+        {
+          "assertion": "a g11_reserved placeholder SURVIVED in the reports tree",
+          "held": true
+        },
+        {
+          "assertion": "whole-tree check is RED -- merge gate 10 fails",
+          "held": true
+        },
+        {
+          "assertion": "...and it says report_never_written",
+          "held": true
+        },
+        {
+          "assertion": "no owned process leaked (the asymmetry F-071 names)",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "reports_root": "C:\\t\\c063work\\g9\\base_reports",
+        "seed_allocated": "C:\\t\\c063work\\g9\\base_reports\\C-063\\01-seed.json",
+        "seed_exit": 0,
+        "seed_report_published": true,
+        "killed_allocated": "C:\\t\\c063work\\g9\\base_reports\\C-063\\02-killed.json",
+        "killed_job_was_in_flight": true,
+        "owned_pids_after_kill": [],
+        "reports_tree_listing": [
+          "01-seed.json",
+          "02-killed.json"
+        ],
+        "placeholder_in_reports_tree": [
+          "02-killed.json"
+        ],
+        "whole_tree_check_exit": 1,
+        "whole_tree_check_tail": [
+          "FAIL C:\\t\\c063work\\g9\\base_reports\\C-063\\02-killed.json",
+          "     report_never_written",
+          "",
+          "G11 evidence: 2 artifact(s), 1 non-compliant (spec v1)"
+        ],
+        "whole_tree_says_never_written": true,
+        "task_check_exit": 1,
+        "task_check_tail": [
+          "     report_never_written",
+          "",
+          "G11 evidence: 2 artifact(s), 1 non-compliant (spec v1)"
+        ]
+      }
+    },
+    {
+      "arm": "F-071 tip -- staging + promotion",
+      "kind": "tip removes the defect",
+      "expect_red": false,
+      "checks": [
+        {
+          "assertion": "the killed job really was in flight",
+          "held": true
+        },
+        {
+          "assertion": "NOTHING was left in the reports tree",
+          "held": true
+        },
+        {
+          "assertion": "whole-tree check is GREEN",
+          "held": true
+        },
+        {
+          "assertion": "check is silent about a never-written report",
+          "held": true
+        },
+        {
+          "assertion": "a job that FINISHED still published its report",
+          "held": true
+        },
+        {
+          "assertion": "...so `check --task` is green over real evidence, not over nothing",
+          "held": true
+        },
+        {
+          "assertion": "no owned process leaked",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [],
+      "verdict": "PASS",
+      "observations": {
+        "reports_root": "C:\\t\\c063work\\g9\\tip_reports",
+        "seed_allocated": "C:\\t\\c063work\\g9\\tip_reports\\C-063\\01-seed.json",
+        "seed_exit": 0,
+        "seed_report_published": true,
+        "killed_allocated": "C:\\t\\c063work\\g9\\tip_reports\\C-063\\02-killed.json",
+        "killed_job_was_in_flight": true,
+        "owned_pids_after_kill": [],
+        "reports_tree_listing": [
+          ".staging",
+          "01-seed.json"
+        ],
+        "placeholder_in_reports_tree": [],
+        "whole_tree_check_exit": 0,
+        "whole_tree_check_tail": [
+          "ok   C:\\t\\c063work\\g9\\tip_reports\\C-063\\01-seed.json",
+          "",
+          "G11 evidence: 1 artifact(s), 0 non-compliant (spec v1)"
+        ],
+        "whole_tree_says_never_written": false,
+        "task_check_exit": 0,
+        "task_check_tail": [
+          "ok   C:\\t\\c063work\\g9\\tip_reports\\C-063\\01-seed.json",
+          "",
+          "G11 evidence: 1 artifact(s), 0 non-compliant (spec v1)"
+        ]
+      }
+    },
+    {
+      "arm": "F-071 NEUTRALIZED (staging) -- the reservation goes back in the reports tree",
+      "kind": "RULING 13: the harness must go red",
+      "expect_red": true,
+      "checks": [
+        {
+          "assertion": "the killed job really was in flight",
+          "held": true
+        },
+        {
+          "assertion": "NOTHING was left in the reports tree",
+          "held": false
+        },
+        {
+          "assertion": "whole-tree check is GREEN",
+          "held": false
+        },
+        {
+          "assertion": "check is silent about a never-written report",
+          "held": false
+        },
+        {
+          "assertion": "a job that FINISHED still published its report",
+          "held": true
+        },
+        {
+          "assertion": "...so `check --task` is green over real evidence, not over nothing",
+          "held": false
+        },
+        {
+          "assertion": "no owned process leaked",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [
+        "NOTHING was left in the reports tree",
+        "whole-tree check is GREEN",
+        "check is silent about a never-written report",
+        "...so `check --task` is green over real evidence, not over nothing"
+      ],
+      "verdict": "PASS",
+      "observations": {
+        "reports_root": "C:\\t\\c063work\\g9\\n1_reports",
+        "seed_allocated": "C:\\t\\c063work\\g9\\n1_reports\\C-063\\01-seed.json",
+        "seed_exit": 0,
+        "seed_report_published": true,
+        "killed_allocated": "C:\\t\\c063work\\g9\\n1_reports\\C-063\\02-killed.json",
+        "killed_job_was_in_flight": true,
+        "owned_pids_after_kill": [],
+        "reports_tree_listing": [
+          ".staging",
+          "01-seed.json",
+          "02-killed.json"
+        ],
+        "placeholder_in_reports_tree": [
+          "02-killed.json"
+        ],
+        "whole_tree_check_exit": 1,
+        "whole_tree_check_tail": [
+          "FAIL C:\\t\\c063work\\g9\\n1_reports\\C-063\\02-killed.json",
+          "     report_never_written",
+          "",
+          "G11 evidence: 2 artifact(s), 1 non-compliant (spec v1)"
+        ],
+        "whole_tree_says_never_written": true,
+        "task_check_exit": 1,
+        "task_check_tail": [
+          "     report_never_written",
+          "",
+          "G11 evidence: 2 artifact(s), 1 non-compliant (spec v1)"
+        ],
+        "neutralization": {
+          "module": "g11_evidence.py",
+          "removed": "return os.path.join(directory, STAGING_DIRNAME, name)",
+          "replaced_with": "return os.path.join(directory, name)  # NEUTRALIZED (RULING 13)",
+          "occurrences_substituted": 1,
+          "neutralized_digest": "sha256:376e5915ea1cf97324cf10d7bb9d60c4a9286af64ccf04b771b2f61c627dbdca"
+        }
+      }
+    },
+    {
+      "arm": "F-071 NEUTRALIZED (promotion) -- the atomic publish removed",
+      "kind": "RULING 13: the harness must go red",
+      "expect_red": true,
+      "checks": [
+        {
+          "assertion": "the killed job really was in flight",
+          "held": true
+        },
+        {
+          "assertion": "NOTHING was left in the reports tree",
+          "held": true
+        },
+        {
+          "assertion": "whole-tree check is GREEN",
+          "held": true
+        },
+        {
+          "assertion": "check is silent about a never-written report",
+          "held": true
+        },
+        {
+          "assertion": "a job that FINISHED still published its report",
+          "held": false
+        },
+        {
+          "assertion": "...so `check --task` is green over real evidence, not over nothing",
+          "held": false
+        },
+        {
+          "assertion": "no owned process leaked",
+          "held": true
+        }
+      ],
+      "assertions_that_went_red": [
+        "a job that FINISHED still published its report",
+        "...so `check --task` is green over real evidence, not over nothing"
+      ],
+      "verdict": "PASS",
+      "observations": {
+        "reports_root": "C:\\t\\c063work\\g9\\n2_reports",
+        "seed_allocated": "C:\\t\\c063work\\g9\\n2_reports\\C-063\\01-seed.json",
+        "seed_exit": 0,
+        "seed_report_published": false,
+        "killed_allocated": "C:\\t\\c063work\\g9\\n2_reports\\C-063\\02-killed.json",
+        "killed_job_was_in_flight": true,
+        "owned_pids_after_kill": [],
+        "reports_tree_listing": [
+          ".staging"
+        ],
+        "placeholder_in_reports_tree": [],
+        "whole_tree_check_exit": 0,
+        "whole_tree_check_tail": [
+          "G11 evidence: 0 artifact(s), 0 non-compliant (spec v1)"
+        ],
+        "whole_tree_says_never_written": false,
+        "task_check_exit": 1,
+        "task_check_tail": [
+          "     unmatched_task:C-063 -- selector matched 0 committed artifacts",
+          "",
+          "G11 evidence: 0 artifact(s), 0 non-compliant (spec v1); 1 unmatched selector(s)"
+        ],
+        "neutralization": {
+          "module": "bounded_run.py",
+          "removed": "os.replace(staged, json_path)",
+          "replaced_with": "pass  # NEUTRALIZED (RULING 13)",
+          "occurrences_substituted": 1,
+          "neutralized_digest": "sha256:9f68dc24bc6c731c82c129ab65a24475dbbf3a976f836594c8fdf71ff72fa2d4"
+        }
+      }
+    }
+  ],
+  "arms_passed": 10,
+  "arms_total": 10
+}
