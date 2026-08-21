@@ -2421,3 +2421,68 @@ because that history is the only evidence of how long the preflight has been par
 
 **Do not let a future card absorb this quietly in passing.** Registered, not fixed. No accepted card is
 reopened.
+
+## F-074 — a replica instrument cannot witness production behaviour, and this is the third time it has produced a false record
+
+- **Severity** **HIGH** (method) · **Registered 2026-08-20**, integration `9492744`
+- Found by **REV-059** while rejecting C-059. **The card's code was correct; its evidence artifact was not.**
+
+### The concrete instance
+
+`evidence/c059_leg_replay.json` commits `"dedup_alone_is_payload_neutral": true, "dedup_alone_payload_delta": []`.
+
+Measured through the **real `synthesize_with_report`**, the payload is **not** neutral: the delivered row's
+`provenance_lineage` goes **2 entries → 1**. The per-gap `fills_named_gap_directly: via <metabolite>` record
+for the losing gap disappears from the payload, and it is **not recoverable from the admission report
+either**, because `_reject` (`admission.py:3765`) overwrites `candidate.reasons` with the duplicate code.
+
+**Why the card's instrument could not see it.** Both `tests/test_rag_already_covered_gap.py:767-813`
+(`_rows_through_the_production_carry`) and `evidence/c059_already_covered_probe.py` construct `_Reaction`s and
+call `_reaction_row` directly — **without ever executing the production line
+`reaction.lineage.append(entry.as_dict())` at `synthesize.py:1971-1973`**. `_reaction_row` (`:1652-1663`)
+then emits only the `rag_retrieval` entry, which is derived from `gap_ids` and **is** identical once the
+union carry lands.
+
+**The replica reproduced every field that did not move and none of the field that did.** It was not a weak
+test; it was a test of a different object.
+
+### Why this is HIGH and not a one-off
+
+**Third instance this sprint of the same method failure**, each in a different subsystem:
+
+* **C-050i's census** replayed committed `final_mapped.json` — state from *before* `_apply_create_defaults`
+  runs — so it **structurally could not observe** the post-freeze collision C-050j was later chartered to
+  guard. Recorded in D-050 §2.
+* **`bounded_run.py` retains exit codes but not stdout**, so no pytest summary is recoverable from a G11
+  report afterwards. The remedy — capture verbatim summary lines into a committed artifact — is already in
+  the shared execution block § 3 as "the instrument gap".
+* **This one.**
+
+In each case a **cheaper stand-in for the production path** was measured, the stand-in agreed with the real
+thing on everything the author thought to check, and the disagreement lived exactly where nobody looked.
+
+### The rule this makes explicit
+
+**An evidence artifact that asserts something about production output must be produced by running the
+production entry point.** A helper that assembles the same dataclasses and calls the same leaf function is
+**not** that entry point — it omits whatever the caller does between them, and that is precisely where
+regressions hide.
+
+Where a replica is genuinely necessary (cost, determinism, an input that was never written), it is
+**acceptable only with a stated scope limit on the artifact itself**: name the production path it stands in
+for and the fields it therefore cannot witness. **An unqualified `delta: []` from a replica is a claim the
+instrument was never able to make.**
+
+**Corollary for reviewers, which is how this was caught:** when a card commits an artifact asserting
+*"identical"*, *"neutral"*, or *"empty delta"*, **re-derive it through the real function before accepting
+it**. REV-059 did exactly that and found the residual in one run.
+
+### Owner and remedy
+
+**C-059 is correcting its own artifact under correction round 1** — restating the measured residual, adding
+one arm through the real `synthesize_with_report`, and refreshing a stale `g9_proof` count captured at an
+earlier tip. **That closes the instance, not the class.**
+
+The class remedy is a line in `_SHARED_EXECUTION_BLOCK.md` § 3, beside the existing stdout gap: **evidence
+about production output comes from the production entry point, or carries an explicit scope limit.**
+Registered, unowned, not fixed — the shared block is not a card's to edit.
