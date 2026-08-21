@@ -1224,3 +1224,39 @@ on every one. Post-merge gates green (`MERGE-058/01-smoke.json`, 465).
 **One process violation, the reviewer's and not the card's** — F-072, disclosed unprompted.
 
 **⚠ C-058 is one half of the F-062 lock. C-059 must also be ACCEPTED before the refusal seam is touched.**
+
+### PACK 9 RULING 8 — C-059's ceiling raised again, 1700 → 2000, and both raises trace to my charter
+
+**Measured 1875** at `94625bd` after the REV-059 correction round (was 1625 at `c822dd8`; +188 test, +62
+probe). **Ratified prospectively to 2000 / 110 / 5 MB.** Zero deletions anywhere in the tree.
+
+**Product code is 377 of the 1875.** The remaining ~1500 is the test suite, the offline probe and their
+documentation — for a card that had to build an empirical merge-rule-7 safety case (REV-061 forbids the
+monotonicity argument), non-vacuity arms into a seam with **zero prior test references**, both G9 arms, and
+then a real-path witness after its replica proved blind.
+
+**Both raises trace to the same root: my charter §2 asserted a byte-identical payload that was false**
+(RULING 6). That error created the union-carry work, and the correction round then created the real-path arm.
+**The card cut nothing at either point and reported both overruns rather than absorbing them** — which is the
+behaviour REV-051a exists to produce, and it worked twice.
+
+### PACK 9 RULING 9 — a card that finds a second instance of its own defect, unprompted, is doing the job
+
+While fixing the false record REV-059 caught, C-059 **found a second one of the same class in its own diff**
+and fixed it without being asked: a replica test named `..._is_payload_neutral_once_the_union_is_carried`
+asserting full-row equality, blind for exactly the reason the first was.
+
+**What it did with it is the part worth recording.** It did not merely correct the name. The replica now runs
+the production lineage append, is renamed `..._changes_nothing_on_the_row_but_the_lineage`, and **asserts the
+differing-key set is exactly `{provenance_lineage}`** — so a *second* field cannot begin moving unnoticed.
+
+**That is the correct generalisation of F-074.** The failure was never "this assertion was wrong"; it was
+"the instrument could not see the field that moved." An exact-set assertion converts an open blind spot into
+a closed one: any new divergence fails the test rather than passing it silently. **Prefer pinning the exact
+set of differing keys over asserting that a specific field is unchanged**, wherever a card claims something is
+neutral.
+
+The card also **withdrew an argument of its own** that the reviewer had flagged as weaker than stated — that
+a two-module `rag` diff cannot reach F-065 or `qb` node15 because neither file references `t2pw.rag`. The
+greps hold; the inference does not, since `qb` drives the app through `maybe_run_rag`. Both reds now stand on
+pre-charged status alone.
