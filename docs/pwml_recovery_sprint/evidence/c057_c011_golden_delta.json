@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "card": "C-057",
+  "base_sha": "ca6bf13",
+  "tip_sha": "aa4dac2",
+  "status": "DISCLOSED, NOT ABSORBED. Needs ratification before merge.",
+  "what_moved": "tests/test_c011_freeze_seam_golden_equivalence.py passes at ca6bf13 (measured: 2 passed inside '39 passed' on a base worktree carrying .env) and fails x2 at this tip.",
+  "why": "Its golden pins canonical_payload_sha256 per leg. C-057 writes provenance_lineage onto the process rows it quarantines; on a leg where the quarantined row is a LOCKED reaction, _reconcile_locked_reactions keeps that row under payload['quarantined_locked_reactions'][*]['original_reaction'], so the frozen payload's hash moves. That is PRODUCT_CONTRACT:178's second half working as specified -- 'lineage changes must remain detectable'.",
+  "not_regenerated_because": "docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json and tests/test_c011_freeze_seam_golden_equivalence.py are C-011's and outside C-057's declared ownership boundary. Widening the boundary is a stop-and-report condition (shared block section 11), so the delta is measured and handed over instead.",
+  "house_pattern_available": {
+    "note": "That test file already carries the merge rule 4 pattern for this exact situation, twice: C-030 states its baseline move in _with_c030_hash_keys (:236-258, 'stated here instead of being absorbed by a rewritten fixture') and C-052 in _with_c052_path_keys (:281-302). A _with_c057_lineage_hashes helper following either shape would keep the fixture the BEFORE document it is named for.",
+    "c030_helper": "tests/test_c011_freeze_seam_golden_equivalence.py:236-258",
+    "c052_helper": "tests/test_c011_freeze_seam_golden_equivalence.py:281-302"
+  },
+  "measurement": {
+    "how": "The generator's own in-memory path, run at the tip without writing the fixture: _serialize(_without_c052_path_keys(_document(BASE_SHA))) compared field by field against _fixture_bytes(). The tracked fixture was never modified.",
+    "fixture_bytes_before": 345053,
+    "fixture_bytes_after": 345053,
+    "legs_in_fixture": 39,
+    "top_level_keys_moved": [],
+    "fields_that_move": {
+      "canonical_payload_sha256": 7,
+      "final_stage3_gate_report": 7
+    },
+    "fields_that_do_not_move": [
+      "seam_result_keys",
+      "quarantine_ok",
+      "quarantine_refusal_reasons",
+      "quarantine_coverage",
+      "sbml_input_source",
+      "final_mapped_is_final_mapped_quarantined",
+      "tmp_final_canonical_json_written",
+      "canonical_json_path_name",
+      "canonical_json_path_in_tmp"
+    ],
+    "final_stage3_gate_report_note": "It moves on exactly the same 7 legs and for the same reason: it embeds the frozen payload's own digests. No key is added, removed or renamed.",
+    "legs": {
+      "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict": {
+        "canonical_payload_sha256_before": "56e568b43fe3cbcc2df79e564a6af3b5b0b509c18c97d5b310fbd910fd48df58",
+        "canonical_payload_sha256_after": "be0192d98a5d08b2f7fe94a61a25f9591ddded2b02552632b8bf52119f280bc7"
+      },
+      "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict": {
+        "canonical_payload_sha256_before": "e24a5aa89234f89eddee17240dbe07d05d9be8f530514aee720cc43685097749",
+        "canonical_payload_sha256_after": "681c7668fa4b94b1e6fadf07c3e3488061865cc6bcbe64ae75ca29958e329133"
+      },
+      "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict": {
+        "canonical_payload_sha256_before": "c3476460c562056b26158ecba0b54471a2f0c1a14e1da467b6c6e38e6798d604",
+        "canonical_payload_sha256_after": "1098b4326fc61d0aa271faaa3cce62b26363fc9ce452cd101488ccca73063bce"
+      },
+      "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict": {
+        "canonical_payload_sha256_before": "f0ad32bda6d471fb36338381ee94471112f3676bbb0b207f30bd5efbd61dfc15",
+        "canonical_payload_sha256_after": "a86351d23d97dcc9ef45de7628c4a97b4968c751b7be1f5f06db22c9e4a72b83"
+      },
+      "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict": {
+        "canonical_payload_sha256_before": "01a9c800e8e97922c11e2135c4baa2cb0689db08b0480478ed56d74458b94171",
+        "canonical_payload_sha256_after": "a4a242737df2022cf746ae26b7f3108ff1c275ec5380b63e41506f3b35c547d6"
+      },
+      "runs/2026-08-02_2130/papers/PMC12096016/strict": {
+        "canonical_payload_sha256_before": "ea8bb992b3c1ad87168d92687cf7f78b3f39436e86d482915858dce7ad9ba56b",
+        "canonical_payload_sha256_after": "c4ab374bcf35308361a424746c1c125a7d5905b80ea4ddbf6601b7ecb7f937a4"
+      },
+      "runs/2026-08-02_2130/papers/PMC12421875/strict": {
+        "canonical_payload_sha256_before": "3a108cbcce966f87962efe2a32cb4863a761d2e3c52abecf337a24947ba1585c",
+        "canonical_payload_sha256_after": "137a9be099b80b3d2a926c663056b6574c6ecc2f28061a4456395ce8944557b8"
+      }
+    }
+  },
+  "correction_to_c057_cohort_equivalence_json": "That file's c011_golden_delta.legs_whose_canonical_payload_sha256_moves lists NINE leg runs. Nine is the count from the standalone probe, which calls quarantine_and_close directly on the normalized payload. SEVEN is the count from the fixture's own generator, which runs the whole freeze block. SEVEN is the authoritative number for the fixture; the probe's nine is a different measurement of a related quantity and is left in place rather than silently overwritten.",
+  "graph_equivalence": "canonical_graph_sha256 moves on ZERO of the 39 fixture legs and zero of the 78 cohort leg runs. Only the payload-integrity hash moves. See c057_cohort_equivalence.json."
+}

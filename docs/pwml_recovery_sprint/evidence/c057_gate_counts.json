@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "card": "C-057",
+  "branch": "agent/p27-lineage-quarantine",
+  "base_sha": "ca6bf13",
+  "tip_sha": "aa4dac2",
+  "why_this_file_exists": "bounded_run.py retains exit codes but not stdout, so no pytest summary line is recoverable from a G11 report afterwards (shared block section 3). These are the verbatim summary lines, captured as each job ran.",
+  "environment": {
+    "interpreter": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe",
+    "python": "3.13.6",
+    "env_present_in_worktree": true,
+    "env_note": "copied from the primary checkout for F-051 control parity. The base worktree at ca6bf13 used for every A/B carries the same .env, so the PathBank DB is reachable on BOTH sides and no red is hidden or manufactured by the swap.",
+    "T2PW_OFFLINE_CURATOR": "1 in every bounded child",
+    "basetemp_root": "C:/t/c057, C:/t/c057d",
+    "heavy_mutex": "held for SMOKE, Chunk A, Chunk E and Chunk D only; released immediately after. Acquired as its own statement with the exit code tested (F-072), and the holder file was read and confirmed to name C-057 before release."
+  },
+  "runs": [
+    {
+      "label": "focused-chunkless-tip",
+      "what": "the 8 chunkless files named in the charter, plus the new lineage file",
+      "tree": "tip",
+      "summary_line": "4 failed, 161 passed, 8 skipped in 52.15s",
+      "failures": [
+        "test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive] -- PRE-CHARGED",
+        "test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive] -- PRE-CHARGED",
+        "test_c011_freeze_seam_golden_equivalence.py::test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte -- NOT pre-charged, attributable to this diff, see c057_c011_golden_delta.json",
+        "test_c011_freeze_seam_golden_equivalence.py::test_the_fixture_regenerates_byte_identically_from_the_base_blob -- NOT pre-charged, same cause"
+      ],
+      "g11": "evidence/g11/C-057/01-focused-chunkless-tip.json",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "chunkless-base-control",
+      "what": "the same 8 chunkless files, base worktree at ca6bf13, same .env",
+      "tree": "base",
+      "summary_line": "2 failed, 138 passed, 8 skipped in 49.16s",
+      "reconciliation": "138 base + 25 new lineage tests = 163 = 161 passed + the 2 c011 tests that flipped. The ONLY delta between base and tip on this selection is c011 x2.",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "smoke-tip",
+      "what": "SMOKE, the 20-file invocation from TEST_MATRIX.md 'Commands'",
+      "tree": "tip",
+      "summary_line": "465 passed in 87.89s (0:01:27)",
+      "expected": 465,
+      "verdict": "EXACTLY 465, merge gate 10 satisfied",
+      "g11": "evidence/g11/C-057/02-smoke-tip.json",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "chunk-a-tip",
+      "what": "Chunk A, 6 files",
+      "tree": "tip",
+      "summary_line": "126 passed in 6.16s",
+      "expected": 126,
+      "g11": "evidence/g11/C-057/03-chunk-a-tip.json",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "chunk-e-tip",
+      "what": "Chunk E, tests/test_strict_quarantine_real_artifact_replay.py",
+      "tree": "tip",
+      "summary_line": "174 passed in 132.01s (0:02:12)",
+      "note": "22 `def test_` parameterized over the committed leg cohort collects 174. Both numbers are valid; 174 is what was collected.",
+      "g11": "evidence/g11/C-057/04-chunk-e-tip.json",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "chunkd-outer",
+      "what": "Chunk D through chunk_d_gate.py run (the authoritative split-process gate)",
+      "tree": "tip",
+      "partition_proof": "monolithic exit=0 parsed=187 pytest_said=187 expected=187; core 160/160, s8 4/4, qb 23/23, overlap_with_earlier=0 for each",
+      "gate_line": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+      "core_summary_line": "1 failed, 159 passed in 12.40s",
+      "total": "185/187",
+      "expected_on_an_env_carrying_tree": "185/187, core 159/160",
+      "failures": [
+        "core: tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance -- F-065, PRE-CHARGED, .env-conditional, deliberately NOT 'fixed'",
+        "qb/node15: tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block -- PRE-CHARGED whenever PathBank is reachable; hotspot 9, file untouched"
+      ],
+      "g11": "evidence/g11/C-057/05-chunkd-outer.json plus the gate's own self-allocated 06..28",
+      "descendants_observed": 172,
+      "descendants_terminated": 172,
+      "forced": false,
+      "final_surviving_count": 0
+    },
+    {
+      "label": "c057-adjacent-tip",
+      "what": "prudence sweep, files that touch lineage or the freeze seam and are in NO chunk and NOT in the charter's focused set: test_pipeline_lineage_carrier, test_pipeline_lineage_schema, test_c030a_object_sharing_at_the_freeze_seam, test_research_mode_tiers, test_locked_noop_quarantine_policy, test_canonical_biological_equivalence, test_c052_prefreeze_report_at_the_streamlit_seams",
+      "tree": "tip",
+      "summary_line": "120 passed in 22.80s",
+      "f066_note": "PYTHONPATH=src was set in the bounded child. Three of these files are among F-066's 21 that insert no sys.path of their own. Disclosed, per the corrections file.",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "c057-c055-tip",
+      "what": "the one remaining test file importing strict_quarantine that no gate above covers",
+      "tree": "tip",
+      "summary_line": "14 passed in 16.68s",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "c057-new / c057-new2",
+      "what": "the new acceptance file alone, before and after the private-constant rename",
+      "tree": "tip",
+      "summary_line": "25 passed in 3.14s",
+      "note": "19 `def test_`, 2 of them parameterized over the 4 admission-time quarantine states, collects 25.",
+      "final_surviving_count": 0
+    },
+    {
+      "label": "c057-cohort-base / c057-cohort-tip / c057-ab-base / c057-ab-tip / c057-probe1 / c057-c011-delta",
+      "what": "the A/B probes and the c011 delta measurement",
+      "tree": "both",
+      "final_surviving_count": 0
+    }
+  ],
+  "process_deviations_disclosed": [
+    "One bounded SMOKE invocation was killed by the AGENT's own tool wall clock (2 min) before bounded_run could write its report -- the F-071 ordering hazard. Cause was a malformed shell fragment in the pytest argument list that made the selection collect the whole repo. The process table was checked immediately afterwards: the Job Object had terminated every child, zero survivors, and the only python.exe processes alive belonged to VS Code's isort LSP and to REV-059's own bounded run, neither of which was touched. The allocated placeholder 02-smoke-tip.json was then REUSED for the corrected run rather than abandoned, so no placeholder is orphaned.",
+    "Development-time probes ran through bounded_run without --json, deliberately, so that no G11 placeholder was allocated for a job that was not a gate."
+  ]
+}
