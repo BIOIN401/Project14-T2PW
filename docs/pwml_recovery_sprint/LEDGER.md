@@ -1121,3 +1121,56 @@ infrastructure limitation this sprint has hit at the agent-permission layer.
   `tmp/quarantined_rag_reactions.json` (`streamlit_app.py:1275-1279`) and is now written **once per round**.
   Identical to base at the default `max_rounds=1`; at `N > 1` the last round overwrites earlier rounds'
   records. **Not one of the three protected scratch files, and no test covers it.**
+
+### PACK 9 RULING 6 — C-059's ceiling raised 1100 → 1700, and my charter §2 was FALSE
+
+**Measured 1625 hand-authored** (tests 911 · `admission.py` 343 · probe 337 · `synthesize.py` 34), against a
+ceiling of 1100. **Ratified prospectively to 1700 / 110 / 5 MB.** The diff **deletes zero lines anywhere**;
+nothing was cut to fit.
+
+**The overrun is mine, and it has a specific cause: I told the card something false.**
+
+C-059's charter §2 asserted, in bold, that fixing the cross-gap dedup alone would produce a **byte-identical
+payload** — and instructed the card to *"report that, it contradicts §2 and I want to know"* if it turned out
+otherwise. **It turned out otherwise, and the card reported it.**
+
+`_merge_into` unions `_Reaction.scores` and `gap_ids`; `_confidence` maxes the scores. Collapsing at
+admission therefore cost four things: `rag_confidence` **0.930233 → 0.914815**, the same on the enzyme actor,
+`rag_provenance.gap_ids`, and the lineage entry naming the gaps.
+
+**The `gap_ids` loss was a regression against a pinned test** —
+`test_rag_admission_adversarial::test_one_claim_admitted_for_two_gaps_keeps_both_attributions`. **It was
+caught by running that test, not by reasoning**, which is the whole reason the sprint requires the pinned
+suites to be run rather than argued about.
+
+Repairing it required carrying the union with the verdict — ~20 lines in **`synthesize_with_report`'s body**,
+a **disclosed boundary extension** beyond the charter-named `_dedupe_candidates`, guarded so uncollapsed
+claims never take it. That work exists **only because my §2 was wrong**, and the ceiling was sized before it.
+
+**§2's substantive point survives and is confirmed:** `REASON_ALREADY_COVERED` is the fix that changes the
+biology (accepted 2 → **0**, the re-imported row gone), and the cross-gap dedup is hygiene — with the
+coverage rule neutralized it takes accepted 2 → 1 and **still emits** the row that went degree-zero. The
+card had the two the right way round, which is what §2 existed to enforce. **Only the byte-identical claim
+was false.**
+
+**Second charter error of the session** (PACK 9 RULING 2 recorded three wrong line numbers). Both were
+caught by the card, not by me. **The instruction to verify rather than trust is the only reason neither cost
+anything.**
+
+### PACK 9 RULING 7 — a card that shortens its own text rather than raise a bound gets it right
+
+C-059 edited `tests/test_rag_gap_admission.py` (+6 lines), extending its pinned `ADMISSION_RULES` name list
+**additively** for two new reason codes.
+
+It also hit that file's **report-size bound** — and **did not raise it.** It shortened its own rule texts
+**575 → 344 bytes** instead, on the stated reasoning that *raising a size bound to fit one's own additions is
+what that bound exists to catch.*
+
+**That is exactly right, and it is worth recording as the standard.** A bound a card may raise whenever it
+becomes inconvenient is not a bound. The same instinct — fix the thing the guard is complaining about, never
+the guard — is what REV-051 protected when it refused to let F-065's assertion be re-pointed, and what
+REV-051a protects when it forbids cutting an adversarial arm to fit a budget.
+
+**Standing guidance:** a pinned bound, digest or count may move **only** as a deliberate baseline move under
+merge rule 4, **with an exact documented delta**, and never to accommodate the moving card's own additions.
+Where the card can instead change its own contribution to fit, **that is the correct fix**.
