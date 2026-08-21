@@ -1,0 +1,141 @@
+{
+  "label": "rev056d-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/rev56d/sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+  "started_at": "2026-08-21T04:12:39+00:00",
+  "finished_at": "2026-08-21T04:14:24+00:00",
+  "duration_seconds": 105.01903479999964,
+  "timeout_seconds": 1200.0,
+  "root_pid": 122272,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 120688,
+      "name": "python.exe",
+      "ppid": 122272
+    },
+    {
+      "pid": 94412,
+      "name": "python.exe",
+      "ppid": 120688
+    },
+    {
+      "pid": 119100,
+      "name": "python.exe",
+      "ppid": 94412
+    },
+    {
+      "pid": 107160,
+      "name": "python.exe",
+      "ppid": 120688
+    },
+    {
+      "pid": 122652,
+      "name": "python.exe",
+      "ppid": 107160
+    },
+    {
+      "pid": 118956,
+      "name": "python.exe",
+      "ppid": 122504
+    },
+    {
+      "pid": 122504,
+      "name": "python.exe",
+      "ppid": 120688
+    },
+    {
+      "pid": 120864,
+      "name": "python.exe",
+      "ppid": 120688
+    },
+    {
+      "pid": 120972,
+      "name": "python.exe",
+      "ppid": 120864
+    }
+  ],
+  "descendants_terminated": [
+    94412,
+    107160,
+    118956,
+    119100,
+    120688,
+    120864,
+    120972,
+    122504,
+    122652
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 114644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 122676,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/REV-056d/08-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+    "repo_head": "7e04a1fb65de4ce5cb02f6e4579bcfb4be223a8c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "label": "chunkd-node20",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/rev56d/cdq/node20",
+    "tests/test_streamlit_quarantine_boundary.py::test_the_export_reuses_the_boundary_decision_when_the_payload_did_not_move"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+  "started_at": "2026-08-21T04:21:20+00:00",
+  "finished_at": "2026-08-21T04:21:35+00:00",
+  "duration_seconds": 14.444736999997986,
+  "timeout_seconds": 120.0,
+  "root_pid": 128052,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 127524,
+      "name": "python.exe",
+      "ppid": 128052
+    }
+  ],
+  "descendants_terminated": [
+    127524
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 124636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 125016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 125884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127540,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-056d\\42-rv3-node20.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+    "repo_head": "7e04a1fb65de4ce5cb02f6e4579bcfb4be223a8c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}

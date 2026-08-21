@@ -1,0 +1,184 @@
+{
+  "label": "rev056d-preflight-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_batch_preflight.py",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/t/rev56d/pt",
+    "-q"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+  "started_at": "2026-08-21T04:08:53+00:00",
+  "finished_at": "2026-08-21T04:09:16+00:00",
+  "duration_seconds": 22.862846199997875,
+  "timeout_seconds": 900.0,
+  "root_pid": 119384,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 118748,
+      "name": "python.exe",
+      "ppid": 119384
+    },
+    {
+      "pid": 114916,
+      "name": "python.exe",
+      "ppid": 119560
+    },
+    {
+      "pid": 119560,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 117940,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 118888,
+      "name": "python.exe",
+      "ppid": 117940
+    },
+    {
+      "pid": 119552,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 78516,
+      "name": "python.exe",
+      "ppid": 119552
+    },
+    {
+      "pid": 118176,
+      "name": "python.exe",
+      "ppid": 119576
+    },
+    {
+      "pid": 119576,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 118912,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 119132,
+      "name": "python.exe",
+      "ppid": 118912
+    },
+    {
+      "pid": 118220,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 119480,
+      "name": "python.exe",
+      "ppid": 118220
+    },
+    {
+      "pid": 113856,
+      "name": "python.exe",
+      "ppid": 119480
+    },
+    {
+      "pid": 119468,
+      "name": "python.exe",
+      "ppid": 113856
+    },
+    {
+      "pid": 109196,
+      "name": "python.exe",
+      "ppid": 119792
+    },
+    {
+      "pid": 119792,
+      "name": "python.exe",
+      "ppid": 118748
+    },
+    {
+      "pid": 108440,
+      "name": "python.exe",
+      "ppid": 109196
+    },
+    {
+      "pid": 119304,
+      "name": "python.exe",
+      "ppid": 108440
+    }
+  ],
+  "descendants_terminated": [
+    78516,
+    108440,
+    109196,
+    113856,
+    114916,
+    117940,
+    118176,
+    118220,
+    118748,
+    118888,
+    118912,
+    119132,
+    119304,
+    119468,
+    119480,
+    119552,
+    119560,
+    119576,
+    119792
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 119424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 119732,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c056d-gate-carry/docs/pwml_recovery_sprint/evidence/g11/REV-056d/04-preflight-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+    "repo_head": "7e04a1fb65de4ce5cb02f6e4579bcfb4be223a8c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  }
+}
