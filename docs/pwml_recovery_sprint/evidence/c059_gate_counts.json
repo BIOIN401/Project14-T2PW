@@ -1,61 +1,90 @@
 {
-  "task": "C-059",
-  "branch": "agent/c059-gap-already-covered",
+  "all_sixteen_charted_focused_files_plus_the_new_one_at_the_committed_tip": {
+    "disclosure": "PYTHONPATH=src set in the bounded child for the three F-066 files in this selection",
+    "failures": 0,
+    "files": [
+      "test_rag_admission_adversarial",
+      "test_rag_typed_resolution_integrity",
+      "test_rag_graph_delta",
+      "test_rag_loop_controller",
+      "test_rag_retrieve",
+      "test_rag_seed_entity_reimport",
+      "test_rag_lineage_emission",
+      "test_rag_synthesize",
+      "test_rag_cached_replay",
+      "test_rag_synonym_merge",
+      "test_rag_payload_gate_guardrails",
+      "test_rag_loop_policy",
+      "test_rag_reversible_reaction_preservation",
+      "test_rag_gap_admission",
+      "test_rag_admission_production_path",
+      "test_rag_triage_orchestration",
+      "test_rag_already_covered_gap"
+    ],
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/49-final-focused-at-tip.json",
+    "summary_line_verbatim": "336 passed, 1 skipped in 20.09s"
+  },
   "base_sha": "87dbcca2a3f0608a6550736b9dc60030afc36c9d",
-  "purpose": "literal pytest COUNTS and verbatim summary lines for every gate this card owes -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10)",
-  "tree_note": "worktree carries .env, copied from the primary checkout for F-051 control parity; the PathBank DB is therefore REACHABLE on this tree",
+  "branch": "agent/c059-gap-already-covered",
+  "budgets_measured": {
+    "command": "git diff --numstat 87dbcca2a3f0608a6550736b9dc60030afc36c9d HEAD -- src tests 'docs/pwml_recovery_sprint/evidence/*.py' | sum cols 1+2",
+    "evidence_bytes": {
+      "ceiling": 5242880,
+      "measured": 173399,
+      "measured_mb": 0.17
+    },
+    "generated_artifacts": {
+      "ceiling": 110,
+      "measured": 50
+    },
+    "hand_authored_lines": {
+      "OVER_BY": 525,
+      "breakdown": {
+        "docs/pwml_recovery_sprint/evidence/c059_already_covered_probe.py": 337,
+        "src/t2pw/rag/admission.py": 343,
+        "src/t2pw/rag/synthesize.py": 34,
+        "tests/test_rag_already_covered_gap.py": 905,
+        "tests/test_rag_gap_admission.py": 6
+      },
+      "ceiling": 1100,
+      "measured": 1625,
+      "note": "OVER CEILING -- reported, not absorbed. No adversarial arm was cut and no evidence deleted to fit the number (D-025 / REV-051a). Every line is additive; nothing was deleted anywhere."
+    }
+  },
   "chunk_c": {
     "expected_per_TEST_MATRIX": 109,
-    "measured": 109,
-    "matches_expected": true,
     "failures": 0,
-    "summary_line_verbatim": "109 passed in 5.78s",
+    "final_surviving_count": 0,
     "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/15-chunk-c-109.json",
-    "final_surviving_count": 0
+    "matches_expected": true,
+    "measured": 109,
+    "summary_line_verbatim": "109 passed in 5.78s"
   },
   "chunk_d": {
-    "expected_per_TEST_MATRIX": 187,
     "expected_on_a_dot_env_tree": "185/187, core 159/160",
-    "measured_core": "159/160",
-    "measured_total": "185/187",
-    "matches_expected": true,
-    "partition_proof": "core exit=0 parsed=160 pytest_said=160 expected=160 overlap_with_earlier=0",
-    "run_core_line_verbatim": "[chunk-d] core/run-core [5 files]: passed=159/160, failed=1, exit=1, exit_reason=nonzero",
-    "gate_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
-    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/16-chunkd-outer.json",
-    "final_surviving_count": 0,
+    "expected_per_TEST_MATRIX": 187,
     "failures": [
       {
-        "node": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance",
-        "classification": "PRE-CHARGED, F-065",
         "basis": "its own comment at :1829 asserts 'no worktree carries a .env'; sprint worktrees copy .env in for F-051 control parity, so :1833's assert report['db_resolution']['available'] is False fails on this tree",
+        "classification": "PRE-CHARGED, F-065",
+        "node": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance",
         "not_attributable_to_this_diff": "tests/test_pwml_writer.py contains ZERO t2pw.rag imports, and this card's source diff is confined to src/t2pw/rag/admission.py and src/t2pw/rag/synthesize.py -- a structural exclusion, stronger than a re-run"
       },
       {
-        "node": "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block",
         "classification": "PRE-CHARGED, qb node15 whenever the PathBank DB is reachable (hotspot 9 -- file not touched)",
+        "node": "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block",
         "not_attributable_to_this_diff": "tests/test_streamlit_quarantine_boundary.py contains ZERO t2pw.rag references"
       }
-    ]
-  },
-  "smoke": {
-    "expected_per_COUNT_CORRECTIONS": 465,
-    "measured": 465,
-    "matches_expected": true,
-    "failures": 0,
-    "summary_line_verbatim": "465 passed in 98.82s (0:01:38)",
-    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/14-smoke-465-recheck.json",
+    ],
     "final_surviving_count": 0,
-    "first_run_before_the_pinned_rule_list_was_extended": {
-      "summary_line_verbatim": "2 failed, 463 passed in 82.18s (0:01:22)",
-      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/13-smoke-465.json",
-      "collected_total": 465,
-      "failures": [
-        "tests/test_rag_gap_admission.py::test_the_admission_rules_are_declared_as_data",
-        "tests/test_rag_gap_admission.py::test_the_admission_report_is_bounded_and_counts_what_it_drops"
-      ],
-      "resolution": "Both were direct consequences of appending two entries to ADMISSION_RULES, which the admission report publishes VERBATIM. The rule-name list was extended in the test (additive only; the eleven existing names unchanged in name and order) -- an exact merge-rule-4 delta. The report SIZE bound at test_rag_gap_admission.py:721 was NOT touched: the two new rule texts were shortened instead, from 575 to 344 bytes of published contract, so the serialized report stays inside the existing < 4600 bound. Raising a size bound to fit one's own additions is the pattern that bound exists to catch."
-    }
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/16-chunkd-outer.json",
+    "gate_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "matches_expected": true,
+    "measured_core": "159/160",
+    "measured_total": "185/187",
+    "partition_proof": "core exit=0 parsed=160 pytest_said=160 expected=160 overlap_with_earlier=0",
+    "run_core_line_verbatim": "[chunk-d] core/run-core [5 files]: passed=159/160, failed=1, exit=1, exit_reason=nonzero"
   },
   "focused_chunkless": {
     "files": [
@@ -71,34 +100,60 @@
       "test_rag_reversible_reaction_preservation",
       "test_rag_already_covered_gap"
     ],
-    "summary_line_verbatim": "221 passed, 1 skipped in 25.34s",
-    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/11-focused-nochunk-recheck.json",
     "final_surviving_count": 0,
-    "note": "test_rag_admission_adversarial (54) is NOT Chunk C -- only test_rag_admission_production_path is. Certified stem-exactly, never by filename substring (F-054)."
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/11-focused-nochunk-recheck.json",
+    "note": "test_rag_admission_adversarial (54) is NOT Chunk C -- only test_rag_admission_production_path is. Certified stem-exactly, never by filename substring (F-054).",
+    "summary_line_verbatim": "221 passed, 1 skipped in 25.34s"
   },
   "focused_f066_group": {
-    "files": ["test_rag_graph_delta", "test_rag_loop_controller", "test_rag_loop_policy"],
-    "summary_line_verbatim": "74 passed in 0.90s",
-    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/12-focused-f066-pythonpath.json",
+    "disclosure": "PYTHONPATH=src was set in the bounded child, as F-066 requires. These three files insert no sys.path entry of their own and fail at COLLECTION without it. No conftest.py was created, no sys.path insert was added to any test, nothing was pip-installed.",
+    "files": [
+      "test_rag_graph_delta",
+      "test_rag_loop_controller",
+      "test_rag_loop_policy"
+    ],
     "final_surviving_count": 0,
-    "disclosure": "PYTHONPATH=src was set in the bounded child, as F-066 requires. These three files insert no sys.path entry of their own and fail at COLLECTION without it. No conftest.py was created, no sys.path insert was added to any test, nothing was pip-installed."
-  },
-  "g9_proof": {
-    "method": "F-051 remedy -- the tree, its .env and the test file held CONSTANT; only the two files under test swapped to their base-SHA contents via `git checkout 87dbcca -- src/t2pw/rag/admission.py src/t2pw/rag/synthesize.py`. No second worktree, so no .env asymmetry can exist between the two sides.",
-    "base_summary_line_verbatim": "11 failed, 11 passed in 4.44s",
-    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/06-g9-base-final.json",
-    "tip_summary_line_verbatim": "22 passed in 3.24s",
-    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/07-g9-tip-final.json",
-    "correction_arm_fails_behaviourally_at_base": {
-      "test": "test_correction_the_leg_no_longer_admits_a_reaction_the_paper_already_locked",
-      "base_failure_verbatim": "AssertionError: the seed payload's /processes/reactions/1 already states isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate; re-importing it is what put a second EntB protein row in the export\\nassert 2 == 0",
-      "why_this_is_not_symbol_absence": "the test imports no name this card introduced; it runs to completion at base and fails on the COUNT the committed rag_admission_report.json itself records"
-    }
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/12-focused-f066-pythonpath.json",
+    "summary_line_verbatim": "74 passed in 0.90s"
   },
   "g11": {
-    "artifacts": 48,
+    "artifacts": 49,
+    "checker_line_verbatim": "G11 evidence: 49 artifact(s), 0 non-compliant (spec v1)",
     "non_compliant": 0,
-    "checker_line_verbatim": "G11 evidence: 48 artifact(s), 0 non-compliant (spec v1)",
     "survivors_across_every_job": 0
-  }
+  },
+  "g9_proof": {
+    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/06-g9-base-final.json",
+    "base_summary_line_verbatim": "11 failed, 11 passed in 4.44s",
+    "correction_arm_fails_behaviourally_at_base": {
+      "base_failure_verbatim": "AssertionError: the seed payload's /processes/reactions/1 already states isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate; re-importing it is what put a second EntB protein row in the export\\nassert 2 == 0",
+      "test": "test_correction_the_leg_no_longer_admits_a_reaction_the_paper_already_locked",
+      "why_this_is_not_symbol_absence": "the test imports no name this card introduced; it runs to completion at base and fails on the COUNT the committed rag_admission_report.json itself records"
+    },
+    "method": "F-051 remedy -- the tree, its .env and the test file held CONSTANT; only the two files under test swapped to their base-SHA contents via `git checkout 87dbcca -- src/t2pw/rag/admission.py src/t2pw/rag/synthesize.py`. No second worktree, so no .env asymmetry can exist between the two sides.",
+    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/07-g9-tip-final.json",
+    "tip_summary_line_verbatim": "22 passed in 3.24s"
+  },
+  "purpose": "literal pytest COUNTS and verbatim summary lines for every gate this card owes -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10)",
+  "smoke": {
+    "expected_per_COUNT_CORRECTIONS": 465,
+    "failures": 0,
+    "final_surviving_count": 0,
+    "first_run_before_the_pinned_rule_list_was_extended": {
+      "collected_total": 465,
+      "failures": [
+        "tests/test_rag_gap_admission.py::test_the_admission_rules_are_declared_as_data",
+        "tests/test_rag_gap_admission.py::test_the_admission_report_is_bounded_and_counts_what_it_drops"
+      ],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/13-smoke-465.json",
+      "resolution": "Both were direct consequences of appending two entries to ADMISSION_RULES, which the admission report publishes VERBATIM. The rule-name list was extended in the test (additive only; the eleven existing names unchanged in name and order) -- an exact merge-rule-4 delta. The report SIZE bound at test_rag_gap_admission.py:721 was NOT touched: the two new rule texts were shortened instead, from 575 to 344 bytes of published contract, so the serialized report stays inside the existing < 4600 bound. Raising a size bound to fit one's own additions is the pattern that bound exists to catch.",
+      "summary_line_verbatim": "2 failed, 463 passed in 82.18s (0:01:22)"
+    },
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/14-smoke-465-recheck.json",
+    "matches_expected": true,
+    "measured": 465,
+    "summary_line_verbatim": "465 passed in 98.82s (0:01:38)"
+  },
+  "task": "C-059",
+  "tree_note": "worktree carries .env, copied from the primary checkout for F-051 control parity; the PathBank DB is therefore REACHABLE on this tree"
 }
