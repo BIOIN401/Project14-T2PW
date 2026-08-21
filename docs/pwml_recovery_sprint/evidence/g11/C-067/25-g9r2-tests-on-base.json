@@ -1,0 +1,77 @@
+{
+  "label": "g9r2-tests-on-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/c067tmp/g9b",
+    "tests/test_strict_quarantine.py",
+    "-k",
+    "referenced_only_through_a_synonym or pruner_and_the_detector or true_orphan_is_still_reported or synonym_that_nothing_references or degree_zero_cannot_drive or no_run_reports_ok"
+  ],
+  "cwd": "C:\\t\\c067b",
+  "started_at": "2026-08-21T19:00:28+00:00",
+  "finished_at": "2026-08-21T19:00:31+00:00",
+  "duration_seconds": 2.970358800000213,
+  "timeout_seconds": 300.0,
+  "root_pid": 41300,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 40420,
+      "name": "python.exe",
+      "ppid": 41300
+    }
+  ],
+  "descendants_terminated": [
+    40420
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 40176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41936,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c067b\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-067\\25-g9r2-tests-on-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3b0c6bdfcda1f0106856ae2af7ddf6dc0c1e1952",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

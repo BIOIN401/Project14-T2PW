@@ -1921,15 +1921,36 @@ def _degree_zero_exports(
     silently drops surviving reactions and reports their enzymes as degree-zero.
     ``strict=True``: every accepted record resolves against that snapshot by
     construction, so one that does not makes this answer wrong, not incomplete.
+
+    **A row is resolved through ``_entity_name_norms`` -- name UNION synonyms --
+    exactly as :func:`_prune_entities` resolves it against ``keep_norms`` and
+    :func:`_build_registry` indexes it.** Resolving on the primary name alone
+    made this the only consumer in the module that could not see a synonym
+    reference, and ``referenced | exempt`` here is the same set the closure loop
+    calls ``keep_norms``. So on a converged run every row this saw had already
+    survived a fixpoint prune against the wider test: a row whose primary name
+    was absent from that set had matched under a SYNONYM, was therefore reached
+    by a surviving process, and was reported degree-zero anyway. Two production
+    legs refused export over the identical protein that way. Now the two agree,
+    which makes this empty by construction after convergence -- the residual
+    assertion it is documented as -- and a non-empty answer denotes a real
+    invariant break, still refusing exactly as before.
+
+    **The rule "no protein is exported at degree zero" is not weakened.** It is
+    enforced where it always was, by the pruner, which deletes the row. This only
+    stops a second, narrower name test from contradicting that one.
     """
 
     reference = {**payload, "processes": process_snapshot}
     _surviving_processes(reference, admissions, strict=True)
     referenced = _referenced_entity_norms(reference, admissions)
+    # The MEMBERSHIP test widens to name-union-synonyms; the set still holds the
+    # primary-name norm, because _complex_component_norms matches its complexes
+    # by that key. Widening what is stored would silently stop it matching.
     surviving_complex_norms = {
         _normalize(_row_name(row))
         for row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
-        if isinstance(row, dict) and _normalize(_row_name(row)) in referenced
+        if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
     }
     exempt = _complex_component_norms(payload, surviving_complex_norms)
     out: List[Dict[str, str]] = []
@@ -1939,7 +1960,14 @@ def _degree_zero_exports(
                 continue
             name = _row_name(row)
             norm = _normalize(name)
-            if not norm or norm in referenced or norm in exempt:
+            # An unnamed row is still skipped rather than reported: it cannot be
+            # named in the answer, and _prune_entities has already removed it as
+            # malformed_entity_row. Unchanged, deliberately -- widening the guard
+            # to "has some synonym" would report a row with no name to print.
+            if not norm:
+                continue
+            norms = {candidate for candidate in _entity_name_norms([row]) if candidate}
+            if norms & referenced or norms & exempt:
                 continue
             out.append({"bucket": bucket, "name": name})
     return out
@@ -2078,10 +2106,24 @@ def quarantine_and_close(
 
     for iteration in range(1, int(max_iterations) + 1):
         referenced = _referenced_entity_norms(working, admissions)
+        # F-083. A complex is recognised as surviving through name UNION synonyms,
+        # the same test _prune_entities applies to the complex row itself. Resolving
+        # on the primary name alone made the two disagree and DELETED BIOLOGY: a
+        # complex referenced only under a synonym was kept by the pruner, was not
+        # recognised here, contributed no components to keep_norms, and every
+        # component protein it carries was then pruned as
+        # degree_zero_after_quarantine -- the exact rows requirement 3 exists to
+        # preserve, removed because the complex that carries their edge was named
+        # a second way.
+        #
+        # The MEMBERSHIP test widens; the STORED value stays the primary-name norm,
+        # because _complex_component_norms:1483 keys its lookup on it. Widening what
+        # is stored would break that lookup and trade one silent deletion for
+        # another.
         surviving_complex_norms = {
             _normalize(_row_name(row))
             for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
-            if isinstance(row, dict) and _normalize(_row_name(row)) in referenced
+            if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
         }
         keep_norms = referenced | _complex_component_norms(working, surviving_complex_norms)
 
