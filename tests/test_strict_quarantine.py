@@ -37,6 +37,7 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
     CLOSURE_REPORT_FILENAME,
     CORE_ACCEPTED,
     COVERAGE_REPORT_FILENAME,
+    DEFAULT_MAX_CLOSURE_ITERATIONS,
     QUARANTINE_REPORT_FILENAME,
     QUARANTINED_BROKEN_REFERENCE,
     QUARANTINED_DISCONNECTED,
@@ -46,11 +47,13 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
     REMOVED_ENTITY_REPORT_FILENAME,
     StrictQuarantineInvariantError,
     _degree_zero_exports,
+    _prune_entities,
     _surviving_processes,
     evaluate_core_coverage,
     quarantine_and_close,
     write_quarantine_artifacts,
 )
+from t2pw.pipeline import strict_quarantine as SQ  # noqa: E402
 
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
@@ -1000,3 +1003,226 @@ def test_a_protein_no_admitted_process_reaches_is_still_reported_degree_zero() -
     )
 
     assert [row["name"] for row in found] == ["glutathione synthetase", "SOD1"]
+
+
+# ── 12. The detector resolves names the way everything else does (C-067) ────
+#
+# F-081. ``_prune_entities`` keeps a row when ``_entity_name_norms([row])`` --
+# name UNION synonyms -- meets ``keep_norms``; ``_degree_zero_exports`` used to
+# ask only whether the row's PRIMARY NAME was in ``referenced | exempt``, which
+# is the same set. On a converged run that made the two disagree in exactly one
+# direction: a row the pruner had deliberately kept BECAUSE a synonym matched
+# was then reported as having no connectivity at all. Two production legs
+# refused export over the identical protein that way.
+#
+# The fixtures below are deliberately, obviously synthetic. The seam under test
+# is NAME RESOLUTION, not chemistry, so ``Enzyme X`` / synonym ``ExA`` / ``A -> B``
+# is used rather than a real pathway: it exercises the same code and cannot
+# later be replayed or quoted as a claim about any organism. No accession is
+# minted -- the direct-drive tests never reach an identity check, and the one
+# end-to-end test passes ``strict_db=False``, which short-circuits at
+# ``strict_quarantine.py:697-698`` BEFORE any identity test. (It does not
+# short-circuit ``placeholder_claims_real_identity`` at ``:692``: a fabricated
+# accession would still be caught. There simply is not one.)
+
+
+def _synonym_payload(*, synonyms: bool = True) -> dict:
+    """One accepted reaction whose enzyme slot names the protein's SYNONYM.
+
+    ``synonyms=False`` is the control: the same graph with the synonym gone, so
+    the protein really is unreachable and the pruner must delete it.
+    """
+
+    protein: dict = {"name": "Enzyme X"}
+    if synonyms:
+        protein["synonyms"] = ["ExA"]
+    return {
+        "entities": {
+            "species": [],
+            "subcellular_locations": [],
+            "compounds": [{"name": "A"}, {"name": "B"}],
+            "proteins": [protein],
+            "protein_complexes": [],
+            "nucleic_acids": [],
+        },
+        "biological_states": [],
+        "element_locations": {},
+        "processes": {
+            "reactions": [
+                {
+                    "name": "A to B",
+                    "inputs": ["A"],
+                    "outputs": ["B"],
+                    "enzymes": [{"entity": "ExA"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
+def _closure_keep_norms(payload: dict, admissions: list) -> set:
+    """``keep_norms`` exactly as the closure loop builds it (``:2080-2086``)."""
+
+    referenced = SQ._referenced_entity_norms(payload, admissions)
+    surviving_complex_norms = {
+        SQ._normalize(SQ._row_name(row))
+        for row in SQ._safe_list(SQ._safe_dict(payload.get("entities")).get("protein_complexes"))
+        if isinstance(row, dict) and SQ._normalize(SQ._row_name(row)) in referenced
+    }
+    return referenced | SQ._complex_component_norms(payload, surviving_complex_norms)
+
+
+def _prune_to_fixpoint(payload: dict, admissions: list) -> list:
+    """Run the closure loop's ENTITY leg until it removes nothing. Returns removals.
+
+    These fixtures carry no locations, no biological states and no reaction that
+    revalidation can quarantine, so the entity leg alone reaches the same
+    fixpoint the full loop would. Every step calls the shipped helper.
+    """
+
+    removed: list = []
+    for _ in range(DEFAULT_MAX_CLOSURE_ITERATIONS):
+        step = _prune_entities(payload, _closure_keep_norms(payload, admissions))
+        removed.extend(step)
+        if not step:
+            return removed
+    raise AssertionError("closure did not converge")
+
+
+def test_a_protein_referenced_only_through_a_synonym_is_not_reported_degree_zero() -> None:
+    """The row IS referenced -- ``enzymes[0].entity`` is its synonym.
+
+    Would catch: the detector resolving on ``_normalize(_row_name(row))`` alone,
+    which reports a protein that catalyses a surviving reaction as having no
+    connectivity, and refuses the whole export over it.
+    """
+
+    payload = _synonym_payload()
+    admissions = [_admission(0)]
+
+    assert _prune_to_fixpoint(payload, admissions) == []
+    assert [row["name"] for row in payload["entities"]["proteins"]] == ["Enzyme X"]
+    assert _degree_zero_exports(payload, admissions, process_snapshot=payload["processes"]) == []
+
+
+def test_the_pruner_and_the_detector_cannot_disagree_after_the_closure_fixpoint() -> None:
+    """The invariant the two halves of F-081 are really about.
+
+    Both arms are here so the equality is not vacuous. With the synonym the
+    pruner KEEPS the row and the detector must agree it is referenced; without
+    it the pruner DELETES the row for ``degree_zero_after_quarantine`` and the
+    detector has nothing left to report -- the rule "no protein is exported at
+    degree zero" enforced where it always was.
+    """
+
+    kept = _synonym_payload()
+    orphan = _synonym_payload(synonyms=False)
+    admissions = [_admission(0)]
+
+    assert _prune_to_fixpoint(kept, admissions) == []
+    removed = _prune_to_fixpoint(orphan, admissions)
+
+    assert [(row["name"], row["reason"]) for row in removed] == [
+        ("Enzyme X", "degree_zero_after_quarantine")
+    ]
+    assert orphan["entities"]["proteins"] == []
+    for payload in (kept, orphan):
+        assert (
+            _degree_zero_exports(payload, admissions, process_snapshot=payload["processes"]) == []
+        )
+
+
+def test_the_true_orphan_is_still_reported_before_the_pruner_deletes_it() -> None:
+    """Non-vacuity for the control: the detector itself still fires.
+
+    Would catch: a detector emptied unconditionally rather than taught to
+    resolve synonyms. Run on the UNPRUNED graph, where the orphan is still
+    present, it must name it.
+    """
+
+    orphan = _synonym_payload(synonyms=False)
+
+    found = _degree_zero_exports(
+        orphan, [_admission(0)], process_snapshot=orphan["processes"]
+    )
+
+    assert found == [{"bucket": "proteins", "name": "Enzyme X"}]
+
+
+def test_a_synonym_that_nothing_references_does_not_exempt_the_row() -> None:
+    """Non-vacuity for the NEW resolution path specifically.
+
+    ``Enzyme Y`` carries a synonym, and neither its name nor that synonym is
+    reached by anything. Would catch a fix that skipped every row merely because
+    it HAS synonyms, instead of intersecting them with the reference set.
+    """
+
+    payload = _synonym_payload()
+    payload["entities"]["proteins"].append({"name": "Enzyme Y", "synonyms": ["EyB"]})
+
+    found = _degree_zero_exports(
+        payload, [_admission(0)], process_snapshot=payload["processes"]
+    )
+
+    assert found == [{"bucket": "proteins", "name": "Enzyme Y"}]
+
+
+def test_a_complex_referenced_only_through_a_synonym_exempts_its_components() -> None:
+    """The ``exempt`` construction gets the same treatment as the row loop.
+
+    A component protein has no edge of its own by construction -- the complex
+    carries it -- so whether it is exempt depends on whether the complex is
+    recognised as surviving. Would catch: recognising the complex by primary
+    name only, which reports BOTH the complex and every component it protects.
+    """
+
+    payload = _synonym_payload()
+    payload["entities"]["proteins"].append({"name": "Sub One"})
+    payload["entities"]["protein_complexes"].append(
+        {"name": "Complex C", "synonyms": ["CxC"], "components": ["Sub One"]}
+    )
+    payload["processes"]["reactions"][0]["enzymes"].append({"entity": "CxC"})
+
+    found = _degree_zero_exports(
+        payload, [_admission(0)], process_snapshot=payload["processes"]
+    )
+
+    assert found == []
+
+
+def test_ok_and_the_release_classifier_gate_move_together(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``ok`` and ``strict_gates_passed`` are computed separately from one list.
+
+    ``strict_quarantine.py:2160-2164`` builds ``ok`` and ``:2342-2345`` builds
+    ``strict_gates_passed``; both read the same ``degree_zero`` local, so
+    emptying it at the source moves both. Would catch the alternative repair
+    F-081 rejects -- routing ``degree_zero_export`` into ``review_reasons``,
+    which flips ``ok`` alone and ships a final PWML on a run the classifier
+    still calls ``diagnostic_only`` (PRODUCT_CONTRACT.md:343).
+    """
+
+    from t2pw.pipeline import release_status as RS
+
+    captured: dict = {}
+    shipped = RS.classify_release_status
+
+    def _spy(*args, **kwargs):
+        captured["strict_gates_passed"] = bool(kwargs.get("strict_gates_passed"))
+        return shipped(*args, **kwargs)
+
+    monkeypatch.setattr(RS, "classify_release_status", _spy)
+    result = quarantine_and_close(_synonym_payload(), strict_db=False)
+
+    invariants = result.quarantine_report["strict_invariants"]
+    assert invariants["closure_converged"] is True
+    assert invariants["degree_zero_exports"] == []
+    assert result.refusal_reasons == []
+    assert result.ok is True
+    assert captured["strict_gates_passed"] is True
+    assert result.ok is captured["strict_gates_passed"]
+    assert result.quarantine_report["release"]["status"] != "diagnostic_only"
+    assert [row["name"] for row in result.payload["entities"]["proteins"]] == ["Enzyme X"]

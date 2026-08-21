@@ -1,0 +1,94 @@
+{
+  "arms": {
+    "complex_component_exempt": {
+      "closure_converged": true,
+      "detector_after_prune": [
+        "Complex C"
+      ],
+      "detector_before_prune": [
+        "Complex C",
+        "Sub One"
+      ],
+      "pruner_removed": [
+        {
+          "bucket": "proteins",
+          "name": "Sub One",
+          "reason": "degree_zero_after_quarantine"
+        }
+      ],
+      "surviving_protein_rows": [
+        "Complex C"
+      ]
+    },
+    "control_true_orphan": {
+      "closure_converged": true,
+      "detector_after_prune": [],
+      "detector_before_prune": [
+        "Enzyme X"
+      ],
+      "pruner_removed": [
+        {
+          "bucket": "proteins",
+          "name": "Enzyme X",
+          "reason": "degree_zero_after_quarantine"
+        }
+      ],
+      "surviving_protein_rows": []
+    },
+    "divergence": {
+      "closure_converged": true,
+      "detector_after_prune": [
+        "Enzyme X"
+      ],
+      "detector_before_prune": [
+        "Enzyme X"
+      ],
+      "pruner_removed": [],
+      "surviving_protein_rows": [
+        "Enzyme X"
+      ]
+    },
+    "unreferenced_synonym": {
+      "closure_converged": true,
+      "detector_after_prune": [
+        "Enzyme X"
+      ],
+      "detector_before_prune": [
+        "Enzyme X",
+        "Enzyme Y"
+      ],
+      "pruner_removed": [
+        {
+          "bucket": "proteins",
+          "name": "Enzyme Y",
+          "reason": "degree_zero_after_quarantine"
+        }
+      ],
+      "surviving_protein_rows": [
+        "Enzyme X"
+      ]
+    }
+  },
+  "integration": {
+    "closure_converged": true,
+    "degree_zero_exports": [
+      "Enzyme X"
+    ],
+    "ok": false,
+    "ok_and_gates_agree": true,
+    "refusal_reasons": [
+      "degree_zero_export:1"
+    ],
+    "release_status": "diagnostic_only",
+    "review_reasons": [],
+    "serializable_without_invention": true,
+    "strict_acceptance_eligible": false,
+    "strict_gates_passed": false,
+    "surviving_protein_rows": [
+      "Enzyme X"
+    ]
+  },
+  "label": "base-414368c",
+  "module": "C:/t/c067tmp/basesrc/t2pw/pipeline/strict_quarantine.py",
+  "probe": "c067_degree_zero_probe"
+}
