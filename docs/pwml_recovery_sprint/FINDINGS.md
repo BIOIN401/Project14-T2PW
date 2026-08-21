@@ -3801,3 +3801,35 @@ died, and the card verified zero survivors afterwards.
    staging record alone rather than tidy it. C-071 left it, disclosed it, and separately identified two
    further staging entries as belonging to the orchestrator's concurrent Chunk D run and left those alone
    too — which is exactly the required behaviour.
+
+### F-091 addendum — measured: NOTHING pins the literal text, so the fix is prose-only
+
+Measured by the orchestrator at `7de755c`, because it decides whether this needs a card or can ride
+along with one.
+
+**The only assertion on the constant is by SYMBOL, not by value.**
+`tests/test_semantic_release_gating.py:428` reads `assert reason == SEMANTIC_NO_GATING_CHECK_EVALUABLE`,
+importing the name at `:47`. **Changing the string's value breaks no test.**
+
+The complete family, measured — one ships, three do not:
+
+| site | kind | ships? |
+|---|---|---|
+| `release_status.py:72-75` | the constant's own text, returned as `reason` at `:421` | **YES** |
+| `release_status.py:77` | comment above `SEMANTIC_GATING_CHECKS` | no |
+| `bench/acceptance.py:235` | docstring | no |
+| `tests/test_c056b_semantic_denominators.py:13` | module docstring | no |
+
+**So the whole remedy is four prose edits with no behavioural surface beyond the emitted string, and no
+test pins that string.**
+
+**It is still a patch to production source and will NOT be applied by the orchestrator.** F-088 was fixed
+in place because it was a docstring in an *evidence instrument* that a merge had just falsified.
+`release_status.py` and `acceptance.py` are production. *"Behaviourally inert"* would be a claim about an
+unreviewed edit made by the person making it — which is precisely the failure PACK 11 RULING 4 was written
+about, and applying it unreviewed would be a worse error than the stale string.
+
+**Routing: fold into C-071 as an orchestrator-initiated scope addition after its review returns**, since
+C-071 already owns `release_status.py` for one appended literal and its merge is held on Decision 5 anyway,
+so there is no time pressure. The four sites are named above; the recommended text drops the number rather
+than changing it to five.
