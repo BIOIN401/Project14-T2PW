@@ -3700,3 +3700,104 @@ It is not a defect in C-070's diff and it breaks nothing today. But it has one c
 Either defer the `git ls-files` call out of import scope into the test body, or have the sweep's docstring name this file as a known export-only failure. **The first is better** — the second is a comment that will drift, which is F-087 and F-088 both.
 
 **A sentence in C-070's sweep docstring is the cheap interim.** It should ride along with the next card that owns either file rather than becoming a card of its own.
+
+---
+
+## F-090 — `bounded_run.py`'s descendant enumeration and RULE 5's record cap are in direct conflict for any high-fan-out job
+
+- **Severity** MEDIUM (infrastructure, **live evidence-gate hazard**) · **Registered 2026-08-21**, integration `4c18736`
+- **Surfaced by C-071**, whose base-tree materialisation produced a **149,703-byte** report that could not pass `check`. **The card disclosed the deletion rather than quietly renumbering**, which is the only reason this is visible at all.
+- **Not C-071's defect**, and not fixable by any card that trips over it.
+
+### The mechanism
+
+`docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py:74-77`:
+
+```python
+#: A structured record, never a log dump. 64 KiB is ~40x the size of a real
+MAX_REPORT_BYTES = 65_536
+```
+
+and `:257` — `if size > MAX_REPORT_BYTES:  # RULE 5 (size): a record, not a log dump`.
+
+`bounded_run.py` writes **every observed descendant PID and image name** into its report. For an ordinary pytest job that is a handful of entries. For a job that spawns thousands of short-lived children it is a log dump — which is exactly what RULE 5 exists to exclude, arriving through a field RULE 5 does not police.
+
+`c045b_base_tree.py --rev <sha>` re-hashes every blob in the tree through `git cat-file`, so it spawns roughly **3820** transient processes. The resulting report was 149,703 bytes: **2.3× the cap**, composed almost entirely of dead PIDs.
+
+**The job itself was clean** — exit 0, `FINAL SURVIVING COUNT: 0`, `cleanup: success`, and *"VERIFIED: every exported file re-hashes to its blob sha"*. **A compliant job produced a non-compliant record.**
+
+### Why it cannot be worked around by the card that hits it
+
+Re-running changes nothing: the descendant count is a property of `git cat-file`, not of how the job is invoked. The only options available to an implementer are
+
+1. commit a report that fails `check` — turning the whole-tree gate red for everyone; or
+2. delete it and disclose — spending D-025's contiguity evidence.
+
+C-071 took (2) and said so. **Both are bad, and the choice should not exist.**
+
+### Why this is worth registering rather than absorbing
+
+**Merge rule 11 makes the G11 gate a hard merge condition**, and D-025 reads a contiguous sequence as proof nothing was deleted to fit a budget. This defect forces a gap into that sequence for a legitimate, correctly-run job — **so the very signal used to detect evidence tampering is consumed by a tooling limitation.** The next card that materialises a base tree hits it identically, with no warning in any charter.
+
+### Remedy direction, for whoever owns it — UNOWNED
+
+The narrowest fix is in `bounded_run.py`'s report writer, not in the cap: **cap or summarise the descendant list** — a count plus the first N entries, or a count plus a hash of the full list — rather than serialising every PID. That preserves what the field is for (proving nothing survived, which is a **count** question) while removing the unbounded growth.
+
+**Do not raise `MAX_REPORT_BYTES` instead.** The comment at `:74` is right that a record is not a log dump, and raising the cap treats the symptom while leaving the field unbounded.
+
+### The reusable lesson
+
+**A size cap on a record does not bound a record whose fields are unbounded.** RULE 5 polices the artefact; nothing polices the field that grows with the child's behaviour. **A guard expressed as a limit on the output needs a matching limit on each input that can grow without bound**, or it fails exactly when the job is unusual — which is when its evidence matters most.
+
+---
+
+## F-091 — a serialized constant still tells consumers the semantic gating set is closed at four
+
+- **Severity** LOW, but **it is the only one of its family that ships**, and it becomes wrong the moment C-071 merges · **Registered 2026-08-21**, integration `4c18736` · **UNOWNED**
+- **Reported by C-071, correctly not fixed** — its charter granted `release_status.py` as *"one appended literal. Nothing else in this file."* The card obeyed the boundary and reported the prose it wanted changed, which is what a charter-bounded card is supposed to do.
+
+### The mechanism
+
+`src/t2pw/pipeline/release_status.py:72-75` defines `SEMANTIC_NO_GATING_CHECK_EVALUABLE`, whose text states that the gating set **is closed at four**. C-071 takes `SEMANTIC_GATING_CHECKS` to **five**.
+
+**This one is not a comment.** It is a **serialized constant** — `semantic_verdict` returns it as the `reason` at `release_status.py:420` when no gating check is evaluable, and it reaches artifacts and operator-facing output. So the moment C-071 merges, the pipeline can emit a statement about its own configuration that is false.
+
+### The rest of the family, which are comments and do not ship
+
+* `release_status.py:77` — *"closed at exactly four"*
+* `release_status.py:91` — *"equals the four constants"*
+* `bench/acceptance.py:235` — read-only for C-071
+* `tests/test_c056b_semantic_denominators.py:13` — module docstring
+
+### Remedy
+
+**Drop the number rather than change it to five.** *"…closed at four…"* → *"…closed…"*, with the count derived from `len(SEMANTIC_GATING_CHECKS)` where a count is genuinely needed. A constant that hard-codes the cardinality of a tuple it describes will drift again on the sixth addition, and the test that forces deliberate addition already guarantees a sixth will one day come.
+
+### Why it is registered separately from the comment family
+
+**PACK 11 RULING 4** says rationale prose carries an assertion's evidentiary burden and is worse than a stale assertion because no test goes red when it drifts. **This entry is worse still: it drifts *into an artifact*.** A stale comment misleads a maintainer reading the source; a stale serialized constant misleads a reviewer reading a run's output, who has no reason to suspect the string and no way to check it from the artifact alone.
+
+**It must land with or before C-071's merge, not after.**
+
+### Operational addendum to F-090 — `c045b_base_tree.py` needs ~182 s and will die under a 120 s agent tool clock
+
+Measured by C-071, and worth stating because it cost a reservation before it was understood.
+
+The base-tree export takes **182.48 s** for 3820 blobs. C-071's first attempt was killed at **120 s by its
+own agent tool's wall clock** — `Exit code 143 — Command timed out after 2m 0s` — **not** by
+`bounded_run.py --timeout`. The wrapper therefore never reached its report write and never promoted the
+reservation, leaving an untouched three-key `g11_reserved` stub in `.staging/`.
+
+**Nothing leaked:** the Windows Job Object's `KILL_ON_JOB_CLOSE` terminated the children when the shell
+died, and the card verified zero survivors afterwards.
+
+**Two things follow.**
+
+1. **A charter that asks an agent to materialise a base tree must budget the tool clock, not just
+   `--timeout`.** The wrapper's timeout is irrelevant if the caller's clock is shorter. C-071's second
+   attempt used `--timeout 540` under a 580 s tool clock and completed.
+2. **An abandoned reservation is the CORRECT residue of a killed job, not corruption.** `.staging/` is
+   gitignored (`.gitignore:66`), so it can never reach a commit, and the standing rule is to leave a
+   staging record alone rather than tidy it. C-071 left it, disclosed it, and separately identified two
+   further staging entries as belonging to the orchestrator's concurrent Chunk D run and left those alone
+   too — which is exactly the required behaviour.
