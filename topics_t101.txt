@@ -1,0 +1,30 @@
+# T-101 (M2) live legs -- PENDING product-owner authorization.
+#
+# TEST_MATRIX.md:478 milestone row: "+ PMC12444477 x2, PMC12782028, PMC12312563".
+# The x2 on the first paper means both modes; the other two carry no multiplier.
+#
+# DELIBERATE SUPERSET. scripts/batch_run.py --modes is per-RUN, not per-paper, so
+# three papers x two modes = 6 legs, not the 4 the row reads literally. A superset
+# satisfies the acceptance criteria in one invocation instead of two, and the two
+# extra research legs cost roughly 46 min at free-tier rates. Recorded here so the
+# run record can cite the choice rather than have it inferred.
+#
+# Scope is MANDATORY. A bare id stages a scopeless, invalid run
+# (runs/INVALID-scopeless-2026-08-01_1724).
+#
+# PMC12444477 and PMC12782028 scopes are verbatim from topics_regression_research.txt
+# / topics_verify_subset.txt and topics_flip_strict.txt respectively.
+#
+# PMC12312563 scope was RECOVERED, not copied: it is recorded in no topics file, and
+# topics_verify_subset.txt:13 lists the id as a Stage-0 scope abort, which is what
+# happens scopeless. The scope below comes from the one successful slugged run,
+# runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/00_PAPER.txt,
+# whose strict leg is in GOLDEN.
+#
+# Acceptance (TEST_MATRIX.md:478): no leg reports "produced nothing";
+# identical_empty_response recorded where two draws share a hash;
+# budget_exhausted distinct from failure. The third clause is F-070, closed by
+# C-064 (merged d0b5d51), so it is assessable.
+PMC12444477 | lipid A biosynthesis | Escherichia coli
+PMC12782028 | cholesterol biosynthesis | Homo sapiens
+PMC12312563 | menaquinone biosynthesis | Bacillus subtilis

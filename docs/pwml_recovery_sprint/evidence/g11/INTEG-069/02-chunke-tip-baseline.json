@@ -1,0 +1,112 @@
+{
+  "label": "chunke-tip-baseline",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/INTEG-069/02-chunke-tip-baseline.pin.json",
+    "-q",
+    "--basetemp=C:/t/integ/e1",
+    "tests/test_strict_quarantine_real_artifact_replay.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-21T19:51:43+00:00",
+  "finished_at": "2026-08-21T19:53:41+00:00",
+  "duration_seconds": 117.64835809999931,
+  "timeout_seconds": 420.0,
+  "root_pid": 70536,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 70516,
+      "name": "python.exe",
+      "ppid": 70536
+    }
+  ],
+  "descendants_terminated": [
+    70516
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65872,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68888,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 70284,
+      "name": "python.exe"
+    },
+    {
+      "pid": 70436,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\INTEG-069\\02-chunke-tip-baseline.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "integ-chunke-tip",
+    "token": "integ-chunke-tip:69980:9edf64749a012eaf",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

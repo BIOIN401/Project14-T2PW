@@ -1,0 +1,34 @@
+# T-103 (M4) live RAG legs -- PENDING product-owner authorization.
+#
+# Acceptance (TEST_MATRIX.md:480): every RAG round re-entered normalization,
+# mapping, gates, persistence, classification. Structural, not a release
+# classification -- T-103 is NOT blocked by F-062.
+#
+# Two papers x two modes = 4 legs, roughly 1.5 h.
+#
+# ROUND MULTIPLIER IS 1x, resolved from source, not assumed:
+#   streamlit_app.py:1273  rounds_allowed = int(max_rounds) if max_rounds is not None
+#                          else rag_loop_max_rounds()
+#   streamlit_app.py:912-920  rag_loop_max_rounds() reads RAG_LOOP_MAX_ROUNDS,
+#                          int(raw) if raw else 1, ValueError -> 1, max(1, value)
+#   RAG_LOOP_MAX_ROUNDS is unset in .env.
+# So production max_rounds = 1 and the cost is the same shape as T-100.
+#
+# TWO SETTINGS THAT ARE NOT DEFAULTS -- both belong in the bounded child env:
+#   T2PW_SPECIES_LLM=0     MANDATORY. PACK 9 RULING 3. Mapping must still run.
+#                          T-104 must NOT inherit this.
+#   T2PW_OFFLINE_CURATOR=1 RECOMMENDED. Disables only the pathway-curator LLM
+#                          call, not RAG retrieval or synthesis, so the loop and
+#                          its five stages still run and the acceptance property
+#                          stays observable. It does make artifacts not directly
+#                          comparable to T-100, which T-103 acceptance does not
+#                          require. Flag the choice in the run record.
+#
+# STANDING RISK, PACK 9 RULING 4: C-055 tightened a previously unconditional gate
+# (validate_graph_delta). A T-103 leg merging fewer additions than a pre-C-055 leg
+# is NOT a regression. Do not score it as one.
+#
+# Scope is MANDATORY and both are verbatim from topics_verify_subset.txt, so the
+# paper scoping matches every earlier committed leg for these two ids.
+PMC12452463 | enterobactin biosynthesis | Escherichia coli
+PMC12096016 | enterobactin biosynthesis | Escherichia coli

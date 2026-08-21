@@ -1590,3 +1590,195 @@ transport is **dead in bytes** and dead parsed. **Only running both checks disti
 **Standing rule, extended:** for any security-adjacent pattern, assert the regression arm in both directions
 **and** inspect both the committed bytes and the parsed runtime value. **Two instances of one failure class
 in one afternoon, from two different directions, is not bad luck — it is the shape of the hazard.**
+
+---
+
+# PACK 11 — the post-PACK-10 wave (2026-08-21)
+
+Opened at integration `e616846de75e2098e3fb76592665955b3cfe3bbc`. Takeover verified once:
+branch, local = `origin` = `git ls-remote`, no merge in progress, empty index, G11 **3,096
+artifacts / 0 non-compliant / exit 0**, **zero sprint-owned Python processes** (only the two
+protected `ms-python.isort` LSP servers), `C:\t\heavylock` absent, and all seven protected
+scratch modifications plus the four untracked `topics_*.txt` intact.
+
+## Integration baselines re-measured at tip — not copied from the register
+
+All three through `bounded_run.py`, all `FINAL SURVIVING COUNT: 0` / `cleanup: success`,
+heavy mutex acquired and released by the wrapper.
+
+| gate | result at `e616846` | verdict |
+|---|---|---|
+| SMOKE | exit 0, 53.43 s (`INTEG-069/01`) | green |
+| Chunk E | **174 passed** in 116.93 s (`INTEG-069/02`) | matches the pin exactly |
+| Chunk D (full split-process gate) | **core 159/160**, **node15 failed**, `jobs=28`, `additions=0` (`INTEG-069/03`, nodes under `INTEG-070`) | matches the documented `.env`-conditional baseline **exactly** |
+
+**Chunk D is the one worth stating carefully.** The primary checkout carries `.env`, so the
+conditional baseline applies: core 159/160 (one `.env`-conditional red) plus `qb` node15
+(pre-charged whenever PathBank is reachable). **Both failures are documented and expected;
+neither is new.** The gate observed **173 descendants and terminated 173, surviving 0** — the
+wrapper doing exactly the job G11 exists for.
+
+## Findings registered this session
+
+| id | severity | status |
+|---|---|---|
+| **F-084** | LOW | **NOT a defect — mechanism disproved offline.** Registered *and closed in the same entry* so it is not re-investigated. No live request made; none required. Carries a real but **unreachable** latent sub-finding, and the reason it is unreachable is a property of `openai`'s internals, not of anything this repo controls. |
+| **F-085** | MEDIUM | **F-080 names the wrong SHA for C-010.** `9e06360` is its **base**; the merge is **`72ee20f`**. Caught **before** ratification — `DECISIONS.md` is append-only, so the circulated wording would have made a false fact permanent. |
+| **F-086** | MEDIUM | The batch preflight's own detector discards submodule names, hiding a **third** undeclared module. **Assigned to C-069**, ceiling raised 400 → 650. Does not consume that card's correction rounds. |
+| **F-087** | LOW | `runner.py:1341`'s stated measurement went stale. Found by C-069, correctly reported rather than fixed. No card of its own. |
+
+## PACK 11 RULING 1 — a SHA lifted from a wide Markdown table must name its column
+
+This is the sibling of PACK 10 RULING 1 (*"a control-plane grep restricted to `*.md` does not
+search the control plane"*), and it cost less only because it was caught in time.
+
+The LEDGER's card rows carry **two** SHA columns — `Base SHA` and `Merge SHA` — five columns
+apart, on rows thousands of characters wide. F-080 quoted *"`MERGED` at `9e06360`"* from row
+C-010 and took the **base** for the **merge**. The takeover brief inherited it, and the
+proposed ratification text carried it to the threshold of a LOCKED, append-only entry.
+
+**The standing guard, and it is one line:** before citing any sprint SHA, run
+`git log -1 --format="%s" <sha>` and confirm the subject names the card you think it does.
+
+**The correction strengthened the underlying reading rather than weakening it.** F-080's
+load-bearing claim was that no competing candidate exists for *"the index fix"*. That was
+argued from prose; it is now **measured** — `git log --oneline --all --merges | grep -i index`
+returns **exactly one commit in the entire repository**, and it is C-010's merge.
+
+## PACK 11 RULING 2 — RULING 13's non-vacuity duty extends to a guard's INPUT derivation
+
+F-086's mechanism is that `_deferred_imports` loses a submodule name **before** `_covered` is
+ever called, so `_covered` is asked about the parent package and answers correctly — about the
+wrong thing.
+
+RULING 13 requires a mutation harness to prove it can fail. C-069's charter applied that to
+the **assertion** (*"neutralize `_deferred_imports` so it returns nothing"*), and the card
+delivered it: at base the neutralized guard passed vacuously, at tip it fails with a distinct
+message. **But a guard that finds nothing and a guard that asks the wrong question are
+different failure modes, and only the first was covered.**
+
+**The sharpened rule:** when a guard derives its own input, the derivation needs its own
+non-vacuity arm. *"I found no problem"* and *"I looked in the wrong place"* are
+indistinguishable from every level above, and the second is worse because it survives review.
+
+## F-062 — DISPOSITIONED, no card required
+
+Re-measured at tip. The four-way classification the disposition was asked for:
+
+* **defect corrected** — no. The routing seam at `strict_quarantine.py:2273-2275` is
+  **byte-identical**: `structural_reasons` is still appended to `refusal_reasons`
+  unconditionally, regardless of `defensible_core`. F-062 read the mechanism correctly and
+  still does.
+* **original trigger removed** — **YES**, and this is the operative one. C-067 (`bb6bb6d`)
+  made `_degree_zero_exports` resolve through `_entity_name_norms` (`:1905, 1925, 1953,
+  1969`), so on a converged run `degree_zero_export` is empty by construction.
+* **proposed remedy superseded** — **YES**, by F-081, on evidence: routing would have shipped
+  a review instruction to delete a **connected** enzyme, and because `classify_release_status`
+  encodes the same refusal independently, flipping `ok` alone yields `ok: true` with
+  `status: diagnostic_only` — shipping a final PWML on a `diagnostic_only` run, breaching
+  `PRODUCT_CONTRACT.md:343`.
+* **different residual seam still present** — **YES, but adjudicated correct.** The
+  unconditional append survives and is the **right** behaviour for the four remaining
+  structural reasons, each ruled `keep_refusing` for its own stated reason.
+
+**So F-062 requires no code card.** Writing one now would re-open a seam an independent
+biological adjudication ruled should not move.
+
+**The honest limit, and it is why this is a milestone rather than a card:** whether the two
+T-100 legs now actually reach `review_required` **cannot be established offline**. The
+quarantine input payload is not persisted (instrumentation gap 1 of 3, `FINDINGS.md:1580`,
+UNOWNED) — `admitted_payload_hash` is `sha256:b22521ec9dfc4088` while the committed
+`final_mapped.json` gives `sha256:7e22a4662dbe2f61` and `merged_payload.json` gives
+`sha256:a88b67690be2da81`, so **neither committed file is the payload quarantine judged.**
+The confirming measurement is **T-104**, which is the right home for it.
+
+**Residual risk, stated rather than assumed away:** F-081 holds its own core claim at MEDIUM,
+not HIGH, and names what would overturn it — *"If the flagged row's synonym set is disjoint
+from `keep_norms`, the theorem is wrong and there is a third divergence not yet found."*
+**T-104 triage must carry that possibility explicitly in scope.**
+
+## F-077 — REASSESSED, classification holds, accepted as deliberate residual
+
+Verified against current source rather than re-read from the record:
+
+* `schema_version` is **still 6** (`strict_quarantine.py:2481`). No card bumped it, so the
+  report-schema decision F-077 is blocked on remains unmade.
+* All three closure prunes still exist — `_prune_entities` (`:1493`), `_prune_locations`
+  (`:1548`), `_prune_biological_states` (`:1618`) — and `_revalidate_surviving_processes`
+  (`:1656`). *(Line numbers moved from the F-077 record by C-067's insertions; the functions
+  are the same.)*
+* The house-rule comment survives at `:1133`.
+* Both scopes remain pinned by `tests/test_strict_quarantine_lineage.py` (19 tests).
+* `PRODUCT_CONTRACT.md:85-102` §3 still binds *"the final pathway"*, verbatim.
+
+**A row deleted by a closure prune is not in the final pathway, so §3 does not bind it.**
+F-077 remains LOW, deliberate, pinned, and **not a contract violation today**.
+
+**Recorded as accepted deliberate residual behaviour. No card required, and none was
+manufactured to make the queue look empty.**
+
+## Correction to `LEDGER.md:231` — the C-056c row is FALSE
+
+That row reads **`DEPENDENCY-READY`, NOT STARTED**. **C-056c is MERGED.** `61d5473` (merge,
+*"Merge C-056c (agent/c056c-semantic-evaluability): evaluability travels beside the …"*) and
+`f6c8404` (impl) are both ancestors of `HEAD`, and the F-053 carrier is live in source at
+`release_status.py:251-272`, `:302-310`, `:373-380`, `:401-417` and
+`strict_quarantine.py:2378-2390`.
+
+**This matters because a charter written from the ledger would conclude the carrier does not
+exist.** The row is corrected here rather than rewritten in place: it is a 14-column table row
+several thousand characters wide, and editing it in place is how the *next* transcription
+error gets introduced.
+
+## F-053 — remains UNDISCHARGED, and F-079 is fresh evidence it should stay
+
+Verified rather than assumed: `DECISIONS.md` ends at D-055, and **no entry after D-054 lifts
+the prohibition**. D-054 §7 (`:3179-3184`) says in terms that C-056c *"makes the shortfall
+visible; it never closes it"* and that lifting it is a separate product decision. So the bar
+at `DECISIONS.md:2939-2941` still stands.
+
+**F-079 is the first observed instance of the harm F-053 was written to prevent.** A `passed`
+verdict has now been measured on a payload carrying a fabricated actor — and
+`strict_acceptance_eligible` came back **`True`**, which is precisely a denominator-entry
+authorisation. Had any card been chartered to build a rate on `passed`, this leg would have
+entered a strict-benchmark numerator carrying a reaction the paper does not state.
+
+**Re-measured, not copied from D-054 §5:** `ReleaseStatus.semantic_confirmed`
+(`release_status.py:285-288`) still has **zero `src/` consumers** — every live `src/` predicate
+on `semantic_evaluation` is either subtractive (`bench/acceptance.py:256`,
+`release_status.py:522, 541`) or a three-way membership validation (`batch/driver.py:1803`).
+
+**No question is being put to the product owner about F-053.** It stays in force.
+
+## C-071 chartered — F-079
+
+`prompts/C-071.md`, branch `agent/c071-actor-span-gate`, ceiling 700/140/1 MB.
+
+The narrowest verified boundary is **three files**: a new `CHECK_*` constant and one
+`CHECK_ORDER` entry in `bench/semantic.py`; one new `_check_*` function plus two lines in
+`bench/semantic_production.py`; and **one appended literal** in
+`release_status.py :: SEMANTIC_GATING_CHECKS`. **It is deliberately NOT combined with F-078** —
+different package, different stage, zero file overlap.
+
+**The engineering choice was taken by the orchestrator rather than left open**: the new check
+is *an actor whose entity name does not appear in the span it cites as its own evidence*. Of
+the three candidate defects on that leg it is the only one that is string-decidable, offline,
+deterministic **and** generalises — it is exactly the F-058 fabricated-transporter class.
+A hard constraint makes this non-negotiable: `tests/test_semantic_production_no_gold.py:20,186`
+pins that `openai`, `requests`, `httpx`, `socket`, `ssl`, `sqlite3` and two others are **not
+importable** from `semantic_production`.
+
+**The card respects F-053 by construction.** It may not read `passed` affirmatively; it must
+make the defect produce `SEMANTIC_FAILED` through a gating check and let the existing
+subtractive cap at `release_status.py:541` do the demotion.
+
+**⚠ It moves a pinned baseline by construction, and its merge is expected to be HELD.**
+`tests/test_semantic_release_gating.py:192-223` asserts the gating set is *"closed at exactly
+four"* with the stated purpose *"adding a fifth gate silently is impossible."* That test is
+doing its job and this card is the deliberate act it was built to force —
+`SEMANTIC_GATING_CHECKS` **4 → 5**. Under the D-044 / D-052 §1 standing rule the disclosure is
+the card's obligation and **the ratification is the product owner's**. The card implements
+fully regardless, so a one-line answer unblocks the merge rather than starting the work.
+
+**Ten of twelve consuming test files are in no chunk** — the F-054 hazard live — so the
+charter enumerates the focused set explicitly instead of naming a gate.

@@ -2686,6 +2686,44 @@ Observed on **one** committed leg. **Not measured against current source** — t
 from the 2026-08-18 T-100 run. Whether the current pipeline still emits it is unmeasured, and a card must
 establish that before treating it as live. Registered, not fixed, unowned.
 
+> **⚠ SUPERSEDED 2026-08-21, integration `e616846`. Measured — and the finding SPLITS INTO TWO HALVES with
+> different statuses. The paragraph above is left standing because it was true when written.**
+>
+> **Half A — the chemistry. NOT A CODE PREDICATE, and no card can own it today.** The row
+> (`out: ['2,3-dihydroxybenzoyl-AMP', 'AMP']`) is Stage-1 **LLM extraction output**. No deterministic
+> function in `src/` produced it, so there is no `file:line` predicate to cite and no offline proof that
+> today's pipeline still emits it. Owning this half requires an **authorised LLM leg**, which is a separate
+> authorization, not a card.
+> *The chemistry claim itself is CONFIRMED* against the committed paper text
+> (`runs_verify/2026-08-18_1328/papers/PMC12096016/01_source_text.txt`, 43,667 chars): `AMP` occurs
+> **exactly once**, inside the enzyme name *"EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71)"*, and
+> `pyrophosphate` occurs once as **thiamine** pyrophosphate in an assay buffer — unrelated. `PPi`: zero.
+> So *"the correct co-product is absent"* is verified, with the added precision that the single
+> `pyrophosphate` hit is not the EntE product. **Note `00_PAPER.txt` in that directory is a 709-char stub;
+> `01_source_text.txt` is the real text.**
+>
+> **Half B — the provenance claim. STILL REPRODUCES, deterministically and offline.** Feeding the historical
+> `AMP` row through today's `_paper_entry` returns `stage=paper_extraction`, `origin=paper_stated`,
+> `paper_explicit=explicit`, `review_required=False` — byte-identical to the committed
+> `provenance_lineage[0]`. The predicate is `stage_one_boundary.py:311-315` with
+> `_PROVENANCE_NOT_READ = ("inferred", "enriched")` (`:212`) and
+> `_MARKS_NOT_READ = ("inference", "rag_provenance")` (`:217`): **any row the extraction did not self-mark is
+> stamped `explicit` with no review flag, and the seam has no paper text with which to check.** Its own
+> docstring concedes this (`:168-171`): *"this seam receives a payload, not the paper it was drawn from."*
+>
+> **Half B is BLOCKED ON A PRODUCT DECISION and is deliberately not chartered.** `settle_stage_one`
+> (`:411-418`) takes no source-text parameter and its only production call site is
+> `src/t2pw/app/streamlit_app.py:5476` — the file carrying the protected uncommitted product-owner edit. So
+> the only in-boundary change is to what the seam **claims**, not to what it **checks**, and choosing
+> between two claims with no new evidence is policy, not engineering. The question put to the product owner
+> is whether `PRODUCT_CONTRACT.md:85-102` §3's *"whether it was paper-explicit"* must be **verified** or
+> merely **recorded**. Ownership, G9 posture and the one pinned test that moves
+> (`tests/test_stage_one_boundary_lineage.py:246-256`) are all measured and ready if the answer is
+> "verified".
+>
+> **All fourteen consuming test files for this seam are outside the chunk table.** No chunk and no SMOKE
+> covers them; a charter must enumerate them explicitly.
+
 ## F-079 — a payload asserting a reaction that does not occur was classified `release_ready` with `semantic_evaluation: passed`
 
 - **Severity** **HIGH** · `product_contract_violation` (§13, `PRODUCT_CONTRACT.md:343`) · **Registered
@@ -2751,6 +2789,18 @@ reason to lift F-053. It is a reason to keep it.**
 Observed on **one** committed leg, and it is **historical output**, not current-pipeline evidence. Whether
 today's classifier still passes this payload is **unmeasured**. A card must establish that first —
 re-measuring under current source is the first obligation, not the fix. Registered, not fixed, unowned.
+
+> **⚠ SUPERSEDED 2026-08-21, integration `e616846`. The obligation above is DISCHARGED — it was measured,
+> and the finding STILL REPRODUCES IN FULL.** Feeding the committed `final_mapped.json` through today's
+> `evaluate_production_semantics` → `semantic_verdict` → `classify_release_status`, with the request derived
+> as the pipeline does (`pathway_context_from_stage_zero` over the committed `manifest.jsonl`
+> `observed_context`), returns `evaluation=passed`, `status='release_ready'`,
+> `strict_acceptance_eligible=True`, `semantic_failed_checks=[]` — **byte-identical to the four committed
+> fields** in `runs_verify/2026-08-18_1328/papers/PMC12096016/research/quarantine_report.json` → `release`.
+> No PACK 10 card touched the predicate: `git log 931c065..HEAD -- src/t2pw/bench/semantic_production.py
+> src/t2pw/bench/semantic.py src/t2pw/pipeline/release_status.py` is **empty**.
+> **Owned by C-071** (`prompts/C-071.md`), which is chartered against this measurement. The paragraph above
+> is left standing because it was true when written; it is corrected, not deleted.
 
 ## F-080 — "after the index fix" HAS an antecedent; three sessions missed it because every search was restricted to `*.md`
 
@@ -3220,3 +3270,325 @@ observed.
 **F-081's mechanism confidence is raised from MEDIUM to HIGH on this leg.** The remaining gap is narrow and
 named. **A separate observation worth its own attention:** the enrichment cache holds no entry for an
 accession two committed legs map to, so the cache does not cover the accessions those runs actually used.
+
+## F-084 — the `httpx` / `httpx2` cross-stack timeout hypothesis, INVESTIGATED AND DISPROVED offline
+
+- **Severity** LOW · **NOT a defect** · **Registered and closed in the same entry**, 2026-08-21, integration `e616846`
+- **Registered so it is not re-investigated.** C-066 raised the possibility as an aside
+  (`prompts/C-066.md:29-45`) and it was carried forward as a candidate. It was never a
+  registered finding: `grep -rn "F-084" docs/ src/ tests/` — searched `.md`, `.py` and `.txt`
+  alike, not `*.md`-only — returned **zero hits** before this entry.
+- **No live external request was made, and none is required.** The type boundary was proven
+  offline end to end, through `httpx2.MockTransport`, zero sockets.
+
+### The hypothesis
+
+*"OpenAI 3.x may ignore or reject a `httpx.Timeout` object constructed from a different HTTPX
+stack."* **False for this codebase.**
+
+### The type boundary is real — verified
+
+Both stacks are installed: `httpx` 0.28.1 and `httpx2` 2.12.0 (with `httpcore` 1.0.9 and
+`httpcore2` 2.12.0), alongside `openai` 3.3.1. They are **different class objects**:
+
+```
+httpx.Timeout  = <class 'httpx.Timeout'>   __module__='httpx'
+httpx2.Timeout = <class 'openai.Timeout'>  __module__='openai'
+same class object?                           = False
+isinstance(httpx.Timeout(1), httpx2.Timeout) = False
+openai._types.Timeout is httpx2.Timeout      = True
+```
+
+Both MROs are `['Timeout', 'object']` — no shared base. `openai` imports `httpx2` in 12
+modules (`openai/_types.py:36`) and `httpx` in **zero**. `t2pw` constructs the legacy one:
+`src/t2pw/llm/client.py:55-59` `return httpx.Timeout(seconds, connect=CONNECT_TIMEOUT_SECONDS)`,
+handed to the SDK at `:87` and `:101`.
+
+### Why it is nonetheless correct — `openai` ships an explicit shim
+
+`.venv/Lib/site-packages/openai/_httpx2.py:65-69`:
+
+```python
+def normalize_httpx_timeout(value: float | httpx2.Timeout | None) -> float | httpx2.Timeout | None:
+    module = _loaded_legacy_httpx()          # sys.modules.get("httpx")
+    if module is not None and isinstance(value, module.Timeout):
+        return httpx2.Timeout(**value.as_dict())
+    return value
+```
+
+invoked on every request build at `openai/_base_client.py:610-621`. Its `sys.modules["httpx"]`
+lookup **cannot fail on this path**: an `httpx.Timeout` cannot be constructed without `httpx`
+already being in `sys.modules`.
+
+**Measured through the real SDK call path, mocked transport, no network:**
+
+```
+BaseClient.timeout stored     = Timeout(connect=5.0, read=300.0, write=300.0, pool=300.0)
+request.extensions['timeout'] = {'connect': 5.0, 'read': 300.0, 'write': 300.0, 'pool': 300.0}
+mocked chat.completions.create -> succeeded; all floats: True
+streaming request              -> {'connect': 5.0, 'read': 300.0, 'write': 300.0, 'pool': 300.0}
+with_options(timeout=httpx.Timeout(30, connect=5)) -> read/write/pool 30.0, connect 5.0
+```
+
+**Exactly what `client.py:55-59` intends: 300 s overall, connect pinned at 5 s.** Neither
+ignored nor rejected. No `TypeError`, no `APITimeoutError`, no silent fallback.
+
+### ⚠ The latent sub-finding — real corruption, currently unreachable
+
+`openai/_base_client.py:955-958` hands the **raw** legacy object to the inner client (the
+`:928` normalisation is inside the `if not is_given(timeout)` branch and does not apply):
+
+```python
+self._client = http_client or SyncHttpxClientWrapper(base_url=base_url, timeout=cast(Timeout, timeout))
+```
+
+`_DefaultHttpxClient.__init__` (`:872-877`) only `setdefault`s, so no conversion happens;
+`httpx2/_client.py:203` `self._timeout = Timeout(timeout)` then falls to
+`httpx2/_config.py:132-138`'s scalar branch and assigns the whole legacy object to all four
+fields:
+
+```
+client._client.timeout.as_dict() = {'connect': Timeout(connect=5.0, read=300.0, ...), 'read': <same>, ...}
+1.0 + client._client.timeout.connect  ->  TypeError: unsupported operand type(s) for +: 'float' and 'Timeout'
+```
+
+**Unreachable on every path this product takes**, for three independently measured reasons:
+
+1. `openai/_base_client.py:621` always passes an explicit `timeout=` to `build_request`, so
+   `httpx2/_client.py:357-359`'s `isinstance(timeout, UseClientDefault)` fallback never fires.
+2. `httpx2/_client.py:560-563` `_set_timeout` is guarded by `if "timeout" not in request.extensions`
+   — already set by (1). Redirects preserve it (`httpx2/_client.py:469` copies `extensions`).
+3. `openai` reads the inner client's `.timeout` only at `_base_client.py:928` and `:1553`,
+   both guarded `if http_client` — and `grep -rn "build_request|\.send\(|with_options" src/ --include=*.py`
+   returns **zero hits**; `src/t2pw/llm/client.py` never passes `http_client=`.
+
+Demonstrated directly: driving the raw inner client (`client._client.request(...)`, a path the
+repo never takes) **does** hand the transport the corrupted objects; the SDK path never does.
+
+### Disposition
+
+**NOT a `product_contract_violation`. No card. No code change today.**
+
+**The standing risk, stated so it is not forgotten:** the safeguard is a property of `openai`'s
+internals, not of anything this repo controls. **An `openai` upgrade could expose it.** If a
+card ever does want it closed, the one-line boundary is `src/t2pw/llm/client.py:55-59` —
+return an `httpx2.Timeout` when `httpx2` is importable — but that would also require
+revisiting C-066's `requirements.txt` declaration, so it is not free.
+
+---
+
+
+## F-085 — F-080 names the wrong SHA for C-010: `9e06360` is its BASE, and the LEDGER's Merge SHA column says `72ee20f`
+
+- **Severity** MEDIUM (control-plane, **blocks a correct ratification**) · **Registered 2026-08-21**, integration `e616846`
+- **Does NOT overturn F-080's reading.** F-080 concluded that *"the index fix"* at
+  `PRODUCT_CONTRACT.md:341` means C-010, and that conclusion survives intact. **Only the
+  commit identifier attached to it is wrong.** The measurement below in fact *strengthens*
+  F-080's central claim.
+- **Caught before ratification, which is the whole point.** `DECISIONS.md` is append-only.
+  Had the product owner ratified the wording as circulated, a false fact would have been
+  written permanently into a LOCKED entry, and every downstream citation of C-010 would have
+  inherited it.
+
+### The error
+
+F-080 records, under "The antecedent":
+
+> *"`LEDGER.md:114` — **C-010 = "p01 stale positional index"**, `MERGED` at **`9e06360`**,
+> branch `agent/p01-stale-index` …"*
+
+`LEDGER.md:112` is the header row, and its columns run:
+
+```
+| ID | Task | Status | Deps | Base SHA | Branch | Worktree | Ownership boundary |
+  Reviewer | Focused | Integration | Merge SHA | Bench delta | Blockers |
+```
+
+On the C-010 row, `9e06360` sits in **Base SHA**. The **Merge SHA** cell reads **`72ee20f`**.
+**The finding read the wrong column.**
+
+### Verified by execution, four independent ways
+
+```
+$ git log -1 --format="%h %s" 72ee20f
+72ee20f Merge C-010 (agent/p01-stale-index): degree zero answered against the pre-prune snapshot
+
+$ git log -1 --format="%h %s" 9e06360
+9e06360 Merge C-012 (agent/p00b-driver-seam): driver.py _drive terminal-path seam
+
+$ git merge-base --is-ancestor 9e06360 72ee20f && echo ANCESTOR
+ANCESTOR
+```
+
+and the content check, which is the decisive one:
+
+| commit | source files touched |
+|---|---|
+| **`72ee20f`** | `src/t2pw/pipeline/strict_quarantine.py`, `tests/test_strict_quarantine.py`, `tests/test_strict_quarantine_real_artifact_replay.py`, `docs/change_log.md` — **exactly C-010's declared ownership boundary at `LEDGER.md:114`** |
+| `9e06360` | `src/t2pw/batch/driver.py`, `tests/test_batch_driver_seam_golden.py`, and `evidence/g11/**C-012**/*` reports |
+
+`9e06360` writes C-012's own G11 evidence directory. It is C-012's merge, and it is C-010's
+base because C-010 was cut from the integration tip that C-012's merge produced. **The two
+facts are consistent; the finding simply took one for the other.**
+
+### Why this strengthens F-080 rather than weakening it
+
+F-080's load-bearing claim is that **no competing candidate exists** for *"the index fix"*.
+That was argued from the prose. It can now be **measured**:
+
+```
+$ git log --oneline --all --merges | grep -i index
+72ee20f Merge C-010 (agent/p01-stale-index): degree zero answered against the pre-prune snapshot
+```
+
+**One commit in the entire repository, across all branches, whose merge subject contains
+"index" — and it is C-010.** F-080's reading is better supported after this correction than
+before it.
+
+### The corrected ratification wording
+
+> *"After the index fix" in `PRODUCT_CONTRACT.md:341` refers to C-010, merged as `72ee20f`.*
+
+### The reusable lesson, and it is the sibling of PACK 10 RULING 1
+
+PACK 10 RULING 1 was *"a control-plane grep restricted to `*.md` does not search the control
+plane."* This is its sibling:
+
+**A citation lifted from a 14-column Markdown table must name the column it came from.** The
+LEDGER's card rows carry **two** SHA columns — `Base SHA` and `Merge SHA` — five columns
+apart, on rows thousands of characters wide. Quoting *"`MERGED` at `<sha>`"* without naming
+the column is how a base becomes a merge.
+
+**Cheap standing guard, and it would have caught this in one command:** before citing any
+sprint SHA, run `git log -1 --format="%s" <sha>` and confirm the subject names the card you
+think it does. It costs one line and it is decisive.
+
+---
+## F-086 — the batch preflight's own detector discards submodule names, hiding a third undeclared module from the guard that exists to find them
+
+- **Severity** MEDIUM · **Registered 2026-08-21**, integration `e616846`
+- **Found by the orchestrator** while independently verifying C-069's predicate rather than
+  trusting its charter. **Assigned to C-069**, which already owns both files, with its ceiling
+  raised 400 → 650. **It does not consume that card's correction rounds** — the defect was
+  surfaced after its charter was written.
+- **This is F-073 one layer down.** F-073 is *"the preflight has been partially blind."*
+  F-086 is *"and the instrument that measures the blindness is itself blind, in a way that
+  reports zero problem."*
+
+### The mechanism
+
+`tests/test_batch_preflight.py :: _deferred_imports` records `inner.module` for an
+`ast.ImportFrom` node:
+
+```python
+if isinstance(inner, ast.ImportFrom):
+    if inner.level == 0 and inner.module:
+        found.append(inner.module)
+```
+
+For `from t2pw.pipeline import deadline as leg_deadline` (`src/t2pw/batch/driver.py:1718`)
+that records **`"t2pw.pipeline"`** — the package — and **discards `deadline` entirely**.
+`_covered("t2pw.pipeline")` then returns **True**, because `CHILD_IMPORTS` already lists
+`t2pw.pipeline.export_mode`, which `startswith("t2pw.pipeline.")`.
+
+Measured at `e616846`:
+
+```
+deferred total (helper view): 9
+MISSED: 6            CHILD_IMPORTS entries: 5
+
+line 1718: from t2pw.pipeline import deadline
+   -> REAL SUBMODULE t2pw.pipeline.deadline
+   ; helper recorded 't2pw.pipeline'
+   ; covered('t2pw.pipeline')          = True
+   ; covered('t2pw.pipeline.deadline') = False
+```
+
+**`t2pw.pipeline.deadline` is deferred in `driver.py`, is absent from `CHILD_IMPORTS`, and the
+preflight cannot validate it in the child — while the guard reports zero problem.** A third
+distinct blind module, on top of F-073's `t2pw.pipeline.release_status` (4 sites) and
+`t2pw.pipeline.strict_quarantine` (2 sites).
+
+### Why it is worse than F-073, and why the direction matters
+
+`_covered`'s own docstring already warns, correctly:
+
+> *"It does NOT cover its own descendants -- importing `t2pw.rag` says nothing about
+> `t2pw.rag.research_report`, which is one of the two modules this whole check exists for."*
+
+**The authors knew the descendant direction was unsafe.** The defect is that
+`_deferred_imports` **loses the descendant name before `_covered` is ever called**, so
+`_covered` is asked about the parent and answers correctly — about the wrong thing.
+
+F-073's failure mode is a guard that finds a real gap and is ignored. **F-086's is a guard
+that reports success because it asked the wrong question**, which is strictly worse: it is
+indistinguishable from correctness at every level above it.
+
+### The fix direction, and its sharp edge
+
+Resolve a `from <pkg> import <name>` site to `<pkg>.<name>` **when `<name>` is a real
+submodule**, and leave it as `<pkg>` when it is an ordinary attribute — a class, a function, a
+constant. `importlib.util.find_spec` distinguishes them.
+
+**Getting this wrong in the permissive direction turns every `from x import SomeClass` into a
+bogus `x.SomeClass` entry** and floods `missed` with names that are not modules at all. The
+card must test both directions.
+
+### The reusable lesson
+
+**A guard that derives its own input is only as good as the derivation, and the derivation is
+usually untested.** `_deferred_imports` had no test of its own; the only thing exercising it
+was the assertion that consumes its output, which cannot distinguish *"nothing is missing"*
+from *"I did not look."* **RULING 13's non-vacuity requirement should extend to a guard's
+input derivation, not only to its assertion.**
+
+---
+
+## F-087 — `runner.py:1341`'s stated measurement went stale, and the guard above it survives only because it deliberately asserts by name
+
+- **Severity** LOW (prose / rationale drift, **no behavioural consequence**) · **Registered 2026-08-21**, integration `e616846`
+- **Found by C-069** while building its behavioural arm, and **correctly reported rather than
+  fixed** — it sits outside that card's `CHILD_IMPORTS`-only boundary. Stale at the base SHA,
+  independently of C-069's change.
+
+### The drift
+
+The `#:` block above `CHILD_IMPORTS` (`src/t2pw/batch/runner.py:1338-1361`) states:
+
+> *"Measured 2026-07-28: importing all four of the entries above in a fresh interpreter leaves
+> `t2pw.llm.client` absent from `sys.modules`"*
+
+and that measurement is the **stated reason the fifth entry exists**.
+
+**Re-measured 2026-08-21 in a fresh interpreter, per module:** `t2pw.rag.research_report`
+**now reaches** `t2pw.llm.client`. (`streamlit.testing.v1`, `t2pw.batch.driver` and
+`t2pw.pipeline.export_mode` do not, and neither do C-069's two new entries.) Evidence:
+`evidence/c069_probe_coverage_base.json` / `_tip.json`, key `llm_client_reach.per_module`.
+
+### Why nothing breaks — and this is the interesting half
+
+`test_the_llm_backend_is_probed_even_though_nothing_else_reaches_it` asserts **by name**
+rather than through `_covered`, **exactly as its own docstring says it deliberately does**.
+So the guard survives its own rationale going stale.
+
+**That is the design working, not luck.** A test that had asserted *"nothing else reaches it"*
+dynamically would now be green for the wrong reason — the entry would still be needed, but the
+test would have stopped proving why. By pinning the name instead, the guard keeps enforcing
+the requirement even after the justification for it changes.
+
+What is stale is only the **justification prose**, in two places: `runner.py:1338-1361` and
+that test's docstring.
+
+### Disposition
+
+**No card of its own.** The correct remedy is a prose update in both places, re-stating the
+measurement with its 2026-08-21 result and noting that the entry is retained because a
+transitive reach through one sibling is not a guarantee. **It should ride along with the next
+card that owns `runner.py`'s `#:` block or that test file** — not be made a card to make the
+queue look busy.
+
+### The reusable lesson
+
+**A comment that cites a measurement should cite its date and its method, so a later reader
+can tell staleness from disagreement.** This one did cite its date, which is the only reason
+the drift was detectable at all rather than being argued about.
