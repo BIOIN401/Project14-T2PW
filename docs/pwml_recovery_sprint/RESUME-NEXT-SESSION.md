@@ -47,7 +47,27 @@ by direct measurement, and the conditionality is the only difference between the
 |---|---|---|---|---|
 | **C-070** (F-066) | `agent/c070-isolated-collection` | `C:/t/c070` | `5bc600e` | ✅ **MERGED `09f7156`** — bare `APPROVE` from REV-070, zero correction rounds |
 | **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `b08cdce` | ✅ **MERGED `8a93da0`** — bare `APPROVE` from REV-069 after one correction round; one round left unspent |
-| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | — | in flight, base `f2a959f`. **Merge is HELD on Decision 5** |
+| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | `38cbbf8` | delivered; **REV-071 dispatched on exact tip**. Both heavy gates run by orchestrator and **green**. **Merge is HELD on Decision 5** |
+
+### C-071 — delivered, gates green, merge held
+
+Orchestrator-run gates on the branch, both through `bounded_run.py` with the wrapper-owned
+mutex, both zero survivors: **SMOKE 473**, **Chunk D `executed=187/187, omissions=0,
+additions=0, failed=none`**. The Chunk D run specifically covers
+`tests/test_streamlit_quarantine_boundary.py`'s 23 AppTest nodes, which the author flagged as
+unmeasured and correctly described its own reasoning about as *"an argument, not a
+measurement."*
+
+**Two budget overages ratified, not charged** — both traceable to my charter, not the card:
+ceiling 1 **700 → 850** (product diff alone is 606; the 213-line overage is the G9 instrument
+the charter mandated) and doc+comment **140 → 220** (the prose cites measurements: 221 actor
+rows across 21 legs, the 3-vs-4 token floor argued from `Fur`).
+
+**One G11 report was deleted and disclosed** — see F-090. **Accepted because it was disclosed**;
+a silent deletion would have been a reject.
+
+**Still to do on this card before merge:** fold in the F-091 prose fix as an
+orchestrator-initiated scope addition, then a short re-review. Then Decision 5.
 
 ### C-070 — ACCEPTED and MERGED
 
@@ -188,8 +208,12 @@ module it could not see (F-086).
 |---|---|---|
 | **F-084** | LOW | **NOT a defect — disproved offline.** Registered *and closed* so it is not re-investigated. Carries an unreachable latent sub-finding whose safeguard is a property of `openai`'s internals, so an upgrade could expose it. |
 | **F-085** | MEDIUM | The C-010 SHA error. Caught before ratification. |
-| **F-086** | MEDIUM | Preflight detector discards submodule names. **Assigned to C-069**, ceiling raised 400 → 650, no correction round consumed. |
+| **F-086** | MEDIUM | Preflight detector discards submodule names. **Closed by C-069** (merged `8a93da0`). |
 | **F-087** | LOW | `runner.py:1341`'s cited measurement went stale. No card; should ride along with the next card owning that file. |
+| **F-088** | MEDIUM | `tree_pin.py` cited *"`pytest.ini` sets no `pythonpath`"*; C-070 falsified it. **Registered and fixed at the merge, docstring only** — it became false as a direct result of a merge the orchestrator performed. Guard function re-verified after the change. |
+| **F-089** | LOW | `test_c030_canonical_identity_fallback.py:88` shells out to `git ls-files` at import time, so it cannot collect in a `.git`-less exported tree. **UNOWNED.** Anyone running `T2PW_ISOLATED_COLLECT_ALL=1` on an export gets one spurious failure. |
+| **F-090** | MEDIUM | **`bounded_run.py`'s descendant enumeration vs RULE 5's 64 KiB record cap.** A compliant job (3820 `git cat-file` children) produced a 149,703-byte non-compliant record. **Forces a gap into the very sequence D-025 uses to detect evidence tampering.** UNOWNED. Fix in the report writer, not the cap. |
+| **F-091** | LOW **but it ships** | `release_status.py:72-75`'s serialized `SEMANTIC_NO_GATING_CHECK_EVALUABLE` says the gating set *"is closed at four"* and reaches artifacts. **Becomes false the moment C-071 merges.** Measured: nothing pins the literal (the one test asserts by symbol), so the remedy is four prose edits — but it is production source and **must be reviewed, not applied by the orchestrator.** Routed as a scope addition to C-071. |
 
 ## 8. Findings dispositioned WITHOUT a card — do not re-open casually
 
