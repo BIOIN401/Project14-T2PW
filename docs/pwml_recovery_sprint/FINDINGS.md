@@ -2122,3 +2122,170 @@ silently ignored — cite F-069 when you see them):
 `test_prefreeze_species_resolution.py`'s `db_available is False` predicate is at **`:146`**, not `:131`;
 `test_prefreeze_third_export_seam.py`'s live `db_resolution` assertions are at **`:378, :383, :414, :436,
 :441, :468, :494`**, not `:365/:394/:452`.
+
+## F-070 — the RAG loop reports an OPERATIONAL FAILURE when it merely hit its configured round ceiling, and the default ceiling is 1
+
+- **Severity** **HIGH** · **Registered 2026-08-20**, integration `87dbcca`
+- **Surfaced by C-055**, which recorded it as a design note and correctly fed no denominator from it.
+  **Independently verified by the orchestrator** against `src/t2pw/rag/loop_policy.py`.
+- **⚠ It becomes REACHABLE IN PRODUCTION the moment C-055 merges.** Until then `run_rag_loop` has zero
+  production callers and the conflation is inert.
+
+### The mechanism, read from source
+
+`loop_policy.py:139-143` — **one property, two unrelated bounds:**
+
+```python
+@property
+def out_of_budget(self) -> bool:
+    """No further round is affordable. The round bound and the time bound each
+    stop the loop independently, which is what makes the loop bounded."""
+    return (self.rounds_completed >= self.max_rounds
+            or self.deadline - self.now <= self.next_round_reserve_seconds)
+```
+
+`loop_policy.py:170` then maps it straight onto D-005's operational-failure reason:
+
+```python
+BUDGET_EXHAUSTED: state.out_of_budget and not exhausted,
+```
+
+And the module's own docstring states what that reason means (`loop_policy.py:11`, `:18-20`):
+
+> *"`budget_exhausted`, which D-005 counts as an OPERATIONAL failure in pipeline-completion …
+> **D-005 names `budget_exhausted` as THE operational-failure denominator.**"*
+
+`DECISIONS.md:134` confirms it: *"`budget_exhausted` is an operational failure in pipeline-completion."*
+
+### Why the two bounds are not the same thing
+
+* **The time bound** — `deadline - now <= next_round_reserve_seconds` — is a genuine resource exhaustion. The
+  run wanted more and the clock refused. *Operational failure* is the honest label.
+* **The round bound** — `rounds_completed >= max_rounds` — is a **configuration ceiling being honoured**. The
+  loop did exactly what it was told. Calling that an operational failure reports a **policy success as a
+  malfunction**.
+
+`_conditions`' own comment at `:166-169` states the standard the round bound fails:
+
+> *"`budget_exhausted` asserts D-005's 'another recovery step MIGHT HAVE HELPED': a rung never ran, or the
+> round produced claims a further round would integrate."*
+
+When `max_rounds` is reached, another recovery step **might well have helped** — which is exactly why the
+reason fires. But the thing that prevented it was **an operator's configured ceiling, not an exhausted
+budget**, and D-005's denominator is meant to count runs the pipeline could not complete, not runs it was
+told to stop.
+
+### ⚠ Why this is HIGH and not a labelling nicety: the default is 1
+
+`controller.py:237` defaults **`max_rounds=1`**. So on the default configuration, **every RAG loop that
+completes its first round and would have continued reports `budget_exhausted`** — an operational failure —
+into D-005's denominator. Not an edge case: **the default path.**
+
+The exemption at `:164`/`:170` (`and not exhausted`) only suppresses it when the ladder completed *and*
+`new_admissible_claims <= 0`. A round that **did** produce integrable claims — the interesting case, and the
+one T-103 exists to exercise — is precisely the one that gets mislabelled.
+
+### Scope, measured — the blast radius is smaller than the name suggests
+
+`budget_exhausted` is a **shared string** across three subsystems, and they are **independent**:
+
+* `pipeline/deadline.py:84` defines its own `BUDGET_EXHAUSTED` and
+  `OPERATIONAL_TERMINATION_REASONS = frozenset({BUDGET_EXHAUSTED, OPERATION_TIMEOUT})` (`:120`) — this is
+  the **pipeline** deadline seam and is **not** fed by `loop_policy`.
+* `batch/driver.py:1701` and `batch/runner.py:921` reference it in **docstrings only**.
+
+**No live consumer converts `loop_policy`'s reason into a rate today** — consistent with C-055's report that
+it feeds no denominator. **The defect is that the reason is wrong at the source**, and the moment anything
+downstream starts counting termination reasons per leg — which is what T-103 and T-104 will make tempting —
+it counts configured stops as failures.
+
+### Owner and remedy — UNOWNED, and deliberately not fixed here
+
+`rag/loop_policy.py` is **C-043's, merged and reviewed**, and it is **outside C-055's boundary** — C-055 was
+right to register rather than fix. The remedy is a narrow card that **splits the round bound from the time
+bound**, giving the configured-ceiling stop its own reason distinct from D-005's operational-failure set.
+
+**Do not fix this by widening the `and not exhausted` exemption** — that would suppress the reason on runs
+where the time bound genuinely fired, trading a false positive for a false negative in the denominator that
+matters more.
+
+**Binding on T-103:** its acceptance (`TEST_MATRIX.md:480`) is *"every RAG round re-entered normalization,
+mapping, gates, persistence, classification"* — structural, and **unaffected**. But **no operational-failure
+rate may be quoted from a T-103 or T-104 run until this is fixed**, because at `max_rounds=1` the reason
+fires on the default path. Registered, not fixed. No accepted card is reopened.
+
+## F-071 — an agent's own wall-clock kill leaves a G11 reservation that turns whole-tree G11 red; four occurrences, no durable fix
+
+- **Severity** MEDIUM (process, recurring) · **Registered 2026-08-20**, integration `87dbcca`
+- **Fourth occurrence.** Every one was resolved by hand. There is no mechanism that prevents a fifth.
+
+### The mechanism
+
+`g11_evidence.py next --task X --label Y` **creates a real placeholder file on disk** before the job runs:
+
+```json
+{ "g11_reserved": true, "task": "X", "label": "Y" }
+```
+
+That is deliberate and correct — it is what stops an agent hand-writing a `--json` path and abandoning the
+audit trail. The README and the allocator both say so.
+
+**The failure mode it creates:** `bounded_run.py` writes the completed report at the *end* of a job. If the
+**agent's own tool wall clock** kills the parent shell first, the wrapper never writes, and the reservation
+survives with three keys and **none** of the ~28 fields a completed report carries. `check` then reports it
+non-compliant, **whole-tree G11 exits 1, and merge gate 10 fails** — on a job that never produced a result
+either way.
+
+**Note the asymmetry that makes this hard to see coming:** `bounded_run.py`'s own `--timeout` is honoured
+correctly and its Job Object (`KILL_ON_JOB_CLOSE`) tears descendants down cleanly — **every one of the four
+kills left `FINAL SURVIVING COUNT: 0`.** Nothing leaks. The only residue is the bookkeeping artifact.
+
+### The four occurrences
+
+| # | Reservation | Killed by | Disposal |
+|---|---|---|---|
+| 1 | `evidence/g11/C-042r/09-r1focused.json` | — | PACK 3 **RULING 1**, quarantined to `sprint-records/p3-01-…` |
+| 2 | `evidence/g11/REV-050j/10-sample-census-tip.json` | reviewer's 2-min shell limit under CPU/DB contention | PACK 9, quarantined to `sprint-records/p9-01-…` |
+| 3 | `evidence/g11/C-055/05-focused-full-r1.json` | agent's 2-min wall clock | `git rm` in C-055 `5ad0d47` |
+| 4 | `evidence/g11/C-055/10-c055-own-tests.json` | agent's 6m40s wall clock | `git rm` in C-055 `5ad0d47` |
+
+**#3 and #4 differ from #1 and #2 in a way that matters: they were COMMITTED**, not untracked. PACK 3's
+quarantine procedure is written for an untracked file (*"it is in no commit, so moving it cannot alter
+history"*) and **does not transfer** to a committed one. The disposal there is a normal `git rm` on the card
+branch by the card's own author, with the reason stated in the commit message.
+
+**Occurrence #4 was never disclosed by the agent** — it was found only because the orchestrator's correction
+instruction told the author to run `check --task C-055` and report the result. **The author then disclosed it
+unprompted and disposed of both in one commit.** That is the process working, but it worked because someone
+asked for the check, not because anything enforced it.
+
+### Why this is worth a card rather than a habit
+
+Every remedy so far has been a human noticing. The failure is silent at the moment it happens — the agent
+sees its shell die, not a corrupted audit trail — and it surfaces one step later, as a **merge gate failure
+attributed to whoever runs the gate next.** Twice it was found by the orchestrator immediately before a
+merge.
+
+**Candidate remedies, none owned:**
+
+* a `g11_evidence.py release --task X --label Y` subcommand, so an agent whose job died can dispose of its own
+  reservation without a `git rm` and without an orchestrator ruling;
+* `check` tolerating a reservation younger than N minutes, so a live job in flight is not reported
+  non-compliant — this one needs care, because it would also hide a genuinely abandoned reservation for N
+  minutes;
+* `next` writing to a staging path that `bounded_run.py` promotes on completion, so an unfinished job leaves
+  nothing in the reports tree at all. **This is the only candidate that removes the failure mode rather than
+  papering over it.**
+
+### Binding on every agent until it is fixed
+
+1. **Allocate the `--json` path only when the job is ready to start.** Already in the shared execution block;
+   it is necessary and demonstrably not sufficient.
+2. **Keep `bounded_run.py --timeout` comfortably under your own tool's wall clock**, so the wrapper ends the
+   job and writes its report rather than your shell being killed mid-flight. **All four occurrences are the
+   opposite ordering.**
+3. **Run `g11_evidence.py check --task <YOUR-CARD>` before you report**, and disclose the result. A card that
+   reports a clean tip while leaving a non-compliant reservation is handing its reviewer a red gate.
+
+Registered, **unowned, not fixed.** No accepted card is reopened, and no completed report has ever been moved,
+deleted or altered in any of the four disposals.
