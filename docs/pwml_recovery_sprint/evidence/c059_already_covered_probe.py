@@ -94,7 +94,12 @@ def _candidate(row: Dict[str, Any]) -> RagReactionCandidate:
 
 
 def _reaction_of(candidate: RagReactionCandidate) -> Any:
-    """The ``_Reaction`` ``synthesize`` would carry for this candidate."""
+    """The ``_Reaction`` ``synthesize`` would carry for this candidate.
+
+    ``gap_ids`` is the BUNDLE's own, exactly as ``_reactions_from_bundle`` writes
+    it; the union across a collapsed group is applied afterwards by
+    :func:`_carry_the_verdict`, which is where production applies it too.
+    """
     participant = synthesize_mod._Participant
     return synthesize_mod._Reaction(
         name=candidate.name,
@@ -108,7 +113,7 @@ def _reaction_of(candidate: RagReactionCandidate) -> Any:
         scores=[float(candidate.evidence.get("score") or 0.0)],
         origin="rag",
         gap_id=candidate.gap_id,
-        gap_ids=list(candidate.gap_ids or [candidate.gap_id]),
+        gap_ids=[candidate.gap_id],
         scope_membership=candidate.scope_membership,
         evidence_span=candidate.evidence_span,
         observed_organisms=list(candidate.observed_organisms),
@@ -140,9 +145,28 @@ def _row_delta(left: List[Any], right: List[Any]) -> List[Dict[str, Any]]:
     return delta
 
 
+def _carry_the_verdict(reaction: Any, candidate: RagReactionCandidate) -> Any:
+    """The C-059 carry step from ``synthesize_with_report``, replayed.
+
+    When the gate collapsed a claim several gaps each retrieved, the sibling rows
+    never reach ``_resolve_reactions``, so the union that merge used to perform --
+    the gap attributions and the group's best retrieval score -- travels with the
+    verdict instead. Guarded on the union growing, so an uncollapsed claim is
+    untouched.
+    """
+    merged = synthesize_mod._dedupe_strs(
+        list(reaction.gap_ids or []) + list(candidate.gap_ids or [])
+    )
+    if len(merged) > len(list(reaction.gap_ids or [])):
+        reaction.gap_ids = merged
+        if candidate.confidence:
+            reaction.scores = list(reaction.scores) + [float(candidate.confidence)]
+    return reaction
+
+
 def _rows_for(candidates: List[RagReactionCandidate], resolver: Any) -> List[Any]:
     resolved, _conflicts = synthesize_mod._resolve_reactions(
-        [_reaction_of(c) for c in candidates], resolver
+        [_carry_the_verdict(_reaction_of(c), c) for c in candidates], resolver
     )
     return [synthesize_mod._reaction_row(r) for r in resolved]
 
@@ -276,18 +300,20 @@ def main() -> int:
         "dedup_alone_is_payload_neutral": dedup_is_payload_neutral,
         "dedup_alone_payload_delta": dedup_payload_delta,
         "dedup_alone_payload_delta_note": (
-            "MEASURED, and it contradicts the C-059 charter's section 2, which "
-            "predicted a byte-identical payload. Cause: _merge_into unions "
-            "_Reaction.scores and _confidence takes their max, so the row the "
-            "committed run shipped carries the HIGHER of the two per-retrieval "
-            "scores (0.930233, verifiable at merged_payload.json "
-            "/processes/reactions/5/rag_confidence). Deduping at admission means "
-            "only the surviving candidate's own score reaches synthesis, so "
-            "rag_confidence becomes 0.914815. Everything else on the row -- name, "
-            "participants, enzymes, gap_id, gap_ids, provenance, evidence, "
-            "source_refs -- is identical. The row itself is NOT removed by the "
-            "dedup: that is the already-covered refusal's doing, which is the "
-            "point of the split."
+            "The charter's section 2 predicted a byte-identical payload from the "
+            "dedup alone. MEASURED, that was FALSE as first built: _merge_into "
+            "unions _Reaction.scores and gap_ids and _confidence maxes over the "
+            "scores, so the committed row carries the HIGHER of the two "
+            "per-retrieval scores (0.930233 at merged_payload.json "
+            "/processes/reactions/5/rag_confidence) and BOTH gap ids. Collapsing "
+            "at admission means the sibling row never reaches that merge, which "
+            "cost the row 0.930233 -> 0.914815 and dropped the second gap's "
+            "attribution -- a regression against the pre-existing pinned test "
+            "test_rag_admission_adversarial.py::"
+            "test_one_claim_admitted_for_two_gaps_keeps_both_attributions. Fixed "
+            "by carrying that union with the verdict; this delta is now empty. "
+            "The row itself is NOT removed by the dedup -- that is the "
+            "already-covered refusal's doing, which is the point of the split."
         ),
         "already_covered_removes_the_reimported_row": covered_removes_the_row,
         "reading": (

@@ -271,17 +271,13 @@ ADMISSION_RULES: Tuple[Tuple[str, str], ...] = (
     ),
     (
         "gap_not_already_covered",
-        "for a CONNECTIVITY gap: the pathway does not already hold one reaction "
-        "whose substrates and products subsume this candidate's on the same side "
-        "and in the same direction — a candidate that adds any participant, or "
-        "any reversibility, the existing reaction lacks is extending it and is "
-        "admitted",
+        "for a connectivity gap: no existing reaction already has every "
+        "substrate and product of this candidate, same side, same direction",
     ),
     (
         "not_already_admitted_for_another_gap",
-        "the same canonical claim from the same span is admitted once, against "
-        "the first gap it filled; the surviving admission carries every gap id it "
-        "was retrieved for",
+        "one canonical claim from one span is admitted once; it carries every "
+        "gap id it was retrieved for",
     ),
 )
 
@@ -3572,6 +3568,15 @@ def _refuse_covered_and_duplicate(
                 + ([winner.gap_id] if winner.gap_id else [])
                 + list(candidate.gap_ids or [])
                 + ([candidate.gap_id] if candidate.gap_id else [])
+            )
+            # The retrieval score is per QUERY, not per claim: the same span
+            # scores differently against two gaps' queries. Downstream,
+            # ``synthesize._merge_into`` used to union both rows' scores and
+            # ``_confidence`` takes their max, so collapsing here without
+            # carrying the better score would silently DOWNGRADE the surviving
+            # row. Measured on the F-057 leg: 0.930233 -> 0.914815.
+            winner.confidence = max(
+                float(winner.confidence or 0.0), float(candidate.confidence or 0.0)
             )
             _reject(
                 candidate,

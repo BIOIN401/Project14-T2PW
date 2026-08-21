@@ -757,69 +757,149 @@ def test_nonvacuity_the_seed_index_is_what_the_refusal_reads():
     # The coverage rule contributes nothing; the cross-gap dedup still fires.
     assert report.counts["accepted"] == 1
 
-
 # ---------------------------------------------------------------------------
-# The measured contradiction of the charter's section 2, pinned so it cannot
-# drift back into being an assumption.
+# The charter's section 2 predicted the cross-gap dedup would leave a
+# BYTE-IDENTICAL payload. Measured, that was false until the union the
+# downstream merge used to perform was carried across the collapse. These two
+# tests pin the measurement and the fix, so neither can drift back into being an
+# assumption.
 # ---------------------------------------------------------------------------
-def test_the_cross_gap_dedup_is_not_byte_neutral_on_the_payload(monkeypatch):
-    """MEASURED: the dedup alone moves ``rag_confidence``, and only that.
+def _rows_through_the_production_carry(
+    accepted: List[RagReactionCandidate], *, carry_union: bool
+) -> List[Dict[str, Any]]:
+    """The candidate -> row path ``synthesize_with_report`` runs, replayed.
 
-    ``_merge_into`` unions ``_Reaction.scores`` and ``_confidence`` takes their
-    max, so the committed row carries the higher of the two per-retrieval scores
-    (0.930233 at ``merged_payload.json /processes/reactions/5/rag_confidence``).
-    Deduping at admission leaves only the surviving candidate's own score,
-    0.914815. The ROW is unchanged in every other respect and is not removed --
-    removing it is the coverage refusal's doing, which is the whole point of
-    separating the two.
+    ``_reactions_from_bundle`` builds one ``_Reaction`` per gap bundle carrying
+    that bundle's own ``gap_ids`` and its own retrieval score; the loop after the
+    gate copies the verdict onto it; ``_resolve_reactions`` then groups and
+    merges. ``carry_union=False`` omits only the C-059 carry step, which is what
+    makes the carry falsifiable.
     """
     from t2pw.rag import synthesize as synthesize_mod
 
-    merged = _leg("merged_payload.json")
-    assert merged["processes"]["reactions"][5]["rag_confidence"] == 0.930233
-
-    resolver = synonyms.build_offline_synonym_resolver()
-
-    def _rows(accepted: List[RagReactionCandidate]) -> List[Dict[str, Any]]:
-        reactions = [
-            synthesize_mod._Reaction(
-                name=c.name,
-                inputs=[synthesize_mod._Participant(name=n) for n in c.inputs],
-                outputs=[synthesize_mod._Participant(name=n) for n in c.outputs],
-                enzymes=list(c.enzymes),
-                provenance=[dict(c.evidence)],
-                evidence=[dict(c.evidence)],
-                source_papers=[dict(c.source_paper)],
-                scores=[float(c.evidence.get("score") or 0.0)],
-                gap_id=c.gap_id,
-                gap_ids=list(c.gap_ids or [c.gap_id]),
-                evidence_span=c.evidence_span,
+    reactions = []
+    for candidate in accepted:
+        reaction = synthesize_mod._Reaction(
+            name=candidate.name,
+            inputs=[
+                synthesize_mod._Participant(name=n) for n in candidate.inputs
+            ],
+            outputs=[
+                synthesize_mod._Participant(name=n) for n in candidate.outputs
+            ],
+            enzymes=list(candidate.enzymes),
+            provenance=[dict(candidate.evidence)],
+            evidence=[dict(candidate.evidence)],
+            source_papers=[dict(candidate.source_paper)],
+            scores=[float(candidate.evidence.get("score") or 0.0)],
+            gap_id=candidate.gap_id,
+            gap_ids=[candidate.gap_id],
+            evidence_span=candidate.evidence_span,
+        )
+        if carry_union:
+            merged = synthesize_mod._dedupe_strs(
+                list(reaction.gap_ids or []) + list(candidate.gap_ids or [])
             )
-            for c in accepted
-        ]
-        resolved, _conflicts = synthesize_mod._resolve_reactions(reactions, resolver)
-        return [synthesize_mod._reaction_row(r) for r in resolved]
+            if len(merged) > len(list(reaction.gap_ids or [])):
+                reaction.gap_ids = merged
+                if candidate.confidence:
+                    reaction.scores = list(reaction.scores) + [
+                        float(candidate.confidence)
+                    ]
+        reactions.append(reaction)
+    resolved, _conflicts = synthesize_mod._resolve_reactions(
+        reactions, synonyms.build_offline_synonym_resolver()
+    )
+    return [synthesize_mod._reaction_row(r) for r in resolved]
+
+
+def _base_like_accepted(monkeypatch) -> List[RagReactionCandidate]:
+    """The two candidates the base SHA admitted, on this same tree (F-051)."""
+    monkeypatch.setattr(
+        admission_mod,
+        "_refuse_covered_and_duplicate",
+        lambda accepted, **kwargs: (list(accepted), []),
+    )
+    *_head, accepted, _report = _replay_the_leg()
+    return accepted
+
+
+def test_the_cross_gap_dedup_is_payload_neutral_once_the_union_is_carried():
+    """What the charter's section 2 predicted, made true rather than assumed.
+
+    ``_merge_into`` unions ``_Reaction.scores`` and ``gap_ids``; ``_confidence``
+    maxes over the scores. The committed row proves it -- ``merged_payload.json
+    /processes/reactions/5/rag_confidence`` is 0.930233, the HIGHER of the two
+    per-retrieval scores, and its ``rag_provenance.gap_ids`` names both gaps.
+    Collapsing at admission means the sibling row never reaches that merge, so
+    the union travels with the verdict instead.
+    """
+    merged = _leg("merged_payload.json")
+    committed_row = merged["processes"]["reactions"][5]
+    assert committed_row["rag_confidence"] == 0.930233
+    assert set(committed_row["rag_provenance"]["gap_ids"]) == {
+        "gap-dangling_reaction-555124de",
+        "gap-dangling_reaction-7e0b4a06",
+    }
 
     with pytest.MonkeyPatch.context() as patch:
-        patch.setattr(
-            admission_mod,
-            "_refuse_covered_and_duplicate",
-            lambda accepted, **kwargs: (list(accepted), []),
+        base_rows = _rows_through_the_production_carry(
+            _base_like_accepted(patch), carry_union=True
         )
-        *_head, base_accepted, _base_report = _replay_the_leg()
-    base_rows = _rows(base_accepted)
-
-    monkeypatch.setattr(admission_mod, "_already_covered", lambda *a, **k: None)
-    *_h, dedup_accepted, _r = _replay_the_leg()
-    dedup_rows = _rows(dedup_accepted)
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(admission_mod, "_already_covered", lambda *a, **k: None)
+        *_h, dedup_accepted, _r = _replay_the_leg()
+        dedup_rows = _rows_through_the_production_carry(
+            dedup_accepted, carry_union=True
+        )
 
     assert len(base_rows) == len(dedup_rows) == 1
     assert base_rows[0]["rag_confidence"] == 0.930233
-    assert dedup_rows[0]["rag_confidence"] == 0.914815
+    assert base_rows == dedup_rows, "the dedup must cost the payload nothing"
+    assert set(dedup_rows[0]["rag_provenance"]["gap_ids"]) == {
+        "gap-dangling_reaction-555124de",
+        "gap-dangling_reaction-7e0b4a06",
+    }
+
+
+def test_nonvacuity_without_the_carried_union_the_dedup_downgrades_the_row():
+    """The carry is load-bearing: remove it and the collapse costs two things.
+
+    MEASURED, and it is why this card does not simply drop the sibling row:
+    ``rag_confidence`` falls to the surviving candidate's own retrieval score,
+    and the second gap's attribution disappears from BOTH the row's
+    ``rag_provenance`` and the lineage entry that names the gaps it was
+    retrieved for -- which would report a gap unfilled that a delivered reaction
+    actually closes.
+    """
+    with pytest.MonkeyPatch.context() as patch:
+        base_rows = _rows_through_the_production_carry(
+            _base_like_accepted(patch), carry_union=False
+        )
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(admission_mod, "_already_covered", lambda *a, **k: None)
+        *_h, dedup_accepted, _r = _replay_the_leg()
+        stripped = _rows_through_the_production_carry(
+            dedup_accepted, carry_union=False
+        )
+
+    assert base_rows[0]["rag_confidence"] == 0.930233
+    assert stripped[0]["rag_confidence"] == 0.914815
+    assert "gap_ids" not in stripped[0]["rag_provenance"]
     differing = {
         key
-        for key in set(base_rows[0]) | set(dedup_rows[0])
-        if base_rows[0].get(key) != dedup_rows[0].get(key)
+        for key in set(base_rows[0]) | set(stripped[0])
+        if base_rows[0].get(key) != stripped[0].get(key)
     }
-    # Only the confidence, and the enzyme actor that carries a copy of it.
-    assert differing == {"rag_confidence", "enzymes"}
+    # Four things move, all downgrades: the confidence, the enzyme actor that
+    # carries a copy of it, the row's own gap attribution, and the lineage entry
+    # whose reason names the gaps this claim was retrieved for. Nothing else.
+    assert differing == {
+        "rag_confidence",
+        "enzymes",
+        "rag_provenance",
+        "provenance_lineage",
+    }
+    assert "gap-dangling_reaction-7e0b4a06" not in json.dumps(
+        stripped[0]["provenance_lineage"]
+    )

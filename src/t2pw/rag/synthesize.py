@@ -1938,6 +1938,30 @@ def synthesize_with_report(
         # reversible.
         reaction.scope_membership = candidate.scope_membership
         reaction.reversible = bool(candidate.reversible)
+        # C-059: the gate may now collapse one canonical claim that several gaps
+        # each retrieved (``REASON_DUPLICATE_ACROSS_GAPS``). The sibling rows
+        # therefore never reach :func:`_resolve_reactions`, and the union that
+        # merge used to perform has to happen here instead -- both halves of it,
+        # or the collapse silently costs the row something:
+        #
+        # * ``gap_ids``, or a gap this delivered reaction genuinely fills is
+        #   reported unfilled (pinned by
+        #   ``test_rag_admission_adversarial.py::test_one_claim_admitted_for_two_gaps_keeps_both_attributions``);
+        # * the collapsed group's best retrieval score, which ``_confidence``
+        #   maxes over, or the surviving row ships a lower ``rag_confidence``
+        #   than the same evidence produced before.
+        #
+        # Guarded on the union actually GROWING, so a claim the gate did not
+        # collapse takes this branch never and its row is unchanged.
+        merged_gap_ids = _dedupe_strs(
+            list(reaction.gap_ids or []) + list(candidate.gap_ids or [])
+        )
+        if len(merged_gap_ids) > len(list(reaction.gap_ids or [])):
+            reaction.gap_ids = merged_gap_ids
+            if candidate.confidence:
+                reaction.scores = list(reaction.scores) + [
+                    float(candidate.confidence)
+                ]
         # The gate's ATTRIBUTION travels with it too, and this is the only seam
         # where it can: the candidate holds the verdict (which gap it was admitted
         # against, the reasons, the hop, the organism/pathway comparisons) and the
