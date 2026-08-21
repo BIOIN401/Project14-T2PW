@@ -2550,3 +2550,60 @@ and F-062 cannot be quoted as contradicting a locked position. **F-062 is theref
 decision, not only on C-058 and C-059.**
 
 Registered, not fixed. No accepted card is reopened.
+
+## F-076 — the c011 golden's regeneration block will silently absorb C-057's delta, because that delta is one-way
+
+- **Severity** **HIGH** (latent) · **Registered 2026-08-20**, integration `b011588`
+- **Found and flagged by C-057 itself**, which correctly declined to fix it — `__main__` is outside the
+  boundary I granted, and I did not extend it.
+
+### The asymmetry
+
+`tests/test_c011_freeze_seam_golden_equivalence.py` carries per-card helpers that state a baseline move
+instead of absorbing it into the fixture — C-030's `_with_c030_hash_keys` (`:236-258`), C-052's
+`_with_c052_path_keys` (`:281-302`), and now C-057's `_with_c057_lineage_hashes`.
+
+**Two of the three are reversible. The third is not, and the difference is structural:**
+
+* **C-052's keys are ADDITIVE**, so `_without_c052_path_keys` can strip them and recover the original
+  document exactly.
+* **C-057's helper REPLACES a digest** — `canonical_payload_sha256`, and the `payload_sha256` inside
+  `final_stage3_gate_report` that records the same value a second time. **The pre-move digest is stored
+  nowhere else in the fixture**, so there is nothing to restore it from. **No `_without_c057_*` is
+  expressible.** This is not an omission by the card; it is a property of a replaced value.
+
+### The consequence
+
+**Running that file's `__main__` regeneration block absorbs C-057's delta into the tracked fixture** —
+turning a *stated* baseline move into a silent one, which is exactly the failure the helper mechanism exists
+to prevent, and the same class REV-051 refused when it would not let F-065's assertion be re-pointed.
+
+**The golden is named as a BEFORE document.** Once regenerated with the lineage hashes folded in, it stops
+being one, and **every earlier card's stated delta becomes unverifiable at the same stroke** — because the
+document those deltas are stated *against* no longer exists.
+
+### Why it is HIGH despite nothing being broken today
+
+Nothing is wrong in the tree right now. The hazard is that the trigger is a **routine, sanctioned action**:
+someone regenerating the fixture for an unrelated legitimate reason destroys three cards' evidence as a side
+effect, and the suite goes green, so **nothing reports it.** A latent trap whose trigger looks like
+maintenance is worse than a red test.
+
+**In-boundary mitigation, already taken by C-057:** the limitation is written into the constant's comment,
+where a reader meets it *before* running the block — stating that the delta is one-way, that no
+`_without_c057_*` is expressible and why, and that `__main__` will silently absorb it.
+
+### Owner and remedy — UNOWNED
+
+Needs a card owning `tests/test_c011_freeze_seam_golden_equivalence.py`. Candidate remedies:
+
+* **make `__main__` refuse to regenerate while any one-way helper is registered**, requiring an explicit
+  override flag — the only remedy that removes the failure mode rather than documenting it;
+* or have the helper **record the pre-move digest alongside the post-move one**, making the delta reversible
+  and restoring symmetry with C-052's;
+* or split the fixture so replaced values live in a separate document from additive ones.
+
+**The first is strongest.** A comment stops a careful reader; it does not stop a regeneration run in a hurry.
+
+**Do not fix this by regenerating the fixture "one last time" and starting clean.** That is the defect,
+performed deliberately. Registered, not fixed. No accepted card is reopened.
