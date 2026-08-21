@@ -3079,3 +3079,144 @@ fixed they would pass unchanged, so nothing about them needs correcting.
 its job in the sense that matters — it has never been shown to miss a real key — and this finding narrows a
 false positive without weakening it. The measured table above is the evidence for that claim, and any fix
 must reproduce it.
+
+## F-083 — the SAME name-resolution divergence one layer up, and this one silently DELETES biology
+
+- **Severity** **HIGH** · `product_contract_violation` · **Registered 2026-08-21**, integration `f2471fd`
+- **Found and measured by C-067**, which correctly declared it **out of bounds and did not fix it** —
+  `_prune_entities` and the closure loop were not in its charter. That is the second time this sprint a card
+  has found a second instance of its own defect and reported rather than absorbed it (PACK 9 RULING 9).
+- **Same root cause as F-081, different site, and a strictly worse consequence.**
+
+### The mechanism
+
+`strict_quarantine.py:2081-2085` — the closure loop builds `surviving_complex_norms` using **name only**,
+while `_prune_entities:1524` keeps rows on **name ∪ synonyms** (`_entity_name_norms`,
+`process_normalizer.py:626-636`). Exactly the F-081 divergence, one layer up.
+
+**Measured by C-067 at both base and tip:** a protein complex referenced **solely under its synonym** is
+
+1. **kept** by `_prune_entities`, because the keep test counts synonyms; but
+2. **not recognised as surviving** by `surviving_complex_norms`, because that test does not;
+
+so `_complex_component_norms` returns nothing for it, and **every component protein is then pruned as
+`degree_zero_after_quarantine`.**
+
+### Why this is worse than F-081
+
+**F-081 is a false refusal — the run stops and says something wrong.** Loud, and nothing ships.
+
+**F-083 is a silent deletion.** The complex survives; its component proteins are removed from the graph as
+orphans; the run continues; and the payload that ships is **missing biology a surviving complex declares it
+contains.** Nothing refuses, nothing warns, and `degree_zero_after_quarantine` is a *legitimate* reason code,
+so the removal looks correct in `removed_entity_report.json`.
+
+**That is the pruner deleting biology**, which is the failure class merge rule 7 exists to prevent — and it
+is invisible in exactly the way F-076 warns about: the suite stays green.
+
+### Scope, and what is NOT claimed
+
+* **Measured on a synthetic fixture**, in C-067's probe, at **both** base and tip — so it is **not**
+  introduced by C-067 and is **not** fixed by it. C-067's change is confined to `_degree_zero_exports`.
+* **Not measured on any committed leg.** Whether any of the 35 committed legs contains a complex referenced
+  only under a synonym is **unmeasured**. That measurement is cheap and should be the first thing the owning
+  card does — if the answer is zero, the severity is latent rather than live, and the finding should say so.
+* C-067's own `exempt` widening is **asymmetric with the closure loop** as a result. C-067 argues this is
+  safe because it can only exempt rows the pruner has already deleted, making it a no-op on a converged run,
+  and non-convergence refuses independently. **That argument was accepted for C-067's scope; it is not a
+  reason to leave F-083 unfixed.**
+
+### Remedy — UNOWNED
+
+Align `surviving_complex_norms` with `_entity_name_norms`, as C-067 did for `_degree_zero_exports`.
+
+**⚠ The subtlety that makes this more than a copy of C-067's patch, and C-067 flagged it explicitly:** the
+set must still **store** the primary-name norm, because `_complex_component_norms` keys on it. **Widening
+what is stored would silently stop it matching** — trading one silent deletion for another. The fix is to
+widen the *test*, not the *stored value*. A card that copies C-067's diff shape without noticing this will
+make the defect worse.
+
+### Related, and it is now a pattern rather than an incident
+
+**Three sites, one rule, and only some of them follow it.** `_build_registry:632-634` states the module's own
+resolution rule — *"Synonyms count, exactly as `validate_registry_references` counts them"* — and admission,
+`_prune_entities` and the registry all honour it. `_degree_zero_exports` did not (**F-081**, fixed by C-067)
+and `surviving_complex_norms` does not (**this finding**).
+
+**The owning card should audit every remaining name comparison in `strict_quarantine.py` against that rule
+and report the full census**, rather than fixing the one site named here. Two instances found by accident, in
+two different cards, is evidence there are more.
+
+### Orchestrator verification at source, and the code says the consequence out loud
+
+Confirmed independently at integration `f2471fd`, `strict_quarantine.py:2081-2085`:
+
+```python
+surviving_complex_norms = {
+    _normalize(_row_name(row))                                  # <- STORES the primary-name norm
+    for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
+    if isinstance(row, dict) and _normalize(_row_name(row)) in referenced   # <- TESTS name ONLY
+}
+keep_norms = referenced | _complex_component_norms(working, surviving_complex_norms)
+```
+
+**`_normalize(_row_name(row))` appears twice and the two occurrences are not the same obligation.** The
+**membership test** is the defect and must be widened to `_entity_name_norms([row]) & referenced`. The
+**stored value** must stay the primary-name norm, because `_complex_component_norms:1484` keys on it
+(`if _normalize(_row_name(row)) not in surviving_complex_norms`). C-067's warning is exactly right, and a
+card that widens both will break the lookup it is trying to fix.
+
+**The consequence is stated by the code itself.** `_complex_component_norms`'s docstring (`:1472-1477`):
+
+> *"Requirement 3: a component protein is kept even at degree zero. It has no edge of its own **by
+> construction** -- the complex carries the edge -- so **pruning it on connectivity would gut every surviving
+> complex**."*
+
+**That protection is the thing the synonym gap defeats.** The module knows pruning components guts surviving
+complexes, built a mechanism to prevent it, and then gated that mechanism behind a name test that the rest of
+the module does not use. This is not a subtle consequence being inferred — it is the documented failure mode
+of the exact code path.
+
+**A second construction site exists at `:1929`**, feeding the `exempt` set for `_degree_zero_exports`, with
+the same shape. **C-067 fixed that one** (it was inside its boundary) and left `:2081` alone, which is why
+the two are now inconsistent — disclosed by the card, accepted for its scope, and the reason this finding
+should be taken promptly rather than banked.
+
+---
+
+## F-081 — CONFIDENCE UPGRADE (appended 2026-08-21, integration `f2471fd`)
+
+F-081 was registered **MEDIUM** on the claim that the production `Isochorismatase (EntB)` row carried a
+synonym in `keep_norms`, because **the quarantine input payload is not persisted** (`FINDINGS.md:1580`) and
+the theorem forced the conclusion without observing it.
+
+**C-067 derived it from the committed artifacts alone**, which was flagged as valuable-and-unscheduled and
+delivered. From `runs_verify/2026-08-18_1328/papers/PMC12096016/strict/`:
+
+1. `final_mapped.json` — reactions 1 and 5 name the enzyme entity **`isochorismatase`**, and **no protein row
+   is named that** (rows are `EntC, EntB, EntA, EntE, EntF, Fur, Isochorismatase (EntB)`).
+2. `quarantine_report.json` — **all 9 processes `core_accepted`, `quarantined_broken_reference: 0`.** So
+   `isochorismatase` **resolved**, through `_build_registry`, which counts synonyms. A synonym-bearing row
+   therefore exists.
+3. `removed_entity_report.json` — the closure removed exactly **one** protein, `Fur`, with
+   `closure.converged: true`. So `Isochorismatase (EntB)` **survived the fixpoint prune**, whose keep test is
+   name ∪ synonyms.
+4. The detector nonetheless flagged it ⟹ `_normalize("Isochorismatase (EntB)")` = `"isochorismatase entb"`
+   ∉ `referenced ∪ exempt`.
+
+**⟹ its match with `keep_norms` came from a synonym, and `referenced` contains `"isochorismatase"`.**
+F-081's theorem, instantiated on the production leg from its own committed report, naming the string.
+
+Mechanism corroborated at `mapping/enrich_entities.py:1462-1469`: protein synonyms = existing ∪ UniProt
+`alternative_names` ∪ `gene_names` ∪ `recommended_name`.
+
+**Two caveats, stated by C-067 rather than extracted from it.** The derivation assumes the admitted payload
+shares `final_mapped.json`'s **process** rows — the admission pointers and names match exactly (6 reactions,
+2 transports, 1 interaction), so the divergence between the two files is in the **entity** rows, which is
+where enrichment writes synonyms. And **the synonym string itself was not read**:
+`data/enrichment_cache.json` has **no `P0ADI4` entry**, so its provenance is inferred from code, not
+observed.
+
+**F-081's mechanism confidence is raised from MEDIUM to HIGH on this leg.** The remaining gap is narrow and
+named. **A separate observation worth its own attention:** the enrichment cache holds no entry for an
+accession two committed legs map to, so the cache does not cover the accessions those runs actually used.
