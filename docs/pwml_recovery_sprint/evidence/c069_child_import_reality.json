@@ -1,0 +1,70 @@
+{
+  "app_module_scope_statements": 55,
+  "declined_form_cost": {
+    "chosen_modules": 600,
+    "chosen_s": 0.373,
+    "declined_extra_modules": 18,
+    "declined_extra_s": 0.058
+  },
+  "declined_form_under_magicmock": {
+    "declined": "ModuleNotFoundError: No module named 'streamlit.testing'; 'streamlit' is not a package"
+  },
+  "guard_import_footprint": {
+    "added_count": 483,
+    "notable_roots": [
+      "anyio",
+      "asyncio",
+      "blinker",
+      "click",
+      "streamlit"
+    ]
+  },
+  "matrix": [
+    {
+      "app_module_scope": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "import_driver": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "import_pipeline": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "poisoned": "t2pw.pipeline.release_status"
+    },
+    {
+      "app_module_scope": {
+        "exit": 1,
+        "stderr_tail": "ImportError: C-069 poison: t2pw.pipeline.strict_quarantine is unimportable here"
+      },
+      "import_driver": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "import_pipeline": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "poisoned": "t2pw.pipeline.strict_quarantine"
+    },
+    {
+      "app_module_scope": {
+        "exit": 1,
+        "stderr_tail": "ImportError: C-069 poison: t2pw.pipeline.deadline is unimportable here"
+      },
+      "import_driver": {
+        "exit": 0,
+        "stderr_tail": ""
+      },
+      "import_pipeline": {
+        "exit": 1,
+        "stderr_tail": "ImportError: C-069 poison: t2pw.pipeline.deadline is unimportable here"
+      },
+      "poisoned": "t2pw.pipeline.deadline"
+    }
+  ],
+  "question": "what actually breaks in the child when one declared module is unimportable?"
+}

@@ -76,17 +76,30 @@ def cli() -> Any:
 def _submodule_names(package: str) -> frozenset:
     """The real submodule names of ``package``, WITHOUT importing ``package``.
 
-    ``find_spec(package)`` imports only the ancestors of ``package``, never
+    ``find_spec(package)`` imports only the ANCESTORS of ``package``, never
     ``package`` itself, and hands back ``submodule_search_locations`` when -- and
     only when -- it is a package. ``pkgutil.iter_modules`` then reads those
-    directories off disk. Nothing under test is executed to answer the question.
+    directories off disk.
 
-    That matters twice over. Executing ``streamlit.testing.v1`` here would cost
-    seconds and would be answered by a ``MagicMock`` in any session where one of
-    the four mocking test modules got imported first (see
-    ``runner.probe_imports``, on why the parent's ``sys.modules`` lies in both
-    directions). And a module that is not a package answers the empty set, which
-    is the truthful answer: ``t2pw.pipeline.release_status`` has no submodules, so
+    The ancestors are not free, and an earlier draft of this docstring claimed they
+    were. MEASURED: one ``_deferred_imports(DRIVER_PATH)`` adds **483** modules to
+    ``sys.modules`` -- the whole ``streamlit`` runtime plus ``anyio``, ``asyncio``,
+    ``blinker`` and ``click`` -- because ``streamlit.testing.v1``'s ancestors get
+    imported to locate it. The true and narrow claim is only this: the module whose
+    module-ness is being decided is never executed; its ancestors are.
+
+    Why not ``find_spec(f"{package}.{name}")`` -- with the reasons that survived
+    measurement. NOT cost: that form adds 18 modules and 0.058s on top of what this
+    one already pays, which is noise against 483 and 0.373s. NOT ``MagicMock``
+    safety: under a poisoned ``sys.modules['streamlit']`` it raises
+    ``ModuleNotFoundError: ... 'streamlit' is not a package``, which the
+    ``BaseException`` handler below would have caught anyway. What is left is
+    small and true -- this form resolves ONCE PER PACKAGE and answers every name on
+    the statement from one cached directory listing, where the other asks the import
+    system once per imported name.
+
+    A module that is not a package answers the empty set, which is the truthful
+    answer: ``t2pw.pipeline.release_status`` has no submodules, so
     ``RELEASE_STATES`` cannot be one.
 
     ``BaseException`` on the way out, and the empty set as the fallback: an

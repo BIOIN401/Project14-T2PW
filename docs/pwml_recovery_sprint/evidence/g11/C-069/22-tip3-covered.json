@@ -1,0 +1,238 @@
+{
+  "label": "tip3-covered",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/c069_probe_coverage.py",
+    "--out",
+    "docs/pwml_recovery_sprint/evidence/c069_probe_coverage_tip.json",
+    "--expect",
+    "covered",
+    "--module",
+    "t2pw.pipeline.release_status",
+    "--module",
+    "t2pw.pipeline.strict_quarantine",
+    "--module",
+    "t2pw.pipeline.deadline"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T20:39:20+00:00",
+  "finished_at": "2026-08-21T20:39:30+00:00",
+  "duration_seconds": 9.011400100000174,
+  "timeout_seconds": 300.0,
+  "root_pid": 84776,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 106096,
+      "name": "python.exe",
+      "ppid": 84776
+    },
+    {
+      "pid": 85028,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 139420,
+      "name": "python.exe",
+      "ppid": 85028
+    },
+    {
+      "pid": 146096,
+      "name": "python.exe",
+      "ppid": 161888
+    },
+    {
+      "pid": 161888,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 84224,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 164168,
+      "name": "python.exe",
+      "ppid": 84224
+    },
+    {
+      "pid": 85032,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 129220,
+      "name": "python.exe",
+      "ppid": 85032
+    },
+    {
+      "pid": 81752,
+      "name": "python.exe",
+      "ppid": 130872
+    },
+    {
+      "pid": 130872,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 84712,
+      "name": "python.exe",
+      "ppid": 85480
+    },
+    {
+      "pid": 85480,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 80312,
+      "name": "python.exe",
+      "ppid": 84720
+    },
+    {
+      "pid": 84720,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 85528,
+      "name": "python.exe",
+      "ppid": 155732
+    },
+    {
+      "pid": 155732,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 84288,
+      "name": "python.exe",
+      "ppid": 162936
+    },
+    {
+      "pid": 162936,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 85648,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 131972,
+      "name": "python.exe",
+      "ppid": 85648
+    },
+    {
+      "pid": 85160,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 100036,
+      "name": "python.exe",
+      "ppid": 85160
+    }
+  ],
+  "descendants_terminated": [
+    80312,
+    81752,
+    84224,
+    84288,
+    84712,
+    84720,
+    85028,
+    85032,
+    85160,
+    85480,
+    85528,
+    85648,
+    100036,
+    106096,
+    129220,
+    130872,
+    131972,
+    139420,
+    146096,
+    155732,
+    161888,
+    162936,
+    164168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 84104,
+      "name": "python.exe"
+    },
+    {
+      "pid": 84128,
+      "name": "python.exe"
+    },
+    {
+      "pid": 85548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 85572,
+      "name": "python.exe"
+    },
+    {
+      "pid": 160240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 164040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165792,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-069/22-tip3-covered.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "86d5807ed9857808bb2261a0e089c958ce497767",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

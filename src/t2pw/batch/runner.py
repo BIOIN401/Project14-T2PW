@@ -1396,20 +1396,22 @@ CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
     ),
     (
         "t2pw.pipeline.strict_quarantine",
-        "the quarantine report FILENAMES live here and nowhere else, so a child "
-        "that cannot import it still reaches the boundary and still writes all "
-        "four reports -- then _add_identity_artifacts cannot copy them into the "
-        "run directory and _gate_failure_semantic_carry cannot read the frozen "
-        "verdict back, which is the refusal record for exactly the leg whose "
-        "refusal mattered most",
+        "streamlit_app.py:52 imports it at MODULE scope, so a child that cannot "
+        "import it dies EXECUTING THE APP -- AppTest execs the app as a script "
+        "(driver.py:111) -- and there is no boundary, no quarantine artifacts "
+        "and no reports at all. Measured: poisoned, the app's module-scope "
+        "import block exits 1 while 'import t2pw.batch.driver' still exits 0. "
+        "The deferred sites are the second loss: the four report FILENAMES live "
+        "only here",
     ),
     (
         "t2pw.pipeline.deadline",
-        "_finalize_timeout defers it to classify a leg that has ALREADY burned "
-        "its hour -- classify_interaction_timeout and is_operational are what "
-        "set termination_reason on the terminal row. A child that cannot import "
-        "it turns an orderly timeout into a crash, so exactly the night's "
-        "slowest legs are the ones filed under the wrong failure_kind",
+        "extraction_ladder.py:61 imports it at MODULE scope and pipeline.py:32 "
+        "imports extraction_ladder the same way, so EVERY leg dies at pipeline "
+        "import -- not just the ones that time out. Measured: poisoned, 'import "
+        "t2pw.pipeline.pipeline' exits 1 while 'import t2pw.batch.driver' still "
+        "exits 0. _finalize_timeout's deferred use additionally loses "
+        "termination_reason on the terminal row",
     ),
 )
 
