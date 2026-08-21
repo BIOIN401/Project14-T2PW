@@ -9,9 +9,9 @@ import pytest
 
 from t2pw.rag.loop_policy import (
     ATTEMPT_CAP_REACHED, BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, NO_NEW_CLAIMS,
-    OPERATION_TIMEOUT, RETRIEVAL_EXHAUSTED, SCIENTIFICALLY_UNRECOVERABLE,
-    TERMINATION_PRECEDENCE, TERMINATION_REASONS, LoopState, SeenClaims,
-    claim_identity_key, decide,
+    OPERATION_TIMEOUT, RETRIEVAL_EXHAUSTED, ROUND_CAP_REACHED,
+    SCIENTIFICALLY_UNRECOVERABLE, TERMINATION_PRECEDENCE, TERMINATION_REASONS,
+    LoopState, SeenClaims, claim_identity_key, decide,
 )
 
 #: A healthy mid-loop state: budget left, the round completed, the graph grew.
@@ -30,6 +30,9 @@ ONLY = {  # per reason, the overrides that make exactly that one reason true
     # D-024: budget left, the round produced claims, the ladder did not complete —
     # so the ONLY thing that stopped this loop is the spent attempt ceiling.
     ATTEMPT_CAP_REACHED: dict(attempt_cap_reached=True),
+    # C-064: 900 s of clock left, the round produced claims, nothing else fired —
+    # so the ONLY thing that stopped this loop is the configured round ceiling.
+    ROUND_CAP_REACHED: dict(rounds_completed=3, max_rounds=3),
 }
 
 
@@ -45,7 +48,10 @@ def claim(reactant: str, name: str = "step", gap: str = "gap-1") -> dict:
 def test_each_reason_is_produced_by_a_state_that_yields_only_it(reason):
     # BASELINE MOVE, C-042a / D-024: 6 -> 7. Exact delta: ``attempt_cap_reached``
     # added, nothing removed or renamed. Still one precedence slot per reason.
-    assert len(TERMINATION_REASONS) == len(TERMINATION_PRECEDENCE) == 7  # all distinct
+    # BASELINE MOVE, C-064 / F-070: 7 -> 8. Exact delta: ``round_cap_reached`` added
+    # in the LAST slot, nothing removed or renamed. The round bound moved out of
+    # ``budget_exhausted`` into it; ``budget_exhausted`` is now the time bound alone.
+    assert len(TERMINATION_REASONS) == len(TERMINATION_PRECEDENCE) == 8  # all distinct
     decision = decide(state(**ONLY[reason]))
     assert (decision.should_continue, decision.reason, decision.also_true) == (
         False, reason, ())
@@ -88,12 +94,27 @@ def test_precedence_prefers_the_documented_winner_when_two_conditions_hold():
     assert SCIENTIFICALLY_UNRECOVERABLE in mechanism.also_true
 
 
-@pytest.mark.parametrize("bound", [dict(rounds_completed=3, max_rounds=3),
-                                   dict(now=999.5, next_round_reserve_seconds=60.0)])
-def test_the_round_bound_and_the_time_bound_each_stop_the_loop(bound):
+@pytest.mark.parametrize("bound, reason", [
+    (dict(rounds_completed=3, max_rounds=3), ROUND_CAP_REACHED),
+    (dict(now=999.5, next_round_reserve_seconds=60.0), BUDGET_EXHAUSTED)])
+def test_each_bound_stops_the_loop_and_now_says_which_bound_it_was(bound, reason):
+    """BASELINE MOVED, C-064 / F-070. At ``ac77668`` BOTH arms asserted
+    ``budget_exhausted``, which reported a configured ceiling as D-005's operational
+    failure. Exact delta: the round-bound arm's expected reason, and nothing else —
+    the time-bound arm is untouched, and both still STOP, which is boundedness."""
     assert decide(state()).should_continue is True  # same state, neither bound spent
     decision = decide(state(**bound))
-    assert (decision.should_continue, decision.reason) == (False, BUDGET_EXHAUSTED)
+    assert (decision.should_continue, decision.reason) == (False, reason)
+    assert decision.also_true == ()                 # exactly one bound is spent
+
+
+def test_both_bounds_at_once_keep_reporting_the_operational_failure_first():
+    """The ceiling never displaces a genuinely spent clock: ``budget_exhausted`` is
+    rank 1 and the ceiling is rank 8, so a run that hit both is still an operational
+    failure — and the ceiling is recorded rather than lost."""
+    both = decide(state(rounds_completed=3, max_rounds=3, now=1000.0))
+    assert (both.should_continue, both.reason) == (False, BUDGET_EXHAUSTED)
+    assert both.also_true == (ROUND_CAP_REACHED,)
 
 
 def test_decide_is_pure_and_the_module_imports_no_clock_no_io():

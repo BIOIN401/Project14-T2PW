@@ -1,0 +1,3345 @@
+{
+ "axes": [
+  "round_bound",
+  "time_bound",
+  "ladder_completed",
+  "round_retrieval_completed",
+  "new_admissible_claims",
+  "graph_delta",
+  "operation_timed_out",
+  "identical_empty_responses",
+  "evidence_sources_exhausted",
+  "defensible_core",
+  "attempt_cap_reached"
+ ],
+ "base_census": "C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/797a957f-8161-4eda-9cf7-9d17efd8c579/scratchpad/c064/census_base_ac77668.json",
+ "base_precedence": [
+  "budget_exhausted",
+  "operation_timeout",
+  "identical_empty_response",
+  "scientifically_unrecoverable",
+  "attempt_cap_reached",
+  "retrieval_exhausted",
+  "no_new_claims"
+ ],
+ "equivalence_classes": [
+  {
+   "base_also": [],
+   "base_reason": "budget_exhausted",
+   "count": 90,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [],
+   "tip_reason": "round_cap_reached"
+  },
+  {
+   "base_also": [
+    "operation_timeout"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 90,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 45,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 45,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 42,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "attempt_cap_reached"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 42,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 30,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "scientifically_unrecoverable"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 30,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 21,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 21,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 15,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 15,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 14,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "scientifically_unrecoverable"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 14,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 7,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 7,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "no_new_claims"
+  },
+  {
+   "base_also": [
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "attempt_cap_reached"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "scientifically_unrecoverable"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "scientifically_unrecoverable"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "identical_empty_response"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 0
+    }
+   ],
+   "reason_changed": true,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "operation_timeout"
+  },
+  {
+   "base_also": [],
+   "base_reason": "budget_exhausted",
+   "count": 90,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 90,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 45,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 45,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 42,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 42,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 30,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 30,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 21,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 21,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 15,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 15,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 14,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 14,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 7,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 7,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 1,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 1,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 0,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 6,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 3,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 0,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 0,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 2,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 0,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    },
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 1,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 0,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 0,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  },
+  {
+   "base_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims"
+   ],
+   "base_reason": "budget_exhausted",
+   "count": 1,
+   "example_states": [
+    {
+     "attempt_cap_reached": 1,
+     "defensible_core": 1,
+     "evidence_sources_exhausted": 1,
+     "graph_delta": 0,
+     "identical_empty_responses": 2,
+     "ladder_completed": 0,
+     "new_admissible_claims": 0,
+     "operation_timed_out": 1,
+     "round_bound": 1,
+     "round_retrieval_completed": 1,
+     "time_bound": 1
+    }
+   ],
+   "reason_changed": false,
+   "tip_also": [
+    "operation_timeout",
+    "identical_empty_response",
+    "scientifically_unrecoverable",
+    "attempt_cap_reached",
+    "no_new_claims",
+    "round_cap_reached"
+   ],
+   "tip_reason": "budget_exhausted"
+  }
+ ],
+ "state_count": 3072,
+ "states_identical": 1920,
+ "states_only_also_true_changed": 576,
+ "states_reason_changed": 576,
+ "states_that_gained_a_reason": [],
+ "states_that_lost_their_reason": [],
+ "tip_census": "C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/797a957f-8161-4eda-9cf7-9d17efd8c579/scratchpad/c064/census_tip.json",
+ "tip_precedence": [
+  "budget_exhausted",
+  "operation_timeout",
+  "identical_empty_response",
+  "scientifically_unrecoverable",
+  "attempt_cap_reached",
+  "retrieval_exhausted",
+  "no_new_claims",
+  "round_cap_reached"
+ ]
+}

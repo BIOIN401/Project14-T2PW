@@ -38,7 +38,7 @@ from t2pw.rag.graph_delta import (
 )
 from t2pw.rag.loop_policy import (
     BUDGET_EXHAUSTED, IDENTICAL_EMPTY_RESPONSE, OPERATION_TIMEOUT, RETRIEVAL_EXHAUSTED,
-    TERMINATION_REASONS, claim_identity_key,
+    ROUND_CAP_REACHED, TERMINATION_REASONS, claim_identity_key,
 )
 
 GAP = "gap-missing_step-1a2b3c4d"
@@ -398,7 +398,13 @@ def test_two_identical_empty_responses_stop_the_loop_but_two_different_ones_do_n
                               ([], dict(empty, empty_response_hash="h1")),
                               ([], dict(empty, empty_response_hash="h2")),
                               ([], dict(empty, empty_response_hash="h3"))))
-    assert varied.reason == BUDGET_EXHAUSTED
+    # BASELINE MOVED, C-064 / F-070: was ``BUDGET_EXHAUSTED``. Exact delta: this loop
+    # ran all three ALLOWED rounds with 1 000 s of its deadline untouched, so what
+    # stopped it was the configured ceiling, not an exhausted budget. The point of the
+    # arm — three genuinely different empty responses do NOT stop the loop early — is
+    # unchanged, and is what ``len(varied.rounds) == 3`` still says.
+    assert varied.reason == ROUND_CAP_REACHED
+    assert BUDGET_EXHAUSTED not in (varied.reason,) + varied.decision.also_true
     assert len(varied.rounds) == 3
 
 
