@@ -1808,6 +1808,16 @@ def _dedupe_candidates(
     * the same claim from a DIFFERENT passage survives as its own candidate.
       That is corroboration, and it must reach :func:`_resolve_reactions` so the
       row ends up carrying both source pointers.
+
+    ``gap_id`` STAYS in the key, deliberately, and C-059 measured why. The same
+    span retrieved for two gaps is collapsed by
+    :data:`~t2pw.rag.admission.REASON_DUPLICATE_ACROSS_GAPS`, which runs AFTER the
+    admission gate has judged the claim against each gap separately. Collapsing
+    here instead would judge it once, against whichever gap sorted first — and the
+    gate's verdict is gap-dependent by construction (``_gap_type_verdict``: a
+    reaction fills a connectivity gap and cannot fill an ``unmapped_enzyme`` one).
+    A claim refused for the first gap and admissible for the second would be lost
+    outright, which is a merge-rule-7 deletion of a legitimate recovery.
     """
     out: List[Tuple[RagReactionCandidate, _Reaction]] = []
     seen: set = set()
@@ -1928,6 +1938,30 @@ def synthesize_with_report(
         # reversible.
         reaction.scope_membership = candidate.scope_membership
         reaction.reversible = bool(candidate.reversible)
+        # C-059: the gate may now collapse one canonical claim that several gaps
+        # each retrieved (``REASON_DUPLICATE_ACROSS_GAPS``). The sibling rows
+        # therefore never reach :func:`_resolve_reactions`, and the union that
+        # merge used to perform has to happen here instead -- both halves of it,
+        # or the collapse silently costs the row something:
+        #
+        # * ``gap_ids``, or a gap this delivered reaction genuinely fills is
+        #   reported unfilled (pinned by
+        #   ``test_rag_admission_adversarial.py::test_one_claim_admitted_for_two_gaps_keeps_both_attributions``);
+        # * the collapsed group's best retrieval score, which ``_confidence``
+        #   maxes over, or the surviving row ships a lower ``rag_confidence``
+        #   than the same evidence produced before.
+        #
+        # Guarded on the union actually GROWING, so a claim the gate did not
+        # collapse takes this branch never and its row is unchanged.
+        merged_gap_ids = _dedupe_strs(
+            list(reaction.gap_ids or []) + list(candidate.gap_ids or [])
+        )
+        if len(merged_gap_ids) > len(list(reaction.gap_ids or [])):
+            reaction.gap_ids = merged_gap_ids
+            if candidate.confidence:
+                reaction.scores = list(reaction.scores) + [
+                    float(candidate.confidence)
+                ]
         # The gate's ATTRIBUTION travels with it too, and this is the only seam
         # where it can: the candidate holds the verdict (which gap it was admitted
         # against, the reasons, the hop, the organism/pathway comparisons) and the

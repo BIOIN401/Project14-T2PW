@@ -1,0 +1,180 @@
+{
+  "all_sixteen_charted_focused_files_plus_the_new_one_at_the_committed_tip": {
+    "disclosure": "PYTHONPATH=src set in the bounded child for the three F-066 files in this selection",
+    "failures": 0,
+    "files": [
+      "test_rag_admission_adversarial",
+      "test_rag_typed_resolution_integrity",
+      "test_rag_graph_delta",
+      "test_rag_loop_controller",
+      "test_rag_retrieve",
+      "test_rag_seed_entity_reimport",
+      "test_rag_lineage_emission",
+      "test_rag_synthesize",
+      "test_rag_cached_replay",
+      "test_rag_synonym_merge",
+      "test_rag_payload_gate_guardrails",
+      "test_rag_loop_policy",
+      "test_rag_reversible_reaction_preservation",
+      "test_rag_gap_admission",
+      "test_rag_admission_production_path",
+      "test_rag_triage_orchestration",
+      "test_rag_already_covered_gap"
+    ],
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/57-rev059-focused-final.json",
+    "note": "re-run after the REV-059 correction round; 336 -> 337 is the one arm that round added, nothing else moved",
+    "summary_line_verbatim": "337 passed, 1 skipped in 29.29s"
+  },
+  "base_sha": "87dbcca2a3f0608a6550736b9dc60030afc36c9d",
+  "branch": "agent/c059-gap-already-covered",
+  "budgets_measured": {
+    "command": "git diff --numstat 87dbcca2a3f0608a6550736b9dc60030afc36c9d HEAD -- src tests 'docs/pwml_recovery_sprint/evidence/*.py' | sum cols 1+2",
+    "evidence_bytes": {
+      "ceiling": 5242880,
+      "measured": 213347,
+      "measured_mb": 0.2
+    },
+    "generated_artifacts": {
+      "ceiling": 110,
+      "measured": 59
+    },
+    "hand_authored_lines": {
+      "OVER_BY": 775,
+      "breakdown": {
+        "docs/pwml_recovery_sprint/evidence/c059_already_covered_probe.py": 399,
+        "src/t2pw/rag/admission.py": 343,
+        "src/t2pw/rag/synthesize.py": 34,
+        "tests/test_rag_already_covered_gap.py": 1093,
+        "tests/test_rag_gap_admission.py": 6
+      },
+      "ceiling": 1100,
+      "measured": 1875,
+      "note": "OVER CEILING -- reported, not absorbed. Was 1625 before the REV-059 correction round, which added +188 test lines (the required real-path arm plus the self-found replica correction) and +62 probe lines (the lineage append and the corrected note). No adversarial arm was cut and no evidence deleted to fit the number (D-025 / REV-051a). Product code is 377 of the 1875; the rest is the test suite, the offline replay probe and their documentation. Every line is additive -- the diff deletes nothing anywhere in the tree."
+    },
+    "measured_at": "54943fc, the REV-059 correction tip"
+  },
+  "chunk_c": {
+    "expected_per_TEST_MATRIX": 109,
+    "failures": 0,
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/15-chunk-c-109.json",
+    "matches_expected": true,
+    "measured": 109,
+    "summary_line_verbatim": "109 passed in 5.78s"
+  },
+  "chunk_d": {
+    "expected_on_a_dot_env_tree": "185/187, core 159/160",
+    "expected_per_TEST_MATRIX": 187,
+    "failures": [
+      {
+        "basis": "its own comment at :1829 asserts 'no worktree carries a .env'; sprint worktrees copy .env in for F-051 control parity, so :1833's assert report['db_resolution']['available'] is False fails on this tree",
+        "classification": "PRE-CHARGED, F-065",
+        "node": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance",
+        "not_attributable_to_this_diff": "tests/test_pwml_writer.py contains ZERO t2pw.rag imports, and this card's source diff is confined to src/t2pw/rag/admission.py and src/t2pw/rag/synthesize.py -- a structural exclusion, stronger than a re-run"
+      },
+      {
+        "classification": "PRE-CHARGED, qb node15 whenever the PathBank DB is reachable (hotspot 9 -- file not touched)",
+        "node": "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block",
+        "not_attributable_to_this_diff": "tests/test_streamlit_quarantine_boundary.py contains ZERO t2pw.rag references"
+      }
+    ],
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/16-chunkd-outer.json",
+    "gate_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "matches_expected": true,
+    "measured_core": "159/160",
+    "measured_total": "185/187",
+    "partition_proof": "core exit=0 parsed=160 pytest_said=160 expected=160 overlap_with_earlier=0",
+    "run_core_line_verbatim": "[chunk-d] core/run-core [5 files]: passed=159/160, failed=1, exit=1, exit_reason=nonzero"
+  },
+  "focused_chunkless": {
+    "files": [
+      "test_rag_admission_adversarial",
+      "test_rag_typed_resolution_integrity",
+      "test_rag_retrieve",
+      "test_rag_seed_entity_reimport",
+      "test_rag_lineage_emission",
+      "test_rag_synthesize",
+      "test_rag_cached_replay",
+      "test_rag_synonym_merge",
+      "test_rag_payload_gate_guardrails",
+      "test_rag_reversible_reaction_preservation",
+      "test_rag_already_covered_gap"
+    ],
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/11-focused-nochunk-recheck.json",
+    "note": "test_rag_admission_adversarial (54) is NOT Chunk C -- only test_rag_admission_production_path is. Certified stem-exactly, never by filename substring (F-054).",
+    "summary_line_verbatim": "221 passed, 1 skipped in 25.34s"
+  },
+  "focused_f066_group": {
+    "disclosure": "PYTHONPATH=src was set in the bounded child, as F-066 requires. These three files insert no sys.path entry of their own and fail at COLLECTION without it. No conftest.py was created, no sys.path insert was added to any test, nothing was pip-installed.",
+    "files": [
+      "test_rag_graph_delta",
+      "test_rag_loop_controller",
+      "test_rag_loop_policy"
+    ],
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/12-focused-f066-pythonpath.json",
+    "summary_line_verbatim": "74 passed in 0.90s"
+  },
+  "g11": {
+    "artifacts": 57,
+    "checker_line_verbatim": "G11 evidence: 57 artifact(s), 0 non-compliant (spec v1)",
+    "measured_at": "94625bd, the REV-059 correction tip, by re-running g11_evidence.py check --task C-059",
+    "non_compliant": 0,
+    "note": "CORRECTED. This block read 49 and was the one block moved this session without a re-measurement stamp -- captured before the REV-059 correction round added eight more reports (50-57). The substantive assertions were true at 49 and remain true at 57: every report is compliant and no job left a surviving owned process. Only the self-referential count was stale. Re-run rather than incremented, and no new report was allocated to produce it, since `check` spawns no child process and allocating one would have moved the number it was measuring.",
+    "survivors_across_every_job": 0
+  },
+  "g9_proof": {
+    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/55-rev059-g9-base-final.json",
+    "base_summary_line_verbatim": "13 failed, 11 passed in 2.74s",
+    "correction_arm_fails_behaviourally_at_base": {
+      "base_failure_verbatim": "AssertionError: the seed payload's /processes/reactions/1 already states isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate; re-importing it is what put a second EntB protein row in the export\nassert 2 == 0",
+      "test": "test_correction_the_leg_no_longer_admits_a_reaction_the_paper_already_locked",
+      "why_this_is_not_symbol_absence": "the test imports no name this card introduced; it runs to completion at base and fails on the COUNT the committed rag_admission_report.json itself records"
+    },
+    "measured_at": "the REV-059 correction tip, over the 24-test file",
+    "method": "F-051 remedy -- the tree, its .env and the test file held CONSTANT; only the two files under test swapped to their base-SHA contents via `git checkout 87dbcca -- src/t2pw/rag/admission.py src/t2pw/rag/synthesize.py`. No second worktree, so no .env asymmetry can exist between the two sides.",
+    "new_real_path_arm_also_fails_behaviourally_at_base": {
+      "base_failure_verbatim": "assert result.admission[\"counts\"][\"accepted\"] == 1\nE       assert 2 == 1",
+      "note": "drives the REAL synthesize_with_report, not a replica of its loop",
+      "test": "test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row"
+    },
+    "supersedes": "the earlier 'base 11 failed, 11 passed / tip 22 passed' figures, which were captured at d19acdc over a 22-test file and went stale as the file grew. REV-059 measured 12/11 over 23 tests; the REV-059 correction round added test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row, which also fails at base, giving 13/11 over 24. Re-measured here, not copied.",
+    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/56-rev059-g9-tip-final.json",
+    "tip_summary_line_verbatim": "24 passed in 2.53s"
+  },
+  "purpose": "literal pytest COUNTS and verbatim summary lines for every gate this card owes -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10)",
+  "rev059_correction_round": {
+    "additional_self_correction": "The sibling replica test carried the same blindness: it was named ..._is_payload_neutral_once_the_union_is_carried and asserted full-row equality. Its replica now runs the lineage append too, it is renamed test_the_cross_gap_dedup_changes_nothing_on_the_row_but_the_lineage, and it asserts the differing-key set is EXACTLY {provenance_lineage} -- so a second field cannot start moving unnoticed. Not a rebuild: no arm added or removed. Left uncorrected it would have been a second false record of the same class.",
+    "argument_withdrawn": "The previous report argued that neither F-065's file nor qb node15's file contains a t2pw.rag reference, so a diff confined to two rag modules cannot reach them. REV-059 confirmed the greps but correctly notes the argument is weaker than stated, since qb drives the app through maybe_run_rag. WITHDRAWN. Both reds stand on their charter-named pre-charged status (F-065 and the PathBank-reachable qb node15), not on that reasoning.",
+    "fix_1_artifact_corrected": "c059_leg_replay.json published 'dedup_alone_is_payload_neutral: true' with an empty delta. FALSE. The probe's own replay loop omitted the production line reaction.lineage.append(admission_lineage_entry(candidate).as_dict()), so it could only ever see the rag_retrieval lineage entry -- derived from gap_ids, hence identical once the union carry lands. _carry_the_verdict now runs that line. Re-measured on the committed F-057 leg: dedup_alone_is_payload_neutral is FALSE, and provenance_lineage is the ONLY differing key -- rag_admission entries go 2 -> 1. Artifact corrected in place, not deleted.",
+    "fix_2_real_path_arm_added": "test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row drives the real synthesize_with_report on a two-gap claim and pins both what survives (gap_ids, rag_confidence 0.9 -- the collapsed group's best, not the losing bundle's 0.4) and what does not (provenance_lineage 3 entries -> 2; the losing gap's 'fills_named_gap_directly: via a' retained NOWHERE, because _reject overwrites candidate.reasons with the duplicate code -- asserted against the report too).",
+    "fix_3_g9_counts_refreshed": "see g9_proof.supersedes",
+    "gates_not_re_run": "SMOKE, Chunk C and Chunk D were NOT re-run, because this round changed no file under src/ -- `git diff HEAD --stat -- src/` is empty against the pre-correction tip. The counts recorded elsewhere in this artifact stand unchanged and were not re-measured. The heavy mutex was held by C-056d and then REV-056d throughout; no acquire was chained and no lock naming another holder was removed (F-072).",
+    "src_untouched_this_round": true,
+    "verdict_addressed": "REJECT, correction round 1 of 2"
+  },
+  "smoke": {
+    "expected_per_COUNT_CORRECTIONS": 465,
+    "failures": 0,
+    "final_surviving_count": 0,
+    "first_run_before_the_pinned_rule_list_was_extended": {
+      "collected_total": 465,
+      "failures": [
+        "tests/test_rag_gap_admission.py::test_the_admission_rules_are_declared_as_data",
+        "tests/test_rag_gap_admission.py::test_the_admission_report_is_bounded_and_counts_what_it_drops"
+      ],
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/13-smoke-465.json",
+      "resolution": "Both were direct consequences of appending two entries to ADMISSION_RULES, which the admission report publishes VERBATIM. The rule-name list was extended in the test (additive only; the eleven existing names unchanged in name and order) -- an exact merge-rule-4 delta. The report SIZE bound at test_rag_gap_admission.py:721 was NOT touched: the two new rule texts were shortened instead, from 575 to 344 bytes of published contract, so the serialized report stays inside the existing < 4600 bound. Raising a size bound to fit one's own additions is the pattern that bound exists to catch.",
+      "summary_line_verbatim": "2 failed, 463 passed in 82.18s (0:01:22)"
+    },
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/14-smoke-465-recheck.json",
+    "matches_expected": true,
+    "measured": 465,
+    "summary_line_verbatim": "465 passed in 98.82s (0:01:38)"
+  },
+  "task": "C-059",
+  "tree_note": "worktree carries .env, copied from the primary checkout for F-051 control parity; the PathBank DB is therefore REACHABLE on this tree"
+}

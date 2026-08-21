@@ -1,0 +1,142 @@
+{
+  "label": "smoke-465-recheck",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/c59/sm2",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c059-gap-covered",
+  "started_at": "2026-08-21T03:39:15+00:00",
+  "finished_at": "2026-08-21T03:40:58+00:00",
+  "duration_seconds": 102.44045249999908,
+  "timeout_seconds": 900.0,
+  "root_pid": 91316,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 89732,
+      "name": "python.exe",
+      "ppid": 91316
+    },
+    {
+      "pid": 81424,
+      "name": "python.exe",
+      "ppid": 90952
+    },
+    {
+      "pid": 90952,
+      "name": "python.exe",
+      "ppid": 89732
+    },
+    {
+      "pid": 83048,
+      "name": "python.exe",
+      "ppid": 87960
+    },
+    {
+      "pid": 87960,
+      "name": "python.exe",
+      "ppid": 89732
+    },
+    {
+      "pid": 90204,
+      "name": "python.exe",
+      "ppid": 89732
+    },
+    {
+      "pid": 90404,
+      "name": "python.exe",
+      "ppid": 90204
+    },
+    {
+      "pid": 85616,
+      "name": "python.exe",
+      "ppid": 89732
+    },
+    {
+      "pid": 85416,
+      "name": "python.exe",
+      "ppid": 85616
+    }
+  ],
+  "descendants_terminated": [
+    81424,
+    83048,
+    85416,
+    85616,
+    87960,
+    89732,
+    90204,
+    90404,
+    90952
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 82176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 86188,
+      "name": "python.exe"
+    },
+    {
+      "pid": 88972,
+      "name": "python.exe"
+    },
+    {
+      "pid": 91056,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-059/14-smoke-465-recheck.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c059-gap-covered\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c059-gap-covered",
+    "repo_head": "d19acdc33d9e975ff896b091bd86639e0f3667ca",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

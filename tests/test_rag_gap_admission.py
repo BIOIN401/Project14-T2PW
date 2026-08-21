@@ -331,6 +331,12 @@ def test_the_admission_rules_are_declared_as_data() -> None:
         "gap_type_compatible",
         "connects_to_pathway",
         "fills_its_named_gap",
+        # C-059 appended two, and only appended: the eleven above are unchanged in
+        # name and in order. A "gap" an existing reaction already covers is not a
+        # gap, and one canonical claim from one span is admitted once however many
+        # adjacent gaps retrieved it.
+        "gap_not_already_covered",
+        "not_already_admitted_for_another_gap",
     ]
 
 

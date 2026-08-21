@@ -94,6 +94,8 @@ __all__ = [
     "SCOPE_ADMITTED",
     "SCOPE_REJECTED",
     "HUB_METABOLITES",
+    "REASON_ALREADY_COVERED",
+    "REASON_DUPLICATE_ACROSS_GAPS",
 ]
 
 
@@ -172,6 +174,32 @@ REASON_SIDE_NO_LONGER_MISSING = "precursor_side_no_longer_missing"
 #: whichever sorts first, which is not evidence. Neither is applied and both
 #: values are reported with their sources.
 REASON_CONFLICTING_RESOLUTION = "conflicting_typed_resolution"
+#: The connectivity the candidate offers is ALREADY in the pathway: every
+#: substrate and every product it asserts is already a substrate/product of ONE
+#: existing reaction, on the same side and in the same direction, and it adds no
+#: participant that reaction lacks. Re-importing such a claim does not close the
+#: gap — it restates a row the paper already locked under a second set of names,
+#: which is how a duplicate protein and compound reach the export as orphans
+#: (F-057). Deliberately narrow, in three ways that all fail OPEN:
+#:
+#: * it is raised only for CONNECTIVITY gaps (:data:`_CONNECTIVITY_GAP_KINDS`),
+#:   because only there is the claimed contribution connectivity. An
+#:   ``unmapped_enzyme`` gap asks about catalyst identity and is never refused by
+#:   this rule;
+#: * SUBSUMPTION, not equality: a candidate naming any substrate or product the
+#:   existing reaction does not have is *extending or correcting* it, and is
+#:   admitted. The seed row that triggered F-057 was the MORE complete one;
+#: * a candidate asserting reversibility an existing one-way reaction does not
+#:   have is a directional correction, and is admitted.
+REASON_ALREADY_COVERED = "gap_already_covered_by_existing_reaction"
+#: The same canonical claim, from the same paper and the same span, already
+#: admitted against a DIFFERENT gap. Every internal metabolite of a linear
+#: pathway lies in two adjacent gaps' target sets, so one passage legitimately
+#: satisfies two gap targets; the per-gap admission loop then accepts it once per
+#: gap. The FIRST admission survives and takes both gap ids into its ``gap_ids``,
+#: so no gap loses its attribution; the second is reported under this code rather
+#: than counted as a second acceptance.
+REASON_DUPLICATE_ACROSS_GAPS = "duplicate_claim_admitted_for_another_gap"
 
 # --- acceptance reason codes -------------------------------------------------
 REASON_FILLS_GAP_DIRECT = "fills_named_gap_directly"
@@ -240,6 +268,16 @@ ADMISSION_RULES: Tuple[Tuple[str, str], ...] = (
         "a substrate or product of the candidate is the gap's target, directly "
         "or within the configured hop limit through metabolites contributed by "
         "reactions already admitted for that same gap",
+    ),
+    (
+        "gap_not_already_covered",
+        "for a connectivity gap: no existing reaction already has every "
+        "substrate and product of this candidate, same side, same direction",
+    ),
+    (
+        "not_already_admitted_for_another_gap",
+        "one canonical claim from one span is admitted once; it carries every "
+        "gap id it was retrieved for",
     ),
 )
 
@@ -2328,6 +2366,200 @@ def _metabolite_tokens(names: Iterable[str], token: Any, *, drop_hubs: bool) -> 
 
 
 # ---------------------------------------------------------------------------
+# "Is this gap already covered?" -- the seed pathway read as a REFUSAL, C-059.
+#
+# Everywhere else in this module the seed payload is an admission ENABLER:
+# ``_pathway_metabolites`` turns its metabolites into anchors that WIDEN the
+# frontier. Nothing read it as a reason to refuse, which is why a retrieved
+# passage restating a reaction the paper had already locked was admitted as
+# "fills_named_gap_directly" (F-057) and shipped as a second, orphaned copy.
+#
+# The predicate below is the missing direction, and it is built to fail OPEN.
+# Three properties are load-bearing and are each pinned by a test:
+#
+# 1. It is NOT keyed on an identifier. F-043 governs: ``PG``, ``PG phosphate``
+#    and ``(PGP)`` all carry PathBank 193, which is UDP-glucose and wrong for all
+#    three, so a shared accession is evidence and never proof. The duplicate
+#    protein rows in F-057 DO share UniProt ``P0ADI4`` and that is still not a
+#    licence to key on it. Nothing here reads ``mapped_ids``,
+#    ``locked_reaction_id`` or any accession.
+# 2. It is NOT keyed on exact name or exact participant-set equality. It could
+#    not have fired on the case it exists for if it were: the seed row is
+#    ``isochorismate -> {2,3-dihydro-2,3-dihydroxybenzoate, pyruvate}`` and the
+#    retrieved row is ``isochorismate -> {2,3-dihydro-2,3-dihydroxybenzoate
+#    (DHB)}``. Different output name, one product short -- a different
+#    ``conflict_key``, which is exactly why ``synthesize._resolve_reactions``
+#    never grouped them.
+# 3. It is SUBSUMPTION and it is DIRECTIONAL. The candidate is covered only when
+#    an existing reaction already asserts everything it asserts. A candidate that
+#    names one participant more, or one direction more, is correcting or
+#    extending the pathway -- the seed row happened to be the more complete one
+#    here, the opposite case is real, and refusing it would delete a legitimate
+#    recovery (merge rule 7).
+# ---------------------------------------------------------------------------
+
+#: A trailing parenthetical gloss: the ``(DHB)`` in
+#: ``2,3-dihydro-2,3-dihydroxybenzoate (DHB)``. Papers introduce an abbreviation
+#: this way on first use and then mix the two spellings, so the HEAD of such a
+#: name is compared alongside the whole of it. Only the head is ever used -- the
+#: abbreviation itself is never matched against anything, because ``PG`` /
+#: ``(PGP)`` is precisely the collision F-043 records.
+_TRAILING_GLOSS_RE = re.compile(r"\s*\([^()]*\)\s*$")
+
+
+def _gloss_forms(name: Any) -> Tuple[str, ...]:
+    """``(name,)``, or ``(name, head)`` when ``name`` ends in a gloss.
+
+    ``"2,3-dihydro-2,3-dihydroxybenzoate (DHB)"`` yields both spellings; ``"PG"``
+    yields itself; ``"(PGP)"`` yields itself, because stripping it leaves nothing
+    and a name is never replaced by the empty string.
+    """
+    text = _text(name)
+    if not text:
+        return ()
+    head = _TRAILING_GLOSS_RE.sub("", text).strip()
+    if head and head != text:
+        return (text, head)
+    return (text,)
+
+
+def _row_participant_names(row: Any, side: str) -> List[str]:
+    """The names on one side of a payload process row (str or dict participants)."""
+    names: List[str] = []
+    if not isinstance(row, dict):
+        return names
+    for participant in row.get(side) or []:
+        if isinstance(participant, str):
+            names.append(_text(participant))
+        elif isinstance(participant, dict):
+            names.append(_text(participant.get("name") or participant.get("entity")))
+    return [name for name in names if name]
+
+
+def _covering_tokens(names: Iterable[Any], token: Any) -> Set[str]:
+    """Every token an existing reaction's side can be matched on.
+
+    Cofactors are dropped for the same reason they are dropped everywhere else in
+    this module: ``ATP -> ADP`` is not a connectivity claim, so cofactor detail
+    must neither create nor destroy a coverage verdict.
+    """
+    cofactors = _cofactors()
+    out: Set[str] = set()
+    for name in names or ():
+        for form in _gloss_forms(name):
+            if _fold(_canonical(form)) in cofactors:
+                continue
+            resolved = token(form)
+            if resolved:
+                out.add(resolved)
+    return out
+
+
+def _participant_token_sets(names: Iterable[Any], token: Any) -> List[Set[str]]:
+    """One token set per non-cofactor participant -- its ALTERNATIVE spellings.
+
+    A participant counts as present in an existing reaction when ANY of its forms
+    is; the list stays per-participant (rather than collapsing to one set)
+    because coverage requires EVERY participant to be present, and a flat set
+    cannot say which one was missing.
+    """
+    cofactors = _cofactors()
+    out: List[Set[str]] = []
+    for name in names or ():
+        forms = _gloss_forms(name)
+        if not forms:
+            continue
+        if _fold(_canonical(forms[0])) in cofactors:
+            continue
+        tokens = {t for t in (token(form) for form in forms) if t}
+        if tokens:
+            out.append(tokens)
+    return out
+
+
+@dataclass(frozen=True)
+class _SeedReaction:
+    """One existing reaction, reduced to what a coverage test may look at.
+
+    Name, tokenized non-cofactor sides, direction. No identifier, no lock id and
+    no enzyme: see property 1 above, and note that catalysis is what an
+    ``unmapped_enzyme`` gap is for, which this rule never touches.
+    """
+
+    name: str
+    inputs: frozenset
+    outputs: frozenset
+    reversible: bool
+
+
+def _seed_reactions(payload: Any, token: Any) -> List[_SeedReaction]:
+    """Index ``payload``'s REACTIONS for the coverage test -- reactions only.
+
+    ``transports`` and ``interactions`` are deliberately excluded: a transport
+    moving A across a membrane is a different biological statement from a
+    reaction converting A, and treating one as covering the other would refuse a
+    real reaction on the strength of a real transport.
+    """
+    data = payload if isinstance(payload, dict) else {}
+    processes = data.get("processes")
+    rows = processes.get("reactions") if isinstance(processes, dict) else None
+    index: List[_SeedReaction] = []
+    if not isinstance(rows, list):
+        return index
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        inputs = _covering_tokens(_row_participant_names(row, "inputs"), token)
+        outputs = _covering_tokens(_row_participant_names(row, "outputs"), token)
+        if not inputs or not outputs:
+            # A half-stated row cannot subsume anything: with one side empty,
+            # "every product is already a product of it" is a coverage verdict
+            # made on missing data. Skipped, which admits.
+            continue
+        index.append(
+            _SeedReaction(
+                name=_text(row.get("name")),
+                inputs=frozenset(inputs),
+                outputs=frozenset(outputs),
+                reversible=bool(row.get("reversible")),
+            )
+        )
+    return index
+
+
+def _already_covered(
+    candidate: "RagReactionCandidate",
+    gap: Any,
+    seed_reactions: Sequence["_SeedReaction"],
+    token: Any,
+) -> Optional["_SeedReaction"]:
+    """The existing reaction that already asserts everything ``candidate`` does.
+
+    ``None`` -- admit -- whenever anything at all is uncertain: a non-connectivity
+    gap, an empty index, a candidate with no chemistry on one side, a candidate
+    naming a participant no single existing reaction has, or a candidate claiming
+    a reversibility the covering reaction does not.
+    """
+    if _text(getattr(gap, "kind", "")) not in _CONNECTIVITY_GAP_KINDS:
+        return None
+    if not seed_reactions:
+        return None
+    inputs = _participant_token_sets(candidate.inputs, token)
+    outputs = _participant_token_sets(candidate.outputs, token)
+    if not inputs or not outputs:
+        return None
+    for seed in seed_reactions:
+        if candidate.reversible and not seed.reversible:
+            continue
+        if not all(forms & seed.inputs for forms in inputs):
+            continue
+        if not all(forms & seed.outputs for forms in outputs):
+            continue
+        return seed
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Gap-type compatibility.
 # ---------------------------------------------------------------------------
 GAP_DANGLING_REACTION = "dangling_reaction"
@@ -3152,6 +3384,17 @@ def admit_candidates(
     :mod:`t2pw.rag.synonyms`; supplying it makes the connection rules
     synonym-aware without rewriting any name (see :func:`_make_token`).
 
+    ``seed_payload`` is read TWICE, in opposite directions, and the second one is
+    C-059. As an ENABLER its metabolites are anchors that widen the frontier. As a
+    REFUSAL its reactions are what a candidate can already be covered by: a claim
+    every one of whose substrates and products is already on the same side of one
+    existing reaction adds no connectivity, and importing it restates a locked row
+    under a second set of names (:data:`REASON_ALREADY_COVERED`). That pass runs
+    after the BFS, so it changes which candidates are EMITTED and never which ones
+    the BFS could chain through. Beside it, one canonical claim from one span is
+    counted once even when adjacent gaps both retrieved it
+    (:data:`REASON_DUPLICATE_ACROSS_GAPS`); the survivor carries every gap id.
+
     Nothing is mutated except the candidates' own verdict fields — that is the
     point of the pass. ``seed_payload`` and ``gaps`` are read-only.
     """
@@ -3246,8 +3489,108 @@ def admit_candidates(
     order = {id(c): i for i, c in enumerate(candidates)}
     accepted.sort(key=lambda c: order.get(id(c), 0))
 
+    # --- Phase 3: refuse what the pathway already has, and count one claim
+    #     once (C-059) -------------------------------------------------------
+    # Deliberately AFTER the per-gap BFS rather than folded into phase 1. The
+    # breadth-first pass is left byte-identical: a candidate refused here still
+    # extended its gap's frontier exactly as it did before, so a genuine hop-1
+    # candidate that chained through it is still admitted and still records the
+    # same parent. Only the EMITTED set changes, which is the smallest surface on
+    # which this refusal can act.
+    accepted, superseded = _refuse_covered_and_duplicate(
+        accepted,
+        gaps_by_id=gaps_by_id,
+        seed_reactions=_seed_reactions(seed_payload, token),
+        token=token,
+    )
+    rejected.extend(superseded)
+
     report = _build_report(accepted, rejected, active, routed, resolutions)
     return accepted, report
+
+
+def _refuse_covered_and_duplicate(
+    accepted: List[RagReactionCandidate],
+    *,
+    gaps_by_id: Dict[str, Any],
+    seed_reactions: Sequence["_SeedReaction"],
+    token: Any,
+) -> Tuple[List[RagReactionCandidate], List[RagReactionCandidate]]:
+    """Split ``accepted`` into what ships and what is superseded.
+
+    Two refusals, in this order, both of which leave the candidate in the report
+    with its own reason code rather than dropping it:
+
+    * :data:`REASON_ALREADY_COVERED` -- an existing reaction already asserts
+      everything this candidate asserts (see :func:`_already_covered`). This one
+      changes the BIOLOGY: it is what stops a locked reaction being re-imported
+      under a second set of names.
+    * :data:`REASON_DUPLICATE_ACROSS_GAPS` -- the same canonical claim from the
+      same span, already admitted for another gap. This one is HYGIENE: the
+      duplicates collapse to a single row downstream at
+      ``synthesize._resolve_reactions`` anyway, so it corrects the counts and the
+      per-gap breakdown without changing what is exported. The survivor takes the
+      loser's gap ids, so a gap this claim genuinely filled is not left looking
+      unfilled.
+
+    ``accepted`` is expected in the caller's input order, which is what makes
+    "the first admission survives" a property of the input rather than of the gap
+    id sort.
+    """
+    kept: List[RagReactionCandidate] = []
+    superseded: List[RagReactionCandidate] = []
+    seen: Dict[Tuple[Any, ...], RagReactionCandidate] = {}
+    for candidate in accepted:
+        gap = gaps_by_id.get(_text(candidate.gap_id))
+        covered = (
+            _already_covered(candidate, gap, seed_reactions, token)
+            if gap is not None
+            else None
+        )
+        if covered is not None:
+            _reject(
+                candidate,
+                [
+                    f"{REASON_ALREADY_COVERED}: every substrate and product of "
+                    f"this candidate is already one of "
+                    f"{covered.name or 'an existing reaction'!r}'s, on the same "
+                    f"side and in the same direction, so it adds no connectivity "
+                    f"gap {_text(candidate.gap_id)} does not already have"
+                ],
+            )
+            superseded.append(candidate)
+            continue
+        key = (candidate.claim_identity(), candidate.provenance_identity())
+        winner = seen.get(key)
+        if winner is not None:
+            winner.gap_ids = _dedupe(
+                list(winner.gap_ids or [])
+                + ([winner.gap_id] if winner.gap_id else [])
+                + list(candidate.gap_ids or [])
+                + ([candidate.gap_id] if candidate.gap_id else [])
+            )
+            # The retrieval score is per QUERY, not per claim: the same span
+            # scores differently against two gaps' queries. Downstream,
+            # ``synthesize._merge_into`` used to union both rows' scores and
+            # ``_confidence`` takes their max, so collapsing here without
+            # carrying the better score would silently DOWNGRADE the surviving
+            # row. Measured on the F-057 leg: 0.930233 -> 0.914815.
+            winner.confidence = max(
+                float(winner.confidence or 0.0), float(candidate.confidence or 0.0)
+            )
+            _reject(
+                candidate,
+                [
+                    f"{REASON_DUPLICATE_ACROSS_GAPS}: the same claim from the "
+                    f"same span is already admitted against gap "
+                    f"{_text(winner.gap_id)!r}, which now carries this gap id too"
+                ],
+            )
+            superseded.append(candidate)
+            continue
+        seen[key] = candidate
+        kept.append(candidate)
+    return kept, superseded
 
 
 def _admit_for_gap(
