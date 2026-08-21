@@ -46,8 +46,8 @@ by direct measurement, and the conditionality is the only difference between the
 | card | branch | worktree | exact tip | state |
 |---|---|---|---|---|
 | **C-070** (F-066) | `agent/c070-isolated-collection` | `C:/t/c070` | `5bc600e` | ✅ **MERGED `09f7156`** — bare `APPROVE` from REV-070, zero correction rounds |
-| **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `86d5807` | **CORRECTION round 1 in flight.** REV-069 returned CORRECTION, not REJECT; orchestrator verified it against source before spending the round |
-| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | — | in flight, base `f2a959f` |
+| **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `b08cdce` | ✅ **MERGED `8a93da0`** — bare `APPROVE` from REV-069 after one correction round; one round left unspent |
+| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | — | in flight, base `f2a959f`. **Merge is HELD on Decision 5** |
 
 ### C-070 — ACCEPTED and MERGED
 
@@ -130,7 +130,7 @@ about to depend on.
 | entry | register said | **measured at integration** | status |
 |---|---|---|---|
 | `test_strict_failure_replay.py` | 2 | **2 failed, 37 passed, 8 skipped** — both the `only_unrelated_reactions_survive` parameterisation | ✔ **confirmed** |
-| `test_batch_preflight.py` | 2 | **1 failed, 35 passed** | ✘ **CORRECTED — see below** |
+| `test_batch_preflight.py` | 2 | **1 failed, 35 passed** at base → **37 passed, 0 failed** after the C-069 merge | ✘ **CORRECTED, then STRUCK ENTIRELY** |
 | `.env`-conditional family | 7 | **7 failed, 50 passed**, and the file breakdown matches exactly: 4 in `test_prefreeze_third_export_seam.py`, 1 in `test_prefreeze_species_resolution.py`, 1 in `test_pwml_writer.py` (F-065), 1 in `test_canonicalization_preflight_and_species.py` | ✔ **confirmed** |
 | `qb` node15 | fails when PathBank reachable | **failed** in the full Chunk D gate | ✔ **confirmed** |
 

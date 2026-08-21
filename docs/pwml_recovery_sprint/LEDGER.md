@@ -1878,3 +1878,155 @@ card's deleted probes, by repointing `TESTS_DIR` at an empty directory — a str
   evidence to carry *"max artifact count AND a size limit"*. The C-070 charter gave only the size. **Both
   reviewers found the same omission in the charters they reviewed**, and both correctly attributed it to the
   charter. C-071's charter was corrected in flight rather than disclosed at closeout.
+
+---
+
+## C-069 — ACCEPTED, MERGED `8a93da0`, reviewed tip `b08cdce` (2026-08-21, PACK 11)
+
+Exact bare unsuffixed `APPROVE` from REV-069 after **one correction round**. Closes **F-073** (MEDIUM) and
+**F-086** (MEDIUM). Three commits, none amended: `29f71a6` → `86d5807` → `b08cdce`.
+
+### The deliberate baseline move, and the register entry it corrects
+
+**`test_every_import_driver_defers_is_covered_by_the_preflight` is STRUCK from the standing pre-charge
+list.** The exact delta, using the card's own corrected numbers:
+
+```
+CHILD_IMPORTS entries        5 -> 8
+missed, occurrences          7 -> 0
+missed, distinct modules     3 -> 0
+```
+
+**The card's FIRST report claimed 5→7 / 6→0 / 2→0 and corrected itself against its own interest** once F-086
+was folded in: the base guard *reported* 6/2, but what was *actually blind* was 7/3. The difference is
+precisely the module the guard could not see. REV-069 verified the right-hand column independently.
+
+**The register entry does not go 2 → 1. It goes 2 → 0, and the 2 was never right for integration.**
+Measured before the merge as a prediction, then confirmed after it:
+
+| | worktree | integration, base | integration, post-merge |
+|---|---|---|---|
+| failed | 2 | **1** | **0** |
+| passed | 30 | 35 | **37** |
+| skipped | 4 | 0 | 0 |
+
+The second "pre-charged failure" is `test_batch_preflight.py:480`'s
+`assert venv is not None, "this project ships a .venv; the test assumes it"`. **`git worktree add` does not
+copy the untracked `.venv`**, so it fires in every agent worktree and four further tests gated on
+`venv_python() is None` skip there and pass here. **It is a measurement-environment artifact, not a red.**
+
+*Prediction discipline note:* the orchestrator first predicted **36** and was wrong — it subtracted the
+closed failure without adding the classifier test the card introduces. Corrected to **37** before the merge
+on REV-069's `.venv`-realistic measurement, and the merge produced **37 passed, 0 failed**.
+
+### F-086 — the guard that measures the blindness was itself blind
+
+`_deferred_imports` recorded `inner.module` for an `ast.ImportFrom`, so
+`from t2pw.pipeline import deadline` (`driver.py:1718`) recorded the **package** and discarded the submodule;
+`_covered` then answered `True` off `t2pw.pipeline.export_mode`. **`t2pw.pipeline.deadline` was undeclared,
+unvalidatable in the child, and the guard reported zero problem.**
+
+The classifier uses `find_spec(pkg)` — which imports only **ancestors** — plus `pkgutil.iter_modules`.
+**The card declined the orchestrator's suggested `find_spec(f"{pkg}.{name}")` and was right to**, though its
+first stated reasons did not survive measurement; the surviving reason is that the chosen form resolves
+**once per package** and answers every name on a statement from one cached listing.
+
+**The self-introduced hazard is the sharpest thing in the card.** `_submodule_names` falls back to an empty
+set when it cannot answer, which **silently restores F-086 behaviour**. Neutralized: the **guard test
+passes** while the **classifier test fails**. A reader tells the two apart *by which test is red* — the guard
+going green proves only that the question it asked got answered.
+
+### PACK 11 RULING 4 — a rationale is an assertion, and drifts like one
+
+**Three instances in one session**, which makes it a pattern rather than three accidents:
+
+* **F-087** — `runner.py:1341` cites a 2026-07-28 measurement that no longer holds.
+* **F-088** — `tree_pin.py:3-4` cited *"`pytest.ini` sets no `pythonpath`"*, which C-070 falsified.
+* **This card's correction round** — two `CHILD_IMPORTS` reason strings asserted a failure mode that
+  measurably cannot happen.
+
+The author's own diagnosis is the best statement of it and is adopted here:
+
+> *"The defect was **method, not wording** — the deferred site is only the first loss if nothing on the
+> child's module-scope path already needs the module, and I never checked whether anything did."*
+
+That is `_SHARED_BLOCKS.md` § S5 exactly — *"Never assert a runtime behaviour from a static code path
+alone."* The card measured everything else and **read** this.
+
+**The rule:** prose that states *why* — a reason string, a rationale docstring, a comment justifying a design
+choice — is a claim about behaviour and carries the same evidentiary burden as an assertion. It is **worse**
+than a stale assertion, because no test goes red when it drifts. **A rationale that cites a measurement
+should cite its date and its method**, so a later reader can distinguish staleness from disagreement.
+
+*Measured consequence, so the rule is not abstract:* both corrected strings were **wrong in the direction of
+understating the damage.** `strict_quarantine` claimed the child *"still writes all four reports"* — in fact
+`streamlit_app.py:52` imports it at module scope, so the child dies executing the app and writes nothing.
+`deadline` claimed *"exactly the night's slowest legs"* — in fact `extraction_ladder.py:61` → `pipeline.py:32`
+makes it a module-scope dependency, so **every** leg dies at pipeline import. This is operator-facing text
+read at 2am.
+
+### The history deliverable — F-073's stated core, and it corrects F-073
+
+```
+9e1b9ab ORIGIN_SHA  missed 0   -- GREEN at the sprint baseline
+d179c49 C-041       missed 1   + release_status    _finalize_gate_failure()
+f3ab5a9 C-031       missed 2   + strict_quarantine _add_identity_artifacts()
+985355f C-032       missed 3   + deadline          _finalize_timeout()      <- F-086
+57be026 C-053       missed 5   + release_status x2
+7e04a1f C-056d      missed 7   + both x1
+```
+
+**F-073's *"for as long as they have existed"* is wrong: nine days, 2026-08-12 → 2026-08-20, entirely inside
+this sprint.** `CHILD_IMPORTS` had been frozen at five since `48e3669`, the commit that created both it and
+the guard. **The `deadline` site was added by C-032 — the card that owns `CHILD_IMPORTS`** — in the same
+commit that created `pipeline/deadline.py`. REV-069 spot-checked all five rows by `git blame` and `git log -S`
+and independently re-verified the `ORIGIN_SHA` green.
+
+Why none of it surfaced: `tests/test_batch_preflight.py` is in **no chunk**, certified stem-exactly with zero
+substring lookalikes. C-053 edited `runner.py` in the very commit that added two of the sites.
+
+### Ceilings — two raises, both orchestrator underestimates, neither charged
+
+400 → 650 when F-086 was folded in mid-flight; **650 → 800** at the correction round, re-measured with
+F-050's corrected command: **741** = 169 `src`+`tests` + 572 across three evidence instruments.
+**REV-069's 152 was `src`+`tests` alone, which is not ceiling 1.**
+
+All three instruments were mandated by the orchestrator — two by the charter (the history deliverable, the
+behavioural arm) and the third by the correction-round instruction to *measure* the reason strings. **A
+charter that mandates three instruments and budgets for none is an under-budgeted charter.** C-053 is the
+precedent in both directions. **One correction round remains unspent.**
+
+**The card was right not to trim.** D-025 forbids curing an overage by deleting evidence; stopping for a
+ruling rather than self-authorizing is what S4 requires.
+
+### Disclosed against the orchestrator, per D-025
+
+* **The charter omitted the artifact COUNT** that § S4 requires alongside a size limit. **Both reviewers
+  found this same omission independently, in both charters they reviewed.** Accepted at 24 artifacts /
+  204 KB. C-071's charter was corrected in flight rather than disclosed at closeout.
+* **The orchestrator relayed the reviewer's marginal-cost figures without re-measuring them.** The author
+  measured different numbers and reported the disagreement rather than echoing. **REV-069 then adjudicated
+  that there was never a disagreement** — the figures measure different quantities (a warmed process versus
+  a controlled bare one) — and **deferred to the author's 18 modules / 0.057 s as the better-controlled
+  measurement**, superseding its own 6 / 0.03 s. Its 483 for the guard's import footprint stands, reproduced
+  by the author.
+
+### Three LOW findings, none blocking, explicitly not a correction round
+
+* `tests/test_batch_preflight.py:91-92` pairs a module count from the footprint experiment with a timing from
+  the bare-interpreter one. Both numbers are real and committed; one word fixes it at the next incidental
+  edit.
+* `evidence/c069_child_import_reality.py:66-68` justifies its scope by naming `try`-guarded imports; the app
+  has none. The real skip is **7 `if`-nested module-scope imports**, and REV-069 **proved the
+  under-approximation is conservative** — none of the seven names a target module, and the two exit-1 rows
+  already fail on a strict subset.
+* `evidence/c069_child_import_reality.py:190` returns `0` unconditionally, with no `--expect` self-validation
+  unlike its sibling instrument. It records rather than asserts, so a future matrix regression would be
+  written down rather than caught.
+
+### Gates
+
+SMOKE **473** at the corrected tip (`C-069/24`) and **473** post-merge at integration
+(`INTEG-069/10`). `test_batch_preflight.py` post-merge: **37 passed, 0 failed** (`INTEG-069/09`).
+`driver.py` untouched at zero lines across the entire range — the import at `:1718` was never un-deferred.
+`01…24` contiguous. Every job zero survivors, `cleanup: success`.

@@ -1,0 +1,179 @@
+{
+  "label": "batchpreflight-postmerge",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/INTEG-069/09-batchpreflight-postmerge.pin.json",
+    "-q",
+    "--basetemp=C:/t/integ/pm2",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-21T20:50:24+00:00",
+  "finished_at": "2026-08-21T20:50:32+00:00",
+  "duration_seconds": 7.350539099999878,
+  "timeout_seconds": 180.0,
+  "root_pid": 172596,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 172608,
+      "name": "python.exe",
+      "ppid": 172596
+    },
+    {
+      "pid": 172676,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172696,
+      "name": "python.exe",
+      "ppid": 172676
+    },
+    {
+      "pid": 172952,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172972,
+      "name": "python.exe",
+      "ppid": 172952
+    },
+    {
+      "pid": 173016,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 169088,
+      "name": "python.exe",
+      "ppid": 171596
+    },
+    {
+      "pid": 171596,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172096,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172124,
+      "name": "python.exe",
+      "ppid": 172096
+    },
+    {
+      "pid": 172180,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172352,
+      "name": "python.exe",
+      "ppid": 172180
+    },
+    {
+      "pid": 171836,
+      "name": "python.exe",
+      "ppid": 172352
+    },
+    {
+      "pid": 172424,
+      "name": "python.exe",
+      "ppid": 171836
+    },
+    {
+      "pid": 172508,
+      "name": "python.exe",
+      "ppid": 172608
+    },
+    {
+      "pid": 172456,
+      "name": "python.exe",
+      "ppid": 172508
+    },
+    {
+      "pid": 172524,
+      "name": "python.exe",
+      "ppid": 172544
+    },
+    {
+      "pid": 172544,
+      "name": "python.exe",
+      "ppid": 172456
+    }
+  ],
+  "descendants_terminated": [
+    169088,
+    171596,
+    171836,
+    172096,
+    172124,
+    172180,
+    172352,
+    172424,
+    172456,
+    172508,
+    172524,
+    172544,
+    172608,
+    172676,
+    172696,
+    172952,
+    172972,
+    173016
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 172336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 172368,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\INTEG-069\\09-batchpreflight-postmerge.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "8a93da0b78755cf83c9911ab2f6d1d65e43dc744",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
