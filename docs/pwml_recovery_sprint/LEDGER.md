@@ -222,7 +222,7 @@ under the D-6 precedent recorded below: *a satisfied dependency is still a true 
 | C-052 | p06b freeze enforcement | **RECONCILIATION 2026-08-18 (orchestrator, from Git ancestry):** **`ACCEPTED`, MERGED `c0df0d0`, reviewed tip `c7250d3`** (D-040). The `DISPATCHED` label below is historical. **`DISPATCHED`** 2026-08-17 — base **`a662c3f5ce994a1436fe62429c74a7db1144df14`**, worktree `.claude/worktrees/agent-c052-prefreeze-report`, charter `C-052-charter-v2.md`, ceilings 900 / 90 / 20,000. **This is the authoritative C-052 row; the second row further down is reconciled to it.** Boundary per **D-040** | C-030, C-050, C-020 · **C-050i ✔ merged `509faee`** | `agent/c052-streamlit-prefreeze-report` *(actual; the planned `agent/p06b-freeze-enforce` was never cut)* | `streamlit_app.py` :: `freeze_canonical_payload` (**zero lines**), `run_pwml_export`, SBML bind (`:3638`/`:3650`), **+ key-addition only on the `run_post_pipeline_sbml_artifacts` success return `:3680-3807` (D-040)** | C-030 impl | **`qb` + full Chunk D + SMOKE + named focused set** (5 of 7 changed files are in no chunk) | M3 |
 | C-053 | p09 PWML artifact naming | **`RULINGS COMMITTED`** 2026-08-17 — dependency C-041 **merged and re-verified live** (`strict_quarantine.py:846` declares `-> CoverageVerdict`; `release_status.py:234` defines `coverage_verdict`, exported `:379`, consumed `strict_quarantine.py:2021`). Boundary re-measured and widened per **D-038**; charter must be rebuilt from D-038 before dispatch | C-041 ✔ | `agent/p09-pwml-naming` | see `MASTER_PLAN` §9 (re-measured 2026-08-17) | C-031 impl | B + named focused set | — |
 | C-054 | p16 gold `expected_export` required | **`DEPENDENCY-READY`, NOT STARTED.** **RECONCILED 2026-08-18:** the previous `BLOCKED` was stale — **both** dependencies are merged (C-041 `b5bbf08`, C-053 `3fde1f1`). No branch, no worktree, no commit. **F-053 caution:** C-054 must not be chartered to consume `semantic_evaluation == "passed"` affirmatively until C-056c discharges F-053. | C-041, **C-053** | `agent/p16-goldset-required` | `bench/goldset.py` | C-056b impl | B | — |
-| C-055 | p33 RAG controller wiring | **`DISPATCHED` 2026-08-20 (PACK 9)** — worktree fast-forwarded `1c06918` -> `32f3a57`, one writer, ceilings 1600 / 140 / 6 MB. Historical detail follows. **`DEPENDENCY-READY`, NOT STARTED.** **RECONCILED 2026-08-18:** the previous `BLOCKED` was stale — **all three** dependencies are merged (C-043 `3c04d4b`, C-041 `b5bbf08`, C-032 `1801298`). Branch `agent/p33-rag-wiring` and worktree `.claude/worktrees/agent-c055-rag-wiring` **created 2026-08-18 at `1c06918`** (clean, zero commits of their own, `.env` copied for F-051 control parity). **HIGHEST MILESTONE VALUE OF THE REMAINING QUEUE: it is the sole prerequisite of T-103 (M4), which cannot run until it merges.** | C-043, C-041, C-032 | `agent/p33-rag-wiring` | `streamlit_app.py` :: `maybe_run_rag` + script body | senior | C + AppTest | M4 |
+| C-055 | p33 RAG controller wiring | **`ACCEPTED`, MERGED `365c99d`, reviewed tip `84a6e4f`** (2026-08-20, PACK 9) — bare `APPROVE` from REV-055 at `5ad0d47`, two correction rounds, both comment-only. **`run_rag_loop` had zero production callers; it has one now, and every round re-enters all five stages.** Separation invariant holds — `ast.While` count in the app is **0 at base and 0 at tip**. REV-055 AST-hashed every top-level def (54 -> 67, **ADDED 13, REMOVED 0, CHANGED 0**), confirmed `maybe_run_rag` **byte-identical**, re-ran SMOKE itself at 465, and **mutation-tested the guards** (restore disabled -> restoration test red with the boundary's REAL report in session; mapping stubbed -> 3 red including the real-app AppTest). **Trap 11 answered better than chartered:** rounds map against a round-scoped copy, so the fragile unlocked 4.2 MB cache overwrite is multiplied by **ZERO**. **Central obligation discharged** — two `streamlit.testing.v1.AppTest` tests on the RAG path, the first ever. **Two forced deviations ratified**, one contradicting my own charter ruling (classification via `run_quarantine_boundary`, because `test_streamlit_quarantine_boundary.py:761-779` is hotspot 9 and a direct call adds **two** callers — the card complied with the guard and removed both harms the ruling named). **PACK 9 RULING 4:** it tightens a previously-unconditional gate (`validate_graph_delta` before `final_payload` advances) — PRODUCT_CONTRACT §10 enforced for the first time. Budget ratified 1600 -> 1900, measured **1791**. Post-merge gates green (`MERGE-055/01-smoke.json`, 465). **The product owner's uncommitted `streamlit_app.py` edit was preserved through the merge and proved byte-identical.** **T-103 IS UNBLOCKED.** Historical detail follows. **`DEPENDENCY-READY`, NOT STARTED.** — worktree fast-forwarded `1c06918` -> `32f3a57`, one writer, ceilings 1600 / 140 / 6 MB. Historical detail follows. **`DEPENDENCY-READY`, NOT STARTED.** **RECONCILED 2026-08-18:** the previous `BLOCKED` was stale — **all three** dependencies are merged (C-043 `3c04d4b`, C-041 `b5bbf08`, C-032 `1801298`). Branch `agent/p33-rag-wiring` and worktree `.claude/worktrees/agent-c055-rag-wiring` **created 2026-08-18 at `1c06918`** (clean, zero commits of their own, `.env` copied for F-051 control parity). **HIGHEST MILESTONE VALUE OF THE REMAINING QUEUE: it is the sole prerequisite of T-103 (M4), which cannot run until it merges.** | C-043, C-041, C-032 | `agent/p33-rag-wiring` | `streamlit_app.py` :: `maybe_run_rag` + script body | senior | C + AppTest | M4 |
 | C-056a | p42a semantic → runtime release_status | **RECONCILIATION 2026-08-18 (orchestrator, from Git ancestry):** **`ACCEPTED`, MERGED `93594aa`, reviewed tip `9c9f94a`** (D-037/D-039/D-042). The `DISPATCHED` label below is historical. **`DISPATCHED`** 2026-08-17 — base **`a662c3f5ce994a1436fe62429c74a7db1144df14`**, worktree `.claude/worktrees/agent-c056a-semantic-gating`, charter `C-056a-charter-v2.md` (rebuilt from D-037+D-039), ceilings 1,100 / 95 / 22,000. Boundary granted by **D-037**, eight rulings issued as **D-039**. **Buildable without moving a single exact-set pin.** The retired scratchpad charter's central blocking finding (F-2) is **measurably false** and its remedy is superseded | C-017 ✔ · C-041 ✔ · D-037 ✔ · D-039 ✔ | `agent/c056a-semantic-release-gating` *(actual; the planned `agent/p42a-semantic-runtime` was never cut)* | see `MASTER_PLAN` §9 (re-measured 2026-08-17) | **independent — not C-017/C-041a impl** | B + `D (qb)` + named focused set | — |
 | C-056b | p42b semantic → benchmark denominators | **`ACCEPTED`, MERGED `69928eb`, reviewed tip `8eee549`** (D-039/D-042); D-052 ratifies its two disclosed boundary widenings. **RECONCILED 2026-08-18:** the previous `BLOCKED` was stale — both dependencies merged (C-056a `93594aa`, C-053 `3fde1f1`). It was the last code-card prerequisite of T-100. | C-056a, C-053 | `agent/p42b-semantic-bench` | `acceptance.py` :: `_build_denominators` | C-056a impl | B | — |
 | C-057 | p27 lineage: quarantine | **`CHARTERED` 2026-08-20 (PACK 9), not dispatched — two-writer cap.** Charter written against post-C-056c source per D-054 §9. Boundary measured for the first time: the **five module-level functions** `_admit_processes` `:1095`, `_prune_entities` `:1294`, `_prune_locations` `:1349`, `_prune_biological_states` `:1419`, `_drop_quarantined_processes` `:1519` — all *before* `quarantine_and_close` (`:1793-2338`), so **same-file, different-function** with C-056c. **`strict_quarantine.py` contains ZERO lineage writes and no writer of `stage="quarantine"` exists in `src/`** though the value has been in the closed vocabulary since C-015 (`lineage.py:54`). Ceilings 1000 / 110 / 5 MB. Historical detail follows. **`DEPENDENCY-READY`, NOT STARTED.** **RECONCILED 2026-08-18:** the previous `BLOCKED` was stale — **all three** dependencies are merged (C-015 `8b4bc0c`, C-010 `72ee20f`, C-041 `b5bbf08`). No branch, no worktree, no commit. | C-015, C-010, C-041 | `agent/p27-lineage-quarantine` | `strict_quarantine.py` (lineage writes) | C-041 impl | A, E | — |
@@ -1174,3 +1174,53 @@ REV-051a protects when it forbids cutting an adversarial arm to fit a budget.
 **Standing guidance:** a pinned bound, digest or count may move **only** as a deliberate baseline move under
 merge rule 4, **with an exact documented delta**, and never to accommodate the moving card's own additions.
 Where the card can instead change its own contribution to fit, **that is the correct fix**.
+
+### C-058 — ACCEPTED, MERGED `c3fd041`, reviewed tip `a908666` (2026-08-20, PACK 9)
+
+Exact bare `APPROVE` from REV-058, **zero correction rounds**. Owns F-058.
+
+`pipeline.py :: _inject_name_based_modifiers`, transports branch only. The cause was one statement
+(`:2884-2886`): a bare substring test with no word boundary, no cue window and no exactly-one guard, so
+`"ente"` matched inside `"enterobactin"` and `EntE` — an adenylation enzyme — was attached as the transporter
+of every transport row on four legs across two papers, on spans naming TolC and TonB.
+
+**Four guards**, three of them the reaction branch's own discipline plus one the charter did not name: a
+row's declared **`cargo` is never its transporter**. REV-058 confirmed that fourth guard was **required, not
+optional** — without it the card would have left **1 of 24** shipped fabrications in place (`ALAS2` on
+`PMC12856317/strict`, which passes guards 1-3).
+
+**Merge rule 7 holds corpus-wide, proved by the reviewer independently:** `rows_losing_a_stage1_transporter:
+0` over 44 rows across 64 legs, zero skipped. **24 rows carry a Stage-1 transporter and all 24 survive** —
+FepA ×5, TolC ×5, TonB ×5, MsbA ×5, SFXN1 ×3, Lpt ×1. All 24 base injections were fabrications (23 `EntE`,
+1 `ALAS2`); nothing correct was traded away.
+
+**G9 CORRECTION with a real base failure**, re-run by the reviewer in a git worktree at `6f9b499` carrying
+`.env` (not an export — `PATHSPEC` omits `runs_verify/`, which the proof reads): **`10 failed, 5 passed` ->
+`15 passed`**. Zero failures are symbol absence; eight assert on produced payload content, one is a `KeyError`
+on the produced dict, one is a crash **inside base production code** at `pipeline.py:2908`. The five passing
+at base are exactly the five preservation arms.
+
+**Reaction branch byte-identical, three proofs, all re-derived:** no hunk intersects base `:2818-2878`;
+base `:2818-2878` and tip `:2828-2888` hash identically; and the reviewer's own replay digest of every
+reaction's `enzymes`/`modifiers` is identical on **64 of 64 legs**.
+
+**The cue-vocabulary decision was a biological judgement and it was made correctly.** The card deliberately
+did not reuse `ENZYME_EVIDENCE_CUE_RE`; the reviewer measured it against every whole-token window around
+`FepA` and confirmed it does not fire on `PMC12452463/strict` — borrowing it would have **refused the one
+correct attachment**. The enzyme vocabulary is also wrong in the other direction: `TolC-dependent` fires it
+via `dependent`, which is not a catalysis claim.
+
+**Non-vacuity re-measured at the actual tip** (the card's own mutation evidence predated its final commit):
+boundary 3 red, cue 1 red, exactly-one 1 red, cargo 1 red.
+
+**Five behaviour changes, not four** — `_attached_transporter_names` reads five key shapes where base read
+two, so a row already naming its transporter under the typed `entity` key is no longer rewritten.
+Base-failing-proved, non-destructive, inside the seam. Recorded because the card summary emphasises four.
+
+Budget ratified 900 -> 1200, measured **889 / 73 / 0.39 MB**. Gates: SMOKE **465**, Chunk C **109**,
+Chunk D **185/187**, focused **226 collected / 0 failures**, 68 G11 reports **0 non-compliant**, survivors 0
+on every one. Post-merge gates green (`MERGE-058/01-smoke.json`, 465).
+
+**One process violation, the reviewer's and not the card's** — F-072, disclosed unprompted.
+
+**⚠ C-058 is one half of the F-062 lock. C-059 must also be ACCEPTED before the refusal seam is touched.**
