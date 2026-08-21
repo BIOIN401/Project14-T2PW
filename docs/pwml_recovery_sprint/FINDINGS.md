@@ -1746,6 +1746,46 @@ would have to be re-pinned. **It must not be absorbed by a card that merely trip
 
 Registered, not fixed. The 21-file list above is the exposure.
 
+> **⚠ CLOSED by C-070, merged `09f7156`. Two claims above are REFUTED BY MEASUREMENT, and both are left
+> standing rather than deleted because they were honest when written.**
+>
+> **1. *"SMOKE and all four chunks would have to be re-pinned"* is an over-estimate — for the
+> `pythonpath = src` remedy only.** Measured, nothing moved. Chunk C **109 → 109** and Chunk D-core
+> **160 → 160** with byte-identical **per-node outcome lists**; and across SMOKE's 20 files + Chunk D's 7 +
+> Chunk E's 1, the collected node-ID sets are **identical, 834 = 473 + 187 + 174**. REV-070 re-derived this
+> by a tighter route than base-vs-tip — holding the tree constant and toggling only `-o pythonpath=`.
+> Orchestrator heavy gates on the branch: SMOKE **473**, Chunk A **134**, Chunk E **174**, Chunk D
+> **187/187 `failed=none`**. **Nothing was re-pinned, because nothing moved.**
+> *Mechanically it cannot move:* `src` is already on `sys.path` in every pinned run from two independent
+> sources — the measured launcher **requires** `PYTHONPATH=<tree>/src`, and 132 files insert it themselves.
+> The ini adds a duplicate of an entry that is always present, and duplicate `sys.path` entries are inert.
+> **The claim is refuted only for this remedy.** A repo-root `conftest.py` and an editable install both
+> change `sys.path` construction and import mode in ways nobody has measured; C-070 claimed nothing about
+> them and neither does this note.
+>
+> **2. The 21-file list above is wrong in BOTH directions, and the count is right by coincidence.**
+> Measured at `e616846`: **155** test files, **132** mention `sys.path`, **23** do not. Of those 23,
+> **18 fail and 5 pass**; of the 132, **3 fail**. 18 + 3 = 21.
+> *Named above but collecting alone perfectly well:* `test_pathbank_unknown_fallback`,
+> `test_prefreeze_species_resolution`, `test_protein_export_policy`, `test_streamlit_stage8_export_contract`
+> — all four reach `src` through `from helpers_prefreeze import ...`. (`test_dependency_declarations` is the
+> fifth passer and imports no `t2pw` at all.)
+> *Missing from the list and genuinely failing:* `test_c064_round_cap_reason`,
+> `test_compound_db_match_admission` (names `sys.path` only in a **docstring**), `test_curator_offline_mode`
+> and `test_semantic_production_no_gold` (both use it **inside a test body**, not at import time).
+>
+> **So no static predicate separates the two sets** — which is why C-070's acceptance test is a real sweep
+> over every `tests/test_*.py` rather than a name list, and why its own first design, an "at-risk subset"
+> sweep, was discarded: it would have missed 3 of the 21.
+>
+> **When citing this finding's exposure, use the measured census** at
+> `evidence/c070_isolated_collect_base.json`, **not the name list above.**
+>
+> **One caveat on the census, from REV-070:** an independent base sweep reported **22**, not 21. The extra is
+> `tests/test_c030_canonical_identity_fallback.py:88`, which shells out to `git ls-files` at **import** time
+> and therefore cannot be collected in a `.git`-less **exported** tree — see **F-089**. The 21 are a strict
+> subset and all reproduce.
+
 ## F-067 — `httpx` is undeclared in both dependency files, and an unpinned rebuild silently drops it
 
 - **Severity** MEDIUM (process) · **Registered 2026-08-20** · previously recorded only in a session handoff
@@ -3592,3 +3632,71 @@ queue look busy.
 **A comment that cites a measurement should cite its date and its method, so a later reader
 can tell staleness from disagreement.** This one did cite its date, which is the only reason
 the drift was detectable at all rather than being argued about.
+
+---
+
+## F-088 — the tree-pin guard's own rationale cited `pytest.ini` as setting no `pythonpath`, and C-070 made that false
+
+- **Severity** MEDIUM (control-plane / instrument prose, **no functional effect**) · **Registered and CLOSED in the same entry**, 2026-08-21, integration `09f7156`
+- **Surfaced by REV-070**, which noticed that approving C-070 would falsify a sentence in the module that certifies every measured run in this sprint. **C-070 correctly did NOT edit it** — its charter says of the evidence instruments *"Call them; never edit them."*
+- **Fixed by the orchestrator at the merge, docstring only**, because the sentence became false *as a direct result of a merge the orchestrator performed*. That makes it integration responsibility, not a future card's inheritance.
+
+### The mechanism
+
+`docs/pwml_recovery_sprint/evidence/tree_pin.py:3-4` listed three premises for why the guard is needed:
+
+> *"The venv's editable `.pth` names the primary checkout's `src`, **`pytest.ini` sets no `pythonpath`** and there is no `conftest.py` (F-003)"*
+
+C-070 added `pythonpath = src`. The middle clause became measurably false the moment the merge landed.
+
+### Why it was worth acting on rather than filing
+
+This is the **F-087 class** — a comment asserting a measurement that has since drifted — but in the one module whose entire job is to refuse a run that cannot prove which tree it measured. **A guard whose stated rationale is false invites the next reader to conclude the guard is obsolete.**
+
+### The function is unchanged, and that was verified rather than assumed
+
+REV-070 measured the guard after the change, four ways. Re-confirmed by the orchestrator post-merge:
+
+```
+normal run                          2 passed, 1 skipped, exit 0
+foreign PYTHONPATH                  violations: T2PW_FROM_WRONG_TREE
+                                    REFUSED before collection. No test was run. Exit 98.
+PYTHONPATH unset                    violations: T2PW_UNIMPORTABLE            Exit 98.
+selection outside --expect-tree     violations: SELECTION_OUTSIDE_EXPECTED_TREE  Exit 98.
+```
+
+### The part that inverts the finding
+
+**`pythonpath = src` moves plain-`pytest` resolution in the SAFE direction**, which is the opposite of what a reader of the stale sentence would assume. Measured by REV-070 with plain `python -m pytest`, same tree, foreign `PYTHONPATH`:
+
+```
+ini ON : t2pw.__file__ = C:\t\c070\src\t2pw\__init__.py          <- rootdir's own tree
+ini OFF: t2pw.__file__ = C:\t\rev070base\src\t2pw\__init__.py    <- FOREIGN tree
+```
+
+Without the ini, plain pytest silently imported `t2pw` from whatever `PYTHONPATH` named. **The change enforces the very property `tree_pin.py` exists to enforce.** Under `pinned_pytest` it is a no-op either way, because `tree_pin.resolve_facts` binds `t2pw` in `sys.modules` before `import pytest` and `check` refuses a mismatch first.
+
+**No hash covers `tree_pin.py`** (`bounded_run.py` hashes only itself), so a docstring edit changes no recorded identity. Verified before editing.
+
+---
+
+## F-089 — a test shells out to `git ls-files` at import time, so it cannot be collected in an exported base tree
+
+- **Severity** LOW · **Registered 2026-08-21**, integration `09f7156` · **UNOWNED, deliberately not fixed**
+- **Surfaced by REV-070** as the explanation for a discrepancy it refused to wave away: its own base isolated-collection sweep reported **22** failures where C-070's reported **21**.
+
+### The mechanism
+
+`tests/test_c030_canonical_identity_fallback.py:88` invokes `git ls-files` at **module import** time, so collection requires a working `.git`. `c045b_base_tree.py:35-38`'s `PATHSPEC` **excludes `.git`** from exported base trees.
+
+So the file collects fine in a real checkout and fails in an export — and the two sweeps disagreed by exactly one file for exactly that reason. **The 21 are a strict subset of the 22 and all reproduce.**
+
+### Why it is registered rather than fixed
+
+It is not a defect in C-070's diff and it breaks nothing today. But it has one concrete consequence worth writing down: **anyone running `T2PW_ISOLATED_COLLECT_ALL=1` on an exported tree gets one spurious failure**, and a spurious failure in a sweep whose whole value is "0 failed" is how a real failure later gets dismissed.
+
+### Remedy direction, for whoever owns it
+
+Either defer the `git ls-files` call out of import scope into the test body, or have the sweep's docstring name this file as a known export-only failure. **The first is better** — the second is a comment that will drift, which is F-087 and F-088 both.
+
+**A sentence in C-070's sweep docstring is the cheap interim.** It should ride along with the next card that owns either file rather than becoming a card of its own.

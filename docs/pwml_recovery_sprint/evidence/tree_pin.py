@@ -1,12 +1,22 @@
 """Verify -- before pytest exists in the process -- WHICH TREE is being measured.
 
 ``PYTHONPATH`` is not evidence and a printed path is not evidence. The venv's editable
-``.pth`` names the primary checkout's ``src``, ``pytest.ini`` sets no ``pythonpath`` and
-there is no ``conftest.py`` (F-003); separately any in-process ``sys.path.insert(0, ...)``
+``.pth`` names the primary checkout's ``src``, and there is no ``conftest.py`` (F-003);
+separately any in-process ``sys.path.insert(0, ...)``
 -- ``_repo_root.add_src_to_path()``, and the self-pin in 24 of the 27 smoke/Chunk-D test
 modules -- **overrides** ``PYTHONPATH`` in a worktree while being a no-op in the primary
 checkout. Only the *resolved* path, compared against the tree under measurement, settles
 which tree was measured.
+
+**Amended 2026-08-21 at the C-070 merge (F-088), docstring only.** This paragraph used to
+list *"``pytest.ini`` sets no ``pythonpath``"* among the reasons the guard is needed. C-070
+(F-066) added ``pythonpath = src``, so that clause became measurably false the moment the
+merge landed, and it is removed rather than left standing. **The guard's function is
+unchanged and was re-measured by REV-070 after the change** -- a foreign ``PYTHONPATH``, an
+unset ``PYTHONPATH`` and a selection outside ``--expect-tree`` all still refuse with exit 98
+before collection. ``pythonpath = src`` in fact moves plain-``pytest`` resolution in the
+*safe* direction: rootdir's own ``src`` now wins over a ``PYTHONPATH`` naming another tree,
+which is what this module exists to enforce.
 
 ``bounded_run.py`` records no environment and deletes the child's merged log (F-004), so a
 verdict printed to stdout is as uncheckable as ``c045_pinned_pytest.py``'s ``print`` was.
