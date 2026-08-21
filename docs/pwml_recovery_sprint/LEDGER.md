@@ -2030,3 +2030,88 @@ SMOKE **473** at the corrected tip (`C-069/24`) and **473** post-merge at integr
 (`INTEG-069/10`). `test_batch_preflight.py` post-merge: **37 passed, 0 failed** (`INTEG-069/09`).
 `driver.py` untouched at zero lines across the entire range — the import at `:1718` was never un-deferred.
 `01…24` contiguous. Every job zero survivors, `cleanup: success`.
+
+---
+
+## C-071 — ACCEPTED, MERGED `e4d92fc`, reviewed tips `38cbbf8` then `bbcaa59` (2026-08-21, PACK 11)
+
+**Two bare unsuffixed `APPROVE`s from REV-071 — one on the card, one on the delta — after ZERO
+correction rounds.** Closes **F-079** (HIGH) and **F-091** (LOW). Merged only after the product
+owner ratified **D-060** (`SEMANTIC_GATING_CHECKS` 4 → 5); the card was implemented to
+completion and held, so the ratification was a one-line unblock rather than a start signal.
+
+The full technical record is in the merge commit. This entry keeps the rulings and the lessons.
+
+### The three rulings I made
+
+1. **Boundary: the four-function decomposition is IN BOUNDS.** The charter said *"one new
+   module-level `_check_*` function"*; the card wrote four plus four constants. The constraints
+   that carry meaning all hold — no existing function body modified, `evaluate_production_semantics`
+   gets exactly the call plus the tuple membership, `release_status.py` is literally `+1 −0`, and
+   **no new `import` appears anywhere in `src`**, which is what keeps the import-graph and
+   no-network pins structurally safe. **The clause meant one check, not one `def`.** A charter
+   that forced a 160-line monolith would be worse engineering than what shipped.
+2. **Ceilings 700 → 870 and 140 → 280, ratified not charged.** Final 855 changed (642
+   `src`+`tests`, 213 the G9 instrument) and 263 doc+comment. **The card was inside 850 at 819
+   before I ordered the F-091 sweep**, so the entire increment is work I asked for. The doc
+   overage was ratified only after I read the prose and the reviewer independently **checked its
+   numbers against the data**.
+3. **The widening past my four named F-091 sites is correct — dating, not restating.** Two
+   adjacent clauses in `acceptance.py` and `test_c056b` report a **committed measurement
+   artifact**. Re-stating them with new numbers without re-running the measurement would claim a
+   figure whose source run is not committed, **which § S5 forbids**. The card dated them
+   (*"measured BEFORE C-071 widened the set"*) and de-cardinalised only the clause that was a
+   claim about the *current* configuration. It disclosed and offered to revert rather than
+   hoping. **That is the minimum honest treatment, not scope creep.**
+
+### PACK 11 RULING 5 — a relayed number is a hypothesis, and this session proved it twice
+
+**Twice in PACK 11 a number the orchestrator passed down without re-measuring was wrong, and
+both times the implementer caught it by refusing to take it on trust.**
+
+* **C-069.** I relayed REV-069's marginal-cost figures. The author measured 18 modules / 0.057 s
+  against my quoted 6 / 0.03 s and reported the disagreement. REV-069 then adjudicated that
+  there had never been a disagreement — the figures measured different quantities — and
+  **deferred to the author's as the better-controlled measurement, superseding its own.**
+* **C-071.** I relayed REV-071's *"20 rows also carry `source_refs`"* as exact. The author
+  measured **19 non-empty**, 20 **keys**; the 20th is a `[""]` row. The sentence is about what
+  the check can **read**, so 19 is load-bearing.
+
+**REV-071 diagnosed the second incident exactly, and the diagnosis generalises:** the wrong
+number entered the record because it was measured with a **truthiness test** — `[""]` is a
+truthy list — and then relayed without re-measuring.
+
+**The rule:** a measurement handed down by a reviewer or an orchestrator carries no more
+authority than one handed up by an implementer. **All three are hypotheses until reproduced.**
+An implementer that reports a disagreement rather than echoing the number it was given is doing
+the job, and should never be treated as arguing with its reviewer.
+
+### The card's own best line
+
+Its diagnosis of *why* the F-091 class of defect happens, which is now PACK 11 RULING 4's
+concrete case: a **serialized** constant is worse than a stale comment, because a stale comment
+misleads a maintainer reading source while a stale serialized constant misleads a reviewer
+reading a run's **output**, who has no reason to suspect the string and no way to check it from
+the artifact alone.
+
+### Findings carried out
+
+* **F-090** (MEDIUM, UNOWNED) — `bounded_run.py`'s descendant enumeration vs RULE 5's 64 KiB
+  cap. A clean job produced a 149,703-byte non-compliant record and forced a gap into the very
+  sequence D-025 uses to detect evidence tampering. **The deletion was accepted because it was
+  disclosed**; a silent one would have been a reject.
+* **F-091** — closed by this merge.
+* **New, LOW, not charged:** REV-071 found my F-091 sweep incomplete — the `"four of four"`
+  idiom survives at six further sites. **None ships**, three are in `strict_quarantine.py`
+  (out of bounds), and all six use it as C-056c's idiom for *fully evaluated* inside text
+  describing a measurement taken when the set had four members — the historical class we just
+  agreed to date rather than restate. **`acceptance.py:245` is the one worth a pickup**: it sits
+  three lines below an edit the card did make, so one paragraph now dates its measurement in one
+  sentence and says "four-of-four" in the next.
+
+### Gates
+
+SMOKE **473** on the branch and **473** post-merge at integration. Chunk D on the branch
+**`executed=187/187, omissions=0, additions=0, failed=none`** — the run the author asked for,
+covering the 23 `test_streamlit_quarantine_boundary.py` AppTest nodes it flagged as unmeasured
+and correctly refused to call proven from reasoning alone.
