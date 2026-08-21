@@ -191,12 +191,19 @@ def test_new_acceptance_all_three_states_remain_reachable_at_the_tip() -> None:
 
 
 # NEW ACCEPTANCE — no runtime semantic verdict exists at the base
-def test_new_acceptance_the_gating_set_is_closed_at_exactly_four() -> None:
+def test_new_acceptance_the_gating_set_is_closed_at_exactly_five() -> None:
     """**D-039 section 3.** The set is closed, and closure is asserted, not commented.
 
-    ``release_status.py`` is ``t2pw.pipeline`` and restates the four names as literals
-    rather than importing ``t2pw.bench`` at module level, which would invert the layering
-    for every importer of that module. This is the test that keeps the restatement honest.
+    ``release_status.py`` is ``t2pw.pipeline`` and restates the names as literals rather
+    than importing ``t2pw.bench`` at module level, which would invert the layering for
+    every importer of that module. This is the test that keeps the restatement honest.
+
+    **C-071 moved this baseline BY CONSTRUCTION, 4 -> 5**, adding
+    ``CHECK_ACTOR_EVIDENCE``. That is a merge-rule-4 deliberate move and the deliberate
+    act this test was built to force: the fifth gate could not be added silently, and it
+    was not. The closure property is unchanged in strength -- the tuple is still asserted
+    member by member, the length is still exact in both directions, and the four excluded
+    names are still excluded by name -- so a SIXTH silent addition remains impossible.
     """
 
     assert SEMANTIC_GATING_CHECKS == (
@@ -204,9 +211,10 @@ def test_new_acceptance_the_gating_set_is_closed_at_exactly_four() -> None:
         _s.CHECK_ORGANISM,
         _s.CHECK_ID_CONFLICT,
         _s.CHECK_RAG_REINTRODUCTION,
+        _s.CHECK_ACTOR_EVIDENCE,
     )
-    assert len(SEMANTIC_GATING_CHECKS) == 4
-    assert len(set(SEMANTIC_GATING_CHECKS)) == 4
+    assert len(SEMANTIC_GATING_CHECKS) == 5
+    assert len(set(SEMANTIC_GATING_CHECKS)) == 5
 
     # CLOSED: every other check ``evaluate_production_semantics`` populates is excluded,
     # by name, so adding a fifth gate silently is impossible.

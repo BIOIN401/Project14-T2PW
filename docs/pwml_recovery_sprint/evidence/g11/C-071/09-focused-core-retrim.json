@@ -1,0 +1,110 @@
+{
+  "label": "focused-core-retrim",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-071/09-focused-core-retrim.pin.json",
+    "-q",
+    "--basetemp=C:/t/c071tmp/core2",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_compound_resolution_extraction.py"
+  ],
+  "cwd": "C:\\t\\c071",
+  "started_at": "2026-08-21T20:46:46+00:00",
+  "finished_at": "2026-08-21T20:46:59+00:00",
+  "duration_seconds": 12.459925999999541,
+  "timeout_seconds": 280.0,
+  "root_pid": 107812,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 169656,
+      "name": "python.exe",
+      "ppid": 107812
+    }
+  ],
+  "descendants_terminated": [
+    169656
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 168088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 168484,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169084,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169204,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169280,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169344,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169456,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-071/09-focused-core-retrim.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c071\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c071",
+    "repo_head": "f2a959ff2fc2014313c23a7d6cfb1d8b4a1ce153",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

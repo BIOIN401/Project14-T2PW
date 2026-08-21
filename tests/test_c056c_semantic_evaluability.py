@@ -7,7 +7,7 @@ about *how much answered*: "one of four gating checks was evaluable and that one
 serialized **byte-identically** to "four of four were evaluable and all passed".
 
 So per G9 this file's proof is **behavioural, not symbolic**.
-:func:`test_correction_a_one_of_four_pass_serializes_differently_from_a_four_of_four_pass`
+:func:`test_correction_a_partly_evaluated_pass_serializes_differently_from_a_fully_evaluated_pass`
 builds both payloads, serializes both, and asserts the two artifacts DIFFER. At the base
 SHA they are equal and it fails on that comparison -- **not** on a missing attribute, and
 it reaches that comparison through :func:`_classify` which adapts to either arity of
@@ -23,7 +23,7 @@ WHAT THIS CARD DOES NOT DO, asserted rather than promised:
   ``admission`` report which does not exist at this seam and a signature change which is
   ungranted (``DECISIONS.md:2277``). The shortfall is made VISIBLE and is pinned as still
   open by ``test_the_rag_shortfall_is_recorded_and_deliberately_not_closed``;
-* it hard-codes **no evaluable count**. Production reaches three of four; a replay of
+* it hard-codes **no evaluable count**. Production reaches three evaluable; a replay of
   context-free committed artifacts reaches one. Both are derived per run, never written
   down (D-054 section 4).
 """
@@ -42,7 +42,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.bench.semantic import CHECK_RAG_REINTRODUCTION  # noqa: E402
+from t2pw.bench.semantic import CHECK_ACTOR_EVIDENCE, CHECK_RAG_REINTRODUCTION  # noqa: E402
 from t2pw.pipeline.release_status import (  # noqa: E402
     SEMANTIC_FAILED,
     SEMANTIC_GATING_CHECKS,
@@ -58,7 +58,7 @@ from test_strict_quarantine_contract_alignment import _base  # noqa: E402
 
 #: A production-shaped Stage-0 request: the pathway the base payload really is about, AND
 #: an organism. ``pathway_context_from_stage_zero`` (``entity_admission.py:396-399``) reads
-#: exactly these two fields, and BOTH are needed to reach D-054 section 4's three-of-four
+#: exactly these two fields, and BOTH are needed to reach D-054 section 4's three-evaluable
 #: production shape -- ``semantic_production.py:123-124`` makes ``CHECK_ORGANISM``
 #: INAPPLICABLE when no organism was requested. A ``pathway_name``-only context therefore
 #: reaches two, not three; ``_PATHWAY_ONLY_CONTEXT`` below pins that difference so the
@@ -138,57 +138,62 @@ def _evaluability(status: ReleaseStatus) -> List[Dict[str, Any]]:
 # ── G9 CORRECTION — the base-failing behavioural proof ───────────────────────
 
 
-def test_correction_a_one_of_four_pass_serializes_differently_from_a_four_of_four_pass() -> None:
+def test_correction_a_partly_evaluated_pass_serializes_differently_from_a_fully_evaluated_pass() -> None:
     """**FAILS BEHAVIOURALLY AT THE BASE SHA.** F-053, stated as an artifact comparison.
 
     Two runs, both ``passed``. One had a single gating check evaluable; the other had all
-    four. At the base these serialize to the SAME string -- that is the whole defect, and
-    the assertion that fails there is ``one != four``, a comparison of two artifacts this
-    file builds, reached through :func:`_classify`'s arity-tolerant shim. No attribute that
-    exists only at the tip is touched before it.
+    of them. At the base these serialize to the SAME string -- that is the whole defect,
+    and the assertion that fails there is ``one != every``, a comparison of two artifacts
+    this file builds, reached through :func:`_classify`'s arity-tolerant shim. No
+    attribute that exists only at the tip is touched before it.
+
+    **Width-parametric since C-071 moved the gating set 4 -> 5.** The widths were literals
+    when the set was closed at four; they now derive from the set, so the assertions stay
+    exact without naming a number a later ratified widening would falsify again.
     """
 
-    three_inapplicable = _Report(inapplicable=SEMANTIC_GATING_CHECKS[1:])
+    all_but_one_inapplicable = _Report(inapplicable=SEMANTIC_GATING_CHECKS[1:])
     all_applicable = _Report()
 
     # The premise both sides agree on: the VERDICT is identical and is a pass. If this
     # ever fails the comparison below would be trivially true and would prove nothing.
-    one_status, four_status = _classify(three_inapplicable), _classify(all_applicable)
+    one_status, every_status = _classify(all_but_one_inapplicable), _classify(all_applicable)
     assert one_status.semantic_evaluation == SEMANTIC_PASSED
-    assert four_status.semantic_evaluation == SEMANTIC_PASSED
-    assert one_status.status == four_status.status
+    assert every_status.semantic_evaluation == SEMANTIC_PASSED
+    assert one_status.status == every_status.status
 
-    one, four = _serialized(three_inapplicable), _serialized(all_applicable)
+    one, four = _serialized(all_but_one_inapplicable), _serialized(all_applicable)
 
     # ── THE BASE FAILURE. Equal at base, different at the tip. ──────────────
     assert one != four, (
-        "a one-of-four pass and a four-of-four pass serialize identically: "
+        "a partly evaluated pass and a fully evaluated pass serialize identically: "
         "the manifest cannot say how much was evaluated"
     )
 
     # ...and the tip's difference is the ruled shape (D-054 section 6), not a bare count.
-    one_map, four_map = _evaluability(one_status), _evaluability(four_status)
+    width = len(SEMANTIC_GATING_CHECKS)
+    one_map, four_map = _evaluability(one_status), _evaluability(every_status)
     assert [entry["check"] for entry in one_map] == list(SEMANTIC_GATING_CHECKS)
-    assert [entry["applicable"] for entry in one_map] == [True, False, False, False]
-    assert [entry["applicable"] for entry in four_map] == [True, True, True, True]
+    assert [entry["applicable"] for entry in one_map] == [True] + [False] * (width - 1)
+    assert [entry["applicable"] for entry in four_map] == [True] * width
     # A reader can reconstruct WHY each one did not count; a count could not say this.
     assert all(entry["inapplicable_reason"] for entry in one_map[1:])
     assert not any(entry["inapplicable_reason"] for entry in four_map)
 
 
 def test_correction_the_count_is_derivable_from_the_map_at_every_evaluable_width() -> None:
-    """The map answers for 0, 1, 2, 3 and 4 evaluable -- no width is special-cased.
+    """The map answers at every evaluable width, 0 up to the whole set -- none is special.
 
-    Also fails behaviourally at base: every one of these five runs serializes to one of
-    only two strings there (``passed`` or ``not_evaluated``), so the set below collapses.
+    Also fails behaviourally at base: every one of these runs serializes to one of only
+    two strings there (``passed`` or ``not_evaluated``), so the set below collapses.
     """
 
     widths = range(len(SEMANTIC_GATING_CHECKS) + 1)
     reports = {width: _Report(inapplicable=SEMANTIC_GATING_CHECKS[width:]) for width in widths}
 
-    # ── THE BASE FAILURE, taken before any new key is read. At base these five
-    # runs collapse onto TWO strings (one ``not_evaluated``, four identical
-    # ``passed``); at the tip all five are distinguishable. ──────────────────
+    # ── THE BASE FAILURE, taken before any new key is read. At base these runs
+    # collapse onto TWO strings (one ``not_evaluated``, the rest identical
+    # ``passed``); at the tip every one of them is distinguishable. ──────────
     assert len({_serialized(report) for report in reports.values()}) == len(widths)
 
     for width, report in reports.items():
@@ -199,14 +204,14 @@ def test_correction_the_count_is_derivable_from_the_map_at_every_evaluable_width
         assert len(entries) == len(SEMANTIC_GATING_CHECKS)
 
 
-# ── the production seam: three of four, and the reason for the fourth ────────
+# ── the production seam: three evaluable, and the reason for the rest ────────
 
 
-def test_the_seam_records_three_of_four_evaluable_beside_a_passed_verdict() -> None:
+def test_the_seam_records_three_evaluable_gating_checks_beside_a_passed_verdict() -> None:
     """TIP CONTENT, not a base-failure proof -- the base has no key to read.
 
     D-054 section 4: under a context-carrying request the seam reaches THREE evaluable,
-    never four, and never the ``1`` the context-free replay arm reports. Measured here
+    never all of them, and never the ``1`` the context-free replay arm reports. Measured here
     through the real ``quarantine_and_close``, so the figure is the seam's own.
     """
 
@@ -222,8 +227,13 @@ def test_the_seam_records_three_of_four_evaluable_beside_a_passed_verdict() -> N
     applicable = [entry["check"] for entry in evaluability if entry["applicable"]]
     inapplicable = [entry for entry in evaluability if not entry["applicable"]]
     assert len(applicable) == 3, applicable
-    assert [entry["check"] for entry in inapplicable] == [CHECK_RAG_REINTRODUCTION]
-    assert inapplicable[0]["inapplicable_reason"]
+    # THREE is unchanged by C-071's widening: ``_base()``'s reactions carry ``enzymes:
+    # []``, so the fifth gating check has no actor row to examine and reports itself
+    # inapplicable rather than joining the evaluable three.
+    assert [entry["check"] for entry in inapplicable] == [
+        CHECK_RAG_REINTRODUCTION, CHECK_ACTOR_EVIDENCE,
+    ]
+    assert all(entry["inapplicable_reason"] for entry in inapplicable)
 
     # ...and THREE is a property of this request, not of the seam. Withhold the organism
     # and the same payload reaches two, with the organism check naming its own reason.
@@ -273,7 +283,7 @@ def test_non_vacuity_the_map_tracks_the_report_position_by_position() -> None:
     """Delete the applicability the map reports and the map must follow it.
 
     A carrier that answered a constant would pass every assertion above. This walks one
-    inapplicable check across all four positions and requires the record to move with it.
+    inapplicable check across every position and requires the record to move with it.
     """
 
     for index, name in enumerate(SEMANTIC_GATING_CHECKS):
@@ -308,11 +318,11 @@ def test_non_vacuity_an_absent_reason_is_recorded_as_absent_not_invented() -> No
         checks = {name: _Bare() for name in SEMANTIC_GATING_CHECKS}
 
     entries = _evaluability(_classify(_BareReport()))
-    assert [entry["applicable"] for entry in entries] == [False] * 4
-    assert [entry["inapplicable_reason"] for entry in entries] == [""] * 4
+    assert [entry["applicable"] for entry in entries] == [False] * len(SEMANTIC_GATING_CHECKS)
+    assert [entry["inapplicable_reason"] for entry in entries] == [""] * len(SEMANTIC_GATING_CHECKS)
 
-    # A check the report never carried at all is recorded the same honest way, and the
-    # four names are still all present -- an omission never shortens the record.
+    # A check the report never carried at all is recorded the same honest way, and every
+    # name is still present -- an omission never shortens the record.
     class _MissingReport:
         evaluated = True
         not_evaluated_reason = ""
@@ -327,7 +337,8 @@ def test_empty_means_not_recorded_and_is_never_a_measured_all_inapplicable() -> 
     """The one ambiguity a carrier could itself introduce, closed by length.
 
     A report that never evaluated has NO per-check applicability, so the record is empty.
-    A report that evaluated and found everything inapplicable records four entries. Both
+    A report that evaluated and found everything inapplicable records one entry per gating
+    check. Both
     answer ``not_evaluated``; only the record tells them apart.
     """
 

@@ -1,0 +1,147 @@
+{
+  "arm": "tip",
+  "f079_leg": {
+    "check_applicable": true,
+    "check_ok": false,
+    "check_present": true,
+    "check_summary": "3 actor(s) cite a span that names a different protein (15 examined, 0 carried no comparable name or span)",
+    "evaluation": "failed",
+    "failed_checks": [
+      "actor_named_in_its_own_cited_span"
+    ],
+    "findings": [
+      {
+        "cited_span": "EntF-catalyzed enterobactin assembly with L-serine Enterobactin production from activated 2,3-DHB t",
+        "entity": "EntE",
+        "pointer": "/processes/reactions/4/enzymes/1"
+      },
+      {
+        "cited_span": "EntF-catalyzed enterobactin assembly with L-serine Enterobactin production from activated 2,3-DHB t",
+        "entity": "EntE",
+        "pointer": "/processes/reactions/4/modifiers/1"
+      },
+      {
+        "cited_span": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+        "entity": "EntE",
+        "pointer": "/processes/transports/0/transporters/0"
+      }
+    ],
+    "reasons": [
+      "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+    ],
+    "requested_organism": "Escherichia coli",
+    "requested_pathway": "enterobactin biosynthesis",
+    "status": "review_required",
+    "strict_acceptance_eligible": false
+  },
+  "gating_set": [
+    "requested_pathway_anchors_present",
+    "organism_compatible",
+    "no_real_id_or_name_conflict",
+    "no_rejected_rag_reaction_reintroduced",
+    "actor_named_in_its_own_cited_span"
+  ],
+  "match_rule": {
+    "over_generated_complex_wrapper": {
+      "agrees": true,
+      "entity": "ALAS2 complex",
+      "expected": true,
+      "observed": true,
+      "raw_substring_would_say": false
+    },
+    "over_hyphen_and_case": {
+      "agrees": true,
+      "entity": "EntC",
+      "expected": true,
+      "observed": true,
+      "raw_substring_would_say": true
+    },
+    "over_parenthesised_symbol": {
+      "agrees": true,
+      "entity": "oxidoreductase (entA)",
+      "expected": true,
+      "observed": true,
+      "raw_substring_would_say": false
+    },
+    "over_uniprot_recommended_name": {
+      "agrees": true,
+      "entity": "Serine hydroxymethyltransferase, mitochondrial",
+      "expected": true,
+      "observed": true,
+      "raw_substring_would_say": false
+    },
+    "true_negative_synthetic_three_letter_symbol": {
+      "agrees": true,
+      "entity": "Fur",
+      "expected": true,
+      "observed": true,
+      "raw_substring_would_say": true
+    },
+    "true_positive_synthetic_three_letter_symbol": {
+      "agrees": true,
+      "entity": "Fur",
+      "expected": false,
+      "observed": false,
+      "raw_substring_would_say": false
+    },
+    "under_f079_self_referential": {
+      "agrees": true,
+      "entity": "EntE",
+      "expected": false,
+      "observed": false,
+      "raw_substring_would_say": true
+    },
+    "under_f079_transporter": {
+      "agrees": true,
+      "entity": "EntE",
+      "expected": false,
+      "observed": false,
+      "raw_substring_would_say": true
+    },
+    "under_no_symbol_at_all": {
+      "agrees": true,
+      "entity": "EntA",
+      "expected": false,
+      "observed": false,
+      "raw_substring_would_say": false
+    },
+    "under_tonb_uptake": {
+      "agrees": true,
+      "entity": "EntE",
+      "expected": false,
+      "observed": false,
+      "raw_substring_would_say": true
+    }
+  },
+  "neutralized_no_actor_keys": {
+    "check_applicable": false,
+    "check_ok": true,
+    "check_present": true,
+    "check_summary": "not evaluated: no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span",
+    "evaluation": "passed",
+    "failed_checks": [],
+    "findings": [],
+    "reasons": [],
+    "requested_organism": "Escherichia coli",
+    "requested_pathway": "enterobactin biosynthesis",
+    "status": "release_ready",
+    "strict_acceptance_eligible": true
+  },
+  "neutralized_token_floor": {
+    "check_applicable": false,
+    "check_ok": true,
+    "check_present": true,
+    "check_summary": "not evaluated: no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span",
+    "evaluation": "passed",
+    "failed_checks": [],
+    "findings": [],
+    "reasons": [],
+    "requested_organism": "Escherichia coli",
+    "requested_pathway": "enterobactin biosynthesis",
+    "status": "release_ready",
+    "strict_acceptance_eligible": true
+  },
+  "payload": "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json",
+  "payload_sha256": "b6cca43e97d484075a0b89b3d1148d75ae124d7d40348e6b18443532fcf82f84",
+  "semantic_production_loaded_from": "C:\\t\\c071\\src\\t2pw\\bench\\semantic_production.py"
+}

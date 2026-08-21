@@ -50,10 +50,32 @@ NO_PATHWAY_CONTEXT = "this run supplied no requested-pathway name to look for"
 NO_ORGANISM_CONTEXT = "this run supplied no requested-organism context to compare against"
 NO_CORE_FLOOR = "this run configured no minimum connected-core size"
 NO_PAYLOAD = "the run produced no payload to evaluate"
+NO_ACTOR_SPANS = (
+    "no actor sub-entry on any retained reaction carries both a name with an identifying "
+    "token and a cited evidence span, so no actor could be compared against its own span"
+)
 
 #: Value of ``goldset.MIN_SUBSTRING_TERM``. A needle shorter than this matches by equality
 #: only, so a 2-character name cannot anchor a request by containment.
 _MIN_CONTAINMENT = 4
+
+#: Sub-entries of a retained reaction that name an ACTOR -- a protein the row asserts is
+#: doing the chemistry. ``inputs``/``outputs`` are participants, not actors, and their
+#: chemistry is :data:`_s.CHECK_SUPPORTED_REACTIONS`'s gold-only question.
+_ACTOR_KEYS: Tuple[str, ...] = ("enzymes", "modifiers", "transporters")
+
+#: Where an actor cites its own span. Measured over the 21 committed ``final_mapped.json``
+#: legs, all 221 actor rows carry ``evidence`` and 20 also carry ``source_refs``; both are
+#: read and their union is searched, so citing the right sentence in either is enough.
+_ACTOR_SPAN_KEYS: Tuple[str, ...] = ("source_refs", "evidence")
+
+#: A normalized token shorter than this, or a bare numeral, cannot IDENTIFY a protein:
+#: ``normalize_name`` splits ``2,3-DHB`` into ``2 3 dhb``, and without the floor a numeral
+#: in a name would be corroborated by any numeral in a span. Deliberately 3 and NOT
+#: :data:`_MIN_CONTAINMENT`'s 4 -- three-character symbols are real identifiers (``Fur``
+#: is one, flagged in the very leg F-079 was found on), and 4 would silently make every
+#: one undecidable, disarming this check on the names most likely to be fabricated.
+_MIN_IDENTIFYING_TOKEN = 3
 
 
 def _not_evaluated(name: str, reason: str) -> CheckResult:
@@ -268,6 +290,141 @@ def _check_connected_core(graph: Mapping[str, Any], minimum: Optional[int]) -> C
     )
 
 
+def _cited_spans(actor: Mapping[str, Any]) -> List[str]:
+    """The spans an actor row cites AS ITS OWN evidence -- never the reaction's. A
+    non-string reference contributes nothing rather than being coerced: guessing which key
+    of an unseen mapping shape holds the quote would invent the evidence being read."""
+
+    out: List[str] = []
+    for key in _ACTOR_SPAN_KEYS:
+        value = actor.get(key)
+        if isinstance(value, str):
+            out.append(value)
+        elif isinstance(value, (list, tuple)):
+            out.extend(item for item in value if isinstance(item, str))
+    return [text for text in out if _s.normalize_name(text)]
+
+
+def _identifying_tokens(name: str) -> List[str]:
+    """The tokens of ``name`` that can identify a protein, in ``normalize_name`` form."""
+
+    return [
+        token for token in _s.normalize_name(name).split(" ")
+        if len(token) >= _MIN_IDENTIFYING_TOKEN and not token.isdigit()
+    ]
+
+
+def _actor_named_in_span(name: str, spans: Sequence[str]) -> Optional[bool]:
+    """THE MATCHING RULE. ``None`` means the row could not be examined at all.
+
+    **An actor is corroborated when its name and its own cited span share at least one
+    identifying token, compared on WHOLE-TOKEN boundaries after ``normalize_name``.**
+
+    *Whole tokens, not substrings* -- the half that catches F-079. ``EntE`` is a substring
+    of ``enterobactin``, so a raw ``in`` test reports the fabricated transporter
+    (``entity: "EntE"`` over *"Enterobactin is produced ... by a TolC-dependent
+    process"*) as fully corroborated. Measured over the 21 committed legs a substring test
+    accepts **20 of 221** actor rows this rejects, every one an ``Ent*`` symbol swallowed
+    by the word ``enterobactin``.
+
+    *One SHARED token, not the whole name* -- the half that stops it over-firing. A bare
+    symbol (``EntE``, ``EntA``, ``ALAS2``: the fabrication class) has exactly one
+    identifying token, so for those the rule IS "the span must name it". Longer names get
+    the looser test because the payload's canonical names are not the paper's words:
+    ``Serine hydroxymethyltransferase, mitochondrial`` cites *"catalyzed by serine
+    hydroxymethyltransferase"*, ``ALAS2 complex`` cites *"ALAS2 mediates ..."*,
+    ``oxidoreductase (entA)`` cites *"EntA (2,3-dihydro-...)"* -- the same protein under a
+    DB or wrapper name, and a whole-name rule demotes five of the 21 legs over that.
+
+    So the predicate is deliberately WEAKER than "the span names the actor": it fires only
+    on lexical disjointness. It under-reports, which is the correct direction for a check
+    joining a CLOSED gating set -- a false positive demotes correct output, a false
+    negative only leaves pre-existing behaviour in place.
+    """
+
+    wanted = set(_identifying_tokens(name))
+    if not wanted:
+        return None
+    seen = {token for span in spans for token in _s.normalize_name(span).split(" ") if token}
+    if not seen:
+        return None
+    return bool(wanted & seen)
+
+
+def _check_actor_evidence(processes: Mapping[str, List[Dict[str, Any]]]) -> CheckResult:
+    """Does every actor a retained reaction names appear in the span that row cites?
+
+    Three dispositions, and the third is the one that matters:
+
+    * span names the actor -> examined, passes.
+    * span names something else -> examined, FINDING.
+    * **no cited span, or no identifying token in the name -> NOT EXAMINED**, and counted.
+      Not a failure: whether a row carries a citation *at all* is
+      :data:`_s.CHECK_SOURCE_CARRIER`'s question, and that check documents itself as
+      hygiene and is deliberately non-gating, so failing a row here for a missing span
+      would smuggle it into the gate against its own stated meaning. Not a pass either:
+      an actor able to evade the gate by DELETING its evidence makes the gate reward less
+      evidence.
+
+    When nothing was examinable the check reports NOT EVALUATED rather than ``ok`` -- the
+    anti-vacuity property, since a detector that stopped looking and one that looked and
+    found nothing agree on ``ok``, and this module's rule (``semantic.py:293-299``) is
+    that not evaluated is never a pass. The census is in the summary for the same reason.
+    """
+
+    findings: List[Dict[str, Any]] = []
+    examined = 0
+    not_examined = 0
+    for bucket, rows in processes.items():
+        for index, row in enumerate(rows):
+            reaction = _s.canonical_text(row.get("name")) or "(unnamed)"
+            for key in _ACTOR_KEYS:
+                actors = row.get(key)
+                if not isinstance(actors, (list, tuple)):
+                    continue
+                for position, actor in enumerate(actors):
+                    if not isinstance(actor, _AbcMapping):
+                        # A bare string actor carries no citation of its own, so there is
+                        # no span to compare it against. Same disposition as a missing one.
+                        not_examined += 1
+                        continue
+                    name = (
+                        _s.canonical_text(actor.get("entity"))
+                        or _s.canonical_text(actor.get("protein"))
+                        or _s.canonical_text(actor.get("name"))
+                    )
+                    spans = _cited_spans(actor)
+                    verdict = _actor_named_in_span(name, spans)
+                    if verdict is None:
+                        not_examined += 1
+                        continue
+                    examined += 1
+                    if verdict:
+                        continue
+                    findings.append({
+                        "pointer": f"/processes/{bucket}/{index}/{key}/{position}",
+                        "entity": name,
+                        "name": reaction,
+                        "role": _s.canonical_text(actor.get("role")),
+                        "cited_span": spans[0][:300],
+                        "reason": (
+                            f"'{name}' is named as an actor of '{reaction}', but the span "
+                            "this row cites as its own evidence does not name it"
+                        ),
+                    })
+    if not examined:
+        return _not_evaluated(_s.CHECK_ACTOR_EVIDENCE, NO_ACTOR_SPANS)
+    census = f"{examined} examined, {not_examined} carried no comparable name or span"
+    ok = not findings
+    return CheckResult(
+        name=_s.CHECK_ACTOR_EVIDENCE, ok=ok, findings=findings,
+        summary=(
+            f"every examined actor is named in the span it cites ({census})" if ok
+            else f"{len(findings)} actor(s) cite a span that names a different protein ({census})"
+        ),
+    )
+
+
 def evaluate_production_semantics(
     payload: Optional[Mapping[str, Any]],
     *,
@@ -306,9 +463,11 @@ def evaluate_production_semantics(
     report.graph = _s._connected_core(processes, _s._cofactor_names())
     connected = _check_connected_core(report.graph, min_connected_reactions)
     report.identity_census = census
+    actor_evidence = _check_actor_evidence(processes)
     orphans = _s._orphaned_references(payload)
 
-    for result in (anchors, carrier, supported, organism, conflicts, reintroduction, connected, placeholder):
+    for result in (anchors, carrier, supported, organism, conflicts, reintroduction, connected,
+                   placeholder, actor_evidence):
         report.checks[result.name] = result
     report.scientific_errors = {
         _s.ERR_FALSE_REAL_IDENTIFIERS: forged,

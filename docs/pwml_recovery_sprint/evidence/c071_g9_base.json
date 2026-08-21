@@ -1,0 +1,35 @@
+{
+  "arm": "base",
+  "f079_leg": {
+    "check_applicable": null,
+    "check_ok": null,
+    "check_present": false,
+    "check_summary": "",
+    "evaluation": "passed",
+    "failed_checks": [],
+    "findings": [],
+    "reasons": [],
+    "requested_organism": "Escherichia coli",
+    "requested_pathway": "enterobactin biosynthesis",
+    "status": "release_ready",
+    "strict_acceptance_eligible": true
+  },
+  "gating_set": [
+    "requested_pathway_anchors_present",
+    "organism_compatible",
+    "no_real_id_or_name_conflict",
+    "no_rejected_rag_reaction_reintroduced"
+  ],
+  "match_rule": {
+    "skipped": "the predicate does not exist on this source"
+  },
+  "neutralized_no_actor_keys": {
+    "skipped": "_ACTOR_KEYS does not exist on this source"
+  },
+  "neutralized_token_floor": {
+    "skipped": "_MIN_IDENTIFYING_TOKEN does not exist on this source"
+  },
+  "payload": "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json",
+  "payload_sha256": "b6cca43e97d484075a0b89b3d1148d75ae124d7d40348e6b18443532fcf82f84",
+  "semantic_production_loaded_from": "C:\\t\\c071base\\src\\t2pw\\bench\\semantic_production.py"
+}

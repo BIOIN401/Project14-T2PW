@@ -115,10 +115,15 @@ def test_d_five_d006_states_are_independently_reachable():
     unasked = sp.evaluate_production_semantics(payload())
     assert axes(passed)[:3] == (True, True, False)
     assert axes(failed)[:3] == (True, False, False)
+    # C-071 appended CHECK_ACTOR_EVIDENCE. It is inapplicable here for a reason that is
+    # this list's own subject: ``payload()``'s ``enzymes`` are bare strings, so no actor
+    # row cites a span of its own and there is nothing to compare. Reporting it as
+    # PASSED on a payload it never examined is the one answer D-006 forbids, so the
+    # honest disposition puts it exactly here.
     assert unasked.inapplicable_checks == [
         bench_semantic.CHECK_ANCHORS, bench_semantic.CHECK_SUPPORTED_REACTIONS,
         bench_semantic.CHECK_ORGANISM, bench_semantic.CHECK_RAG_REINTRODUCTION,
-        bench_semantic.CHECK_CONNECTED_CORE,
+        bench_semantic.CHECK_CONNECTED_CORE, bench_semantic.CHECK_ACTOR_EVIDENCE,
     ]
     states = [axes(no_payload), axes(passed), axes(failed), axes(unasked)]
     assert len(set(states)) == len(states)

@@ -95,6 +95,7 @@ SEMANTIC_GATING_CHECKS: Tuple[str, ...] = (
     "organism_compatible",                     # bench.semantic.CHECK_ORGANISM
     "no_real_id_or_name_conflict",             # bench.semantic.CHECK_ID_CONFLICT
     "no_rejected_rag_reaction_reintroduced",   # bench.semantic.CHECK_RAG_REINTRODUCTION
+    "actor_named_in_its_own_cited_span",       # bench.semantic.CHECK_ACTOR_EVIDENCE
 )
 
 #: Reason vocabulary. Grouped so a report can say WHY without parsing prose.
