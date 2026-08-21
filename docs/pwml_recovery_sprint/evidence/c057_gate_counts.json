@@ -3,7 +3,7 @@
   "card": "C-057",
   "branch": "agent/p27-lineage-quarantine",
   "base_sha": "ca6bf13",
-  "tip_sha": "aa4dac2",
+  "tip_sha": "see git log; correction round 1 added one commit after f7ad0bf",
   "why_this_file_exists": "bounded_run.py retains exit codes but not stdout, so no pytest summary line is recoverable from a G11 report afterwards (shared block section 3). These are the verbatim summary lines, captured as each job ran.",
   "environment": {
     "interpreter": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe",
@@ -117,5 +117,20 @@
   "process_deviations_disclosed": [
     "One bounded SMOKE invocation was killed by the AGENT's own tool wall clock (2 min) before bounded_run could write its report -- the F-071 ordering hazard. Cause was a malformed shell fragment in the pytest argument list that made the selection collect the whole repo. The process table was checked immediately afterwards: the Job Object had terminated every child, zero survivors, and the only python.exe processes alive belonged to VS Code's isort LSP and to REV-059's own bounded run, neither of which was touched. The allocated placeholder 02-smoke-tip.json was then REUSED for the corrected run rather than abandoned, so no placeholder is orphaned.",
     "Development-time probes ran through bounded_run without --json, deliberately, so that no G11 placeholder was allocated for a job that was not a gate."
-  ]
+  ],
+  "correction_round_1": {
+    "grant": "narrow boundary extension: add _with_c057_lineage_hashes to tests/test_c011_freeze_seam_golden_equivalence.py, house pattern, that file only.",
+    "reran": "ONLY tests/test_c011_freeze_seam_golden_equivalence.py + tests/test_strict_quarantine_lineage.py, as instructed.",
+    "summary_line": "27 passed in 15.27s",
+    "breakdown": "2 (c011, both previously failing) + 25 (the new acceptance file)",
+    "g11": "evidence/g11/C-057/38-c011-plus-lineage.json",
+    "final_surviving_count": 0,
+    "not_rerun_and_why": "SMOKE, Chunk A, Chunk E and Chunk D were NOT re-run. src/ did not move in this round -- the only file touched is tests/test_c011_freeze_seam_golden_equivalence.py, which is in none of those four selections -- so the counts measured at aa4dac2 stand unchanged: SMOKE 465, Chunk A 126, Chunk E 174, Chunk D 185/187.",
+    "non_vacuity": "seven single-field perturbations of the new helper, ALL SEVEN RED. See c057_c011_golden_delta.json non_vacuity."
+  },
+  "budgets_after_correction": {
+    "hand_authored": "1095 / 1100 (ratified 1000 -> 1100 in ruling 1)",
+    "generated_artifacts": "41 / 110",
+    "evidence_bytes": "about 230 KB / 5 MB"
+  }
 }

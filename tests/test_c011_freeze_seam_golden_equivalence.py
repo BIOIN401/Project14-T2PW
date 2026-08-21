@@ -302,6 +302,85 @@ def _with_c052_path_keys(before: dict[str, Any], after: dict[str, Any]) -> dict[
     return document
 
 
+#: C-057's LINEAGE delta, stated here for exactly the reason ``_C030_KEYS`` and
+#: ``_C052_KEYS`` are: so the fixture stays the BEFORE document it is named for
+#: instead of being quietly rewritten. C-057 writes ``provenance_lineage`` onto
+#: the process rows strict quarantine EXCLUDES. A quarantined row is deleted from
+#: the payload, so on most legs the attribution never reaches the frozen graph at
+#: all -- but where the excluded row is a LOCKED reaction,
+#: ``_reconcile_locked_reactions`` keeps its retained copy under
+#: ``payload["quarantined_locked_reactions"]``, and the frozen payload's digest
+#: moves with it. ``PRODUCT_CONTRACT`` 178 REQUIRES that it move: "Lineage must
+#: not change graph equivalence, but lineage changes must remain detectable."
+#:
+#: Unlike C-030's and C-052's, these name keys whose VALUE moves, not keys that
+#: appear: C-057 adds nothing to this projection. What moves is ONE digest
+#: recorded twice -- the leg's ``canonical_payload_sha256`` and its gate report's
+#: ``payload_sha256``, equal on all 35 report-writing legs -- on the 7 legs that
+#: quarantine a locked reaction. Nothing else moves: not ``connectivity``, not
+#: ``normalization_stats``, not ``errors``, not ``ok``, not ``phase``, and no leg
+#: field outside the report. Those are the biology, and a lineage write that had
+#: moved any of them fails right here instead of being absorbed. Measured over
+#: the whole cohort in ``evidence/c057_cohort_equivalence.json``:
+#: ``canonical_graph_sha256`` -- the EXPORTERS' hash -- moves on 0 of 78 leg
+#: runs, and so do the surviving row set, the admission states and the removals.
+#:
+#: ONE-WAY, and that is the limitation to know: ``_without_c052_path_keys`` can
+#: strip C-052's delta because its keys are additive, but the digest this one
+#: replaces is not stored anywhere, so its inverse is not expressible. Running
+#: ``__main__`` below would therefore ABSORB this delta into the fixture, which
+#: is the "regenerate to absorb it" failure the whole mechanism exists to
+#: prevent. The fixture must not be regenerated while this delta stands.
+_C057_KEYS = ("canonical_payload_sha256", "final_stage3_gate_report")
+_C057_LEGS = 7
+
+
+def _with_c057_lineage_hashes(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    """``before`` plus exactly C-057's payload-digest delta, leg by leg.
+
+    Runs INNERMOST, before :func:`_with_c030_hash_keys`, deliberately. C-030's
+    ``produced["canonical_payload_sha256"] == report["payload_sha256"]`` is what
+    proves schema 2's payload projection agrees with the digest the seam already
+    published; moving the stored digest first keeps that assertion running
+    against a live value rather than weakening it to accommodate this delta.
+    """
+
+    document = copy.deepcopy(before)
+    moved = 0
+    for name, leg in document["legs"].items():
+        produced = after["legs"][name]
+        report = leg["final_stage3_gate_report"]
+        # Everything this delta does NOT touch, checked on EVERY leg and not only
+        # on the ones that move. A comparison of the digests alone would absorb a
+        # lineage write that had also changed the graph; these are where such a
+        # change would land.
+        for field in leg:
+            if field not in _C057_KEYS:
+                assert leg[field] == produced[field], f"{name}: {field}"
+        for key in report:
+            if key != "payload_sha256":
+                assert report[key] == produced["final_stage3_gate_report"][key], f"{name}: {key}"
+        if not report:
+            # A refusal leg freezes nothing, so it has no digest that can move.
+            assert not produced["final_stage3_gate_report"], name
+            assert leg["canonical_payload_sha256"] == "", name
+            assert produced["canonical_payload_sha256"] == "", name
+            continue
+        # One digest recorded twice, and it must be recorded twice on BOTH sides
+        # -- otherwise "the payload hash moved" is two claims and this helper
+        # would let the two halves drift apart.
+        assert leg["canonical_payload_sha256"] == report["payload_sha256"], name
+        digest = produced["final_stage3_gate_report"]["payload_sha256"]
+        assert produced["canonical_payload_sha256"] == digest, name
+        if digest == report["payload_sha256"]:
+            continue
+        report["payload_sha256"] = digest
+        leg["canonical_payload_sha256"] = digest
+        moved += 1
+    assert moved == _C057_LEGS, moved
+    return document
+
+
 def _without_c052_path_keys(document: dict[str, Any]) -> dict[str, Any]:
     """``document`` reduced to the 9-field projection the FIXTURE stores.
 
@@ -321,8 +400,8 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
     after = _document(None)
     before = json.loads(_fixture_bytes())
     assert _serialize(before) == _fixture_bytes(), "the fixture is no longer its own bytes"
-    expected = _serialize(
-        _with_c052_path_keys(_with_c030_hash_keys(before, after), after))
+    expected = _serialize(_with_c052_path_keys(
+        _with_c030_hash_keys(_with_c057_lineage_hashes(before, after), after), after))
     assert _serialize(after) == expected
     declared = [e["path"] for e in json.loads(MANIFEST.read_text(encoding="utf-8"))["legs"]]
     assert sorted(after["legs"]) == sorted(declared) == sorted(set(declared))
@@ -340,13 +419,14 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
 
 def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
     base = _document(BASE_SHA)
-    before = json.loads(_fixture_bytes())
     # The base blob's own document IS the fixture plus exactly C-052's projection
-    # delta -- proved through the same helper the tip goes through, so the two
-    # sides cannot drift apart -- and the fixture bytes themselves never move.
+    # delta and C-057's digest delta -- both proved through the same helpers the
+    # tip goes through, so the two sides cannot drift apart -- and the fixture
+    # bytes themselves never move.
+    before = _with_c057_lineage_hashes(json.loads(_fixture_bytes()), base)
     assert _serialize(base) == _serialize(_with_c052_path_keys(before, base))
     first = _serialize(_without_c052_path_keys(base))
-    assert first == _fixture_bytes()
+    assert first == _serialize(before)
     assert _serialize(_without_c052_path_keys(_document(BASE_SHA))) == first
 
 
