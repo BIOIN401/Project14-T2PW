@@ -221,9 +221,30 @@ in place (not deleted); `LEDGER.md:231`'s false C-056c row is corrected in the P
 * **`FINDINGS.md:1742-1745`'s *"SMOKE and all four chunks would have to be re-pinned"* is
   refuted for the `pythonpath = src` remedy** — measured, nothing moved. C-070 makes no claim
   about the other two remedies.
-* **`TEST_MATRIX.md` § Chunks needs an isolated-collection entry.** C-070 supplied the exact
-  prose. **`TEST_MATRIX.md` is 541 lines with citations pinned through line 477 — patch in
-  place and preserve the line count.**
+* **`TEST_MATRIX.md` § Chunks needs an isolated-collection entry — OWED AND GENUINELY BLOCKED,
+  not skipped.** C-070 supplied the exact prose:
+
+  > **Isolated collection (F-066 / C-070).** `tests/test_isolated_collection.py` runs two
+  > sub-second arms in any selection that includes it. Its complete sweep — every
+  > `tests/test_*.py` collected alone in a fresh interpreter, ~95 s for 156 files — is opt-in
+  > via `T2PW_ISOLATED_COLLECT_ALL=1` and belongs at **release-gate / pre-merge-window cadence,
+  > not per merge**. Set `T2PW_ISOLATED_COLLECT_REPORT=<path>` for a machine-readable per-file
+  > census; the rendered pytest assertion truncates and under-reports.
+
+  **Why it was not applied.** The standing constraint is *"`TEST_MATRIX.md` has citations
+  pinned through line 477. Patch it in place and preserve its 541-line count **unless a
+  separately authorized migration changes that requirement**."* Verified today: the file is
+  **exactly 541 lines** and the constraint holds. Adding this entry adds lines.
+
+  Adding it **after** line 477 would preserve every pinned citation — that half is safe. It is
+  the **line count** that cannot move without authorization. There are 14 blank lines after
+  477 that could technically absorb the prose, but consuming them to dodge a tripwire is
+  precisely the kind of quiet accommodation the tripwire exists to prevent.
+
+  **This is a one-line authorization, not a design question:** either permit 541 → ~549, or
+  say the entry belongs somewhere other than `TEST_MATRIX.md`. Until then the capability is
+  documented here and in `LEDGER.md`, so it is discoverable — just not where a test-matrix
+  reader would look first.
 
 ## 10. Process state
 
