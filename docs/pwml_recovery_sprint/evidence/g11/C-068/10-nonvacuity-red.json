@@ -1,0 +1,75 @@
+{
+  "label": "nonvacuity-red",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture",
+    "--basetemp=C:/t/c068tmp/nv10",
+    "-q",
+    "--no-header"
+  ],
+  "cwd": "C:/t/c068",
+  "started_at": "2026-08-21T16:54:35+00:00",
+  "finished_at": "2026-08-21T16:54:36+00:00",
+  "duration_seconds": 0.7748429000057513,
+  "timeout_seconds": 300.0,
+  "root_pid": 357336,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 357548,
+      "name": "python.exe",
+      "ppid": 357336
+    }
+  ],
+  "descendants_terminated": [
+    357548
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 357408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 358336,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c068/docs/pwml_recovery_sprint/evidence/g11/C-068/10-nonvacuity-red.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "23614d9e772bae597becac19e6d9aca6bd99f0c2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

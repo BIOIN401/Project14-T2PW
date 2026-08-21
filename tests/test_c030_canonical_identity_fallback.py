@@ -171,18 +171,53 @@ def _edit(edit) -> tuple[dict, dict, dict]:
 
 def test_the_census_reproduces_over_the_committed_corpus() -> None:
     """NEW ACCEPTANCE. Pins the measurement A0-C1's acceptance is scoped to.
-    The ledger's "60" does not reproduce; 49 is what the corpus holds."""
+    The ledger's "60" does not reproduce; 49 was what the corpus held at 32 legs.
+
+    **MOVED by C-068 on 2026-08-21 under permanent merge rule 4, five assertions
+    at once, deliberately and never absorbed.** This test iterates
+    :func:`_corpus`, which is ``git ls-files "*final_mapped.json"`` -- **not**
+    ``GOLDEN`` -- so it moved the moment T-100 committed three legs, and it has
+    been red unconditionally (**not** ``.env``-conditionally) ever since. F-069.
+
+    The exact delta, every value re-measured under pytest at ``5414cda`` before
+    it was moved -- ``len(_corpus())`` 32 -> 35 · ``len(gaps)`` 49 -> 55 ·
+    distinct files carrying a gap 19 -> 21 · ``buckets``
+    ``{compounds: 38, protein_complexes: 11}`` ->
+    ``{compounds: 43, protein_complexes: 12}`` · ``keys``
+    ``{pathbank_compound_id: 38, pathbank_complex_id: 11}`` ->
+    ``{pathbank_compound_id: 43, pathbank_complex_id: 12}``.
+
+    **The interpretation, and it is the whole point of moving these by hand:
+    the census grew because two REFUSED legs were committed, not because
+    identity resolution regressed.** Per-leg contribution, measured: the third
+    new leg ``runs_verify/2026-08-18_1328/…/PMC12096016/research`` contributes
+    **0** rows; ``…/PMC12096016/strict`` contributes **1**; and
+    ``…/PMC12452463/strict`` contributes **5**. All 6 of the 6 new gap rows come
+    off the two strict legs, whose ``quarantine_report.json -> ok`` is ``false``,
+    so their ``final_mapped.json`` is the **pre-quarantine fallback**: 5 are
+    duplicate-compound rows (``2,3-dihydro-2,3-dihydroxybenzoate (DHB)`` on both
+    legs -- the RAG duplicate -- plus ``isochorismate``,
+    ``2,3-dihydro-2,3-dihydroxybenzoate`` and ``2,3-dihydroxybenzoate``) and the
+    6th is ``enterobactin synthase complex``, an entity the gold set forbids
+    outright (``src/t2pw/bench/gold/pinned_v1.json:2037``).
+
+    **The only way to hold the old numbers is to un-commit those legs, which
+    would destroy the evidence base of D-055 and F-055…F-064. Do not propose
+    it.** These two strict legs are excluded from the export golden on the
+    record instead -- see ``EXCLUDED`` in
+    ``tests/test_compound_resolution_extraction.py``.
+    """
     gaps = _gap_rows()
-    assert len(_corpus()) == 32
-    assert len(gaps) == 49
-    assert len({relative for relative, *_ in gaps}) == 19
+    assert len(_corpus()) == 35
+    assert len(gaps) == 55
+    assert len({relative for relative, *_ in gaps}) == 21
     buckets: dict[str, int] = {}
     keys: dict[str, int] = {}
     for _relative, bucket, _index, key in gaps:
         buckets[bucket] = buckets.get(bucket, 0) + 1
         keys[key] = keys.get(key, 0) + 1
-    assert buckets == {"compounds": 38, "protein_complexes": 11}
-    assert keys == {"pathbank_compound_id": 38, "pathbank_complex_id": 11}
+    assert buckets == {"compounds": 43, "protein_complexes": 12}
+    assert keys == {"pathbank_compound_id": 43, "pathbank_complex_id": 12}
 
 
 def test_the_allowlist_names_every_identity_key_ir_consumes() -> None:
