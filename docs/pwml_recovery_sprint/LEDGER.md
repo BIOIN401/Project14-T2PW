@@ -1347,3 +1347,133 @@ one level up, in an instrument rather than a guard.
 **Standing guidance:** a committed mutation or perturbation harness carries its **own** non-vacuity check —
 neutralize the thing it audits and show the harness goes red. **Without it, the harness is an assertion about
 an assertion, and nothing has verified the outer one.**
+
+---
+
+# PACK 10 — the post-PACK-9 wave (2026-08-21)
+
+Opened from integration `ac776682d36012b0b583952d78ac8f0cf02115a3` with an **empty card queue**. Takeover
+verified clean: local = origin = `ls-remote`, no merge in progress, empty index, whole-tree G11 **exit 0 /
+2890 artifacts / 0 non-compliant**, **zero** sprint-owned Python processes, `C:\t\heavylock` absent,
+protected state exactly as manifested.
+
+**SMOKE re-measured before any card merged: `465 passed in 38.82s`** at `931c065` (`ac77668` plus five
+charter `.md` files, nothing else), under the mutex, zero survivors, cleanup success. Evidence at
+`evidence/g11/T-106/03` and `04`. **This is what makes a post-merge red attributable to a card this session
+rather than to drift.**
+
+## Card register
+
+| Card | Finding | Branch | Base | Tip | State |
+|---|---|---|---|---|---|
+| **C-063** | F-071 + F-072 | `agent/c063-runjob-lifecycle` | `ac77668` | `5d54eb5` | reported; **REV-063 dispatched on exact tip** |
+| **C-064** | F-070 | `agent/c064-round-cap-reason` | `ac77668` | `b51b6c9` | reported, 1 orchestrator-caused correction; **REV-064 dispatched on exact tip** |
+| **C-065** | F-076 | `agent/c065-golden-regen-guard` | `4bfeb06` | — | dispatched |
+| **C-066** | F-067 | — | — | — | chartered, ready |
+| **C-067** | F-062 | — | — | — | chartered, **GATED** on a per-reason biological ruling |
+| **C-068** | F-069 | `agent/c068-golden-coverage` | `5414cda` | — | dispatched |
+| **C-069** | F-073 | — | — | — | chartered, ready |
+| **C-070** | F-066 | — | — | — | chartered, ready |
+
+**F-077** — LOW, deliberate, pinned by tests, **not a contract violation today**. Both scopes blocked on
+separate decisions (a `schema_version` 6→7 bump; a card owning `_revalidate_surviving_processes`).
+**Deliberately deferred. That is a decision, not an oversight.**
+
+**Seam disjointness verified before every parallel dispatch**, and re-verified from the merged file lists
+after reporting: C-063 touches only `docs/pwml_recovery_sprint/evidence/`; C-064 touches
+`src/t2pw/rag/loop_policy.py` plus four test files and its own evidence. **Zero overlap, and neither touches
+`src/t2pw/app/streamlit_app.py`** — so the product-owner-edit stash procedure is **not** required for either
+merge. Verified, not assumed.
+
+## PACK 10 RULING 1 — a control-plane grep restricted to `*.md` does not search the control plane
+
+**`PRODUCT_CONTRACT.md:341` conditions PMC12452463's required outcome on "after the index fix". Three
+consecutive sessions recorded that phrase as having no antecedent, and F-062 — the sprint's highest-value
+finding — has been blocked on it throughout.**
+
+All three ran **the same search**, and it is quoted verbatim at `FINDINGS.md:1510` and `DECISIONS.md:3316`:
+
+```
+grep -rn "index fix" docs/pwml_recovery_sprint/*.md
+```
+
+**The antecedent is in a committed `.py` docstring**, which that glob cannot reach:
+`evidence/probe_downstream_gates.py:1` — *"How far a leg gets AFTER the **stale-index fix** -- the honest
+limit of **C-010**"*; `:5-6` names *"the index defect (C-010)"*; `:122` prints `quarantine (index-fixed)`.
+`LEDGER.md:114` has **C-010 = "p01 stale positional index", MERGED `9e06360`**.
+
+That probe is **about PMC12452463**, and states its own purpose as giving **T-100** its evidence base —
+whose acceptance (`TEST_MATRIX.md:477`) **is** the contract row. Probe, contract row and milestone acceptance
+are three statements of one thing, and the probe is the one that names the event.
+
+**Registered as F-080, and deliberately scoped as a READING rather than a definition** — no document says
+*"the index fix means C-010"* in those words. It does **not** overturn `DECISIONS.md` D-055 §6, which asks
+the product owner to name the referent or strike the condition; **it supplies the evidence for the naming.**
+
+**Standing rule: search `docs/` including `.py`, and `tests/` too, before recording that a term has no
+antecedent.** `docs/` carries committed evidence code whose docstrings hold load-bearing definitions —
+`probe_downstream_gates.py` is 40 lines of prose before its first import. **This habit cost three sessions.**
+
+## PACK 10 RULING 2 — size a ceiling against everything the charter mandates, not against the ownership table
+
+**C-063 reported itself over ceiling and did not self-authorize.** Correct under S4, and the seventh
+consecutive raise this sprint traceable to an orchestrator estimate rather than to a card's discipline.
+
+I set 1400 changed lines against a **three-file** ownership table, while the same charter simultaneously
+required a base-vs-tip G9 harness, **six** permanent selftest arms and **four** RULING-13 neutralizations.
+The harness alone is 715 lines and was **not in the table the ceiling was estimated against**.
+
+**Ratified to 1800 changed lines (including the harness) / 380 docstring+comment / 5 MB.** Measured
+1628 / 360 / ~96 KB. **No correction round charged** (RULING 12). **RULING 7 forbids trimming an adversarial
+arm or its documentation to fit a number, and the card did not.**
+
+**The generalisation, which RULING 12 half-stated and this completes:** a ceiling must be sized against
+**every artifact the charter obliges the card to produce**, including ones that will correctly live outside
+the owned-files table. A G9 harness, a census instrument and a neutralization suite are deliverables, not
+overhead.
+
+## PACK 10 RULING 3 — a `missed` list may count occurrences, not distinct items
+
+F-073 records `runner.CHILD_IMPORTS` as *"missing six deferred imports"* and says the cure is *"adding all
+six"*. **Measured by executing the test module's own helpers against the real driver: 9 deferred imports,
+6 missed — and the six resolve to exactly TWO distinct modules**, `t2pw.pipeline.release_status` (4 sites)
+and `t2pw.pipeline.strict_quarantine` (2 sites). `CHILD_IMPORTS` goes **5 → 7**, not 5 → 11.
+
+The finding is not wrong — it counts **deferral sites**, and each site is a real place the preflight is blind
+— but *"adding all six"* materially overstates the work. **Recorded because it is the fourth drifted count in
+one session:** corpus 32 → **35**, test files 148 → **153**, `missed` 6 sites → **2 modules**, G11 artifacts
+2889 → **2890**. **Never cite a count from a record. Measure it.**
+
+## Two findings registered from the F-069 biological lane
+
+Both verified unregistered before filing.
+
+* **F-078** (MEDIUM) — an adenylation reaction emits `AMP` as a co-product. One ATP cannot yield both an
+  adenylylated product and free AMP; EntE releases pyrophosphate. The row carries
+  `(paper_extraction, paper_stated, explicit)` while `AMP` appears in the source **only inside an enzyme
+  name**. Same mechanism as F-058's fabricated transporter and the NAD+/NADH rows — **a species derived from
+  an enzyme name or an EC number, then stamped explicit as though the span carried it. Three instances now
+  share it on one leg.**
+* **F-079** (HIGH) — a payload asserting `EntE`-catalyzed **adenylation** outputs **enterobactin**, plus a
+  fabricated transporter on a **TolC** span and a reaction whose entire evidence string is its own name, was
+  classified **`release_ready`** with **`semantic_evaluation: passed`** and one unrelated review flag.
+  `PRODUCT_CONTRACT.md:343` makes structured status authoritative. **Distinct from F-055**, which concerns
+  gate-**failed** legs; this leg failed no gate. Nothing shipped — the run wrote no PWML — so the violation
+  is in the **classification**.
+  **F-079 is evidence the F-053 prohibition should STAY.** A `passed` verdict has now been observed on a
+  payload carrying a false product assignment, so a consumer treating `passed` as positive evidence would be
+  consuming a value that has demonstrably not earned it.
+
+## Milestone posture
+
+* **T-101** — `TEST_MATRIX.md:478` is a **live 4–6 leg benchmark, ~2 h**, not an offline check. Its third
+  acceptance clause, *"`budget_exhausted` distinct from failure"*, **is F-070**, so it is sequenced after
+  C-064. **PMC12312563's scope was recorded in no topics file** and was recovered from the successful slugged
+  run's `00_PAPER.txt`: **`menaquinone biosynthesis | Bacillus subtilis`**. The *"Stage-0 scope abort"* at
+  `topics_verify_subset.txt:13` is what happens **scopeless**.
+* **T-103** — **round multiplier resolved: 1×.** `rag_loop_max_rounds()` (`streamlit_app.py:912-920`)
+  defaults to 1 and `RAG_LOOP_MAX_ROUNDS` is unset in `.env`, so T-103 ≈ 1.5 h. The same measurement
+  independently confirms F-070's claim that `max_rounds=1` is the **default production path**.
+* **Cost for both ≈ $0 marginal** — all nine OpenRouter model slots are `openrouter/free`. The binding
+  constraint is free-tier rate limiting and wall clock. Package at `T101_T103_AUTHORIZATION.md`.
+* **T-104 / T-105** — unchanged: blocked behind F-062, two separate ~7 h runs, **never collapsed into one**.
