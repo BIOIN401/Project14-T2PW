@@ -210,17 +210,17 @@ modify `runner.py` (that file is owned by C-032).
 
 | Chunk | Files | Tests | Runtime |
 |---|---|---|---|
-| **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 126 | **12 s** |
+| **A** | `test_reference_repair`, `test_strict_quarantine`, `test_strict_quarantine_contract_alignment`, `test_strict_quarantine_locks_and_scope`, `test_strict_quarantine_versioning`, `test_empty_extraction_payload` | 134 | **12 s** |
 | **B** | `test_bench_goldset_and_semantic`, `test_bench_acquisition_and_artifacts`, `test_bench_controls`, `test_completeness_audit`, `test_batch_driver`, `test_stage3_gate_report_lifecycle` | 230 | **25 s** |
 | **C** | `test_rag_admission_production_path`, `test_rag_gap_admission`, `test_rag_triage_orchestration`, `test_rag_provenance_gates`, `test_pipeline_reaction_rag_provenance`, `test_research_mode_orchestration`, `test_map_ids_name_gate`, `test_db_candidate_species_evidence` | 109 | **2 s** |
 | **D-core** | `test_process_normalizer`, `test_pwml_ir`, `test_pwml_writer`, `test_stage_contracts`, `test_payload_models` | 160 | **0.9 s** |
 | **D-apptest** | `test_streamlit_stage8_export_contract` · `test_streamlit_quarantine_boundary` — one process **per NODE** (H-007) | 4 + 23 | ~10.5 min, all 27 |
 | **E** | `test_strict_quarantine_real_artifact_replay` | parameterized over `runs/` | tens of s per leg |
 
-**SMOKE = A + B + C = 465 tests, ~40 s.** Runs after **every** merge, on the integration
-branch. Gate G10. **457 and 460 are both stale**: C-010 moved the baseline 457 → 460 and
-C-054 moved it 460 → 465, each under merge rule 4 with an exact documented delta — C-054's
-is five ADDED tests, named in `evidence/c054_gate_counts.json`; nothing was ever removed.
+**SMOKE = A + B + C = 473 tests, ~40 s.** Runs after **every** merge, on the integration
+branch. Gate G10. **457, 460 and 465 are all stale**: C-010 moved 457 -> 460, C-054 moved
+460 -> 465, C-067 moved 465 -> 473 (eight ADDED tests, `test_strict_quarantine.py` 32 ->
+40; Chunk **A** 126 -> 134). Each under merge rule 4; nothing has ever been removed.
 
 **Chunk D is excluded from the smoke gate.** Its deterministic core is 160 tests in
 **~1 s**, but the complete 187-test gate cost **9–13 min** over six runs — the 27 AppTest
@@ -237,7 +237,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 465 passed
+# SMOKE (every merge) — expect 473 passed
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -492,8 +492,8 @@ different Stage-1 draws at temperature 0 in this repository.
 
 ## Baseline to preserve (filled by INIT-001)
 
-Full suite per-chunk counts · smoke **465** (457 at INIT-001, moved 457→460 by C-010 and
-460→465 by C-054, each with an exact documented delta) · chunk D 187 · `bench_acceptance.py` on
+Full suite per-chunk counts - smoke **473** (457 at INIT-001; 457->460 C-010, 460->465
+C-054, 465->473 C-067, each an exact documented delta) - chunk A **134** - chunk D 187 -
 `runs/2026-08-02_2130` · `FULL_STACK_BASELINE` and `RESIDUAL_CODES_BY_{LEG,ROW}` as
 currently pinned. See `BASELINE.md`.
 
