@@ -10,7 +10,7 @@ import copy
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional, Tuple, TypedDict
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypedDict
 from uuid import uuid4
 
 # Streamlit executes this file directly, so Python puts src/t2pw/app on
@@ -833,6 +833,698 @@ def maybe_run_rag(
         diagnostics=diagnostics,
         error="",
     )
+
+# ── RAG round loop (D-008, PRODUCT_CONTRACT §10) — WIRING ONLY, NO LOGIC ────
+# The loop is ``t2pw.rag.controller.run_rag_loop``. Nothing below decides whether
+# to go round again, what a round's delta is worth, or why the loop stopped —
+# those are ``loop_policy.decide``, ``graph_delta.validate_graph_delta`` and
+# ``LoopOutcome.reason``. The app supplies exactly the four inputs the separation
+# invariant (``docs/rag/03_separation_invariant.md``, and the note at :161) allows:
+# ``stages=``, ``round_runner=``, ``deadline=`` and ``checkpoint=``. There is no
+# ``while`` here and there must never be one.
+#
+# THE FIVE STAGES ARE CALLED, NEVER EDITED, AND NEVER FEED THE CANONICAL GRAPH.
+# D-008 requires every round to RE-ENTER normalization, mapping, gates,
+# persistence and classification. Three of the five cannot return a graph at all:
+# ``run_strict_post_normalization_gates`` returns gate details,
+# ``build_and_save_draft_graph`` returns ``(graph, qa_report, summary)`` and
+# ``quarantine_and_close`` returns a ``StrictQuarantineResult`` whose ``payload``
+# is a REDUCED graph; ``map_payload`` returns ``{"payload", "report"}``. So each
+# adapter runs the real stage, publishes its REPORT on the round channel, and
+# returns the graph it was handed.
+#
+# That is exactly what round N+1 needs. ``retrieve.detect_gaps`` reads THREE
+# report channels (``rag/retrieve.py:699-701`` — ``qa``, ``gate``, ``mapping``)
+# and at base only ``qa_graph`` was ever populated, from the Stage-1 payload, once
+# (``:5476``). A second round reusing that frozen report detects the identical gap
+# set and converges for the wrong reason. Re-entering the five stages is what
+# recomputes all three channels from the PREVIOUS round's merged payload.
+#
+# Feeding a stage's OUTPUT forward instead would (a) hand
+# ``run_post_pipeline_sbml_artifacts`` an already normalized, mapped and
+# quarantined payload that it then re-normalizes and re-maps, and (b) make every
+# round's delta a rewrite rather than the additive merge ``validate_graph_delta``
+# exists to judge (``rag/graph_delta.py:29-32``: "the seam is additive by
+# construction … so a removal or a biology change on a pre-existing row is
+# reported and never repaired").
+#
+# Every per-round side effect is confined to ``tmp/rag_rounds/``. The authoritative
+# draft graph / QA report / reaction summary stay the ones the existing flow writes
+# at ``:5615``, and the authoritative classification stays the one the quarantine
+# boundary writes — which is why ``quarantine_and_close`` is called directly rather
+# than ``run_quarantine_boundary`` (:1746), whose extra job is writing those
+# artifacts and six session-state keys.
+#
+# The LLM audit is NOT re-entered per round: it lives inside
+# ``run_post_pipeline_sbml_artifacts``, and calling the five concrete stage
+# functions excludes it by construction. Keep it that way — a per-round LLM audit
+# would make the loop nondeterministic and unaffordable.
+
+#: Where every per-round artifact goes. ``tmp/`` is gitignored, and this is a fresh
+#: subdirectory: it cannot collide with the protected scratch files
+#: (``tmp/draft_graph.json``, ``tmp/qa_report.json``, ``tmp/reaction_summary.txt``).
+RAG_ROUND_SCRATCH_DIRNAME = "rag_rounds"
+
+#: Rounds this leg may run. Default 1 — today's exact single-pass behaviour, so
+#: wiring the loop changes nothing until an operator asks for more.
+RAG_LOOP_MAX_ROUNDS_ENV = "RAG_LOOP_MAX_ROUNDS"
+
+#: The loop's own monotonic budget, in seconds. Default is D-005's child deadline.
+RAG_LOOP_DEADLINE_ENV = "RAG_LOOP_DEADLINE_SECONDS"
+
+#: Sentinel for "this session key was absent before the round".
+_MISSING = object()
+
+#: Every ``st.session_state`` key ``run_quarantine_boundary`` writes. The round
+#: restores each one, so a per-round classification cannot leave a boundary decision
+#: in the session for a payload version that is not the one the boundary judged.
+#: (Measured: FIVE keys at ``:1835-1845``, not the six a record claimed.)
+QUARANTINE_SESSION_KEYS = (
+    "quarantine_report", "quarantine_artifacts", "quarantine_coverage",
+    "quarantine_ok", "quarantine_decision_controls",
+)
+
+
+def rag_loop_max_rounds() -> int:
+    """How many rounds the loop may run. ``1`` unless an operator raises it."""
+
+    raw = str(os.getenv(RAG_LOOP_MAX_ROUNDS_ENV, "") or "").strip()
+    try:
+        value = int(raw) if raw else 1
+    except ValueError:
+        value = 1
+    return max(1, value)
+
+
+def rag_loop_deadline_seconds() -> float:
+    """The loop's wall-clock budget, from D-005's numbers (``pipeline/deadline.py``).
+
+    Not invented here: the default is ``CHILD_DEADLINE_SECONDS`` (the per-leg
+    ceiling minus the parent/child grace) and the floor is
+    ``MIN_CHILD_DEADLINE_SECONDS``, both of which that module owns.
+    """
+
+    from t2pw.pipeline.deadline import (  # noqa: PLC0415 - lazy: RAG-off imports nothing
+        CHILD_DEADLINE_SECONDS,
+        MIN_CHILD_DEADLINE_SECONDS,
+    )
+
+    raw = str(os.getenv(RAG_LOOP_DEADLINE_ENV, "") or "").strip()
+    try:
+        value = float(raw) if raw else float(CHILD_DEADLINE_SECONDS)
+    except ValueError:
+        value = float(CHILD_DEADLINE_SECONDS)
+    return max(float(MIN_CHILD_DEADLINE_SECONDS), value)
+
+
+def rag_round_scratch_dir(
+    round_index: Optional[int] = None, *, root: Optional[Path] = None
+) -> Path:
+    """The round-scoped scratch directory, created on demand."""
+
+    base = (Path(root) if root is not None else PROJECT_ROOT / "tmp") / RAG_ROUND_SCRATCH_DIRNAME
+    path = base if round_index is None else base / f"round_{int(round_index):02d}"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def rag_round_mapping_cache_path(*, root: Optional[Path] = None) -> Path:
+    """A round-scoped mapping cache, seeded ONCE from the authoritative one.
+
+    TRAP 11. ``map_payload`` ends with ``cache.save()`` (``map_ids.py:8856``), and
+    ``MappingCache.save`` (``map_ids.py:780-783``) is a non-atomic, unlocked,
+    whole-file overwrite of a ~4.2 MB file. On 2026-08-18 a T-100 leg died on
+    exactly that write — ``[Errno 22] Invalid argument`` on
+    ``data/id_mapping_cache.json`` — after 456.8 s and after it had already
+    produced 5 reactions and 20 entities.
+
+    Re-entering mapping once per round would turn one such overwrite of the shared
+    file into N. Pointing the rounds at a copy under ``tmp/`` instead means the loop
+    performs **zero** writes to ``data/id_mapping_cache.json`` — the authoritative
+    cache is still written exactly once per leg, by the unchanged post-pipeline
+    path. Seeding the copy (rather than passing ``use_cache=False``) keeps the reads
+    warm, so a round does not re-resolve every entity over the network; and a failed
+    scratch write aborts one round through ``RoundAborted``, which carries the
+    checkpoint, instead of killing a leg that had already produced real biology.
+
+    ``map_ids.py`` is not touched: it is outside this card's boundary.
+    """
+
+    scratch = rag_round_scratch_dir(root=root) / "id_mapping_cache.json"
+    authoritative = PROJECT_ROOT / "data" / "id_mapping_cache.json"
+    if not authoritative.exists():
+        return scratch
+    # Re-seed whenever the authoritative cache has moved on. The copy outlives the leg,
+    # and a scratch cache that is never refreshed would drift away from what the
+    # post-pipeline mapping sees -- which would make the round's ``mapping`` report,
+    # the very channel this card exists to create, describe a different resolution
+    # than production's.
+    if (not scratch.exists()
+            or authoritative.stat().st_mtime_ns > scratch.stat().st_mtime_ns):
+        shutil.copyfile(authoritative, scratch)
+    return scratch
+
+
+def rag_round_reports(channel: Dict[str, Any]) -> Dict[str, Any]:
+    """The three report channels ``retrieve.detect_gaps`` reads (``retrieve.py:699-701``).
+
+    Only non-empty channels are passed on, so a stage that produced nothing is
+    absent rather than present-and-empty — ``detect_gaps`` treats the two the same,
+    but a diagnostic reading this dict should not see a report that never existed.
+    """
+
+    reports: Dict[str, Any] = {}
+    for key in ("qa_graph", "gate", "mapping"):
+        value = channel.get(key)
+        if isinstance(value, dict) and value:
+            reports[key] = value
+    return reports
+
+
+def build_rag_round_stages(
+    channel: Dict[str, Any],
+    *,
+    pathway_context: Optional[Dict[str, Any]] = None,
+    export_mode: "ExportMode" = DEFAULT_EXPORT_MODE,
+    strict_db: bool = True,
+    mapping_cache_path: Optional[Path] = None,
+    id_source: str = "",
+    scratch_root: Optional[Path] = None,
+) -> Any:
+    """The five D-008 stage adapters, as ``RoundStages``.
+
+    Each adapter CALLS the real stage function, publishes its report on ``channel``
+    and returns the graph unchanged (see the block comment above). ``channel`` is
+    also how the round index reaches the persistence adapter: ``RoundStages`` is
+    built once for the whole loop, so the runner stamps ``channel["round_index"]``
+    before the controller drives the stages.
+    """
+
+    from t2pw.rag.controller import RoundStages  # noqa: PLC0415 - lazy, see :452 and :436
+
+    def _cache_path() -> Path:
+        # Resolved on the mapping stage's first call, never at build time: seeding
+        # the round-scoped copy reads and writes ~4.2 MB, and a round aborted before
+        # mapping must not pay for it.
+        return (
+            Path(mapping_cache_path)
+            if mapping_cache_path is not None
+            else rag_round_mapping_cache_path(root=scratch_root)
+        )
+
+    resolved_id_source = (
+        id_source or os.getenv("PATHBANK_ID_SOURCE", "hybrid") or "hybrid"
+    ).strip().lower()
+
+    def _round_dir() -> Path:
+        return rag_round_scratch_dir(int(channel.get("round_index") or 0), root=scratch_root)
+
+    def _normalization(graph: Any) -> Any:
+        normalized, report = normalize_process_payload(graph, mode=export_mode)
+        channel["normalized_payload"] = normalized
+        channel["normalization"] = _safe_dict(report)
+        return graph
+
+    def _mapping(graph: Any) -> Any:
+        # COST, stated rather than suppressed. This is a full ``map_payload`` pass per
+        # round: PathBank/UniProt/ChEBI resolution plus ``hydrate_species_references``,
+        # which issues an LLM call unless ``T2PW_SPECIES_LLM=0``. D-008 asks for
+        # re-entry, not a cheaper imitation, so no resolver flag is flipped behind the
+        # operator's back — the knobs stay ``T2PW_SPECIES_LLM`` / ``PATHBANK_ID_SOURCE``
+        # / ``RAG_LOOP_MAX_ROUNDS``, and at the default of one round this is exactly one
+        # extra mapping pass per RAG leg.
+        result = map_payload(
+            graph,
+            cache_path=_cache_path(),
+            id_source=resolved_id_source,
+            use_cache=True,
+            mode=export_mode,
+        )
+        if not isinstance(result, dict):
+            raise ValueError("map_payload returned a malformed result: expected an object.")
+        channel["mapped_payload"] = result.get("payload")
+        channel["mapping"] = _safe_dict(result.get("report"))
+        return graph
+
+    def _gates(graph: Any) -> Any:
+        # Run on THIS round's normalized payload when normalization produced one:
+        # gating the un-normalized graph would report errors normalization had
+        # already fixed. A GateValidationError is a scientific verdict, not an
+        # infrastructure failure, so it is RECORDED and the round continues — the
+        # same {"ok": False, **details} shape ``normalize_process_payload`` itself
+        # records at ``process_normalizer.py:5532``. Anything else propagates and
+        # the controller turns it into RoundAborted, which is what it is for.
+        target = channel.get("normalized_payload")
+        target = target if isinstance(target, dict) else graph
+        try:
+            details = run_strict_post_normalization_gates(
+                target,
+                enforce_all_proteins_connected=not is_research(export_mode),
+            )
+            channel["gate"] = {"ok": True, **_safe_dict(details)}
+        except GateValidationError as exc:
+            channel["gate"] = {"ok": False, **_safe_dict(exc.details)}
+        return graph
+
+    def _persistence(graph: Any) -> Any:
+        # ``output_path`` is round-scoped on purpose: build_and_save_draft_graph
+        # writes draft_graph.json, qa_report.json and reaction_summary.txt next to
+        # it, and those three are protected scratch files whose authoritative write
+        # is the one at :5615.
+        _graph, qa_report, _summary = build_and_save_draft_graph(
+            graph, output_path=_round_dir() / "draft_graph.json"
+        )
+        channel["qa_graph"] = _safe_dict(qa_report)
+        return graph
+
+    def _classification(graph: Any) -> Any:
+        # DEVIATION FROM THIS CARD'S RULING, disclosed and measured. The ruling said
+        # to call ``quarantine_and_close`` directly rather than
+        # ``run_quarantine_boundary``, because the latter additionally writes
+        # artifacts and session-state keys. But
+        # ``tests/test_streamlit_quarantine_boundary.py:761-779`` (hotspot 9, which
+        # this card may not edit) asserts that the ONLY functions in THIS FILE calling
+        # ``quarantine_and_close`` are ``run_quarantine_boundary`` and
+        # ``run_pwml_export`` -- "exactly one function in the app decides; everything
+        # else carries it" -- so a stage adapter that called it directly became a third
+        # decision point and turned that gate red (measured: Chunk D qb node19).
+        #
+        # Both harms the ruling named are removed instead of the guard being dodged:
+        # the artifacts go to the ROUND's own directory, never ``outputs/``, and every
+        # session key the boundary writes is restored afterwards, so a round re-enters
+        # the app's real classification decision and leaves no trace of having done so.
+        # The authoritative boundary decision is still the one the post-pipeline pass
+        # makes, on the payload it judges, under its own controls.
+        target = _round_dir() / "quarantine"
+        target.mkdir(parents=True, exist_ok=True)
+        saved = {key: st.session_state.get(key, _MISSING) for key in QUARANTINE_SESSION_KEYS}
+        try:
+            result = run_quarantine_boundary(
+                graph,
+                strict_db=bool(strict_db),
+                outputs_dir=target,
+                pathway_context=pathway_context,
+                mode=export_mode,
+            )
+        finally:
+            for key, value in saved.items():
+                if value is _MISSING:
+                    st.session_state.pop(key, None)
+                else:
+                    st.session_state[key] = value
+        channel["classification"] = _safe_dict(_safe_dict(result).get("quarantine_report"))
+        channel["coverage"] = _safe_dict(_safe_dict(result).get("coverage"))
+        return graph
+
+    return RoundStages(
+        normalization=_normalization,
+        mapping=_mapping,
+        gates=_gates,
+        persistence=_persistence,
+        classification=_classification,
+    )
+
+
+def rag_round_merge(
+    graph: Dict[str, Any],
+    rag_payload: Any,
+    *,
+    pathway_context: Optional[Dict[str, Any]],
+    merge_site: Callable[[Any, Any, Any], Dict[str, Any]],
+    locked_manifest: Any = None,
+    quarantine_output_path: Optional[Path] = None,
+) -> Tuple[Dict[str, Any], List[str], int]:
+    """conform -> merge -> post-merge cleanup, against the LIVE merge base.
+
+    Lifted verbatim from the single-pass site this card replaced, with one thing
+    parameterized: the merge base. ``conform_rag_additions_for_merge``'s second
+    argument must be the very object ``merge_additions`` is about to be handed, and
+    per round that object moves — round 2 merges into round 1's result, not into
+    the Stage-1 seed. Everything the original comment there established still holds:
+    the base is Stage 1 PLUS Stage 2 whenever inference ran, and ``build_citation_report``
+    reads the PRE-MERGE ``rag_result.payload``, which conform never mutates.
+
+    ``merge_site`` is the ``merge_additions`` statement itself, supplied by the
+    caller rather than written here. C-060a's wiring test lifts the app's two
+    ``merge_additions`` statements out of ``streamlit_app.py`` BY AST and executes
+    the real source bytes to prove each passes a real ``PathwayContext``
+    (``tests/test_c060a_requested_pathway_wiring.py:68-104``, floor
+    ``OWNED_FLOOR = 4640``). Writing the RAG statement here would move it out of
+    that instrument's reach and silently disarm the protection, so it stays in the
+    script body where C-060a can still lift it, and this function calls it.
+    """
+
+    from t2pw.rag.conform import conform_rag_additions_for_merge  # noqa: PLC0415
+
+    seed_reaction_count = _count_reactions(graph)
+    envelope = conform_rag_additions_for_merge(rag_payload, graph)
+    # The RAG leg runs merge_additions a SECOND time, so the same request has to
+    # reach the gate on this pass too — and on every later round's pass.
+    merged = merge_site(graph, envelope, pathway_context)
+    # Preserve the locked-reaction quarantine the old replace-path performed:
+    # merge_additions runs apply_post_merge_cleanup WITHOUT the manifest.
+    merged, removed = apply_post_merge_cleanup(
+        merged,
+        locked_manifest=locked_manifest,
+        quarantine_output_path=quarantine_output_path,
+    )
+    return merged, list(removed), _count_reactions(merged) - seed_reaction_count
+
+
+def _rag_round_claims(rag_result: Any) -> Tuple[List[Any], List[Any]]:
+    """``(admitted, rejected)`` claim rows for the round, from the admission report.
+
+    Read-only: these are ``RagReactionCandidate.to_dict()`` rows, which carry the
+    ``inputs`` / ``outputs`` / ``enzymes`` / ``reversible`` fields
+    ``loop_policy.claim_identity_key`` reads. Only the gate's verdict makes a claim
+    rejected — nothing here promotes a retrieval failure into one.
+    """
+
+    admission = _safe_dict(getattr(getattr(rag_result, "synthesis", None), "admission", None))
+    return _safe_list(admission.get("accepted")), _safe_list(admission.get("rejected"))
+
+
+def _rag_round_gap_ids(rag_result: Any) -> frozenset:
+    """The round's detected-gap ids. An empty set refuses every addition (§10)."""
+
+    ids = {
+        str(getattr(gap, "gap_id", "") or "").strip()
+        for gap in _safe_list(getattr(rag_result, "gaps", None))
+    }
+    return frozenset(gap_id for gap_id in ids if gap_id)
+
+
+def _rag_reentry_map(reentered: Any) -> Dict[str, str]:
+    """``stage -> true/false/not_evaluated``. §11: ``not_evaluated`` is NEVER ``false``."""
+
+    from t2pw.rag.graph_delta import (  # noqa: PLC0415
+        FALSE,
+        NOT_EVALUATED,
+        REENTRY_STAGES,
+        TRUE,
+    )
+
+    known = _safe_dict(reentered)
+    out: Dict[str, str] = {}
+    for stage in REENTRY_STAGES:
+        value = known.get(stage)
+        out[stage] = TRUE if value is True else FALSE if value is False else NOT_EVALUATED
+    return out
+
+
+def run_rag_rounds(
+    graph: Dict[str, Any],
+    *,
+    first_result: Any,
+    merge_site: Callable[[Any, Any, Any], Dict[str, Any]],
+    pathway_context: Optional[Dict[str, Any]],
+    user_flag: bool,
+    seed_text: str = "",
+    export_mode: "ExportMode" = DEFAULT_EXPORT_MODE,
+    strict_db: bool = True,
+    max_rounds: Optional[int] = None,
+    deadline_seconds: Optional[float] = None,
+    scratch_root: Optional[Path] = None,
+    locked_manifest_path: Optional[Path] = None,
+    quarantine_output_path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Drive ``run_rag_loop`` over the RAG chain and return what it settled on.
+
+    ``first_result`` is round 0's already-computed chain result. It is reused rather
+    than re-run because the chain has to happen BEFORE Stage 2 — its
+    ``evidence_context`` is folded into Stage 2's prompt through S1/S2 — while the
+    merge has to happen AFTER it, so the merge base is Stage 1 PLUS Stage 2. Later
+    rounds run the chain fresh against the round's own graph and the round's own
+    recomputed reports.
+
+    Returns a record, never raises: ``payload`` is the graph to carry forward (the
+    loop's last GOOD graph, or the checkpoint's graph if a stage aborted the round),
+    and ``messages`` are the UI lines for the caller to emit, so this function does
+    not have to be a Streamlit widget to be testable.
+    """
+
+    from t2pw.rag.controller import RoundAborted, RoundResult, run_rag_loop  # noqa: PLC0415
+    from t2pw.pipeline.deadline import LegDeadline  # noqa: PLC0415
+
+    rounds_allowed = int(max_rounds) if max_rounds is not None else rag_loop_max_rounds()
+    leg = LegDeadline(
+        total_seconds=(
+            float(deadline_seconds) if deadline_seconds is not None else rag_loop_deadline_seconds()
+        )
+    )
+    channel: Dict[str, Any] = {}
+    record: Dict[str, Any] = {
+        "payload": graph,
+        "rounds": [],
+        "checkpoints": [],
+        "messages": [],
+        "reason": None,
+        "aborted": None,
+        "max_rounds": rounds_allowed,
+        "budget": {},
+    }
+    manifest = load_locked_reaction_manifest(
+        locked_manifest_path
+        if locked_manifest_path is not None
+        else PROJECT_ROOT / "tmp" / "locked_reaction_manifest.json"
+    )
+    quarantine_path = (
+        quarantine_output_path
+        if quarantine_output_path is not None
+        else PROJECT_ROOT / "tmp" / "quarantined_rag_reactions.json"
+    )
+    pending: Dict[str, Any] = {"first": first_result}
+
+    def _checkpoint(mark: Any) -> None:
+        """§9's pre-retrieval checkpoint: the last good graph, the claim history and
+        the budget, on disk BEFORE anything long runs."""
+
+        state = {
+            "round_index": int(mark.round_index),
+            "reactions": _count_reactions(mark.graph),
+            "seen_claims": sorted(mark.seen_claims.keys),
+            "rejected_claim_keys": sorted(mark.rejected_claim_keys),
+            "decision": {
+                "should_continue": bool(mark.decision.should_continue),
+                "reason": mark.decision.reason,
+                "also_true": list(mark.decision.also_true),
+                "counts": dict(mark.decision.counts),
+            },
+        }
+
+        def _persist(budget_record: Any) -> None:
+            target = rag_round_scratch_dir(mark.round_index, root=scratch_root)
+            (target / "checkpoint.json").write_text(
+                json.dumps(
+                    {"budget": budget_record.to_dict(), "loop": state},
+                    indent=2,
+                    ensure_ascii=False,
+                    default=str,
+                ),
+                encoding="utf-8",
+            )
+            (target / "checkpoint_graph.json").write_text(
+                json.dumps(mark.graph, indent=2, ensure_ascii=False, default=str),
+                encoding="utf-8",
+            )
+
+        leg.checkpoint(
+            f"rag_round_{int(mark.round_index)}",
+            stage="rag_loop",
+            state=state,
+            persist=_persist,
+        )
+        record["checkpoints"].append(state)
+
+    def _round_runner(context: Any) -> Any:
+        channel["round_index"] = int(context.round_index)
+        rag = pending.pop("first", None)
+        if rag is None:
+            # Round N>0 re-runs the chain against THIS round's graph and THIS
+            # round's recomputed reports — the whole point of re-entering the five
+            # stages. Reusing round 0's frozen seed payload and its single qa_graph
+            # report would re-detect the identical gap set.
+            rag = maybe_run_rag(
+                pathway_context=pathway_context or {},
+                user_flag=bool(user_flag),
+                seed_payload=context.graph,
+                reports=rag_round_reports(channel),
+                seed_text=seed_text,
+            )
+        admitted, rejected = _rag_round_claims(rag)
+        observations = dict(
+            claims=tuple(admitted) + tuple(rejected),
+            admitted_claims=tuple(admitted),
+            rejected_claims=tuple(rejected),
+            detected_gap_ids=_rag_round_gap_ids(rag),
+            retrieval_completed=bool(rag is not None and not str(getattr(rag, "error", "") or "")),
+        )
+        candidate = context.graph
+        synthesized = bool(
+            rag is not None and getattr(rag, "synthesized", False) and getattr(rag, "payload", None)
+        )
+        if synthesized:
+            merged, removed, added = rag_round_merge(
+                context.graph,
+                rag.payload,
+                pathway_context=pathway_context,
+                merge_site=merge_site,
+                locked_manifest=manifest,
+                quarantine_output_path=quarantine_path,
+            )
+            if added > 0:
+                # Differential schema gate at the RAG boundary: reject only when the
+                # merge INTRODUCES a violation the base did not already carry.
+                if _post_extraction_new_error_keys(context.graph, merged):
+                    try:
+                        validate_runtime_payload_contract(
+                            merged, boundary="post_extraction", mode="enforce"
+                        )
+                    except StageContractError as failure:
+                        record["messages"].append(
+                            (
+                                "error",
+                                "Multi-paper RAG merge produced a payload that failed the "
+                                "post-extraction runtime schema; keeping the single-paper "
+                                "extraction rather than passing a malformed payload downstream.",
+                            )
+                        )
+                        record["messages"].append(("json", failure.report))
+                else:
+                    candidate = merged
+                    message = (
+                        f"Merged {added} RAG reaction(s) into the single-paper extraction."
+                    )
+                    if removed:
+                        message += (
+                            f" {len(removed)} synthesized reaction(s) were dropped/quarantined "
+                            f"as unusable: {', '.join(removed)}."
+                        )
+                    record["messages"].append(("info", message))
+            else:
+                record["messages"].append(
+                    (
+                        "warning",
+                        "Multi-paper RAG produced no additional usable reactions (no evidence "
+                        "retrieved — check that the embeddings endpoint is running and papers "
+                        "were fetched). Keeping the single-paper extraction."
+                        + (
+                            f" {len(removed)} synthesized reaction(s) were dropped as unusable: "
+                            f"{', '.join(removed)}."
+                            if removed
+                            else ""
+                        ),
+                    )
+                )
+        return RoundResult(graph=candidate, **observations)
+
+    try:
+        outcome = run_rag_loop(
+            graph,
+            stages=build_rag_round_stages(
+                channel,
+                pathway_context=pathway_context,
+                export_mode=export_mode,
+                strict_db=strict_db,
+                scratch_root=scratch_root,
+            ),
+            round_runner=_round_runner,
+            deadline=leg.started + leg.total,
+            max_rounds=rounds_allowed,
+            next_round_reserve_seconds=leg.reserve,
+            checkpoint=_checkpoint,
+        )
+    except RoundAborted as exc:
+        # TRAP 3. RoundAborted carries the failing stage, the PARTIAL re-entry map
+        # and the checkpoint written before the round. Funnelling it through a
+        # blanket ``except Exception`` would collapse all three into a UI string and
+        # destroy the checkpoint. It carries NO termination reason on purpose: an
+        # infrastructure failure is not one of D-005's six, and the un-run stages
+        # report ``not_evaluated``, never ``false``.
+        record["aborted"] = {
+            "stage": exc.stage,
+            "round_index": int(exc.checkpoint.round_index),
+            "reentry": _rag_reentry_map(exc.reentered),
+            "error": str(exc),
+        }
+        record["payload"] = exc.checkpoint.graph
+        record["budget"] = leg.snapshot()
+        record["messages"].append(
+            (
+                "error",
+                f"Multi-paper RAG round {int(exc.checkpoint.round_index)} was aborted in the "
+                f"{exc.stage!r} stage; the last checkpointed graph was kept and the round was "
+                "not merged.",
+            )
+        )
+        return record
+
+    record["payload"] = outcome.graph
+    record["reason"] = outcome.reason
+    record["budget"] = leg.snapshot()
+    record["seen_claims"] = len(outcome.seen_claims.keys)
+    record["rejected_claim_keys"] = sorted(outcome.rejected_claim_keys)
+    for round_outcome in outcome.rounds:
+        row = {
+            "index": int(round_outcome.index),
+            "accepted": bool(round_outcome.accepted),
+            "graph_delta": int(round_outcome.graph_delta),
+            "new_admissible_claims": int(round_outcome.new_admissible_claims),
+            "reentry": dict(round_outcome.verdict.reentry),
+            "rules": list(round_outcome.verdict.rules()),
+            "violations": [
+                {
+                    "rule": v.rule,
+                    "element": v.element,
+                    "observed": v.observed,
+                    "required": v.required,
+                    "detail": v.detail,
+                }
+                for v in round_outcome.verdict.violations
+            ],
+        }
+        record["rounds"].append(row)
+        if not round_outcome.accepted:
+            # A refused delta never advances the canonical graph — the controller's
+            # rule, not a choice made here. Say WHICH rules refused it, so a refusal
+            # is diagnosable rather than a silent disappearance of RAG output.
+            record["messages"].append(
+                (
+                    "warning",
+                    f"Multi-paper RAG round {row['index']} produced a delta the graph-delta "
+                    f"validator refused ({', '.join(row['rules']) or 'no rule reported'}); the "
+                    "previous graph was kept. See the RAG loop record for the affected elements.",
+                )
+            )
+    return record
+
+
+def emit_rag_loop_messages(messages: Any) -> None:
+    """Render the loop's collected UI lines. Best-effort UI only."""
+
+    for kind, body in _safe_list(messages):
+        if kind == "info":
+            st.info(body)
+        elif kind == "warning":
+            st.warning(body)
+        elif kind == "error":
+            st.error(body)
+        elif kind == "json":
+            st.json(body)
+
+
+def rag_loop_session_record(record: Dict[str, Any]) -> Dict[str, Any]:
+    """The JSON-safe half of the loop record, for session state and diagnostics.
+
+    ``payload`` is deliberately excluded: the graph the loop settled on is
+    ``final_payload``, and a second copy under another key would be a second
+    authority for the same fact.
+    """
+
+    return {
+        key: value for key, value in _safe_dict(record).items()
+        if key not in {"payload", "messages"}
+    }
 
 
 def _rag_funnel_verdict(diag: Dict[str, Any]) -> str:
@@ -4881,8 +5573,8 @@ if submit:
         )
 
     # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather
-    # than REPLACING it. A no-op with RAG off (rag_result is None): final_payload
-    # is untouched.
+    # than REPLACING it, ONE ROUND AT A TIME. A no-op with RAG off (rag_result is
+    # None): final_payload is untouched and t2pw.rag.controller is never imported.
     #
     # RAG's ``to_payload`` emits a thin, reaction-only payload MISSING the rich
     # Stage-1 shape the post-pipeline assumes (no element_locations, no per-reaction
@@ -4893,118 +5585,70 @@ if submit:
     # SAME machinery Stage 2 uses (merge_additions) — so the payload entering the
     # post-pipeline keeps the seed's rich Stage-1 shape (compartments defaulted by
     # the existing default_compartment="cell" path) with RAG reactions slotted in.
-    if rag_result is not None and rag_result.synthesized and rag_result.payload:
-        from t2pw.rag.conform import conform_rag_additions_for_merge
-
+    #
+    # That conform/merge/cleanup/schema-gate sequence is unchanged; what changed is
+    # that it is now the body of ONE ROUND of ``t2pw.rag.controller.run_rag_loop``
+    # (``run_rag_rounds`` above) instead of a single straight-line pass. D-008
+    # (LOCKED) and PRODUCT_CONTRACT §10: every RAG round must re-enter normalization,
+    # mapping, gates, persistence and classification, the loop must be deadline-aware,
+    # and it must checkpoint before each round. The controller enforces all of that
+    # structurally; this site supplies only ``stages=``, ``round_runner=``,
+    # ``deadline=`` and ``checkpoint=``, per the separation invariant at :161.
+    #
+    # WHY THE CHAIN STAYS AT :5470 AND THE MERGE HAPPENS HERE. Round 0's chain must
+    # run BEFORE Stage 2, because its ``evidence_context`` is folded into Stage 2's
+    # prompt through S1/S2; the merge must run AFTER it, because the merge base is
+    # Stage 1 PLUS Stage 2 whenever inference ran. So round 0 REUSES the result
+    # computed there, and only rounds 1..N-1 re-enter the chain — against their own
+    # graph and their own recomputed reports.
+    #
+    # ``RAG_LOOP_MAX_ROUNDS`` defaults to 1, so an unchanged environment runs exactly
+    # one round and produces exactly today's merge, today's messages and today's
+    # final_payload.
+    #
+    # THE MERGE STATEMENT STAYS HERE, and the loop calls it. C-060a's wiring test
+    # lifts the app's two ``merge_additions`` statements out of this file BY AST and
+    # executes the real source bytes, to prove each passes a real PathwayContext
+    # (tests/test_c060a_requested_pathway_wiring.py:68-104; both must sit at or
+    # above OWNED_FLOOR = 4640, Stage 2's first). Writing the RAG merge inside a
+    # helper defined above would put it out of that instrument's reach and disarm
+    # C-060a's protection without changing a line of C-060a's test.
+    def _rag_merge_site(final_payload, rag_envelope, pathway_context):
         # The RAG leg runs merge_additions a SECOND time, so the same request has
         # to reach the gate on this pass too. Without it the rows RAG adds are
         # screened with no context while the Stage-2 rows were screened with one,
         # and the two passes would disagree about the same species.
         from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
 
-        seed_reaction_count = _count_reactions(final_payload)
-        # The second argument is the MERGE BASE, and it must be `final_payload` --
-        # the very object handed to merge_additions on the next line -- because
-        # without it the guard inside conform has nothing to compare against and the
-        # whole fix is inert.
-        #
-        # WHY the guard exists. merge_additions dedupes entity rows with
-        # _extend_unique, whose signature is json.dumps(row, sort_keys=True). RAG
-        # synthesis rebuilds an entity row for every participant of every reaction it
-        # resolved, and it resolves the SEED's reactions too (the seed paper is itself
-        # indexed, so its own claims can corroborate), so the base's
-        # {"name": "LpxA", "class": "protein", "confidence": 1.0, ...} and RAG's
-        # {"name": "LpxA", "rag_provenance": {"source_id": "seed_paper", ...}, ...}
-        # are two different signatures for one protein and BOTH survive the merge.
-        # Measured on runs/2026-07-28_0919 PMC12444477/strict/merged_payload.json:
-        # entities.proteins 31 rows for 22 distinct normalized names (all nine seed
-        # enzymes doubled), entities.compounds 56 rows for 43. Byte-identical names,
-        # so the 2026-07-23 synonym resolver -- which collapses SYNONYMS -- correctly
-        # never touched them.
-        #
-        # WHY `final_payload` and not `stage_one_in_scope`. The base is Stage 1 PLUS
-        # Stage 2 whenever inference ran. In that same run 'lipid IV_A precursor',
-        # 'Kdo-lipid A precursor' and 'tetra-acylated disaccharide intermediate' are
-        # Stage-1 reaction participants that Stage 1 never registered and Stage 2 did;
-        # comparing against the Stage-1 seed alone would let those three back in.
-        # Passing the object we are about to merge into makes "already registered"
-        # mean exactly what merge_additions is about to see.
-        #
-        # Cost to the research deliverable: none. build_citation_report reads the
-        # PRE-MERGE rag_result.payload (research_report.py:332), which conform never
-        # mutates, so the dropped rows' source_refs / rag_provenance are still there
-        # for the citation report to quote -- only the duplicate ROW in the merged
-        # payload goes away. Reconstructed over all 8 delivered merged_payload.json
-        # under runs/ that have a RAG side: 279 entity rows -> 220, zero reactions
-        # lost, zero new process_normalizer.validate_registry_references errors.
-        rag_envelope = conform_rag_additions_for_merge(rag_result.payload, final_payload)
         merged = merge_additions(
             final_payload,
             rag_envelope,
             pathway_context=pathway_context_from_stage_zero(pathway_context),
         )
-        # Preserve the locked-reaction quarantine the old replace-path performed:
-        # merge_additions runs apply_post_merge_cleanup WITHOUT the manifest, so
-        # run the manifest-aware cleanup on the merged result — a locked Stage-1
-        # reaction mangled by synthesis is quarantined for inspection (and the
-        # quarantine file written) rather than silently dropped.
-        merged, rag_removed_reactions = apply_post_merge_cleanup(
-            merged,
-            locked_manifest=load_locked_reaction_manifest(
-                PROJECT_ROOT / "tmp" / "locked_reaction_manifest.json"
-            ),
-            quarantine_output_path=PROJECT_ROOT / "tmp" / "quarantined_rag_reactions.json",
+        return merged
+
+    if rag_result is not None and rag_result.synthesized and rag_result.payload:
+        rag_loop_record = run_rag_rounds(
+            final_payload,
+            first_result=rag_result,
+            merge_site=_rag_merge_site,
+            pathway_context=pathway_context,
+            user_flag=bool(rag_incomplete_flag),
+            seed_text=text,
+            export_mode=export_mode,
+            strict_db=bool(st.session_state.get("pwml_strict_db", True)),
         )
-        added_reactions = _count_reactions(merged) - seed_reaction_count
-        if added_reactions > 0:
-            # Differential schema gate at the RAG boundary. The wider pipeline runs
-            # this runtime schema in REPORT mode, so the single-paper seed can
-            # legitimately carry shapes the strict enforce-mode schema flags (e.g.
-            # Stage-2 inference interactions). Holding the merged payload to a
-            # stricter bar than the seed it merges into false-positives on those
-            # pre-existing shapes. Instead, reject only when the merge INTRODUCES a
-            # NEW violation not already present in the seed. Snapshot the seed's
-            # error keys BEFORE reassigning final_payload = merged.
-            new_error_keys = _post_extraction_new_error_keys(final_payload, merged)
-            if new_error_keys:
-                # The merge added a genuinely new schema violation — surface it and
-                # keep the single-paper extraction rather than pass it downstream.
-                try:
-                    validate_runtime_payload_contract(
-                        merged, boundary="post_extraction", mode="enforce"
-                    )
-                except StageContractError as failure:
-                    st.error(
-                        "Multi-paper RAG merge produced a payload that failed the "
-                        "post-extraction runtime schema; keeping the single-paper "
-                        "extraction rather than passing a malformed payload downstream."
-                    )
-                    st.json(failure.report)
-            else:
-                final_payload = merged
-                merge_message = (
-                    f"Merged {added_reactions} RAG reaction(s) into the single-paper "
-                    "extraction."
-                )
-                if rag_removed_reactions:
-                    merge_message += (
-                        f" {len(rag_removed_reactions)} synthesized reaction(s) were "
-                        f"dropped/quarantined as unusable: "
-                        f"{', '.join(rag_removed_reactions)}."
-                    )
-                st.info(merge_message)
-        else:
-            st.warning(
-                "Multi-paper RAG produced no additional usable reactions (no evidence "
-                "retrieved — check that the embeddings endpoint is running and "
-                "papers were fetched). Keeping the single-paper extraction."
-                + (
-                    f" {len(rag_removed_reactions)} synthesized reaction(s) were "
-                    f"dropped as unusable: {', '.join(rag_removed_reactions)}."
-                    if rag_removed_reactions
-                    else ""
-                )
-            )
+        final_payload = rag_loop_record["payload"]
+        emit_rag_loop_messages(rag_loop_record["messages"])
+        # Additive only. ``RagOrchestrationResult`` is a bare SimpleNamespace read
+        # through ``getattr(..., default)``, and ``payload`` keeps its meaning — the
+        # PRE-MERGE synthesized payload the citation report reads. The loop record is
+        # a NEW field beside it, never a redefinition of that one.
+        st.session_state["rag_loop"] = rag_loop_session_record(rag_loop_record)
+        try:
+            rag_result.loop = st.session_state["rag_loop"]
+        except Exception:  # noqa: BLE001 - a diagnostic attachment is never fatal
+            pass
 
     stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)
 
