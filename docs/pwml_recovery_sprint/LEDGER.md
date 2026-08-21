@@ -1513,3 +1513,47 @@ the charter did not fully specify — after F-071 and F-072.
 being a workaround and becomes enforceable — a subagent passing the flag gets a real acquire or a hard stop,
 and the "cannot create the lock" limitation is removed from agent hands entirely. **This ruling is the case
 for C-063 rather than an argument against it.**
+
+## PACK 10 RULING 5 — a guard can be silently disabled by the transport that writes it, and only a bidirectional test catches that
+
+**While fixing F-082, C-063 first wrote `\b` as a literal backspace byte (`0x08`)** — the shell transport
+collapsed `\\` on the way in. **The pattern compiled without error and matched nothing.** A credential
+scanner in that state reports every artifact clean, forever, and whole-tree G11 stays green while guarding
+nothing.
+
+**The card caught it by inspecting bytes**, then rebuilt both patterns with `chr(92)` and scanned all four
+owned files for stray control characters, tabs and over-long lines. **The orchestrator verified the result
+independently:** no stray control bytes in the `CRED_PATTERNS` block, five false-positive shapes clean
+(`ondisk-`, `task-`, `risk-`, `C:/runs/troughs_…`, `laughs_…`), and all three true-positive shapes still
+caught (bare key, assigned key, `ghp_` token).
+
+### Why this is a ruling and not an anecdote
+
+**The charter required the regression arm to be bidirectional**, and that requirement is the only thing
+standing between this defect and a silently dead scanner:
+
+* a **false-positive-only** test ("these ordinary labels must come back clean") **passes on a dead pattern**;
+* the **true-positive** half ("this key shape must still be rejected") is what fails.
+
+C-063 confirmed the arm is non-vacuous by replacing the openai pattern with one that matches nothing and
+watching it go red. **The half that felt redundant when the charter was written is the half that did the
+work.**
+
+### The generalisation
+
+RULING 13 says a mutation harness must carry its own non-vacuity check. **This extends it one step further
+back: a guard can be neutralised before it ever runs, by the mechanism that writes it.** A regex, a glob, a
+schema, a validator — any of them can be transported into a form that parses, imports, compiles and is inert.
+
+**Standing rule.** Whenever a card writes or edits a *pattern* — regex, glob, matcher, validator — its test
+must assert **both** directions: that the things it must not match come back clean, **and** that a known
+positive is still caught. **A one-directional pattern test is not a weaker test; it is a test that cannot
+detect the most likely failure.** Where the pattern is security-adjacent, inspect the committed bytes as
+well, because `\b`, `\d`, `\s` and `\\` are all one transport away from a control character that compiles.
+
+### Sizing the risk honestly
+
+C-063 scanned **all 2906 committed artifacts** with every pattern, before and after: **0 hits either way.**
+The F-082 hazard was **latent, not active** — precisely because `check` had already refused to let REV-068's
+two artifacts be committed. **The gate worked. The cost was that a reviewer had to find the defect instead of
+a red tree finding it**, and that is the sentence F-082's closure should carry.
