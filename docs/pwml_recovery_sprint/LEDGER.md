@@ -1557,3 +1557,36 @@ C-063 scanned **all 2906 committed artifacts** with every pattern, before and af
 The F-082 hazard was **latent, not active** — precisely because `check` had already refused to let REV-068's
 two artifacts be committed. **The gate worked. The cost was that a reviewer had to find the defect instead of
 a red tree finding it**, and that is the sentence F-082's closure should carry.
+
+### PACK 10 RULING 5 — AMENDMENT: it happened a second time, from the opposite direction
+
+**Byte inspection is not sufficient. The same afternoon, the docstring written to warn about this defect
+reproduced it.**
+
+C-063 was asked to record, in `test_credential_scan_is_word_bounded_and_still_bites`, that the true-positive
+half exists because a pattern can be silently neutralised by **transport** rather than by a bad edit. **The
+docstring it wrote was not raw**, so Python parsed its own `\b` into a real backspace character. *The text
+warning about a parsed escape was itself carrying one.*
+
+**The card's earlier control-byte scan did not catch it**, and the reason is the whole point: that scan reads
+**file bytes**, where `\b` is two entirely innocent characters, `\` and `b`. The defect exists only in the
+**parsed** value. It was caught by inspecting `__doc__` at runtime, fixed by making the docstring raw and
+saying why it is raw, and every docstring in both modules was then audited for parsed control characters —
+**none remaining**.
+
+### The sharpened rule
+
+**Two checks, not one, and they find different things:**
+
+| check | reads | catches |
+|---|---|---|
+| **byte inspection** | the file on disk | a control character written literally by a transport that collapsed `\` |
+| **parsed inspection** | `pattern.pattern`, `__doc__`, the live object | an escape the file spells correctly and **Python then interprets** |
+
+**Neither subsumes the other.** A regex whose source reads `r"\bsk-"` is fine in bytes and fine parsed; one
+whose source reads `"\bsk-"` is fine in **bytes** and **dead** parsed; one written through a collapsing
+transport is **dead in bytes** and dead parsed. **Only running both checks distinguishes the three.**
+
+**Standing rule, extended:** for any security-adjacent pattern, assert the regression arm in both directions
+**and** inspect both the committed bytes and the parsed runtime value. **Two instances of one failure class
+in one afternoon, from two different directions, is not bad luck — it is the shape of the hazard.**
