@@ -2751,3 +2751,97 @@ reason to lift F-053. It is a reason to keep it.**
 Observed on **one** committed leg, and it is **historical output**, not current-pipeline evidence. Whether
 today's classifier still passes this payload is **unmeasured**. A card must establish that first —
 re-measuring under current source is the first obligation, not the fix. Registered, not fixed, unowned.
+
+## F-080 — "after the index fix" HAS an antecedent; three sessions missed it because every search was restricted to `*.md`
+
+- **Severity** MEDIUM (control-plane, **unblocking**) · **Registered 2026-08-21**, integration `6769ea8`
+- **This does NOT overturn `DECISIONS.md` D-055 §6.** That entry asks the product owner to *"name the
+  referent or strike the condition."* **This finding supplies the evidence for the naming.** The decision
+  itself remains the product owner's, and is unmade until they make it.
+
+### The blocked state, and how long it has held
+
+`PRODUCT_CONTRACT.md:341` (§13, LOCKED) conditions PMC12452463's required outcome on *"after the index fix"*:
+
+> *"Correct outcome **after the index fix** is `review_required` with `strict_acceptance_eligible=false`.
+> **Never strict success.**"*
+
+Three consecutive sessions recorded that phrase as having **no antecedent anywhere in the control plane**,
+and F-062 — the sprint's highest-product-value finding — has been formally blocked on it. The claim is
+recorded at `FINDINGS.md:1509-1510`, `FINDINGS.md:2547`, and `DECISIONS.md:3315-3316`.
+
+### The cause of the miss, stated exactly, because it is the reusable lesson
+
+**All three searches were the same search, and it was restricted to `*.md`.** Both `FINDINGS.md:1510` and
+`DECISIONS.md:3316` quote it verbatim:
+
+```
+grep -rn "index fix" docs/pwml_recovery_sprint/*.md
+```
+
+**The antecedent is in a committed `.py` docstring**, which that glob cannot reach.
+
+### The antecedent
+
+`docs/pwml_recovery_sprint/evidence/probe_downstream_gates.py`:
+
+* **`:1`** — *"How far a leg gets AFTER the **stale-index fix** -- the honest limit of **C-010**."*
+* **`:5-6`** — *"Fixing **the index defect (C-010)** is not the same as producing PWML."*
+* **`:122`** — `print(f"  1. quarantine (index-fixed) : ok={result.ok}")`
+
+Corroborated across the control plane:
+
+* `LEDGER.md:114` — **C-010 = "p01 stale positional index"**, `MERGED` at **`9e06360`**, branch
+  `agent/p01-stale-index`, owning `strict_quarantine.py :: _surviving_processes, _degree_zero_exports,
+  quarantine_and_close`.
+* `MASTER_PLAN.md:215` and `:394` — `C-010 p01-stale-index`.
+
+### Why this probe, specifically, is the right antecedent and not a coincidental phrase
+
+It is **about PMC12452463**, the same paper as the contract row, and it exists to measure exactly the
+question the contract row answers:
+
+> *"On `ORIGIN_SHA`, PMC12452463 passes 1 and 2 and then FAILS 3 with `compound_db_resolution_failed` --
+> because `build_pwml_ir` performs live PathBank compound resolution AFTER the canonical graph is frozen.
+> That is a separate defect (C-040/C-050/C-051/C-052), not a C-010 shortfall."*
+
+and it states its own purpose as:
+
+> *"It is the guard against overclaiming. … **It also gives T-100's acceptance criterion its evidence
+> base.**"*
+
+**T-100's acceptance criterion is `PMC12452463 -> review_required, not strict success`** —
+`TEST_MATRIX.md:477`. So the probe, the contract row and the milestone acceptance are three statements of one
+thing, and the probe is the one that names the event: **C-010, the stale positional index fix.**
+
+### The reading this supports, and its exact strength
+
+**"the index fix" = C-010, merged at `9e06360`.** The condition is therefore **already satisfied**, and
+`PRODUCT_CONTRACT.md:341` binds today.
+
+**Stated honestly: this is an objectively grounded reading, not a definition someone wrote down.** No
+document says "the index fix means C-010" in those words. The evidence is that C-010 is the *only* fix in the
+sprint called an index fix, that the one artifact using the phrase ties it to C-010 **and** to PMC12452463
+**and** to T-100's acceptance, and that no competing candidate exists. **A one-line ratification from the
+product owner converts it from a strong reading into a settled fact**, and that is what should be sought —
+not a fresh investigation.
+
+### What changes if it is ratified
+
+* **F-062 stops being blocked on an undefined condition.** Its mechanism was never in doubt; only whether the
+  contract row currently binds. C-067's charter is written against this reading and says so.
+* **F-062 may then be quoted as a live contradiction of a locked position**, which `DECISIONS.md` D-055 §6
+  currently forbids.
+* **T-104's acceptance becomes well-defined** — it requires PMC12452463 to reach the contractually required
+  status, which is unquotable while the condition is undefined.
+
+**If it is instead struck**, F-062's mechanism still stands on its own — it is read from code and reproduces
+— but the contract half of its severity goes away, and T-104's acceptance row needs rewriting. **Either
+answer unblocks work; the absence of an answer is what does not.**
+
+### The reusable lesson, and it has now cost three sessions
+
+**A control-plane search restricted to `*.md` does not search the control plane.** `docs/` contains committed
+evidence code whose docstrings carry load-bearing definitions — `probe_downstream_gates.py` is 40 lines of
+prose before its first import. **Search `docs/` including `.py`, and search `tests/` too**, before recording
+that a term has no antecedent.
