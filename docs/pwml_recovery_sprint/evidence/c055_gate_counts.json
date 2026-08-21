@@ -1,0 +1,76 @@
+{
+  "base_sha": "32f3a57558ae6a85c333ebddaaa6db77cd4e4dfd",
+  "chunk_d": {
+    "expected_on_this_tree": "185/187 (F-065 + qb node15), core 159/160",
+    "expected_per_TEST_MATRIX": 187,
+    "final_surviving_count": 0,
+    "g11_report_outer": "docs/pwml_recovery_sprint/evidence/g11/C-055/88-chunk-d-final.json",
+    "note": "an earlier run of this same gate had a THIRD red, qb node19 (test_the_boundary_is_the_only_unguarded_quarantine_call_in_the_app), caused by this card and fixed before this run -- see the commit message, deviation 2. Its evidence is retained at docs/pwml_recovery_sprint/evidence/g11/C-055/41-node19.json (red) and docs/pwml_recovery_sprint/evidence/g11/C-055/50-qb-node19-recheck.json (green).",
+    "reds": [
+      {
+        "cause": "F-065 test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance",
+        "count": "159/160",
+        "id": "run-core",
+        "pre_charged": true
+      },
+      {
+        "cause": "test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block, red whenever the PathBank DB is reachable",
+        "id": "node15",
+        "pre_charged": true
+      }
+    ],
+    "summary_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']"
+  },
+  "f049_chunkless": {
+    "note": "F-049: these appear in no chunk table and in no chunk_d_gate.py list. PYTHONPATH=src was set in the bounded child per F-066, without which four of them fail at COLLECTION.",
+    "set_a": {
+      "files": [
+        "tests/test_rag_loop_controller.py",
+        "tests/test_rag_loop_policy.py",
+        "tests/test_rag_graph_delta.py",
+        "tests/test_attempt_cap_termination_reason.py"
+      ],
+      "final_surviving_count": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-055/85-f049-a-final.json",
+      "summary_line_verbatim": "98 passed in 1.05s"
+    },
+    "set_b": {
+      "files": [
+        "tests/test_c060a_requested_pathway_wiring.py",
+        "tests/test_batch_preflight.py"
+      ],
+      "final_surviving_count": 0,
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-055/86-f049-b-final.json",
+      "note": "all SEVEN test_c060a_requested_pathway_wiring.py failures an earlier run showed were caused by this card and are fixed -- see the commit message, deviation 1. Evidence: docs/pwml_recovery_sprint/evidence/g11/C-055/08-f049-c060a-preflight.json (red) and docs/pwml_recovery_sprint/evidence/g11/C-055/86-f049-b-final.json (green).",
+      "reds": [
+        "tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight",
+        "tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure"
+      ],
+      "reds_pre_charged": true,
+      "summary_line_verbatim": "2 failed, 41 passed, 4 skipped in 10.49s"
+    }
+  },
+  "note_env": "this worktree carries .env, so the PathBank DB is reachable -- see the pre-charged reds below",
+  "own_acceptance_tests": {
+    "file": "tests/test_c055_rag_loop_wiring.py",
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-055/87-own-final.json",
+    "measured": 14,
+    "note": "in NO chunk, like the F-049 files; must be run by name.",
+    "summary_line_verbatim": "14 passed in 6.13s"
+  },
+  "purpose": "literal pytest COUNTS for every gate this card ran -- an exit code cannot certify 'SMOKE exactly 465' (merge gate 10), and bounded_run retains exit codes but not stdout",
+  "python": "3.13.6, pytest 9.0.3",
+  "smoke": {
+    "expected_per_COUNT_CORRECTIONS": 465,
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-055/84-smoke-465-final.json",
+    "matches_expected": true,
+    "measured": 465,
+    "note": "contains test_rag_triage_orchestration.py and test_batch_driver.py, the two files the charter named as load-bearing; both pass UNCHANGED -- this card edits neither.",
+    "summary_line_verbatim": "465 passed in 45.77s"
+  },
+  "task": "C-055",
+  "tree_line_verbatim": "T2PW: C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c055-rag-wiring\\src\\t2pw\\__init__.py",
+  "unexpected_failures_attributable_to_this_diff": 0
+}
