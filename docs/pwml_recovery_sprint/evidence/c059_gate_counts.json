@@ -119,9 +119,11 @@
     "summary_line_verbatim": "74 passed in 0.90s"
   },
   "g11": {
-    "artifacts": 49,
-    "checker_line_verbatim": "G11 evidence: 49 artifact(s), 0 non-compliant (spec v1)",
+    "artifacts": 57,
+    "checker_line_verbatim": "G11 evidence: 57 artifact(s), 0 non-compliant (spec v1)",
+    "measured_at": "94625bd, the REV-059 correction tip, by re-running g11_evidence.py check --task C-059",
     "non_compliant": 0,
+    "note": "CORRECTED. This block read 49 and was the one block moved this session without a re-measurement stamp -- captured before the REV-059 correction round added eight more reports (50-57). The substantive assertions were true at 49 and remain true at 57: every report is compliant and no job left a surviving owned process. Only the self-referential count was stale. Re-run rather than incremented, and no new report was allocated to produce it, since `check` spawns no child process and allocating one would have moved the number it was measuring.",
     "survivors_across_every_job": 0
   },
   "g9_proof": {
