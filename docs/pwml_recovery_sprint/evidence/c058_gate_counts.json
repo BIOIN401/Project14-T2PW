@@ -1,0 +1,166 @@
+{
+  "base_sha": "6f9b4993f05c9131b7d30b5e4b984a2f17630414",
+  "chunk_c": {
+    "expected_per_TEST_MATRIX": 109,
+    "failures": 0,
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/34-chunk-c.json",
+    "matches_expected": true,
+    "measured": 109,
+    "summary_line_verbatim": "109 passed in 2.48s"
+  },
+  "chunk_d": {
+    "core": "159/160",
+    "core_summary_line_verbatim": "1 failed, 159 passed in 47.96s",
+    "duration_s": 445.79,
+    "expected_per_TEST_MATRIX": 187,
+    "failures": [
+      {
+        "assertion": "assert report[\"db_resolution\"][\"available\"] is False",
+        "classification": "PRE-CHARGED F-065 -- .env-conditional, do not fix",
+        "id": "core",
+        "test": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance"
+      },
+      {
+        "classification": "PRE-CHARGED -- red whenever the PathBank DB is reachable; hotspot 9 forbids touching the file",
+        "id": "qb/node15",
+        "test": "tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block"
+      }
+    ],
+    "final_surviving_count": 0,
+    "jobs_line_verbatim": "jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "matches_expected_on_env_tree": true,
+    "outer_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/36-chunkd-outer.json",
+    "partition_components_verbatim": [
+      "monolithic : exit=0 parsed=187 pytest_said=187 expected=187",
+      "core : exit=0 parsed=160 pytest_said=160 expected=160 overlap_with_earlier=0"
+    ],
+    "partition_proof_verbatim": "union=187 monolithic=187 missing=0 extra=0 SETS_EQUAL=True",
+    "runner": "evidence/chunk_d_gate.py run --tmp C:/t/c58d --task C-058 --timeout 900 --node-timeout 600",
+    "total": "185/187"
+  },
+  "env_note": "copied in from the primary checkout for F-051 control parity; the base worktree C:/t/c058base carries the same file",
+  "env_present": true,
+  "focused": {
+    "failures": 0,
+    "files": {
+      "test_adversarial_actor_entity_type": {
+        "chunk": null,
+        "declared": 18,
+        "summary_line_verbatim": "29 passed in 0.07s"
+      },
+      "test_c060a_requested_pathway_wiring": {
+        "chunk": null,
+        "declared": 11,
+        "summary_line_verbatim": "11 passed in 2.33s"
+      },
+      "test_entity_admission": {
+        "chunk": null,
+        "declared": 23,
+        "summary_line_verbatim": "33 passed in 1.00s"
+      },
+      "test_payload_models": {
+        "chunk": "D-core",
+        "declared": 13,
+        "summary_line_verbatim": "19 passed in 0.15s"
+      },
+      "test_pipeline_reaction_rag_provenance": {
+        "chunk": "C",
+        "declared": 7,
+        "summary_line_verbatim": "7 passed in 0.26s"
+      },
+      "test_process_normalizer": {
+        "chunk": "D-core",
+        "declared": 49,
+        "summary_line_verbatim": "49 passed in 1.90s"
+      },
+      "test_rag_conform_merge": {
+        "chunk": null,
+        "declared": 3,
+        "summary_line_verbatim": "3 passed in 0.24s"
+      },
+      "test_rag_gap_admission": {
+        "chunk": "C",
+        "declared": 18,
+        "summary_line_verbatim": "18 passed in 0.41s"
+      },
+      "test_rag_payload_gate_guardrails": {
+        "chunk": null,
+        "declared": 16,
+        "summary_line_verbatim": "16 passed in 0.65s"
+      },
+      "test_rag_seed_entity_reimport": {
+        "chunk": null,
+        "declared": 14,
+        "summary_line_verbatim": "14 passed in 0.42s"
+      },
+      "test_streamlit_stage2_orchestration": {
+        "chunk": null,
+        "declared": 11,
+        "summary_line_verbatim": "12 passed in 24.70s"
+      },
+      "test_transport_actor_guards": {
+        "chunk": null,
+        "declared": 15,
+        "new_in_this_card": true,
+        "summary_line_verbatim": "15 passed in 0.85s"
+      }
+    },
+    "note": "run one file per process, PYTHONPATH=src in the bounded child for F-066 (test_entity_admission and test_payload_models carry no sys.path insert). 'declared' is the charter's def-test_ count; 'collected' is the pytest node count -- four files are parameterized.",
+    "total_collected": 226
+  },
+  "g11": {
+    "non_compliant": 0,
+    "reports": 68,
+    "reports_with_survivors": 0,
+    "statement": "every C-058 job ran through bounded_run.py with a real --timeout and a short unique --basetemp under C:/t/; all 68 reports show FINAL SURVIVING COUNT 0 and cleanup success"
+  },
+  "g9_arm": "CORRECTION",
+  "g9_proof": {
+    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/21-new-tests-base-v3.json",
+    "base_summary_line_verbatim": "10 failed, 5 passed in 1.14s",
+    "base_worktree": "C:/t/c058base (git worktree at the base SHA, NOT an export: PATHSPEC omits runs_verify/, which this proof reads)",
+    "file": "tests/test_transport_actor_guards.py",
+    "symbol_absence_excluded": "_inject_name_based_modifiers exists at the base SHA; every base failure is an assertion on payload content, not an ImportError or AttributeError",
+    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/20-new-tests-tip-v3.json",
+    "tip_summary_line_verbatim": "15 passed in 1.02s"
+  },
+  "guard_mutations": {
+    "boundary": "3 failed, 11 passed in 1.49s",
+    "cargo": "1 failed, 13 passed in 1.25s",
+    "cue_window": "1 failed, 13 passed in 1.21s",
+    "exactly_one": "1 failed, 13 passed in 1.19s",
+    "note": "each guard deleted on its own at the tip, in a throwaway worktree, focused file re-run"
+  },
+  "heavy_mutex": "acquired 03:00:36Z for Chunk C + SMOKE + Chunk D, released 03:13:23Z immediately after Chunk D ended",
+  "purpose": "literal pytest COUNTS, read off runs -- an exit code cannot certify 'SMOKE exactly 465' (merge gate 10). bounded_run retains exit codes but not stdout, so the summary lines are captured here verbatim as the job produced them.",
+  "replay_pin": {
+    "base": {
+      "artifact": "docs/pwml_recovery_sprint/evidence/c058_corpus_base.json",
+      "rows_losing_a_stage1_transporter": 0,
+      "rows_reproducing_committed": 44,
+      "total_injected_transporter_rows": 24
+    },
+    "corpus": "runs/ + runs_verify/, 64 legs, 44 transport rows",
+    "probe": "docs/pwml_recovery_sprint/evidence/c058_transport_injection_replay.py",
+    "reaction_actor_digests_identical_on_legs": 64,
+    "refused": "23 EntE attachments plus 1 ALAS2 cargo-as-transporter",
+    "tip": {
+      "artifact": "docs/pwml_recovery_sprint/evidence/c058_corpus_tip.json",
+      "rows_losing_a_stage1_transporter": 0,
+      "total_injected_transporter_rows": 0
+    }
+  },
+  "smoke": {
+    "expected_per_TEST_MATRIX": 465,
+    "failures": 0,
+    "final_surviving_count": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-058/35-smoke-465.json",
+    "matches_expected": true,
+    "measured": 465,
+    "note": "465 is the current pinned figure (C-054 moved it 460 -> 465). This card adds a new test FILE that is in no chunk and not in the 20-file SMOKE selection, so the SMOKE baseline is unmoved.",
+    "summary_line_verbatim": "465 passed in 43.97s"
+  },
+  "task": "C-058",
+  "tree": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/agent-c058-transport-guards"
+}

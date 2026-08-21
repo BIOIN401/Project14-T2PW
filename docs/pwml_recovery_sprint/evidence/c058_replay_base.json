@@ -1,0 +1,276 @@
+{
+  "legs": [
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "42bd4eae656f2b08550e359402426b47b61058aac5bfa4ab817e5cb44bf2f4f8",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin secretion"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "MenD",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12096016/strict",
+      "reaction_actor_digest_after_replay": "977294a1a971789fc26d1f7bfd347dde45db50876adead525a79b90602b5c71f",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin export"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "FepA",
+          "Fur",
+          "Fnr"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12452463/research",
+      "reaction_actor_digest_after_replay": "74b585cc5a5cd0caf23e238cf7aadeacf60c23314a3a3a808402ae8907df986c",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric enterobactin import via FepA"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "FepA",
+          "Fur",
+          "RyhB"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+      "reaction_actor_digest_after_replay": "8b5aa7417e6cde966ce5c8d052249fe60e917ad32889b0ad8e79f3b8651f17a3",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric-enterobactin import via FepA"
+        }
+      ]
+    }
+  ],
+  "purpose": "replay pipeline._inject_name_based_modifiers on committed stage1 payloads; at base it reproduces the committed merged transporters byte-exactly, at the tip the fabricated rows are refused and the correct FepA row survives",
+  "reaction_actor_digests": {
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/research": "42bd4eae656f2b08550e359402426b47b61058aac5bfa4ab817e5cb44bf2f4f8",
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/strict": "977294a1a971789fc26d1f7bfd347dde45db50876adead525a79b90602b5c71f",
+    "runs_verify/2026-08-18_1328/papers/PMC12452463/research": "74b585cc5a5cd0caf23e238cf7aadeacf60c23314a3a3a808402ae8907df986c",
+    "runs_verify/2026-08-18_1328/papers/PMC12452463/strict": "8b5aa7417e6cde966ce5c8d052249fe60e917ad32889b0ad8e79f3b8651f17a3"
+  },
+  "roots": "runs_verify/2026-08-18_1328",
+  "task": "C-058",
+  "totals": {
+    "legs": 4,
+    "rows_losing_a_stage1_transporter": 0,
+    "rows_reproducing_committed": 5,
+    "rows_with_injected_transporters": 5,
+    "total_injected_transporter_rows": 5,
+    "transport_rows": 5
+  }
+}

@@ -1,0 +1,2451 @@
+{
+  "legs": [
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenD"
+        ]
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "reaction_actor_digest_after_replay": "9b62097db3cf9f0715fd8dde079ff26a65eb1d6f483c62fedf1afd9132623089",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenD"
+        ]
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "reaction_actor_digest_after_replay": "9c8578d3bb317d430c6735c84c0d8afc6eca4a4753bec78ab2127d7317fa54c3",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "YejM",
+          "LapB"
+        ]
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "reaction_actor_digest_after_replay": "719e0fbf49061001fa63a3ee8316094a24936a80ff1bfe4d8b9d16eaeaba1791",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "NDM-1",
+          "LpxC"
+        ]
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "NDM-1"
+        ]
+      },
+      "leg": "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxI",
+          "LpxG",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "MsbA",
+          "FtsH",
+          "LapB",
+          "YejM"
+        ]
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "reaction_actor_digest_after_replay": "e8f40c7eb0dbe844e631574f9bd146570154045eff5f38c8344ee106c34bf2c6",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "transported to the OM by the lipopolysaccharide transport (Lpt) system",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "LPS transport to OM"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "MsbA"
+        ]
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+      "reaction_actor_digest_after_replay": "1a54c4d0e0cd3c2d3cfbf9c604e0109a08107b993d2cff954c5078d4ac0de1af",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "Lpt-mediated LPS transport to OM"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "NDM-1",
+          "LpxC"
+        ]
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MCR-1"
+        ]
+      },
+      "leg": "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict",
+      "reaction_actor_digest_after_replay": "8ea27d8657909248b72b0b33fca7971680361266bcbd73c68ca51ecb39aaace8",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SFXN4",
+          "ferrochelatase",
+          "ALAS2"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ferrochelatase",
+          "ALAS2",
+          "SFXN4"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenD"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research",
+      "reaction_actor_digest_after_replay": "a636a0e4d0fddeed496ce2cebb2bd607cfcfeab469ee61609a83f5d53e55ec4e",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenD"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict",
+      "reaction_actor_digest_after_replay": "9fb16764d53ca5a648484f66aa0fef8ee2c1ad7a7e91e73f451e113f9d558940",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenF",
+          "MenD",
+          "MenH",
+          "MenC",
+          "MenE",
+          "MenB",
+          "MenI"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research",
+      "reaction_actor_digest_after_replay": "689c521f0a498587a7313bd4c49fc4482b4e902c1f915ad8542d7fa5f89ebc09",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenF",
+          "MenD",
+          "MenH",
+          "MenC",
+          "MenE",
+          "MenB",
+          "MenI",
+          "MenA",
+          "MenG",
+          "NoxAB"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict",
+      "reaction_actor_digest_after_replay": "d261b9d400eb26514b3b6d46e7fb40f01ac5b44a9bf34ab6db41f18c6b5a0377",
+      "transports": [
+        {
+          "committed_merged_transporters": null,
+          "evidence": "DHNA secreted by L. lactis",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "DHNA secretion"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "Lpt system"
+        ],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "ObgE",
+          "PldA",
+          "FadD",
+          "MsbA",
+          "FabZ"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+      "reaction_actor_digest_after_replay": "53ed590b34654633d6a88a4a05ea51e9b456177a9d68375ccfbd14b9cf6f9cd7",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+              "protein_complex": "Lpt system"
+            }
+          ],
+          "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+              "protein_complex": "Lpt system"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+              "protein_complex": "Lpt system"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Lpt-mediated core-lipid A transport to OM"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "FtsH/YciM complex"
+        ],
+        "proteins": [
+          "LpxC",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "LpxA",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "MsbA",
+          "FabZ",
+          "ObgE",
+          "FabI",
+          "FabA"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict",
+      "reaction_actor_digest_after_replay": "6451f9eb990f0aa6e0af0d218a0e5a98088310411953607d5f23231bcae52aa9",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ClcB",
+          "PtsI",
+          "YcaM"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": [
+        {
+          "committed_merged_transporters": null,
+          "evidence": "movement of colistin beyond the OM and colistin also reaches the cytoplasmic side of the inner membrane",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "colistin movement from outer membrane to inner membrane"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ClcB",
+          "PtsI",
+          "YcaM"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EcMenA",
+          "BsUbiE",
+          "BsHepPPS",
+          "ECidi",
+          "EfmvaE",
+          "EfmvaS",
+          "MmmvK",
+          "ScpmK",
+          "ScmvD",
+          "MetK",
+          "acs",
+          "ispA"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research",
+      "reaction_actor_digest_after_replay": "ac275a26957e864343cc488e8d685a9f287c4d0a42d61a1ad52cdb11a17fa606",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "BsHepPPS",
+          "EcMenA",
+          "BsUbiE",
+          "EcIdi",
+          "MvaE",
+          "MvaS",
+          "MVK",
+          "PMK",
+          "MVD",
+          "MetK",
+          "acetyl-CoA synthetase",
+          "pyruvate oxidase"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict",
+      "reaction_actor_digest_after_replay": "413bd4004a67bf223bd59b7432ef9e8a1870564db6df08e291722dababcb3335",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research",
+      "reaction_actor_digest_after_replay": "52d8b627b36c4b8fb9a8212f3a122f79d272fe4a6fbda946856b94f6d28dd38d",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict",
+      "reaction_actor_digest_after_replay": "0bb405158fe7889a8529d242b12a7aa9ce3f71128e422d804b005c10fd769483",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxC"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS1",
+          "ALAD",
+          "UROS",
+          "CPOX",
+          "FECH"
+        ]
+      },
+      "leg": "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research",
+      "reaction_actor_digest_after_replay": "92567ca392cf5104b4762e1d509e9647902540dc7b67a59b457e16b820130f75",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "TolC"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "547a5ffb09e09d6543e02617bca2a60e2a13da87d1626dce617d907ad9c5587c",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion via TolC"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntB",
+          "EntC",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "TolC",
+          "TonB"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12096016/strict",
+      "reaction_actor_digest_after_replay": "16947f2c4bdb7c7f62bb1affb17fff76245798da324a3ea72985b4c143694402",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion via TolC"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Ferric-enterobactin import via TonB"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SFXN4",
+          "ALAS2",
+          "ferrochelatase",
+          "SFXN1"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/research",
+      "reaction_actor_digest_after_replay": "65a7848697a66074fa84e0e4b59640b6bac81a69725e8249a222518d1766bd40",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "SFXN1-mediated serine transport"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SFXN1",
+          "SFXN2",
+          "SFXN3",
+          "SFXN4",
+          "SFXN5",
+          "serine hydroxymethyltransferase",
+          "ALAS2",
+          "ferrochelatase",
+          "PCBP2",
+          "frataxin",
+          "NFS1",
+          "ISCU",
+          "SLC25A1/CIC"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12180156/strict",
+      "reaction_actor_digest_after_replay": "633ca929b1e72bca9eec58a4e58191c1c41727892bfdf07c8c0cb99f86c57944",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "serine transport via SFXN1"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenD"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12312563/research",
+      "reaction_actor_digest_after_replay": "d94eb759013298f9ecdd989b4cf84fa2c7c66898827b3d9746285553a6384ff1",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenF",
+          "MenD",
+          "MenH",
+          "MenC",
+          "MenE",
+          "MenB",
+          "MenI",
+          "MenA",
+          "MenG",
+          "NoxAB"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12421875/research",
+      "reaction_actor_digest_after_replay": "73003577390fea9cb362b93894acbbbb58217b506ae4d8f3c4efd08ca33e9276",
+      "transports": [
+        {
+          "committed_merged_transporters": null,
+          "evidence": "DHNA diffusion through the membrane occurs at a rate k_DHNA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "DHNA export"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "diffusion rate of DHNA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "DHNA export"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "MenF",
+          "MenD",
+          "MenH",
+          "MenC",
+          "MenE",
+          "MenB",
+          "MenI",
+          "MenA",
+          "MenG",
+          "NoxAB"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12421875/strict",
+      "reaction_actor_digest_after_replay": "77494f5738aa1959b7f1d4ddd3fcef409a3ddd5eb0c99ce34641cb5d250b04ab",
+      "transports": [
+        {
+          "committed_merged_transporters": null,
+          "evidence": "DHNA secreted by L. lactis",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "DHNA export"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "extracellular DHNA accumulation rate",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "DHNA export to extracellular space"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "MsbA"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/research",
+      "reaction_actor_digest_after_replay": "c75bb9bd6e61ecb9fccbe235ba2ca9c55f287192b3f6921dace75e8d0b308d9a",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "Lpt-mediated core-lipid A transport to OM"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "MsbA"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12444477/strict",
+      "reaction_actor_digest_after_replay": "0846ef0a466037c2629275eadd155fb080fa936413506d45806dcea2afb7e37f",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "flippase MsbA",
+              "protein": "MsbA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "MsbA-mediated core-lipid A flip"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur",
+          "FepA"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12452463/research",
+      "reaction_actor_digest_after_replay": "f279c43d9a2e96e9d4ad40669a17b4cfd3605b303482c7c974e27619c9849c3a",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin secretion"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "FepA-mediated ferric enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "BsHepPPS",
+          "EcMenA",
+          "BsUbiE",
+          "Idi",
+          "Acs",
+          "EfmvaE",
+          "EfmvaS",
+          "MmmvK",
+          "ScpmK",
+          "ScmvD",
+          "MetK"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12657337/research",
+      "reaction_actor_digest_after_replay": "a7e26179776cd44fd8f02760fe1642a78233a2f87d3b46d9bf13337d49766348",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EcMenA",
+          "BsHepPPS",
+          "BsUbiE",
+          "ECidi",
+          "acs",
+          "EfmvaE",
+          "EfmvaS",
+          "MmmvK",
+          "ScpmK",
+          "ScmvD"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12657337/strict",
+      "reaction_actor_digest_after_replay": "411dff12e75f0bac4b63846a4396fe91059a44abc8c9ebb91a4f5f59ada8e83a",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LSS",
+          "CYP51A1",
+          "MSMO1",
+          "DHCR24",
+          "SQLE",
+          "FDFT1",
+          "FDPS",
+          "MVD",
+          "HMGCR",
+          "HMGCS1",
+          "MVK",
+          "IDI1",
+          "ACAT2",
+          "NSDHL",
+          "EBP",
+          "LBR",
+          "HSD17B7",
+          "LIPA",
+          "SREBF1",
+          "SREBF2"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12782028/strict",
+      "reaction_actor_digest_after_replay": "eb37a3947bb5837f57b659a1367fc175332030b641133d13e5f254f6f1ac0156",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/research",
+      "reaction_actor_digest_after_replay": "220ba0da1e6fd47d95473a467d0b57b0deff55e86c8c3f324276ad2fe5a91a86",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2",
+          "ALAS1"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC12856317/strict",
+      "reaction_actor_digest_after_replay": "8a05e2b9de35036af43c94f9c1f2ff42b860d13a0344085e8f2eb4cda0341f28",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "NDM-1",
+          "LpxC"
+        ]
+      },
+      "leg": "runs/2026-08-02_2130/papers/PMC13231680/strict",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LpxC"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1148/papers/PMC13231680/research",
+      "reaction_actor_digest_after_replay": "a97825ba12f7180788b5785f5dfa087e8bffd290ae0a2a5baa190eb0be9eed66",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntA",
+          "EntB",
+          "EntC",
+          "EntD",
+          "EntE",
+          "EntF"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1207/papers/PMC12452463/strict",
+      "reaction_actor_digest_after_replay": "1d9bb12a634004da846e847f7b34fa91d71d9fba96201271d6de5f6d290a4642",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntB",
+          "EntC",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "TolC",
+          "TonB",
+          "LDH"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12096016/strict",
+      "reaction_actor_digest_after_replay": "1b6314e376c48da1db5f3d9297998436cf6cabc244f6d0eca8e0e00860c95152",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion via TolC"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Ferric-enterobactin import via TonB"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1234/papers/PMC12856317/strict",
+      "reaction_actor_digest_after_replay": "035d808076b04373164cc846c602677b2583da719c0c6358ad844a0e882f5c3b",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntB",
+          "EntC",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "TolC",
+          "TonB"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "e349bb968f20317528752143ba5f846c049193af5b2c10fff89f9a26ea33a0ae",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein": "TolC"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "the ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "the ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Ferric-enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SFXN4",
+          "ALAS2",
+          "ferrochelatase"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12180156/research",
+      "reaction_actor_digest_after_replay": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur",
+          "RyhB",
+          "Fnr",
+          "FepA"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1306/papers/PMC12452463/research",
+      "reaction_actor_digest_after_replay": "1a5ad66ed2f2e4726d61800e6ef7fd632059a0f8f134bc41886c02be8da14fb2",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferri-enterobactin import into bacterial cell"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "EntCB complex",
+          "EntCBAE"
+        ],
+        "proteins": [
+          "EntB",
+          "EntC",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "TolC",
+          "TonB",
+          "MenD"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1358/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "fa63ff454ffad49c4f2ff67c01b73feaf083179112a61d4f377d5b1381dfa67a",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "TolC is involved in enterobactin efflux across the outer membrane",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "TolC is involved in enterobactin efflux across the outer membrane",
+              "protein": "TolC"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "TolC is involved in enterobactin efflux across the outer membrane",
+              "protein": "TolC"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion via TolC"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                ""
+              ]
+            }
+          ],
+          "evidence": null,
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                ""
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "imported via TonB-dependent uptake",
+              "protein": "TonB"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Ferric-enterobactin import via TonB-dependent uptake"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2",
+          "ALAS1"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1504/papers/PMC12856317/strict",
+      "reaction_actor_digest_after_replay": "0bb405158fe7889a8529d242b12a7aa9ce3f71128e422d804b005c10fd769483",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2",
+          "ALAS1",
+          "CLPXP",
+          "LONP1"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1647/papers/PMC12856317/strict",
+      "reaction_actor_digest_after_replay": "c4a9a28051d6f29b348be05d85a9002d5f39502910b2502c7d0b41cd8dadca03",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix",
+              "protein_complex": "ALAS2",
+              "provenance": "inferred",
+              "source_refs": [
+                "heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix"
+              ]
+            }
+          ],
+          "evidence": "heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix",
+              "protein_complex": "ALAS2",
+              "provenance": "inferred",
+              "source_refs": [
+                "heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "ALAS2 import into mitochondrial matrix"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "EntH"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "1941d15f1c12f6bb4af88537fe8e784dbedc0acef25cf50c7603dc0e3e746d9d",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin secretion"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric-enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12096016/strict",
+      "reaction_actor_digest_after_replay": "d4ab563ce1ed92dd136355b5646843cbe9a25bef6c94afa7986acb151854de4e",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin secretion"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SFXN1",
+          "SFXN2",
+          "SFXN3",
+          "SFXN4",
+          "SFXN5",
+          "ferrochelatase",
+          "ALAS2",
+          "serine hydroxymethyltransferase"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/research",
+      "reaction_actor_digest_after_replay": "ad021516a8e0f4cc7c534d269fb4b3cb856be7cc230c2e5c8877d4f0e730e83b",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "SFXN1 is essential for serine transport from cytosol into the mitochondrial matrix",
+              "protein": "SFXN1"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "SFXN1-mediated serine transport"
+        },
+        {
+          "committed_merged_transporters": null,
+          "evidence": "Formate is exported to the cytosol",
+          "injected_rows": 0,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": null,
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "formate export from mitochondria"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "SHMT2",
+          "ferrochelatase",
+          "ALAS2",
+          "SFXN1",
+          "SFXN2",
+          "SFXN4"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12180156/strict",
+      "reaction_actor_digest_after_replay": "3aebec9bef90c217ae3e754a0aafdfd3efbde14a546a4df1f58998292d7805e9",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/research",
+      "reaction_actor_digest_after_replay": "6e2572b4765e5778f0eca11f6ab0f3818dee94cfa4db8fbb99fe4b8c13bae105",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur",
+          "FepA"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12452463/strict",
+      "reaction_actor_digest_after_replay": "377a25ea8463b6db0aa8de1ebb5ebb35f289ad0c34867536f3ab9e1e4809ae3b",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is secreted by bacteria into the extracellular environment",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is secreted by bacteria into the extracellular environment"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is secreted by bacteria into the extracellular environment",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is secreted by bacteria into the extracellular environment",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is secreted by bacteria into the extracellular environment"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "Enterobactin secretion"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+              ]
+            }
+          ],
+          "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "recognized by specific outer membrane receptors (e.g. FepA), which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "Ferri-enterobactin import via FepA"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "LSS",
+          "CYP51A1",
+          "MSMO1",
+          "DHCR24",
+          "SQLE",
+          "FDFT1",
+          "HMGCR",
+          "HMGCS1",
+          "MVK",
+          "FDPS",
+          "MVD",
+          "IDI1",
+          "ACAT2",
+          "LIPA",
+          "LBR",
+          "HSD17B7",
+          "EBP",
+          "NSDHL",
+          "SREBF1",
+          "SREBF2"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12782028/research",
+      "reaction_actor_digest_after_replay": "9a69c666dc620a7e5aeff065d99621630320732ec0e2923422d05bbacb2b6b0b",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "ALAS2",
+          "ALAS1",
+          "CLPXP protease",
+          "LONP1 protease"
+        ]
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/research",
+      "reaction_actor_digest_after_replay": "e98d2064bf5b7da59d3d63b1751917884b1cb8407115ccf1d1adfbdfeb8c4d46",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "ALAS2"
+        ],
+        "proteins": []
+      },
+      "leg": "runs_verify/2026-08-04_1754/papers/PMC12856317/strict",
+      "reaction_actor_digest_after_replay": "d09288f02b78ee67fcd3d2c45f91a104d69fae8db527dee5b044c3007e14cde6",
+      "transports": []
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12096016/research",
+      "reaction_actor_digest_after_replay": "42bd4eae656f2b08550e359402426b47b61058aac5bfa4ab817e5cb44bf2f4f8",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin secretion"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntA",
+          "EntE",
+          "EntF",
+          "EntD",
+          "MenD",
+          "Fur"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12096016/strict",
+      "reaction_actor_digest_after_replay": "977294a1a971789fc26d1f7bfd347dde45db50876adead525a79b90602b5c71f",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "secreted to the extracellular environment by a TolC-dependent process",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "secreted to the extracellular environment by a TolC-dependent process"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "enterobactin export"
+        },
+        {
+          "committed_merged_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "confidence": 0.9,
+              "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+              ]
+            }
+          ],
+          "stage1_transporters": null,
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric enterobactin import"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "FepA",
+          "Fur",
+          "Fnr"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12452463/research",
+      "reaction_actor_digest_after_replay": "74b585cc5a5cd0caf23e238cf7aadeacf60c23314a3a3a808402ae8907df986c",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. col"
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric enterobactin import via FepA"
+        }
+      ]
+    },
+    {
+      "actors": {
+        "protein_complexes": [
+          "enterobactin synthase complex"
+        ],
+        "proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "FepA",
+          "Fur",
+          "RyhB"
+        ]
+      },
+      "leg": "runs_verify/2026-08-18_1328/papers/PMC12452463/strict",
+      "reaction_actor_digest_after_replay": "8b5aa7417e6cde966ce5c8d052249fe60e917ad32889b0ad8e79f3b8651f17a3",
+      "transports": [
+        {
+          "committed_merged_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell",
+          "injected_rows": 1,
+          "replay_reproduces_committed": true,
+          "replayed_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            },
+            {
+              "confidence": 0.9,
+              "evidence": "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), ",
+              "protein_complex": "EntE",
+              "provenance": "inferred",
+              "source_refs": [
+                "iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), "
+              ]
+            }
+          ],
+          "stage1_transporters": [
+            {
+              "evidence": "specific outer membrane receptors (e.g. FepA in E. coli) which transport it into the bacterial cell",
+              "protein": "FepA"
+            }
+          ],
+          "stage1_transporters_preserved": true,
+          "transport_name": "ferric-enterobactin import via FepA"
+        }
+      ]
+    }
+  ],
+  "purpose": "replay pipeline._inject_name_based_modifiers on committed stage1 payloads; at base it reproduces the committed merged transporters byte-exactly, at the tip the fabricated rows are refused and the correct FepA row survives",
+  "reaction_actor_digests": {
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research": "9b62097db3cf9f0715fd8dde079ff26a65eb1d6f483c62fedf1afd9132623089",
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict": "9c8578d3bb317d430c6735c84c0d8afc6eca4a4753bec78ab2127d7317fa54c3",
+    "runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research": "719e0fbf49061001fa63a3ee8316094a24936a80ff1bfe4d8b9d16eaeaba1791",
+    "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research": "e8f40c7eb0dbe844e631574f9bd146570154045eff5f38c8344ee106c34bf2c6",
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict": "1a54c4d0e0cd3c2d3cfbf9c604e0109a08107b993d2cff954c5078d4ac0de1af",
+    "runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict": "8ea27d8657909248b72b0b33fca7971680361266bcbd73c68ca51ecb39aaace8",
+    "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research": "a636a0e4d0fddeed496ce2cebb2bd607cfcfeab469ee61609a83f5d53e55ec4e",
+    "runs/2026-07-28_2122/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict": "9fb16764d53ca5a648484f66aa0fef8ee2c1ad7a7e91e73f451e113f9d558940",
+    "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research": "689c521f0a498587a7313bd4c49fc4482b4e902c1f915ad8542d7fa5f89ebc09",
+    "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict": "d261b9d400eb26514b3b6d46e7fb40f01ac5b44a9bf34ab6db41f18c6b5a0377",
+    "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research": "53ed590b34654633d6a88a4a05ea51e9b456177a9d68375ccfbd14b9cf6f9cd7",
+    "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict": "6451f9eb990f0aa6e0af0d218a0e5a98088310411953607d5f23231bcae52aa9",
+    "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_2122/papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research": "ac275a26957e864343cc488e8d685a9f287c4d0a42d61a1ad52cdb11a17fa606",
+    "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict": "413bd4004a67bf223bd59b7432ef9e8a1870564db6df08e291722dababcb3335",
+    "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research": "52d8b627b36c4b8fb9a8212f3a122f79d272fe4a6fbda946856b94f6d28dd38d",
+    "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict": "0bb405158fe7889a8529d242b12a7aa9ce3f71128e422d804b005c10fd769483",
+    "runs/2026-07-28_2122/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research": "92567ca392cf5104b4762e1d509e9647902540dc7b67a59b457e16b820130f75",
+    "runs/2026-08-02_2130/papers/PMC12096016/research": "547a5ffb09e09d6543e02617bca2a60e2a13da87d1626dce617d907ad9c5587c",
+    "runs/2026-08-02_2130/papers/PMC12096016/strict": "16947f2c4bdb7c7f62bb1affb17fff76245798da324a3ea72985b4c143694402",
+    "runs/2026-08-02_2130/papers/PMC12180156/research": "65a7848697a66074fa84e0e4b59640b6bac81a69725e8249a222518d1766bd40",
+    "runs/2026-08-02_2130/papers/PMC12180156/strict": "633ca929b1e72bca9eec58a4e58191c1c41727892bfdf07c8c0cb99f86c57944",
+    "runs/2026-08-02_2130/papers/PMC12312563/research": "d94eb759013298f9ecdd989b4cf84fa2c7c66898827b3d9746285553a6384ff1",
+    "runs/2026-08-02_2130/papers/PMC12421875/research": "73003577390fea9cb362b93894acbbbb58217b506ae4d8f3c4efd08ca33e9276",
+    "runs/2026-08-02_2130/papers/PMC12421875/strict": "77494f5738aa1959b7f1d4ddd3fcef409a3ddd5eb0c99ce34641cb5d250b04ab",
+    "runs/2026-08-02_2130/papers/PMC12444477/research": "c75bb9bd6e61ecb9fccbe235ba2ca9c55f287192b3f6921dace75e8d0b308d9a",
+    "runs/2026-08-02_2130/papers/PMC12444477/strict": "0846ef0a466037c2629275eadd155fb080fa936413506d45806dcea2afb7e37f",
+    "runs/2026-08-02_2130/papers/PMC12452463/research": "f279c43d9a2e96e9d4ad40669a17b4cfd3605b303482c7c974e27619c9849c3a",
+    "runs/2026-08-02_2130/papers/PMC12657337/research": "a7e26179776cd44fd8f02760fe1642a78233a2f87d3b46d9bf13337d49766348",
+    "runs/2026-08-02_2130/papers/PMC12657337/strict": "411dff12e75f0bac4b63846a4396fe91059a44abc8c9ebb91a4f5f59ada8e83a",
+    "runs/2026-08-02_2130/papers/PMC12782028/strict": "eb37a3947bb5837f57b659a1367fc175332030b641133d13e5f254f6f1ac0156",
+    "runs/2026-08-02_2130/papers/PMC12856317/research": "220ba0da1e6fd47d95473a467d0b57b0deff55e86c8c3f324276ad2fe5a91a86",
+    "runs/2026-08-02_2130/papers/PMC12856317/strict": "8a05e2b9de35036af43c94f9c1f2ff42b860d13a0344085e8f2eb4cda0341f28",
+    "runs/2026-08-02_2130/papers/PMC13231680/strict": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs_verify/2026-08-04_1148/papers/PMC13231680/research": "a97825ba12f7180788b5785f5dfa087e8bffd290ae0a2a5baa190eb0be9eed66",
+    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict": "1d9bb12a634004da846e847f7b34fa91d71d9fba96201271d6de5f6d290a4642",
+    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict": "1b6314e376c48da1db5f3d9297998436cf6cabc244f6d0eca8e0e00860c95152",
+    "runs_verify/2026-08-04_1234/papers/PMC12856317/strict": "035d808076b04373164cc846c602677b2583da719c0c6358ad844a0e882f5c3b",
+    "runs_verify/2026-08-04_1306/papers/PMC12096016/research": "e349bb968f20317528752143ba5f846c049193af5b2c10fff89f9a26ea33a0ae",
+    "runs_verify/2026-08-04_1306/papers/PMC12180156/research": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runs_verify/2026-08-04_1306/papers/PMC12452463/research": "1a5ad66ed2f2e4726d61800e6ef7fd632059a0f8f134bc41886c02be8da14fb2",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research": "fa63ff454ffad49c4f2ff67c01b73feaf083179112a61d4f377d5b1381dfa67a",
+    "runs_verify/2026-08-04_1504/papers/PMC12856317/strict": "0bb405158fe7889a8529d242b12a7aa9ce3f71128e422d804b005c10fd769483",
+    "runs_verify/2026-08-04_1647/papers/PMC12856317/strict": "c4a9a28051d6f29b348be05d85a9002d5f39502910b2502c7d0b41cd8dadca03",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/research": "1941d15f1c12f6bb4af88537fe8e784dbedc0acef25cf50c7603dc0e3e746d9d",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict": "d4ab563ce1ed92dd136355b5646843cbe9a25bef6c94afa7986acb151854de4e",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/research": "ad021516a8e0f4cc7c534d269fb4b3cb856be7cc230c2e5c8877d4f0e730e83b",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/strict": "3aebec9bef90c217ae3e754a0aafdfd3efbde14a546a4df1f58998292d7805e9",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research": "6e2572b4765e5778f0eca11f6ab0f3818dee94cfa4db8fbb99fe4b8c13bae105",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict": "377a25ea8463b6db0aa8de1ebb5ebb35f289ad0c34867536f3ab9e1e4809ae3b",
+    "runs_verify/2026-08-04_1754/papers/PMC12782028/research": "9a69c666dc620a7e5aeff065d99621630320732ec0e2923422d05bbacb2b6b0b",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/research": "e98d2064bf5b7da59d3d63b1751917884b1cb8407115ccf1d1adfbdfeb8c4d46",
+    "runs_verify/2026-08-04_1754/papers/PMC12856317/strict": "d09288f02b78ee67fcd3d2c45f91a104d69fae8db527dee5b044c3007e14cde6",
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/research": "42bd4eae656f2b08550e359402426b47b61058aac5bfa4ab817e5cb44bf2f4f8",
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/strict": "977294a1a971789fc26d1f7bfd347dde45db50876adead525a79b90602b5c71f",
+    "runs_verify/2026-08-18_1328/papers/PMC12452463/research": "74b585cc5a5cd0caf23e238cf7aadeacf60c23314a3a3a808402ae8907df986c",
+    "runs_verify/2026-08-18_1328/papers/PMC12452463/strict": "8b5aa7417e6cde966ce5c8d052249fe60e917ad32889b0ad8e79f3b8651f17a3"
+  },
+  "roots": "runs,runs_verify",
+  "task": "C-058",
+  "totals": {
+    "legs": 64,
+    "rows_losing_a_stage1_transporter": 0,
+    "rows_reproducing_committed": 44,
+    "rows_with_injected_transporters": 24,
+    "total_injected_transporter_rows": 24,
+    "transport_rows": 44
+  }
+}
