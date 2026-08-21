@@ -59,17 +59,21 @@
   },
   "f083_end_to_end": {
     "closure_converged": true,
-    "component_loss_is_exportable": false,
-    "component_survived": true,
+    "component_loss_is_exportable": true,
+    "component_survived": false,
     "degree_zero_exports": [],
     "ok": true,
     "refusal_reasons": [],
     "release_status": "release_ready",
-    "removed_entities": [],
+    "removed_entities": [
+      {
+        "name": "Sub One",
+        "reason": "degree_zero_after_quarantine"
+      }
+    ],
     "strict_gates_passed": true,
     "surviving_protein_rows": [
-      "Complex C",
-      "Sub One"
+      "Complex C"
     ]
   },
   "integration": {
@@ -87,7 +91,7 @@
       "Enzyme X"
     ]
   },
-  "label": "tip-with-f083",
-  "module": "C:/t/c067b/src/t2pw/pipeline/strict_quarantine.py",
+  "label": "detector-only-638afe6",
+  "module": "C:/t/c067tmp/c067src/t2pw/pipeline/strict_quarantine.py",
   "probe": "c067_degree_zero_probe"
 }

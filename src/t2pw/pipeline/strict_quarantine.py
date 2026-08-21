@@ -2106,10 +2106,24 @@ def quarantine_and_close(
 
     for iteration in range(1, int(max_iterations) + 1):
         referenced = _referenced_entity_norms(working, admissions)
+        # F-083. A complex is recognised as surviving through name UNION synonyms,
+        # the same test _prune_entities applies to the complex row itself. Resolving
+        # on the primary name alone made the two disagree and DELETED BIOLOGY: a
+        # complex referenced only under a synonym was kept by the pruner, was not
+        # recognised here, contributed no components to keep_norms, and every
+        # component protein it carries was then pruned as
+        # degree_zero_after_quarantine -- the exact rows requirement 3 exists to
+        # preserve, removed because the complex that carries their edge was named
+        # a second way.
+        #
+        # The MEMBERSHIP test widens; the STORED value stays the primary-name norm,
+        # because _complex_component_norms:1483 keys its lookup on it. Widening what
+        # is stored would break that lookup and trade one silent deletion for
+        # another.
         surviving_complex_norms = {
             _normalize(_row_name(row))
             for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
-            if isinstance(row, dict) and _normalize(_row_name(row)) in referenced
+            if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
         }
         keep_norms = referenced | _complex_component_norms(working, surviving_complex_norms)
 

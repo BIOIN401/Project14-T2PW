@@ -1192,17 +1192,10 @@ def test_a_complex_referenced_only_through_a_synonym_exempts_its_components() ->
     assert found == []
 
 
-def test_ok_and_the_release_classifier_gate_move_together(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """``ok`` and ``strict_gates_passed`` are computed separately from one list.
+def _release_run(payload: dict, monkeypatch: pytest.MonkeyPatch) -> tuple:
+    """Run the seam and capture what the CLASSIFIER was told, not what we infer.
 
-    ``strict_quarantine.py:2160-2164`` builds ``ok`` and ``:2342-2345`` builds
-    ``strict_gates_passed``; both read the same ``degree_zero`` local, so
-    emptying it at the source moves both. Would catch the alternative repair
-    F-081 rejects -- routing ``degree_zero_export`` into ``review_reasons``,
-    which flips ``ok`` alone and ships a final PWML on a run the classifier
-    still calls ``diagnostic_only`` (PRODUCT_CONTRACT.md:343).
+    Returns ``(result, invariants, strict_gates_passed, release_status)``.
     """
 
     from t2pw.pipeline import release_status as RS
@@ -1215,14 +1208,121 @@ def test_ok_and_the_release_classifier_gate_move_together(
         return shipped(*args, **kwargs)
 
     monkeypatch.setattr(RS, "classify_release_status", _spy)
-    result = quarantine_and_close(_synonym_payload(), strict_db=False)
+    result = quarantine_and_close(payload, strict_db=False)
+    return (
+        result,
+        result.quarantine_report["strict_invariants"],
+        captured["strict_gates_passed"],
+        result.quarantine_report["release"]["status"],
+    )
 
-    invariants = result.quarantine_report["strict_invariants"]
+
+def test_degree_zero_cannot_drive_ok_and_the_release_classifier_apart(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The narrow guarantee that is actually true, pinned on both sides.
+
+    Three DIFFERENT values are involved and an earlier version of this test
+    conflated them:
+
+    * ``strict_invariants["ok"]`` (``:2196-2207``) -- the five structural
+      invariants, and nothing else;
+    * ``strict_gates_passed`` (``:2384-2386``) -- FOUR of them; ``unexportable``
+      travels separately as ``serializable_without_invention``;
+    * ``result.ok`` -> ``quarantine_report["ok"]`` (``:2500``) --
+      ``True if research else not refusal_reasons``, which folds in the COVERAGE
+      refusal and is unconditionally ``True`` in research mode.
+
+    So ``result.ok`` and ``strict_gates_passed`` are NOT equal in general -- an
+    ``unexportable_entity`` or a coverage refusal separates them on real legs.
+    What IS guaranteed is narrower and is the thing F-081 cares about: the two
+    read the **same ``degree_zero`` local**, so no value of ``degree_zero`` can
+    move one without the other.
+
+    Would catch the repair F-081 rejects -- routing ``degree_zero_export`` into
+    ``review_reasons``, which flips ``result.ok`` to ``True`` while the classifier
+    is still told ``strict_gates_passed=False``, shipping a final PWML on a run
+    reported ``diagnostic_only`` (``PRODUCT_CONTRACT.md:343``).
+    """
+
+    # Arm 1: degree_zero empty -> every gate agrees, and it is not diagnostic_only.
+    result, invariants, gates, status = _release_run(_synonym_payload(), monkeypatch)
     assert invariants["closure_converged"] is True
     assert invariants["degree_zero_exports"] == []
-    assert result.refusal_reasons == []
+    assert invariants["ok"] is True
+    assert gates is True
     assert result.ok is True
-    assert captured["strict_gates_passed"] is True
-    assert result.ok is captured["strict_gates_passed"]
-    assert result.quarantine_report["release"]["status"] != "diagnostic_only"
+    assert status != "diagnostic_only"
     assert [row["name"] for row in result.payload["entities"]["proteins"]] == ["Enzyme X"]
+
+    # Arm 2: force the detector to report one row and BOTH must fall, together,
+    # from the same local. This is the arm that fails if the reason is rerouted.
+    monkeypatch.setattr(
+        SQ, "_degree_zero_exports", lambda *a, **k: [{"bucket": "proteins", "name": "Enzyme X"}]
+    )
+    result, invariants, gates, status = _release_run(_synonym_payload(), monkeypatch)
+    assert invariants["degree_zero_exports"] == [{"bucket": "proteins", "name": "Enzyme X"}]
+    assert invariants["ok"] is False
+    assert gates is False
+    assert result.ok is False
+    assert "degree_zero_export:1" in result.refusal_reasons
+    assert status == "diagnostic_only"
+
+
+def test_no_run_reports_ok_together_with_diagnostic_only(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The self-contradictory report must be unreachable, in both directions.
+
+    ``ok`` is the PWML production switch (``app/streamlit_app.py:4717`` returns
+    early with no export when ``not quarantine_result.ok``), and
+    ``PRODUCT_CONTRACT.md:343`` says no final PWML for ``diagnostic_only``. A run
+    that is both is a shipped export on a refused graph.
+    """
+
+    for payload in (_synonym_payload(), _synonym_payload(synonyms=False)):
+        with monkeypatch.context() as patched:
+            result, _invariants, _gates, status = _release_run(payload, patched)
+            assert not (result.ok and status == "diagnostic_only")
+
+
+def test_a_complex_referenced_only_through_a_synonym_keeps_its_components(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """F-083: the closure loop resolves the complex the same way the pruner does.
+
+    A component protein has no edge of its own by construction -- the complex
+    carries it -- so it survives only if the complex is recognised as surviving.
+    The loop recognised complexes by PRIMARY NAME while ``_prune_entities`` kept
+    the complex row itself by name UNION synonyms, so a complex referenced only
+    under a synonym was kept while every component it protects was deleted as
+    ``degree_zero_after_quarantine``.
+
+    Would catch: that deletion, and -- because C-067 empties ``degree_zero`` --
+    the deletion being reported ``release_ready`` instead of refused. The base
+    behaviour was to REFUSE this graph, so a fix to the detector alone would have
+    made a silent data loss exportable.
+    """
+
+    payload = _synonym_payload()
+    payload["entities"]["proteins"].append({"name": "Sub One"})
+    payload["entities"]["protein_complexes"].append(
+        {"name": "Complex C", "synonyms": ["CxC"], "components": ["Sub One"]}
+    )
+    payload["processes"]["reactions"][0]["enzymes"].append({"entity": "CxC"})
+
+    result, invariants, gates, status = _release_run(payload, monkeypatch)
+
+    removed = result.removed_entity_report["removed_entities"]
+    assert [row["name"] for row in removed] == []
+    assert sorted(row["name"] for row in result.payload["entities"]["proteins"]) == [
+        "Enzyme X",
+        "Sub One",
+    ]
+    assert [row["name"] for row in result.payload["entities"]["protein_complexes"]] == [
+        "Complex C"
+    ]
+    assert invariants["degree_zero_exports"] == []
+    assert invariants["closure_converged"] is True
+    assert gates is True
+    assert status != "diagnostic_only"

@@ -272,10 +272,101 @@ def integration_arm() -> Dict[str, Any]:
     }
 
 
+def f083_arm() -> Dict[str, Any]:
+    """END TO END: does a synonym-referenced complex keep its components?
+
+    REV-067 measured this and it is the reason the first attempt was rejected.
+    At the card base the graph is REFUSED, so the component loss ships nothing.
+    With the detector fix ALONE the graph becomes ``release_ready`` **and the
+    component protein is still gone** -- the detector fix does not cause the
+    deletion, it makes the deletion EXPORTABLE. The closure-loop fix (F-083) is
+    what keeps the component.
+    """
+
+    from t2pw.pipeline import release_status as RS
+
+    captured: Dict[str, Any] = {}
+    shipped = RS.classify_release_status
+
+    def _spy(*args: Any, **kwargs: Any) -> Any:
+        captured["strict_gates_passed"] = bool(kwargs.get("strict_gates_passed"))
+        return shipped(*args, **kwargs)
+
+    payload = complex_component_payload()
+    RS.classify_release_status = _spy  # type: ignore[assignment]
+    try:
+        result = SQ.quarantine_and_close(payload, strict_db=False)
+    finally:
+        RS.classify_release_status = shipped  # type: ignore[assignment]
+
+    invariants = result.quarantine_report.get("strict_invariants") or {}
+    release = result.quarantine_report.get("release") or {}
+    removed = (result.removed_entity_report or {}).get("removed_entities") or []
+    survivors = _surviving_protein_names(result.payload)
+    return {
+        "degree_zero_exports": _names(invariants.get("degree_zero_exports") or []),
+        "closure_converged": bool(invariants.get("closure_converged")),
+        "ok": bool(result.ok),
+        "strict_gates_passed": captured.get("strict_gates_passed"),
+        "release_status": release.get("status"),
+        "refusal_reasons": list(result.refusal_reasons),
+        "removed_entities": [
+            {"name": row.get("name"), "reason": row.get("reason")} for row in removed
+        ],
+        "surviving_protein_rows": survivors,
+        "component_survived": "Sub One" in survivors,
+        "component_loss_is_exportable": (
+            "Sub One" not in survivors and release.get("status") != "diagnostic_only"
+        ),
+    }
+
+
+# ── F-083 monotonicity: what is proved, and what could not be reached ───────
+#
+# PROVED, exactly. The fix only widens the MEMBERSHIP test that builds
+# ``surviving_complex_norms``, so that set only grows; ``_complex_component_norms``
+# therefore returns a superset; ``keep_norms`` is a superset; and
+# ``_prune_entities`` deletes a SUBSET of what it deleted before. **No row is ever
+# newly deleted by F-083.**
+#
+# NOT monotone, and stated plainly: a row that now survives is a row the downstream
+# structural detectors get to walk, so ``_entity_type_overlaps`` and
+# ``_unexportable_entities`` can each report a finding the base run did not have.
+# Every one of those detectors walks the surviving rows, so a superset of rows
+# yields a superset of findings: F-083 can turn a pass into a REFUSAL, never a
+# refusal into a pass. Newly preserved components land in ``exempt``, so they are
+# not themselves flagged degree-zero. **Nothing becomes exportable that was not
+# exportable before, and nothing is deleted that was not deleted before.**
+#
+# MEASURED: over the 35-leg replay cohort, both columns plus the release
+# observables -- 105 observations -- F-083 alone moves **zero**
+# (``c067_replay_detector_only.json`` vs ``c067_replay_tip.json``).
+#
+# NOT DEMONSTRATED, and recorded rather than glossed. Two accession-free synthetic
+# payloads were built to exhibit the added refusal and BOTH collapsed before
+# reaching it, identically at all three trees:
+#
+#   1. ``strict_db=True`` with a bare component -- the ENZYME then has no identity
+#      either, so its reaction is quarantined and the graph empties. The sanctioned
+#      PathBank placeholder cannot rescue it: it is available only to a row literally
+#      named ``Unknown`` (``entity_identity.py:107-116``). Minting an accession for
+#      a gate that exists to catch minted accessions is not a trade this probe makes.
+#   2. component protein and a reaction compound sharing one normalized name --
+#      the shared name is ambiguous at ADMISSION, so the reaction never survives to
+#      the point where ``_entity_type_overlaps`` could fire.
+#
+# So the added-refusal path is open on the argument and unreached in practice. (2)
+# is also weak evidence toward the committed claim at
+# ``test_strict_quarantine_release_seam.py:264-267`` that ``entity_type_overlap``
+# is hard to reach with a surviving graph -- which F-081 disputes. Not resolved
+# here, and not this card to resolve.
+
+
 def measure(loaded_from: str) -> Dict[str, Any]:
     return {
         "probe": "c067_degree_zero_probe",
         "module": loaded_from.replace("\\", "/"),
+        "f083_end_to_end": f083_arm(),
         "arms": {
             "divergence": _arm(divergence_payload()),
             "control_true_orphan": _arm(control_payload()),

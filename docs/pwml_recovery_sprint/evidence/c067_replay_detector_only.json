@@ -1,5 +1,5 @@
 {
-  "label": "base-414368c",
+  "label": "detector-only-638afe6",
   "leg_count": 35,
   "legs": {
     "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict": {
@@ -865,15 +865,11 @@
         "refusal_reasons": []
       },
       "before": {
-        "degree_zero": [
-          "Isochorismatase (EntB)"
-        ],
-        "ok": false,
-        "refusal_reasons": [
-          "degree_zero_export:1"
-        ]
+        "degree_zero": [],
+        "ok": true,
+        "refusal_reasons": []
       },
-      "moved": true,
+      "moved": false,
       "release": {
         "contradiction": false,
         "invariants_ok": true,
@@ -882,15 +878,11 @@
         "strict_gates_passed": true
       },
       "tuple": [
-        [
-          "Isochorismatase (EntB)"
-        ],
         [],
-        false,
+        [],
         true,
-        [
-          "degree_zero_export:1"
-        ],
+        true,
+        [],
         []
       ]
     },
@@ -1101,7 +1093,7 @@
       ]
     }
   },
-  "module": "C:/t/c067tmp/basesrc/t2pw/pipeline/strict_quarantine.py",
+  "module": "C:/t/c067tmp/c067src/t2pw/pipeline/strict_quarantine.py",
   "moved": {
     "runs/2026-08-02_2130/papers/PMC12096016/strict": [
       [
@@ -1157,18 +1149,6 @@
       ],
       []
     ],
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research": [
-      [
-        "Isochorismatase (EntB)"
-      ],
-      [],
-      false,
-      true,
-      [
-        "degree_zero_export:1"
-      ],
-      []
-    ],
     "runs_verify/2026-08-04_1754/papers/PMC12452463/strict": [
       [
         "EntD",
@@ -1183,7 +1163,7 @@
       []
     ]
   },
-  "moved_count": 6,
+  "moved_count": 5,
   "probe": "c067_replay_census",
-  "src": "C:/t/c067tmp/basesrc"
+  "src": "C:/t/c067tmp/c067src"
 }

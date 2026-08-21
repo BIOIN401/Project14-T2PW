@@ -1131,13 +1131,40 @@ def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
 # Stage-3 normalization, pathway_context=None -- exactly as
 # docs/pwml_recovery_sprint/evidence/allowlist_generator.py does it.
 
-#: Every archived leg whose verdict moves, and how. 32 measured, 26 unmoved.
+#: Every archived leg whose verdict moves, and how. 35 measured, 30 unmoved.
 #: Tuple: dz_before, dz_after, ok_before, ok_after, refusals_before, refusals_after.
 #:
 #: **Not a target, and no gate is weakened.** ``PMC12856317/research`` stays
 #: ``ok=False`` on ``unexportable_entity:1``, and ``PMC12452463`` clearing this
 #: boundary is not strict success: its gold ``export_rationale`` records the route
 #: as chemically broken, so ``PRODUCT_CONTRACT.md`` § 13 makes it ``review_required``.
+#:
+#: **C-067 moved this pin from SIX legs to FIVE, deliberately (merge rule 4).**
+#: The leg removed is ``runs_verify/2026-08-04_1754/papers/PMC12452463/research``,
+#: whose tuple was::
+#:
+#:     (["Isochorismatase (EntB)"], [], False, True, ["degree_zero_export:1"], [])
+#:
+#: Nothing about that leg's SHIPPED verdict changed. What changed is the ``before``
+#: column, and the reason is structural: ``_pre_c010_degree_zero`` is not a frozen
+#: copy of the old body, it CALLS the shipped ``_degree_zero_exports`` with a
+#: different ``process_snapshot``. C-067 taught that function to resolve entity
+#: names as name UNION synonyms, the way ``_prune_entities`` and ``_build_registry``
+#: already did (F-081), so the device no longer flags ``Isochorismatase (EntB)``
+#: either. ``before == after``, and the leg is no longer ATTRIBUTABLE to C-010 --
+#: it is not a leg that stopped moving in production.
+#:
+#: This table attributes a historical change to C-010; a leg leaving it is
+#: over-determination resolving, not a lost gate. The gate that bounds the fix is
+#: assertion 3 (*no leg GAINS a degree-zero entity*), and it still holds. Measured
+#: base vs tip over all 35 legs and BOTH columns -- 70 observations, exactly one
+#: moves, the five surviving tuples byte-identical:
+#: ``evidence/c067_replay_{base,detector_only,tip}.json``.
+#:
+#: **The stale count is corrected here too**: this comment said "32 measured, 26
+#: unmoved" while the cohort had already grown to 35 (29 unmoved at C-067's base).
+#: That drift predates C-067 and is fixed in passing because this block is being
+#: rewritten anyway.
 EXPECTED_P01_DELTAS: Dict[str, Tuple[Any, ...]] = {
     "runs/2026-08-02_2130/papers/PMC12096016/strict":
         (["EntA", "Unknown", "enterobactin synthase complex"], [], False, True,
@@ -1149,8 +1176,6 @@ EXPECTED_P01_DELTAS: Dict[str, Tuple[Any, ...]] = {
         (["EntE"], [], False, True, ["degree_zero_export:1"], []),
     "runs_verify/2026-08-04_1234/papers/PMC12096016/strict":
         (["EntA"], [], False, True, ["degree_zero_export:1"], []),
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research":
-        (["Isochorismatase (EntB)"], [], False, True, ["degree_zero_export:1"], []),
     "runs_verify/2026-08-04_1754/papers/PMC12452463/strict":
         (["EntD", "EntF"], [], False, True, ["degree_zero_export:2"], []),
 }
