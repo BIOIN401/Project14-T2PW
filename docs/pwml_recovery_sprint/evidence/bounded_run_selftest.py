@@ -1,15 +1,17 @@
 """Validation of ``bounded_run.py``: the six cases INIT-001 § Step 0c requires,
-the two H-003 / D-017 cases for the restricted-console drain defect, and the four
-H-006 cases for the report schema version and the wrapper build identity.
+the two H-003 / D-017 cases for the restricted-console drain defect, the four
+H-006 cases for the report schema version and the wrapper build identity, and the
+six C-063 cases for the heavy mutex (F-072) and the G11 report lifecycle (F-071).
 
 Every case must pass **and** end with zero surviving owned processes. Survival is
 proved by an explicit post-run liveness check of the recorded PIDs against a fresh
 process-table snapshot -- never by assuming that a kill worked.
 
-Cases 1-6 call ``bounded_run.run`` in-process. Cases 7-12 run ``bounded_run.py``
+Cases 1-6 call ``bounded_run.run`` in-process. Cases 7-18 run ``bounded_run.py``
 as a *subprocess*, because they are about ``main()``: the ``--json`` report, the
-encoding of the parent's own stdout, and -- for 9-12 -- the identity fields of the
-artifact a real invocation leaves behind. Case 7 forces
+encoding of the parent's own stdout, for 9-12 the identity fields of the artifact
+a real invocation leaves behind, and for 13-18 the mutex and report lifecycle,
+which exist only in ``main()`` by design. Case 7 forces
 ``PYTHONIOENCODING=cp1252:strict`` on that subprocess, so the restricted-console
 failure reproduces deterministically whether the developer's console is UTF-8 or
 cp1252. That environment variable is the *fault injection*, never a fix.
@@ -473,6 +475,17 @@ def _wrapper_report(wrapper_path: str, label: str,
         return proc.returncode, None
 
 
+def _report_payload(path: str) -> Optional[Dict[str, Any]]:
+    """The report a wrapper run left at *path*, decoded, or ``None``."""
+
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
 def _as_report(payload: Optional[Dict[str, Any]], label: str
                ) -> bounded_run.CleanupReport:
     if not payload:
@@ -663,6 +676,318 @@ def case_12_preexisting_reports_still_validate() -> bool:
     return ok
 
 
+# --------------------------------------------------------------------------- #
+# C-063 -- the heavy mutex (F-072) and the G11 report lifecycle (F-071).
+#
+# Every lock case points --heavy-lock-path at a SCRATCH directory under the case's
+# own tempdir. The real C:/t/heavylock is never created, read or removed here: a
+# selftest that manipulated the live mutex would be the very defect F-072 records.
+# --------------------------------------------------------------------------- #
+
+#: A foreign holder file, in the shape the wrapper itself writes. The token is
+#: what release compares against, so this one can never match a live job's.
+_FOREIGN_HOLDER = {
+    "token": "C-999-SOMEONE-ELSE:4242:ffffffffffffffff",
+    "holder": "C-999-SOMEONE-ELSE",
+    "label": "a-job-that-is-still-running",
+    "pid": 4242,
+    "command": ["<the other card's heavy job>"],
+    "cwd": "<elsewhere>",
+    "acquired_at": "2026-08-21T00:00:00+00:00",
+}
+
+
+def _blank(label: str) -> bounded_run.CleanupReport:
+    return bounded_run.CleanupReport(label=label, command=[PY, "-c"], cwd="",
+                                     started_at="")
+
+
+def _plant_foreign_lock(lock_dir: str) -> bytes:
+    """Create *lock_dir* held by someone else. Returns the holder file's bytes."""
+
+    shutil.rmtree(lock_dir, ignore_errors=True)
+    os.makedirs(lock_dir)
+    holder = os.path.join(lock_dir, bounded_run.HEAVY_LOCK_HOLDER_FILENAME)
+    with open(holder, "w", encoding="utf-8") as fh:
+        json.dump(_FOREIGN_HOLDER, fh, indent=2)
+    with open(holder, "rb") as fh:
+        return fh.read()
+
+
+def _lock_run(lock_dir: str, holder: str, label: str, child_code: str,
+              json_path: Optional[str] = None, timeout: float = 45.0,
+              wall: float = 180.0) -> Tuple[int, str]:
+    """Run the wrapper WITH --heavy-lock against a scratch lock. (rc, stderr)."""
+
+    argv = [PY, WRAPPER, "--label", label, "--timeout", str(timeout), "--quiet",
+            "--heavy-lock", holder, "--heavy-lock-path", lock_dir]
+    if json_path is not None:
+        argv += ["--json", json_path]
+    argv += ["--", PY, "-c", child_code]
+    proc = subprocess.run(argv, capture_output=True, timeout=wall)
+    return proc.returncode, proc.stderr.decode("utf-8", "replace")
+
+
+#: Writes a marker file, so "did the child run?" is answered by the filesystem
+#: rather than by parsing output the wrapper may or may not have forwarded.
+_MARKER_CHILD = "open(r'{path}', 'w').write('the child ran')\n"
+
+
+def case_13_lock_held_blocks_the_job() -> bool:
+    """F-072 (a): a held lock must STOP the job, and must survive untouched.
+
+    The exact REV-058 shape: someone else holds the mutex, and a second job goes
+    for it. What made that incident a finding was not the failed acquire -- it
+    was that the job ran anyway and a trailing unconditional release then cleared
+    a lock the agent had never held.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case13_")
+    lock_dir = os.path.join(tmp, "scratch_heavylock")
+    holder_file = os.path.join(lock_dir, bounded_run.HEAVY_LOCK_HOLDER_FILENAME)
+    before = _plant_foreign_lock(lock_dir)
+    marker = os.path.join(tmp, "case13_child_ran.txt")
+    json_path = os.path.join(tmp, "01-blocked.json")
+
+    rc, err = _lock_run(lock_dir, "C-063-BLOCKED", "c13-lock-held",
+                        _MARKER_CHILD.format(path=marker), json_path)
+    after = open(holder_file, "rb").read() if os.path.isfile(holder_file) else b""
+
+    ok = _record("13. held lock blocks the job", _blank("c13-lock-held"), [], [
+        ("the scratch lock is NOT the real one",
+         os.path.normcase(lock_dir)
+         != os.path.normcase(os.path.abspath(bounded_run.DEFAULT_HEAVY_LOCK_PATH))),
+        ("the CHILD NEVER RAN", not os.path.exists(marker)),
+        (f"exit == EXIT_HEAVY_LOCK_UNAVAILABLE "
+         f"({bounded_run.EXIT_HEAVY_LOCK_UNAVAILABLE})",
+         rc == bounded_run.EXIT_HEAVY_LOCK_UNAVAILABLE),
+        ("the lock SURVIVED", os.path.isdir(lock_dir)),
+        ("the foreign holder file is byte-identical", after == before and bool(before)),
+        ("the condition is NAMED on stderr",
+         bounded_run.HEAVY_LOCK_HELD_MARKER in err),
+        ("the current holder is printed, so no second command is needed",
+         "C-999-SOMEONE-ELSE" in err),
+        ("no cleanup report certifies a job that never started",
+         not os.path.exists(json_path)),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_14_lock_acquired_attributed_released() -> bool:
+    """F-072 (b): the wrapper writes the holder file and releases it itself.
+
+    The child reads the holder file WHILE the job runs, so attribution is proved
+    from inside the critical section rather than inferred from an artifact
+    written after the fact. The agent is never asked to remember either half.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case14_")
+    lock_dir = os.path.join(tmp, "scratch_heavylock")
+    seen = os.path.join(tmp, "holder_as_the_child_saw_it.json")
+    json_path = os.path.join(tmp, "01-acquired.json")
+    child = (
+        "import shutil\n"
+        f"shutil.copyfile(r'{os.path.join(lock_dir, bounded_run.HEAVY_LOCK_HOLDER_FILENAME)}',"
+        f" r'{seen}')\n"
+    )
+
+    rc, _err = _lock_run(lock_dir, "C-063-OWNER", "c14-lock-ok", child, json_path)
+    payload: Dict[str, Any] = {}
+    if os.path.isfile(seen):
+        with open(seen, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    rep = _as_report(_report_payload(json_path), "c14-lock-ok")
+    lock_record = (_report_payload(json_path) or {}).get("heavy_lock") or {}
+
+    ok = _record("14. lock acquired and released", rep, [rep.root_pid or 0], [
+        ("the wrapper wrote the holder file, not the agent", bool(payload)),
+        ("it names this job's holder", payload.get("holder") == "C-063-OWNER"),
+        ("it carries the wrapper's own PID and command",
+         isinstance(payload.get("pid"), int) and bool(payload.get("command"))),
+        ("the child's REAL exit code is still returned", rc == 0),
+        ("the lock was RELEASED on the normal exit path",
+         not os.path.exists(lock_dir)),
+        ("the report records acquire and release",
+         lock_record.get("acquired") is True and lock_record.get("released") is True),
+        ("the report records no refusal", lock_record.get("release_refusal") == ""),
+        ("cleanup_success", rep.cleanup_success is True),
+        ("reported survivors == 0", rep.final_surviving_count == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_15_release_refused_for_a_foreign_holder() -> bool:
+    """F-072 (c): the wrapper must REFUSE to remove a lock naming someone else.
+
+    The child overwrites the holder file mid-job, so at release time the lock
+    names another card. This is the rule that converts the F-072 failure from
+    silent to visible: an unconditional release would remove it and nobody would
+    ever learn that it had.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case15_")
+    lock_dir = os.path.join(tmp, "scratch_heavylock")
+    holder_file = os.path.join(lock_dir, bounded_run.HEAVY_LOCK_HOLDER_FILENAME)
+    json_path = os.path.join(tmp, "01-refused.json")
+    child = (
+        "import json\n"
+        f"json.dump({_FOREIGN_HOLDER!r}, open(r'{holder_file}', 'w'), indent=2)\n"
+    )
+
+    rc, err = _lock_run(lock_dir, "C-063-OWNER", "c15-lock-stolen", child, json_path)
+    payload = _report_payload(json_path) or {}
+    lock_record = payload.get("heavy_lock") or {}
+    still_foreign = False
+    if os.path.isfile(holder_file):
+        with open(holder_file, "r", encoding="utf-8") as fh:
+            still_foreign = json.load(fh).get("holder") == _FOREIGN_HOLDER["holder"]
+    rep = _as_report(payload, "c15-lock-stolen")
+
+    ok = _record("15. release refused (foreign)", rep, [rep.root_pid or 0], [
+        ("the lock was NOT removed", os.path.isdir(lock_dir)),
+        ("it still names the other holder", still_foreign),
+        (f"exit == EXIT_HEAVY_LOCK_RELEASE_REFUSED "
+         f"({bounded_run.EXIT_HEAVY_LOCK_RELEASE_REFUSED})",
+         rc == bounded_run.EXIT_HEAVY_LOCK_RELEASE_REFUSED),
+        ("the refusal is NAMED on stderr",
+         bounded_run.HEAVY_LOCK_RELEASE_REFUSED_MARKER in err),
+        ("the report records the refusal and its reason",
+         lock_record.get("released") is False
+         and str(lock_record.get("release_refusal", "")).startswith(
+             "holder_is_not_this_job")),
+        ("the report still records the job itself",
+         rep.exit_code == 0 and rep.cleanup_success is True),
+        ("reported survivors == 0", rep.final_surviving_count == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_16_lock_released_on_the_timeout_path() -> bool:
+    """F-072 (d): release runs on EVERY exit path the wrapper controls.
+
+    A hanging child taken down at the outer bound is the path an agent is least
+    likely to hand-roll correctly, and the one where a leaked mutex would stall
+    the next heavy job with no explanation.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case16_")
+    lock_dir = os.path.join(tmp, "scratch_heavylock")
+    json_path = os.path.join(tmp, "01-timeout.json")
+
+    rc, _err = _lock_run(lock_dir, "C-063-OWNER", "c16-lock-timeout",
+                         "import time; time.sleep(600)\n", json_path, timeout=4.0)
+    payload = _report_payload(json_path) or {}
+    lock_record = payload.get("heavy_lock") or {}
+    rep = _as_report(payload, "c16-lock-timeout")
+
+    ok = _record("16. lock released on timeout", rep, [rep.root_pid or 0], [
+        ("the job really did time out", rep.exit_reason == "timeout" and rc == 124),
+        ("the lock was released anyway", not os.path.exists(lock_dir)),
+        ("the report says so",
+         lock_record.get("acquired") is True and lock_record.get("released") is True),
+        ("cleanup_success", rep.cleanup_success is True),
+        ("reported survivors == 0", rep.final_surviving_count == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_17_report_promoted_on_completion() -> bool:
+    """F-071 (a): a finished job's report reaches the reports tree, whole.
+
+    Promotion is the half that must not break while fixing the other one: if a
+    completed job stopped publishing, every card would look uncertified instead
+    of every killed one looking non-compliant.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case17_")
+    target = g11_evidence.allocate("C-063", "promoted", root=tmp)
+    staged = g11_evidence.staging_path_for(target)
+    reserved_before = os.path.isfile(staged) and not os.path.exists(target)
+
+    argv = [PY, WRAPPER, "--label", "c17-promote", "--timeout", "60", "--quiet",
+            "--json", target, "--", PY, "-c", "print('c17')"]
+    rc = subprocess.run(argv, capture_output=True, timeout=180).returncode
+    payload = _report_payload(target) or {}
+    rep = _as_report(payload, "c17-promote")
+
+    ok = _record("17. staged report promoted", rep, [rep.root_pid or 0], [
+        ("the reservation was staged, not published", reserved_before),
+        ("the finished report IS in the reports tree", os.path.isfile(target)),
+        ("the staging slot is gone -- a rename, not a copy",
+         not os.path.exists(staged)),
+        ("it is a full report, not the placeholder",
+         g11_evidence.RESERVED_KEY not in payload and len(payload) > 20),
+        ("g11 check accepts it", g11_evidence.check_report(target) == []),
+        ("the report names its real destination",
+         os.path.normcase(payload.get("json_report_path") or "")
+         == os.path.normcase(target) and payload.get("json_report_written") is True),
+        ("the child's REAL exit code is preserved", rc == 0 and rep.exit_code == 0),
+        ("cleanup_success", rep.cleanup_success is True),
+        ("reported survivors == 0", rep.final_surviving_count == 0),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
+def case_18_killed_wrapper_leaves_the_gate_green() -> bool:
+    """F-071 (b): kill the wrapper mid-job; the merge gate must stay green.
+
+    This is the F-071 mechanism itself -- four occurrences, every one an agent's
+    own wall clock killing the parent before the wrapper could write. The kill is
+    of the WRAPPER only, never a tree: the Job Object is what takes the child
+    down with it, and this case proves that too.
+    """
+
+    tmp = tempfile.mkdtemp(prefix="boundedrun_case18_")
+    target = g11_evidence.allocate("C-063", "killed", root=tmp)
+    staged = g11_evidence.staging_path_for(target)
+    marker = os.path.join(tmp, "c18_child_started.txt")
+    child = (f"open(r'{marker}', 'w').write('x')\n"
+             "import time; time.sleep(600)\n")
+
+    proc = subprocess.Popen(
+        [PY, WRAPPER, "--label", "c18-killed", "--timeout", "300", "--quiet",
+         "--json", target, "--", PY, "-c", child],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    deadline = time.monotonic() + 30.0
+    while not os.path.exists(marker) and time.monotonic() < deadline:
+        time.sleep(0.2)
+    started = os.path.exists(marker)
+    descendants = bounded_run.descendants_of(proc.pid,
+                                             bounded_run.snapshot_processes())
+    proc.kill()          # the parent dies; the wrapper never reaches its report
+    proc.wait(timeout=60)
+    settle = time.monotonic() + 15.0
+    while time.monotonic() < settle:
+        table = bounded_run.snapshot_processes()
+        if not [pid for pid in descendants + [proc.pid] if pid in table]:
+            break
+        time.sleep(0.2)
+
+    tree = sorted(os.listdir(os.path.join(tmp, "C-063")))
+    ok = _record("18. killed wrapper, gate green", _blank("c18-killed"),
+                 descendants + [proc.pid], [
+        ("the job really was in flight when it was killed", started),
+        ("NOTHING was left in the reports tree",
+         tree == [g11_evidence.STAGING_DIRNAME]),
+        ("no report at the allocated path", not os.path.exists(target)),
+        ("the orphan reservation is in staging, where check cannot see it",
+         os.path.isfile(staged)),
+        ("whole-tree check is GREEN -- merge gate 10 does not fail",
+         g11_evidence.check_many(
+             *g11_evidence.resolve_selection([], None, root=tmp)) == 0),
+        ("the killed wrapper still took its child down (Job Object)",
+         not _alive(descendants)),
+    ])
+    shutil.rmtree(tmp, ignore_errors=True)
+    return ok
+
+
 def main() -> int:
     print("=" * 74)
     print("bounded_run.py -- INIT-001 Step 0c + H-003 drain + H-006 identity cases")
@@ -682,6 +1007,12 @@ def main() -> int:
         case_10_identity_stable_and_sensitive(),
         case_11_identity_from_the_executing_copy(),
         case_12_preexisting_reports_still_validate(),
+        case_13_lock_held_blocks_the_job(),
+        case_14_lock_acquired_attributed_released(),
+        case_15_release_refused_for_a_foreign_holder(),
+        case_16_lock_released_on_the_timeout_path(),
+        case_17_report_promoted_on_completion(),
+        case_18_killed_wrapper_leaves_the_gate_green(),
     ]
 
     print()

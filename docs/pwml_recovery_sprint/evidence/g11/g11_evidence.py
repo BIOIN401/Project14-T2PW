@@ -26,6 +26,21 @@ Usage
     # prove this specification still matches what bounded_run.py emits
     <py> ... selftest
 
+Report lifecycle  (F-071)
+-------------------------
+``next`` prints the path the FINISHED report will occupy, exactly as it always
+has. What changed is where the **reservation** lives: :func:`allocate` writes its
+``g11_reserved`` placeholder into the task's :data:`STAGING_DIRNAME`
+subdirectory, and ``bounded_run.py`` promotes it -- one atomic rename, inside the
+task directory -- when the job actually produces a report.
+
+So a job that never finishes (an agent's own wall clock killing the parent shell
+was the failure four times over) leaves **nothing the reports tree can see**,
+instead of a three-key placeholder that turns whole-tree ``check`` red and fails
+merge gate 10 for a job that produced no result either way. The
+``report_never_written`` rule below is untouched: a placeholder that reaches the
+reports tree by any route is still a hard failure.
+
 ``next`` and ``check`` are sub-second bookkeeping utilities that spawn no child
 process. They are not tests, benchmarks, pipeline legs or LLM-backed commands,
 so they are outside the four job classes `[S8]` item 1 names. That is a
@@ -71,6 +86,18 @@ LABEL_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 #: committed, and a hard failure in ``check``.
 RESERVED_KEY = "g11_reserved"
 
+#: Where reservations wait until a job has something to promote (F-071). One
+#: subdirectory per task, inside the task directory, so promotion is a rename
+#: within one directory tree and therefore atomic on every platform this sprint
+#: runs on.
+#:
+#: The leading dot is load-bearing, not cosmetic: ``iter_reports`` skips names
+#: beginning with ``.``, and that single rule is what keeps a live reservation
+#: out of every ``check`` selection. ``bounded_run.py`` hard-codes this same name
+#: (``bounded_run.G11_STAGING_DIRNAME``); the two must stay equal, and
+#: ``test_staging_contract_matches_the_wrapper`` fails if they drift.
+STAGING_DIRNAME = ".staging"
+
 VALID_EXIT_REASONS = {
     "completed", "nonzero", "timeout", "cancelled", "infrastructure_failure",
 }
@@ -114,17 +141,45 @@ CRED_PATTERNS = [
 # --------------------------------------------------------------------------- #
 
 
+def staging_path_for(report_path: str) -> str:
+    """The reservation path whose promotion target is *report_path*.
+
+    Purely structural -- same basename, one directory deeper -- so
+    ``bounded_run.py`` derives it from the ``--json`` path it was handed without
+    importing this module, and a reader can verify any promotion by looking at
+    two paths side by side.
+    """
+
+    directory, name = os.path.split(report_path)
+    return os.path.join(directory, STAGING_DIRNAME, name)
+
+
 def allocate(task: str, label: str, root: str = REPORTS_ROOT) -> str:
     """Reserve and return the report path for ONE job.
 
-    Uniqueness is not "unlikely to collide", it is structural:
+    The RETURNED path is where the finished report will live, unchanged from
+    before. The RESERVATION is made at :func:`staging_path_for` of that path, so
+    an unfinished job leaves the reports tree untouched (F-071).
+
+    Uniqueness is not "unlikely to collide", it is structural, and staging does
+    not weaken any of the three properties -- it only moves which directory the
+    ``O_EXCL`` happens in:
 
     * the directory is the task ID, and a task owns exactly one branch;
-    * the sequence is ``max(existing) + 1`` **and** the file is created with
+    * the sequence is ``max(existing) + 1`` over the task directory **and its
+      staging directory together**, and the reservation is created with
       ``O_CREAT|O_EXCL``, so two allocations -- even concurrent ones, even for
-      the same label -- can never resolve to the same path;
-    * sequences are never reused, so a re-run cannot overwrite the report of the
-      attempt it is replacing (an infrastructure failure must stay on record).
+      the same label -- can never resolve to the same path. Two racing callers
+      that compute the same sequence race for one ``O_EXCL`` create of one
+      staging path; exactly one wins and the loser increments;
+    * sequences are never reused. Every sequence ever allocated is held by
+      exactly one file at every instant: by its reservation in
+      ``.staging/`` until promotion, and by the report itself in the task
+      directory afterwards. Promotion is ``os.replace``, which publishes the
+      target in the same step that removes the source, so there is no window in
+      which neither holds it. A re-run therefore cannot overwrite the report of
+      the attempt it is replacing (an infrastructure failure must stay on
+      record), and cannot overwrite the reservation of a job still running.
 
     No clock is involved: the caller needs no timestamp it cannot obtain.
     """
@@ -134,21 +189,30 @@ def allocate(task: str, label: str, root: str = REPORTS_ROOT) -> str:
     if not LABEL_RE.match(label):
         raise ValueError(f"label {label!r} must match {LABEL_RE.pattern}")
     directory = os.path.join(root, task)
-    os.makedirs(directory, exist_ok=True)
+    staging = os.path.join(directory, STAGING_DIRNAME)
+    os.makedirs(staging, exist_ok=True)
     used = [
-        int(m.group(1)) for m in
-        (NAME_RE.match(n) for n in os.listdir(directory)) if m
+        int(m.group(1))
+        for listing in (directory, staging)
+        for m in (NAME_RE.match(n) for n in os.listdir(listing)) if m
     ]
     seq = max(used, default=0) + 1
     while True:
         path = os.path.join(directory, f"{seq:02d}-{label}.json")
+        # A promoted report holds its sequence here even though its reservation
+        # is gone, so the task directory is consulted before the staging one.
+        if os.path.exists(path):
+            seq += 1
+            continue
+        staged = staging_path_for(path)
         try:
-            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            fd = os.open(staged, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
             seq += 1
             continue
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            json.dump({RESERVED_KEY: True, "task": task, "label": label}, fh, indent=2)
+            json.dump({RESERVED_KEY: True, "task": task, "label": label,
+                       "promote_to": path}, fh, indent=2)
         return path
 
 
@@ -226,7 +290,14 @@ def check_report(path: str) -> List[str]:
 
 
 def iter_reports(root: str = REPORTS_ROOT, task: Optional[str] = None) -> List[str]:
-    """Every candidate artifact under the evidence root, sorted."""
+    """Every candidate artifact under the evidence root, sorted.
+
+    The dot-prefix skip below is what keeps :data:`STAGING_DIRNAME` -- and every
+    live reservation inside it -- out of every selection (F-071). It is not a
+    convenience: without it a running job's reservation is a directory in a task
+    folder, ``check_many`` would call it ``unexpected_artifact``, and the merge
+    gate would go red on a job that has not finished yet.
+    """
 
     out: List[str] = []
     for entry in sorted(os.listdir(root)):
@@ -334,7 +405,14 @@ def test_required_fields_present_in_real_wrapper_output() -> None:
 
 
 def test_naming_scheme_cannot_collide() -> None:
-    """(b) Two jobs in one task never share a path -- same label included."""
+    """(b) Two jobs in one task never share a path -- same label included.
+
+    DELIBERATE DELTA (C-063 / F-071). Durability is still asserted, but of the
+    RESERVATION, which now lives in ``.staging``; the four returned paths are the
+    promotion targets and none of them exists until a job promotes one. The
+    property that mattered is unchanged and still asserted below: a
+    reserved-but-unwritten slot is evidence of nothing.
+    """
 
     with tempfile.TemporaryDirectory(prefix="g11nam_") as tmp:
         a = allocate("H-004", "smoke", root=tmp)
@@ -342,12 +420,72 @@ def test_naming_scheme_cannot_collide() -> None:
         c = allocate("H-004", "chunk-d", root=tmp)
         d = allocate("C-010", "smoke", root=tmp)
         assert len({a, b, c, d}) == 4, (a, b, c, d)
-        assert all(os.path.isfile(p) for p in (a, b, c, d)), "reservation not durable"
+        staged = [staging_path_for(p) for p in (a, b, c, d)]
+        assert len(set(staged)) == 4, staged
+        assert all(os.path.isfile(p) for p in staged), "reservation not durable"
+        assert not any(os.path.exists(p) for p in (a, b, c, d)), \
+            "an unpromoted reservation must leave the reports tree untouched"
         assert NAME_RE.match(os.path.basename(a)) and NAME_RE.match(os.path.basename(b))
         assert int(NAME_RE.match(os.path.basename(b)).group(1)) > \
             int(NAME_RE.match(os.path.basename(a)).group(1))
         # A reserved-but-unwritten path is evidence of nothing and must fail.
-        assert "report_never_written" in check_report(a)
+        assert "report_never_written" in check_report(staged[0])
+        # ... and its promotion target does not exist at all until it is earned.
+        assert "report_missing" in check_report(a)
+        # A sequence stays consumed once promoted, even though the reservation
+        # that held it is gone: a re-run cannot land on the attempt it replaces.
+        os.replace(staged[0], a)
+        assert allocate("H-004", "smoke", root=tmp) not in {a, b, c}
+
+
+def test_reservation_is_invisible_to_the_merge_gate() -> None:
+    """F-071: an unfinished job must leave the merge gate nothing to see.
+
+    Whole-tree ``check`` is the consumer that gates merges -- four times over,
+    an agent's own wall clock killed a wrapper and this went red on a job that
+    produced no result either way. It must now be GREEN with a live reservation
+    outstanding, and it must still be RED for a placeholder that reaches the
+    reports tree by any other route.
+    """
+
+    with tempfile.TemporaryDirectory(prefix="g11res_") as tmp:
+        target = allocate("H-004", "killed", root=tmp)
+        assert iter_reports(root=tmp) == [], iter_reports(root=tmp)
+        assert check_many(*resolve_selection([], None, root=tmp)) == 0, \
+            "a live reservation turned whole-tree check red -- F-071 is back"
+        # The `report_never_written` rule is untouched: promote the placeholder
+        # itself (the one route that still puts one in the reports tree) and the
+        # gate must reject it.
+        os.replace(staging_path_for(target), target)
+        assert check_many(*resolve_selection([], None, root=tmp)) == 1
+        assert "report_never_written" in check_report(target)
+
+
+def test_staging_contract_matches_the_wrapper() -> None:
+    """The promoter and the allocator must agree on where reservations live.
+
+    ``bounded_run.py`` derives the staging path itself rather than importing this
+    module, so the one shared constant is the whole contract. If either side is
+    renamed without the other, every promotion silently stops happening and every
+    finished job looks like an unfinished one.
+    """
+
+    sys.path.insert(0, os.path.dirname(BOUNDED_RUN))
+    import bounded_run  # noqa: PLC0415 - deliberate late import, read-only
+
+    assert bounded_run.G11_STAGING_DIRNAME == STAGING_DIRNAME, (
+        bounded_run.G11_STAGING_DIRNAME, STAGING_DIRNAME)
+    assert bounded_run.G11_RESERVED_KEY == RESERVED_KEY, (
+        bounded_run.G11_RESERVED_KEY, RESERVED_KEY)
+    with tempfile.TemporaryDirectory(prefix="g11stg_") as tmp:
+        target = allocate("H-004", "contract", root=tmp)
+        assert bounded_run._staged_reservation_for(target) == \
+            os.path.abspath(staging_path_for(target))
+        # A path with no reservation behind it is NOT promotable: every legacy
+        # caller that hands the wrapper a scratch --json path keeps writing
+        # straight to it.
+        assert bounded_run._staged_reservation_for(
+            os.path.join(tmp, "H-004", "99-nothing.json")) == ""
 
 
 def _write(tmp: str, name: str, **over: Any) -> str:
@@ -440,6 +578,8 @@ def test_selector_resolution() -> None:
 TESTS = [
     test_required_fields_present_in_real_wrapper_output,
     test_naming_scheme_cannot_collide,
+    test_reservation_is_invisible_to_the_merge_gate,
+    test_staging_contract_matches_the_wrapper,
     test_compliance_rules,
     test_selector_resolution,
 ]
@@ -473,7 +613,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
 
     if args.cmd == "next":
-        print(allocate(args.task, args.label))
+        path = allocate(args.task, args.label)
+        print(path)
+        # stdout stays exactly one path, because every caller substitutes it into
+        # a --json argument. Where the reservation is actually waiting goes to
+        # stderr, so whoever has to dispose of an orphan can find it (F-071).
+        print(f"reserved at {staging_path_for(path)} "
+              f"(promoted here by bounded_run.py when the job writes a report)",
+              file=sys.stderr)
         return 0
     if args.cmd == "selftest":
         return selftest()

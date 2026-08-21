@@ -45,6 +45,28 @@ Guarantees
 9. Every report states its own ``schema_version`` and the ``wrapper_build`` that
    produced it -- a digest of the *executing* module, so the artifact answers
    ``[S8]``'s self-reference question without git archaeology (H-006).
+10. ``--heavy-lock`` makes "one heavy job at a time" an enforced invariant rather
+    than a shell protocol every agent re-implements. A failed acquire **does not
+    run the child**; a release **refuses** to remove a lock whose holder file
+    does not name this exact job (F-072).
+11. A ``--json`` destination that a G11 reservation is waiting behind is written
+    through **staging and one atomic promotion**, so a job killed before it
+    finishes leaves nothing in the reports tree at all (F-071).
+
+Two process defects, one root cause
+-----------------------------------
+F-071 and F-072 are both cases of an agent hand-rolling infrastructure in shell
+and getting it wrong a new way each time: an unconditional ``rm -rf`` after a
+failed ``mkdir`` cleared a live holder's mutex, and a wall-clock kill left a
+reservation that turned the merge gate red on a job that produced no result
+either way. Both primitives now live here, next to the process lifecycle this
+module already owns, because the shell cannot be relied on to test a result it
+was never made to look at.
+
+**Neither is on by default.** ``--heavy-lock`` is opt-in and every call site that
+does not pass it behaves exactly as before; promotion engages only when a real
+``g11_reserved`` reservation is sitting at the staging path, so a ``--json``
+scratch path is still written straight through.
 
 Forbidden here, permanently: ``taskkill /IM``, ``pkill``, or any kill by image
 name. Cleanup targets only PIDs this job created. Processes that already existed
@@ -58,8 +80,19 @@ Usage
         --label smoke --timeout 900 -- \\
         .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke tests/...
 
-The process exit code is the child's own. ``--json <path>`` also writes the
-structured cleanup report required on every test record.
+A heavy job takes the mutex in the same command, and cannot get past a failed
+acquire::
+
+    .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/bounded_run.py \\
+        --label chunk-d --timeout 900 --heavy-lock C-063 \\
+        --json <path allocated by g11_evidence.py next> -- <command>
+
+The process exit code is the child's own -- except on the two mutex conditions,
+which are infrastructure and not test results: :data:`EXIT_HEAVY_LOCK_UNAVAILABLE`
+(the lock was held; the child never started) and
+:data:`EXIT_HEAVY_LOCK_RELEASE_REFUSED` (the job ran but its lock now names
+someone else, so it was left alone). ``--json <path>`` also writes the structured
+cleanup report required on every test record.
 """
 
 from __future__ import annotations
@@ -97,6 +130,80 @@ _POLL_INTERVAL = 0.1
 #: could not be written. A missing cleanup report makes a run uncertifiable under
 #: G11, so the condition is announced loudly rather than skipped silently.
 JSON_REPORT_UNWRITABLE_MARKER = "BOUNDED_RUN_JSON_REPORT_UNWRITABLE"
+
+# --------------------------------------------------------------------------- #
+# G11 report promotion  (F-071)
+#
+# ``g11_evidence.allocate`` reserves a report path by writing a placeholder --
+# that placeholder is what stops an agent hand-writing a ``--json`` path and
+# abandoning the audit trail, and it is not going away. It used to sit in the
+# reports tree, where a wrapper killed before it could write left it behind with
+# three keys instead of ~28: whole-tree ``check`` went red and merge gate 10
+# failed on a job that produced no result either way. Four occurrences.
+#
+# The reservation now waits one directory deeper, in the task's staging
+# directory, and this module promotes it. The two constants below ARE the
+# contract; ``g11_evidence.test_staging_contract_matches_the_wrapper`` fails if
+# either side drifts. Nothing here imports ``g11_evidence``: this wrapper stays
+# usable with no evidence tree at all, and a ``--json`` path with no reservation
+# behind it is written straight through exactly as before.
+# --------------------------------------------------------------------------- #
+
+#: Mirror of ``g11_evidence.STAGING_DIRNAME``.
+G11_STAGING_DIRNAME = ".staging"
+
+#: Mirror of ``g11_evidence.RESERVED_KEY``. Only a file that really carries it is
+#: treated as a reservation, so an unrelated sibling can never divert a report.
+G11_RESERVED_KEY = "g11_reserved"
+
+#: A report written to staging but not promoted is invisible to ``check`` -- so
+#: the failure is announced here instead of silently producing no evidence.
+G11_PROMOTION_FAILED_MARKER = "BOUNDED_RUN_G11_PROMOTION_FAILED"
+
+# --------------------------------------------------------------------------- #
+# Heavy mutex  (F-072)
+#
+# ``mkdir`` on an existing directory is the CORRECT primitive: atomic, and it
+# fails when held. The defect was never the primitive, it was how a shell
+# consumed its failure -- ``mkdir X && echo ACQUIRED`` suppressed only the echo,
+# the following statements ran anyway, and a trailing unconditional ``rm -rf``
+# cleared a lock its holder had never acquired. A rule against deliberately
+# clearing someone's lock does not help: the agent believed it held the lock it
+# was releasing.
+#
+# So the two-phase protocol moves in here, where a failed acquire can stop the
+# job by construction rather than by the caller remembering to test a result.
+# --------------------------------------------------------------------------- #
+
+#: The sprint's "one heavy job at a time" mutex. A DIRECTORY, because ``mkdir``
+#: is atomic. ``--heavy-lock-path`` overrides it so a test can exercise the
+#: protocol against a scratch lock and never touch the real one.
+DEFAULT_HEAVY_LOCK_PATH = "C:/t/heavylock" if IS_WINDOWS else "/tmp/heavylock"
+
+#: Written by the wrapper on acquire, read by the wrapper on release. The agent
+#: never has to remember to create it, which is the point.
+HEAVY_LOCK_HOLDER_FILENAME = "holder.json"
+
+#: Cap on how much of a foreign holder file is copied into a report or printed.
+HEAVY_LOCK_HOLDER_MAX_BYTES = 4096
+
+#: The lock was held by someone else: the child was NEVER STARTED.
+#:
+#: The two codes below are chosen against the sprint's reserved set, so no caller
+#: can misread either as a test result or as another tool's verdict: pytest's
+#: 0-5, ``runner.EXIT_PREFLIGHT`` 3, :data:`EXIT_INFRASTRUCTURE_FAILURE` 97,
+#: ``tree_pin.EXIT_MEASUREMENT_TREE_REFUSED`` **98**, 124 (timeout) and 130
+#: (cancelled). 98 in particular is already spoken for and must not be reused.
+#: No ``--json`` report is written on this path -- see :func:`main`.
+EXIT_HEAVY_LOCK_UNAVAILABLE = 95
+
+#: The job ran, but the lock could not be released because its holder file no
+#: longer names this job. The lock is left ALONE and the condition is reported;
+#: clearing another holder's lock is the orchestrator's decision alone.
+EXIT_HEAVY_LOCK_RELEASE_REFUSED = 96
+
+HEAVY_LOCK_HELD_MARKER = "BOUNDED_RUN_HEAVY_LOCK_HELD"
+HEAVY_LOCK_RELEASE_REFUSED_MARKER = "BOUNDED_RUN_HEAVY_LOCK_RELEASE_REFUSED"
 
 
 def _forward_text(stream: Any, text: str) -> None:
@@ -545,6 +652,10 @@ class CleanupReport:
     wrapper_build: Dict[str, Any] = dataclasses.field(
         default_factory=wrapper_build_identity
     )
+    #: Heavy-mutex outcome, or ``{}`` when ``--heavy-lock`` was not used (F-072).
+    #: ADDITIVE: a consumer that never heard of it reads the record exactly as
+    #: before, so :data:`REPORT_SCHEMA_VERSION` does not move for it.
+    heavy_lock: Dict[str, Any] = dataclasses.field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
@@ -589,6 +700,20 @@ class CleanupReport:
         ]
         if self.json_report_error:
             lines.append(f"json report ERROR       : {self.json_report_error}")
+        # Only when the mutex was actually used, so no existing caller's output
+        # -- or the regexes that parse it -- changes shape (F-072).
+        lock = self.heavy_lock if isinstance(self.heavy_lock, dict) else {}
+        if lock.get("requested"):
+            lines.append(
+                f"heavy lock              : {lock.get('path', '')}"
+                f"  holder={lock.get('holder', '')}"
+                f"  acquired={lock.get('acquired')}  released={lock.get('released')}"
+            )
+            if lock.get("release_refusal"):
+                lines.append(
+                    f"heavy lock NOT RELEASED : {HEAVY_LOCK_RELEASE_REFUSED_MARKER} "
+                    f"{lock['release_refusal']}"
+                )
         for surv in self.survivors:
             lines.append(f"  SURVIVOR pid={surv.get('pid')} name={surv.get('name')} "
                          f"ppid={surv.get('ppid')} rss={surv.get('rss_mb')}")
@@ -600,6 +725,154 @@ class CleanupReport:
             lines.append(f"note                    : {note}")
         lines.append("================================================")
         return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
+# Heavy mutex -- acquire, attribute, refuse  (F-072)
+# --------------------------------------------------------------------------- #
+
+
+class HeavyLock:
+    """The sprint heavy mutex, held for the lifetime of one wrapped job.
+
+    Three properties, each answering one half of F-072:
+
+    1. **Acquire is atomic and its failure is fatal.** ``os.mkdir`` either
+       creates the directory or raises ``FileExistsError``; :func:`main` does not
+       spawn the child unless :meth:`acquire` returned ``True``. There is no
+       compound statement for a failure to slip past, because there is no
+       statement -- the caller cannot express "run anyway".
+    2. **The holder file is the wrapper's job, not the agent's.** It is written
+       immediately after the directory exists, so a lock this class created is
+       always attributable. If it cannot be written the lock is given straight
+       back rather than left held by nobody.
+    3. **Release is conditional on identity.** :attr:`token` carries a random
+       nonce as well as holder and PID, so "does this lock name me?" is decided
+       by an exact match and not by a name two jobs of the same card would share.
+       Anything else -- a foreign token, a vanished holder file, an unreadable
+       one, a stray file inside the lock -- is a REFUSAL to remove. Clearing
+       another holder's lock is the orchestrator's decision alone, so the wrapper
+       reports the condition and leaves the lock exactly as it found it.
+
+    Not covered, and deliberately so: a wrapper whose own process is killed
+    outright leaves the lock held, with a holder file naming the job that died.
+    That is a stale lock a human can attribute and dispose of, which is strictly
+    better than the anonymous one the shell protocol left, but it is not an
+    automatic release and must not be mistaken for one.
+    """
+
+    def __init__(self, holder: str, path: str, label: str = "",
+                 command: Sequence[str] = ()) -> None:
+        self.holder = holder
+        self.path = os.path.abspath(path)
+        self.holder_file = os.path.join(self.path, HEAVY_LOCK_HOLDER_FILENAME)
+        self.label = label
+        self.command = [str(part) for part in command]
+        self.token = f"{holder}:{os.getpid()}:{os.urandom(8).hex()}"
+        self.acquired = False
+        self.released = False
+        self.acquire_error = ""
+        self.release_refusal = ""
+        self.holder_seen = ""
+
+    def read_holder_text(self) -> str:
+        """Whatever the holder file says right now. Never raises."""
+
+        try:
+            with open(self.holder_file, "r", encoding="utf-8", errors="replace") as fh:
+                return fh.read(HEAVY_LOCK_HOLDER_MAX_BYTES)
+        except OSError as exc:
+            return f"<holder file unreadable: {type(exc).__name__}: {exc}>"
+
+    def acquire(self) -> bool:
+        """Take the lock, or return ``False`` having recorded who holds it."""
+
+        try:
+            os.mkdir(self.path)
+        except FileExistsError:
+            self.acquire_error = "held"
+            self.holder_seen = self.read_holder_text()
+            return False
+        except OSError as exc:
+            self.acquire_error = f"{type(exc).__name__}: {exc}"
+            return False
+        payload = {
+            "token": self.token,
+            "holder": self.holder,
+            "label": self.label,
+            "pid": os.getpid(),
+            "command": self.command,
+            "cwd": os.getcwd(),
+            "acquired_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        }
+        try:
+            with open(self.holder_file, "w", encoding="utf-8") as fh:
+                fh.write(json.dumps(payload, indent=2))
+        except OSError as exc:
+            # We know we created this directory, so removing it is not clearing
+            # anyone's lock. A lock nobody can attribute is worse than no lock:
+            # the next holder could never be told from a stale one.
+            self.acquire_error = f"holder file unwritable: {type(exc).__name__}: {exc}"
+            try:
+                os.rmdir(self.path)
+            except OSError:
+                self.acquire_error += " (and the lock directory could not be removed)"
+            return False
+        self.acquired = True
+        return True
+
+    def release(self) -> bool:
+        """Remove the lock ONLY if its holder file still names this job."""
+
+        if not self.acquired:
+            return True
+        try:
+            with open(self.holder_file, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except FileNotFoundError:
+            self.release_refusal = "holder_file_vanished"
+            return False
+        except (OSError, ValueError) as exc:
+            self.release_refusal = f"holder_file_unreadable:{type(exc).__name__}"
+            self.holder_seen = self.read_holder_text()
+            return False
+        if not isinstance(data, dict) or data.get("token") != self.token:
+            self.holder_seen = self.read_holder_text()
+            named = data.get("holder") if isinstance(data, dict) else None
+            self.release_refusal = f"holder_is_not_this_job:{named!r}"
+            return False
+        try:
+            stray = sorted(set(os.listdir(self.path)) - {HEAVY_LOCK_HOLDER_FILENAME})
+        except OSError as exc:
+            self.release_refusal = f"lock_unlistable:{type(exc).__name__}: {exc}"
+            return False
+        if stray:
+            self.release_refusal = f"lock_directory_has_foreign_content:{stray}"
+            return False
+        try:
+            os.unlink(self.holder_file)
+            os.rmdir(self.path)
+        except OSError as exc:
+            self.release_refusal = f"remove_failed:{type(exc).__name__}: {exc}"
+            return False
+        self.released = True
+        return True
+
+    def snapshot(self) -> Dict[str, Any]:
+        """The record of this lock's whole life, for the cleanup report."""
+
+        return {
+            "requested": True,
+            "path": self.path,
+            "holder": self.holder,
+            "token": self.token,
+            "holder_file": self.holder_file,
+            "acquired": self.acquired,
+            "released": self.released,
+            "acquire_error": self.acquire_error,
+            "release_refusal": self.release_refusal,
+            "holder_seen": self.holder_seen[:HEAVY_LOCK_HOLDER_MAX_BYTES],
+        }
 
 
 # --------------------------------------------------------------------------- #
@@ -1013,6 +1286,29 @@ def run(
     return report
 
 
+def _staged_reservation_for(json_path: str) -> str:
+    """The staging path holding a G11 reservation for *json_path*, or ``""``.
+
+    Recognised only when the sibling really is an unwritten reservation: it must
+    parse as an object and carry :data:`G11_RESERVED_KEY`. Anything else -- a
+    scratch ``--json`` path with nothing behind it, an unrelated file that
+    happens to sit in a ``.staging`` directory, a half-written orphan -- returns
+    ``""`` and the report is written straight to the destination, which is what
+    every caller predating this saw and must keep seeing.
+    """
+
+    directory, name = os.path.split(os.path.abspath(json_path))
+    staged = os.path.join(directory, G11_STAGING_DIRNAME, name)
+    try:
+        with open(staged, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, ValueError):
+        return ""
+    if not isinstance(payload, dict) or payload.get(G11_RESERVED_KEY) is not True:
+        return ""
+    return staged
+
+
 def emit_json_report(report: CleanupReport, json_path: Optional[str]) -> None:
     """Persist *report* to *json_path*. Never raises.
 
@@ -1021,27 +1317,52 @@ def emit_json_report(report: CleanupReport, json_path: Optional[str]) -> None:
     ``json_report_error``, and the rendered report still reaches stderr, so the
     cleanup result is not lost with it. It must not become an exception -- that
     would destroy the very record the caller needs.
+
+    PROMOTION (F-071). When a G11 reservation is waiting behind *json_path*, the
+    report is written to that staging path and then moved onto the destination
+    with :func:`os.replace`. The reports tree therefore sees the artifact whole
+    or not at all -- ``os.replace`` publishes the target in the same step that
+    removes the source, and both live in one directory tree, so the rename is a
+    rename and never a copy. A partially written report in the reports tree would
+    be worse than none, which is the same reason the payload is serialised before
+    anything is opened.
     """
 
     report.json_report_path = json_path or ""
     if not json_path:
         return
+    staged = _staged_reservation_for(json_path)
+    marker = G11_PROMOTION_FAILED_MARKER if staged else JSON_REPORT_UNWRITABLE_MARKER
     try:
         report.json_report_written = True
         # Serialise first: a serialisation fault must not leave a truncated file
         # that a later reader would mistake for a cleanup report.
         payload = json.dumps(report.to_dict(), indent=2)
-        with open(json_path, "w", encoding="utf-8") as fh:
-            fh.write(payload)
+        if staged:
+            with open(staged, "w", encoding="utf-8") as fh:
+                fh.write(payload)
+            os.replace(staged, json_path)
+        else:
+            with open(json_path, "w", encoding="utf-8") as fh:
+                fh.write(payload)
     except Exception as exc:  # noqa: BLE001 - reported, never fatal
         report.json_report_written = False
         report.json_report_error = f"{type(exc).__name__}: {exc}"
         report.notes.append(
-            f"{JSON_REPORT_UNWRITABLE_MARKER}: {json_path}: {report.json_report_error}"
+            f"{marker}: {json_path}: {report.json_report_error}"
         )
+        if staged and os.path.exists(staged):
+            # A report stranded in staging still claims it was written, and it is
+            # invisible to `check`. Correct it in place so whoever finds the
+            # orphan is not misled about what happened to it.
+            try:
+                with open(staged, "w", encoding="utf-8") as fh:
+                    fh.write(json.dumps(report.to_dict(), indent=2))
+            except Exception as inner:  # noqa: BLE001
+                report.notes.append(f"{marker}: staged copy not corrected: {inner!r}")
         _forward_text(
             sys.stderr,
-            f"\n{JSON_REPORT_UNWRITABLE_MARKER} path={json_path} "
+            f"\n{marker} path={json_path} "
             f"error={report.json_report_error}\n",
         )
 
@@ -1057,6 +1378,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--json", dest="json_path", default=None,
                         help="write the structured cleanup report here")
     parser.add_argument("--quiet", action="store_true", help="do not echo child output")
+    parser.add_argument(
+        "--heavy-lock", default=None, metavar="HOLDER",
+        help="acquire the sprint heavy mutex as HOLDER (e.g. a card id) before "
+             f"starting the child. A failed acquire exits "
+             f"{EXIT_HEAVY_LOCK_UNAVAILABLE} WITHOUT running it. Opt-in: omit it "
+             "and nothing about this wrapper changes")
+    parser.add_argument(
+        "--heavy-lock-path", default=DEFAULT_HEAVY_LOCK_PATH, metavar="DIR",
+        help=f"override the lock directory (default {DEFAULT_HEAVY_LOCK_PATH}). "
+             "Exists so a test can exercise the protocol against a scratch lock "
+             "instead of the real one")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args(list(argv) if argv is not None else None)
 
@@ -1066,11 +1398,33 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not command:
         parser.error("no command given (use: ... --timeout N -- <command>)")
 
+    # ---- heavy mutex: acquire, or STOP. There is no third branch (F-072) ----
+    lock: Optional[HeavyLock] = None
+    if args.heavy_lock:
+        lock = HeavyLock(args.heavy_lock, args.heavy_lock_path,
+                         label=args.label, command=command)
+        if not lock.acquire():
+            # No --json report is written here ON PURPOSE. The child never ran,
+            # so there is no cleanup to certify, and a report claiming
+            # cleanup_success on a job that never started is exactly the shape a
+            # G11 checker would accept as a pass. Any reservation the caller
+            # allocated simply stays in staging, where `check` cannot see it.
+            _forward_text(
+                sys.stderr,
+                f"\n{HEAVY_LOCK_HELD_MARKER} path={lock.path} "
+                f"holder_attempted={lock.holder} reason={lock.acquire_error}\n"
+                f"---- current holder file ({lock.holder_file}) ----\n"
+                f"{lock.holder_seen or '(no holder file present)'}\n"
+                f"---- the child was NOT started; nothing was removed ----\n",
+            )
+            return EXIT_HEAVY_LOCK_UNAVAILABLE
+
     # Emitted from a `finally`, with `run` handing the report over as soon as it
     # exists, so a writable --json destination receives it on EVERY exit path --
     # including one where an exception escapes `run`. A run with no cleanup
     # report is uncertifiable under G11.
     holder: List[CleanupReport] = []
+    released = True
     try:
         report = run(
             command,
@@ -1082,9 +1436,38 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             report_out=holder,
         )
     finally:
+        # Release BEFORE the report is written, so the artifact records what
+        # actually happened to the lock. This `finally` is every exit path the
+        # wrapper controls: success, nonzero, timeout kill, child crash,
+        # KeyboardInterrupt, or an exception escaping `run`.
+        if lock is not None:
+            released = lock.release()
         if holder:
+            if lock is not None:
+                holder[0].heavy_lock = lock.snapshot()
+                if not released:
+                    holder[0].notes.append(
+                        f"{HEAVY_LOCK_RELEASE_REFUSED_MARKER}: {lock.path}: "
+                        f"{lock.release_refusal}"
+                    )
             emit_json_report(holder[0], args.json_path)
             _forward_text(sys.stderr, holder[0].render() + "\n")
+        if lock is not None and not released:
+            _forward_text(
+                sys.stderr,
+                f"\n{HEAVY_LOCK_RELEASE_REFUSED_MARKER} path={lock.path} "
+                f"holder_expected={lock.holder} reason={lock.release_refusal}\n"
+                f"---- holder file as found ({lock.holder_file}) ----\n"
+                f"{lock.holder_seen or '(absent)'}\n"
+                f"---- the lock was LEFT IN PLACE. Clearing another holder's "
+                f"lock is the orchestrator's decision alone ----\n",
+            )
+    if lock is not None and not released:
+        # The lock is now in a state this job cannot vouch for, which is an
+        # infrastructure condition and not a test result -- so it takes
+        # precedence over the child's own code, exactly as a failed cleanup
+        # verification does.
+        return EXIT_HEAVY_LOCK_RELEASE_REFUSED
     return int(report.returned_code if report.returned_code is not None else 1)
 
 
