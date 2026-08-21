@@ -141,11 +141,22 @@ def test_every_import_driver_defers_is_covered_by_the_preflight() -> None:
     import ``json`` has already failed in louder ways).
     """
 
-    missed = [
+    third_party = [
         name
         for name in _deferred_imports(DRIVER_PATH)
-        if name.split(".")[0] not in sys.stdlib_module_names and not _covered(name)
+        if name.split(".")[0] not in sys.stdlib_module_names
     ]
+    # NON-VACUITY FLOOR (RULING 13). This guard derives its list from driver.py, so
+    # a parse that finds NOTHING passes it -- and looks exactly like a list that is
+    # genuinely complete. Measured for C-069: neutralize ``_deferred_imports`` to
+    # return ``[]`` and the assertion below goes green against a CHILD_IMPORTS that
+    # is missing six real deferral sites. This is the line that tells the two apart.
+    assert third_party, (
+        "_deferred_imports found no non-stdlib deferred import in driver.py at all. "
+        "That is a broken parse, not a clean bill of health -- the check below would "
+        "pass vacuously."
+    )
+    missed = [name for name in third_party if not _covered(name)]
     assert missed == [], (
         "driver.py defers these imports and the preflight would not catch them "
         f"missing: {missed}. Add them to runner.CHILD_IMPORTS with the reason a "

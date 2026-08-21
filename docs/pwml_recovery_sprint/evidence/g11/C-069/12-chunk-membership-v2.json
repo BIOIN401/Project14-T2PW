@@ -1,0 +1,97 @@
+{
+  "label": "chunk-membership-v2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "import re,sys,pathlib\nroot=pathlib.Path(r\"C:/t/c069\")\ntm=(root/\"docs/pwml_recovery_sprint/TEST_MATRIX.md\").read_text(encoding=\"utf-8\")\ncd=(root/\"docs/pwml_recovery_sprint/evidence/chunk_d_gate.py\").read_text(encoding=\"utf-8\")\nsmoke=re.search(r\"# SMOKE .*?\\n(.*?)\\n\\n\",tm,re.S).group(1)\nS={pathlib.PurePosixPath(p).stem for p in re.findall(r\"tests/[A-Za-z0-9_]+\\.py\",smoke)}\nD={pathlib.PurePosixPath(p).stem for p in re.findall(r\"\\\"(tests/[A-Za-z0-9_]+\\.py)\\\"\",cd)}\nE={\"test_strict_quarantine_real_artifact_replay\"}\nt=\"test_batch_preflight\"\nA=S|D|E\nprint(\"SMOKE stems n=%d\"%len(S));print(\"CHUNKD stems n=%d %s\"%(len(D),sorted(D)));print(\"CHUNKE stems n=%d\"%len(E))\nprint(\"in SMOKE=%s inD=%s inE=%s\"%(t in S,t in D,t in E))\nprint(\"lookalikes=%s\"%sorted(s for s in A if t in s or s in t))\nprint(\"VERDICT unchunked=%s\"%(t not in A))\nsys.exit(0 if t not in A else 1)"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T19:58:16+00:00",
+  "finished_at": "2026-08-21T19:58:16+00:00",
+  "duration_seconds": 0.16065340000022843,
+  "timeout_seconds": 240.0,
+  "root_pid": 79492,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 79536,
+      "name": "python.exe",
+      "ppid": 79492
+    }
+  ],
+  "descendants_terminated": [
+    79536
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 73680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74624,
+      "name": "python.exe"
+    },
+    {
+      "pid": 76300,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 79740,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-069/12-chunk-membership-v2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1384,6 +1384,25 @@ CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
         "OPENROUTER_API_KEY is missing or malformed, or LLM_PROVIDER is neither "
         "'local' nor 'openrouter'",
     ),
+    (
+        "t2pw.pipeline.release_status",
+        "four driver functions defer it and every one of them runs AFTER the "
+        "pipeline is finished, so an ImportError here costs the leg's whole "
+        "runtime and then loses the answer: _pwml_artifact_name reads "
+        "RELEASE_READY / DIAGNOSTIC_ONLY to choose between pathway.pwml and "
+        "pathway.review_required.pwml, and _finalize_gate_failure calls "
+        "classify_release_status, so the run directory ends up with its PWML "
+        "named by nothing and no release record in the manifest row",
+    ),
+    (
+        "t2pw.pipeline.strict_quarantine",
+        "the quarantine report FILENAMES live here and nowhere else, so a child "
+        "that cannot import it still reaches the boundary and still writes all "
+        "four reports -- then _add_identity_artifacts cannot copy them into the "
+        "run directory and _gate_failure_semantic_carry cannot read the frozen "
+        "verdict back, which is the refusal record for exactly the leg whose "
+        "refusal mattered most",
+    ),
 )
 
 

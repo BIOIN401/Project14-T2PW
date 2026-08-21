@@ -1,0 +1,101 @@
+{
+  "label": "nonvac-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-069/04-nonvac-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/c069tmp/nvb",
+    "tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T19:51:04+00:00",
+  "finished_at": "2026-08-21T19:51:05+00:00",
+  "duration_seconds": 0.7061749999993481,
+  "timeout_seconds": 300.0,
+  "root_pid": 69204,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 66352,
+      "name": "python.exe",
+      "ppid": 69204
+    }
+  ],
+  "descendants_terminated": [
+    66352
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 53840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 65872,
+      "name": "python.exe"
+    },
+    {
+      "pid": 66448,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68888,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69548,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-069/04-nonvac-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
