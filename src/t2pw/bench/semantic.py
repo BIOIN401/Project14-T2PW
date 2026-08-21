@@ -100,6 +100,17 @@ CHECK_RAG_REINTRODUCTION = "no_rejected_rag_reaction_reintroduced"
 CHECK_CONNECTED_CORE = "minimum_connected_core"
 CHECK_PLACEHOLDER_IDENTITY = "placeholder_identities_distinguished"
 
+#: An ACTOR -- an ``enzymes[]`` / ``modifiers[]`` / ``transporters[]`` sub-entry on a
+#: retained reaction -- must be named by the span that same sub-entry cites as its own
+#: evidence. Distinct from :data:`CHECK_SOURCE_CARRIER` (does a citation field exist at
+#: all) and from :data:`CHECK_SUPPORTED_REACTIONS` (the CHEMISTRY, gold-only). This one
+#: asks what the payload answers about itself: the row says *"protein P does this, and
+#: here is the sentence I took it from"* and the sentence names another protein. F-058
+#: and F-079 are both that shape -- ``EntE`` over *"secreted ... by a TolC-dependent
+#: process"*. Produced by ``bench.semantic_production`` only; every ``CHECK_ORDER``
+#: consumer already guards on membership, so its absence from a gold report costs nothing.
+CHECK_ACTOR_EVIDENCE = "actor_named_in_its_own_cited_span"
+
 CHECK_ORDER: Tuple[str, ...] = (
     CHECK_ANCHORS,
     CHECK_SOURCE_CARRIER,
@@ -109,6 +120,7 @@ CHECK_ORDER: Tuple[str, ...] = (
     CHECK_RAG_REINTRODUCTION,
     CHECK_CONNECTED_CORE,
     CHECK_PLACEHOLDER_IDENTITY,
+    CHECK_ACTOR_EVIDENCE,
 )
 
 #: Scientific error categories, reported as separate counts. These are NOT

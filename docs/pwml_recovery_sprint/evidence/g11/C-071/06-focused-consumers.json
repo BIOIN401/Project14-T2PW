@@ -1,0 +1,251 @@
+{
+  "label": "focused-consumers",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-071/06-focused-consumers.pin.json",
+    "-q",
+    "--basetemp=C:/t/c071tmp/cons",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c055_rag_loop_wiring.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py"
+  ],
+  "cwd": "C:\\t\\c071",
+  "started_at": "2026-08-21T20:38:13+00:00",
+  "finished_at": "2026-08-21T20:39:25+00:00",
+  "duration_seconds": 72.36842129999968,
+  "timeout_seconds": 290.0,
+  "root_pid": 165792,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 163704,
+      "name": "python.exe",
+      "ppid": 165792
+    },
+    {
+      "pid": 85348,
+      "name": "git.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85292,
+      "name": "git.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85672,
+      "name": "git.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 80072,
+      "name": "python.exe",
+      "ppid": 83636
+    },
+    {
+      "pid": 83636,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 104836,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 165624,
+      "name": "python.exe",
+      "ppid": 104836
+    },
+    {
+      "pid": 85872,
+      "name": "git.exe",
+      "ppid": 165624
+    },
+    {
+      "pid": 85836,
+      "name": "python.exe",
+      "ppid": 107080
+    },
+    {
+      "pid": 107080,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85976,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 84984,
+      "name": "python.exe",
+      "ppid": 85976
+    },
+    {
+      "pid": 85304,
+      "name": "python.exe",
+      "ppid": 95240
+    },
+    {
+      "pid": 95240,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85352,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85412,
+      "name": "python.exe",
+      "ppid": 85352
+    },
+    {
+      "pid": 84116,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 84320,
+      "name": "python.exe",
+      "ppid": 84116
+    },
+    {
+      "pid": 84232,
+      "name": "python.exe",
+      "ppid": 100404
+    },
+    {
+      "pid": 100404,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85548,
+      "name": "python.exe",
+      "ppid": 163704
+    },
+    {
+      "pid": 85572,
+      "name": "python.exe",
+      "ppid": 85548
+    },
+    {
+      "pid": 163516,
+      "name": "python.exe",
+      "ppid": 164960
+    },
+    {
+      "pid": 164960,
+      "name": "python.exe",
+      "ppid": 163704
+    }
+  ],
+  "descendants_terminated": [
+    80072,
+    83636,
+    84116,
+    84232,
+    84320,
+    84984,
+    85292,
+    85304,
+    85348,
+    85352,
+    85412,
+    85548,
+    85572,
+    85672,
+    85836,
+    85872,
+    85976,
+    95240,
+    100404,
+    104836,
+    107080,
+    163516,
+    163704,
+    164960,
+    165624
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 107720,
+      "name": "python.exe"
+    },
+    {
+      "pid": 160240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163568,
+      "name": "python.exe"
+    },
+    {
+      "pid": 164040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165632,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-071/06-focused-consumers.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c071\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c071",
+    "repo_head": "f2a959ff2fc2014313c23a7d6cfb1d8b4a1ce153",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

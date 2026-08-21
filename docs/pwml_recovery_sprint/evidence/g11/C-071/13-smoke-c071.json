@@ -1,0 +1,149 @@
+{
+  "label": "smoke-c071",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-071/13-smoke-c071.pin.json",
+    "-q",
+    "--basetemp=C:/t/c071tmp/sm",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\t\\c071",
+  "started_at": "2026-08-21T22:27:46+00:00",
+  "finished_at": "2026-08-21T22:28:24+00:00",
+  "duration_seconds": 37.895427699999345,
+  "timeout_seconds": 300.0,
+  "root_pid": 196728,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 196740,
+      "name": "python.exe",
+      "ppid": 196728
+    },
+    {
+      "pid": 197076,
+      "name": "python.exe",
+      "ppid": 196740
+    },
+    {
+      "pid": 197116,
+      "name": "python.exe",
+      "ppid": 196740
+    },
+    {
+      "pid": 197136,
+      "name": "python.exe",
+      "ppid": 197116
+    },
+    {
+      "pid": 197428,
+      "name": "python.exe",
+      "ppid": 196740
+    },
+    {
+      "pid": 197448,
+      "name": "python.exe",
+      "ppid": 197428
+    },
+    {
+      "pid": 197568,
+      "name": "python.exe",
+      "ppid": 196740
+    },
+    {
+      "pid": 197588,
+      "name": "python.exe",
+      "ppid": 197568
+    }
+  ],
+  "descendants_terminated": [
+    196740,
+    197076,
+    197116,
+    197136,
+    197428,
+    197448,
+    197568,
+    197588
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 182924,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193512,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c071\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-071\\13-smoke-c071.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c071\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c071",
+    "repo_head": "38cbbf874f2f484375a89edecfa0b1a5f90f1e39",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "integ-c071-smoke",
+    "token": "integ-c071-smoke:193512:dbe7d23d8a819a5a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
