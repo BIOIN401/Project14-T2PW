@@ -998,3 +998,55 @@ where the run can actually succeed, rather than twice.
 normalization, mapping, gates, persistence, classification"* — a **structural** property of the loop, not a
 strict-rate or release-classification claim. **F-062 does not gate it.** T-103 becomes runnable the moment
 C-055 merges, and needs only its own live-curator authorization for 4 RAG legs (~1.5 h).
+
+### PACK 9 RULING 1 — where the heavy-mutex line falls, and it is narrower than "every pytest"
+
+C-058 disclosed the line it drew and asked to have it drawn differently if I disagreed: **named sprint gates
+(SMOKE, Chunk C, Chunk D) took the mutex; offline replay probes and single-file focused runs did not.** Its
+charter listed "replay derivation" as not needing the mutex and it extended that to single-file runs.
+
+**RATIFIED, with one boundary the card did not need but the next card will.**
+
+The mutex exists to stop **contention that manufactures a false result** — F-064's leg died on a concurrent
+4.4 MB unlocked cache write, and REV-050j's sampled census timed out *"while C-055's Chunk D contended for
+CPU and the DB."* It does not exist to serialize every Python process in the sprint.
+
+**The line, stated so it is not re-litigated a fourth time:**
+
+**TAKE THE MUTEX** for: SMOKE · any chunk gate (A/B/C/D/E, including `--only` narrowings) · any `qb` run ·
+any pipeline leg or benchmark · **and any job that reaches the live PathBank DB or writes a shared cache
+under `data/`** — regardless of how few tests it runs.
+
+**DO NOT NEED IT** for: a fully offline single-file focused pytest · a read-only replay or census probe ·
+`g11_evidence.py next` / `check` · AST or source-hash comparisons.
+
+**The discriminator is the resource, not the test count.** A one-test run that opens the PathBank DB
+contends exactly as hard as a chunk; a 226-test offline replay contends with nothing but CPU. `_SHARED_
+EXECUTION_BLOCK.md` § 1 should carry this wording; it currently says only *"one heavy job at a time"* and
+leaves each card to guess.
+
+**Note for the record:** C-058 disclosed its line rather than assuming it, which is why this ruling exists at
+all. That is the behaviour the shared block asks for and it cost the card nothing.
+
+### PACK 9 RULING 2 — three charter line numbers were WRONG, and all three were the orchestrator's error
+
+C-058 verified every line number it was given and found three false. **The code won each time. Recorded here
+because the sprint's standing claim — that records are false more often than code — applies to the
+orchestrator's own charters, not only to inherited records.**
+
+| Charter said | Live truth at base `6f9b499` | Consequence |
+|---|---|---|
+| the replay reproduces on **"3 legs across 2 papers"** | **4 legs / 5 transport rows**; corpus-wide **44 rows across 64 legs** | **My summary was imprecise. `FINDINGS.md:1890`'s own correction block lists all four** — I under-counted when compressing it into the charter. |
+| `merge_additions` called from `streamlit_app.py:4910` and `:4974` | **`:4877` and `:4941`** — off by 33 | I propagated line numbers measured against **C-055's branch state**, not against the card's own base. Harmless here only because **no signature change was made**. |
+| `_attached_actor_names` at `:2777` | the `def` is at **`:2774`**; `:2777` is inside its docstring | cosmetic |
+
+**The second is the instructive one.** A charter's line numbers must be measured **against the card's own
+base SHA**, not against whatever tree the preparatory research happened to run on. C-055 and C-058 were
+chartered from research done at different tips, and one card inherited the other's addresses. **No harm
+resulted because the card verified rather than trusted — which is exactly why every charter carries the
+instruction to verify.**
+
+**Also confirmed, and not a defect:** four focused files collect more nodes than they declare `def test_`
+(`entity_admission` 23→33, `streamlit_stage2` 11→12, `adversarial_actor` 18→29, `payload_models` 13→19).
+**Parameterization, not drift.** Any future census that compares a `def test_` count to a collected count
+must expect this — the two are different measurements and neither is wrong.
