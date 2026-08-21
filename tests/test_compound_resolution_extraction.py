@@ -29,7 +29,7 @@ import inspect
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 import pytest
 
@@ -509,7 +509,131 @@ GOLDEN = {
     "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "2c8897c47475836b45a581258a211a6b039217b73795b6aed68b1f0085c8ad1e",
     "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "5ca749ae322a5e0b1998b934a945d3a0e41ca61a921197be66eaa9085d32dd38",
     "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "a6ca91c577ead5d85e0b97d1b34e35f675fd58fabed4a930bd3d2f5f7347f02a",
+    # ADMITTED by C-068 on 2026-08-21 (F-069), the ONE of T-100's three survivors
+    # that is an export fixture at all: ``quarantine_report.json -> ok`` is
+    # ``true`` with ``refusal_reasons: []`` and ``degree_zero_exports: []``,
+    # ``prefreeze_db_resolution`` is ``{"available": true}``, it is accessioned
+    # (10 ``"enrichment"`` / 5 ``"ec_number"`` occurrences), and it contributes
+    # **0** rows to the C-030 identity census. Measured **under pytest** (F-047):
+    # all five configurations BUILD -- ``stops == {}``, no pre-freeze stop and no
+    # IR refusal -- so this leg is in neither ``GOLDEN_PREFREEZE_STOPS`` nor
+    # ``GOLDEN_IR_REFUSALS``, and over the same 33-leg sweep the other 32 legs'
+    # digests AND stops are byte-identical: the differing key set is exactly
+    # ``{runs_verify/2026-08-18_1328/…/PMC12096016/research/final_mapped.json}``.
+    #
+    # THE DIGEST IS A PIN, NOT AN ENDORSEMENT. This payload carries three
+    # biological defects, named here so no later reader reads "it is in GOLDEN"
+    # as "it is correct":
+    #   1. ``processes.reactions[3]`` "EntE-catalyzed adenylation of 2,3-DHB" has
+    #      ``outputs: ["enterobactin"]``. **Adenylation produces DHB-AMP.** A
+    #      named enzyme is asserted to make a product it does not make -- and the
+    #      row's own ``evidence`` calls EntE a "2,3-dihydroxybenzoyl-AMP ligase;
+    #      EC 6.2.1.71", so the payload contradicts itself.
+    #   2. ``processes.transports[0]`` "enterobactin secretion" carries
+    #      ``transporters: [{entity: "EntE", provenance: "inferred"}]`` on a span
+    #      reading "secreted ... by a **TolC**-dependent process". The transporter
+    #      is not the protein the cited span names. **F-058.**
+    #   3. ``processes.reactions[4]``, the EntF assembly, lists ``EntE`` as a
+    #      catalyst whose entire ``evidence`` is the reaction's own name
+    #      concatenated with a truncated fragment ("EntF-catalyzed enterobactin
+    #      assembly with L-serine Enterobactin production from activated
+    #      2,3-DHB t"). That is not evidence.
+    #
+    # **F-079** is registered against this same leg -- classified
+    # ``release_ready`` with ``semantic_evaluation: passed`` despite defect 1.
+    # **F-079 is NOT fixed here**: it is unowned and needs its own card and its
+    # own current-source measurement. Pinning this digest freezes the defect so
+    # that card can prove its fix moved something.
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": "609950f179ebf871d27f9ee0cae9bcddf1272a21bc437b7699a85fb1ad37548b",
 }
+
+#: Minimum length, in stripped characters, of an ``EXCLUDED`` reason.
+#:
+#: Not a style rule. C-068 § 3b requires each reason to state TWO facts, and a
+#: string too short to hold them is a silencing dressed as a record. The bound is
+#: far below the length of a real reason: it exists to make ``""``, ``" "`` and
+#: ``"n/a"`` structurally impossible, not to police prose.
+MIN_EXCLUSION_REASON_CHARS = 120
+
+
+class ExclusionReasonMissing(ValueError):
+    """A committed leg was excluded from ``GOLDEN`` without a stated reason."""
+
+
+def _excluded(*entries: Tuple[str, str]) -> Dict[str, str]:
+    """Build :data:`EXCLUDED` so a leg CANNOT enter it without a reason.
+
+    **Structural, not conventional.** There is no dict literal below for a later
+    editor to append a bare key to: the register is built from ``(leg, reason)``
+    pairs, and a bare string, a 1-tuple, a non-string reason, an empty reason, a
+    whitespace reason, a reason shorter than
+    :data:`MIN_EXCLUSION_REASON_CHARS`, or a duplicated leg raises
+    :exc:`ExclusionReasonMissing` **at import time** -- so the module fails to
+    collect rather than one test failing somewhere downstream.
+
+    Proved by :func:`test_excluded_cannot_silence_a_leg_without_a_reason`.
+    """
+    register: Dict[str, str] = {}
+    for entry in entries:
+        if not isinstance(entry, tuple) or len(entry) != 2:
+            raise ExclusionReasonMissing(
+                f"an EXCLUDED entry is a (leg, reason) pair; got {entry!r}")
+        leg, reason = entry
+        if not isinstance(reason, str) or len(reason.strip()) < MIN_EXCLUSION_REASON_CHARS:
+            raise ExclusionReasonMissing(
+                f"{leg}: excluded with no usable reason ({reason!r}). State why "
+                f"this committed leg is not an export fixture -- C-068 § 3b "
+                f"requires the quarantine fact AND the refusal-trigger fact.")
+        if leg in register:
+            raise ExclusionReasonMissing(f"{leg}: excluded twice")
+        register[leg] = " ".join(reason.split())
+    return register
+
+
+#: Committed leg fixtures deliberately kept OUT of ``GOLDEN``, each with its reason.
+#:
+#: C-068, closing F-069. Two of T-100's three survivors are not payloads the
+#: exporter is ever handed on a completed run, so pinning their digests would pin
+#: the output of a path production never takes. They are excluded ON THE RECORD
+#: rather than by silence: the coverage tripwire asserts against
+#: ``set(GOLDEN) | set(EXCLUDED)``, so it is green on today's corpus and **still
+#: fires on a genuinely new committed leg** -- the property that matters.
+#: Re-pointing it to pass in both configurations would have destroyed that
+#: property (REV-051); leaving it permanently red would have decayed it into
+#: noise, the second-order cost F-069 itself diagnoses.
+#:
+#: **Exclusion is not a biological judgement and must never become one.** Neither
+#: entry is out because its biology is disliked; both are out because the file is
+#: a pre-quarantine fallback. **An entry here is not a licence to ignore the
+#: artifact** -- F-055…F-064 reason about exactly these two legs.
+EXCLUDED: Dict[str, str] = _excluded(
+    ("runs_verify/2026-08-18_1328/papers/PMC12096016/strict/final_mapped.json",
+     "quarantine_report.json -> ok is FALSE with refusal_reasons "
+     "['degree_zero_export:1'], so this final_mapped.json is the PRE-QUARANTINE "
+     "FALLBACK and not the canonical payload; corroborated by 0 occurrences each "
+     "of 'enrichment' and 'ec_number' and a null prefreeze_db_resolution, against "
+     "10, 5 and {'available': true} on the same paper's research leg. It is "
+     "therefore never a payload build_pwml_ir is handed on a completed run. And "
+     "its ONLY structural refusal is strict_invariants.degree_zero_exports == "
+     "[{'bucket': 'proteins', 'name': 'Isochorismatase (EntB)'}] -- the exact row "
+     "C-059's REASON_ALREADY_COVERED was written to reject (F-075) -- so this "
+     "artifact may no longer reflect pipeline behaviour and must not be pinned as "
+     "though it did."),
+    ("runs_verify/2026-08-18_1328/papers/PMC12452463/strict/final_mapped.json",
+     "quarantine_report.json -> ok is FALSE with refusal_reasons "
+     "['degree_zero_export:1'], so this final_mapped.json is the PRE-QUARANTINE "
+     "FALLBACK and not the canonical payload. Directly WITNESSED, not inferred: "
+     "removed_entity_report.json lists 2,3-dihydroxybenzoate, DHB-AMP, Fe2+, EntF "
+     "and Fur as removed, and all five are still present in this final_mapped.json "
+     "(5, 5, 7, 7 and 5 occurrences). Corroborated by 0 occurrences each of "
+     "'enrichment' and 'ec_number' and a null prefreeze_db_resolution. It is "
+     "therefore never a payload build_pwml_ir is handed on a completed run. And "
+     "its ONLY structural refusal is strict_invariants.degree_zero_exports == "
+     "[{'bucket': 'proteins', 'name': 'Isochorismatase (EntB)'}] -- the exact row "
+     "C-059's REASON_ALREADY_COVERED was written to reject (F-075) -- so this "
+     "artifact may no longer reflect pipeline behaviour and must not be pinned as "
+     "though it did."),
+)
 
 #: The (leg, configuration) pairs whose pre-freeze stage STOPS, by code.
 #:
@@ -803,15 +927,85 @@ def test_build_pwml_ir_matches_the_pre_extraction_golden() -> None:
     assert not mismatched, "build_pwml_ir output drifted:\n" + "\n".join(mismatched)
 
 
+def _leg_coverage_gap(found: Set[str]) -> Tuple[List[str], List[str]]:
+    """``(unaccounted, stale)`` for a set of discovered leg paths.
+
+    Split out of the tripwire by C-068 so its predicate can be exercised on a
+    **synthesized** leg path without writing into ``runs/`` or ``runs_verify/``,
+    which are read-only evidence (D-055, F-055…F-064).
+    """
+    accounted = set(GOLDEN) | set(EXCLUDED)
+    return sorted(found - accounted), sorted(accounted - found)
+
+
 def test_the_golden_covers_every_committed_leg_fixture() -> None:
-    """NEW ACCEPTANCE. A new committed leg must be added to GOLDEN deliberately."""
+    """NEW ACCEPTANCE. A new committed leg must be ACCOUNTED FOR deliberately.
+
+    **C-068 widened the accounting set, not the assertion** (F-069). Every
+    committed leg must appear in ``GOLDEN`` -- pinned -- or in ``EXCLUDED`` with
+    a stated reason, which :func:`_excluded` makes structurally impossible to
+    skip. A leg in neither still fails here, and that is the property the test
+    exists for; :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg`
+    proves the widened form is not vacuous.
+    """
     found = {
         str(path.relative_to(ROOT)).replace("\\", "/")
         for root in ("runs", "runs_verify")
         for path in (ROOT / root).rglob("final_mapped.json")
     }
     assert found, "no committed leg fixtures found under runs/ or runs_verify/"
-    assert found == set(GOLDEN), (
-        f"missing from GOLDEN: {sorted(found - set(GOLDEN))}; "
-        f"stale in GOLDEN: {sorted(set(GOLDEN) - found)}"
+    both = sorted(set(GOLDEN) & set(EXCLUDED))
+    assert not both, f"a leg is BOTH pinned and excluded: {both}"
+    unaccounted, stale = _leg_coverage_gap(found)
+    assert (unaccounted, stale) == ([], []), (
+        f"unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: "
+        f"{unaccounted}; stale in GOLDEN/EXCLUDED: {stale}"
     )
+
+
+def test_the_coverage_tripwire_fires_on_an_unaccounted_leg() -> None:
+    """NEW ACCEPTANCE (C-068, RULING 13). The widened tripwire is NOT vacuous.
+
+    ``found == set(GOLDEN) | set(EXCLUDED)`` would look green forever if the
+    accounting set silently absorbed whatever it was given. It does not: a leg
+    path in neither register is reported unaccounted, and a register key with no
+    file on disk is still reported stale. The synthetic path is never written to
+    disk -- ``runs/`` and ``runs_verify/`` are read-only evidence.
+    """
+    real = set(GOLDEN) | set(EXCLUDED)
+    assert _leg_coverage_gap(real) == ([], [])
+
+    synthetic = "runs_verify/9999-99-99_9999/papers/PMCNONVACUITY/research/final_mapped.json"
+    assert synthetic not in real
+    assert _leg_coverage_gap(real | {synthetic}) == ([synthetic], [])
+
+    # and an EXCLUDED key does not become a place to hide a deleted fixture.
+    dropped = sorted(EXCLUDED)[0]
+    assert _leg_coverage_gap(real - {dropped}) == ([], [dropped])
+
+
+def test_excluded_cannot_silence_a_leg_without_a_reason() -> None:
+    """NEW ACCEPTANCE (C-068 § 6). A leg cannot enter EXCLUDED reason-free.
+
+    The register is a constructor, not a literal, so there is no bare key to
+    append: every reason-free shape raises, and it raises at import time. Also
+    asserts that both committed reasons carry the two facts § 3b requires -- the
+    quarantine refusal and the ``degree_zero_export`` trigger C-059 rejects.
+    """
+    leg = "runs/2026-01-01_0000/papers/PMCFAKE/strict/final_mapped.json"
+    for entry in (leg, (leg,), (leg, ""), (leg, "   "), (leg, "n/a"),
+                  (leg, None), (leg, 0), (leg, "excluded, see the ledger"),
+                  (leg, "x" * (MIN_EXCLUSION_REASON_CHARS - 1))):
+        with pytest.raises(ExclusionReasonMissing):
+            _excluded(entry)  # type: ignore[arg-type]
+
+    good = "z" * MIN_EXCLUSION_REASON_CHARS
+    assert _excluded((leg, good)) == {leg: good}
+    with pytest.raises(ExclusionReasonMissing):
+        _excluded((leg, good), (leg, good))
+
+    for path, reason in EXCLUDED.items():
+        assert len(reason) >= MIN_EXCLUSION_REASON_CHARS, path
+        assert "quarantine_report.json -> ok is FALSE" in reason, path
+        assert "degree_zero_export" in reason, path
+        assert "C-059" in reason, path
