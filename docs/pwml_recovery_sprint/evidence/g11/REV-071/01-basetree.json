@@ -1,0 +1,77 @@
+{
+  "label": "basetree",
+  "command": [
+    "git",
+    "-C",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW",
+    "worktree",
+    "add",
+    "--detach",
+    "C:/t/rev071base",
+    "f2a959ff2fc2014313c23a7d6cfb1d8b4a1ce153"
+  ],
+  "cwd": "C:\\t\\c071",
+  "started_at": "2026-08-21T22:30:33+00:00",
+  "finished_at": "2026-08-21T22:30:36+00:00",
+  "duration_seconds": 2.9876703999998426,
+  "timeout_seconds": 280.0,
+  "root_pid": 197784,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 200280,
+      "name": "git.exe",
+      "ppid": 197784
+    }
+  ],
+  "descendants_terminated": [
+    200280
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196200,
+      "name": "python.exe"
+    },
+    {
+      "pid": 197640,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/REV-071/01-basetree.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c071\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c071",
+    "repo_head": "38cbbf874f2f484375a89edecfa0b1a5f90f1e39",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
