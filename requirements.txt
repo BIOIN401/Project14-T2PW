@@ -7,6 +7,10 @@ pymysql>=1.1.1
 
 # LLm - Client 
 openai>=1.55.0
+# Direct dependency of src/t2pw/llm/client.py (httpx.Timeout, :55 and :59), NOT a
+# transitive one: openai 3.x requires `httpx2`, a different distribution, so an
+# unpinned rebuild drops httpx and the LLM client stops importing (F-067).
+httpx>=0.23.0
 
 # data models and validation (JSON Contract)
 pydantic>=2.9.2
