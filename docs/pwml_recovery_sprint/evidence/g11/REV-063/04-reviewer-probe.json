@@ -1,0 +1,151 @@
+{
+  "label": "rev063-reviewer-probe",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev063tmp/probe/rev063_probe.py",
+    "--work",
+    "C:/t/rev063tmp/probework"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-21T16:53:09+00:00",
+  "finished_at": "2026-08-21T16:53:13+00:00",
+  "duration_seconds": 3.9533717000012984,
+  "timeout_seconds": 280.0,
+  "root_pid": 355768,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 356152,
+      "name": "python.exe",
+      "ppid": 355768
+    },
+    {
+      "pid": 354840,
+      "name": "python.exe",
+      "ppid": 356152
+    },
+    {
+      "pid": 356312,
+      "name": "python.exe",
+      "ppid": 354840
+    },
+    {
+      "pid": 355464,
+      "name": "git.exe",
+      "ppid": 356312
+    },
+    {
+      "pid": 355400,
+      "name": "python.exe",
+      "ppid": 355620
+    },
+    {
+      "pid": 355620,
+      "name": "python.exe",
+      "ppid": 356152
+    },
+    {
+      "pid": 355072,
+      "name": "git.exe",
+      "ppid": 355400
+    },
+    {
+      "pid": 354736,
+      "name": "python.exe",
+      "ppid": 356152
+    },
+    {
+      "pid": 354836,
+      "name": "python.exe",
+      "ppid": 354736
+    },
+    {
+      "pid": 355520,
+      "name": "git.exe",
+      "ppid": 354836
+    },
+    {
+      "pid": 355764,
+      "name": "python.exe",
+      "ppid": 355776
+    },
+    {
+      "pid": 355776,
+      "name": "python.exe",
+      "ppid": 356152
+    },
+    {
+      "pid": 353896,
+      "name": "git.exe",
+      "ppid": 355764
+    },
+    {
+      "pid": 355084,
+      "name": "git.exe",
+      "ppid": 356152
+    }
+  ],
+  "descendants_terminated": [
+    353896,
+    354736,
+    354836,
+    354840,
+    355072,
+    355084,
+    355400,
+    355464,
+    355520,
+    355620,
+    355764,
+    355776,
+    356152,
+    356312
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 353576,
+      "name": "python.exe"
+    },
+    {
+      "pid": 354812,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-063/04-reviewer-probe.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "23614d9e772bae597becac19e6d9aca6bd99f0c2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

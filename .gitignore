@@ -49,3 +49,18 @@ runs_verify/*/cache_snapshot/
 docs/pwml_recovery_sprint/evidence/g11/**/*.log
 docs/pwml_recovery_sprint/evidence/g11/**/*.out
 docs/pwml_recovery_sprint/evidence/g11/**/*.out.txt
+
+# C-063 (F-071): the G11 reservation staging area. `g11_evidence.py next` creates
+# the placeholder HERE, and `bounded_run.py` promotes it into the reports tree with
+# one `os.replace` when the job actually produces a report. A job whose caller dies
+# first therefore leaves its orphan in `.staging/` rather than in the reports tree,
+# which is exactly what stops an unfinished job turning whole-tree G11 red.
+#
+# It must be IGNORED as well as invisible to `check`. REV-063 measured the gap:
+# `git add -A` staged `g11/H-004/.staging/01-orphan.json`, and the comment above
+# RESERVED_KEY promises such a file is "never committed". Without this rule that
+# promise holds only outside `.staging/`.
+#
+# Narrow on purpose: it matches the staging directory only, so every promoted
+# report -- the whole point of the tree -- stays tracked.
+docs/pwml_recovery_sprint/evidence/g11/*/.staging/
