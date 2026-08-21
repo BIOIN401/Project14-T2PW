@@ -1,0 +1,115 @@
+{
+  "label": "c056d-focused-9-tip-2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/c056d/t2",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+  "started_at": "2026-08-21T03:45:19+00:00",
+  "finished_at": "2026-08-21T03:46:35+00:00",
+  "duration_seconds": 76.26558039999873,
+  "timeout_seconds": 900.0,
+  "root_pid": 95040,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 27172,
+      "name": "python.exe",
+      "ppid": 95040
+    }
+  ],
+  "descendants_terminated": [
+    27172
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 71688,
+      "name": "python.exe"
+    },
+    {
+      "pid": 82176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 86188,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 94808,
+      "name": "python.exe"
+    },
+    {
+      "pid": 94836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 94956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 95088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 95136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 96012,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-056d/07-c056d-focused-9-tip-2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry",
+    "repo_head": "40fdb234e84325333979627a6ab051cdaa9c2b7d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}

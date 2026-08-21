@@ -1,0 +1,112 @@
+{
+  "base_capture_reproduces_committed_GOLDEN_byte_identically": true,
+  "base_sha": "40fdb234e84325333979627a6ab051cdaa9c2b7d",
+  "card": "C-056d",
+  "cause": "SEMANTIC_INPUT_NOT_WIRED's text changed (release_status.py:58-61). It named C-056a as pending; C-056a merged at 93594aa. Neither golden fixture publishes a quarantine_artifacts map, so no boundary record exists for _gate_failure_semantic_carry to carry and both legs take the honest not_evaluated fallback -- which is why the ONLY value that moved is the reason string.",
+  "control": "base captured in a git worktree at the base SHA with .env copied in (F-051 parity on BOTH sides)",
+  "growth_only_guard_no_field_dropped": true,
+  "legs_moved": [
+    "strict_contract_failure",
+    "strict_gate_failure"
+  ],
+  "legs_total": 7,
+  "legs_unmoved": [
+    "input_timeout",
+    "research_pass",
+    "strict_export_not_ok",
+    "strict_no_pwml_button",
+    "strict_pwml_export"
+  ],
+  "measured_by": "docs/pwml_recovery_sprint/evidence/c056d_golden_base.json + c056d_golden_tip.json",
+  "per_leg": {
+    "input_timeout": {
+      "digest_new": "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5",
+      "digest_old": "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": false,
+      "release_status_value_changes": {},
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "research_pass": {
+      "digest_new": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3",
+      "digest_old": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": false,
+      "release_status_value_changes": {},
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_contract_failure": {
+      "digest_new": "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205",
+      "digest_old": "d102035df954736fa85dec18239518eecbfdc1704329b73cd5e6500234d0b13e",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": true,
+      "release_status_value_changes": {
+        "semantic_not_evaluated_reason": {
+          "new": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+          "old": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass"
+        }
+      },
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": true
+    },
+    "strict_export_not_ok": {
+      "digest_new": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4",
+      "digest_old": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": false,
+      "release_status_value_changes": {},
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_gate_failure": {
+      "digest_new": "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b",
+      "digest_old": "a55b08af3c3db132ad2069e9659e3b24448ca399c950006ff098c79cc76bc4bf",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": true,
+      "release_status_value_changes": {
+        "semantic_not_evaluated_reason": {
+          "new": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+          "old": "no semantic evaluation is wired into the runtime classification yet; this is a missing input (C-056a), NOT a semantic failure and NOT a pass"
+        }
+      },
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": true
+    },
+    "strict_no_pwml_button": {
+      "digest_new": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14",
+      "digest_old": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": false,
+      "release_status_value_changes": {},
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_pwml_export": {
+      "digest_new": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027",
+      "digest_old": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027",
+      "release_status_keys_added": [],
+      "release_status_keys_dropped": [],
+      "release_status_present": false,
+      "release_status_value_changes": {},
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    }
+  },
+  "slot0_moved_on": [],
+  "slot1_moved_on": []
+}

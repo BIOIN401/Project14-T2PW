@@ -1731,6 +1731,92 @@ def _finalize_timeout(
     outcome.termination_is_operational = leg_deadline.is_operational(outcome.termination_reason)
 
 
+def _gate_failure_semantic_carry(artifacts: Dict[str, Any]) -> Dict[str, Any]:
+    """The semantic verdict the quarantine boundary FROZE, as classifier kwargs.
+
+    ``{}`` means the boundary left nothing to carry, and the caller then takes
+    ``classify_release_status``'s unwired defaults -- an honest ``not_evaluated``.
+
+    WHY THIS SOURCE, when :func:`_frozen_release_record` reads an in-memory object
+    on the PASS path. ``_finalize_gate_failure``'s parameters are ``outcome`` and
+    eight verdict-side values; neither ``at`` nor ``artifacts`` (the app's
+    ``post_pipeline_artifacts``) is among them, and ``_drive`` RETURNS at the
+    gate-failure call, 85 lines before ``pwml_result`` is bound by
+    ``_find_pwml_result``. Both in-memory routes -- ``_ss(at,
+    "quarantine_report")``, written by ``streamlit_app.py:1143``, and
+    ``artifacts["quarantine_report"]``, the same object republished at
+    ``streamlit_app.py:3713`` -- would therefore need a new parameter on this
+    seam. ``outcome`` is a parameter, and ``_add_common_artifacts`` has already
+    run: it reaches :func:`_add_identity_artifacts`, which puts
+    ``QUARANTINE_REPORT_FILENAME`` into the artifact set as the verbatim text of
+    the file ``write_quarantine_artifacts`` wrote from the same
+    ``QuarantineResult``.
+
+    WHY READING IT BACK IS SOUND HERE, when ``_frozen_release_record`` rejects the
+    on-disk report for the PASS path. That objection is anchored on the export --
+    "the report on disk can therefore describe a DIFFERENT payload than the XML
+    being named". No XML is named on this path, and more decisively the export
+    never ran: the boundary is invoked ONCE per pipeline run
+    (``streamlit_app.py:2561``), and the only other ``quarantine_and_close`` call
+    (``streamlit_app.py:3990``, inside ``run_pwml_export``) is unreachable behind
+    the ``refinement_gate_errors`` return at ``streamlit_app.py:1911``. One
+    decision exists for this leg, and this text is its serialization. Each leg
+    also gets a fresh ``AppTest`` session, and ``outputs/`` is cleared ahead of
+    every pipeline run, so the file cannot belong to a previous leg.
+
+    ONLY THE SEMANTIC FIELDS TRAVEL. The record is NOT carried wholesale the way
+    the PASS path carries it: the boundary's own ``strict_gates_passed`` is its
+    closure/lock invariant set, computed BEFORE the final pre-export Stage-3
+    suite runs, so on a leg those later gates blocked it can legitimately still
+    read ``release_ready``. Copying that status onto a leg that produced no PWML
+    would manufacture a strict success -- the opposite of this fix.
+
+    Unrecognised, absent or unparseable input answers ``{}`` rather than being
+    trusted, for the reason ``_frozen_release_record`` gives about a fourth
+    status string: a record this code cannot interpret is the same predicament as
+    having none.
+    """
+
+    from t2pw.pipeline.release_status import (
+        SEMANTIC_FAILED,
+        SEMANTIC_NOT_EVALUATED,
+        SEMANTIC_PASSED,
+    )
+    from t2pw.pipeline.strict_quarantine import QUARANTINE_REPORT_FILENAME
+
+    document = artifacts.get(QUARANTINE_REPORT_FILENAME)
+    if isinstance(document, (bytes, bytearray)):
+        document = document.decode("utf-8", "replace")
+    if isinstance(document, str):
+        try:
+            document = json.loads(document) if document.strip() else {}
+        except ValueError:  # a truncated or swept file is not a verdict
+            return {}
+    release = _safe_dict(_safe_dict(document).get("release"))
+    evaluation = _text(release.get("semantic_evaluation"))
+    # A CLOSED-VOCABULARY guard, the same shape as ``_frozen_release_record``'s
+    # ``... in RELEASE_STATES``: PRODUCT_CONTRACT 11 defines exactly three semantic
+    # outcomes and a fourth string is a record this code cannot interpret. It is
+    # NOT an affirmative read of ``passed`` under D-054 section 7 -- all three
+    # members are treated identically, nothing branches on which one arrived, and
+    # no denominator, numerator or rate is built here or anywhere downstream of it.
+    if evaluation not in (SEMANTIC_PASSED, SEMANTIC_FAILED, SEMANTIC_NOT_EVALUATED):
+        return {}
+    carried: Dict[str, Any] = {
+        "semantic_evaluation": evaluation,
+        # Names, verbatim. ``classify_release_status`` keeps them only on a
+        # ``failed``, so a carried pass cannot arrive holding failing checks.
+        "semantic_failed_checks": _safe_list(release.get("semantic_failed_checks")),
+        # C-056c's carrier, in the serialized mapping shape the classifier
+        # documents itself as tolerating so a record rebuilt from JSON keeps it.
+        "semantic_check_evaluability": _safe_list(release.get("semantic_check_evaluability")),
+    }
+    reason = _text(release.get("semantic_not_evaluated_reason"))
+    if reason:
+        carried["semantic_not_evaluated_reason"] = reason
+    return carried
+
+
 def _finalize_gate_failure(
     outcome: RunOutcome,
     *,
@@ -1751,18 +1837,41 @@ def _finalize_gate_failure(
     anything releasable?" from the absence of a ``pathway.pwml``. The
     classification is attached as a first-class
     :class:`~t2pw.pipeline.release_status.ReleaseStatus`, with
-    PRODUCT_CONTRACT 11's states unfolded: the pipeline DID execute, the strict
-    TECHNICAL gates did NOT pass, and semantic evaluation was NOT PERFORMED --
-    which is recorded as ``not_evaluated``, never as ``False``.
+    PRODUCT_CONTRACT 11's states unfolded.
+
+    TWO OF THE THREE ARE THIS PATH'S OWN OBSERVATIONS and stay so: the pipeline
+    DID execute, and the strict TECHNICAL gates did NOT pass -- that second one
+    is what ``_drive`` just measured off ``FINAL_GATE_REPORT_KEY`` and the
+    contract channel, and it is a gate result, never a biological verdict.
+
+    THE THIRD IS NOT THIS PATH'S TO ANSWER (F-055, merge rule 8). This function
+    used to pass NO semantic argument at all, so ``classify_release_status``'s
+    unwired defaults fired and every gate-failed manifest row recorded
+    ``semantic_evaluation: not_evaluated`` -- while the SAME leg's quarantine
+    boundary had already computed ``failed`` and named the checks. Both records
+    shipped, disagreeing, in ``runs_verify/2026-08-18_1328``. The verdict is now
+    CARRIED from the boundary rather than re-derived here: see
+    :func:`_gate_failure_semantic_carry` for the source and why it is the only
+    one reachable at this seam.
+
+    Carrying is subtractive-safe by construction, not by promise.
+    ``strict_gates_passed=False`` pins the status at ``diagnostic_only``
+    (``release_status.py:491-493``), which pins ``strict_acceptance_eligible``
+    to ``False`` (``:563``) and puts the run below the semantic cap's only entry
+    point (``:540``, which acts on ``release_ready`` alone). No semantic input
+    this function can carry -- ``failed``, ``passed`` or ``not_evaluated`` --
+    can move either field. Nothing here reads the verdict; it is recorded.
+
+    ``not_evaluated`` remains the honest answer when the boundary left no record
+    to carry: the defect was recording it when the boundary HAD computed one.
 
     ``diagnostic_only`` here is a statement about SERIALIZATION, not about the
     biology: the gate channel blocked export, so no PWML exists to review, and
     the reason line says exactly that rather than implying "no defensible core".
 
-    It is NOT added to :meth:`RunOutcome.to_dict` -- that would edit ``RunOutcome``,
-    which is outside C-041's boundary -- so the manifest row is byte-identical and
-    the golden driver diff stays empty. Promoting it into the row belongs to the
-    card that owns the row and the artifact names (D-004 / C-053).
+    D-004 / C-053 have since promoted the record into the manifest row through
+    :func:`_release_status_row`, which copies it wholesale -- so what this
+    function attaches is what an offline reader gets.
     """
 
     from t2pw.pipeline.release_status import classify_release_status
@@ -1770,6 +1879,7 @@ def _finalize_gate_failure(
     outcome.release_status = classify_release_status(
         pipeline_executed=True,
         strict_gates_passed=False,
+        **_gate_failure_semantic_carry(outcome.artifacts),
     )
 
     _fail(

@@ -202,12 +202,45 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 #:   "not recorded" -- which is exactly true of a run that never reached the
 #:   semantic seam. ``fields_added``/``fields_dropped`` are both empty and the
 #:   capture's own GROWTH-ONLY guard is True.
+#:
+#: **RE-BASELINED AGAIN by C-056d under merge rule 4** (F-055), by the same
+#: mechanism D-054 section 8 ratified for C-056c. C-056d makes
+#: ``_finalize_gate_failure`` CARRY the quarantine boundary's semantic verdict
+#: instead of re-deriving one from nothing, and corrects the text of
+#: ``SEMANTIC_INPUT_NOT_WIRED`` (``release_status.py:58-61``), which named C-056a
+#: as pending after C-056a had merged at ``93594aa``. Derived, not asserted: base
+#: capture ``evidence/c056d_golden_base.json`` (taken in a real git worktree at the
+#: base SHA ``40fdb23``, with ``.env`` copied in as an F-051 control on BOTH
+#: sides), tip capture ``c056d_golden_tip.json``, slot-by-slot difference
+#: ``c056d_golden_delta.json``. **The base capture reproduced all seven tuples
+#: above BYTE-IDENTICALLY before the tip was taken**, which is what makes the move
+#: attributable. The exact delta:
+#:
+#: * **slot 0** (``status|stage|failure_kind``) moves on **0 of 7** legs.
+#: * **slot 1** (``message``) moves on **0 of 7** legs.
+#: * **slot 2** (digest) moves on **exactly 2 of 7** -- ``strict_contract_failure``
+#:   (``d102035d…`` -> ``8a5c7a80…``) and ``strict_gate_failure``
+#:   (``a55b08af…`` -> ``3279e51b…``). The same two as C-056b and C-056c, for the
+#:   same structural reason: they are the only fixtures reaching
+#:   ``_finalize_gate_failure`` and therefore the only rows carrying a
+#:   ``release_status`` at all. The other five carry ``None`` and are
+#:   byte-identical -- measured, not assumed.
+#: * on both moving legs: **zero keys added, zero keys dropped, and exactly ONE
+#:   value changed -- ``semantic_not_evaluated_reason``**, the corrected constant.
+#:   The GROWTH-ONLY guard is True; no digest was stabilised by dropping a field.
+#: * **the carry itself contributes nothing to this delta, and that is the point.**
+#:   Neither fixture publishes a ``quarantine_artifacts`` map, so no boundary
+#:   record exists for these legs to carry and both take the honest
+#:   ``not_evaluated`` fallback. The carried-verdict behaviour is proved on real
+#:   committed boundary records in
+#:   ``tests/test_c056d_gate_failure_semantic_carry.py``, which is red on the base
+#:   SHA with ``assert 'not_evaluated' == 'failed'``.
 GOLDEN: dict = {
     "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"),
     "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
-    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "d102035df954736fa85dec18239518eecbfdc1704329b73cd5e6500234d0b13e"),
+    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205"),
     "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),
-    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "a55b08af3c3db132ad2069e9659e3b24448ca399c950006ff098c79cc76bc4bf"),
+    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b"),
     "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"),
     "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"),
 }
