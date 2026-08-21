@@ -1,0 +1,115 @@
+{
+  "label": "g9base3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/REV-065/14-g9base3.pin.json",
+    "--expect-tree",
+    "C:/t/rev065work/tree",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/rev065tmp/g9c",
+    "tests/test_c011_g9_probe.py"
+  ],
+  "cwd": "C:\\t\\rev065work\\tree",
+  "started_at": "2026-08-21T17:53:51+00:00",
+  "finished_at": "2026-08-21T17:54:08+00:00",
+  "duration_seconds": 17.14015940000536,
+  "timeout_seconds": 290.0,
+  "root_pid": 409172,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 410540,
+      "name": "python.exe",
+      "ppid": 409172
+    },
+    {
+      "pid": 410344,
+      "name": "git.exe",
+      "ppid": 410540
+    },
+    {
+      "pid": 407960,
+      "name": "git.exe",
+      "ppid": 410540
+    },
+    {
+      "pid": 410128,
+      "name": "git.exe",
+      "ppid": 410540
+    },
+    {
+      "pid": 410996,
+      "name": "python.exe",
+      "ppid": 410540
+    },
+    {
+      "pid": 411020,
+      "name": "python.exe",
+      "ppid": 410996
+    },
+    {
+      "pid": 411072,
+      "name": "git.exe",
+      "ppid": 411020
+    }
+  ],
+  "descendants_terminated": [
+    407960,
+    410128,
+    410344,
+    410540,
+    410996,
+    411020,
+    411072
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 405384,
+      "name": "python.exe"
+    },
+    {
+      "pid": 408092,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/REV-065/14-g9base3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence",
+    "repo_head": "09492babad25232b4cf829a7709734aa3df59265",
+    "repo_source": "git",
+    "wrapper_vs_head": "untracked",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
