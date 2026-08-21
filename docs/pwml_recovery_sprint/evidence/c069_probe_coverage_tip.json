@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "control_module_reported": false,
+      "declared_in_child_imports": true,
+      "poison_bites": true,
+      "poison_child_stderr_tail": [
+        "ImportError: C-069 probe poison: t2pw.pipeline.release_status is unimportable here"
+      ],
+      "poisoned_module": "t2pw.pipeline.release_status",
+      "preflight_problem_subjects": [
+        "t2pw.pipeline.release_status"
+      ],
+      "probe_fatal": [],
+      "reported": true,
+      "reported_error": "ImportError: C-069 probe poison: t2pw.pipeline.release_status is unimportable here",
+      "reported_why": "four driver functions defer it and every one of them runs AFTER the pipeline is finished, so an ImportError here costs the leg's whole runtime and then loses the answer: _pwml_artifact_name reads RELEASE_READY / DIAGNOSTIC_ONLY to choose between pathway.pwml and pathway.review_required.pwml, and _finalize_gate_failure calls classify_release_status, so the run directory ends up with its PWML named by nothing and no release record in the manifest row"
+    },
+    {
+      "control_module_reported": false,
+      "declared_in_child_imports": true,
+      "poison_bites": true,
+      "poison_child_stderr_tail": [
+        "ImportError: C-069 probe poison: t2pw.pipeline.strict_quarantine is unimportable here"
+      ],
+      "poisoned_module": "t2pw.pipeline.strict_quarantine",
+      "preflight_problem_subjects": [
+        "t2pw.pipeline.strict_quarantine"
+      ],
+      "probe_fatal": [],
+      "reported": true,
+      "reported_error": "ImportError: C-069 probe poison: t2pw.pipeline.strict_quarantine is unimportable here",
+      "reported_why": "streamlit_app.py:52 imports it at MODULE scope, so a child that cannot import it dies EXECUTING THE APP -- AppTest execs the app as a script (driver.py:111) -- and there is no boundary, no quarantine artifacts and no reports at all. Measured: poisoned, the app's module-scope import block exits 1 while 'import t2pw.batch.driver' still exits 0. The deferred sites are the second loss: the four report FILENAMES live only here"
+    },
+    {
+      "control_module_reported": false,
+      "declared_in_child_imports": true,
+      "poison_bites": true,
+      "poison_child_stderr_tail": [
+        "ImportError: C-069 probe poison: t2pw.pipeline.deadline is unimportable here"
+      ],
+      "poisoned_module": "t2pw.pipeline.deadline",
+      "preflight_problem_subjects": [
+        "t2pw.pipeline.deadline"
+      ],
+      "probe_fatal": [],
+      "reported": true,
+      "reported_error": "ImportError: C-069 probe poison: t2pw.pipeline.deadline is unimportable here",
+      "reported_why": "extraction_ladder.py:61 imports it at MODULE scope and pipeline.py:32 imports extraction_ladder the same way, so EVERY leg dies at pipeline import -- not just the ones that time out. Measured: poisoned, 'import t2pw.pipeline.pipeline' exits 1 while 'import t2pw.batch.driver' still exits 0. _finalize_timeout's deferred use additionally loses termination_reason on the terminal row"
+    }
+  ],
+  "child_imports_declared": [
+    "streamlit.testing.v1",
+    "t2pw.rag.research_report",
+    "t2pw.batch.driver",
+    "t2pw.pipeline.export_mode",
+    "t2pw.llm.client",
+    "t2pw.pipeline.release_status",
+    "t2pw.pipeline.strict_quarantine",
+    "t2pw.pipeline.deadline"
+  ],
+  "expect": "covered",
+  "llm_client_reach": {
+    "imported": [
+      "streamlit.testing.v1",
+      "t2pw.rag.research_report",
+      "t2pw.batch.driver",
+      "t2pw.pipeline.export_mode",
+      "t2pw.pipeline.release_status",
+      "t2pw.pipeline.strict_quarantine",
+      "t2pw.pipeline.deadline"
+    ],
+    "llm_client_in_sys_modules": true,
+    "per_module": {
+      "streamlit.testing.v1": false,
+      "t2pw.batch.driver": false,
+      "t2pw.pipeline.deadline": false,
+      "t2pw.pipeline.export_mode": false,
+      "t2pw.pipeline.release_status": false,
+      "t2pw.pipeline.strict_quarantine": false,
+      "t2pw.rag.research_report": true
+    }
+  },
+  "passed": true,
+  "project_root": "C:\\t\\c069",
+  "question": "does check_preflight report a broken deferred module from a real probe child?",
+  "runner_file": "C:\\t\\c069\\src\\t2pw\\batch\\runner.py",
+  "verdict": {
+    "all_poisons_bit": true,
+    "controls_clean": true,
+    "no_probe_fatal": true,
+    "observation_matches_expectation": true,
+    "tree_ok": true
+  }
+}

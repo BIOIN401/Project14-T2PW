@@ -1,0 +1,201 @@
+{
+  "label": "tip2-green",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-069/15-tip2-green.pin.json",
+    "-q",
+    "--basetemp=C:/t/c069tmp/tip2",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T20:07:39+00:00",
+  "finished_at": "2026-08-21T20:07:48+00:00",
+  "duration_seconds": 8.7828784000003,
+  "timeout_seconds": 300.0,
+  "root_pid": 88072,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 88084,
+      "name": "python.exe",
+      "ppid": 88072
+    },
+    {
+      "pid": 88276,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88296,
+      "name": "python.exe",
+      "ppid": 88276
+    },
+    {
+      "pid": 88464,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88484,
+      "name": "python.exe",
+      "ppid": 88464
+    },
+    {
+      "pid": 88612,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88632,
+      "name": "python.exe",
+      "ppid": 88612
+    },
+    {
+      "pid": 88696,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88716,
+      "name": "python.exe",
+      "ppid": 88696
+    },
+    {
+      "pid": 88748,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88768,
+      "name": "python.exe",
+      "ppid": 88748
+    },
+    {
+      "pid": 88320,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88348,
+      "name": "python.exe",
+      "ppid": 88320
+    },
+    {
+      "pid": 88016,
+      "name": "python.exe",
+      "ppid": 88348
+    },
+    {
+      "pid": 88404,
+      "name": "python.exe",
+      "ppid": 88016
+    },
+    {
+      "pid": 88700,
+      "name": "python.exe",
+      "ppid": 88084
+    },
+    {
+      "pid": 88788,
+      "name": "python.exe",
+      "ppid": 88700
+    },
+    {
+      "pid": 88900,
+      "name": "python.exe",
+      "ppid": 88788
+    },
+    {
+      "pid": 88912,
+      "name": "python.exe",
+      "ppid": 88900
+    }
+  ],
+  "descendants_terminated": [
+    88016,
+    88084,
+    88276,
+    88296,
+    88320,
+    88348,
+    88404,
+    88464,
+    88484,
+    88612,
+    88632,
+    88696,
+    88700,
+    88716,
+    88748,
+    88768,
+    88788,
+    88900,
+    88912
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 73276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 76120,
+      "name": "python.exe"
+    },
+    {
+      "pid": 81208,
+      "name": "python.exe"
+    },
+    {
+      "pid": 81360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 86280,
+      "name": "python.exe"
+    },
+    {
+      "pid": 87724,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-069/15-tip2-green.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "29f71a6559cc0713aef15f7528be28c33bccb027",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

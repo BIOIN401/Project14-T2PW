@@ -37,9 +37,11 @@ in-process ``main()`` call cannot prove either.
 from __future__ import annotations
 
 import ast
+import functools
 import importlib.util
 import json
 import os
+import pkgutil
 import subprocess
 import sys
 from pathlib import Path
@@ -70,6 +72,49 @@ def cli() -> Any:
     return module
 
 
+@functools.lru_cache(maxsize=None)
+def _submodule_names(package: str) -> frozenset:
+    """The real submodule names of ``package``, WITHOUT importing ``package``.
+
+    ``find_spec(package)`` imports only the ANCESTORS of ``package``, never
+    ``package`` itself, and hands back ``submodule_search_locations`` when -- and
+    only when -- it is a package. ``pkgutil.iter_modules`` then reads those
+    directories off disk.
+
+    The ancestors are not free, and an earlier draft of this docstring claimed they
+    were. MEASURED: one ``_deferred_imports(DRIVER_PATH)`` adds **483** modules to
+    ``sys.modules`` -- the whole ``streamlit`` runtime plus ``anyio``, ``asyncio``,
+    ``blinker`` and ``click`` -- because ``streamlit.testing.v1``'s ancestors get
+    imported to locate it. The true and narrow claim is only this: the module whose
+    module-ness is being decided is never executed; its ancestors are.
+
+    Why not ``find_spec(f"{package}.{name}")`` -- with the reasons that survived
+    measurement. NOT cost: that form adds 18 modules and 0.058s on top of what this
+    one already pays, which is noise against 483 and 0.373s. NOT ``MagicMock``
+    safety: under a poisoned ``sys.modules['streamlit']`` it raises
+    ``ModuleNotFoundError: ... 'streamlit' is not a package``, which the
+    ``BaseException`` handler below would have caught anyway. What is left is
+    small and true -- this form resolves ONCE PER PACKAGE and answers every name on
+    the statement from one cached directory listing, where the other asks the import
+    system once per imported name.
+
+    A module that is not a package answers the empty set, which is the truthful
+    answer: ``t2pw.pipeline.release_status`` has no submodules, so
+    ``RELEASE_STATES`` cannot be one.
+
+    ``BaseException`` on the way out, and the empty set as the fallback: an
+    unresolvable package must degrade to the OLD, narrower behaviour rather than
+    invent names. Being unable to answer is never grounds for a new assertion.
+    """
+
+    try:
+        spec = importlib.util.find_spec(package)
+        locations = list(getattr(spec, "submodule_search_locations", None) or ())
+    except BaseException:  # noqa: BLE001 - an unimportable ancestor is not our verdict
+        return frozenset()
+    return frozenset(name for _finder, name, _ispkg in pkgutil.iter_modules(locations))
+
+
 def _deferred_imports(path: Path) -> List[str]:
     """Every module imported INSIDE a function in ``path``, by dotted name.
 
@@ -77,6 +122,27 @@ def _deferred_imports(path: Path) -> List[str]:
     inside a ``try``, inside a nested helper -- is still found. These are exactly
     the imports the parent does not exercise by importing the module itself, and
     therefore exactly the ones a preflight has to know about.
+
+    ``from <pkg> import <name>`` RESOLVES THE SUBMODULE (F-086)
+    -----------------------------------------------------------
+    ``inner.module`` alone is the package, and for
+    ``from t2pw.pipeline import deadline`` (``driver.py:1718``) that recorded
+    ``t2pw.pipeline`` and threw ``deadline`` away. ``_covered`` was then asked
+    about the PARENT and answered True -- correctly, because
+    ``t2pw.pipeline.export_mode`` is listed and startswith ``t2pw.pipeline.`` --
+    while ``t2pw.pipeline.deadline`` itself was undeclared and unvalidatable in the
+    child. ``_covered``'s docstring already refuses to cover descendants; the
+    descendant name simply never reached it. A guard asking the wrong question is
+    strictly worse than one that finds nothing, because it looks like success.
+
+    So the package is still recorded -- ``from t2pw.pipeline import deadline`` does
+    import ``t2pw.pipeline``, and dropping that would lose coverage this helper
+    already had -- and each imported name that is a REAL SUBMODULE is recorded as
+    well. A name that is an ordinary attribute is not: ``AppTest`` is a class
+    re-exported by ``streamlit.testing.v1``, and promoting it to
+    ``streamlit.testing.v1.AppTest`` would put a non-module in ``missed`` and make
+    the guard unsatisfiable. Both directions are asserted by
+    ``test_a_from_package_import_resolves_submodules_but_not_attributes``.
     """
 
     tree = ast.parse(path.read_text(encoding="utf-8"))
@@ -88,6 +154,12 @@ def _deferred_imports(path: Path) -> List[str]:
             if isinstance(inner, ast.ImportFrom):
                 if inner.level == 0 and inner.module:
                     found.append(inner.module)
+                    children = _submodule_names(inner.module)
+                    found.extend(
+                        f"{inner.module}.{alias.name}"
+                        for alias in inner.names
+                        if alias.name in children
+                    )
             elif isinstance(inner, ast.Import):
                 found.extend(alias.name for alias in inner.names)
     return found
@@ -141,15 +213,79 @@ def test_every_import_driver_defers_is_covered_by_the_preflight() -> None:
     import ``json`` has already failed in louder ways).
     """
 
-    missed = [
+    third_party = [
         name
         for name in _deferred_imports(DRIVER_PATH)
-        if name.split(".")[0] not in sys.stdlib_module_names and not _covered(name)
+        if name.split(".")[0] not in sys.stdlib_module_names
     ]
+    # NON-VACUITY FLOOR (RULING 13). This guard derives its list from driver.py, so
+    # a parse that finds NOTHING passes it -- and looks exactly like a list that is
+    # genuinely complete. Measured for C-069: neutralize ``_deferred_imports`` to
+    # return ``[]`` and the assertion below goes green against a CHILD_IMPORTS that
+    # is missing six real deferral sites. This is the line that tells the two apart.
+    assert third_party, (
+        "_deferred_imports found no non-stdlib deferred import in driver.py at all. "
+        "That is a broken parse, not a clean bill of health -- the check below would "
+        "pass vacuously."
+    )
+    missed = [name for name in third_party if not _covered(name)]
     assert missed == [], (
         "driver.py defers these imports and the preflight would not catch them "
         f"missing: {missed}. Add them to runner.CHILD_IMPORTS with the reason a "
         "child needs them."
+    )
+
+
+def test_a_from_package_import_resolves_submodules_but_not_attributes(tmp_path) -> None:
+    """F-086, both directions, because only one of them is safe to get wrong.
+
+    ``from <pkg> import <name>`` is two different statements wearing one syntax.
+    When ``<name>`` is a submodule the child imports a module the preflight has to
+    know about; when it is a class or a constant there is no such module, and
+    minting ``<pkg>.<name>`` would put a name in ``missed`` that can never be
+    declared, leaving the guard permanently and unfixably red. So the permissive
+    direction is asserted just as hard as the strict one.
+
+    The synthetic file carries both cases; the real ``driver.py`` assertion below
+    it is the live instance F-086 was found on.
+    """
+
+    source = tmp_path / "sample.py"
+    source.write_text(
+        """
+def f():
+    from t2pw.pipeline import deadline                              # a submodule
+    from t2pw.pipeline.release_status import RELEASE_STATES         # a constant
+    from streamlit.testing.v1 import AppTest                        # a class
+""",
+        encoding="utf-8",
+    )
+    found = _deferred_imports(source)
+
+    assert "t2pw.pipeline.deadline" in found, (
+        "a submodule imported as 'from <pkg> import <submodule>' must be resolved to "
+        f"its own dotted name, or the preflight cannot probe it. got: {found}"
+    )
+    assert "t2pw.pipeline" in found, (
+        "the package is still imported by that statement and must still be recorded"
+    )
+    assert "t2pw.pipeline.release_status.RELEASE_STATES" not in found, (
+        "RELEASE_STATES is a constant, not a submodule; minting a module name for it "
+        f"would make the guard unsatisfiable. got: {found}"
+    )
+    assert "streamlit.testing.v1.AppTest" not in found, (
+        f"AppTest is a class re-exported by that package, not a submodule. got: {found}"
+    )
+
+    # The classifier itself, stated directly: a package answers with its real
+    # children, and a MODULE answers with the empty set rather than guessing.
+    assert "deadline" in _submodule_names("t2pw.pipeline")
+    assert "export_mode" in _submodule_names("t2pw.pipeline")
+    assert _submodule_names("t2pw.pipeline.release_status") == frozenset()
+
+    assert "t2pw.pipeline.deadline" in _deferred_imports(DRIVER_PATH), (
+        "driver.py:1718 defers 'from t2pw.pipeline import deadline'; if that site is "
+        "gone this assertion should be retired deliberately, not deleted in passing"
     )
 
 

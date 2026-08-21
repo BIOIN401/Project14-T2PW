@@ -1,0 +1,217 @@
+{
+  "label": "tip-green",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-069/07-tip-green.pin.json",
+    "-q",
+    "--basetemp=C:/t/c069tmp/tipg",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T19:56:05+00:00",
+  "finished_at": "2026-08-21T19:56:13+00:00",
+  "duration_seconds": 7.619011099999625,
+  "timeout_seconds": 300.0,
+  "root_pid": 74908,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 74920,
+      "name": "python.exe",
+      "ppid": 74908
+    },
+    {
+      "pid": 74940,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 74960,
+      "name": "python.exe",
+      "ppid": 74940
+    },
+    {
+      "pid": 75080,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 75100,
+      "name": "python.exe",
+      "ppid": 75080
+    },
+    {
+      "pid": 75144,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 75164,
+      "name": "python.exe",
+      "ppid": 75144
+    },
+    {
+      "pid": 75224,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 75244,
+      "name": "python.exe",
+      "ppid": 75224
+    },
+    {
+      "pid": 75264,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 75284,
+      "name": "python.exe",
+      "ppid": 75264
+    },
+    {
+      "pid": 75416,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 75436,
+      "name": "python.exe",
+      "ppid": 75416
+    },
+    {
+      "pid": 75520,
+      "name": "python.exe",
+      "ppid": 75436
+    },
+    {
+      "pid": 75540,
+      "name": "python.exe",
+      "ppid": 75520
+    },
+    {
+      "pid": 74868,
+      "name": "python.exe",
+      "ppid": 74920
+    },
+    {
+      "pid": 74892,
+      "name": "python.exe",
+      "ppid": 74868
+    },
+    {
+      "pid": 74972,
+      "name": "python.exe",
+      "ppid": 75028
+    },
+    {
+      "pid": 75028,
+      "name": "python.exe",
+      "ppid": 74892
+    }
+  ],
+  "descendants_terminated": [
+    74868,
+    74892,
+    74920,
+    74940,
+    74960,
+    74972,
+    75028,
+    75080,
+    75100,
+    75144,
+    75164,
+    75224,
+    75244,
+    75264,
+    75284,
+    75416,
+    75436,
+    75520,
+    75540
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 63244,
+      "name": "python.exe"
+    },
+    {
+      "pid": 68640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 69596,
+      "name": "python.exe"
+    },
+    {
+      "pid": 71296,
+      "name": "python.exe"
+    },
+    {
+      "pid": 71328,
+      "name": "python.exe"
+    },
+    {
+      "pid": 71732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 72352,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74480,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74600,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-069/07-tip-green.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

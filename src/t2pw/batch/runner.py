@@ -1384,6 +1384,35 @@ CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
         "OPENROUTER_API_KEY is missing or malformed, or LLM_PROVIDER is neither "
         "'local' nor 'openrouter'",
     ),
+    (
+        "t2pw.pipeline.release_status",
+        "four driver functions defer it and every one of them runs AFTER the "
+        "pipeline is finished, so an ImportError here costs the leg's whole "
+        "runtime and then loses the answer: _pwml_artifact_name reads "
+        "RELEASE_READY / DIAGNOSTIC_ONLY to choose between pathway.pwml and "
+        "pathway.review_required.pwml, and _finalize_gate_failure calls "
+        "classify_release_status, so the run directory ends up with its PWML "
+        "named by nothing and no release record in the manifest row",
+    ),
+    (
+        "t2pw.pipeline.strict_quarantine",
+        "streamlit_app.py:52 imports it at MODULE scope, so a child that cannot "
+        "import it dies EXECUTING THE APP -- AppTest execs the app as a script "
+        "(driver.py:111) -- and there is no boundary, no quarantine artifacts "
+        "and no reports at all. Measured: poisoned, the app's module-scope "
+        "import block exits 1 while 'import t2pw.batch.driver' still exits 0. "
+        "The deferred sites are the second loss: the four report FILENAMES live "
+        "only here",
+    ),
+    (
+        "t2pw.pipeline.deadline",
+        "extraction_ladder.py:61 imports it at MODULE scope and pipeline.py:32 "
+        "imports extraction_ladder the same way, so EVERY leg dies at pipeline "
+        "import -- not just the ones that time out. Measured: poisoned, 'import "
+        "t2pw.pipeline.pipeline' exits 1 while 'import t2pw.batch.driver' still "
+        "exits 0. _finalize_timeout's deferred use additionally loses "
+        "termination_reason on the terminal row",
+    ),
 )
 
 

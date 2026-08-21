@@ -1,0 +1,181 @@
+{
+  "label": "rev-blast-radius",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/REV-069/14-blast.pin.json",
+    "-q",
+    "--basetemp=C:/t/rev069tmp/br",
+    "tests/test_batch_run.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_fetch.py"
+  ],
+  "cwd": "C:\\t\\c069",
+  "started_at": "2026-08-21T20:22:40+00:00",
+  "finished_at": "2026-08-21T20:22:49+00:00",
+  "duration_seconds": 9.043578499999057,
+  "timeout_seconds": 600.0,
+  "root_pid": 107192,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 107204,
+      "name": "python.exe",
+      "ppid": 107192
+    },
+    {
+      "pid": 107316,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 107336,
+      "name": "python.exe",
+      "ppid": 107316
+    },
+    {
+      "pid": 107404,
+      "name": "taskkill.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 106536,
+      "name": "python.exe",
+      "ppid": 106580
+    },
+    {
+      "pid": 106580,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 106616,
+      "name": "python.exe",
+      "ppid": 106648
+    },
+    {
+      "pid": 106648,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 88608,
+      "name": "python.exe",
+      "ppid": 97508
+    },
+    {
+      "pid": 97508,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 106732,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 106788,
+      "name": "python.exe",
+      "ppid": 106732
+    },
+    {
+      "pid": 107028,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 107084,
+      "name": "python.exe",
+      "ppid": 107028
+    },
+    {
+      "pid": 107060,
+      "name": "python.exe",
+      "ppid": 107112
+    },
+    {
+      "pid": 107112,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 107160,
+      "name": "python.exe",
+      "ppid": 107204
+    },
+    {
+      "pid": 107180,
+      "name": "python.exe",
+      "ppid": 107160
+    }
+  ],
+  "descendants_terminated": [
+    88608,
+    97508,
+    106536,
+    106580,
+    106616,
+    106648,
+    106732,
+    106788,
+    107028,
+    107060,
+    107084,
+    107112,
+    107160,
+    107180,
+    107204,
+    107316,
+    107336,
+    107404
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 106940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 106972,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/REV-069/14-blast-radius.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c069\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c069",
+    "repo_head": "86d5807ed9857808bb2261a0e089c958ce497767",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
