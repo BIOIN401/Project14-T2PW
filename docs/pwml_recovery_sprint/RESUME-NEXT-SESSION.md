@@ -116,7 +116,14 @@ that assertion fires in every agent worktree, and four further tests gated on
 
 **So on the C-069 merge this entry does not go 2 → 1. It goes 2 → 0, and the 2 was never
 right for integration.** Post-merge expectation, stated before the merge so it is a
-prediction and not a rationalisation: **36 passed, 0 failed.**
+prediction and not a rationalisation: **37 passed, 0 failed.**
+
+> **My first stated prediction was 36, and it was wrong.** I subtracted the failure without
+> adding the test the card introduces. REV-069 measured the real figure by junctioning the
+> primary's `.venv` into a base worktree carrying the tip's two files: **`37 passed in 7.16s`**,
+> against the primary's own `1 failed, 35 passed`. So the delta is `1 failed / 35 passed` →
+> `0 failed / 37 passed` — one red closed **and** one new classifier test added. Recorded
+> because a prediction is only worth stating if it is also corrected when measured.
 
 **Why it matters beyond one line.** This is the same class of error as F-068 and PACK 11
 RULING 1 — a number measured correctly, in the wrong environment, then carried forward as if
