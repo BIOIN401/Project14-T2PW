@@ -1,0 +1,107 @@
+{
+  "schema_version": 2,
+  "card": "C-057",
+  "base_sha": "ca6bf13",
+  "status": "RESOLVED under a narrow boundary extension granted by the orchestrator in correction round 1. The delta is now STATED in the test file, in the house pattern. The tracked fixture was NOT regenerated and NOT modified.",
+  "grant": "Add a _with_c057_lineage_hashes helper to tests/test_c011_freeze_seam_golden_equivalence.py, in the established house pattern, and nothing else in that file. No other test, no src/, no fixture regeneration, no schema_version bump, and do not touch the pre-charged reds.",
+  "what_moved": "That file passed at ca6bf13 (2 passed, inside the 39 passed on a base worktree carrying .env) and failed x2 at aa4dac2. It passes at the corrected tip.",
+  "why": "Its golden pins the frozen payload digest per leg. C-057 writes provenance_lineage onto the process rows strict quarantine EXCLUDES. A quarantined row is deleted from the payload, so on most legs the attribution never reaches the frozen graph -- but where the excluded row is a LOCKED reaction, _reconcile_locked_reactions keeps its retained copy under payload.quarantined_locked_reactions, and the digest moves with it. PRODUCT_CONTRACT:178 REQUIRES that it move: lineage must not change graph equivalence, but lineage changes must remain detectable.",
+  "fixture_untouched": {
+    "path": "docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json",
+    "git_status": "unmodified; the only commit that has ever touched it remains C-011 8956a57",
+    "why_not_regenerated": "The golden is named as a BEFORE document. Rewriting it destroys the property it exists to hold -- REV-051 standing precedent, that re-pointing an assertion so it passes in both configurations destroys what it guards. The file own two precedents say the same thing in situ: the C-030 comment reads stated here instead of being absorbed by a rewritten fixture."
+  },
+  "measurement": {
+    "how": "The generator own in-memory path at the tip, comparing the fixture against BOTH documents the file builds -- _document(None), the extracted seam, and _document(BASE_SHA), the base blob. The tracked fixture was never written.",
+    "identical_on_both_documents": true,
+    "legs_in_fixture": 39,
+    "legs_that_move": 7,
+    "fields_that_move": [
+      "leg.canonical_payload_sha256",
+      "leg.final_stage3_gate_report.payload_sha256"
+    ],
+    "one_digest_recorded_twice": "leg.canonical_payload_sha256 equals leg.final_stage3_gate_report.payload_sha256 on all 35 report-writing legs, on both sides. The helper asserts it rather than assuming it, so the two recordings cannot drift apart.",
+    "gate_report_keys_that_do_NOT_move": [
+      "connectivity",
+      "errors",
+      "normalization_stats",
+      "ok",
+      "phase",
+      "report_schema_version",
+      "stage"
+    ],
+    "leg_fields_outside_the_report_that_move": [],
+    "top_level_keys_that_move": [],
+    "keys_added_removed_or_renamed": 0,
+    "fixture_bytes_before": 345053,
+    "fixture_bytes_after_hypothetical_regeneration": 345053,
+    "refusal_legs": "4 legs freeze nothing: they carry canonical_payload_sha256 empty and an empty gate report on both sides, and the helper asserts a refusal leg did not grow one.",
+    "legs": {
+      "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict": {
+        "before": "56e568b43fe3cbcc2df79e564a6af3b5b0b509c18c97d5b310fbd910fd48df58",
+        "after": "be0192d98a5d08b2f7fe94a61a25f9591ddded2b02552632b8bf52119f280bc7"
+      },
+      "runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict": {
+        "before": "e24a5aa89234f89eddee17240dbe07d05d9be8f530514aee720cc43685097749",
+        "after": "681c7668fa4b94b1e6fadf07c3e3488061865cc6bcbe64ae75ca29958e329133"
+      },
+      "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict": {
+        "before": "c3476460c562056b26158ecba0b54471a2f0c1a14e1da467b6c6e38e6798d604",
+        "after": "1098b4326fc61d0aa271faaa3cce62b26363fc9ce452cd101488ccca73063bce"
+      },
+      "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict": {
+        "before": "f0ad32bda6d471fb36338381ee94471112f3676bbb0b207f30bd5efbd61dfc15",
+        "after": "a86351d23d97dcc9ef45de7628c4a97b4968c751b7be1f5f06db22c9e4a72b83"
+      },
+      "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict": {
+        "before": "01a9c800e8e97922c11e2135c4baa2cb0689db08b0480478ed56d74458b94171",
+        "after": "a4a242737df2022cf746ae26b7f3108ff1c275ec5380b63e41506f3b35c547d6"
+      },
+      "runs/2026-08-02_2130/papers/PMC12096016/strict": {
+        "before": "ea8bb992b3c1ad87168d92687cf7f78b3f39436e86d482915858dce7ad9ba56b",
+        "after": "c4ab374bcf35308361a424746c1c125a7d5905b80ea4ddbf6601b7ecb7f937a4"
+      },
+      "runs/2026-08-02_2130/papers/PMC12421875/strict": {
+        "before": "3a108cbcce966f87962efe2a32cb4863a761d2e3c52abecf337a24947ba1585c",
+        "after": "137a9be099b80b3d2a926c663056b6574c6ecc2f28061a4456395ce8944557b8"
+      }
+    }
+  },
+  "why_the_helper_runs_innermost": "_with_c030_hash_keys asserts produced canonical_payload_sha256 equals report payload_sha256, which is what proves schema 2 payload projection agrees with the digest the seam already published. Measured: that is the exact line (:253) where the pre-C-057 stored digest breaks the file. Running _with_c057_lineage_hashes FIRST moves the stored digest, so the C-030 assertion keeps running against a live value. The C-030 property is preserved intact, not weakened to accommodate this delta.",
+  "non_vacuity": {
+    "why": "shared block section 6: if a card adds a guard, prove the guard can fail.",
+    "method": "The unperturbed pair passes; then seven single-field perturbations of the produced document, each fed to _with_c057_lineage_hashes alone.",
+    "result": "ALL SEVEN RED",
+    "perturbations": [
+      "biology moved: connectivity on a quiet leg -> AssertionError(<leg>: connectivity)",
+      "biology moved: normalization_stats on a moved leg -> AssertionError(<leg>: normalization_stats)",
+      "gate verdict moved: ok on a quiet leg -> AssertionError(<leg>: ok)",
+      "leg field outside the report moved: sbml_input_source -> AssertionError(<leg>: sbml_input_source)",
+      "an 8th leg digest moves, leg count wrong -> AssertionError(8)",
+      "the two recordings of one digest disagree -> AssertionError(<leg>)",
+      "a refusal leg grew a gate report -> AssertionError(<leg>)"
+    ],
+    "what_this_buys": "The first two are the ones that matter. connectivity and normalization_stats ARE the biology. A lineage write that had also changed the graph would move them, and this helper fails rather than absorbing it -- which is the difference between stating a delta and papering over one.",
+    "harness": "docs/pwml_recovery_sprint/evidence/c057_golden_delta_perturbations.py -- committed RUNNABLE in correction round 2, on the orchestrator ruling that the next card facing a golden move needs a harness it can point at its own helper, not a transcript it has to re-implement. Run: .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/c057_golden_delta_perturbations.py --tree .",
+    "harness_result_from_the_repo": "7/7 perturbations rejected, exit 0.",
+    "harness_is_itself_non_vacuous": "Swap _with_c057_lineage_hashes for a no-op that returns `before` unchanged and the harness reports all seven arms GREEN and exits 1. Measured. So a green run is evidence, not silence."
+  },
+  "one_way_limitation_disclosed": "_without_c052_path_keys can strip the C-052 delta because its keys are additive. The digest this delta REPLACES is not stored anywhere, so its inverse is not expressible and no _without_c057_ helper is possible. Running the __main__ regeneration block in that file would therefore ABSORB this delta into the fixture -- the exact failure the mechanism exists to prevent. __main__ was NOT modified, being outside the grant; the limitation is stated in the constant comment in the file itself so the next person meets it before running it.",
+  "graph_equivalence": "canonical_graph_sha256 moves on ZERO of the 39 fixture legs and ZERO of the 78 cohort leg runs. Only the payload-integrity hash moves. See c057_cohort_equivalence.json.",
+  "correction_to_c057_cohort_equivalence_json": "That file c011_golden_delta.legs_whose_canonical_payload_sha256_moves lists NINE leg runs. Nine is the standalone probe count, which calls quarantine_and_close directly on the normalized payload. SEVEN is the count from the fixture own generator, which runs the whole freeze block, and SEVEN is the authoritative number for the fixture and the number the helper enforces. The nine is left in place rather than silently overwritten.",
+  "correction_round_2": {
+    "grant": "commit the perturbation driver (ceiling raised 1100 -> 1200); strengthen the one-way comment to state all three facts.",
+    "comment_now_states": [
+      "the delta is ONE-WAY and does not reverse like C-052's, stated as a do-not-assume-symmetry warning",
+      "no _without_c057_lineage_hashes exists or can be written, and WHY: C-052 ADDS keys so dropping them restores; this REPLACES a digest stored nowhere but the fixture, so once overwritten there is nothing to restore from",
+      "running __main__ WILL silently absorb it -- the write succeeds, the suite passes, and the fixture stops being the BEFORE document, committed by the one command documented as safe",
+      "so the fixture must not be regenerated while this delta stands, and retiring the BEFORE baseline is a product decision rather than a housekeeping step"
+    ],
+    "main_not_modified": "still outside the grant; the orchestrator is registering the hazard as a finding with an owner outside this card.",
+    "reran": "ONLY tests/test_c011_freeze_seam_golden_equivalence.py + tests/test_strict_quarantine_lineage.py.",
+    "summary_line": "27 passed in 12.82s",
+    "g11": "evidence/g11/C-057/39-c011-plus-lineage-r2.json",
+    "final_surviving_count": 0,
+    "not_rerun_and_why": "SMOKE, Chunk A, Chunk E and Chunk D were NOT re-run. src/ has not moved since aa4dac2 and the touched file is in none of those four selections, so SMOKE 465, Chunk A 126, Chunk E 174 and Chunk D 185/187 stand as measured there."
+  }
+}

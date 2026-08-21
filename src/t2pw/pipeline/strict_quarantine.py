@@ -58,6 +58,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
+from t2pw.pipeline import lineage
 from t2pw.pipeline.entity_identity import (
     has_protein_external_identity,
     is_generated_complex_wrapper,
@@ -1092,6 +1093,193 @@ def _weak_evidence_verdict(
     return f"confidence_below_floor:{float(value):.3f}<{float(confidence_floor):.3f}"
 
 
+# ── PRODUCT_CONTRACT section 3 attribution ──────────────────────────────────
+#
+# THIS STAGE IS A FILTER, NOT A SOURCE. It introduces no content, grounds
+# nothing and repairs nothing, so the only section 3 category it can populate is
+# the sixth -- "unresolved or excluded", which ``lineage.CONTRACT_CATEGORIES``
+# maps to ``("unresolved", "excluded")``. Attributing a SURVIVING row to this
+# stage would name quarantine as the provenance of content it did not create,
+# which inverts the clause's stated purpose ("so that false content can be
+# attributed empirically to Stage 1, RAG, inference, audit, mapping, gap
+# resolution or another stage"), and section 3's per-element sentence binds
+# "every EXTERNALLY ADDED entity and process". The closed ``lineage.ORIGINS``
+# vocabulary has no member meaning "retained unchanged", and ``lineage.py`` is
+# frozen: an honest attribution of a survivor is not available, and inventing
+# one would be worse than none.
+#
+# WHERE IT LANDS, AND WHY THAT IS THE ONLY REACHABLE TARGET. A quarantined
+# process row is physically deleted from the payload by
+# :func:`_drop_quarantined_processes`, so an entry written onto it reaches no
+# reader *through the payload*. It reaches one through the audit artifact:
+# :func:`quarantine_and_close` deep-copies each admitted row into ``originals``
+# AFTER this function returns, and files every quarantined row's copy under
+# ``quarantine_report["quarantined"][*]["original_process"]``, which
+# :func:`write_quarantine_artifacts` writes to ``quarantine_report.json``. That
+# is precisely the row a reviewer restores, so the reason it left rides with it
+# in one typed vocabulary instead of seven spellings of a free string. Rule 4 of
+# this module already guaranteed the removal was RECORDED; what this adds is the
+# six-fact form section 3 requires.
+#
+# WHAT IS DELIBERATELY NOT ATTRIBUTED, and why each is a product question rather
+# than an omission:
+#
+# * The three closure prunes discard the row object itself and keep only a
+#   summary dict (:func:`_prune_entities` replaces the bucket with ``kept``, and
+#   the sibling prunes do the same). The only carrier that survives them is a
+#   fixed-shape record inside ``removed_entity_report.json`` /
+#   ``graph_closure_iterations.json``. Growing that record is a REPORT-SCHEMA
+#   change, not a lineage write, and this module's own house rule bumps a
+#   schema_version for exactly that -- so it is not taken here.
+# * A process quarantined during closure rather than at admission
+#   (``QUARANTINED_DISCONNECTED``) is attributed by neither: its row was already
+#   deep-copied into ``originals`` while it was still accepted, and the only
+#   site that could write it, :func:`_revalidate_surviving_processes`, is
+#   outside this card's boundary.
+
+#: The origin for every decision this stage makes. C-015 splits section 3's
+#: sixth category in two: ``unresolved`` is "could not be grounded" and
+#: ``excluded`` is "deliberately removed". Every row this stage touches leaves
+#: because a strict rule removed it, so every entry is ``excluded``. The thing
+#: that "could not be grounded" is the PARTICIPANT, which this stage neither
+#: removes nor attributes -- reading its failure onto the process's record would
+#: attribute one row's fact to another.
+_QUARANTINE_LINEAGE_ORIGIN = "excluded"
+
+#: What is still uncertain once a process has been excluded, by admission state.
+#: Deliberately carries no pointer, index, counter or timestamp: :func:`_record_once`
+#: recognizes a repeat by CONTENT, so the same fact has to rebuild to an equal entry.
+_QUARANTINE_UNCERTAINTY: Dict[str, str] = {
+    QUARANTINED_UNMAPPED_ENTITY: (
+        "an essential participant resolved to nothing strict PWML can represent, so "
+        "the biology this process described is absent from the exported pathway"
+    ),
+    QUARANTINED_OUT_OF_SCOPE: (
+        "removed on the extractor's own scope verdict, which nothing at this stage "
+        "re-examined"
+    ),
+    QUARANTINED_WEAK_EVIDENCE: (
+        "removed on a declared confidence below the caller's floor, not on any "
+        "finding that the process is wrong"
+    ),
+    QUARANTINED_BROKEN_REFERENCE: (
+        "the row could not be serialized as strict PWML, so whether the biology it "
+        "named is real was never decided"
+    ),
+}
+
+#: For an admission state the map above does not name. Reachable only if a state
+#: is added without one, which is why it says less rather than guessing.
+_QUARANTINE_UNCERTAINTY_FALLBACK = (
+    "excluded from the exported pathway by strict quarantine; what it described "
+    "survives only in the quarantine artifact"
+)
+
+
+def _quarantine_lineage_entry(record: Mapping[str, Any]) -> lineage.LineageEntry:
+    """The section 3 attribution for one quarantined admission record.
+
+    ``support="unsupported"`` with no sources is what an unevidenced removal
+    looks like: nothing here retrieved a record stating this process is wrong,
+    and ``excluded`` is not one of ``lineage.SOURCED_ORIGINS``, so naming a
+    source would be inventing one. ``paper_explicit="not_evaluated"`` for the
+    same reason -- this stage never asks what the paper said, and C-015's
+    three-valued rule is that ``not_evaluated`` is never ``not_explicit``.
+
+    ``review_required`` is always true, and the ``uncertainty`` beside it says
+    what is open. Excluded biology is precisely the content section 3 exists to
+    make auditable; a reviewer who cannot see it cannot tell a correct removal
+    from a lost reaction.
+    """
+
+    state = str(record.get("state") or "")
+    reason = str(record.get("reason") or "") or state or "quarantined"
+    kind = str(record.get("process_kind") or "process")
+    return lineage.LineageEntry(
+        stage="quarantine",
+        origin=_QUARANTINE_LINEAGE_ORIGIN,
+        support="unsupported",
+        paper_explicit="not_evaluated",
+        reason=(
+            f"strict quarantine excluded this {kind} from the frozen graph "
+            f"({state or 'quarantined'}: {reason})"
+        ),
+        review_required=True,
+        uncertainty=_QUARANTINE_UNCERTAINTY.get(state, _QUARANTINE_UNCERTAINTY_FALLBACK),
+        sources=(),
+    )
+
+
+def _record_once(row: Dict[str, Any], entry: lineage.LineageEntry) -> bool:
+    """Append ``entry`` to ``row``'s lineage unless an equal entry is there.
+
+    Idempotent, additive and never fatal -- the three properties every merged
+    lineage writer carries, and all three have to live in the writer:
+
+    * **Idempotent.** :class:`lineage.Lineage` keeps duplicates by design (dedup
+      removes, and removal is what its append-only rule forbids) and
+      ``lineage.record`` re-emits everything it read, so one duplicate written
+      persists forever. A caller feeding a reduced graph back through quarantine
+      -- or a payload settled twice -- would otherwise stack identical entries.
+    * **Additive.** Any attribution an earlier stage wrote is re-emitted intact;
+      this stage can never erase another's.
+    * **Non-fatal.** A row carrying malformed stored lineage makes
+      ``lineage.read`` raise. Letting that escape would abort a quarantine that
+      had already reached a valid verdict -- a decision change this card is not
+      entitled to make -- so it is logged against the row and attribution for
+      that row alone is skipped.
+
+    Returns whether an entry was written.
+    """
+
+    try:
+        if entry in lineage.read(row).entries:
+            return False
+        lineage.record(row, entry)
+        return True
+    except lineage.LineageError as exc:
+        logger.warning(
+            "strict_quarantine: leaving %r unattributed, its stored %s is malformed: %s",
+            _row_name(row) or "<unnamed>",
+            lineage.LINEAGE_KEY,
+            exc,
+        )
+        return False
+
+
+def _attribute_quarantined_processes(
+    processes: Mapping[str, Any], records: Sequence[Mapping[str, Any]]
+) -> int:
+    """Write this stage's section 3 attribution onto every row it quarantined.
+
+    Runs LAST, after every record in ``records`` is built, for two reasons. The
+    admission decisions are final by then, so this pass can only describe them:
+    it admits nothing, quarantines nothing, removes nothing and reorders
+    nothing. And ``row_digest`` is a DENYLIST projection that copies every key it
+    finds, so a row written before its digest was taken would move
+    ``admissions[*]["detail"]["row"]`` -- an existing report field this card may
+    not touch.
+
+    Accepted rows are deliberately left alone. They survive into the payload,
+    and this stage has nothing true to say about where they came from.
+
+    Returns the number of entries written. The caller discards it: attribution
+    is an OUTPUT of the decisions and never an input to them.
+    """
+
+    written = 0
+    for record in records:
+        if record.get("state") not in QUARANTINE_STATES:
+            continue
+        rows = _safe_list(processes.get(str(record.get("bucket") or "")))
+        index = int(record.get("index") or 0)
+        if not (0 <= index < len(rows)) or not isinstance(rows[index], dict):
+            continue
+        if _record_once(rows[index], _quarantine_lineage_entry(record)):
+            written += 1
+    return written
+
+
 def _admit_processes(
     payload: Mapping[str, Any],
     registry: _Registry,
@@ -1100,7 +1288,14 @@ def _admit_processes(
     core_terms: Sequence[str],
     confidence_floor: Optional[float],
 ) -> List[Dict[str, Any]]:
-    """One admission record per process, in payload order."""
+    """One admission record per process, in payload order.
+
+    Writes no payload row's biology: it neither adds, removes nor reorders a
+    row, and edits no field any gate, hash or exporter reads. Its one write is
+    the PRODUCT_CONTRACT section 3 attribution the block above describes --
+    ``provenance_lineage`` on the rows it quarantines, appended by a final pass
+    once every record here is final.
+    """
 
     processes = _safe_dict(payload.get("processes"))
     core_term_norms = [_normalize(term) for term in core_terms if _normalize(term)]
@@ -1200,6 +1395,10 @@ def _admit_processes(
                     "detail": {},
                 }
             )
+    # Deliberately last, and deliberately after every record is built: the
+    # admission decisions are final, so this pass can only describe them. Its
+    # census is discarded for the same reason -- see the section 3 note above.
+    _attribute_quarantined_processes(processes, records)
     return records
 
 

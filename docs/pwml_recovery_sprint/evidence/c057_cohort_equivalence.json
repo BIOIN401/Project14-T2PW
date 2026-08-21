@@ -1,0 +1,385 @@
+{
+  "base_has_lineage_writer": false,
+  "base_module": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c057-base\\src\\t2pw\\pipeline\\strict_quarantine.py",
+  "base_sha": "ca6bf13",
+  "c011_golden_delta": {
+    "fixture": "docs/pwml_recovery_sprint/evidence/c011_freeze_seam_before.json",
+    "legs_in_fixture": 39,
+    "legs_whose_canonical_graph_sha256_moves": [],
+    "legs_whose_canonical_payload_sha256_moves": [
+      "2026-07-28_0919/PMC13278307__an-overview/strict::strict",
+      "2026-07-28_2122/PMC12312563__structures-/strict::strict",
+      "2026-07-28_2122/PMC12421875__the-growth-/strict::strict",
+      "2026-07-28_2122/PMC12444477__the-regulat/strict::strict",
+      "2026-07-28_2122/PMC12657337__high-level-/strict::strict",
+      "2026-07-28_2122/PMC12856317__a-reversibl/strict::strict",
+      "2026-08-02_2130/PMC12096016/strict::strict",
+      "2026-08-02_2130/PMC12421875/strict::strict",
+      "2026-08-02_2130/PMC12657337/strict::strict"
+    ],
+    "note": "test_c011_freeze_seam_golden_equivalence pins canonical_payload_sha256 per leg. It PASSES at ca6bf13 and FAILS x2 at this tip. NOT regenerated here: the fixture is C-011's and outside this card's ownership boundary. Merge rule 4 delta below."
+  },
+  "card": "C-057",
+  "leg_runs": 78,
+  "moved": {
+    "canonical_payload_sha256": {
+      "leg_runs": 25,
+      "which": [
+        "2026-07-27_1623/PMC12312563__structures-/research::strict",
+        "2026-07-27_1623/PMC12444477__the-regulat/research::strict",
+        "2026-07-28_0919/PMC13278307__an-overview/strict::strict",
+        "2026-07-28_2122/PMC12312563__structures-/research::strict",
+        "2026-07-28_2122/PMC12312563__structures-/strict::strict",
+        "2026-07-28_2122/PMC12421875__the-growth-/research::strict",
+        "2026-07-28_2122/PMC12421875__the-growth-/strict::strict",
+        "2026-07-28_2122/PMC12444477__the-regulat/research::strict",
+        "2026-07-28_2122/PMC12444477__the-regulat/strict::strict",
+        "2026-07-28_2122/PMC12657337__high-level-/research::strict",
+        "2026-07-28_2122/PMC12657337__high-level-/strict::strict",
+        "2026-07-28_2122/PMC12856317__a-reversibl/research::strict",
+        "2026-07-28_2122/PMC12856317__a-reversibl/strict::strict",
+        "2026-07-28_2122/PMC13233763__glycine-the/research::strict",
+        "2026-08-02_2130/PMC12096016/research::strict",
+        "2026-08-02_2130/PMC12096016/strict::strict",
+        "2026-08-02_2130/PMC12180156/research::strict",
+        "2026-08-02_2130/PMC12312563/research::strict",
+        "2026-08-02_2130/PMC12421875/research::strict",
+        "2026-08-02_2130/PMC12421875/strict::strict",
+        "2026-08-02_2130/PMC12444477/research::strict",
+        "2026-08-02_2130/PMC12452463/research::strict",
+        "2026-08-02_2130/PMC12657337/research::strict",
+        "2026-08-02_2130/PMC12657337/strict::strict",
+        "2026-08-02_2130/PMC12856317/research::strict"
+      ]
+    },
+    "payload_sha256": {
+      "leg_runs": 25,
+      "which": [
+        "2026-07-27_1623/PMC12312563__structures-/research::strict",
+        "2026-07-27_1623/PMC12444477__the-regulat/research::strict",
+        "2026-07-28_0919/PMC13278307__an-overview/strict::strict",
+        "2026-07-28_2122/PMC12312563__structures-/research::strict",
+        "2026-07-28_2122/PMC12312563__structures-/strict::strict",
+        "2026-07-28_2122/PMC12421875__the-growth-/research::strict",
+        "2026-07-28_2122/PMC12421875__the-growth-/strict::strict",
+        "2026-07-28_2122/PMC12444477__the-regulat/research::strict",
+        "2026-07-28_2122/PMC12444477__the-regulat/strict::strict",
+        "2026-07-28_2122/PMC12657337__high-level-/research::strict",
+        "2026-07-28_2122/PMC12657337__high-level-/strict::strict",
+        "2026-07-28_2122/PMC12856317__a-reversibl/research::strict",
+        "2026-07-28_2122/PMC12856317__a-reversibl/strict::strict",
+        "2026-07-28_2122/PMC13233763__glycine-the/research::strict",
+        "2026-08-02_2130/PMC12096016/research::strict",
+        "2026-08-02_2130/PMC12096016/strict::strict",
+        "2026-08-02_2130/PMC12180156/research::strict",
+        "2026-08-02_2130/PMC12312563/research::strict",
+        "2026-08-02_2130/PMC12421875/research::strict",
+        "2026-08-02_2130/PMC12421875/strict::strict",
+        "2026-08-02_2130/PMC12444477/research::strict",
+        "2026-08-02_2130/PMC12452463/research::strict",
+        "2026-08-02_2130/PMC12657337/research::strict",
+        "2026-08-02_2130/PMC12657337/strict::strict",
+        "2026-08-02_2130/PMC12856317/research::strict"
+      ]
+    }
+  },
+  "per_leg_payload_hash_delta": {
+    "2026-07-27_1623/PMC12312563__structures-/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "e46a2ef494c75853e56507604f5d83e821b3987e18bc9bfd4279e51675ed5ef9",
+        "c40190eee4cc463141d44db05242b26d8a982b0a345d8f3983589a5bde3ceb52"
+      ],
+      "payload_sha256": [
+        "sha256:e9a2c28ac410f8b0",
+        "sha256:e968789edb064985"
+      ]
+    },
+    "2026-07-27_1623/PMC12444477__the-regulat/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "416a38ed70edca8bb5aac899a3fb192138a05f156369a053a7200c42e5061669",
+        "3e752c5e21577a4ddfdb287222dd21a4862922732823200b36b75a1419ccff6d"
+      ],
+      "payload_sha256": [
+        "sha256:b49a0f0625cd014d",
+        "sha256:4a58e9ef65cc1f50"
+      ]
+    },
+    "2026-07-28_0919/PMC13278307__an-overview/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "56e568b43fe3cbcc2df79e564a6af3b5b0b509c18c97d5b310fbd910fd48df58",
+        "be0192d98a5d08b2f7fe94a61a25f9591ddded2b02552632b8bf52119f280bc7"
+      ],
+      "payload_sha256": [
+        "sha256:378205b6a2796f84",
+        "sha256:b6ff051b28338694"
+      ]
+    },
+    "2026-07-28_2122/PMC12312563__structures-/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "7c18e9889dd29b8ec5cf41108d82778142130594ccab8ffd98dc92d1e9536870",
+        "c071849c13441252a8129a152c0d72d0beed6944019ec09d07c6ea6e0289ebe0"
+      ],
+      "payload_sha256": [
+        "sha256:754896710ca68150",
+        "sha256:e9ba8361d92b242d"
+      ]
+    },
+    "2026-07-28_2122/PMC12312563__structures-/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "9bcf7ccec6e32420181ee82bea44155a29652cad775b81e11f7a70549e9c28ad",
+        "41f80c7bc55efc6860a41692de6ecc67c9716f7de8bac6ca2e60909408e35840"
+      ],
+      "payload_sha256": [
+        "sha256:1950709fd35ed6d1",
+        "sha256:ebf6943661ddcaad"
+      ]
+    },
+    "2026-07-28_2122/PMC12421875__the-growth-/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "2337dbbcf8f6516ba077b3d3fa081b05e798e7147059dab50a8e25d4f750b757",
+        "4a86683c60086cc28e343aeb9765b901be4af5b9515cb413c2543f02d1860798"
+      ],
+      "payload_sha256": [
+        "sha256:a9e1483a185fede8",
+        "sha256:9a7859b51a907838"
+      ]
+    },
+    "2026-07-28_2122/PMC12421875__the-growth-/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "e24a5aa89234f89eddee17240dbe07d05d9be8f530514aee720cc43685097749",
+        "681c7668fa4b94b1e6fadf07c3e3488061865cc6bcbe64ae75ca29958e329133"
+      ],
+      "payload_sha256": [
+        "sha256:2a503310a79b5eb1",
+        "sha256:2cdd3869e7faaf7f"
+      ]
+    },
+    "2026-07-28_2122/PMC12444477__the-regulat/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "c4508a0174fe374d3b607589a140bce81ec0f78d9a8433f6a7db2992ce43738d",
+        "02eff239b55013680edca591631ab531c591e4b41c94d8024d834be0b989eb4d"
+      ],
+      "payload_sha256": [
+        "sha256:48e717faa7a52e4e",
+        "sha256:d40ca63df7fc78e4"
+      ]
+    },
+    "2026-07-28_2122/PMC12444477__the-regulat/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "c3476460c562056b26158ecba0b54471a2f0c1a14e1da467b6c6e38e6798d604",
+        "1098b4326fc61d0aa271faaa3cce62b26363fc9ce452cd101488ccca73063bce"
+      ],
+      "payload_sha256": [
+        "sha256:d9240ac5dd0afc59",
+        "sha256:3822506d3af6c484"
+      ]
+    },
+    "2026-07-28_2122/PMC12657337__high-level-/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "5f549b7be197db60ceb84c92b08a29f0aa66e5c927e5c0fa06ecc9943d9ae75c",
+        "536c012c9fc866b766a900990fe6ca8cd4e42ae1b8977db2edc8ca73131ca744"
+      ],
+      "payload_sha256": [
+        "sha256:5a997505db2c0dab",
+        "sha256:db1e8060100559a2"
+      ]
+    },
+    "2026-07-28_2122/PMC12657337__high-level-/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "f0ad32bda6d471fb36338381ee94471112f3676bbb0b207f30bd5efbd61dfc15",
+        "a86351d23d97dcc9ef45de7628c4a97b4968c751b7be1f5f06db22c9e4a72b83"
+      ],
+      "payload_sha256": [
+        "sha256:72c8699fdc6be59a",
+        "sha256:39c9e21fe31fa19f"
+      ]
+    },
+    "2026-07-28_2122/PMC12856317__a-reversibl/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "a674c28277460a29e034fe3fdfa75ffdd88311993889c7f62085e2600dbe3433",
+        "6188c93e6835c59ac7809070ac4ac6997c34a097c84aa308250b60f5e7771d3e"
+      ],
+      "payload_sha256": [
+        "sha256:baf93a1b2297d7bc",
+        "sha256:d52c48f414a447cf"
+      ]
+    },
+    "2026-07-28_2122/PMC12856317__a-reversibl/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "01a9c800e8e97922c11e2135c4baa2cb0689db08b0480478ed56d74458b94171",
+        "a4a242737df2022cf746ae26b7f3108ff1c275ec5380b63e41506f3b35c547d6"
+      ],
+      "payload_sha256": [
+        "sha256:07a9de94f41e35be",
+        "sha256:220f18ff8a0b3679"
+      ]
+    },
+    "2026-07-28_2122/PMC13233763__glycine-the/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "f8553477421d8d59271ef07ec156bf1577163ba7e9ecc40f812feb93023be4f2",
+        "55108c68568640cbee0aba7cb05811f5aca5ada99dc2a6dba28141011c21a67d"
+      ],
+      "payload_sha256": [
+        "sha256:d81e49cbc5dba6f7",
+        "sha256:eb28a91546212b60"
+      ]
+    },
+    "2026-08-02_2130/PMC12096016/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "2b3fa749dcaf14656a2c26c40944752a5b8210329d7459b453ed2fe15f767956",
+        "192d0e782f803493742780d2a3856d1249bbe2b276b06d8c0fe2534741c260f2"
+      ],
+      "payload_sha256": [
+        "sha256:f913867e877b606a",
+        "sha256:10d6bdcf04c3bd17"
+      ]
+    },
+    "2026-08-02_2130/PMC12096016/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "ea8bb992b3c1ad87168d92687cf7f78b3f39436e86d482915858dce7ad9ba56b",
+        "c4ab374bcf35308361a424746c1c125a7d5905b80ea4ddbf6601b7ecb7f937a4"
+      ],
+      "payload_sha256": [
+        "sha256:809df22add228e44",
+        "sha256:98c13a597ba894a2"
+      ]
+    },
+    "2026-08-02_2130/PMC12180156/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "e919c484102a79c128bde368f70c538e3195cd9ca0b26f228449bfb90a335cd7",
+        "13133a4310ea4d2777d7f2c0051b0b0d28b886ba8adc35ac3bc9566f7742c8e4"
+      ],
+      "payload_sha256": [
+        "sha256:3a3a2c0025acfea5",
+        "sha256:5d00c1b1814c0089"
+      ]
+    },
+    "2026-08-02_2130/PMC12312563/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "b60d74962b1272eee18f0cf3c83f961af73f79db0f96cb931276d2972b15c635",
+        "a5e6f73f4e27cb87a5cc8348782e4dd067efc8e3471dcd83dab02e8175abe193"
+      ],
+      "payload_sha256": [
+        "sha256:84f9abf83a342737",
+        "sha256:e7fce441e999e93f"
+      ]
+    },
+    "2026-08-02_2130/PMC12421875/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "a8fa28c4a9241d8c97eec01ee708cd8b399d6f5fae881d97b7fa96f7576a6fab",
+        "8793224fe3be99e3ae728f820f73e136e3b6b084cc2af595140bd8ecb3e1bc37"
+      ],
+      "payload_sha256": [
+        "sha256:9d9d197b4869544a",
+        "sha256:cef8ef0d5c9117d9"
+      ]
+    },
+    "2026-08-02_2130/PMC12421875/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "3a108cbcce966f87962efe2a32cb4863a761d2e3c52abecf337a24947ba1585c",
+        "137a9be099b80b3d2a926c663056b6574c6ecc2f28061a4456395ce8944557b8"
+      ],
+      "payload_sha256": [
+        "sha256:b3adde0d1fafe94f",
+        "sha256:591688cdf90fbbdf"
+      ]
+    },
+    "2026-08-02_2130/PMC12444477/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "99818b82022e9628277c18cd616486ec3c91416cf3b2bccd6664fad22ffcf7f6",
+        "7bdfe62e0ebb2c8fee9db7150374844d5bd987f1538b3cc6319e5f7412f42f07"
+      ],
+      "payload_sha256": [
+        "sha256:68040f4127213e25",
+        "sha256:38c2fc137c62ef5e"
+      ]
+    },
+    "2026-08-02_2130/PMC12452463/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "ee09b280e53ff98954905d7859e5d9df18252bdb6535bfd3496106af5758ad9e",
+        "a418d45bb455548235d3262e420a496a703a08c2c0155a1124119fb0f3387252"
+      ],
+      "payload_sha256": [
+        "sha256:8e13a53c5bcae2c6",
+        "sha256:13e8394efa91c1b3"
+      ]
+    },
+    "2026-08-02_2130/PMC12657337/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "3a6b052e695ccabce8e28eef7f75025025efa79ab550b7be2fea9ca1058564a9",
+        "befdc8b929934a6e94c2fe36816bc60feeecc7970a312998d58393beb9e184b4"
+      ],
+      "payload_sha256": [
+        "sha256:1c9a5cd20fd617ff",
+        "sha256:e5de9f926230905a"
+      ]
+    },
+    "2026-08-02_2130/PMC12657337/strict::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "afc6095891fdaca09f745cf110960fb05f9f42a4de1f9925aa4503b95d8f5a23",
+        "75ecba77e966c164a3c07fcba750d29b9f6abc4436df958e270da01882b7ea12"
+      ],
+      "payload_sha256": [
+        "sha256:f84733ff4f7393d9",
+        "sha256:d664f3029f226c32"
+      ]
+    },
+    "2026-08-02_2130/PMC12856317/research::strict": {
+      "canonical_graph_sha256_unchanged": true,
+      "canonical_payload_sha256": [
+        "632e6f681f0a88e762750006cb400bfe0ae1195cc9d56a7be6f29228ed16ea8b",
+        "a38ef7265e6d6e18e049d553d60a8f365d9c78d4859d53b743f2cb450d3d0494"
+      ],
+      "payload_sha256": [
+        "sha256:7a4ea098c4e94220",
+        "sha256:e08a9f915205abea"
+      ]
+    }
+  },
+  "quarantine_entries_at_base": 0,
+  "quarantine_entries_in_quarantine_report_at_tip": 932,
+  "quarantine_entries_in_saved_payload_at_tip": 125,
+  "report_fields_that_moved": [
+    "resulting_payload_hash"
+  ],
+  "schema_version": 1,
+  "tip_has_lineage_writer": true,
+  "tip_module": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c057-lineage\\src\\t2pw\\pipeline\\strict_quarantine.py",
+  "unchanged_everywhere": [
+    "canonical_graph_sha256",
+    "surviving",
+    "admissions",
+    "removed",
+    "release",
+    "closure",
+    "input_payload_mutated"
+  ],
+  "what_this_is": "A/B over every leg of the frozen baseline cohort, both export modes, run through docs/pwml_recovery_sprint/evidence/c057_lineage_equivalence.py with --src pointed at a base worktree and at the card worktree. Both trees carry .env (F-051 control parity). The full 2 MB censuses are the probe's output; this is their verdict.",
+  "where_the_payload_entries_landed": [
+    "/quarantined_locked_reactions/*/original_reaction"
+  ]
+}
