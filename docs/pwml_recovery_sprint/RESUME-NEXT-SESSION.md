@@ -17,9 +17,28 @@
 |---|---|
 | Branch | `sprint/pwml-recovery` |
 | Session start tip | `e616846de75e2098e3fb76592665955b3cfe3bbc` |
-| **Current tip** | `81b8c3ea56d73ad7c28b9e4c4b871e12e3c6dc78` — pushed, `local = origin = ls-remote` verified after every push |
-| Cards merged this session | **C-070** (`09f7156`) |
+| **Current tip** | `839f529bbd6bb26d6975c5df04e44b143cccaade` — pushed, `local = origin = ls-remote` verified after every push |
+| Cards merged this session | **C-070** (`09f7156`), **C-069** (`8a93da0`), **C-071** (`e4d92fc`) — **the card queue is CLEAR** |
+| Decisions recorded | **D-056 … D-061** |
 | Merges to `main` | **none, and none permitted** |
+
+### ⚠ Machine crashed mid-session, 2026-08-21 — verified clean on restart
+
+The crash happened after the C-071 merge and its post-merge gates, during the T-101 pre-flight.
+**Nothing was left dirty.** Verified on restart, all four independently:
+
+* `local = origin = ls-remote` at `839f529`; no merge in progress; empty index.
+* **`C:\t\heavylock` FREE** — no stale lock. `bounded_run.py` releases from `finally`, and the
+  Job Object's `KILL_ON_JOB_CLOSE` did its job even through a hard crash.
+* **Zero orphaned Python processes** — only the two protected `ms-python.isort` IDE servers
+  (new PIDs; the IDE restarted with the machine).
+* **No unpromoted G11 staging reservation anywhere in the tree.**
+* Protected user state and the product-owner edit both intact, `35 insertions / 2 deletions`,
+  `sha256:e50a248b…` unchanged.
+
+**That is worth recording as evidence, not just reassurance:** the wrapper's lifecycle
+guarantees held across an actual unplanned power loss, which is a stronger test than any
+mutation arm.
 
 ## 2. Baselines re-measured at tip — use these, do not re-derive
 
