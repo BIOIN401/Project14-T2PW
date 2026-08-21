@@ -1,0 +1,77 @@
+{
+  "release_status": {
+    "strict_contract_failure": {
+      "completeness": null,
+      "coverage_evaluated": false,
+      "expansion_blocked_reason": "",
+      "missing_anchors": [],
+      "pipeline_executed": true,
+      "reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "retrieval_attempts": null,
+      "semantic_check_evaluability": [],
+      "semantic_evaluation": "not_evaluated",
+      "semantic_failed_checks": [],
+      "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+      "status": "diagnostic_only",
+      "strict_acceptance_eligible": false,
+      "strict_gates_passed": false
+    },
+    "strict_gate_failure": {
+      "completeness": null,
+      "coverage_evaluated": false,
+      "expansion_blocked_reason": "",
+      "missing_anchors": [],
+      "pipeline_executed": true,
+      "reasons": [
+        "strict_technical_gates_blocked_export"
+      ],
+      "retrieval_attempts": null,
+      "semantic_check_evaluability": [],
+      "semantic_evaluation": "not_evaluated",
+      "semantic_failed_checks": [],
+      "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+      "status": "diagnostic_only",
+      "strict_acceptance_eligible": false,
+      "strict_gates_passed": false
+    }
+  },
+  "tuples": {
+    "input_timeout": [
+      "timeout|input|timeout",
+      "extraction did not finish inside the time budget",
+      "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"
+    ],
+    "research_pass": [
+      "pass|research_report|",
+      "research run completed; no RAG synthesis in this run, so no citation report was produced",
+      "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"
+    ],
+    "strict_contract_failure": [
+      "fail|post_pipeline|contract",
+      "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary",
+      "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205"
+    ],
+    "strict_export_not_ok": [
+      "fail|pwml_export|unknown",
+      "PWML export failed: the gate rejected the payload",
+      "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"
+    ],
+    "strict_gate_failure": [
+      "fail|post_pipeline|contract",
+      "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates",
+      "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b"
+    ],
+    "strict_no_pwml_button": [
+      "fail|pwml_export|unknown",
+      "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached",
+      "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"
+    ],
+    "strict_pwml_export": [
+      "pass|pwml_export|",
+      "strict run completed; pathway.review_required.pwml is 43 bytes",
+      "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"
+    ]
+  }
+}

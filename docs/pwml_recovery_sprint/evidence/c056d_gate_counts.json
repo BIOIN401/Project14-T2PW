@@ -1,0 +1,99 @@
+{
+  "task": "C-056d",
+  "base_sha": "40fdb234e84325333979627a6ab051cdaa9c2b7d",
+  "purpose": "literal pytest COUNTS, verbatim, for every gate C-056d ran -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10)",
+  "tree": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\agent-c056d-gate-carry (.env present, F-051 control parity)",
+  "smoke": {
+    "expected_per_COUNT_CORRECTIONS": 465,
+    "measured": 465,
+    "matches_expected": true,
+    "failures": 0,
+    "summary_line_verbatim": "465 passed in 59.81s",
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/08-c056d-smoke-and-preflight.json",
+    "final_surviving_count": 0
+  },
+  "chunk_d": {
+    "expected_total": 187,
+    "expected_on_an_env_carrying_tree": "185/187, core 159/160",
+    "partition_proof_verbatim": "union=187 monolithic=187 missing=0 extra=0 SETS_EQUAL=True",
+    "core_verbatim": "[chunk-d] core/run-core [5 files]: passed=159/160, failed=1, exit=1, exit_reason=nonzero",
+    "core_failure": "tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance -- F-065, PRE-CHARGED, .env-conditional, NOT attributable to this diff",
+    "s8_verbatim": "4 of 4 nodes ok (node00..node03)",
+    "qb_verbatim": "23 nodes run, 22 ok, 1 red",
+    "qb_failure": "node15 tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block -- PRE-CHARGED whenever PathBank is reachable, hotspot 9, file NOT touched",
+    "measured_pass_total": 185,
+    "matches_expected": true,
+    "gate_line_verbatim": "[chunk-d] jobs=28 executed=26/187 omissions=161 additions=0 failed=['run-core=passed=159/160, failed=1, exit=1, exit_reason=nonzero', 'node15=passed=0/1, failed=1, exit=1, exit_reason=nonzero']",
+    "gate_line_note": "executed/omissions is NOT a partition defect: chunk_d_gate.py:299-302 adds a job's node set to `executed` ONLY when the job is green, so the 160-test core set and node15 are withheld by the two PRE-CHARGED reds. The authoritative set-identity proof is the partition line above, and it passed.",
+    "g11_outer_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/11-c056d-chunkd-outer.json",
+    "g11_node_reports": "docs/pwml_recovery_sprint/evidence/g11/C-056d/12-*.json .. 43-node26.json (self-allocated by --task)",
+    "final_surviving_count": 0
+  },
+  "focused_nine_files": {
+    "files": [
+      "tests/test_batch_driver.py",
+      "tests/test_batch_driver_seam_golden.py",
+      "tests/test_release_status_classification.py",
+      "tests/test_semantic_release_gating.py",
+      "tests/test_strict_quarantine_release_seam.py",
+      "tests/test_c056b_semantic_denominators.py",
+      "tests/test_c056c_semantic_evaluability.py",
+      "tests/test_batch_pwml_artifact_naming.py",
+      "tests/test_c056d_gate_failure_semantic_carry.py"
+    ],
+    "collected": 174,
+    "collected_note": "174 COLLECTED, not the 129 def-count the charter tabulates for the eight pre-existing files plus this card's 14 -- the difference is parameterization, which the charter names as expected. Both are valid measurements; this is what was collected.",
+    "summary_line_verbatim": "174 passed in 58.57s",
+    "failures": 0,
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/44-c056d-focused-9-final.json",
+    "final_surviving_count": 0,
+    "earlier_run_before_the_golden_rebaseline": {
+      "summary_line_verbatim": "1 failed, 173 passed in 83.30s (0:01:23)",
+      "only_failure": "tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/04-c056d-focused-9-tip-1.json",
+      "note": "the authorized merge-rule-4 baseline move, before GOLDEN was updated"
+    }
+  },
+  "batch_preflight": {
+    "tip": {
+      "summary_line_verbatim": "2 failed, 30 passed, 4 skipped in 7.48s",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/09-c056d-preflight-tip.json",
+      "missed_imports_verbatim": "['t2pw.pipeline.strict_quarantine', 't2pw.pipeline.release_status', 't2pw.pipeline.release_status', 't2pw.pipeline.release_status', 't2pw.pipeline.strict_quarantine', 't2pw.pipeline.release_status']"
+    },
+    "base": {
+      "summary_line_verbatim": "2 failed, 30 passed, 4 skipped in 7.85s",
+      "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-056d/10-c056d-preflight-base.json",
+      "missed_imports_verbatim": "['t2pw.pipeline.strict_quarantine', 't2pw.pipeline.release_status', 't2pw.pipeline.release_status', 't2pw.pipeline.release_status']"
+    },
+    "delta_disclosed": "SAME two tests red at base and at tip, SAME counts. But test_every_import_driver_defers_is_covered_by_the_preflight's already-failing `missed` list GROWS 4 -> 6: _gate_failure_semantic_carry defers one t2pw.pipeline.release_status and one t2pw.pipeline.strict_quarantine import, matching the deferred-import house style of _finalize_gate_failure, _frozen_release_record and _add_identity_artifacts. The cure the message names is runner.CHILD_IMPORTS -- runner.py is C-032's and outside this card's boundary, and adding the entries would turn a PRE-CHARGED red GREEN, which is a baseline move no card may absorb silently. Reported, not fixed."
+  },
+  "g9_base_proof": {
+    "arm": "CORRECTION",
+    "method": "git worktree at the base SHA 40fdb23 (NOT an export), .env copied in as an F-051 control on BOTH sides, only tests/test_c056d_gate_failure_semantic_carry.py added",
+    "summary_line_verbatim": "6 failed, 8 passed in 12.77s",
+    "behavioural_failures": [
+      "test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12452463] -- AssertionError: assert 'not_evaluated' == 'failed'",
+      "test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12096016] -- AssertionError: assert 'not_evaluated' == 'failed'",
+      "test_c056cs_evaluability_travels_with_the_verdict -- AssertionError: assert [] == [{'applicable'...}]",
+      "test_the_carry_cannot_manufacture_a_strict_success -- AssertionError: assert 'not_evaluated' == 'passed'",
+      "test_the_unwired_reason_no_longer_names_a_merged_card_as_pending -- AssertionError: assert 'C-056a' not in '...'"
+    ],
+    "symbol_absence_failures_NOT_counted_as_proof": [
+      "test_the_seam_reads_only_the_artifact_set_it_is_handed -- AttributeError: module 't2pw.batch.driver' has no attribute '_gate_failure_semantic_carry'. Labelled in-file as NOT a G9 proof arm."
+    ],
+    "tip_result": "14 passed in 11.45s",
+    "g11_reports": [
+      "docs/pwml_recovery_sprint/evidence/g11/C-056d/03-c056d-g9-base-proof-verbatim.json",
+      "docs/pwml_recovery_sprint/evidence/g11/C-056d/01-c056d-focused-new.json"
+    ],
+    "final_surviving_count": 0
+  },
+  "process": {
+    "every_job_through_bounded_run": true,
+    "every_pytest_had_basetemp_under_C_t": true,
+    "T2PW_OFFLINE_CURATOR": 1,
+    "pytest_n_auto_used": false,
+    "full_suite_unchunked_used": false,
+    "jobs_with_surviving_owned_processes": 0
+  }
+}

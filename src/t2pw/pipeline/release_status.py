@@ -56,8 +56,9 @@ SEMANTIC_NOT_EVALUATED = "not_evaluated"
 #: default: a caller that passes no semantic input gets exactly the pre-C-056a
 #: record, which is what keeps every unwired consumer byte-identical.
 SEMANTIC_INPUT_NOT_WIRED = (
-    "no semantic evaluation is wired into the runtime classification yet; this is "
-    "a missing input (C-056a), NOT a semantic failure and NOT a pass"
+    "no semantic verdict reached this classification: the caller passed no "
+    "semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT "
+    "a pass"
 )
 
 #: No report reached the classifier at all -- distinct from a report that ran and
