@@ -1260,3 +1260,52 @@ The card also **withdrew an argument of its own** that the reviewer had flagged 
 a two-module `rag` diff cannot reach F-065 or `qb` node15 because neither file references `t2pw.rag`. The
 greps hold; the inference does not, since `qb` drives the app through `maybe_run_rag`. Both reds now stand on
 pre-charged status alone.
+
+### PACK 9 RULING 10 — C-057's §3 answer overrides my charter's stated preference, and the card was right
+
+My C-057 charter posed the question and said option 1 — **attribute the surviving rows** — was *"the reading
+this charter finds most defensible."* **C-057 argued option 2 — attribute what was EXCLUDED, and nothing
+kept — and I accept it. My preference was wrong.**
+
+The reasoning, recorded because it is the durable part:
+
+* **Quarantine is a filter, not a source.** It introduces no content, so the only `PRODUCT_CONTRACT` § 3
+  category it can populate is the sixth — `CONTRACT_CATEGORIES["unresolved_or_excluded"] = ("unresolved",
+  "excluded")` (`lineage.py:79-86`).
+* **Option 1 could not be done honestly.** § 3's per-element sentence binds *"Every **externally added**
+  entity and process"*, and its stated purpose is attributing **false content** to the stage that introduced
+  it. Naming quarantine as the provenance of a row it merely let through runs that backwards. And the closed
+  `ORIGINS` tuple has **no member meaning "retained unchanged"**, so option 1 required either a fabricated
+  origin or an edit to frozen `lineage.py`. **The card took neither, and correctly did not stop-and-report,
+  because § 3 *can* be discharged without changing what survives.**
+* **A reader genuinely reaches the artifact.** `test_the_attribution_reaches_quarantine_report_json_on_disk`
+  reads it back **off the filesystem**; and quarantined *locked reactions* carry it into `final_mapped.json`
+  itself via `_reconcile_locked_reactions:1668` — 125 entries across the cohort.
+
+**The corroboration the card found is the strongest evidence it chose right:**
+`tests/test_pipeline_lineage_schema.py:25` already pairs `"excluded": ("quarantine", "unsupported",
+"not_evaluated")` as *"what a real writer would pair it with"*. **C-015 wrote down the expected shape before
+any writer existed, and C-057 matched it field for field without being pointed at it.**
+
+### PACK 9 RULING 11 — the c011 golden moves via the file's own house helper, never by regenerating the fixture
+
+`tests/test_c011_freeze_seam_golden_equivalence.py` passes at `ca6bf13` and fails ×2 at C-057's tip, because
+its golden pins `canonical_payload_sha256` and lineage is part of that hash by design.
+
+**GRANTED: a narrow boundary extension for C-057 to add `_with_c057_lineage_hashes` to that file, in the
+established house pattern, and nothing else in it.**
+
+* **The file already carries this pattern twice** — C-030's `_with_c030_hash_keys` (`:236-258`, *"stated here
+  instead of being absorbed by a rewritten fixture"*) and C-052's `_with_c052_path_keys` (`:281-302`). This
+  is the file's own documented mechanism, not a new precedent.
+* **Regenerating the tracked fixture is FORBIDDEN.** The golden is named as a BEFORE document; rewriting it
+  destroys the property it exists to hold. Same standing precedent as REV-051's refusal to re-point F-065.
+* **The delta is safe and was measured exactly before the grant:** 2 fields on 7 of 39 legs, size identical,
+  no top-level key moved, added, removed or renamed — and **`canonical_graph_sha256` moves on ZERO legs.**
+  Graph equivalence holds; only `canonical_payload_sha256` moves, which `PRODUCT_CONTRACT.md:178`
+  **requires** to remain detectable.
+
+**Generalisation:** where a fixture already carries a documented per-card helper for baseline moves, **that
+helper is the sanctioned mechanism and regeneration is not**. The helper keeps the fixture the BEFORE
+document it is named for, and keeps every prior card's delta legible instead of folding them all into one
+opaque rewrite.

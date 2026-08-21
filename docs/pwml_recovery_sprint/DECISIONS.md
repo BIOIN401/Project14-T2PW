@@ -3185,7 +3185,7 @@ the reverse is not.
 
 ### 8. Two consequences that must be disclosed, not absorbed
 
-* **`quarantine_report["schema_version"]` 5 → 6** (`strict_quarantine.py:2219`), with its pin at
+* **`quarantine_report["schema_version"]` 5 → 6** (`strict_quarantine.py:2240` — **address corrected 2026-08-20; this clause said `:2219`, which was the pre-merge address and is now stale. Found by C-057, verified live**), with its pin at
   `tests/test_strict_quarantine_release_seam.py:699`. The house rule mandating the bump is stated in-file
   at `:2214-2218`. **Authorized, and it must be stated in the card's report.**
 * **`tests/test_batch_driver_seam_golden.py`'s GOLDEN digests move.** `:112` folds
