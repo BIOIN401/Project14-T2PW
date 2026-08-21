@@ -13,13 +13,37 @@ integrable claims, and a deadline nowhere near expiring — not ``decide`` alone
 ``LoopState`` unit arm would be the replica trap one level down: the controller, not
 ``decide``, is what ``streamlit_app.py:1426`` calls.
 
-WHAT IS AND IS NOT G9 EVIDENCE HERE:
+WHAT EACH ARM DOES AT THE BASE — MEASURED, not inferred, against the real ``ac77668``
+modules (G11 report ``14-g9-base-ac77668-remeasured``): **7 failed, 4 passed.** Read
+this before interpreting a base run; most of these reds are the point of the file.
 
-* ``A1`` and ``A6`` are the G9 base-failure arms. They observe a reason STRING change.
-* ``A2``/``A3``/``A7`` are non-regression pins: green at the base AND at the tip.
-* ``A4`` is the boundedness invariant. It is green at BOTH ends by design — that is
-  the point of it, since boundedness is what must SURVIVE the split — and ``A5`` is
-  its RULING-13 non-vacuity check.
+======================================  ======  ====================================
+arm                                     base    what it is
+======================================  ======  ====================================
+``a1``  default ceiling, run_rag_loop    RED     G9. Observes ``budget_exhausted``
+                                                where the tip observes the ceiling.
+``a2``  spent clock  (2 arms)            GREEN   true non-regression pins: the time
+                                                bound is untouched at both ends.
+``a3``  both bounds at once              RED     its REASON half is genuinely
+                                                unchanged; the ``also_true ==
+                                                (ROUND_CAP,)`` half cannot hold at
+                                                the base, where the key does not
+                                                exist. Half pin, half tip-only.
+``a4``  boundedness                      GREEN   green at BOTH ends BY DESIGN — it
+                                                is the invariant that must SURVIVE.
+``a5``  a4 non-vacuity (RULING 13)       RED     tip-only: at the base there is no
+                                                round-cap key to neutralize.
+``a6``  precedence deltas                RED     G9. Observes the reason strings.
+``a7``  ranked last / appended           RED     tip-only: the base tuple has 7.
+``a7``  two vocabularies differ          RED     tip-only: SET-EQUAL at the base.
+``a7``  budget_exhausted is the clock     RED     G9-grade behavioural: at the base it
+                                                fires with 900 s of clock left.
+``a7``  exemption carried, not widened   GREEN   preservation pin, both ends.
+======================================  ======  ====================================
+
+So the G9 base-failure evidence is ``a1``, ``a6`` and the third ``a7``, all of which
+observe a reason STRING. The others are either preservation pins that must be green
+at both ends, or tip-only invariants — never dress a tip-only red as G9 evidence.
 """
 
 from __future__ import annotations
@@ -27,6 +51,9 @@ from __future__ import annotations
 from copy import deepcopy
 from itertools import product
 
+import pytest
+
+from t2pw.pipeline import deadline as dl
 from t2pw.pipeline.lineage import LINEAGE_KEY
 from t2pw.rag import loop_policy as lp
 from t2pw.rag.admission import SCOPE_ADMITTED
@@ -333,11 +360,15 @@ def test_a6_g9_every_round_ceiling_combination_reports_its_ruled_winner():
     """G9 BEHAVIOURAL BASE PROOF, and charter § 7.2's enumeration.
 
     Six of the eight rows report a DIFFERENT reason at the tip than at the base.
-    That is the deliberate consequence of ranking the ceiling last instead of first,
-    and every one of the six surfaces a reason the base was suppressing: a real
-    timeout, an inert mechanism, an explicit refusal, a mid-flight attempt cap, or a
-    round that observed nothing new. None of them invents a reason — each was
-    already TRUE and already sat in ``also_true`` at the base.
+    That is the deliberate consequence of ranking the ceiling last instead of first.
+    FIVE of the six surface a reason the base already held in ``also_true`` and was
+    merely suppressing: a real timeout, an inert mechanism, an explicit refusal, a
+    mid-flight attempt cap, or a round that observed nothing new. THE SIXTH — row 1,
+    the fix itself — is the new reason, which could not have been in ``also_true`` at
+    the base because ``_conditions`` had no key for it there at all. Row 1 is not a
+    corner case: the census puts 90 of the 576 changed states in that class. The
+    assertion below carves it out explicitly rather than letting the docstring
+    generalize over it.
     """
     changed = []
     for overrides, base_reason, tip_reason, tip_also in PRECEDENCE_DELTA:
@@ -346,8 +377,9 @@ def test_a6_g9_every_round_ceiling_combination_reports_its_ruled_winner():
         assert (decision.reason, decision.also_true) == (tip_reason, tip_also), overrides
         if base_reason != tip_reason:
             changed.append((base_reason, tip_reason, tuple(sorted(overrides))))
-            # Whatever now wins was already true at the base, and was reported in
-            # ``also_true`` there. Nothing was invented by the re-ranking.
+            # Only row 1 may report the NEW reason. For every other changed row the
+            # winner was already true at the base and already sat in ``also_true``
+            # there, so the re-ranking surfaced it rather than inventing it.
             assert tip_reason != ROUND_CAP or overrides == {}
     assert len(changed) == 6
     assert {c[1] for c in changed} == {ROUND_CAP, TIMEOUT, EMPTY, UNRECOVERABLE,
@@ -355,7 +387,7 @@ def test_a6_g9_every_round_ceiling_combination_reports_its_ruled_winner():
 
 
 # ----------------------------------------------- A7 the shape of the reason vocabulary
-def test_a7_the_ceiling_is_ranked_last_and_the_vocabulary_stays_closed():
+def test_a7_the_ceiling_is_ranked_last_and_was_appended_never_reordered():
     """The chosen rank, pinned. The ceiling is the RESIDUAL reason: it wins only when
     nothing else describes the stop. It holds on every loop that runs its full
     allowance — and the default allowance is one round — so any higher rank would
@@ -373,6 +405,34 @@ def test_a7_the_ceiling_is_ranked_last_and_the_vocabulary_stays_closed():
     assert lp.TERMINATION_PRECEDENCE.index(ATTEMPT_CAP) == 4
     assert lp.TERMINATION_PRECEDENCE[:7] == (
         BUDGET, TIMEOUT, EMPTY, UNRECOVERABLE, ATTEMPT_CAP, EXHAUSTED, NO_NEW)
+
+
+def test_a7_the_two_termination_vocabularies_differ_by_exactly_the_new_member():
+    """The CROSS-SEAM relationship, pinned rather than left to a one-shot probe.
+
+    ``pipeline.deadline`` carries its OWN termination-reason vocabulary. At the base
+    the two were SET-EQUAL; at the tip ``loop_policy`` is a strict SUPERSET by exactly
+    ``round_cap_reached``, and ``deadline``'s closed vocabulary REFUSES that member
+    with a ``ValueError``.
+
+    That is safe only because nothing routes a ``loop_policy`` reason into a
+    ``deadline`` validator today — ``outcome.reason`` reaches
+    ``streamlit_app.py:1467`` and has no readers. Whoever next wires a RAG
+    termination reason into a denominator should meet THIS test rather than a
+    runtime surprise, so the relationship is asserted, not merely observed once.
+
+    ``deadline`` is imported READ-ONLY. ``src/t2pw/pipeline/`` is a different seam and
+    is not this card's to change; that it is untouched is the point being pinned.
+    """
+    assert set(lp.TERMINATION_REASONS) - set(dl.TERMINATION_REASONS) == {ROUND_CAP}
+    assert set(dl.TERMINATION_REASONS) - set(lp.TERMINATION_REASONS) == set()
+    # The pipeline vocabulary did not grow, and its operational denominator -- the
+    # thing F-070 is ultimately about -- did not grow either.
+    assert len(dl.TERMINATION_REASONS) == len(set(dl.TERMINATION_REASONS)) == 7
+    assert dl.OPERATIONAL_TERMINATION_REASONS == frozenset({BUDGET, TIMEOUT})
+    assert ROUND_CAP not in dl.OPERATIONAL_TERMINATION_REASONS
+    with pytest.raises(ValueError):
+        dl.require_reason(ROUND_CAP)
 
 
 def test_a7_budget_exhausted_fires_for_the_clock_and_for_nothing_else():

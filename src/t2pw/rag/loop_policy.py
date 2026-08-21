@@ -199,7 +199,7 @@ class LoopDecision:
 
 
 def _conditions(state: LoopState) -> Dict[str, bool]:
-    """Which of the seven reasons are TRUE for ``state``. Several may hold at once.
+    """Which of the eight reasons are TRUE for ``state``. Several may hold at once.
 
     EVERY member of :data:`TERMINATION_PRECEDENCE` gets a key here, because
     :func:`decide` indexes this mapping by precedence member: a reason added to the
@@ -237,6 +237,12 @@ def _conditions(state: LoopState) -> Dict[str, bool]:
         # new, so the honest reason there is still retrieval_exhausted. Like D-024's
         # guard, this keeps the two mutually exclusive rather than leaving the ranking
         # to decide a contradiction.
+        # THE PREDICATE IS FORCED, NOT MERELY TIDY. Copying D-024's ``not
+        # ladder_completed`` verbatim would LOSE BOUNDEDNESS: a state with the ceiling
+        # reached, the clock fine, ladder_completed=True and new_admissible_claims > 0
+        # is NOT ``exhausted``, so retrieval_exhausted does not fire either, and the
+        # loop would yield no reason at all and spin. Carry ``not exhausted``; do not
+        # substitute the other guard.
         ROUND_CAP_REACHED: state.round_cap_reached and not exhausted,
     }
 

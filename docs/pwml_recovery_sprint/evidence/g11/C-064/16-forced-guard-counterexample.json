@@ -1,0 +1,72 @@
+{
+  "label": "forced-guard-counterexample",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-c",
+    "import t2pw.rag.loop_policy as lp\ns = lp.LoopState(rounds_completed=3, max_rounds=3, now=100.0, deadline=1000.0,\n                 round_retrieval_completed=True, ladder_completed=True,\n                 new_admissible_claims=2, graph_delta=2)\nshipped = lp._conditions(s)\nprint('state: ceiling reached, 900 s of clock left, ladder_completed=True, new_admissible_claims=2')\nprint('AS SHIPPED   (guard = not exhausted)      ->', lp.decide(s).reason, '| continue =', lp.decide(s).should_continue)\nalt = dict(shipped)\nalt[lp.ROUND_CAP_REACHED] = s.round_cap_reached and not s.ladder_completed\nheld = [r for r in lp.TERMINATION_PRECEDENCE if alt[r]]\nprint('IF GUARDED LIKE D-024 (not ladder_completed) -> reasons held:', held, '| continue =', not held)\nprint('out_of_budget for this state:', s.out_of_budget)\nassert lp.decide(s).reason == lp.ROUND_CAP_REACHED and lp.decide(s).should_continue is False\nassert held == [], 'the counterexample does not hold -- the comment would be FALSE'\nassert s.out_of_budget is True\nprint('CONFIRMED: the alternative guard yields NO reason on a state that reached a bound == unbounded loop')"
+  ],
+  "cwd": "C:\\t\\c064",
+  "started_at": "2026-08-21T17:03:52+00:00",
+  "finished_at": "2026-08-21T17:03:53+00:00",
+  "duration_seconds": 0.25102149999293033,
+  "timeout_seconds": 200.0,
+  "root_pid": 334588,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 362272,
+      "name": "python.exe",
+      "ppid": 334588
+    }
+  ],
+  "descendants_terminated": [
+    362272
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 357812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 362000,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c064/docs/pwml_recovery_sprint/evidence/g11/C-064/16-forced-guard-counterexample.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:69f9f1b57076f4587a4a1b17a010a47f65c9b06a043ed7e0aa5e58f8eb2baad5",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c064\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 46712,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c064",
+    "repo_head": "b51b6c98e0d89019d709d468aff91cf9cc8ab16e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  }
+}
