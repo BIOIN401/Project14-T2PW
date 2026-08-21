@@ -15,11 +15,15 @@ It answers four questions and writes them to JSON:
 3. **Which of the two C-059 refusals is load-bearing?** The same replay is run
    with ``_already_covered`` neutralized, isolating the cross-gap dedup. That is
    the configuration the charter predicts leaves the PAYLOAD unchanged.
-4. **Is the payload really unchanged by the dedup alone?** The candidates that
+4. **What exactly does the dedup alone cost the payload?** The candidates that
    survive each configuration are turned into ``_Reaction`` rows the way
-   ``synthesize`` turns them, run through ``_resolve_reactions`` with the same
-   offline synonym resolver production uses, and emitted with ``_reaction_row``.
-   Two configurations, two row lists, compared as canonical JSON.
+   ``synthesize`` turns them -- INCLUDING the admission lineage entry, whose
+   omission is what made an earlier version of this probe publish a delta of
+   ``[]`` (REV-059) -- run through ``_resolve_reactions`` with the same offline
+   synonym resolver production uses, and emitted with ``_reaction_row``. Two
+   configurations, two row lists, compared as canonical JSON. The answer is NOT
+   "nothing": one ``rag_admission`` lineage entry is dropped. See
+   ``dedup_alone_payload_delta_note``.
 
 Usage::
 
@@ -50,6 +54,7 @@ from t2pw.rag import synthesize as synthesize_mod  # noqa: E402
 from t2pw.rag.admission import (  # noqa: E402
     AdmissionPolicy,
     RagReactionCandidate,
+    admission_lineage_entry,
     admit_candidates,
 )
 
@@ -121,6 +126,16 @@ def _reaction_of(candidate: RagReactionCandidate) -> Any:
     )
 
 
+def _admission_entry_reasons(rows: List[Any]) -> List[str]:
+    """Every ``rag_admission`` lineage reason on the emitted rows, in order."""
+    out: List[str] = []
+    for row in rows:
+        for entry in row.get("provenance_lineage") or []:
+            if entry.get("stage") == "rag_admission":
+                out.append(str(entry.get("reason") or ""))
+    return out
+
+
 def _row_delta(left: List[Any], right: List[Any]) -> List[Dict[str, Any]]:
     """Per-row, per-key differences between two emitted row lists."""
     delta: List[Dict[str, Any]] = []
@@ -146,13 +161,27 @@ def _row_delta(left: List[Any], right: List[Any]) -> List[Dict[str, Any]]:
 
 
 def _carry_the_verdict(reaction: Any, candidate: RagReactionCandidate) -> Any:
-    """The C-059 carry step from ``synthesize_with_report``, replayed.
+    """The verdict-to-reaction loop from ``synthesize_with_report``, replayed.
 
-    When the gate collapsed a claim several gaps each retrieved, the sibling rows
-    never reach ``_resolve_reactions``, so the union that merge used to perform --
-    the gap attributions and the group's best retrieval score -- travels with the
-    verdict instead. Guarded on the union growing, so an uncollapsed claim is
-    untouched.
+    Two things happen here in production and BOTH are replayed, because omitting
+    the second is what made an earlier version of this probe report a delta it
+    could not have seen (REV-059):
+
+    1. the C-059 carry -- when the gate collapsed a claim several gaps each
+       retrieved, the sibling rows never reach ``_resolve_reactions``, so the
+       union that merge used to perform (the gap attributions and the group's
+       best retrieval score) travels with the verdict instead. Guarded on the
+       union growing, so an uncollapsed claim is untouched;
+    2. ``reaction.lineage.append(admission_lineage_entry(candidate).as_dict())``
+       (``synthesize.py``, the line immediately below the carry). The FIRST
+       version of this probe built ``_Reaction`` objects and called
+       ``_reaction_row`` without ever executing it. ``_reaction_row`` then emits
+       only the ``rag_retrieval`` entry, which is derived from ``gap_ids`` and IS
+       identical once the carry lands -- so the probe was structurally blind to
+       ``provenance_lineage``, the one payload field the collapse still moves,
+       and it published ``payload delta: []``. A false record outliving the code
+       it describes is this sprint's dominant failure mode; this is the
+       correction.
     """
     merged = synthesize_mod._dedupe_strs(
         list(reaction.gap_ids or []) + list(candidate.gap_ids or [])
@@ -161,6 +190,9 @@ def _carry_the_verdict(reaction: Any, candidate: RagReactionCandidate) -> Any:
         reaction.gap_ids = merged
         if candidate.confidence:
             reaction.scores = list(reaction.scores) + [float(candidate.confidence)]
+    entry = admission_lineage_entry(candidate)
+    if entry is not None:
+        reaction.lineage.append(entry.as_dict())
     return reaction
 
 
@@ -254,6 +286,14 @@ def main() -> int:
     dedup_payload_delta = _row_delta(
         base_like["emitted_rows"], dedup_only["emitted_rows"]
     )
+    dedup_lineage_delta = {
+        "base_like_admission_entries": _admission_entry_reasons(
+            base_like["emitted_rows"]
+        ),
+        "dedup_only_admission_entries": _admission_entry_reasons(
+            dedup_only["emitted_rows"]
+        ),
+    }
     covered_removes_the_row = not tip["emitted_rows"] and bool(
         base_like["emitted_rows"]
     )
@@ -299,19 +339,41 @@ def main() -> int:
         "dedup_only_emits_the_duplicate_row": bool(dedup_only["emitted_rows"]),
         "dedup_alone_is_payload_neutral": dedup_is_payload_neutral,
         "dedup_alone_payload_delta": dedup_payload_delta,
+        "dedup_alone_lineage_delta": dedup_lineage_delta,
         "dedup_alone_payload_delta_note": (
-            "The charter's section 2 predicted a byte-identical payload from the "
-            "dedup alone. MEASURED, that was FALSE as first built: _merge_into "
-            "unions _Reaction.scores and gap_ids and _confidence maxes over the "
-            "scores, so the committed row carries the HIGHER of the two "
-            "per-retrieval scores (0.930233 at merged_payload.json "
-            "/processes/reactions/5/rag_confidence) and BOTH gap ids. Collapsing "
-            "at admission means the sibling row never reaches that merge, which "
-            "cost the row 0.930233 -> 0.914815 and dropped the second gap's "
-            "attribution -- a regression against the pre-existing pinned test "
-            "test_rag_admission_adversarial.py::"
-            "test_one_claim_admitted_for_two_gaps_keeps_both_attributions. Fixed "
-            "by carrying that union with the verdict; this delta is now empty. "
+            "CORRECTED after REV-059. This probe previously published "
+            "dedup_alone_is_payload_neutral: true with an EMPTY delta. That was "
+            "FALSE, and it was false for the same reason the charter's own "
+            "section 2 was: an instrument that could not see the field that "
+            "moves. The probe built _Reaction objects and called _reaction_row "
+            "without ever running the production line "
+            "reaction.lineage.append(admission_lineage_entry(candidate).as_dict()), "
+            "so it only ever saw the rag_retrieval lineage entry -- which is "
+            "derived from gap_ids and IS identical once the union carry lands. "
+            "_carry_the_verdict now runs that line and the residual is measured "
+            "above. "
+            "WHAT THE CARRY DOES PRESERVE: gap_ids on the row, and rag_confidence "
+            "at the collapsed group's best retrieval score. _merge_into unions "
+            "_Reaction.scores and gap_ids and _confidence maxes the scores, so the "
+            "committed row carries 0.930233 -- the HIGHER of the two -- at "
+            "merged_payload.json /processes/reactions/5/rag_confidence, and both "
+            "gap ids. Without the carry all of that is lost, which also regressed "
+            "the pre-existing pinned test test_rag_admission_adversarial.py::"
+            "test_one_claim_admitted_for_two_gaps_keeps_both_attributions. "
+            "WHAT IT DOES NOT PRESERVE, stated plainly: the delivered row's "
+            "provenance_lineage drops one rag_admission entry. The base emits one "
+            "per acceptance; the tip emits one, in the pre-existing "
+            "(also retrieved for ...) form. The per-gap record of WHICH metabolite "
+            "the claim filled each gap through is therefore retained for the "
+            "surviving gap only. On this leg both gaps share isochorismate, so the "
+            "lost entry's text happens to read the same; on a claim bridging two "
+            "gaps with DIFFERENT shared metabolites the losing gap's "
+            "fills_named_gap_directly: via <metabolite> is gone from the payload, "
+            "and it is recoverable from the admission report NOWHERE, because "
+            "_reject overwrites candidate.reasons with the duplicate code. Pinned "
+            "on the real synthesize_with_report path by "
+            "tests/test_rag_already_covered_gap.py::"
+            "test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row. "
             "The row itself is NOT removed by the dedup -- that is the "
             "already-covered refusal's doing, which is the point of the split."
         ),

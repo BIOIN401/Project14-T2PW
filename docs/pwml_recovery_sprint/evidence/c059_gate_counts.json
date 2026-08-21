@@ -22,8 +22,9 @@
       "test_rag_already_covered_gap"
     ],
     "final_surviving_count": 0,
-    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/49-final-focused-at-tip.json",
-    "summary_line_verbatim": "336 passed, 1 skipped in 20.09s"
+    "g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/57-rev059-focused-final.json",
+    "note": "re-run after the REV-059 correction round; 336 -> 337 is the one arm that round added, nothing else moved",
+    "summary_line_verbatim": "337 passed, 1 skipped in 29.29s"
   },
   "base_sha": "87dbcca2a3f0608a6550736b9dc60030afc36c9d",
   "branch": "agent/c059-gap-already-covered",
@@ -123,18 +124,35 @@
     "survivors_across_every_job": 0
   },
   "g9_proof": {
-    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/06-g9-base-final.json",
-    "base_summary_line_verbatim": "11 failed, 11 passed in 4.44s",
+    "base_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/55-rev059-g9-base-final.json",
+    "base_summary_line_verbatim": "13 failed, 11 passed in 2.74s",
     "correction_arm_fails_behaviourally_at_base": {
-      "base_failure_verbatim": "AssertionError: the seed payload's /processes/reactions/1 already states isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate; re-importing it is what put a second EntB protein row in the export\\nassert 2 == 0",
+      "base_failure_verbatim": "AssertionError: the seed payload's /processes/reactions/1 already states isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate; re-importing it is what put a second EntB protein row in the export\nassert 2 == 0",
       "test": "test_correction_the_leg_no_longer_admits_a_reaction_the_paper_already_locked",
       "why_this_is_not_symbol_absence": "the test imports no name this card introduced; it runs to completion at base and fails on the COUNT the committed rag_admission_report.json itself records"
     },
+    "measured_at": "the REV-059 correction tip, over the 24-test file",
     "method": "F-051 remedy -- the tree, its .env and the test file held CONSTANT; only the two files under test swapped to their base-SHA contents via `git checkout 87dbcca -- src/t2pw/rag/admission.py src/t2pw/rag/synthesize.py`. No second worktree, so no .env asymmetry can exist between the two sides.",
-    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/07-g9-tip-final.json",
-    "tip_summary_line_verbatim": "22 passed in 3.24s"
+    "new_real_path_arm_also_fails_behaviourally_at_base": {
+      "base_failure_verbatim": "assert result.admission[\"counts\"][\"accepted\"] == 1\nE       assert 2 == 1",
+      "note": "drives the REAL synthesize_with_report, not a replica of its loop",
+      "test": "test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row"
+    },
+    "supersedes": "the earlier 'base 11 failed, 11 passed / tip 22 passed' figures, which were captured at d19acdc over a 22-test file and went stale as the file grew. REV-059 measured 12/11 over 23 tests; the REV-059 correction round added test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row, which also fails at base, giving 13/11 over 24. Re-measured here, not copied.",
+    "tip_g11_report": "docs/pwml_recovery_sprint/evidence/g11/C-059/56-rev059-g9-tip-final.json",
+    "tip_summary_line_verbatim": "24 passed in 2.53s"
   },
   "purpose": "literal pytest COUNTS and verbatim summary lines for every gate this card owes -- bounded_run retains exit codes but not stdout, so an exit code cannot certify 'SMOKE exactly 465' (merge gate 10)",
+  "rev059_correction_round": {
+    "additional_self_correction": "The sibling replica test carried the same blindness: it was named ..._is_payload_neutral_once_the_union_is_carried and asserted full-row equality. Its replica now runs the lineage append too, it is renamed test_the_cross_gap_dedup_changes_nothing_on_the_row_but_the_lineage, and it asserts the differing-key set is EXACTLY {provenance_lineage} -- so a second field cannot start moving unnoticed. Not a rebuild: no arm added or removed. Left uncorrected it would have been a second false record of the same class.",
+    "argument_withdrawn": "The previous report argued that neither F-065's file nor qb node15's file contains a t2pw.rag reference, so a diff confined to two rag modules cannot reach them. REV-059 confirmed the greps but correctly notes the argument is weaker than stated, since qb drives the app through maybe_run_rag. WITHDRAWN. Both reds stand on their charter-named pre-charged status (F-065 and the PathBank-reachable qb node15), not on that reasoning.",
+    "fix_1_artifact_corrected": "c059_leg_replay.json published 'dedup_alone_is_payload_neutral: true' with an empty delta. FALSE. The probe's own replay loop omitted the production line reaction.lineage.append(admission_lineage_entry(candidate).as_dict()), so it could only ever see the rag_retrieval lineage entry -- derived from gap_ids, hence identical once the union carry lands. _carry_the_verdict now runs that line. Re-measured on the committed F-057 leg: dedup_alone_is_payload_neutral is FALSE, and provenance_lineage is the ONLY differing key -- rag_admission entries go 2 -> 1. Artifact corrected in place, not deleted.",
+    "fix_2_real_path_arm_added": "test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row drives the real synthesize_with_report on a two-gap claim and pins both what survives (gap_ids, rag_confidence 0.9 -- the collapsed group's best, not the losing bundle's 0.4) and what does not (provenance_lineage 3 entries -> 2; the losing gap's 'fills_named_gap_directly: via a' retained NOWHERE, because _reject overwrites candidate.reasons with the duplicate code -- asserted against the report too).",
+    "fix_3_g9_counts_refreshed": "see g9_proof.supersedes",
+    "gates_not_re_run": "SMOKE, Chunk C and Chunk D were NOT re-run, because this round changed no file under src/ -- `git diff HEAD --stat -- src/` is empty against the pre-correction tip. The counts recorded elsewhere in this artifact stand unchanged and were not re-measured. The heavy mutex was held by C-056d and then REV-056d throughout; no acquire was chained and no lock naming another holder was removed (F-072).",
+    "src_untouched_this_round": true,
+    "verdict_addressed": "REJECT, correction round 1 of 2"
+  },
   "smoke": {
     "expected_per_COUNT_CORRECTIONS": 465,
     "failures": 0,

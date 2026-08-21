@@ -771,11 +771,19 @@ def _rows_through_the_production_carry(
 
     ``_reactions_from_bundle`` builds one ``_Reaction`` per gap bundle carrying
     that bundle's own ``gap_ids`` and its own retrieval score; the loop after the
-    gate copies the verdict onto it; ``_resolve_reactions`` then groups and
-    merges. ``carry_union=False`` omits only the C-059 carry step, which is what
-    makes the carry falsifiable.
+    gate copies the verdict onto it -- the C-059 union carry AND
+    ``reaction.lineage.append(admission_lineage_entry(candidate).as_dict())`` --
+    and ``_resolve_reactions`` then groups and merges. ``carry_union=False``
+    omits only the carry, which is what makes the carry falsifiable.
+
+    The lineage append is replayed because omitting it is exactly the instrument
+    gap REV-059 found: without it ``_reaction_row`` emits only the
+    ``rag_retrieval`` entry, which is derived from ``gap_ids`` and IS identical
+    once the carry lands, so the replica cannot see ``provenance_lineage`` -- the
+    one payload field the collapse still moves.
     """
     from t2pw.rag import synthesize as synthesize_mod
+    from t2pw.rag.admission import admission_lineage_entry
 
     reactions = []
     for candidate in accepted:
@@ -806,6 +814,9 @@ def _rows_through_the_production_carry(
                     reaction.scores = list(reaction.scores) + [
                         float(candidate.confidence)
                     ]
+        entry = admission_lineage_entry(candidate)
+        if entry is not None:
+            reaction.lineage.append(entry.as_dict())
         reactions.append(reaction)
     resolved, _conflicts = synthesize_mod._resolve_reactions(
         reactions, synonyms.build_offline_synonym_resolver()
@@ -824,15 +835,28 @@ def _base_like_accepted(monkeypatch) -> List[RagReactionCandidate]:
     return accepted
 
 
-def test_the_cross_gap_dedup_is_payload_neutral_once_the_union_is_carried():
-    """What the charter's section 2 predicted, made true rather than assumed.
+def test_the_cross_gap_dedup_changes_nothing_on_the_row_but_the_lineage():
+    """What the union carry preserves, and the single field it does not.
 
     ``_merge_into`` unions ``_Reaction.scores`` and ``gap_ids``; ``_confidence``
     maxes over the scores. The committed row proves it -- ``merged_payload.json
     /processes/reactions/5/rag_confidence`` is 0.930233, the HIGHER of the two
     per-retrieval scores, and its ``rag_provenance.gap_ids`` names both gaps.
     Collapsing at admission means the sibling row never reaches that merge, so
-    the union travels with the verdict instead.
+    the union travels with the verdict instead, and every one of those fields
+    comes out byte-identical.
+
+    ``provenance_lineage`` does NOT, and this test no longer claims otherwise.
+    The charter's section 2 predicted a byte-identical payload; measured, that is
+    true of every field but this one. The base emits one ``rag_admission`` entry
+    per acceptance and the tip emits one, in the pre-existing
+    ``(also retrieved for ...)`` form. It is compared explicitly below rather
+    than quietly, and the CONTENT that is lost -- the losing gap's own
+    ``fills_named_gap_directly: via <metabolite>`` -- is pinned on the real
+    ``synthesize_with_report`` path by
+    :func:`test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row`,
+    because a replica of the production loop must never be that property's only
+    witness (REV-059).
     """
     merged = _leg("merged_payload.json")
     committed_row = merged["processes"]["reactions"][5]
@@ -855,11 +879,31 @@ def test_the_cross_gap_dedup_is_payload_neutral_once_the_union_is_carried():
 
     assert len(base_rows) == len(dedup_rows) == 1
     assert base_rows[0]["rag_confidence"] == 0.930233
-    assert base_rows == dedup_rows, "the dedup must cost the payload nothing"
     assert set(dedup_rows[0]["rag_provenance"]["gap_ids"]) == {
         "gap-dangling_reaction-555124de",
         "gap-dangling_reaction-7e0b4a06",
     }
+
+    # The residual, named and asserted rather than excluded silently.
+    def _admission_reasons(row):
+        return [
+            e["reason"]
+            for e in row["provenance_lineage"]
+            if e["stage"] == "rag_admission"
+        ]
+
+    assert len(_admission_reasons(base_rows[0])) == 2
+    assert len(_admission_reasons(dedup_rows[0])) == 1
+
+    # Everything else on the row is byte-identical, and provenance_lineage is
+    # the ONLY field that is not -- asserted, so a second field cannot start
+    # moving without this test noticing.
+    differing = {
+        key
+        for key in set(base_rows[0]) | set(dedup_rows[0])
+        if base_rows[0].get(key) != dedup_rows[0].get(key)
+    }
+    assert differing == {"provenance_lineage"}
 
 
 def test_nonvacuity_without_the_carried_union_the_dedup_downgrades_the_row():
@@ -900,6 +944,150 @@ def test_nonvacuity_without_the_carried_union_the_dedup_downgrades_the_row():
         "rag_provenance",
         "provenance_lineage",
     }
-    assert "gap-dangling_reaction-7e0b4a06" not in json.dumps(
-        stripped[0]["provenance_lineage"]
+    # The RETRIEVAL entry is the one the carry feeds -- its reason is built from
+    # ``reaction.gap_ids`` -- so stripping the carry costs it the second gap.
+    # The ADMISSION entry is built from the CANDIDATE, which the gate's own dedup
+    # already unioned, so it still names both; that is why the carry is needed in
+    # synthesize and not only in admission.
+    retrieval = [
+        e
+        for e in stripped[0]["provenance_lineage"]
+        if e["stage"] == "rag_retrieval"
+    ]
+    assert len(retrieval) == 1
+    assert "gap-dangling_reaction-7e0b4a06" not in retrieval[0]["reason"]
+    assert "gap-dangling_reaction-555124de" in retrieval[0]["reason"]
+
+
+# ---------------------------------------------------------------------------
+# REV-059 -- the arm the replica above CANNOT provide.
+#
+# ``_rows_through_the_production_carry`` builds ``_Reaction`` objects and calls
+# ``_reaction_row`` directly, so it never executes
+# ``reaction.lineage.append(entry.as_dict())`` in ``synthesize_with_report``.
+# ``_reaction_row`` then emits only the ``rag_retrieval`` entry, which is derived
+# from ``gap_ids`` and IS identical once the union carry lands -- so the replica
+# is structurally blind to the one payload field the cross-gap dedup still
+# moves. The arm below drives the REAL ``synthesize_with_report``, in the shape
+# ``tests/test_rag_admission_adversarial.py`` uses, and pins that residual.
+# ---------------------------------------------------------------------------
+def _two_gap_seed() -> Dict[str, Any]:
+    """``B -> P`` and ``Q -> A``. Open at B and at A; one claim bridges both."""
+    return {
+        "entities": {
+            "species": [{"name": "Pseudomonas putida"}],
+            "compounds": [{"name": "B"}, {"name": "P"}, {"name": "A"}],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "R0", "inputs": ["B"], "outputs": ["P"]},
+                {"name": "R1", "inputs": ["Q"], "outputs": ["A"]},
+            ]
+        },
+    }
+
+
+def test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row():
+    """MEASURED on the real path: what survives the collapse, and what does not.
+
+    ``A -> B`` is covered by no seed reaction, so only
+    ``REASON_DUPLICATE_ACROSS_GAPS`` fires and this isolates the hygiene half.
+
+    SURVIVES, because the union carry puts it there -- both gap ids on the row,
+    and ``rag_confidence`` at the collapsed group's best retrieval score (0.9,
+    not the losing bundle's 0.4).
+
+    DOES NOT SURVIVE, and this is the residual REV-059 found: the delivered row's
+    ``provenance_lineage`` goes from THREE entries to TWO. The base emits one
+    ``rag_admission`` entry per acceptance -- ``via b`` for the first gap and
+    ``via a`` for the second -- and the tip emits one, in the pre-existing
+    ``(also retrieved for ...)`` form. The per-gap record that this claim filled
+    the SECOND gap through metabolite ``a`` is retained nowhere: ``_reject``
+    overwrites ``candidate.reasons`` with the duplicate code, so the admission
+    report does not hold it either.
+    """
+    from t2pw.rag.store import Chunk, Retrieved
+    from t2pw.rag.retrieve import EvidenceBundle, query_for_gap
+    from t2pw.rag.synthesize import synthesize_with_report
+
+    seed = _two_gap_seed()
+    gaps = detect_gaps(
+        seed,
+        {},
+        requested_pathway="caffeine degradation",
+        requested_organism="Pseudomonas putida",
     )
+    gap_b = next(
+        g for g in gaps if g.label == "B" and g.kind == "orphan_metabolite"
+    )
+    gap_a = next(
+        g for g in gaps if g.label == "A" and g.kind == "orphan_metabolite"
+    )
+    chunk = Chunk(
+        id="shared",
+        text="name: bridges A and B | A -> B | enzyme: E1",
+        source_id="PMID:B",
+        source_title="downstream paper",
+        source_type="paper",
+        source_uri="https://example.org/PMID:B",
+        organism="Pseudomonas putida",
+        section="results",
+    )
+    result = synthesize_with_report(
+        seed,
+        [
+            EvidenceBundle(
+                gap=gap,
+                query=query_for_gap(gap),
+                hits=[Retrieved(chunk=chunk, score=score)],
+            )
+            # The LOSING bundle deliberately carries the lower score, so the
+            # confidence assertion below is about the union carry and not about
+            # which candidate happened to survive.
+            for gap, score in ((gap_b, 0.9), (gap_a, 0.4))
+        ],
+        {
+            "text": "caffeine degradation in Pseudomonas putida",
+            "source": {
+                "source_id": "PMID:SEED",
+                "source_title": "seed paper",
+                "source_type": "paper",
+                "organism": "Pseudomonas putida",
+            },
+        },
+        gaps=gaps,
+        requested_pathway="caffeine degradation",
+        requested_organism="Pseudomonas putida",
+    )
+
+    assert result.admission["counts"]["accepted"] == 1
+    row = next(
+        r
+        for r in result.payload["processes"]["reactions"]
+        if r["name"] == "bridges A and B"
+    )
+
+    # --- what the carry preserves -----------------------------------------
+    assert row["rag_confidence"] == 0.9
+    assert set(row["rag_provenance"]["gap_ids"]) == {gap_a.gap_id, gap_b.gap_id}
+
+    # --- what it does not: the residual, pinned ---------------------------
+    lineage = row["provenance_lineage"]
+    assert [e["stage"] for e in lineage] == ["rag_retrieval", "rag_admission"]
+    admission_entries = [e for e in lineage if e["stage"] == "rag_admission"]
+    assert len(admission_entries) == 1, "base emits one per acceptance, i.e. two"
+    reason = admission_entries[0]["reason"]
+    assert f"(also retrieved for {gap_a.gap_id})" in reason
+    assert "fills_named_gap_directly: via b" in reason
+    # The losing gap's own shared-metabolite record is gone from the payload...
+    assert "via a" not in json.dumps(lineage)
+    # ...and the admission report does not hold it either, because _reject
+    # replaces the candidate's reasons with the duplicate code.
+    rejected = result.admission["rejected"]
+    assert len(rejected) == 1 and rejected[0]["gap_id"] == gap_a.gap_id
+    assert rejected[0]["reasons"] == [
+        "duplicate_claim_admitted_for_another_gap: the same claim from the same "
+        f"span is already admitted against gap {gap_b.gap_id!r}, which now "
+        "carries this gap id too"
+    ]
+    assert "via a" not in json.dumps(rejected)

@@ -59,9 +59,112 @@
       "gap-dangling_reaction-a2038cf5"
     ]
   },
-  "dedup_alone_is_payload_neutral": true,
-  "dedup_alone_payload_delta": [],
-  "dedup_alone_payload_delta_note": "The charter's section 2 predicted a byte-identical payload from the dedup alone. MEASURED, that was FALSE as first built: _merge_into unions _Reaction.scores and gap_ids and _confidence maxes over the scores, so the committed row carries the HIGHER of the two per-retrieval scores (0.930233 at merged_payload.json /processes/reactions/5/rag_confidence) and BOTH gap ids. Collapsing at admission means the sibling row never reaches that merge, which cost the row 0.930233 -> 0.914815 and dropped the second gap's attribution -- a regression against the pre-existing pinned test test_rag_admission_adversarial.py::test_one_claim_admitted_for_two_gaps_keeps_both_attributions. Fixed by carrying that union with the verdict; this delta is now empty. The row itself is NOT removed by the dedup -- that is the already-covered refusal's doing, which is the point of the split.",
+  "dedup_alone_is_payload_neutral": false,
+  "dedup_alone_lineage_delta": {
+    "base_like_admission_entries": [
+      "admission gate accepted this claim against gap 'gap-dangling_reaction-555124de'; fills_named_gap_directly: via isochorismate",
+      "admission gate accepted this claim against gap 'gap-dangling_reaction-7e0b4a06'; fills_named_gap_directly: via isochorismate"
+    ],
+    "dedup_only_admission_entries": [
+      "admission gate accepted this claim against gap 'gap-dangling_reaction-555124de' (also retrieved for gap-dangling_reaction-7e0b4a06); fills_named_gap_directly: via isochorismate"
+    ]
+  },
+  "dedup_alone_payload_delta": [
+    {
+      "index": 0,
+      "key": "provenance_lineage",
+      "left": [
+        {
+          "origin": "rag_literature",
+          "paper_explicit": "not_evaluated",
+          "reason": "transcribed from a passage retrieved for gap(s) gap-dangling_reaction-555124de, gap-dangling_reaction-7e0b4a06",
+          "review_required": false,
+          "sources": [
+            {
+              "locator": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "stage": "rag_retrieval",
+          "support": "direct",
+          "uncertainty": ""
+        },
+        {
+          "origin": "rag_literature",
+          "paper_explicit": "not_evaluated",
+          "reason": "admission gate accepted this claim against gap 'gap-dangling_reaction-555124de'; fills_named_gap_directly: via isochorismate",
+          "review_required": false,
+          "sources": [
+            {
+              "locator": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "stage": "rag_admission",
+          "support": "direct",
+          "uncertainty": ""
+        },
+        {
+          "origin": "rag_literature",
+          "paper_explicit": "not_evaluated",
+          "reason": "admission gate accepted this claim against gap 'gap-dangling_reaction-7e0b4a06'; fills_named_gap_directly: via isochorismate",
+          "review_required": false,
+          "sources": [
+            {
+              "locator": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "stage": "rag_admission",
+          "support": "direct",
+          "uncertainty": ""
+        }
+      ],
+      "right": [
+        {
+          "origin": "rag_literature",
+          "paper_explicit": "not_evaluated",
+          "reason": "transcribed from a passage retrieved for gap(s) gap-dangling_reaction-555124de, gap-dangling_reaction-7e0b4a06",
+          "review_required": false,
+          "sources": [
+            {
+              "locator": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "stage": "rag_retrieval",
+          "support": "direct",
+          "uncertainty": ""
+        },
+        {
+          "origin": "rag_literature",
+          "paper_explicit": "not_evaluated",
+          "reason": "admission gate accepted this claim against gap 'gap-dangling_reaction-555124de' (also retrieved for gap-dangling_reaction-7e0b4a06); fills_named_gap_directly: via isochorismate",
+          "review_required": false,
+          "sources": [
+            {
+              "locator": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "stage": "rag_admission",
+          "support": "direct",
+          "uncertainty": ""
+        }
+      ]
+    }
+  ],
+  "dedup_alone_payload_delta_note": "CORRECTED after REV-059. This probe previously published dedup_alone_is_payload_neutral: true with an EMPTY delta. That was FALSE, and it was false for the same reason the charter's own section 2 was: an instrument that could not see the field that moves. The probe built _Reaction objects and called _reaction_row without ever running the production line reaction.lineage.append(admission_lineage_entry(candidate).as_dict()), so it only ever saw the rag_retrieval lineage entry -- which is derived from gap_ids and IS identical once the union carry lands. _carry_the_verdict now runs that line and the residual is measured above. WHAT THE CARRY DOES PRESERVE: gap_ids on the row, and rag_confidence at the collapsed group's best retrieval score. _merge_into unions _Reaction.scores and gap_ids and _confidence maxes the scores, so the committed row carries 0.930233 -- the HIGHER of the two -- at merged_payload.json /processes/reactions/5/rag_confidence, and both gap ids. Without the carry all of that is lost, which also regressed the pre-existing pinned test test_rag_admission_adversarial.py::test_one_claim_admitted_for_two_gaps_keeps_both_attributions. WHAT IT DOES NOT PRESERVE, stated plainly: the delivered row's provenance_lineage drops one rag_admission entry. The base emits one per acceptance; the tip emits one, in the pre-existing (also retrieved for ...) form. The per-gap record of WHICH metabolite the claim filled each gap through is therefore retained for the surviving gap only. On this leg both gaps share isochorismate, so the lost entry's text happens to read the same; on a claim bridging two gaps with DIFFERENT shared metabolites the losing gap's fills_named_gap_directly: via <metabolite> is gone from the payload, and it is recoverable from the admission report NOWHERE, because _reject overwrites candidate.reasons with the duplicate code. Pinned on the real synthesize_with_report path by tests/test_rag_already_covered_gap.py::test_the_real_synthesis_path_pins_what_the_cross_gap_dedup_costs_the_row. The row itself is NOT removed by the dedup -- that is the already-covered refusal's doing, which is the point of the split.",
   "dedup_only_covered_neutralized": {
     "counts": {
       "accepted": 1,
