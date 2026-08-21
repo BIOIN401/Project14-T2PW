@@ -9,16 +9,33 @@ cohort. The tests rebuild that document from the working tree's extracted
 while dropping a gate report, changing ``sbml_input_source`` or replacing object
 sharing with a copy fails here.
 
-Regenerate, byte-identically, from any checkout of this branch:
+REGENERATION IS REFUSED, and that belongs here, beside the command, not 300 lines
+below it. This fixture is a BEFORE document with a historical identity: the
+per-card helpers below STATE each baseline move instead of absorbing it, so a
+rebuilt fixture stops being the document those moves are stated AGAINST. C-057's
+delta REPLACES a digest whose pre-move value is stored nowhere else, so it cannot
+be inverted the way C-052's additive keys can, and regenerating would destroy
+three cards' evidence while the suite stayed green (F-076). The command below
+therefore exits NON-ZERO and writes NOTHING, printing which delta stands, why no
+inverse is expressible, and what overriding would destroy:
+
     .venv/Scripts/python.exe tests/test_c011_freeze_seam_golden_equivalence.py
+
+Retiring the BEFORE baseline is a PRODUCT DECISION, not maintenance. Taking it
+means naming the exact standing set, which the refusal prints for you:
+
+    ... test_c011_freeze_seam_golden_equivalence.py --retire-the-before-baseline=C-057
+
+``_DELTAS`` below is the registry the guard reads. A per-card delta helper with no
+entry in it blocks regeneration by itself, so a later card cannot add one silently.
 """
 
 from __future__ import annotations
 
-import ast, copy, hashlib, json, subprocess, sys, tempfile, textwrap  # noqa: E401
+import ast, copy, hashlib, json, re, subprocess, sys, tempfile, textwrap  # noqa: E401
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Callable, NamedTuple
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(p) for p in (ROOT / "src", ROOT / "tests") if str(p) not in sys.path]
@@ -411,6 +428,227 @@ def _without_c052_path_keys(document: dict[str, Any]) -> dict[str, Any]:
     return stripped
 
 
+# ─── C-065: the regeneration guard that closes F-076 ────────────────────────
+#: Each helper above states a baseline move. What ``__main__`` needs is not WHAT
+#: each does but whether the fixture can still be REBUILT while it stands, so
+#: every helper carries a REGENERATION DISPOSITION here -- a registry, not an
+#: ``if C-057``, because the guard must keep working for a delta nobody has
+#: written yet, and because an unregistered helper is itself a refusal.
+_INVERTIBLE = "invertible"
+_NOT_IN_BASE_DOCUMENT = "not-in-base-document"
+_ONE_WAY = "one-way"
+_DISPOSITIONS = (_INVERTIBLE, _NOT_IN_BASE_DOCUMENT, _ONE_WAY)
+#: The override. Not a bare ``--force``: its VALUE must be the exact standing set,
+#: so registering a second one-way delta expires every invocation naming the first.
+OVERRIDE = "--retire-the-before-baseline"
+WRITE_TO = "--write-to"
+USAGE = f"""usage: {sys.executable} {GENERATOR} [{OVERRIDE}=CARDS] [{WRITE_TO}=PATH]
+
+  (no arguments)   rebuild the fixture from the BASE blob. REFUSED, non-zero and
+                   writing nothing, while any one-way delta is registered below.
+  {OVERRIDE}=CARDS
+                   a product decision to retire the BEFORE baseline. CARDS must
+                   be the exact comma-separated set of standing one-way deltas.
+  {WRITE_TO}=PATH  write somewhere other than the tracked fixture. Used by this
+                   file's own guard tests; it does NOT bypass the refusal."""
+
+
+class _Delta(NamedTuple):
+    """One card's stated baseline move, as the regeneration guard sees it.
+    ``moves`` and ``why`` are DATA, not commentary: the refusal prints them.
+    """
+
+    card: str
+    helper: str
+    disposition: str
+    inverse: str | None
+    moves: str
+    why: str
+
+
+_DELTAS: tuple[_Delta, ...] = (
+    _Delta(
+        card="C-030", helper="_with_c030_hash_keys",
+        disposition=_NOT_IN_BASE_DOCUMENT, inverse=None,
+        moves="adds three hash-schema-2 keys to final_stage3_gate_report on 35 legs",
+        why="the keys come from the SEAM's own stamp_report call site, which the "
+            "BASE blob does not have, so _document(BASE_SHA) never carries this "
+            "delta and a rebuild cannot absorb it",
+    ),
+    _Delta(
+        card="C-052", helper="_with_c052_path_keys",
+        disposition=_INVERTIBLE, inverse="_without_c052_path_keys",
+        moves="adds canonical_json_path_name and canonical_json_path_in_tmp to "
+              "every leg of the projection",
+        why="the delta is ADDITIVE, so dropping the two keys recovers the "
+            "document exactly; __main__ applies that inverse before writing",
+    ),
+    _Delta(
+        card="C-057", helper="_with_c057_lineage_hashes",
+        disposition=_ONE_WAY, inverse=None,
+        moves="REPLACES one digest recorded twice -- canonical_payload_sha256 and "
+              "its gate report's payload_sha256 -- on the 7 legs that quarantine "
+              "a locked reaction",
+        why="the value it replaces, the pre-C-057 payload_sha256, is stored "
+            "nowhere but in the fixture itself, so once overwritten there is "
+            "nothing left to restore it from and no _without_c057_* is "
+            "expressible at any price (F-076)",
+    ),
+)
+
+_HELPER_RE = re.compile(r"^_with_(c\d+)_\w+$")
+_INVERSE_RE = re.compile(r"^_without_(c\d+)_\w+$")
+
+
+def _named(pattern: re.Pattern[str], prefix: str) -> tuple[dict[str, str], list[str]]:
+    """``({card key: function name}, [misnamed function names])`` in this module."""
+
+    keyed: dict[str, str] = {}
+    misnamed: list[str] = []
+    for name in sorted(globals()):
+        if not name.startswith(prefix) or not callable(globals()[name]):
+            continue
+        match = pattern.match(name)
+        if match is None:
+            misnamed.append(name)
+        else:
+            keyed.setdefault(match.group(1), name)
+    return keyed, misnamed
+
+
+def _registry_defects() -> list[str]:
+    """Every disagreement between ``_DELTAS`` and the module it describes.
+
+    A defect blocks regeneration exactly as a standing one-way delta does, and no
+    override dismisses one: the guard fails CLOSED, so the next card to add a
+    replacing helper is stopped by its own omission rather than permitted by it.
+    """
+
+    defects: list[str] = []
+    registered: dict[str, _Delta] = {}
+    for delta in _DELTAS:
+        key = delta.card.replace("-", "").lower()
+        if key in registered:
+            defects.append(f"{delta.card}: registered more than once")
+        registered[key] = delta
+        if delta.disposition not in _DISPOSITIONS:
+            defects.append(f"{delta.card}: disposition {delta.disposition!r} is not "
+                           f"one of {_DISPOSITIONS}")
+        if delta.disposition == _INVERTIBLE:
+            if not callable(globals().get(delta.inverse or "")):
+                defects.append(f"{delta.card}: declared {_INVERTIBLE} but its inverse "
+                               f"{delta.inverse!r} is not defined here")
+        elif delta.inverse is not None:
+            defects.append(f"{delta.card}: only an {_INVERTIBLE} delta may name an inverse")
+    helpers, misnamed_helpers = _named(_HELPER_RE, "_with_")
+    inverses, misnamed_inverses = _named(_INVERSE_RE, "_without_")
+    for name in misnamed_helpers + misnamed_inverses:
+        defects.append(f"{name}: a per-card delta helper must be named "
+                       f"_with_c<NNN>_... or _without_c<NNN>_... so the guard can "
+                       f"see it. Rename it and register it in _DELTAS.")
+    for key, name in helpers.items():
+        if key not in registered:
+            defects.append(f"{name}: a per-card delta helper with NO entry in _DELTAS. "
+                           f"Add one saying whether __main__ can still rebuild the "
+                           f"fixture while your delta stands, and why. Until then it "
+                           f"blocks regeneration.")
+    for key, delta in registered.items():
+        if helpers.get(key) != delta.helper:
+            defects.append(f"{delta.card}: registered helper {delta.helper} is not a "
+                           f"delta helper defined in this module")
+        if key in inverses and delta.disposition != _INVERTIBLE:
+            defects.append(f"{delta.card}: {inverses[key]} exists, so this delta IS "
+                           f"invertible and must be registered {_INVERTIBLE!r}, not "
+                           f"{delta.disposition!r}")
+    return defects
+
+
+def _standing_one_way_deltas() -> tuple[_Delta, ...]:
+    return tuple(delta for delta in _DELTAS if delta.disposition == _ONE_WAY)
+
+
+def _regeneration_inverses() -> list[Callable[..., dict[str, Any]]]:
+    """The inverses ``__main__`` composes before writing, in registry order.
+
+    With C-052 the only invertible delta this is exactly ``_without_c052_path_keys``:
+    the path that already works is unchanged, merely read off the registry now.
+    """
+
+    return [globals()[delta.inverse] for delta in _DELTAS
+            if delta.disposition == _INVERTIBLE]
+
+
+def _regeneration_refusal() -> str | None:
+    """Why the fixture must not be rebuilt right now, or ``None`` if it may be."""
+
+    defects, standing = _registry_defects(), _standing_one_way_deltas()
+    if not defects and not standing:
+        return None
+    lines = [f"REFUSING to regenerate {FIXTURE.relative_to(ROOT).as_posix()}", ""]
+    for delta in standing:
+        lines += [f"  ONE-WAY DELTA STANDS: {delta.card} ({delta.helper})",
+                  f"    what it does : it {delta.moves}",
+                  f"    no inverse   : {delta.why}", ""]
+    for defect in defects:
+        lines += [f"  REGISTRY DEFECT: {defect}", ""]
+    lines += [
+        "  WHAT REGENERATING WOULD DESTROY:",
+        "    _document(BASE_SHA) already carries the delta above, so a rebuilt",
+        "    fixture absorbs it. It stops being the BEFORE document it is named",
+        "    for, and every card's stated delta -- C-030's, C-052's and C-057's",
+        "    alike -- becomes unverifiable at the same stroke, because the",
+        "    document they are stated AGAINST no longer exists. The suite would",
+        "    still pass, so nothing would report it (F-076).", ""]
+    if defects:
+        lines += ["  Fix the registry defect(s) above. The override cannot dismiss one.", ""]
+    else:
+        lines += ["  Retiring the BEFORE baseline is a PRODUCT DECISION, not maintenance.",
+                  "  If that decision has been taken, name the exact standing set:", "",
+                  f"    {sys.executable} {GENERATOR} \\",
+                  f"      {OVERRIDE}={','.join(delta.card for delta in standing)}", ""]
+    return "\n".join(lines)
+
+
+def _override_mismatch(named: list[str], standing: tuple[_Delta, ...]) -> str | None:
+    """``None`` when ``named`` is exactly the standing set, else why it is not."""
+
+    expected = [delta.card for delta in standing]
+    if sorted(named) == sorted(expected):
+        return None
+    return (f"{OVERRIDE} must name EXACTLY the standing one-way deltas "
+            f"[{','.join(expected) or 'none'}]; got [{','.join(named) or 'none'}]. "
+            f"It names them so it cannot be pasted forward: registering another "
+            f"one-way delta must expire this invocation rather than carry it.")
+
+
+def _destruction_notice(target: Path, standing: tuple[_Delta, ...]) -> str:
+    stored = hashlib.sha256(FIXTURE.read_bytes()).hexdigest() if FIXTURE.is_file() else "absent"
+    return "\n".join([
+        "RETIRING THE BEFORE BASELINE. This is what is being destroyed:", "",
+        f"  document   : {FIXTURE.relative_to(ROOT).as_posix()}",
+        f"  its bytes  : sha256 {stored}",
+        f"  written to : {target}"]
+        + [f"  absorbing  : {delta.card} -- it {delta.moves}" for delta in standing]
+        + ["",
+           "  The rebuilt document is no longer the BEFORE document the entries in",
+           "  _DELTAS are stated AGAINST, so C-030's, C-052's and C-057's stated",
+           "  moves stop being verifiable against it and the pre-move digests",
+           "  survive only in this file's git history.", ""])
+
+
+def _parse_argv(argv: list[str]) -> tuple[Path, list[str] | None]:
+    target, named = FIXTURE, None
+    for argument in argv:
+        if argument.startswith(f"{OVERRIDE}="):
+            named = [card.strip() for card in argument.split("=", 1)[1].split(",")
+                     if card.strip()]
+        elif argument.startswith(f"{WRITE_TO}="):
+            target = Path(argument.split("=", 1)[1])
+        else:
+            raise SystemExit(f"{USAGE}\n\nunrecognized argument: {argument!r}")
+    return target, named
+
+
 def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> None:
     after = _document(None)
     before = json.loads(_fixture_bytes())
@@ -445,5 +683,157 @@ def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
     assert _serialize(_without_c052_path_keys(_document(BASE_SHA))) == first
 
 
-if __name__ == "__main__":  # regeneration, documented in the module docstring
-    FIXTURE.write_bytes(_serialize(_without_c052_path_keys(_document(BASE_SHA))))
+def _regenerate(argv: list[str]) -> int:
+    """``__main__``'s body. Returns the process exit code; writes only on 0.
+
+    The guard runs BEFORE the 39-leg rebuild, so a refusal is instant and cannot
+    half-write; the inverses come from ``_DELTAS``, so a later card extends its
+    registry entry rather than this function.
+    """
+
+    target, named = _parse_argv(argv)
+    refusal = _regeneration_refusal()
+    if refusal is None:
+        if named is not None:
+            print(f"{USAGE}\n\nno one-way delta is registered: there is nothing to "
+                  f"retire, so {OVERRIDE} is refused rather than ignored.",
+                  file=sys.stderr)
+            return 2
+    else:
+        if named is None:
+            print(refusal, file=sys.stderr)
+            return 2
+        standing = _standing_one_way_deltas()
+        rejection = ("the override cannot dismiss a registry defect"
+                     if _registry_defects() else _override_mismatch(named, standing))
+        if rejection is not None:
+            print(f"{refusal}\n  OVERRIDE REJECTED: {rejection}\n", file=sys.stderr)
+            return 2
+        print(_destruction_notice(target, standing))
+    document = _document(BASE_SHA)
+    for inverse in _regeneration_inverses():
+        document = inverse(document)
+    target.write_bytes(_serialize(document))
+    return 0
+
+
+def _run_main(*argv: str) -> subprocess.CompletedProcess[str]:
+    """This file's ``__main__``, as a real process, for the guard tests below."""
+
+    return subprocess.run([sys.executable, str(Path(__file__).resolve()), *argv],
+                          cwd=ROOT, capture_output=True, text=True,
+                          encoding="utf-8", errors="replace")
+
+
+def test_regeneration_is_refused_while_a_one_way_delta_is_registered() -> None:
+    """Bare ``__main__`` must exit non-zero, write nothing, and say why.
+
+    At BASE this block exited 0 and rewrote the fixture, absorbing C-057's
+    digest move on 7 legs -- a stated baseline move turned silent, with the
+    suite still green (F-076).
+    """
+
+    before = FIXTURE.read_bytes()
+    done = _run_main()
+    assert FIXTURE.read_bytes() == before, "the refusal wrote to the fixture"
+    assert done.returncode != 0, done.stdout
+    message = done.stdout + done.stderr
+    for required in ("REFUSING to regenerate", "C-057", "_with_c057_lineage_hashes",
+                     "no inverse", "unverifiable", OVERRIDE):
+        assert required in message, (required, message)
+
+
+def test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta(
+        tmp_path: Any) -> None:
+    """The escape hatch is real, and what it destroys is exactly what was stated.
+
+    The rebuilt document must be the fixture plus C-057's delta and NOTHING else:
+    ``_with_c057_lineage_hashes`` asserts every untouched field on every leg and
+    that the digest moved on exactly ``_C057_LEGS``, so a rebuild that had also
+    moved the biology fails here instead of being absorbed.
+    """
+
+    target = tmp_path / "retired.json"
+    before = FIXTURE.read_bytes()
+    done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}=C-057")
+    assert done.returncode == 0, done.stdout + done.stderr
+    assert FIXTURE.read_bytes() == before, "the override wrote to the TRACKED fixture"
+    for required in ("RETIRING THE BEFORE BASELINE", "what is being destroyed",
+                     "C-057", "sha256", str(target)):
+        assert required in done.stdout, (required, done.stdout)
+    rebuilt = json.loads(target.read_bytes())
+    assert _serialize(_with_c057_lineage_hashes(
+        json.loads(_fixture_bytes()), rebuilt)) == _serialize(rebuilt)
+
+
+def test_the_override_must_name_exactly_the_standing_one_way_deltas(
+        tmp_path: Any) -> None:
+    """A bare force flag would be pasted forward; naming the set expires it."""
+
+    target = tmp_path / "must-not-exist.json"
+    standing = _standing_one_way_deltas()
+    assert [delta.card for delta in standing] == ["C-057"], standing
+    assert _override_mismatch(["C-057"], standing) is None
+    for wrong in ("", "C-030", "C-057,C-099", "c-057"):
+        assert _override_mismatch([c for c in wrong.split(",") if c],
+                                  standing) is not None, wrong
+        done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}={wrong}")
+        assert done.returncode != 0, wrong
+        assert not target.exists(), wrong
+    assert _override_mismatch(["C-057", "C-099"], standing + (
+        _Delta("C-099", "_with_c099_x", _ONE_WAY, None, "x", "y"),)) is None
+
+
+def test_an_unregistered_delta_helper_blocks_regeneration_by_itself(
+        monkeypatch: Any) -> None:
+    """The registry is hard to skip: omitting an entry is itself a refusal.
+
+    Catches the next card adding a replacing helper without declaring whether the
+    fixture can still be rebuilt while its delta stands -- the exact omission that
+    made F-076 latent instead of loud.
+    """
+
+    assert _registry_defects() == []
+    monkeypatch.setitem(globals(), "_with_c099_demo_delta", lambda before, after: before)
+    defects = _registry_defects()
+    assert any("_with_c099_demo_delta" in defect and "_DELTAS" in defect
+               for defect in defects), defects
+    refusal = _regeneration_refusal()
+    assert refusal is not None and "REGISTRY DEFECT" in refusal
+    assert "override cannot dismiss one" in refusal
+    # And a helper named so the scanner cannot see it is a defect too, so the
+    # registry cannot be dodged by choosing a different name.
+    monkeypatch.setitem(globals(), "_with_lineage_v2", lambda before, after: before)
+    assert any("_with_lineage_v2" in defect for defect in _registry_defects())
+
+
+def test_the_registry_describes_the_helpers_it_guards(monkeypatch: Any) -> None:
+    """Every helper registered, every disposition honest, C-052's path unchanged."""
+
+    assert _registry_defects() == []
+    assert {delta.card for delta in _DELTAS} == {"C-030", "C-052", "C-057"}
+    assert all(delta.moves and delta.why for delta in _DELTAS)
+    # The inverse composition IS the pre-C-065 regeneration path, read off the
+    # registry: identical function, identical order, nothing added.
+    assert _regeneration_inverses() == [_without_c052_path_keys]
+    # A delta that claims to be one-way while its inverse exists is a defect, so
+    # the disposition cannot drift away from the code it describes.
+    monkeypatch.setattr(sys.modules[__name__], "_DELTAS", tuple(
+        delta._replace(disposition=_ONE_WAY, inverse=None)
+        if delta.card == "C-052" else delta for delta in _DELTAS))
+    assert any("_without_c052_path_keys" in defect and _INVERTIBLE in defect
+               for defect in _registry_defects()), _registry_defects()
+
+
+def test_the_docstring_states_the_refusal_beside_the_regeneration_command() -> None:
+    """F-076's second defect: the promise was 320 lines from its own warning."""
+
+    doc = __doc__ or ""
+    command = f".venv/Scripts/python.exe {GENERATOR}"
+    assert command in doc and OVERRIDE in doc
+    assert 0 < doc.index("REFUSED") < doc.index(command), "the warning follows the command"
+    assert "byte-identically" not in doc.split("REFUSED")[0], "the false promise survives"
+
+
+if __name__ == "__main__":  # GUARDED regeneration -- see the module docstring
+    raise SystemExit(_regenerate(sys.argv[1:]))
