@@ -123,9 +123,26 @@ REQUIRED_FIELDS: Dict[str, Tuple[type, ...]] = {
 }
 
 #: Credential shapes a command line can carry into a committed artifact.
+#:
+#: F-082. The leading ``\b`` on the first two is load-bearing, not tidiness.
+#: Without it, any ordinary word ending in ``sk`` -- or in ``gh`` plus one of
+#: ``pousr`` -- starts a match inside a perfectly innocent label or path, and a
+#: clean artifact is rejected as carrying a credential. That fails whole-tree
+#: ``check``, which is merge gate 10. Measured on labels REV-068 actually used:
+#: ``ondisk-nonvacuity-control-green`` matched ``sk-nonvacuity-control-green``,
+#: and ``task-``, ``risk-``, ``disk-``, ``desk-``, ``mask-`` are all ordinary
+#: job vocabulary. The boundary costs no true positive: a real key stands at a
+#: string start or after ``=``, ``"``, whitespace or ``/``, each of which IS a
+#: boundary, so ``--api-key=sk-...`` still matches.
 CRED_PATTERNS = [
-    ("openai_style_key", re.compile(r"sk-[A-Za-z0-9_\-]{16,}")),
-    ("github_token", re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}")),
+    ("openai_style_key", re.compile(r"\bsk-[A-Za-z0-9_\-]{16,}")),
+    ("github_token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}")),
+    # Deliberately NOT given a boundary. The shape is the same, but the only
+    # false positive that exists needs a capital ``A`` immediately followed by
+    # ``Iza`` INSIDE a longer word: a label cannot contain one (LABEL_RE is
+    # lowercase) and no path or command this sprint produces does either.
+    # Changing it would be a fix with no demonstrated defect behind it. If a
+    # real false positive ever turns up, this is the line to change.
     ("google_api_key", re.compile(r"AIza[0-9A-Za-z_\-]{20,}")),
     ("aws_access_key_id", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
     ("bearer_token", re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._\-]{10,}")),
@@ -465,9 +482,21 @@ def test_staging_contract_matches_the_wrapper() -> None:
     """The promoter and the allocator must agree on where reservations live.
 
     ``bounded_run.py`` derives the staging path itself rather than importing this
-    module, so the one shared constant is the whole contract. If either side is
-    renamed without the other, every promotion silently stops happening and every
-    finished job looks like an unfinished one.
+    module, so if the two sides ever disagree, every promotion silently stops
+    happening and every finished job starts looking like an unfinished one.
+
+    MEASURED COVERAGE (REV-063). Both failure shapes are caught, because the
+    equality below is asserted against what ``_staged_reservation_for`` ANSWERS
+    for a real reservation, not against the constant alone:
+
+    * a RENAMED wrapper constant -- caught by the first assertion;
+    * a RELOCATED wrapper staging path with the constant left untouched -- also
+      caught, because a wrapper looking somewhere else finds no reservation and
+      returns ``""``, which is not the path this module reserved.
+
+    The implementer's own report claimed only the first of these. It was wrong
+    in its own disfavour, and the record is corrected here rather than left for
+    someone to file a card against a gap that does not exist.
     """
 
     sys.path.insert(0, os.path.dirname(BOUNDED_RUN))
@@ -480,12 +509,18 @@ def test_staging_contract_matches_the_wrapper() -> None:
     with tempfile.TemporaryDirectory(prefix="g11stg_") as tmp:
         target = allocate("H-004", "contract", root=tmp)
         assert bounded_run._staged_reservation_for(target) == \
-            os.path.abspath(staging_path_for(target))
+            os.path.abspath(staging_path_for(target)), (
+                "the wrapper does not look where this module reserves: "
+                f"wrapper={bounded_run._staged_reservation_for(target)!r} "
+                f"allocator={os.path.abspath(staging_path_for(target))!r}")
         # A path with no reservation behind it is NOT promotable: every legacy
         # caller that hands the wrapper a scratch --json path keeps writing
         # straight to it.
         assert bounded_run._staged_reservation_for(
-            os.path.join(tmp, "H-004", "99-nothing.json")) == ""
+            os.path.join(tmp, "H-004", "99-nothing.json")) == "", (
+                "the wrapper treated a path with no reservation behind it as "
+                "promotable; every legacy caller's scratch --json path would "
+                "stop being written straight through")
 
 
 def _write(tmp: str, name: str, **over: Any) -> str:
@@ -575,12 +610,72 @@ def test_selector_resolution() -> None:
         assert check_many(paths, unmatched) == 1
 
 
+def test_credential_scan_is_word_bounded_and_still_bites() -> None:
+    """F-082: an ordinary label must not read as a credential -- nor the reverse.
+
+    REV-068 had two evidence artifacts rejected because their labels contained
+    ``...sk-``: the openai pattern had no left word boundary, so
+    ``ondisk-nonvacuity-control-green`` matched ``sk-nonvacuity-control-green``.
+    Any label built from ``disk-``, ``task-``, ``risk-``, ``mask-`` or ``desk-``
+    plus 16 more characters failed whole-tree G11 -- merge gate 10 -- on an
+    artifact carrying no credential at all.
+
+    BOTH DIRECTIONS ARE ASSERTED, and that is the whole point. A pattern
+    loosened until it matched nothing would sail through a false-positive-only
+    test while letting a real key into a committed artifact; the true-positive
+    half below is what stops that, and it covers every prefix pattern in
+    :data:`CRED_PATTERNS`, not just the one that was changed.
+
+    Both halves go through :func:`check_report` on real artifacts rather than
+    against the regexes directly, because ``check_report`` is the consumer whose
+    verdict actually blocks a commit.
+    """
+
+    with tempfile.TemporaryDirectory(prefix="g11cred_") as tmp:
+        def flagged(path: str) -> bool:
+            return any(v.startswith("possible_credential")
+                       for v in check_report(path))
+
+        # (a) ordinary vocabulary, in the fields that really carry it.
+        clean = [
+            ("01-clean.json", {"label": "ondisk-nonvacuity-control-green"}),
+            ("02-clean.json", {"label": "task-reconciliation-evidence"}),
+            ("03-clean.json", {"label": "risk-assessment-baseline-run"}),
+            ("04-clean.json", {"label": "disk-pressure-probe-run-01"}),
+            # the same defect one pattern over: a path segment, not a label,
+            # because LABEL_RE forbids the underscore github_token needs.
+            ("05-clean.json", {"cwd": "C:/runs/troughs_0123456789abcdefghij"}),
+        ]
+        for name, over in clean:
+            path = _write(tmp, name, **over)
+            assert not flagged(path), (
+                f"ordinary artifact {over!r} read as a credential: "
+                f"{check_report(path)}")
+
+        # (b) the shapes that MUST still be rejected -- one per prefix pattern,
+        # plus a control, so this loop cannot pass by asserting nothing.
+        biting = [
+            ("10-cred.json", {"command": ["py", "r.py", "--api-key=sk-" + "A" * 24]}, True),
+            ("11-cred.json", {"command": ["py", "r.py", "sk-" + "b3" * 12]}, True),
+            ("12-cred.json", {"command": ["py", "r.py", "ghp_" + "c4" * 12]}, True),
+            ("13-cred.json", {"command": ["py", "r.py", "AIzaSy" + "d5" * 12]}, True),
+            ("14-cred.json", {"command": ["py", "r.py", "AKIA" + "E" * 16]}, True),
+            ("15-cred.json", {"command": ["py", "r.py", "--quiet"]}, False),
+        ]
+        for name, over, want in biting:
+            path = _write(tmp, name, **over)
+            assert flagged(path) is want, (
+                f"{over!r}: expected possible_credential={want}, "
+                f"got {check_report(path)}")
+
+
 TESTS = [
     test_required_fields_present_in_real_wrapper_output,
     test_naming_scheme_cannot_collide,
     test_reservation_is_invisible_to_the_merge_gate,
     test_staging_contract_matches_the_wrapper,
     test_compliance_rules,
+    test_credential_scan_is_word_bounded_and_still_bites,
     test_selector_resolution,
 ]
 

@@ -859,6 +859,11 @@ def case_15_release_refused_for_a_foreign_holder() -> bool:
              "holder_is_not_this_job")),
         ("the report still records the job itself",
          rep.exit_code == 0 and rep.cleanup_success is True),
+        # REV-063 correction 1: the artifact used to keep the child's 0 while
+        # the process exited 96, so nothing in the record said which happened.
+        ("artifact and process AGREE on returned_code",
+         rep.returned_code == rc
+         == bounded_run.EXIT_HEAVY_LOCK_RELEASE_REFUSED),
         ("reported survivors == 0", rep.final_surviving_count == 0),
     ])
     shutil.rmtree(tmp, ignore_errors=True)
@@ -990,7 +995,8 @@ def case_18_killed_wrapper_leaves_the_gate_green() -> bool:
 
 def main() -> int:
     print("=" * 74)
-    print("bounded_run.py -- INIT-001 Step 0c + H-003 drain + H-006 identity cases")
+    print("bounded_run.py -- INIT-001 Step 0c + H-003 drain + H-006 identity "
+          "+ C-063 mutex / report-lifecycle cases")
     print(f"platform={sys.platform}  python={sys.version.split()[0]}  pid={os.getpid()}")
     print(f"wrapper under test: {WRAPPER}")
     # [S8] self-reference: name the wrapper build that produced everything below.

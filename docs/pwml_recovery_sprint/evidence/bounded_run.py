@@ -755,10 +755,14 @@ class HeavyLock:
        reports the condition and leaves the lock exactly as it found it.
 
     Not covered, and deliberately so: a wrapper whose own process is killed
-    outright leaves the lock held, with a holder file naming the job that died.
-    That is a stale lock a human can attribute and dispose of, which is strictly
-    better than the anonymous one the shell protocol left, but it is not an
-    automatic release and must not be mistaken for one.
+    outright leaves the lock held. USUALLY it is attributable -- the holder file
+    names the job that died -- and that case is the one worth having. It is NOT
+    always: the ``holder_file_vanished`` branch in :meth:`release` refuses a lock
+    whose holder file is gone, and such a lock is **exactly as anonymous as the
+    one the shell protocol left**. The refusal is still right -- a lock this job
+    cannot identify is not a lock it may clear -- but no general claim to being
+    better off than the shell protocol survives that branch. Either way this is
+    not an automatic release and must not be mistaken for one.
     """
 
     def __init__(self, holder: str, path: str, label: str = "",
@@ -1450,6 +1454,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                         f"{HEAVY_LOCK_RELEASE_REFUSED_MARKER}: {lock.path}: "
                         f"{lock.release_refusal}"
                     )
+                    # BEFORE the artifact is written, so ``returned_code`` --
+                    # which ``g11_evidence.REQUIRED_FIELDS`` documents as "what
+                    # the wrapper returned" -- is true on this path as well.
+                    # Without it the record reads the child's 0 while the process
+                    # exits 96, and nothing in the artifact says which happened.
+                    # ``exit_reason`` deliberately does NOT move to
+                    # ``infrastructure_failure``: process cleanup really did
+                    # succeed, and relabelling it would misreport what ``run()``
+                    # measured. The lock condition is carried by
+                    # ``heavy_lock.release_refusal`` and by the note above.
+                    holder[0].returned_code = EXIT_HEAVY_LOCK_RELEASE_REFUSED
             emit_json_report(holder[0], args.json_path)
             _forward_text(sys.stderr, holder[0].render() + "\n")
         if lock is not None and not released:
@@ -1466,7 +1481,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         # The lock is now in a state this job cannot vouch for, which is an
         # infrastructure condition and not a test result -- so it takes
         # precedence over the child's own code, exactly as a failed cleanup
-        # verification does.
+        # verification does. That precedent overrides ``report.returned_code``
+        # too, and the ``finally`` above now does the same, so artifact and
+        # process AGREE on this path instead of the parity being asserted only
+        # in a comment (REV-063 correction 1).
         return EXIT_HEAVY_LOCK_RELEASE_REFUSED
     return int(report.returned_code if report.returned_code is not None else 1)
 

@@ -16,11 +16,11 @@
     },
     "tip_bounded_run": {
       "path": "C:\\t\\c063\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
-      "digest": "sha256:64cc7a45672b67b246531fe277d227c8ce11831d2bff4ad882774c528d001529"
+      "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0"
     },
     "tip_g11_evidence": {
       "path": "C:\\t\\c063work\\g9\\tip_reports\\g11_evidence.py",
-      "digest": "sha256:b33e85aaa4c95a34845516cb07bed96dc0aaf6ad371db387aa7992842d09588a",
+      "digest": "sha256:7cced4ac90b1c34c3faecdd46c8cd66abc8b7e87937cdaf46aac766e82385ee2",
       "source": "C:\\t\\c063\\docs\\pwml_recovery_sprint\\evidence\\g11\\g11_evidence.py"
     },
     "base_and_tip_wrappers_differ": true,
@@ -152,7 +152,7 @@
           "removed": "if not lock.acquire():",
           "replaced_with": "if lock.acquire() and False:  # NEUTRALIZED (RULING 13)",
           "occurrences_substituted": 1,
-          "neutralized_digest": "sha256:e4c23d2619de508eb907810a20c2ca31764a75aefd8913b22202ce7c80d1050f"
+          "neutralized_digest": "sha256:6b0feb3f602f5b0c886f266d1ddba96794142e67183e32e1ce4c000ba8e4f352"
         }
       }
     },
@@ -247,7 +247,7 @@
           "removed": "if not isinstance(data, dict) or data.get(\"token\") != self.token:",
           "replaced_with": "if False:  # NEUTRALIZED (RULING 13)",
           "occurrences_substituted": 1,
-          "neutralized_digest": "sha256:54e44b285154849139e1d7fe52ed5311d1c9f6d609ab309529a9630fdc747d21"
+          "neutralized_digest": "sha256:7471c231a40b189ad1e0997a086a0b97ec1b07282d8ec266bb862f22c69c3a32"
         }
       }
     },
@@ -450,7 +450,7 @@
           "removed": "return os.path.join(directory, STAGING_DIRNAME, name)",
           "replaced_with": "return os.path.join(directory, name)  # NEUTRALIZED (RULING 13)",
           "occurrences_substituted": 1,
-          "neutralized_digest": "sha256:66181128682d9ddeafa4a33696c6e2487408d9d1acca0db0ee6cb3ec15b42e76"
+          "neutralized_digest": "sha256:fb6f41ba5205c305b7d324b1be1620b34ec26bec5663bec2c7e65d213fcfe579"
         }
       }
     },
@@ -521,7 +521,7 @@
           "removed": "os.replace(staged, json_path)",
           "replaced_with": "pass  # NEUTRALIZED (RULING 13)",
           "occurrences_substituted": 1,
-          "neutralized_digest": "sha256:a513f7a1c1284b16308fd9439c56269257d905cd0f57581519c23825f352159d"
+          "neutralized_digest": "sha256:9f68dc24bc6c731c82c129ab65a24475dbbf3a976f836594c8fdf71ff72fa2d4"
         }
       }
     }
