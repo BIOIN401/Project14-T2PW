@@ -1309,3 +1309,41 @@ established house pattern, and nothing else in it.**
 helper is the sanctioned mechanism and regeneration is not**. The helper keeps the fixture the BEFORE
 document it is named for, and keeps every prior card's delta legible instead of folding them all into one
 opaque rewrite.
+
+### PACK 9 RULING 12 — C-057's ceiling raised a third time, 1200 → 1250, on an estimate I gave it
+
+**Measured 1208.** Ratified to **1250 / 110 / 5 MB**. **No correction round consumed** — a budget correction
+caused by an inaccurate orchestrator estimate is the orchestrator's to make, and both of C-057's rounds are
+already spent on substantive work.
+
+**The cause is traceable to a number I quoted.** When granting the perturbation driver I said *"~45 lines →
+~1140"*, taken from the card's *scratch* harness. The committed driver is **98 lines**, because my own ruling
+— *runnable beats a transcript, and it must be pointable at the next card's own helper* — requires a module
+docstring explaining what the two biology arms buy, `argparse`, and an exit-code contract. **Those are
+precisely the parts that make it reusable rather than a script with one card's leg names hard-coded.**
+1095 + 98 + 15 (comment) = 1208.
+
+**The card did not trim it and was right not to.** Cutting the docstring or the exit-code contract to reach
+1200 would degrade exactly what the ruling asked for — and cutting an adversarial arm or its documentation to
+fit a number is the one move I have said I would reject for. **It reported and asked. That is the sixth and
+last ceiling raise of the session, and every one of the six traced to my estimate rather than to a card's
+discipline.**
+
+**Recorded as a pattern, not an apology:** a ceiling quoted from a scratch artifact will under-count the
+committed one, because committing something makes it reusable and reusable costs lines. **Size a ceiling
+against what the deliverable must be, not against the prototype that proved it possible.**
+
+### PACK 9 RULING 13 — a mutation harness must be able to fail, and C-057 proved its own could
+
+C-057 committed a driver that runs its seven perturbations and exits non-zero if any arm is silently
+accepted. **Then it audited the harness itself**: replacing `_with_c057_lineage_hashes` with a no-op returning
+the document unchanged makes the driver report **all seven arms GREEN and exit 1**. Measured, not argued.
+
+**That is what makes a green run evidence instead of silence.** A harness that reports success when the guard
+it audits has stopped guarding is worse than no harness — it converts an unchecked property into a checked-
+looking one. C-051's reviewer found exactly that failure in a centralized guard, and F-074 is the same defect
+one level up, in an instrument rather than a guard.
+
+**Standing guidance:** a committed mutation or perturbation harness carries its **own** non-vacuity check —
+neutralize the thing it audits and show the harness goes red. **Without it, the harness is an assertion about
+an assertion, and nothing has verified the outer one.**
