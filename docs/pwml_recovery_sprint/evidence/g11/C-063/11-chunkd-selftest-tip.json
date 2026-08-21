@@ -1,0 +1,132 @@
+{
+  "label": "c063-chunkd-selftest-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/chunk_d_gate_selftest.py"
+  ],
+  "cwd": "C:\\t\\c063",
+  "started_at": "2026-08-21T16:35:54+00:00",
+  "finished_at": "2026-08-21T16:35:56+00:00",
+  "duration_seconds": 2.365585399995325,
+  "timeout_seconds": 280.0,
+  "root_pid": 333968,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 334200,
+      "name": "python.exe",
+      "ppid": 333968
+    },
+    {
+      "pid": 326536,
+      "name": "python.exe",
+      "ppid": 334200
+    },
+    {
+      "pid": 335472,
+      "name": "python.exe",
+      "ppid": 326536
+    },
+    {
+      "pid": 330848,
+      "name": "git.exe",
+      "ppid": 335472
+    },
+    {
+      "pid": 336224,
+      "name": "python.exe",
+      "ppid": 336700
+    },
+    {
+      "pid": 336700,
+      "name": "python.exe",
+      "ppid": 335472
+    },
+    {
+      "pid": 333292,
+      "name": "python.exe",
+      "ppid": 335440
+    },
+    {
+      "pid": 335440,
+      "name": "python.exe",
+      "ppid": 334200
+    },
+    {
+      "pid": 334296,
+      "name": "git.exe",
+      "ppid": 333292
+    },
+    {
+      "pid": 324140,
+      "name": "python.exe",
+      "ppid": 333292
+    },
+    {
+      "pid": 336316,
+      "name": "python.exe",
+      "ppid": 324140
+    }
+  ],
+  "descendants_terminated": [
+    324140,
+    326536,
+    330848,
+    333292,
+    334200,
+    334296,
+    335440,
+    335472,
+    336224,
+    336316,
+    336700
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 116376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 334376,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c063/docs/pwml_recovery_sprint/evidence/g11/C-063/11-chunkd-selftest-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:64cc7a45672b67b246531fe277d227c8ce11831d2bff4ad882774c528d001529",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c063\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 66384,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c063",
+    "repo_head": "ac776682d36012b0b583952d78ac8f0cf02115a3",
+    "repo_source": "git",
+    "wrapper_vs_head": "modified:' M'",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
