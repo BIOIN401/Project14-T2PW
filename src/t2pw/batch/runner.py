@@ -1403,6 +1403,14 @@ CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
         "verdict back, which is the refusal record for exactly the leg whose "
         "refusal mattered most",
     ),
+    (
+        "t2pw.pipeline.deadline",
+        "_finalize_timeout defers it to classify a leg that has ALREADY burned "
+        "its hour -- classify_interaction_timeout and is_operational are what "
+        "set termination_reason on the terminal row. A child that cannot import "
+        "it turns an orderly timeout into a crash, so exactly the night's "
+        "slowest legs are the ones filed under the wrong failure_kind",
+    ),
 )
 
 

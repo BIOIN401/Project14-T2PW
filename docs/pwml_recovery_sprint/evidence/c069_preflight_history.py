@@ -45,6 +45,7 @@ REVS: Tuple[Tuple[str, str], ...] = (
     ("9e1b9abe7ba8a1a228558fd03ca6c394cc22c31e", "ORIGIN_SHA (sprint baseline)"),
     ("d179c4935b6b47bf958d9dbccc7a9b72b96e32b3", "C-041 release status as a runtime classification"),
     ("f3ab5a9b96adcb09e26a6ca514039078607111e4", "C-031 persist quarantine artifacts at the boundary"),
+    ("985355fde5de0b693be8d7f9cf38a5caedbbfeb4", "C-032 one monotonic per-leg deadline (F-086 site)"),
     ("57be026a9f4ea367a66b9597629710e86365c7d3", "C-053 the artifact set names its PWML by release state"),
     ("7e04a1fb65de4ce5cb02f6e4579bcfb4be223a8c", "C-056d gate-failure path carries the semantic verdict"),
     ("e616846de75e2098e3fb76592665955b3cfe3bbc", "C-069 base SHA"),
@@ -80,7 +81,18 @@ def _covered_by(listed: Sequence[str], module_name: str) -> bool:
 
 
 def _sites(driver_source: str) -> List[Dict[str, Any]]:
-    """Every deferred import with its enclosing function and line, in file order."""
+    """Every deferred import with its enclosing function and line, in file order.
+
+    The ``from <pkg> import <submodule>`` promotion rule is IMPORTED from the test
+    module rather than restated (F-086), so this instrument and the guard cannot
+    disagree; ``_drift_check`` proves they do not. Caveat worth stating plainly:
+    submodule-ness is resolved against the CURRENT filesystem, so a historical row
+    is classified by today's package layout. It does not distort this timeline --
+    ``t2pw/pipeline/deadline.py`` and the ``driver.py`` site that imports it were
+    created by the same commit, ``985355f``.
+    """
+
+    from test_batch_preflight import _submodule_names
 
     found: List[Dict[str, Any]] = []
     for node in ast.walk(ast.parse(driver_source)):
@@ -90,7 +102,11 @@ def _sites(driver_source: str) -> List[Dict[str, Any]]:
             names: List[str] = []
             if isinstance(inner, ast.ImportFrom):
                 if inner.level == 0 and inner.module:
-                    names = [inner.module]
+                    children = _submodule_names(inner.module)
+                    names = [inner.module] + [
+                        f"{inner.module}.{alias.name}"
+                        for alias in inner.names if alias.name in children
+                    ]
             elif isinstance(inner, ast.Import):
                 names = [alias.name for alias in inner.names]
             for name in names:

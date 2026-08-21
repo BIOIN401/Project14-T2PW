@@ -103,6 +103,54 @@
       "blind_sites": [
         {
           "function": "_add_identity_artifacts",
+          "line": 1278,
+          "module": "t2pw.pipeline.strict_quarantine"
+        },
+        {
+          "function": "_finalize_timeout",
+          "line": 1577,
+          "module": "t2pw.pipeline.deadline"
+        },
+        {
+          "function": "_finalize_gate_failure",
+          "line": 1630,
+          "module": "t2pw.pipeline.release_status"
+        }
+      ],
+      "child_imports_count": 5,
+      "child_imports_declared": [
+        "streamlit.testing.v1",
+        "t2pw.rag.research_report",
+        "t2pw.batch.driver",
+        "t2pw.pipeline.export_mode",
+        "t2pw.llm.client"
+      ],
+      "missed_distinct_count": 3,
+      "missed_distinct_modules": [
+        "t2pw.pipeline.deadline",
+        "t2pw.pipeline.release_status",
+        "t2pw.pipeline.strict_quarantine"
+      ],
+      "missed_occurrence_count": 3,
+      "missed_occurrences": [
+        "t2pw.pipeline.strict_quarantine",
+        "t2pw.pipeline.deadline",
+        "t2pw.pipeline.release_status"
+      ],
+      "note": "C-032 one monotonic per-leg deadline (F-086 site)",
+      "rev": "985355f",
+      "sites_first_blind_here": [
+        {
+          "function": "_finalize_timeout",
+          "line": 1577,
+          "module": "t2pw.pipeline.deadline"
+        }
+      ]
+    },
+    {
+      "blind_sites": [
+        {
+          "function": "_add_identity_artifacts",
           "line": 1322,
           "module": "t2pw.pipeline.strict_quarantine"
         },
@@ -115,6 +163,11 @@
           "function": "_pwml_artifact_name",
           "line": 1485,
           "module": "t2pw.pipeline.release_status"
+        },
+        {
+          "function": "_finalize_timeout",
+          "line": 1711,
+          "module": "t2pw.pipeline.deadline"
         },
         {
           "function": "_finalize_gate_failure",
@@ -130,16 +183,18 @@
         "t2pw.pipeline.export_mode",
         "t2pw.llm.client"
       ],
-      "missed_distinct_count": 2,
+      "missed_distinct_count": 3,
       "missed_distinct_modules": [
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.strict_quarantine"
       ],
-      "missed_occurrence_count": 4,
+      "missed_occurrence_count": 5,
       "missed_occurrences": [
         "t2pw.pipeline.strict_quarantine",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.release_status",
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status"
       ],
       "note": "C-053 the artifact set names its PWML by release state",
@@ -175,6 +230,11 @@
           "module": "t2pw.pipeline.release_status"
         },
         {
+          "function": "_finalize_timeout",
+          "line": 1718,
+          "module": "t2pw.pipeline.deadline"
+        },
+        {
           "function": "_gate_failure_semantic_carry",
           "line": 1780,
           "module": "t2pw.pipeline.release_status"
@@ -198,16 +258,18 @@
         "t2pw.pipeline.export_mode",
         "t2pw.llm.client"
       ],
-      "missed_distinct_count": 2,
+      "missed_distinct_count": 3,
       "missed_distinct_modules": [
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.strict_quarantine"
       ],
-      "missed_occurrence_count": 6,
+      "missed_occurrence_count": 7,
       "missed_occurrences": [
         "t2pw.pipeline.strict_quarantine",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.release_status",
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.strict_quarantine",
         "t2pw.pipeline.release_status"
@@ -245,6 +307,11 @@
           "module": "t2pw.pipeline.release_status"
         },
         {
+          "function": "_finalize_timeout",
+          "line": 1718,
+          "module": "t2pw.pipeline.deadline"
+        },
+        {
           "function": "_gate_failure_semantic_carry",
           "line": 1780,
           "module": "t2pw.pipeline.release_status"
@@ -268,16 +335,18 @@
         "t2pw.pipeline.export_mode",
         "t2pw.llm.client"
       ],
-      "missed_distinct_count": 2,
+      "missed_distinct_count": 3,
       "missed_distinct_modules": [
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.strict_quarantine"
       ],
-      "missed_occurrence_count": 6,
+      "missed_occurrence_count": 7,
       "missed_occurrences": [
         "t2pw.pipeline.strict_quarantine",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.release_status",
+        "t2pw.pipeline.deadline",
         "t2pw.pipeline.release_status",
         "t2pw.pipeline.strict_quarantine",
         "t2pw.pipeline.release_status"
@@ -289,7 +358,7 @@
   ],
   "worktree": {
     "blind_sites": [],
-    "child_imports_count": 7,
+    "child_imports_count": 8,
     "child_imports_declared": [
       "streamlit.testing.v1",
       "t2pw.rag.research_report",
@@ -297,7 +366,8 @@
       "t2pw.pipeline.export_mode",
       "t2pw.llm.client",
       "t2pw.pipeline.release_status",
-      "t2pw.pipeline.strict_quarantine"
+      "t2pw.pipeline.strict_quarantine",
+      "t2pw.pipeline.deadline"
     ],
     "missed_distinct_count": 0,
     "missed_distinct_modules": [],
