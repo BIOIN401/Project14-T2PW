@@ -232,14 +232,15 @@ class ModeResult:
 
         THERE IS DELIBERATELY NO AFFIRMATIVE TWIN OF THIS PROPERTY, and that
         absence is the whole safeguard. A runtime ``passed`` is NOT evidence that
-        a pathway is semantically right: the gating set is closed at four, but
+        a pathway is semantically right: the gating set is closed, but
         ``CHECK_RAG_REINTRODUCTION`` is structurally unevaluable at the
         quarantine seam (``quarantine_and_close`` takes no ``admission``
         parameter, D-042 section 4), and ``CHECK_ANCHORS`` / ``CHECK_ORGANISM``
         evaluate only under a derivation that supplies them. Measured on the 32
-        committed payload legs (``evidence/c056b_s0_measured.json``): under the
-        seam's own ``pathway_context`` derivation **every one of the 32 had
-        exactly ONE evaluable gating check**, and 25 of them answered ``passed``
+        committed payload legs (``evidence/c056b_s0_measured.json``, measured
+        BEFORE C-071 widened the set): under the seam's own ``pathway_context``
+        derivation **every one of the 32 had exactly ONE evaluable gating
+        check**, and 25 of them answered ``passed``
         on that single check. Serialized as a bare string, that ``passed`` is
         indistinguishable from a four-of-four pass.
 

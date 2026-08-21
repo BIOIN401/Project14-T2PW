@@ -65,8 +65,13 @@ _MIN_CONTAINMENT = 4
 _ACTOR_KEYS: Tuple[str, ...] = ("enzymes", "modifiers", "transporters")
 
 #: Where an actor cites its own span. Measured over the 21 committed ``final_mapped.json``
-#: legs, all 221 actor rows carry ``evidence`` and 20 also carry ``source_refs``; both are
-#: read and their union is searched, so citing the right sentence in either is enough.
+#: legs: of 221 actor rows, 220 carry a NON-EMPTY ``evidence`` and 19 a non-empty
+#: ``source_refs`` (20 carry the key). Both are read and their union is searched, so
+#: citing the right sentence in either is enough. The 221st -- ``transports[1]``
+#: ``.transporters[1]`` of ``runs_verify/2026-08-04_1358/.../PMC12096016/research``,
+#: carrying ``evidence: ""`` beside ``source_refs: [""]`` -- is the ONE not-examined row
+#: corpus-wide, and that is the third disposition working rather than a gap: an actor
+#: that cites nothing is neither corroborated nor refuted.
 _ACTOR_SPAN_KEYS: Tuple[str, ...] = ("source_refs", "evidence")
 
 #: A normalized token shorter than this, or a bare numeral, cannot IDENTIFY a protein:

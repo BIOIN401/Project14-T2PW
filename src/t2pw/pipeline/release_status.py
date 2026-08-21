@@ -71,11 +71,16 @@ SEMANTIC_NO_REPORT = "no semantic report was produced for this run"
 #: as ``passed`` would let an unevaluable run count as semantically confirmed.
 SEMANTIC_NO_GATING_CHECK_EVALUABLE = (
     "no gating semantic check could be evaluated on this run; the gating set is "
-    "closed at four and every member was inapplicable"
+    "closed and every member was inapplicable"
 )
 
-#: The semantic checks that may GATE the release status, closed at exactly four
-#: (D-039 section 3). ``CHECK_PLACEHOLDER_IDENTITY`` never gates (PRODUCT_CONTRACT
+#: The semantic checks that may GATE the release status. The set is CLOSED (D-039
+#: section 3); its cardinality is deliberately NOT restated here, nor in any
+#: SHIPPED string, because a hard-coded count drifts on the next ratified widening
+#: and the test below already forces every addition to be deliberate. Read it from
+#: ``len(SEMANTIC_GATING_CHECKS)``.
+#:
+#: ``CHECK_PLACEHOLDER_IDENTITY`` never gates (PRODUCT_CONTRACT
 #: 13 / TRAP-3 -- it is explicitly non-adjudicating); ``CHECK_SUPPORTED_REACTIONS``
 #: is always inapplicable in production; and ``CHECK_SOURCE_CARRIER`` and
 #: ``CHECK_CONNECTED_CORE`` are RECORDED BUT NON-GATING -- the first documents
@@ -88,8 +93,8 @@ SEMANTIC_NO_GATING_CHECK_EVALUABLE = (
 #: ``t2pw.pipeline`` and a module-level ``t2pw.bench`` import here would invert the
 #: layering for every importer of this module, not just the one seam that is
 #: authorized to. Kept in step BY TEST, not by comment --
-#: ``tests/test_semantic_release_gating.py`` asserts this tuple equals the four
-#: constants and that the set is CLOSED.
+#: ``tests/test_semantic_release_gating.py`` asserts this tuple equals the named
+#: constants, member by member, and that the set is CLOSED.
 SEMANTIC_GATING_CHECKS: Tuple[str, ...] = (
     "requested_pathway_anchors_present",       # bench.semantic.CHECK_ANCHORS
     "organism_compatible",                     # bench.semantic.CHECK_ORGANISM

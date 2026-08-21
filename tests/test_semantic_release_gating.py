@@ -217,7 +217,7 @@ def test_new_acceptance_the_gating_set_is_closed_at_exactly_five() -> None:
     assert len(set(SEMANTIC_GATING_CHECKS)) == 5
 
     # CLOSED: every other check ``evaluate_production_semantics`` populates is excluded,
-    # by name, so adding a fifth gate silently is impossible.
+    # by name, so adding a SIXTH gate silently is impossible.
     for excluded in (
         _s.CHECK_PLACEHOLDER_IDENTITY,   # PRODUCT_CONTRACT 13 / TRAP-3: non-adjudicating
         _s.CHECK_SOURCE_CARRIER,         # hygiene only; disclaims biological meaning

@@ -10,14 +10,15 @@ The hazard this file exists to hold shut
 ----------------------------------------
 ``release_status.semantic_evaluation`` is now populated at the quarantine seam, and its
 ``passed`` value is **not** evidence that a pathway is semantically right. The gating set
-is closed at four, but ``CHECK_RAG_REINTRODUCTION`` is structurally unevaluable there
+is closed, but ``CHECK_RAG_REINTRODUCTION`` is structurally unevaluable there
 (``quarantine_and_close`` takes no ``admission`` parameter, D-042 section 4) and
 ``CHECK_ANCHORS`` / ``CHECK_ORGANISM`` evaluate only under a derivation that supplies
 them. **Measured on all 32 committed payload legs**
 (``docs/pwml_recovery_sprint/evidence/c056b_s0_measured.json``): under the seam's own
 ``pathway_context`` derivation every one of the 32 had exactly ONE evaluable gating check,
 and 25 of them answered ``passed`` on that single check. Under a request-carrying
-derivation 31 of 32 reached three; **none ever reached four**.
+derivation 31 of 32 reached three; **none ever reached the whole set**. Those counts
+were measured BEFORE C-071 took the set from four to five and are left as recorded.
 
 So the rule this file locks is: the runtime verdict may REMOVE a semantic confirmation
 and may never ADD one. ``bench.semantic``'s ``confirmed`` -- which already requires that
