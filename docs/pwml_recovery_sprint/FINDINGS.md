@@ -2607,3 +2607,41 @@ Needs a card owning `tests/test_c011_freeze_seam_golden_equivalence.py`. Candida
 
 **Do not fix this by regenerating the fixture "one last time" and starting clean.** That is the defect,
 performed deliberately. Registered, not fixed. No accepted card is reopened.
+
+## F-077 — two quarantine scopes are deliberately unattributed, pinned by tests, and each is blocked on a different decision
+
+- **Severity** LOW (coverage gap, deliberate) · **Registered 2026-08-20**, integration `269cdf5`
+- **Declared by C-057 in its own report, and pinned by its own tests**, so a later card changes them on
+  purpose rather than discovering them by accident. That is the reason this is a finding and not a defect.
+
+C-057 attributes **excluded process rows** with `stage="quarantine"`. Two scopes that a reader might expect
+to be covered are **not**, each for a stated reason:
+
+### 1. The three closure prunes — blocked on a report-schema decision, not on effort
+
+`_prune_entities` (`:1294`), `_prune_locations` (`:1349`) and `_prune_biological_states` (`:1419`) discard the
+row object itself (`:1345` and siblings). The only surviving carrier is a **fixed-shape record inside
+`removed_entity_report.json`** — so attributing them means **growing that record, which is a report-schema
+change, not a lineage write.** The module's own house rule (`strict_quarantine.py:2215-2239`) bumps
+`schema_version` for exactly that.
+
+**C-057 did not take it, and `schema_version` stays at 6.** A card that wants these attributed must own the
+schema bump and its pin, and disclose it as a deliberate baseline move — the same shape D-054 §8 ratified for
+C-056c.
+
+### 2. `QUARANTINED_DISCONNECTED` — its only write site is outside the boundary
+
+That row was copied into `originals` **while still accepted**, and the only site that could attribute it,
+`_revalidate_surviving_processes`, sits outside C-057's five-function boundary. **Correctly not taken.**
+
+### Why this is worth a registered finding rather than a code comment
+
+**A deliberate gap and an oversight look identical six months later.** Both scopes are pinned by tests in
+`tests/test_strict_quarantine_lineage.py`, so a card that widens them will see a red test rather than a silent
+behaviour change — but the *reason* each was left lives only in C-057's report and here.
+
+**Neither is a contract violation today.** `PRODUCT_CONTRACT.md:85-102` §3 binds *"the final pathway"*, and a
+row deleted by a closure prune is not in it — the same argument that made C-057's exclusion-only reading
+correct (PACK 9 RULING 10). These are completeness gaps in the *attribution*, not gaps in the contract.
+
+Registered, not fixed, unowned. No accepted card is reopened.
