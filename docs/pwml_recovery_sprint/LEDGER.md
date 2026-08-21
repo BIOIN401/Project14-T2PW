@@ -1477,3 +1477,39 @@ Both verified unregistered before filing.
 * **Cost for both ≈ $0 marginal** — all nine OpenRouter model slots are `openrouter/free`. The binding
   constraint is free-tier rate limiting and wall clock. Package at `T101_T103_AUTHORIZATION.md`.
 * **T-104 / T-105** — unchanged: blocked behind F-062, two separate ~7 h runs, **never collapsed into one**.
+
+## PACK 10 RULING 4 — "do not touch the lock" plus an unforbidden heavy job guarantees an unprotected run
+
+**C-068 ran SMOKE (`465 passed in 37.65s`) without the heavy mutex.** It did not touch `C:\t\heavylock` and
+did not claim to hold it, so this is a **disclosed unprotected heavy run**, not an F-072-class violation. The
+number is independently corroborated by the orchestrator's own protected SMOKE earlier the same session, so
+nothing measured is in doubt.
+
+**The cause is a defect in my charter, not in the card's judgement.** I wrote *"Offline and focused — do not
+create, touch or remove `C:/t/heavylock`. Never `pytest -n auto`; never run the full suite unchunked."*
+I forbade **taking the lock** and never forbade **running a heavy job**. The card then, reasonably, wanted to
+show the pinned baseline unmoved by its own change — which is exactly the diligence the sprint asks for — and
+the only path my instructions left open was to run it unprotected.
+
+**PACK 9 RULING 1 sets the line by RESOURCE, not by test count**: SMOKE, any chunk, any `qb`, any leg or
+benchmark, and anything touching the live DB or writing a shared cache under `data/` all need the mutex.
+**PACK 9 RULING 5** then records that subagents **cannot create the lock at all** — a permission classifier
+blocks it. **Those two rulings together mean a subagent can never legitimately run a heavy job on its own.**
+
+**Standing rule for every future charter and dispatch.** Telling an agent not to touch the lock is only half
+an instruction. Pair it explicitly with one of:
+
+1. **"Do not run SMOKE, any chunk gate, any `qb`, any benchmark or any pipeline leg. If you believe you need
+   one, stop and ask the orchestrator, who will hold the lock for you and run it."** — the default; or
+2. **"The orchestrator is holding the lock for job X"**, named and time-bounded; or
+3. an explicit, recorded acceptance that a specific run will be **unprotected and disclosed as such**.
+
+**Absent one of those three, an agent that decides mid-card that it needs a heavy run has no compliant option
+and will produce an unprotected one.** That is a charter bug with an agent-shaped symptom, and it is the
+third distinct process defect this sprint rooted in agents being asked to satisfy an infrastructure protocol
+the charter did not fully specify — after F-071 and F-072.
+
+**Note for the C-063 merge:** once `bounded_run.py` owns mutex acquisition (`--heavy-lock`), option 1 stops
+being a workaround and becomes enforceable — a subagent passing the flag gets a real acquire or a hard stop,
+and the "cannot create the lock" limitation is removed from agent hands entirely. **This ruling is the case
+for C-063 rather than an argument against it.**

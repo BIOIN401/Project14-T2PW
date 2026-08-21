@@ -2845,3 +2845,162 @@ answer unblocks work; the absence of an answer is what does not.**
 evidence code whose docstrings carry load-bearing definitions — `probe_downstream_gates.py` is 40 lines of
 prose before its first import. **Search `docs/` including `.py`, and search `tests/` too**, before recording
 that a term has no antecedent.
+
+## F-081 — `_degree_zero_exports` resolves names WITHOUT synonyms while every other consumer resolves WITH them, so it refuses connected proteins
+
+- **Severity** **HIGH** · `product_contract_violation` · **Registered 2026-08-21**, integration `23614d9`
+- **Supersedes F-062's proposed remedy.** F-062's *mechanism* is correctly read and its reading of merge
+  rule 7 is right in spirit. **Its proposed fix — routing structural reasons into `review_reasons` — is
+  wrong, and this finding records why.** F-062 is not withdrawn; its remedy direction is.
+- Produced by an independent read-only biological adjudication of all five structural reasons, commissioned
+  because merge rules 6 and 7 pull in opposite directions at that seam.
+
+### The divergence, derived from source and confirmed by execution
+
+**The closure loop already deletes every removable orphan, using a WIDER name test than the detector that
+then reports orphans.**
+
+* `strict_quarantine.py:1524` — the pruner keeps a row if `_entity_name_norms([row]) & keep_norms`, and
+  `_entity_name_norms` (`process_normalizer.py:626-636`) is **name ∪ synonyms**.
+* `strict_quarantine.py:1940-1942` — the detector flags a row if `_normalize(_row_name(row))` is absent from
+  `referenced ∪ exempt`. That is **name only**.
+
+`keep_norms` (`:2086`) and `referenced ∪ exempt` (`:1928-1934`) are the same set. Nothing between the closure
+fixpoint (`:2124`) and the detector (`:2151`) mutates entities — verified: `_drop_quarantined_processes`
+touches only `processes`, `_reconcile_locked_reactions` writes only top-level keys, and
+`evaluate_core_coverage` takes a `Mapping` and appends only to locals.
+
+**Therefore, for any run with `converged == True`:**
+
+> a row flagged by `_degree_zero_exports` survived `_prune_entities` at a fixpoint ⟹ its primary name is not
+> in `keep_norms` ⟹ its intersection with `keep_norms` came from a **synonym** ⟹ **the row is referenced,
+> and the detector cannot see the reference.**
+
+Executed, with its control:
+
+```
+referenced norms          : ['a', 'b', 'exa']
+pruner norms (name+syn)   : ['enzyme x', 'exa']
+pruner keeps row?         : True
+detector norm (name only) : enzyme x
+_degree_zero_exports      : [{'bucket': 'proteins', 'name': 'Enzyme X'}]
+>>> DIVERGENCE: pruner KEEPS a row the detector calls degree-zero
+
+CONTROL genuine orphan: pruner keeps? False | detector flags it | after prune, detector returns []
+```
+
+**The detector is the outlier, not the pruner.** `_build_registry` (`:632-634`) states the module's own
+resolution rule: *"Synonyms count, exactly as `validate_registry_references` counts them: a reaction that
+says 'NAD' resolves against a compound named 'NAD+' that lists 'NAD' as a synonym."* Synonyms are populated
+in production by UniProt enrichment (`mapping/enrich_entities.py:1469`, `:1225`). **Admission, pruning and
+the registry all count synonyms; only `_degree_zero_exports` does not.**
+
+### What it costs, on the two committed legs
+
+Both `runs_verify/2026-08-18_1328/papers/PMC12096016/strict/` and `.../PMC12452463/strict/`:
+
+```
+strict_invariants.degree_zero_exports = [{'bucket': 'proteins', 'name': 'Isochorismatase (EntB)'}]
+strict_invariants.closure_converged   = True
+coverage.minimum_core_satisfied       = True      coverage.reasons = []
+refusal_reasons = ['degree_zero_export:1']        review_reasons = []
+release.status  = diagnostic_only                 strict_acceptance_eligible = False
+```
+
+**The identical row on two different papers — a systematic name artifact, not leg biology.**
+
+**The gold set settles it.** `bench/gold/pinned_v1.json`, PMC12096016: `mechanistic_relevance: "core"`,
+`expected_export: "strict_exportable"`, and `export_rationale` calls the graph *"a **fully connected**
+metabolite chain (chorismate to isochorismate to 2,3-diDHB to 2,3-DHB to activated DHB to enterobactin) with
+a named enzyme per step"*. **Gold's own word is "fully connected", and the detector calls a protein in it
+disconnected.**
+
+### Why F-062's routing remedy is the wrong repair
+
+Routing `degree_zero_export` into `review_reasons` would make `ok = true` and ship
+`pathway.review_required.pwml` **carrying a review reason that says "this protein has no connectivity" about
+the catalyst of a surviving reaction.** The indicated remedy handed to a human would be to delete a connected
+enzyme. Under **merge rule 6** that is weakening a gate to increase production on the strength of a signal
+the module's own registry contradicts.
+
+**The correct repair is one layer down**, and it satisfies both rules at once:
+
+> Make `_degree_zero_exports` resolve names the way `_build_registry`, `validate_registry_references` and
+> `_prune_entities` already do — through `_entity_name_norms([row])` against `referenced ∪ exempt`. The
+> `exempt` construction at `:1929-1934` needs the same treatment.
+
+Then on a converged run it is **empty by construction**; both legs stop being dropped and reach the coverage
+branch **on their own merits** — which is exactly what merge rule 7 asks for — **obtained without touching
+the routing policy and without relaxing any gate.** The rule *"no protein exported at degree zero"* stays
+fully enforced, by the pruner, correctly; the detector goes back to being the residual assertion
+`tests/test_strict_quarantine_release_seam.py:268` already calls it.
+
+### ⚠ THE SECOND SEAM — a trap that would ship a PWML on a `diagnostic_only` run
+
+**F-062 frames this as a one-line fix at `:2230-2233`. It is not, and a one-line fix would be actively
+harmful.** `classify_release_status` **independently** encodes the same refusal:
+
+* `strict_quarantine.py:2342-2345` computes
+  `strict_gates_passed = (not overlaps and not degree_zero and not unaccounted_locks and converged)` and
+  `serializable_without_invention = not unexportable` — **separately from `refusal_reasons`**;
+* `release_status.py:492-497` checks both **above** the coverage branch, producing `DIAGNOSTIC_ONLY`.
+
+So moving a structural reason into `review_reasons` alone yields **`ok: true` with
+`release.status: diagnostic_only`** — an internally contradictory report. And **`ok` is the PWML production
+switch**: `app/streamlit_app.py:4717` returns early with no export when `not quarantine_result.ok`. Flipping
+`ok` without the classifier would **ship a final PWML on a `diagnostic_only` run**, breaching
+`PRODUCT_CONTRACT.md:343` (*"No final PWML for `diagnostic_only`"*).
+
+**Any card touching this area must be told this explicitly.**
+
+### The other four reasons — all `keep_refusing`, and it is not a blanket answer
+
+* **`entity_type_overlap`** — one normalized name in two buckets; every reference binds by `setdefault` to
+  whichever bucket sorts first, **deterministically and arbitrarily**, with no record that a choice was made.
+  Fails `PRODUCT_CONTRACT.md:189-197`'s third conjunct (*"representable without guessing"*) — the guess is
+  literal. `process_normalizer.py:4566` already raises the protein/complex case as a hard error.
+* **`unexportable_entity`** — every member of `_entity_representability`'s failure set requires inventing a
+  fact to write the row, `placeholder_claims_real_identity` (a **forged accession**) most sharply. Named
+  verbatim in the locked text: *"no defensible connected core, **or serialization would require invention**
+  → `diagnostic_only`"*.
+* **`unaccounted_locked_reactions`** — `locked_reactions_found` is a bare **count**
+  (`pipeline/pipeline.py:1064`), retaining no id list, so the artifact can say *how many* locks vanished and
+  never **which**. A reviewer is handed *"3 locked reaction(s) are neither active nor quarantined"* and
+  cannot find them. **Nothing they could act on.** *(Caveat: the `max()` against a prior count means this
+  can also fire from a stale over-count with nothing actually lost. Either way the accounting needs repair,
+  not a routing change — and the prerequisite for ever making it reviewable is an **id list**.)*
+* **`closure_not_converged`** — all four loop contributors are monotone-decreasing, so a non-converged run
+  is a **mid-reduction snapshot, not a fixpoint**. Every other invariant, `coverage`, and the semantic
+  verdict are computed on that unfinished graph — **so `defensible_core` itself is unreliable**, and the
+  seam's own precondition for routing to review is not established.
+
+### One correction to a committed test's claim
+
+`tests/test_strict_quarantine_release_seam.py:264-267` claims `entity_type_overlap` cannot fire without
+emptying the graph. **Not true in general:** a protein `X` exempt as a component of a surviving complex, plus
+a compound `X` referenced by a surviving reaction, gives an overlap with both rows surviving and the reaction
+resolving cleanly to the compound — reachable **with a defensible core**, and precisely the dangerous
+configuration.
+
+### Confidence, and the one thing that would overturn it
+
+**HIGH** on the divergence theorem and on all five rulings — derived from source and executed.
+
+**MEDIUM** on the claim that the production `Isochorismatase (EntB)` row carried a synonym in `keep_norms`.
+The theorem forces it, but **it could not be observed directly, because the quarantine input payload is not
+persisted** (the standing instrumentation gap at `FINDINGS.md:1580`). This was verified rather than assumed:
+`admitted_payload_hash` on the report is `sha256:b22521ec9dfc4088`, while recomputing over the committed
+`final_mapped.json` gives `sha256:7e22a4662dbe2f61` and over `merged_payload.json` gives
+`sha256:a88b67690be2da81`. **Neither committed file is the payload quarantine judged**, so `synonyms: None`
+in `final_mapped.json` is not evidence about the admitted row.
+
+**The one measurement that settles it:** persist the quarantine input payload, or log
+`_entity_name_norms([row])` alongside each `degree_zero_exports` entry, and re-run either leg at pre-C-059
+code. **Schedule that before the correcting card is written.** If the flagged row's synonym set is disjoint
+from `keep_norms`, the theorem is wrong and there is a third divergence not yet found.
+
+**What would change the ruling itself:** a product-owner decision that **synonym-based connectivity is not
+real connectivity**. Then the pruner and `_build_registry:632-634` are the defect, the remedy is upstream
+duplicate-identity dedupe (F-057, partly delivered by C-059's `REASON_ALREADY_COVERED`), and
+`degree_zero_export` stays `keep_refusing` for a different reason. **Either way the routing seam is not the
+surface to change** — which is the most confident part of the adjudication.
