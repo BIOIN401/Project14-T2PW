@@ -87,18 +87,46 @@ at `9e06360`. **It did not** — that is C-010's *base*, and C-012's merge. C-01
 **`72ee20f`**. Registered as **F-085**. `DECISIONS.md` is append-only, so ratifying the old
 wording would have made a false fact permanent.
 
-## 6. Standing pre-charged failures — CHANGED THIS SESSION
+## 6. Standing pre-charged failures — THE WHOLE REGISTER IS NOW MEASURED
 
-Current list, **pending the C-069 merge**:
+**Every entry was re-measured at integration `e616846` in the primary checkout this
+session.** Three confirmed, one corrected. Do not re-derive these; do re-measure any you are
+about to depend on.
 
-* `test_strict_failure_replay.py` — two failures
-* `test_batch_preflight.py` — **two → ONE on the C-069 merge.** Strike only
-  `test_every_import_driver_defers_is_covered_by_the_preflight`.
-  **`test_the_message_names_the_problem_the_interpreter_and_the_cure` STAYS pre-charged** —
-  it fails on *"this project ships a `.venv`; the test assumes it"*, which is a **worktree
-  artefact** (agent worktrees have no `.venv`) and is unrelated to C-069's diff.
-* seven `.env`-conditional failures
-* `qb` node15 whenever PathBank is reachable
+| entry | register said | **measured at integration** | status |
+|---|---|---|---|
+| `test_strict_failure_replay.py` | 2 | **2 failed, 37 passed, 8 skipped** — both the `only_unrelated_reactions_survive` parameterisation | ✔ **confirmed** |
+| `test_batch_preflight.py` | 2 | **1 failed, 35 passed** | ✘ **CORRECTED — see below** |
+| `.env`-conditional family | 7 | **7 failed, 50 passed**, and the file breakdown matches exactly: 4 in `test_prefreeze_third_export_seam.py`, 1 in `test_prefreeze_species_resolution.py`, 1 in `test_pwml_writer.py` (F-065), 1 in `test_canonicalization_preflight_and_species.py` | ✔ **confirmed** |
+| `qb` node15 | fails when PathBank reachable | **failed** in the full Chunk D gate | ✔ **confirmed** |
+
+### ⚠ The `test_batch_preflight.py` correction
+
+The register's **2** is a **worktree number, not an integration number.**
+`tests/test_batch_preflight.py:480` asserts `venv is not None` — *"this project ships a
+`.venv`; the test assumes it"*. `git worktree add` does not copy `.venv` (it is untracked), so
+that assertion fires in every agent worktree, and four further tests gated on
+`if runner.venv_python() is None:` (`:584`) **skip** there and **pass** here.
+
+| | worktree | primary checkout |
+|---|---|---|
+| failed | 2 | **1** |
+| passed | 30 | **35** |
+| skipped | 4 | 0 |
+
+**So on the C-069 merge this entry does not go 2 → 1. It goes 2 → 0, and the 2 was never
+right for integration.** Post-merge expectation, stated before the merge so it is a
+prediction and not a rationalisation: **36 passed, 0 failed.**
+
+**Why it matters beyond one line.** This is the same class of error as F-068 and PACK 11
+RULING 1 — a number measured correctly, in the wrong environment, then carried forward as if
+environment-free. `FINDINGS.md:2076` already warns about the inverse: filing a genuine
+unconditional red under the `.env` family is *"how a real signal gets permanently silenced."*
+This is that warning running the other way — **a worktree artifact filed as a real red
+inflates the register and is how a genuine new red later gets waved through as expected.**
+
+**Standing guard: a pre-charged failure should record which environment it was measured in.**
+`.env`-dependent reds are tracked carefully; `.venv`-dependent ones were not tracked at all.
 
 **The C-069 baseline delta to cite is the CORRECTED one** — the author's first report was
 wrong in its own favour and it corrected itself:

@@ -1,0 +1,104 @@
+{
+  "label": "envfamily-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/INTEG-069/06-envfamily-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/integ/envf",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_canonicalization_preflight_and_species.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-21T20:19:49+00:00",
+  "finished_at": "2026-08-21T20:20:19+00:00",
+  "duration_seconds": 29.43379559999994,
+  "timeout_seconds": 280.0,
+  "root_pid": 103372,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 103356,
+      "name": "python.exe",
+      "ppid": 103372
+    }
+  ],
+  "descendants_terminated": [
+    103356
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 78024,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102008,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102308,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103200,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\INTEG-069\\06-envfamily-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "82a297f358e543c71929830af5af4cb0fd918f9e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
