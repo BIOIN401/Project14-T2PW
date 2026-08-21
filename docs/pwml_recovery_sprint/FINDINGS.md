@@ -2289,3 +2289,80 @@ merge.
 
 Registered, **unowned, not fixed.** No accepted card is reopened, and no completed report has ever been moved,
 deleted or altered in any of the four disposals.
+
+## F-072 — a failed mutex acquire does not stop the job, and the same shell short-circuit has now cleared a live holder's lock
+
+- **Severity** **HIGH** (process) · **Registered 2026-08-20**, integration `c3fd041`
+- **Disclosed unprompted by REV-058**, which stopped immediately and reported rather than continuing.
+- **Second occurrence of this exact mechanism.** The first was a near-miss the previous session recorded;
+  this one actually cleared a lock.
+
+### What happened, in the reviewer's own account
+
+It ran, as one command:
+
+```
+mkdir C:/t/heavylock && echo ACQUIRED
+<probe>
+rm -rf C:/t/heavylock
+```
+
+`mkdir` **failed** with `File exists` — C-056d held the lock. **The `&&` suppressed only the `echo`.** The
+following statements were separate, so they ran anyway. Consequently:
+
+1. a ~3-second read-only probe ran **while another card held the mutex** — a concurrency violation, minimal
+   contention harm;
+2. the trailing `rm -rf` **deleted a lock the agent had never acquired**, and because it never read the
+   holder file, it could neither name nor restore the holder.
+
+### Why the guard that exists did not help
+
+`_SHARED_EXECUTION_BLOCK.md` § 1 already says *"Clearing another holder's stale lock is the ORCHESTRATOR'S
+DECISION ALONE"* — and the agent was not trying to clear anyone's lock. **It believed it held the lock it was
+releasing.** The rule is about intent; the failure was about control flow. **A rule against deliberate
+clearing does not protect against an unconditional release after a failed acquire.**
+
+`mkdir` on an existing directory is the *correct* mutex primitive — it is atomic and it fails when held. The
+defect is entirely in how its failure is consumed.
+
+### Blast radius, measured
+
+**Nil for every measurement.** The orchestrator verified at the time that **no other heavy job was running**,
+so nothing contended with the probe, and C-056d's in-flight focused run had nothing to be perturbed by.
+**A cleared lock invalidates the protocol, not the result** — C-056d was told explicitly not to discard or
+re-run its job.
+
+REV-058's own 12 evidence jobs each acquired and released correctly; only the 12th was affected, and it was a
+read-only probe.
+
+### The two rules that actually prevent it — binding on every agent
+
+1. **Never chain an acquire to anything with `&&`, and never let a job follow a failed acquire.** Make the
+   acquire its own statement, **test its result explicitly**, and only then run. Compound lines are how
+   execution gets past a failure that should have stopped it. `_SHARED_EXECUTION_BLOCK.md` § 10 already
+   forbids compound `git add && commit` for a related reason.
+2. **Never `rm -rf C:/t/heavylock` unconditionally.** **`cat` the holder file first and remove the lock only
+   if it names you.** If it names someone else — stop and report. This is the rule that converts the failure
+   from silent to visible.
+
+### Owner and remedy — UNOWNED
+
+The durable fix is to stop making every agent hand-roll a two-phase protocol in shell. Candidates:
+
+* a tiny `heavylock.py acquire --holder <CARD>` / `release --holder <CARD>` pair that **refuses to release a
+  lock whose holder file names someone else** and exits non-zero on a failed acquire, so the shell's own
+  error handling stops the job;
+* or folding acquisition into `bounded_run.py`, which already owns job lifecycle, timeouts and cleanup —
+  it is the natural place, and it would make "one heavy job at a time" an enforced invariant rather than a
+  convention every agent re-implements.
+
+**The second is the stronger candidate** — it removes the primitive from agent hands entirely, exactly as
+`bounded_run` already removed process cleanup from them.
+
+**Related, and the reason this keeps costing:** this is the **third** distinct process defect this sprint
+rooted in agents hand-rolling infrastructure in shell — F-071 (reservation left by a wall-clock kill),
+PACK 9 RULING 5 (reviewers cannot create the lock at all, so they run unprotected), and now this.
+**The protocol asks every agent to re-implement the same three-step dance, and agents get it wrong in a new
+way each time.**
+
+Registered, not fixed. **No measurement is invalidated and no card is reopened.**
