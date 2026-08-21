@@ -17,7 +17,8 @@
 |---|---|
 | Branch | `sprint/pwml-recovery` |
 | Session start tip | `e616846de75e2098e3fb76592665955b3cfe3bbc` |
-| Orchestrator evidence commit | `f2a959ff2fc2014313c23a7d6cfb1d8b4a1ce153` (pushed; local = origin = `ls-remote` verified) |
+| **Current tip** | `81b8c3ea56d73ad7c28b9e4c4b871e12e3c6dc78` — pushed, `local = origin = ls-remote` verified after every push |
+| Cards merged this session | **C-070** (`09f7156`) |
 | Merges to `main` | **none, and none permitted** |
 
 ## 2. Baselines re-measured at tip — use these, do not re-derive
@@ -44,19 +45,44 @@ by direct measurement, and the conditionality is the only difference between the
 
 | card | branch | worktree | exact tip | state |
 |---|---|---|---|---|
-| **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `86d5807ed9857808bb2261a0e089c958ce497767` | reported; **REV-069 dispatched on exact tip**; SMOKE **473 ✔** run by orchestrator |
-| **C-070** (F-066) | `agent/c070-isolated-collection` | `C:/t/c070` | `5bc600effbf75f1f1836516e30d4049253617f98` | reported; **REV-070 dispatched on exact tip**; all four heavy gates run by orchestrator, **all on the pin** |
-| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | — | **dispatched**, base `f2a959f` |
+| **C-070** (F-066) | `agent/c070-isolated-collection` | `C:/t/c070` | `5bc600e` | ✅ **MERGED `09f7156`** — bare `APPROVE` from REV-070, zero correction rounds |
+| **C-069** (F-073 + F-086) | `agent/c069-child-imports` | `C:/t/c069` | `86d5807` | **CORRECTION round 1 in flight.** REV-069 returned CORRECTION, not REJECT; orchestrator verified it against source before spending the round |
+| **C-071** (F-079) | `agent/c071-actor-span-gate` | `C:/t/c071` | — | in flight, base `f2a959f` |
 
-### C-070's heavy gates — orchestrator-run, all green
-SMOKE **473**, Chunk A **134**, Chunk E **174**, Chunk D **187/187 `failed=none`**.
-**Every pinned count held and no pass/fail set moved** — C-070's central claim, confirmed
-independently of its report.
+### C-070 — ACCEPTED and MERGED
 
-### ⚠ Uncommitted evidence in `C:/t/c070`
-The orchestrator's four gate runs allocated G11 reports into that worktree (seqs 13–16 plus
-~32 Chunk D node reports under `g11/C-070/`). **They are not yet committed** — deliberately,
-so REV-070 reviews the exact tip it was given. **Commit them on the branch before merging.**
+Bare unsuffixed `APPROVE`, **zero correction rounds**. Orchestrator-run heavy gates, all on
+the pin: SMOKE **473**, Chunk A **134**, Chunk E **174**, Chunk D **187/187 `failed=none`**.
+Post-merge at integration: SMOKE + the new file = **475 passed, 1 skipped** (473 unchanged +
+2 routine arms; the 94 s sweep correctly skips behind `T2PW_ISOLATED_COLLECT_ALL=1`).
+
+**REV-070 verified the one genuinely risky claim by measurement rather than argument** — that
+`pythonpath = src` at `sys.path[0]` could weaken the G11 tree pin. It cannot, and the finding
+inverts: with the ini **off**, plain `pytest` silently imported `t2pw` from whatever
+`PYTHONPATH` named; with it **on**, rootdir's own `src` wins. The change enforces the very
+property `tree_pin.py` exists to enforce.
+
+**F-066 is closed, and closing it refuted two of its own claims** — the "re-pin everything"
+characterization (for this remedy only) and the 21-file exposure list (wrong in both
+directions; its count is right by coincidence). Both left standing in the record, annotated.
+
+### C-069 — correction round 1, and what it is
+
+REV-069 found that **two of the three new `CHILD_IMPORTS` reason strings assert a failure mode
+that measurably cannot happen** — `PreflightProblem.why` text read by an operator at 2am, and
+a static-read assertion of runtime behaviour, which § S5 forbids in terms. Verified against
+source before the round was spent:
+
+* `streamlit_app.py:52` imports `strict_quarantine` at module scope → the child dies executing
+  the app script, so *"still writes all four reports"* is false.
+* `extraction_ladder.py:61` → `pipeline.py:32` makes `deadline` a module-scope dependency of
+  the extraction pipeline → **every** leg dies at import, not *"exactly the night's slowest
+  legs"*.
+* The third string, `release_status`, was ruled **accurate** and must not change.
+
+**One round remains after this one.** Everything else in the card reproduced exactly,
+including its self-correction against its own interest, and its evidence instruments were
+ruled **in-boundary**.
 
 ## 4. What must happen next, in order
 

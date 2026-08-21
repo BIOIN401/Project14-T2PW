@@ -1782,3 +1782,99 @@ fully regardless, so a one-line answer unblocks the merge rather than starting t
 
 **Ten of twelve consuming test files are in no chunk** — the F-054 hazard live — so the
 charter enumerates the focused set explicitly instead of naming a gate.
+
+---
+
+## C-070 — ACCEPTED, MERGED `09f7156`, reviewed tip `5bc600e` (2026-08-21, PACK 11)
+
+Exact bare unsuffixed `APPROVE` from REV-070 after **zero correction rounds**. Closes **F-066** (HIGH).
+
+The remedy is one line — `pythonpath = src` in `pytest.ini` — and the card's real contribution is proving
+that it is *allowed* to be one line.
+
+### The measurement that was the whole card
+
+F-066 characterised every candidate remedy as *"a sprint-wide gate change … SMOKE and all four chunks would
+have to be re-pinned."* Measured, that is an **over-estimate** for this remedy:
+
+| comparison | result |
+|---|---|
+| Chunk C | **109 → 109**, per-node outcome lists byte-identical |
+| Chunk D-core | **160 → 160**, per-node outcome lists byte-identical |
+| collected node IDs across SMOKE + Chunk D + Chunk E | **identical, 834 = 473 + 187 + 174** |
+
+**REV-070 re-derived this by a tighter route than the card's** — holding the tree constant and toggling only
+`-o pythonpath=`, isolating the single changed line rather than comparing two commits.
+
+**Orchestrator heavy gates on the branch**, all through `bounded_run.py` with the wrapper-owned mutex, all
+zero survivors: SMOKE **473**, Chunk A **134**, Chunk E **174**, Chunk D **executed=187/187, omissions=0,
+additions=0, failed=none**. Post-merge at integration, SMOKE + the new file: **475 passed, 1 skipped** — 473
+unchanged plus two routine arms, the 94 s sweep correctly skipping behind `T2PW_ISOLATED_COLLECT_ALL=1`.
+
+**Nothing was re-pinned, because nothing moved.** Mechanically it cannot: `src` is already on `sys.path` in
+every pinned run from two independent sources — the measured launcher **requires** `PYTHONPATH=<tree>/src`,
+and 132 files insert it themselves — so the ini adds a duplicate of an entry that is always present, and
+duplicate `sys.path` entries are inert.
+
+### PACK 11 RULING 3 — measure the risky claim, do not argue it
+
+The one thing in C-070 that could have been a REJECT was that `pythonpath` inserts `<rootdir>/src` at
+`sys.path[0]` **at config time**, so it now beats a `PYTHONPATH` naming a different tree. In a sprint whose
+entire measurement discipline rests on proving *which tree was measured*, that is the question that matters.
+
+**The card disclosed it and named it as the thing to scrutinise, rather than hoping nobody noticed.** The
+reviewer then measured it four ways instead of accepting the card's argument — and the finding **inverted**:
+
+```
+plain python -m pytest, same tree, foreign PYTHONPATH:
+  ini ON : t2pw.__file__ = <rootdir>/src/t2pw/__init__.py    <- rootdir's own tree
+  ini OFF: t2pw.__file__ = <foreign>/src/t2pw/__init__.py    <- FOREIGN tree
+```
+
+Without the ini, plain pytest silently imported `t2pw` from whatever `PYTHONPATH` named. **The change
+enforces the very property `tree_pin.py` exists to enforce.** Under `pinned_pytest` it is a no-op either
+way, because `tree_pin.resolve_facts` binds `t2pw` in `sys.modules` before `import pytest` and `check`
+refuses a mismatch first — re-confirmed post-merge: foreign `PYTHONPATH` still yields
+`T2PW_FROM_WRONG_TREE`, *"REFUSED before collection. No test was run. Exit 98."*
+
+**The rule:** when a card changes something the sprint's own measurement discipline depends on, the reviewer
+reproduces the hazard rather than evaluating the card's reasoning about it. An argument that a change is
+safe and a measurement that it is safe are not the same evidence, and only the second survives a reader who
+disagrees.
+
+### F-066's own record was wrong in two places, annotated rather than deleted
+
+**Its 21-file exposure list is wrong in BOTH directions, and its count is right by coincidence.** 155 files,
+132 mention `sys.path`, 23 do not; of those 23, **18 fail and 5 pass**; of the 132, **3 fail**. 18 + 3 = 21.
+Four files it names collect alone perfectly well (all reach `src` via `from helpers_prefreeze import ...`);
+four genuinely failing files are missing, including one that mentions `sys.path` only in a **docstring** and
+two that use it inside a test **body**.
+
+**So no static predicate separates the two sets** — which is why the acceptance test is a real sweep over
+every `tests/test_*.py` rather than a name list, and why the card's own first design, an "at-risk subset"
+sweep, was discarded: **it would have missed 3 of the 21.** A card that discards its own design on its own
+measurement is doing the job.
+
+### The acceptance test, and the cost decision inside it
+
+The routine canary is **generated, not named**, so test file 157 is covered the day it is written. The
+complete sweep — 156 interpreter starts, ~94 s — is env-gated and skips by default, because a 94-second
+test per merge is one someone later deletes. **Runtime was measured and the placement argued, not assumed.**
+
+Non-vacuity: discovery neutralised identically in two arms, the only difference being the `MIN_TEST_FILES`
+floor. Unguarded PASSED, guarded FAILED. **REV-070 re-ran this against the SHIPPED module** rather than the
+card's deleted probes, by repointing `TESTS_DIR` at an empty directory — a stricter control.
+
+### Findings carried out of this card
+
+* **F-088** — `tree_pin.py:3-4` cited *"`pytest.ini` sets no `pythonpath`"* as a premise. This merge made it
+  false. **Fixed at the merge, docstring only**, because the sentence became false as a direct result of a
+  merge the orchestrator performed. C-070 correctly did not touch it — its charter says *"Call them; never
+  edit them."*
+* **F-089** — `tests/test_c030_canonical_identity_fallback.py:88` shells out to `git ls-files` at **import**
+  time, and exported base trees exclude `.git`. This is why REV-070's base sweep reported **22** where the
+  card's reported 21 — a one-file discrepancy the reviewer ran down instead of waving away. LOW, unowned.
+* **Charter defect, mine not the card's.** `_SHARED_BLOCKS.md` § S4 (D-019) requires machine-generated
+  evidence to carry *"max artifact count AND a size limit"*. The C-070 charter gave only the size. **Both
+  reviewers found the same omission in the charters they reviewed**, and both correctly attributed it to the
+  charter. C-071's charter was corrected in flight rather than disclosed at closeout.
