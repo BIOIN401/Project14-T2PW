@@ -104,9 +104,17 @@ Full text with exact recommended wording:
 | # | decision | recommendation | what it unblocks |
 |---|---|---|---|
 | **1** | *"After the index fix"* (`PRODUCT_CONTRACT.md:341`) refers to C-010, merged as **`72ee20f`** | **Ratify** | T-104's acceptance row becomes quotable; F-062 closes with no card |
-| **2** | `round_cap_reached` as an eighth termination reason, precedence rank 8, **outside** `OPERATIONAL_TERMINATION_REASONS` | **Approve as drafted** | closes C-064's loose end; also the ratification C-071's merge is held on |
+| **2** | `round_cap_reached` as an eighth termination reason, precedence rank 8, **outside** `OPERATIONAL_TERMINATION_REASONS` | **Approve as drafted** | closes C-064's loose end |
 | **3** | T-101 + T-103 live-run authorization, ~3.8 h, ~$0 | **Authorize**, plus one free `GET /api/v1/key` | both milestones start immediately |
 | **4** | **NEW.** Does `PRODUCT_CONTRACT.md` §3's *"whether it was paper-explicit"* require the claim to be **verified** or merely **recorded**? | **Recorded** — close F-078 Half B with the residual documented | F-078 |
+| **5** | **NEW.** Ratify `SEMANTIC_GATING_CHECKS` **4 → 5**, the one named addition C-071 makes | **Ratify on delivery**, once C-071's diff and evidence are in hand | **C-071's merge, which is HELD on this** |
+
+> **⚠ Correction to an earlier draft of this file.** It said C-071's merge was held on
+> Decision 2. **It is not** — Decision 2 is `round_cap_reached`, a RAG-loop termination reason
+> with nothing to do with semantic gating. C-071's hold is its own ratification and is now
+> **Decision 5**. Two unrelated ratifications were conflated; recorded rather than silently
+> renumbered, because a handoff that quietly changes what a decision meant is worse than one
+> that admits it got it wrong.
 
 **⚠ Decision 1 carries a corrected SHA.** F-080 and the takeover brief both say C-010 merged
 at `9e06360`. **It did not** — that is C-010's *base*, and C-012's merge. C-010 merged at

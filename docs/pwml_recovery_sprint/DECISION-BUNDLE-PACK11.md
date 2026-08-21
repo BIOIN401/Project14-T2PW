@@ -1,6 +1,6 @@
 # Product-owner decision bundle — prepared at integration `e616846`
 
-**Four** decisions. The takeover brief anticipated three; **Decision 4 surfaced from
+**Five** decisions. The takeover brief anticipated three; **Decisions 4 and 5 surfaced from
 measurement this session** and could not have been known before F-078 was measured against
 current source. Each is prepared to the point where a one-line answer discharges it.
 
@@ -397,3 +397,91 @@ test it moves is identified: `tests/test_stage_one_boundary_lineage.py:246-256`
 
 **⚠ Note for either answer:** all **fourteen** consuming test files for this seam are outside
 the chunk table. No chunk and no SMOKE covers them. A charter must enumerate them explicitly.
+
+---
+
+# Decision 5 — ratify `SEMANTIC_GATING_CHECKS` 4 → 5 (C-071's merge gate)
+
+**NEW, and it is the one decision that currently holds a completed card out of the tree.**
+
+> ⚠ **Correction to this document's own framing.** An earlier draft of `RESUME-NEXT-SESSION.md`
+> said C-071's merge was held on Decision 2. It is not — Decision 2 is `round_cap_reached`, a
+> RAG-loop termination reason unrelated to semantic gating. Two ratifications were conflated.
+> This is the real one.
+
+## What is being asked
+
+Ratify a single named addition to `src/t2pw/pipeline/release_status.py:93-98`:
+
+```python
+SEMANTIC_GATING_CHECKS: Tuple[str, ...] = (
+    "requested_pathway_anchors_present",
+    "organism_compatible",
+    "no_real_id_or_name_conflict",
+    "no_rejected_rag_reaction_reintroduced",
+    # + one new check: an actor whose entity name does not appear in the span
+    #   it cites as its own evidence
+)
+```
+
+**4 → 5. One name. Nothing else in that file changes.**
+
+## Why it needs you rather than me
+
+`tests/test_semantic_release_gating.py:192-223`
+`test_new_acceptance_the_gating_set_is_closed_at_exactly_four` asserts the tuple literally,
+`len == 4`, `len(set) == 4`, and that four further checks are **excluded by name** — with the
+stated purpose *"adding a fifth gate silently is impossible."*
+
+**That test exists precisely to force this decision, and it is doing its job.** Under the
+D-044 / D-052 §1 standing rule, *"a widening that is the mechanism of an already-granted
+change is ratifiable, but it must be disclosed and ratified in the record — never absorbed
+silently."*
+
+`SEMANTIC_GATING_CHECKS` decides which papers can reach `release_ready`. Adding to it changes
+what the product ships. That is policy, not implementation.
+
+## What it is the mechanism of
+
+**`PRODUCT_CONTRACT.md:343`, which is LOCKED**: *"Structured status is authoritative."*
+
+F-079 measured a payload carrying a fabricated transporter — an `EntE` actor whose only cited
+evidence is a span naming **TolC** — classified `release_ready`, `semantic_evaluation: passed`,
+`strict_acceptance_eligible: True`. Re-measured at tip: still reproduces, byte-identical to the
+committed artifact. So the fix is contract-justified; the gating-set addition is the narrowest
+mechanism that delivers it.
+
+## Why the card does not read `passed` affirmatively
+
+F-053 forbids it and **remains undischarged**. C-071 is chartered to make the defect produce
+`SEMANTIC_FAILED` through a gating check and let the existing subtractive cap at
+`release_status.py:541` do the demotion. **It respects the prohibition rather than testing it.**
+
+F-079 is itself fresh evidence F-053 should stay: `strict_acceptance_eligible` came back `True`
+on that leg, which is a denominator-entry authorisation. Had any card been chartered to build a
+rate on `passed`, that leg would have entered a strict numerator carrying a reaction the paper
+does not state.
+
+## The exact delta you would be ratifying
+
+* `SEMANTIC_GATING_CHECKS` **4 → 5**, one named addition.
+* `tests/test_semantic_release_gating.py:192-223` updated to assert **five**, with its closure
+  property **intact** — a sixth silent addition must still be impossible — and renamed, since a
+  function called `..._closed_at_exactly_four` that asserts five is worse than no test.
+* Real edits expected in `test_c056b_semantic_denominators` and `test_c056c_semantic_evaluability`,
+  which index and sweep the tuple by width.
+* **`test_compound_resolution_extraction`'s `GOLDEN` must NOT move.** It hashes the IR built from
+  the payload; a classification-only fix does not touch it. If it moves, the card left its
+  boundary and the charter says stop.
+
+## Recommended answer
+
+**Ratify on delivery** — i.e. once C-071's diff and evidence are in hand, not now. The card is
+being implemented to completion regardless, so this is a one-line unblock rather than a start
+signal. If you would rather see the finished detector and its false-positive/false-negative
+tests before committing, that is the natural point.
+
+**If you decline**, F-079 stays open and unfixable at this seam: every alternative either reads
+`passed` affirmatively (forbidden by F-053) or makes `CHECK_SUPPORTED_REACTIONS` applicable in
+production, which would mean inventing gold signatures. Declining is a legitimate answer, but it
+should be made knowing there is no narrower mechanism available.
