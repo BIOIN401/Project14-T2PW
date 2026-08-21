@@ -1808,6 +1808,16 @@ def _dedupe_candidates(
     * the same claim from a DIFFERENT passage survives as its own candidate.
       That is corroboration, and it must reach :func:`_resolve_reactions` so the
       row ends up carrying both source pointers.
+
+    ``gap_id`` STAYS in the key, deliberately, and C-059 measured why. The same
+    span retrieved for two gaps is collapsed by
+    :data:`~t2pw.rag.admission.REASON_DUPLICATE_ACROSS_GAPS`, which runs AFTER the
+    admission gate has judged the claim against each gap separately. Collapsing
+    here instead would judge it once, against whichever gap sorted first — and the
+    gate's verdict is gap-dependent by construction (``_gap_type_verdict``: a
+    reaction fills a connectivity gap and cannot fill an ``unmapped_enzyme`` one).
+    A claim refused for the first gap and admissible for the second would be lost
+    outright, which is a merge-rule-7 deletion of a legitimate recovery.
     """
     out: List[Tuple[RagReactionCandidate, _Reaction]] = []
     seen: set = set()

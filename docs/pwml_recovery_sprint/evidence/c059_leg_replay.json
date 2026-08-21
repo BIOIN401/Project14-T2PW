@@ -1,0 +1,201 @@
+{
+  "already_covered_removes_the_reimported_row": true,
+  "base_like_phase3_neutralized": {
+    "counts": {
+      "accepted": 2,
+      "considered": 2,
+      "rejected": 0
+    },
+    "emitted_reaction_names": [
+      "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)"
+    ],
+    "reason_codes": [
+      "fills_named_gap_directly"
+    ]
+  },
+  "both_refusals_active": {
+    "counts": {
+      "accepted": 0,
+      "considered": 2,
+      "rejected": 2
+    },
+    "emitted_reaction_names": [],
+    "reason_codes": [
+      "gap_already_covered_by_existing_reaction"
+    ],
+    "verdicts": [
+      {
+        "gap_id": "gap-dangling_reaction-555124de",
+        "gap_ids": [
+          "gap-dangling_reaction-555124de"
+        ],
+        "reasons": [
+          "gap_already_covered_by_existing_reaction: every substrate and product of this candidate is already one of 'EntB isochorismatase reaction''s, on the same side and in the same direction, so it adds no connectivity gap gap-dangling_reaction-555124de does not already have"
+        ],
+        "status": "rejected"
+      },
+      {
+        "gap_id": "gap-dangling_reaction-7e0b4a06",
+        "gap_ids": [
+          "gap-dangling_reaction-7e0b4a06"
+        ],
+        "reasons": [
+          "gap_already_covered_by_existing_reaction: every substrate and product of this candidate is already one of 'EntB isochorismatase reaction''s, on the same side and in the same direction, so it adds no connectivity gap gap-dangling_reaction-7e0b4a06 does not already have"
+        ],
+        "status": "rejected"
+      }
+    ]
+  },
+  "committed_run": {
+    "counts": {
+      "accepted": 2,
+      "considered": 339,
+      "rejected": 337
+    },
+    "dangling_gap_ids": [
+      "gap-dangling_reaction-555124de",
+      "gap-dangling_reaction-7e0b4a06",
+      "gap-dangling_reaction-8b584237",
+      "gap-dangling_reaction-a2038cf5"
+    ]
+  },
+  "dedup_alone_is_payload_neutral": false,
+  "dedup_alone_payload_delta": [
+    {
+      "index": 0,
+      "key": "enzymes",
+      "left": [
+        {
+          "entity": "Isochorismatase (EntB)",
+          "entity_type": "protein",
+          "evidence": [
+            {
+              "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "score": 0.914815,
+              "section": "introduction",
+              "source_id": "PMC12452463",
+              "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+              "span": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+            }
+          ],
+          "rag_confidence": 0.930233,
+          "rag_provenance": {
+            "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35",
+            "score": 0.914815,
+            "section": "introduction",
+            "source_id": "PMC12452463",
+            "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+            "span": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+          },
+          "role": "catalyst",
+          "source_papers": [
+            {
+              "organism": "",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "title": "",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "source_refs": [
+            "PMC12452463"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "entity": "Isochorismatase (EntB)",
+          "entity_type": "protein",
+          "evidence": [
+            {
+              "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35",
+              "score": 0.914815,
+              "section": "introduction",
+              "source_id": "PMC12452463",
+              "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+              "span": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+            }
+          ],
+          "rag_confidence": 0.914815,
+          "rag_provenance": {
+            "chunk_id": "262953bcb3a53769e2cd36e4ba0a3c35",
+            "score": 0.914815,
+            "section": "introduction",
+            "source_id": "PMC12452463",
+            "source_uri": "https://doi.org/10.1080/21505594.2025.2563018",
+            "span": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+          },
+          "role": "catalyst",
+          "source_papers": [
+            {
+              "organism": "",
+              "source_id": "PMC12452463",
+              "source_type": "paper",
+              "title": "",
+              "uri": "https://doi.org/10.1080/21505594.2025.2563018"
+            }
+          ],
+          "source_refs": [
+            "PMC12452463"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 0,
+      "key": "rag_confidence",
+      "left": 0.930233,
+      "right": 0.914815
+    }
+  ],
+  "dedup_alone_payload_delta_note": "MEASURED, and it contradicts the C-059 charter's section 2, which predicted a byte-identical payload. Cause: _merge_into unions _Reaction.scores and _confidence takes their max, so the row the committed run shipped carries the HIGHER of the two per-retrieval scores (0.930233, verifiable at merged_payload.json /processes/reactions/5/rag_confidence). Deduping at admission means only the surviving candidate's own score reaches synthesis, so rag_confidence becomes 0.914815. Everything else on the row -- name, participants, enzymes, gap_id, gap_ids, provenance, evidence, source_refs -- is identical. The row itself is NOT removed by the dedup: that is the already-covered refusal's doing, which is the point of the split.",
+  "dedup_only_covered_neutralized": {
+    "counts": {
+      "accepted": 1,
+      "considered": 2,
+      "rejected": 1
+    },
+    "emitted_reaction_names": [
+      "Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)"
+    ],
+    "reason_codes": [
+      "duplicate_claim_admitted_for_another_gap",
+      "fills_named_gap_directly"
+    ],
+    "verdicts": [
+      {
+        "gap_id": "gap-dangling_reaction-555124de",
+        "gap_ids": [
+          "gap-dangling_reaction-555124de",
+          "gap-dangling_reaction-7e0b4a06"
+        ],
+        "reasons": [
+          "fills_named_gap_directly: via isochorismate"
+        ],
+        "status": "accepted"
+      },
+      {
+        "gap_id": "gap-dangling_reaction-7e0b4a06",
+        "gap_ids": [
+          "gap-dangling_reaction-7e0b4a06"
+        ],
+        "reasons": [
+          "duplicate_claim_admitted_for_another_gap: the same claim from the same span is already admitted against gap 'gap-dangling_reaction-555124de', which now carries this gap id too"
+        ],
+        "status": "rejected"
+      }
+    ]
+  },
+  "dedup_only_emits_the_duplicate_row": true,
+  "leg": "runs_verify/2026-08-18_1328/papers/PMC12096016/strict",
+  "purpose": "replay the committed strict leg through detect_gaps + admit_candidates; separate the biology fix (already-covered) from the hygiene fix (cross-gap dedup)",
+  "reading": "The already-covered refusal is what removes the re-imported row: with it neutralized the cross-gap dedup still emits one copy of 'Isochorismate to 2,3-Dihydro-2,3-Dihydroxybenzoate (DHB)', which is the row that went degree-zero and refused both strict legs. The dedup corrects counts.accepted and the per-gap breakdown; it is hygiene.",
+  "replay_dangling_gap_ids": [
+    "gap-dangling_reaction-555124de",
+    "gap-dangling_reaction-7e0b4a06",
+    "gap-dangling_reaction-8b584237",
+    "gap-dangling_reaction-a2038cf5"
+  ],
+  "replay_faithful": true,
+  "task": "C-059"
+}
