@@ -129,8 +129,18 @@
     "non_vacuity": "seven single-field perturbations of the new helper, ALL SEVEN RED. See c057_c011_golden_delta.json non_vacuity."
   },
   "budgets_after_correction": {
-    "hand_authored": "1095 / 1100 (ratified 1000 -> 1100 in ruling 1)",
-    "generated_artifacts": "41 / 110",
-    "evidence_bytes": "about 230 KB / 5 MB"
+    "hand_authored": "measured at the final tip; ceiling 1200 (ratified twice: 1000 -> 1100 -> 1200)",
+    "generated_artifacts": "43 / 110",
+    "evidence_bytes": "about 240 KB / 5 MB"
+  },
+  "correction_round_2": {
+    "grant": "commit the perturbation driver runnable (ceiling 1100 -> 1200); strengthen the one-way comment.",
+    "reran": "ONLY tests/test_c011_freeze_seam_golden_equivalence.py + tests/test_strict_quarantine_lineage.py, as instructed.",
+    "summary_line": "27 passed in 12.82s",
+    "breakdown": "2 (c011) + 25 (the new acceptance file)",
+    "g11": "evidence/g11/C-057/39-c011-plus-lineage-r2.json",
+    "final_surviving_count": 0,
+    "harness_run_from_the_repo": "7/7 perturbations rejected, exit 0; and with the guard replaced by a no-op, 0/7 rejected and exit 1, so the harness detects vacuity rather than merely being quiet.",
+    "not_rerun_and_why": "SMOKE, Chunk A, Chunk E and Chunk D were NOT re-run. src/ has not moved since aa4dac2 and the one touched test file is in none of those four selections, so SMOKE 465, Chunk A 126, Chunk E 174 and Chunk D 185/187 stand as measured at aa4dac2."
   }
 }

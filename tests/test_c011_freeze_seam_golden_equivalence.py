@@ -325,12 +325,27 @@ def _with_c052_path_keys(before: dict[str, Any], after: dict[str, Any]) -> dict[
 #: ``canonical_graph_sha256`` -- the EXPORTERS' hash -- moves on 0 of 78 leg
 #: runs, and so do the surviving row set, the admission states and the removals.
 #:
-#: ONE-WAY, and that is the limitation to know: ``_without_c052_path_keys`` can
-#: strip C-052's delta because its keys are additive, but the digest this one
-#: replaces is not stored anywhere, so its inverse is not expressible. Running
-#: ``__main__`` below would therefore ABSORB this delta into the fixture, which
-#: is the "regenerate to absorb it" failure the whole mechanism exists to
-#: prevent. The fixture must not be regenerated while this delta stands.
+#: ONE-WAY. DO NOT READ THE HELPERS ABOVE AND ASSUME THIS ONE REVERSES LIKE
+#: THEIRS -- it does not, and the asymmetry is structural rather than an
+#: oversight:
+#:
+#: 1. **There is no ``_without_c057_lineage_hashes`` and none can be written.**
+#:    ``_without_c052_path_keys`` works because C-052's delta ADDS keys, so
+#:    dropping them restores the fixture exactly. This delta REPLACES a digest,
+#:    and the value it replaces -- the pre-C-057 ``payload_sha256`` -- is stored
+#:    nowhere but in the fixture itself. Once overwritten there is nothing left
+#:    to restore it from, so the inverse is not expressible at any price.
+#: 2. **Running ``__main__`` below WILL silently absorb this delta**, because
+#:    that path regenerates from ``_document(BASE_SHA)``, which now carries it.
+#:    The write would succeed, the suite would pass, and the fixture would have
+#:    stopped being the BEFORE document it is named for -- the exact
+#:    "regenerate to absorb it" failure this whole mechanism exists to prevent,
+#:    committed by the one command documented as safe.
+#: 3. **So the fixture must not be regenerated while this delta stands.** If a
+#:    later card needs to regenerate it, that is a product decision about
+#:    retiring the BEFORE baseline, not a housekeeping step, and it has to be
+#:    taken deliberately rather than by running the block at the bottom of this
+#:    file.
 _C057_KEYS = ("canonical_payload_sha256", "final_stage3_gate_report")
 _C057_LEGS = 7
 

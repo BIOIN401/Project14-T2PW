@@ -82,9 +82,26 @@
       "a refusal leg grew a gate report -> AssertionError(<leg>)"
     ],
     "what_this_buys": "The first two are the ones that matter. connectivity and normalization_stats ARE the biology. A lineage write that had also changed the graph would move them, and this helper fails rather than absorbing it -- which is the difference between stating a delta and papering over one.",
-    "probe_script_not_committed": "The 45-line driver lives in the session scratchpad and is NOT committed, because committing it would take hand-authored lines from 1095 to about 1140 and breach the ratified 1100 ceiling. The perturbations and their verbatim results are recorded above in full so a reviewer can reconstruct it exactly. Say the word and it is committed with another raise -- no evidence has been discarded to fit a number."
+    "harness": "docs/pwml_recovery_sprint/evidence/c057_golden_delta_perturbations.py -- committed RUNNABLE in correction round 2, on the orchestrator ruling that the next card facing a golden move needs a harness it can point at its own helper, not a transcript it has to re-implement. Run: .venv/Scripts/python.exe docs/pwml_recovery_sprint/evidence/c057_golden_delta_perturbations.py --tree .",
+    "harness_result_from_the_repo": "7/7 perturbations rejected, exit 0.",
+    "harness_is_itself_non_vacuous": "Swap _with_c057_lineage_hashes for a no-op that returns `before` unchanged and the harness reports all seven arms GREEN and exits 1. Measured. So a green run is evidence, not silence."
   },
   "one_way_limitation_disclosed": "_without_c052_path_keys can strip the C-052 delta because its keys are additive. The digest this delta REPLACES is not stored anywhere, so its inverse is not expressible and no _without_c057_ helper is possible. Running the __main__ regeneration block in that file would therefore ABSORB this delta into the fixture -- the exact failure the mechanism exists to prevent. __main__ was NOT modified, being outside the grant; the limitation is stated in the constant comment in the file itself so the next person meets it before running it.",
   "graph_equivalence": "canonical_graph_sha256 moves on ZERO of the 39 fixture legs and ZERO of the 78 cohort leg runs. Only the payload-integrity hash moves. See c057_cohort_equivalence.json.",
-  "correction_to_c057_cohort_equivalence_json": "That file c011_golden_delta.legs_whose_canonical_payload_sha256_moves lists NINE leg runs. Nine is the standalone probe count, which calls quarantine_and_close directly on the normalized payload. SEVEN is the count from the fixture own generator, which runs the whole freeze block, and SEVEN is the authoritative number for the fixture and the number the helper enforces. The nine is left in place rather than silently overwritten."
+  "correction_to_c057_cohort_equivalence_json": "That file c011_golden_delta.legs_whose_canonical_payload_sha256_moves lists NINE leg runs. Nine is the standalone probe count, which calls quarantine_and_close directly on the normalized payload. SEVEN is the count from the fixture own generator, which runs the whole freeze block, and SEVEN is the authoritative number for the fixture and the number the helper enforces. The nine is left in place rather than silently overwritten.",
+  "correction_round_2": {
+    "grant": "commit the perturbation driver (ceiling raised 1100 -> 1200); strengthen the one-way comment to state all three facts.",
+    "comment_now_states": [
+      "the delta is ONE-WAY and does not reverse like C-052's, stated as a do-not-assume-symmetry warning",
+      "no _without_c057_lineage_hashes exists or can be written, and WHY: C-052 ADDS keys so dropping them restores; this REPLACES a digest stored nowhere but the fixture, so once overwritten there is nothing to restore from",
+      "running __main__ WILL silently absorb it -- the write succeeds, the suite passes, and the fixture stops being the BEFORE document, committed by the one command documented as safe",
+      "so the fixture must not be regenerated while this delta stands, and retiring the BEFORE baseline is a product decision rather than a housekeeping step"
+    ],
+    "main_not_modified": "still outside the grant; the orchestrator is registering the hazard as a finding with an owner outside this card.",
+    "reran": "ONLY tests/test_c011_freeze_seam_golden_equivalence.py + tests/test_strict_quarantine_lineage.py.",
+    "summary_line": "27 passed in 12.82s",
+    "g11": "evidence/g11/C-057/39-c011-plus-lineage-r2.json",
+    "final_surviving_count": 0,
+    "not_rerun_and_why": "SMOKE, Chunk A, Chunk E and Chunk D were NOT re-run. src/ has not moved since aa4dac2 and the touched file is in none of those four selections, so SMOKE 465, Chunk A 126, Chunk E 174 and Chunk D 185/187 stand as measured there."
+  }
 }
