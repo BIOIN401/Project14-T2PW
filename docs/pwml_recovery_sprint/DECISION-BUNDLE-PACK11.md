@@ -485,3 +485,64 @@ tests before committing, that is the natural point.
 `passed` affirmatively (forbidden by F-053) or makes `CHECK_SUPPORTED_REACTIONS` applicable in
 production, which would mean inventing gold signatures. Declining is a legitimate answer, but it
 should be made knowing there is no narrower mechanism available.
+
+## ⚠ Decision 5 — the measured blast radius, added after REV-071
+
+**This is the number that should decide the answer, and it was not available when Decision 5 was
+first written.**
+
+REV-071 measured the new check against the whole committed corpus, not just F-079's leg:
+
+> **13 of 21 committed `runs_verify` legs, and 8 of 14 `runs/` legs, now fail the new gating
+> check.**
+
+**That is a material move in strict-acceptance eligibility across the committed corpus**, not a
+one-leg fix. Ratifying `SEMANTIC_GATING_CHECKS` 4 → 5 moves those legs from `release_ready` to
+`review_required` with `strict_acceptance_eligible=false`.
+
+### The reviewer's adjudication of whether that is right
+
+**It judged the failures dominated by genuine fabrications**, and named them:
+
+* `EntE` cited by spans naming **TolC**, **TonB**, or **EntF** — F-079's own defect class, and
+  20 of 221 actor rows corpus-wide are `Ent*` symbols a naive substring test would have
+  accepted because they sit inside the word *enterobactin*.
+* `ALAS2 complex` cited by *"rate-limiting step for heme biosynthesis"* — a span naming no
+  protein at all.
+* `SFXN4 complex` cited by a span naming **ALAS**.
+
+**The marginal cases land at `review_required`, which is the contract's answer for an uncertain
+identity** — e.g. `ALAS2` cited by *"ALAS mediates…"*, and `enterobactin synthase` cited by
+*"EntE (…ligase)"*. They are flagged for a human, not dropped.
+
+### What is NOT claimed
+
+REV-071 was explicit that **biological adjudication of the marginal demotions is not a
+reviewer's call**: whether `review_required` is the *biologically* right answer for
+`ALAS2` vs `ALAS` is a `pwml-bio-auditor` question. The reviewer judged them as **lexical
+evidence questions**, which is what the check actually asks.
+
+**If you want that adjudication before ratifying, say so** — it is a read-only bio-auditor
+pass over the ~13 demoted legs and it does not block anything else.
+
+### Two design residuals, recorded rather than fixed
+
+1. **A payload where every actor row lacks a usable span makes the check `applicable=False`**,
+   and an inapplicable gating check cannot demote — so such a payload still reaches
+   `release_ready`. It is visible only as `NO_ACTOR_SPANS` in `semantic_check_evaluability`.
+   This follows from the pre-existing D-006 architecture plus `CHECK_SOURCE_CARRIER` being
+   deliberately non-gating. Closing it would change how `release_status` treats inapplicable
+   gating checks — **a product decision, correctly not improvised by the card.**
+2. **The multi-token hole, now quantified:** ~**14 of 373 passing rows (3.8 %)** are corroborated
+   by a single non-identifying token (`complex`, `homodimer`, `synthase`, `deacetylase`,
+   `disaccharide`, `udp`). It points only in the **under-reporting** direction — it never
+   demotes correct output. Closing it needs a hand-built stopword vocabulary with its own drift.
+
+### How this changes the recommendation
+
+**It does not — but it raises the stakes, so it should be seen.** The recommendation stays
+**ratify on delivery**. The check is doing what the contract asks: `PRODUCT_CONTRACT.md:343`
+makes structured status authoritative, and 13 legs currently claim a status their own cited
+evidence does not support.
+
+**But 13 of 21 is a number you should approve deliberately rather than discover.**
