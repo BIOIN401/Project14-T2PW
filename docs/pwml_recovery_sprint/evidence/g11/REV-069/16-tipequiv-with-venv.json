@@ -1,0 +1,190 @@
+{
+  "label": "rev-tipequiv-with-venv",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/REV-069/16.pin.json",
+    "-q",
+    "-rs",
+    "--basetemp=C:/t/rev069tmp/tv",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\rev069base",
+  "started_at": "2026-08-21T20:26:42+00:00",
+  "finished_at": "2026-08-21T20:26:50+00:00",
+  "duration_seconds": 7.7814468999986275,
+  "timeout_seconds": 300.0,
+  "root_pid": 107140,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 116364,
+      "name": "python.exe",
+      "ppid": 107140
+    },
+    {
+      "pid": 116436,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 116484,
+      "name": "python.exe",
+      "ppid": 116436
+    },
+    {
+      "pid": 115508,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 116776,
+      "name": "python.exe",
+      "ppid": 115508
+    },
+    {
+      "pid": 117436,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 117452,
+      "name": "python.exe",
+      "ppid": 117436
+    },
+    {
+      "pid": 117652,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 117692,
+      "name": "python.exe",
+      "ppid": 117652
+    },
+    {
+      "pid": 116924,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 116996,
+      "name": "python.exe",
+      "ppid": 116924
+    },
+    {
+      "pid": 116928,
+      "name": "python.exe",
+      "ppid": 117184
+    },
+    {
+      "pid": 117184,
+      "name": "python.exe",
+      "ppid": 116996
+    },
+    {
+      "pid": 116740,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 117024,
+      "name": "python.exe",
+      "ppid": 116740
+    },
+    {
+      "pid": 116760,
+      "name": "python.exe",
+      "ppid": 117024
+    },
+    {
+      "pid": 117332,
+      "name": "python.exe",
+      "ppid": 116760
+    }
+  ],
+  "descendants_terminated": [
+    115508,
+    116364,
+    116436,
+    116484,
+    116740,
+    116760,
+    116776,
+    116924,
+    116928,
+    116996,
+    117024,
+    117184,
+    117332,
+    117436,
+    117452,
+    117652,
+    117692
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 109084,
+      "name": "python.exe"
+    },
+    {
+      "pid": 109104,
+      "name": "python.exe"
+    },
+    {
+      "pid": 109448,
+      "name": "python.exe"
+    },
+    {
+      "pid": 109516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116424,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/REV-069/16-tipequiv-with-venv.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev069base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev069base",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

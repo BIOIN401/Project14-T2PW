@@ -1,0 +1,175 @@
+{
+  "label": "rev-crosscontam-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/REV-069/18.pin.json",
+    "-q",
+    "--basetemp=C:/t/rev069tmp/cc2",
+    "tests/test_batch_preflight.py",
+    "tests/test_stage0_scope_fallback.py",
+    "tests/test_batch_driver.py"
+  ],
+  "cwd": "C:\\t\\rev069base",
+  "started_at": "2026-08-21T20:28:01+00:00",
+  "finished_at": "2026-08-21T20:28:34+00:00",
+  "duration_seconds": 32.70233890000054,
+  "timeout_seconds": 300.0,
+  "root_pid": 129928,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 129900,
+      "name": "python.exe",
+      "ppid": 129928
+    },
+    {
+      "pid": 129044,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129084,
+      "name": "python.exe",
+      "ppid": 129044
+    },
+    {
+      "pid": 129908,
+      "name": "python.exe",
+      "ppid": 129984
+    },
+    {
+      "pid": 129984,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129400,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129452,
+      "name": "python.exe",
+      "ppid": 129400
+    },
+    {
+      "pid": 123544,
+      "name": "python.exe",
+      "ppid": 123548
+    },
+    {
+      "pid": 123548,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129280,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129868,
+      "name": "python.exe",
+      "ppid": 129280
+    },
+    {
+      "pid": 50096,
+      "name": "python.exe",
+      "ppid": 129896
+    },
+    {
+      "pid": 129896,
+      "name": "python.exe",
+      "ppid": 129868
+    },
+    {
+      "pid": 102016,
+      "name": "python.exe",
+      "ppid": 129900
+    },
+    {
+      "pid": 129780,
+      "name": "python.exe",
+      "ppid": 102016
+    },
+    {
+      "pid": 114352,
+      "name": "python.exe",
+      "ppid": 129780
+    },
+    {
+      "pid": 129552,
+      "name": "python.exe",
+      "ppid": 114352
+    }
+  ],
+  "descendants_terminated": [
+    50096,
+    102016,
+    114352,
+    123544,
+    123548,
+    129044,
+    129084,
+    129280,
+    129400,
+    129452,
+    129552,
+    129780,
+    129868,
+    129896,
+    129900,
+    129908,
+    129984
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 124328,
+      "name": "python.exe"
+    },
+    {
+      "pid": 129672,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/REV-069/18-crosscontam-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rev069base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rev069base",
+    "repo_head": "e616846de75e2098e3fb76592665955b3cfe3bbc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
