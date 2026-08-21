@@ -1215,9 +1215,21 @@ The same leg produces two release records that disagree. `PMC12452463/strict`:
 `PMC12096016/strict` is identical in shape: `failed` → `not_evaluated`, `completeness 0.823529` → `None`,
 3 missing anchors → `[]`.
 
-**Mechanism.** `batch/driver.py` has two terminal paths. The strict PASS path (`_finalize_strict_pass`,
-~`:1837`) carries the boundary's record — `release = _frozen_release_record(pwml_result)`. The gate-failure
-path (`:1770`) instead **constructs a fresh classification from nothing**:
+**Mechanism.** `batch/driver.py` has two terminal paths. The strict PASS path — **`_finalize_pwml_export`,
+defined `:1814`** — carries the boundary's record at `:1836`, `release = _frozen_release_record(pwml_result)`.
+The gate-failure path (`:1770-1773`) instead **constructs a fresh classification from nothing**:
+
+> **⚠ CORRECTION 2026-08-20.** This paragraph originally named the PASS-path function **`_finalize_strict_pass`**.
+> **No such symbol exists** — `grep` over `driver.py` returns **zero** hits, verified twice. The real function
+> is **`_finalize_pwml_export` (`:1814`)**; its `_frozen_release_record` call is at `:1836`, which the original
+> `~:1837` cited almost correctly. Found by C-056d, confirmed by the orchestrator.
+>
+> **The error propagated:** it was copied verbatim into C-056d's charter OUT list, where it would have told a
+> card not to edit a function that does not exist. **Harmless only because the card verified the name instead
+> of trusting it.** Third charter-address defect of that session — see PACK 9 RULINGS 2 and 6.
+>
+> Two further addresses in this finding drifted and are corrected inline above: the `classify_release_status`
+> expression is `:1770-1773` (`:1768` is the import), and `_drive`'s gate-failure `return` is `:2209`.
 
 ```python
 outcome.release_status = classify_release_status(
@@ -2366,3 +2378,46 @@ PACK 9 RULING 5 (reviewers cannot create the lock at all, so they run unprotecte
 way each time.**
 
 Registered, not fixed. **No measurement is invalidated and no card is reopened.**
+
+## F-073 — `runner.CHILD_IMPORTS` is missing six deferred imports, and closing the gap turns a pre-charged red green
+
+- **Severity** MEDIUM · **Registered 2026-08-20**, integration `416e138`
+- Surfaced by **C-056d**, which **reported rather than fixed** — the correct call, and the reason this has an
+  owner instead of being silently absorbed.
+
+### The mechanism
+
+`tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight` asserts that
+every import `batch/driver.py` defers into a function body is declared in `runner.CHILD_IMPORTS`, so the
+batch preflight can validate them in the child process before a leg starts.
+
+It is **pre-charged red**: its `missed` list already held **4** entries before C-056d existed. The card's new
+private helper defers one `release_status` import and one `strict_quarantine` import — **matching the house
+style of three neighbouring functions in the same file** — taking `missed` to **6**.
+
+**The test outcome does not change: red at base, red at tip.** What changes is the size of the list it
+reports.
+
+### Why the card was right not to fix it
+
+The cure is to add the entries to `runner.CHILD_IMPORTS`. **`runner.py` is C-032's and outside C-056d's
+boundary.** More importantly: adding all six would take the test from **red to green**, and *"a pinned
+baseline moved deliberately, with an exact documented delta"* (merge rule 4) cuts both ways — **a card
+turning someone else's pre-charged red green is absorbing a baseline move it does not own**, and it would
+erase the record of why those four were missing in the first place.
+
+**Ratified by the orchestrator as a documented baseline move: `missed` 4 → 6, both additions being the
+card's own deferred imports, no other assertion in the file touched.**
+
+### What the finding actually is — and it is not the two new entries
+
+**Four imports were already unregistered before any of this**, which means the batch preflight has been
+unable to validate them in the child process for as long as they have existed. That is the defect. C-056d
+made it two larger and visible; it did not create it.
+
+**Needs a card that owns `runner.py`.** It must add all six, take the test red → green **as an explicit,
+documented baseline move**, and record what the four pre-existing entries were and why they were missed —
+because that history is the only evidence of how long the preflight has been partially blind.
+
+**Do not let a future card absorb this quietly in passing.** Registered, not fixed. No accepted card is
+reopened.
