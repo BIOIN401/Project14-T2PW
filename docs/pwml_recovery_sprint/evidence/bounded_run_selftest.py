@@ -649,10 +649,23 @@ def case_12_preexisting_reports_still_validate() -> bool:
         with open(path, "r", encoding="utf-8") as fh:
             if "schema_version" not in json.load(fh):
                 without_fields.append(path)
-    # `-uno` so this task's own, still-untracked new reports are not counted as
-    # tampering with a committed one.
-    edited = _git_in_repo("status", "--porcelain", "--untracked-files=no", "--",
-                          *task_dirs).strip()
+    # WHICH TRACKED REPORTS WERE MODIFIED -- the question this case actually
+    # asks. `git status --porcelain -uno` answers a different one, "is the
+    # working tree dirty", and a STAGED NEW report is an `A ` entry there: a
+    # card that staged its own fresh evidence before running this suite failed
+    # here with nothing wrong, and spent the round diagnosing it (C-063 report
+    # 18, kept under D-025 and the reason this comment exists).
+    #
+    # `git diff --name-only HEAD` alone is NOT the fix -- measured, it still
+    # lists a staged addition. The FILTER is what carries the distinction:
+    # M/D/R/T are the ways a report ALREADY IN HEAD can be edited, regenerated,
+    # moved or removed, and A is excluded because a new report is none of those.
+    # Measured across five states: staged-new and untracked-new come back empty;
+    # a tracked report modified, modified-and-staged, or deleted all come back
+    # named.
+    edited = [line.strip() for line in _git_in_repo(
+        "diff", "--name-only", "--diff-filter=MDRT", "HEAD", "--", *task_dirs
+    ).splitlines() if line.strip()]
     rep = _as_report(data, "c12-compat")
 
     ok = _record("12. pre-existing reports validate", rep, [rep.root_pid or 0], [
@@ -667,7 +680,14 @@ def case_12_preexisting_reports_still_validate() -> bool:
         ("committed pre-H-006 reports were found", len(without_fields) >= 16),
         ("every committed pre-H-006 report still validates",
          all(g11_evidence.check_report(p) == [] for p in without_fields)),
-        ("no committed report was edited or regenerated", edited == ""),
+        # The label carries the diagnosis, because the misdiagnosis was the
+        # whole cost last time: this names the tracked reports that moved, and
+        # says outright that staging a new one is not what it is complaining
+        # about.
+        ("no committed report was edited or regenerated"
+         + (f" -- TRACKED REPORTS MODIFIED (staging a NEW report is not this): "
+            f"{', '.join(edited)}" if edited else ""),
+         not edited),
         ("child's REAL exit code preserved", rc == 0 and data.get("exit_code") == 0),
         ("cleanup_success", data.get("cleanup_success") is True),
         ("reported survivors == 0", data.get("final_surviving_count") == 0),

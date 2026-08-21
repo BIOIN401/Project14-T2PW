@@ -611,7 +611,11 @@ def test_selector_resolution() -> None:
 
 
 def test_credential_scan_is_word_bounded_and_still_bites() -> None:
-    """F-082: an ordinary label must not read as a credential -- nor the reverse.
+    r"""F-082: an ordinary label must not read as a credential -- nor the reverse.
+
+    RAW docstring, deliberately. It names a regex escape, and in a non-raw one
+    Python would parse that escape away -- this very text shipped for a few
+    minutes with a real backspace byte in it, which is the defect it describes.
 
     REV-068 had two evidence artifacts rejected because their labels contained
     ``...sk-``: the openai pattern had no left word boundary, so
@@ -625,6 +629,14 @@ def test_credential_scan_is_word_bounded_and_still_bites() -> None:
     test while letting a real key into a committed artifact; the true-positive
     half below is what stops that, and it covers every prefix pattern in
     :data:`CRED_PATTERNS`, not just the one that was changed.
+
+    The true-positive half exists because a pattern can be silently neutralised
+    by TRANSPORT, not only by a careless edit. While this very fix was being
+    written the \b arrived in the file as a literal backspace byte
+    (0x08): it compiles, it reads almost identically at a glance, and it matches
+    nothing. A credential scanner that matches nothing reports every artifact
+    clean, which is the worst outcome this module has. A false-positive-only
+    test would have gone green on it.
 
     Both halves go through :func:`check_report` on real artifacts rather than
     against the regexes directly, because ``check_report`` is the consumer whose
