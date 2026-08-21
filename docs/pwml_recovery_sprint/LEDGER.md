@@ -1050,3 +1050,74 @@ instruction to verify.**
 (`entity_admission` 23→33, `streamlit_stage2` 11→12, `adversarial_actor` 18→29, `payload_models` 13→19).
 **Parameterization, not drift.** Any future census that compares a `def test_` count to a collected count
 must expect this — the two are different measurements and neither is wrong.
+
+### PACK 9 RULING 3 — `T2PW_SPECIES_LLM` on the RAG round path is an OPERATOR decision, not a code change
+
+REV-055 asked the orchestrator to decide whether `T2PW_SPECIES_LLM=0` belongs on the per-round mapping path.
+Per-round `map_payload` runs `hydrate_species_references(use_llm=…)` (`streamlit_app.py:1063-1076`,
+`map_ids.py:8119`) and **the flag defaults to ON**, so each round issues LLM calls on top of the
+post-pipeline pass.
+
+**RULING: it does not go in the code, and C-055 was right to refuse.**
+
+C-055 disclosed this as its deviation 4 and explicitly declined to *"flip a resolver flag behind the
+operator's back."* That is the correct instinct and it is the same principle F-056 records one layer down,
+where `db_resolver=None` **enables** the DB rather than disabling it — a flag whose sense a caller has to
+guess is how this project has repeatedly measured the wrong thing. A card silently suppressing a resolver to
+make its own loop cheaper would be exactly that defect, authored deliberately.
+
+**Instead it is set at run time, per run, and recorded in that run's config:**
+
+* **T-103 SHALL run with `T2PW_SPECIES_LLM=0` in the bounded child.** Its acceptance
+  (`TEST_MATRIX.md:480`) is *"every RAG round re-entered normalization, mapping, gates, persistence,
+  classification"* — **mapping still runs and is still observable with the flag off**, so the acceptance
+  property is untouched while the cost and the nondeterminism drop. Add it to `T-103-prep.md`'s command.
+* **T-104 is a separate decision** and must not inherit this one. A release-candidate benchmark that
+  suppresses a production resolver is not measuring production.
+
+**No code change. No card. The flag's default is unchanged.**
+
+### PACK 9 RULING 4 — C-055 tightens a gate that was previously unconditional, and that must not be read as a regression
+
+REV-055 identified a **real behavioural delta on the RAG-on path at defaults**, and ruled it correctly:
+after C-055, RAG additions must clear `validate_graph_delta` (`controller.py:306-307`,
+`streamlit_app.py:1284-1313`) before `final_payload` advances. **At base they advanced unconditionally**,
+subject only to the differential schema gate.
+
+**This is `PRODUCT_CONTRACT` §10 — *"only when it fills a specific detected typed gap"* — being enforced for
+the first time.** It is a **tightening**, so **merge rule 6 holds** (no gate weakened to increase PWML
+production) and the **NEW CAPABILITY** arm remains correct.
+
+**Binding on how T-103's output is read:** real legs may now **refuse a merge that previously landed**, and a
+warning naming the refusing rules is emitted. **That is the contract working, not a regression.** A T-103 leg
+showing fewer merged additions than a pre-C-055 leg is **not** evidence of a defect and must not be reported
+as one. Anyone comparing T-103 against T-100's committed legs must account for this delta explicitly.
+
+### PACK 9 RULING 5 — a reviewer that cannot take the mutex is an infrastructure gap, not a process violation
+
+REV-055 disclosed that it **could not create `C:\t\heavylock`** — `mkdir` outside the project directory is
+blocked by its permission classifier — so its SMOKE run was **unprotected**. It verified the lock was free
+immediately before, **did not take it, and did not clear it**, and said so plainly.
+
+**Ratified as a disclosed deviation, and the gap is registered rather than papered over.** The reviewer did
+the only correct thing available to it: it disclosed rather than concealing, and it did not touch a lock it
+could not properly hold.
+
+**Consequence to fix, unowned:** `pwml-reviewer` agents cannot participate in the sprint's own mutex
+protocol. Either reviewers get the permission, or the protocol must give them a project-local lock path.
+**Until then, an orchestrator dispatching a reviewer that will run a heavy gate should confirm the mutex is
+free and hold it on the reviewer's behalf, or accept a disclosed unprotected run.** This is the second
+infrastructure limitation this sprint has hit at the agent-permission layer.
+
+### Two LOW findings registered from REV-055 — neither owned, neither fixed
+
+* **Per-round `map_payload` can conditionally reach the tracked 39 MB `data/enrichment_cache.json`** through
+  the UniProt identity-evidence ladder's `cache.save()` (`uniprot_evidence.py:335-364`, `:428-446`) — but
+  **only** when the identity-evidence env flag selects *network* mode **and** a fetch misses cache. C-055's
+  trap-11 answer covers `data/id_mapping_cache.json` only. **Conditional, pre-existing on the post-pipeline
+  path, and both modules are outside C-055's boundary.** A tracked 39 MB file written from a loop would
+  dirty the tree — worth an owner before `max_rounds > 1` is ever used in anger.
+* **`apply_post_merge_cleanup`'s `quarantine_output_path`** still defaults to the shared
+  `tmp/quarantined_rag_reactions.json` (`streamlit_app.py:1275-1279`) and is now written **once per round**.
+  Identical to base at the default `max_rounds=1`; at `N > 1` the last round overwrites earlier rounds'
+  records. **Not one of the three protected scratch files, and no test covers it.**
