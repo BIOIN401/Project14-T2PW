@@ -1,0 +1,663 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 3,
+        "organisms_added": 0,
+        "locations_added": 1,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 3,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(2013, 'Lost connection to MySQL server during query (timed out)')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "entity_type": "compound",
+            "name": "succinyl-CoA",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:70906431ddb4be3a",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:ferrochelatase\", \"resolve_ids\": { \"strategy\": \"db_then_api\", \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": … (+173 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ferrochelatase",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:4f18135b1b0a0281",
+                  "preview": "[\"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 724,
+                  "hash": "sha256:22430301f881a033",
+                  "preview": "[{\"accession\": \"B4DSA4\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sapiens\", \"reviewed\": false, \"score\": 0.8}, {\"accession\": \"Q5TZY0\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sap… (+524 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 978,
+                  "hash": "sha256:70f190b8b5a3b961",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}, \"pathbank_protein_id\": 4374, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+778 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2347,
+                  "hash": "sha256:8fea90df9901c291",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ferrochelatase\\\" OR g… (+2147 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:00053854ffd55f95",
+                  "preview": "{\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef106ac2c4cd6525",
+                  "preview": "{\"uniprot\": \"Q5TZY0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ba89236fd8f333b4",
+                  "preview": "{\"uniprot\": \"A0A499FJN5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f6cd4380e019bb52",
+                  "preview": "{\"uniprot\": \"K7EJX5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:31a8090eb30dbd07",
+                  "preview": "{\"uniprot\": \"Q53FU1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2391adfe7b2d5748",
+                  "preview": "{\"uniprot\": \"Q7KZA3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef2a6430a154da7a",
+                  "preview": "{\"uniprot\": \"K7EJM8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 5,
+              "confidence": 0.8,
+              "reason": "The candidate with Uniprot ID Q53FU1 is the best match: it appears multiple times (from db with confidence 1.0 and from api with confidence 0.8), is explicitly associated with Homo sapiens in the background context, and corresponds to the p… (+65 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 367,
+                "hash": "sha256:25ae85a7f23a09e4",
+                "preview": "{ \"selected_index\": 5, \"confidence\": 0.8, \"reason\": \"The candidate with Uniprot ID Q53FU1 is the best match: it appears multiple times (from db with confidence 1.0 and from api with confidence 0.8), i… (+161 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 469,
+                  "hash": "sha256:2dbbd71dcca53ffd",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+269 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2725,
+                  "hash": "sha256:fc0d3e6c51cfc22b",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", … (+2525 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 196,
+                  "hash": "sha256:53cfb976af6e43fd",
+                  "preview": "{\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", \"chemspider\": \"730\", \"drugbank\": \"DB00145\", \"pathbank_compound_id\": \"78\"}",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "High confidence (1.0) from PathBankDB with comprehensive mapped IDs including HMDB HMDB0000123, KEGG C00037, ChEBI CHEBI:15428, etc., all matching glycine. No conflicts.",
+              "source": "llm",
+              "raw": {
+                "chars": 223,
+                "hash": "sha256:df8d9829a1f1b082",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"High confidence (1.0) from PathBankDB with comprehensive mapped IDs including HMDB HMDB0000123, KEGG C00037, ChEBI CHEBI:15428, etc., all matching g… (+23 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "entity_type": "compound",
+            "name": "succinyl-CoA",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "succinyl-CoA",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:a1c31312bf0b11bc",
+                  "preview": "{\"kegg\": \"C00091\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 539,
+                  "hash": "sha256:bd2d18b1ffba1cce",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00091\", \"name\": \"Succinyl-CoA\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C09817\", \"name\": \"Benzylsuccinyl-CoA\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C09818\", \"n… (+339 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "succinyl-CoA",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1664,
+                  "hash": "sha256:3f9efacce0dee6a5",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0001022\", \"kegg\": \"C00091\", \"chebi\": \"CHEBI:15380\", \"pubchem\": \"439161\", \"cas\": \"604-98-8\", \"biocyc\": \"3-METH… (+1464 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 1085,
+                  "hash": "sha256:1ca0c9fd78a7c7ca",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00091\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00091\", \"name\": \"Succinyl-CoA\", \"score\": 0… (+885 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 200,
+                  "hash": "sha256:788f4960a65c0188",
+                  "preview": "{\"hmdb\": \"HMDB0001022\", \"kegg\": \"C00091\", \"chebi\": \"CHEBI:15380\", \"pubchem\": \"439161\", \"cas\": \"604-98-8\", \"biocyc\": \"3-METHYLBENZYLSUCCINYL-COA\", \"chemspider\": \"388307\", \"pathbank_compound_id\": \"808\"}",
+                  "keys": 8
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:a1c31312bf0b11bc",
+                  "preview": "{\"kegg\": \"C00091\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:6625db9051a1e10f",
+                  "preview": "{\"kegg\": \"C09817\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:ba2cdb4e33405870",
+                  "preview": "{\"kegg\": \"C09818\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1673cdc64e87dbaa",
+                  "preview": "{\"kegg\": \"C09819\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:98abbe1db706239e",
+                  "preview": "{\"kegg\": \"C09820\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:003ede4ecbda2349",
+                  "preview": "{\"kegg\": \"C14116\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate from PathBankDB has exact match to succinyl-CoA (KEGG C00091, ChEBI 15380) with highest confidence and comprehensive mapped IDs.",
+              "source": "llm",
+              "raw": {
+                "chars": 200,
+                "hash": "sha256:7dec2c1e65e598ea",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate from PathBankDB has exact match to succinyl-CoA (KEGG C00091, ChEBI 15380) with highest confidence and comprehensive mapped IDs.\" }"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

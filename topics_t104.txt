@@ -1,0 +1,53 @@
+# T-104 (M5, first release candidate) -- full pinned gold set, 20 legs.
+#
+# SET DERIVATION. TEST_MATRIX.md:481 reads "full pinned, 20 legs" and does not
+# enumerate them. No topics_t104.txt existed. The set is NOT guessed: it is the
+# pinned gold set itself, src/t2pw/bench/gold/pinned_v1.json (version
+# 2026-08-01.1), which holds exactly 10 cases. bench/acceptance.py measures
+# completeness against that gold-set size (LEDGER.md:770 -- T-100 was scored
+# "NOT ACCEPTED: INCOMPLETE (2/10 papers, 4/20 legs)" for this reason), so
+# 10 papers x 2 modes = the 20 legs the row means.
+#
+# SCOPE SOURCE. Each line below is the gold case's own requested_pathway and
+# requested_organism, copied verbatim from pinned_v1.json. These are the fields
+# named "requested_*": they ARE the request the benchmark is built around, not a
+# reconstruction of one.
+#
+# *** THREE OF THESE TEN ARE DELIBERATE ORGANISM TRAPS ***
+# PMC12657337, PMC12421875 and PMC12312563 all carry
+# requested_organism "Bacillus subtilis" while the paper is about something else
+# (E. coli, Lactococcus lactis, Listeria monocytogenes respectively). This is by
+# design -- the gold relevance_note for each says so in capitals ("ORGANISM
+# TRAP: topics.txt asked for B. subtilis, but this is an E. coli engineering
+# study"), and each case's forbidden_organisms list CONTAINS "Bacillus
+# subtilis". The scored property is the exported reaction's organism label:
+# "Every exported reaction must carry organism Escherichia coli; labelling them
+# Bacillus subtilis, the requested organism, is a failure" (PMC12657337
+# export_rationale).
+#
+# The pipeline at this SHA is expected to ABORT all six of those legs at Stage 0
+# instead of exporting anything: config.py:194 sets
+# eligibility_stage0_conflict_aborts = True, and F-093 measured exactly that on
+# PMC12312563 in the T-101 deepseek run. batch/report.py folds scope_conflict
+# into STATUS_INELIGIBLE -- "not even a run: nothing was attempted".
+#
+# That conflict is what the free --stage-only pre-flight is being run to
+# measure. Nothing here is corrected in advance: correcting the organism would
+# hand the pipeline the answer to the trap and make forbidden_organisms
+# unexercisable, which is input-side gate weakening.
+#
+# lipid A biosynthesis
+PMC12444477 | lipid A biosynthesis | Escherichia coli
+PMC13231680 | lipid A biosynthesis | Escherichia coli
+# menaquinone biosynthesis -- all three are organism traps (see above)
+PMC12657337 | menaquinone biosynthesis | Bacillus subtilis
+PMC12421875 | menaquinone biosynthesis | Bacillus subtilis
+PMC12312563 | menaquinone biosynthesis | Bacillus subtilis
+# heme biosynthesis
+PMC12856317 | heme biosynthesis | Homo sapiens
+PMC12180156 | heme biosynthesis | Homo sapiens
+# enterobactin biosynthesis
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
+PMC12452463 | enterobactin biosynthesis | Escherichia coli
+# cholesterol biosynthesis
+PMC12782028 | cholesterol biosynthesis | Homo sapiens

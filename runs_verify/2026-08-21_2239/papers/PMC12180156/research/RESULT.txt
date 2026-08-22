@@ -1,0 +1,58 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12180156
+title      : (unknown)
+slug       : PMC12180156
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1083.1s (18m03s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/3/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/3/mapping_meta/resolution: Mapping metadata must include a resolution object.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 4
+  entities = 11
+  gate_errors = 0
+  normalization_actions = 2
+  proteins = 3
+  reactions = 2
+  review_flags = 2
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 6, 'b': 0, 'c': 1, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1170 B)
+  - contract_reports.json  (8933 B)
+  - coverage_summary.json  (5924 B)
+  - final_mapped.json  (99584 B)
+  - final_stage3_gate_report.json  (2721 B)
+  - gap_iteration_summary.json  (26246 B)
+  - gate_fail_report.json  (10993 B)
+  - graph_closure_iterations.json  (373 B)
+  - initial_stage3_gate_report.json  (10993 B)
+  - merged_payload.json  (10093 B)
+  - quarantine_report.json  (11927 B)
+  - rag_admission_report.json  (58753 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (29140 B)
+  - research_pathway_elements.csv  (1928 B)
+  - research_pathway_report.txt  (10803 B)
+  - review_flags.json  (9459 B)
+  - stage1_payload.json  (8445 B)

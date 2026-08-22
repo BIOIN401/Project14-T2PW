@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "heme",
+    "glycine",
+    "δ-aminolevulinic acid",
+    "iron",
+    "SFXN2",
+    "SFXN4",
+    "ferrochelatase",
+    "ALAS2"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "heme biosynthesis",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "heme",
+      "glycine",
+      "δ-aminolevulinic acid",
+      "iron"
+    ],
+    "key_proteins": [
+      "SFXN2",
+      "SFXN4",
+      "ferrochelatase",
+      "ALAS2"
+    ],
+    "likely_compartments": [
+      "mitochondrial matrix",
+      "mitochondrial inner membrane"
+    ],
+    "main_subprocesses": [
+      "iron utilization for heme biosynthesis",
+      "modulation of ferrochelatase levels",
+      "inhibition of ALAS2 translation",
+      "glycine incorporation into heme"
+    ],
+    "relevant_sections": [
+      "Background",
+      "Biological functions",
+      "SFXN2",
+      "SFXN4"
+    ],
+    "pathway_relevance_score": 0.4,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 0.7,
+    "selected_example": "heme biosynthesis in Homo sapiens",
+    "candidate_examples": [
+      {
+        "name": "SFXN1",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "serine",
+          "glycine",
+          "formate",
+          "THF"
+        ],
+        "key_proteins": [
+          "SFXN1",
+          "SHMT2"
+        ],
+        "main_subprocesses": [
+          "serine transport",
+          "one-carbon metabolism"
+        ],
+        "evidence": "SFXN1 functions as a mitochondrial serine transporter, which is crucial for one-carbon metabolism"
+      },
+      {
+        "name": "SFXN2",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "iron",
+          "heme"
+        ],
+        "key_proteins": [
+          "SFXN2"
+        ],
+        "main_subprocesses": [
+          "iron homeostasis",
+          "heme biosynthesis"
+        ],
+        "evidence": "SFXN2 is implicated in mitochondrial iron regulation, heme biosynthesis, and iron–sulfur cluster assembly"
+      },
+      {
+        "name": "SFXN3",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "serine",
+          "iron"
+        ],
+        "key_proteins": [
+          "SFXN3",
+          "PCBP2",
+          "TOM20"
+        ],
+        "main_subprocesses": [
+          "serine transport",
+          "iron entry"
+        ],
+        "evidence": "SFXN3 is thought to be involved in serine transport... impacts mitochondrial iron homeostasis and ISC biogenesis"
+      },
+      {
+        "name": "SFXN4",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "heme",
+          "iron",
+          "ISC"
+        ],
+        "key_proteins": [
+          "SFXN4",
+          "ferrochelatase",
+          "ALAS2",
+          "MCIA complex"
+        ],
+        "main_subprocesses": [
+          "heme biosynthesis regulation",
+          "ISC biogenesis",
+          "complex I assembly"
+        ],
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "name": "SFXN5",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "citrate"
+        ],
+        "key_proteins": [
+          "SFXN5"
+        ],
+        "main_subprocesses": [
+          "citrate export"
+        ],
+        "evidence": "SFXN5 has been proposed to modulate cytosolic citrate, possibly by exporting citrate from the mitochondrion"
+      }
+    ],
+    "excluded_examples": [
+      "SFXN1",
+      "SFXN3",
+      "SFXN5"
+    ],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:5c639fc16ae8943d",
+      "response_hash": "sha256:a88bab3c66403c75",
+      "raw_chars": 2743,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2743,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "glycine",
+    "δ-aminolevulinic acid",
+    "SFXN4",
+    "ALAS2"
+  ],
+  "unmatched_terms": [
+    "heme",
+    "iron",
+    "SFXN2",
+    "ferrochelatase"
+  ],
+  "coverage_ratio": 0.5,
+  "core_accepted_processes": 1,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 1,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

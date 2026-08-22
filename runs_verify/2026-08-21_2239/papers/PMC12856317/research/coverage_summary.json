@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "heme",
+    "aminolevulinic acid",
+    "glycine",
+    "succinyl-CoA",
+    "pyridoxal 5-phosphate",
+    "hemin",
+    "ALAS2"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "heme biosynthesis",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "heme",
+      "aminolevulinic acid",
+      "glycine",
+      "succinyl-CoA",
+      "pyridoxal 5-phosphate",
+      "hemin"
+    ],
+    "key_proteins": [
+      "ALAS2"
+    ],
+    "likely_compartments": [
+      "mitochondrial matrix",
+      "mitochondrion"
+    ],
+    "main_subprocesses": [
+      "condensation of glycine and succinyl-CoA to form aminolevulinic acid",
+      "heme binding to ALAS2",
+      "reversible mixed inhibition of ALAS2 by heme",
+      "negative feedback regulation of heme synthesis"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "results",
+      "discussion",
+      "methods",
+      "supplementary"
+    ],
+    "pathway_relevance_score": 1.0,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:c5eadf32bbbd5059",
+      "response_hash": "sha256:907e75129cc2d9e5",
+      "raw_chars": 974,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 974,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "heme",
+    "aminolevulinic acid",
+    "glycine",
+    "succinyl-CoA",
+    "pyridoxal 5-phosphate",
+    "ALAS2"
+  ],
+  "unmatched_terms": [
+    "hemin"
+  ],
+  "coverage_ratio": 0.857143,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

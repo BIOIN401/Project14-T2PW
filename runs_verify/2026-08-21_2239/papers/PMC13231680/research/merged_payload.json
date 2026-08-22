@@ -1,0 +1,133 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "lipopolysaccharide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [],
+    "interactions": [
+      {
+        "entity_1": "LpxC",
+        "entity_2": "lipid A",
+        "name": "LpxC catalyzes committed step in lipid A biosynthesis",
+        "relationship": "catalyzes",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "LpxC catalyzes the first irreversible and committed step in lipid A biosynthesis"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "lipid A",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway"
+      },
+      {
+        "compound": "lipopolysaccharide",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "LpxC",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm from a series of catalytic reactions that make up the Raetz pathway"
+      }
+    ]
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 4500,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        1,
+        1,
+        0,
+        -2,
+        2
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 1,
+      "warning_count": 2,
+      "patch_count": 2,
+      "accepted_patch_count": 2,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "The ALAS2 protein lacked a UniProt identifier, which is required for SBML conversion. The identifier was present in the mapping_meta but not assigned to the entity. This patch adds the missing mapped_ids and updates the resolution status to… (+19 chars elided)",
+      "top_errors": [
+        "Protein 'ALAS2' is missing a UniProt or DrugBank identifier."
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    },
+    {
+      "round": 2,
+      "temperature": 0.15,
+      "max_tokens": 4300,
+      "candidate_count": 1,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 1,
+      "patch_count": 0,
+      "accepted_patch_count": 0,
+      "rejected_patch_count": 0,
+      "llm_ok": false,
+      "llm_error": "LLM output was not valid JSON.",
+      "llm_repair_rationale": "",
+      "top_errors": [],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": false,
+      "gap_payload_changed": false,
+      "settled_payload_changed": false,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

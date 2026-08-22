@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        4,
+        2,
+        4,
+        1,
+        -3,
+        4
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 4,
+      "warning_count": 5,
+      "patch_count": 4,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 1,
+      "llm_ok": false,
+      "llm_error": "LLM output was not valid JSON.",
+      "llm_repair_rationale": "",
+      "top_errors": [
+        "Stage 3 registry reference validation failed: unknown entity: Fur",
+        "Stage 3 registry reference validation failed: unknown entity: ent operon",
+        "Stage 3 registry reference validation failed: unknown entity: RyhB"
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

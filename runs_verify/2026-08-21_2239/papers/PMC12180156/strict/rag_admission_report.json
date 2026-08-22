@@ -1,0 +1,2808 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.856012,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.856012,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.786176,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.786176,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-6a1dd341",
+      "gap_ids": [
+        "gap-orphan_metabolite-6a1dd341"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.785324,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.785324,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.786482,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.786482,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-CoA",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "200de1a3d77e3a485cd992889ff400ed",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "figure",
+        "score": 0.747368,
+        "span": "the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.747368,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-e3984916",
+      "gap_ids": [
+        "gap-orphan_metabolite-e3984916"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.652727,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.652727,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.790137,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.790137,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.728406,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.728406,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-8d2af9c8",
+      "gap_ids": [
+        "gap-orphan_metabolite-8d2af9c8"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.629772,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.629772,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.806083,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.806083,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.7727,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.7727,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-fa99291c",
+      "gap_ids": [
+        "gap-orphan_metabolite-fa99291c"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.723288,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.723288,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.786291,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.786291,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.784934,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.784934,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-011ae1e3",
+      "gap_ids": [
+        "gap-orphan_metabolite-011ae1e3"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.72532,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.72532,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9d363f57",
+      "gap_ids": [
+        "gap-orphan_metabolite-9d363f57"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.950379,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.950379,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-9d363f57",
+      "gap_ids": [
+        "gap-orphan_metabolite-9d363f57"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.750498,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.750498,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-9d4f60c1",
+      "gap_ids": [
+        "gap-missing_compartment-9d4f60c1"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.822012,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.822012,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-9d4f60c1 asks for a compartment/location for 'heme'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-9d4f60c1",
+      "gap_ids": [
+        "gap-missing_compartment-9d4f60c1"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.804522,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.804522,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-9d4f60c1 asks for a compartment/location for 'heme'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-9d4f60c1",
+      "gap_ids": [
+        "gap-missing_compartment-9d4f60c1"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.774727,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.774727,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-9d4f60c1 asks for a compartment/location for 'heme'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-f77105ab",
+      "gap_ids": [
+        "gap-missing_compartment-f77105ab"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.846255,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.846255,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-f77105ab asks for a compartment/location for 'glycine'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-f77105ab",
+      "gap_ids": [
+        "gap-missing_compartment-f77105ab"
+      ],
+      "name": "δALA biosynthesis",
+      "inputs": [
+        "succinyl-CoA",
+        "glycine"
+      ],
+      "outputs": [
+        "δALA"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC10886707",
+        "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+        "uri": "https://doi.org/10.3390/biom14020241",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "200de1a3d77e3a485cd992889ff400ed",
+        "source_id": "PMC10886707",
+        "source_uri": "https://doi.org/10.3390/biom14020241",
+        "section": "figure",
+        "score": 0.747368,
+        "span": "the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine"
+      },
+      "organism": "",
+      "observed_organisms": [],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "unknown",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.747368,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-f77105ab asks for a compartment/location for 'glycine'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.758318,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.758318,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.692652,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.692652,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-620f98fd",
+      "gap_ids": [
+        "gap-missing_compartment-620f98fd"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.610583,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.610583,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-620f98fd asks for a compartment/location for 'δ-aminolevulinic acid'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-65b1593b",
+      "gap_ids": [
+        "gap-missing_compartment-65b1593b"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.864129,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.864129,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-65b1593b asks for a compartment/location for 'iron'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-65b1593b",
+      "gap_ids": [
+        "gap-missing_compartment-65b1593b"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.760373,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.760373,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-65b1593b asks for a compartment/location for 'iron'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_ids": [
+        "gap-missing_compartment-08242d9e"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.795893,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.795893,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-08242d9e asks for a compartment/location for 'ALAS2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_ids": [
+        "gap-missing_compartment-08242d9e"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme complex"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.737012,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.737012,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-08242d9e asks for a compartment/location for 'ALAS2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_ids": [
+        "gap-missing_compartment-08242d9e"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.735288,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.735288,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-08242d9e asks for a compartment/location for 'ALAS2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.78303,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78303,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.767713,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.767713,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-8fdb6683",
+      "gap_ids": [
+        "gap-missing_compartment-8fdb6683"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.718643,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.718643,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-8fdb6683 asks for a compartment/location for 'ferrochelatase'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7f526c35",
+      "gap_ids": [
+        "gap-missing_compartment-7f526c35"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.923789,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923789,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7f526c35 asks for a compartment/location for 'SFXN4'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-7f526c35",
+      "gap_ids": [
+        "gap-missing_compartment-7f526c35"
+      ],
+      "name": "serine cleavage to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine",
+        "5,10-methylene-THF"
+      ],
+      "enzymes": [
+        "serine hydroxymethyltransferase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.65922,
+        "span": "serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.65922,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-7f526c35 asks for a compartment/location for 'SFXN4'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b9344f28",
+      "gap_ids": [
+        "gap-missing_compartment-b9344f28"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.926408,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.926408,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b9344f28 asks for a compartment/location for 'SFXN2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-b9344f28",
+      "gap_ids": [
+        "gap-missing_compartment-b9344f28"
+      ],
+      "name": "serine cleavage to glycine",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine",
+        "5,10-methylene-THF"
+      ],
+      "enzymes": [
+        "serine hydroxymethyltransferase"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "8610ceafdb11f4868ca9276a047e1ae0",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "results",
+        "score": 0.665911,
+        "span": "serine enters the mitochondrial branch of one-carbon metabolism, where it is cleaved to glycine in the reaction catalyzed by serine hydroxymethyltransferase which also generates 5,10-methylene-THF"
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.665911,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-b9344f28 asks for a compartment/location for 'SFXN2'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.846671,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.846671,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "heme binding to ALAS2",
+      "inputs": [
+        "hemin",
+        "ALAS2"
+      ],
+      "outputs": [
+        "ALAS2-heme complex"
+      ],
+      "enzymes": [],
+      "reversible": true,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "results",
+        "score": 0.781113,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.781113,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "gap_ids": [
+        "gap-unmapped_enzyme-65f444d8"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.657622,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.657622,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-65f444d8 asks for the identity of 'ALAS2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.825288,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.825288,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.680925,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.680925,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "gap_ids": [
+        "gap-unmapped_enzyme-a2da3551"
+      ],
+      "name": "PLP -> heme",
+      "inputs": [
+        "PLP"
+      ],
+      "outputs": [
+        "heme"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "discussion",
+        "score": 0.665525,
+        "span": "Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.665525,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-a2da3551 asks for the identity of 'ferrochelatase'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "gap_ids": [
+        "gap-unmapped_enzyme-da2eceff"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.900315,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.900315,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-da2eceff asks for the identity of 'SFXN4'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "gap_ids": [
+        "gap-unmapped_enzyme-da2eceff"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.64861,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.64861,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-da2eceff asks for the identity of 'SFXN4'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "serine to glycine conversion",
+      "inputs": [
+        "serine"
+      ],
+      "outputs": [
+        "glycine"
+      ],
+      "enzymes": [
+        "SHMT2"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "heme biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "9810461f1e5de298cadb7121f4dc3274",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "conclusion",
+        "score": 0.917146,
+        "span": ""
+      },
+      "organism": "Homo sapiens",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.917146,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "gap_ids": [
+        "gap-unmapped_enzyme-3a877526"
+      ],
+      "name": "glycine -> aminolevulinic acid",
+      "inputs": [
+        "glycine",
+        "succinyl-CoA"
+      ],
+      "outputs": [
+        "aminolevulinic acid"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12856317",
+        "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+        "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "section": "body",
+        "score": 0.657939,
+        "span": "The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Homo sapiens"
+      ],
+      "observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.657939,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_disagrees_with_claim: the span states ['glycine', 'succinyl-coa'] -> ['12 )', 'aminolevulinic acid ( 11'] but the claim states ['glycine', 'succinyl-coa'] -> ['aminolevulinic acid']",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-3a877526 asks for the identity of 'SFXN2'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 47,
+    "considered": 47
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 30,
+    "evidence_relation_disagrees_with_claim": 15,
+    "evidence_relation_roles_unassignable": 12,
+    "evidence_states_no_reaction_relation": 2,
+    "no_local_evidence_span": 18
+  },
+  "by_gap": {
+    "gap-missing_compartment-08242d9e": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-620f98fd": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-65b1593b": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-missing_compartment-7f526c35": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-missing_compartment-8fdb6683": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-9d4f60c1": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-missing_compartment-b9344f28": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-missing_compartment-f77105ab": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-orphan_metabolite-011ae1e3": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-6a1dd341": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-8d2af9c8": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-9d363f57": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-orphan_metabolite-e3984916": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-orphan_metabolite-fa99291c": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-3a877526": {
+      "accepted": 0,
+      "rejected": 2
+    },
+    "gap-unmapped_enzyme-65f444d8": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-a2da3551": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "gap-unmapped_enzyme-da2eceff": {
+      "accepted": 0,
+      "rejected": 2
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "5f321ec06b5dfaeea32928189578bd64",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "972421026405f3334a959da25a6ce869",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "Here, we identify a reversible mechanism by which heme inhibits its synthesis by affecting mature mitochondrial ALAS2 activity, challenging the idea that erythroid heme synthesis is an all-or-nothing process."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-08242d9e",
+      "gap_kind": "missing_compartment",
+      "target": "ALAS2",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "97e46ad361709f93c0739eeeda6f36c7",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "This upper estimate is commensurate with the IC 50 values we report for mitochondrial ALAS2-heme inhibition, connecting our in vitro research to a plausible cellular state."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "proteins",
+      "target_entity_type": "protein",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'ALAS2' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-65b1593b",
+      "gap_kind": "missing_compartment",
+      "target": "iron",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "70b2cebdc26d75631d4bebd900628874",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "span": "SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production."
+      },
+      "source_paper": {
+        "source_id": "seed_paper"
+      },
+      "target_entity_bucket": "compounds",
+      "target_entity_type": "compound",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [],
+      "organism_match": "match",
+      "requested_pathway_match": "unknown",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'iron' is not an entity of this payload, so there is nothing to locate"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-65b1593b",
+      "gap_kind": "missing_compartment",
+      "target": "iron",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "bfb1cf26228e56e53a11850109298d9a",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "span": "Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]."
+      },
+      "source_paper": {
+        "source_id": "seed_paper"
+      },
+      "target_entity_bucket": "compounds",
+      "target_entity_type": "compound",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [
+        "Mus musculus"
+      ],
+      "span_observed_pathways": [],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [],
+      "organism_match": "mismatch",
+      "requested_pathway_match": "unknown",
+      "status": "rejected",
+      "applied": false,
+      "reasons": [
+        "organism_mismatch: the evidence reports ['Mus musculus'], the run requested 'Homo sapiens'"
+      ]
+    },
+    {
+      "gap_id": "gap-missing_compartment-9d4f60c1",
+      "gap_kind": "missing_compartment",
+      "target": "heme",
+      "kind": "compartment",
+      "value": {
+        "location": "mitochondrion"
+      },
+      "evidence": {
+        "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833",
+        "source_id": "PMC12856317",
+        "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+        "span": "Previous version available: This article is based on a previously available preprint posted on bioRxiv on September 9, 2025: \" A reversible feedback mechanism regulating mitochondrial heme synthesis \"."
+      },
+      "source_paper": {
+        "source_id": "PMC12856317"
+      },
+      "target_entity_bucket": "compounds",
+      "target_entity_type": "compound",
+      "requested_pathway": "heme biosynthesis",
+      "requested_organism": "Homo sapiens",
+      "span_observed_organisms": [],
+      "span_observed_pathways": [
+        "heme biosynthesis"
+      ],
+      "paper_observed_organisms": [
+        "Homo sapiens"
+      ],
+      "paper_observed_pathways": [
+        "heme biosynthesis",
+        "heme synthesis"
+      ],
+      "organism_match": "match",
+      "requested_pathway_match": "match",
+      "status": "proposed",
+      "applied": false,
+      "reasons": [
+        "compartment not applied: 'heme' is not an entity of this payload, so there is nothing to locate"
+      ]
+    }
+  ],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-65f444d8",
+      "label": "ALAS2",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-a2da3551",
+      "label": "ferrochelatase",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-da2eceff",
+      "label": "SFXN4",
+      "recommended_route": "identity_resolver"
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-3a877526",
+      "label": "SFXN2",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 4,
+    "unresolved_for_unknown_fallback": 4,
+    "unknown_fallback_present": 0
+  }
+}

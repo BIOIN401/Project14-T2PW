@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "enterobactin",
+    "L-serine",
+    "ATP",
+    "NADH",
+    "NAD+",
+    "pyruvate",
+    "EntC (isochorismate synthase)",
+    "EntB (bifunctional isochorismatase/aryl carrier protein)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "Fur (ferric uptake regulator)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "enterobactin",
+      "L-serine",
+      "ATP",
+      "NADH",
+      "NAD+",
+      "pyruvate"
+    ],
+    "key_proteins": [
+      "EntC (isochorismate synthase)",
+      "EntB (bifunctional isochorismatase/aryl carrier protein)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "Fur (ferric uptake regulator)"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "extracellular environment",
+      "outer membrane (TolC-dependent efflux)"
+    ],
+    "main_subprocesses": [
+      "EntC-catalyzed isomerization of chorismate to isochorismate",
+      "EntB isochorismatase-catalyzed conversion of isochorismate to 2,3-diDHB and pyruvate",
+      "EntA-catalyzed dehydrogenation to 2,3-DHB",
+      "EntE-catalyzed adenylation of 2,3-DHB and transfer to EntB ArCP domain",
+      "EntF-catalyzed NRPS assembly, elongation with L-serine, cyclization, and product release"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "results and discussion",
+      "materials and methods",
+      "conclusions"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:cd637a10d6ea5563",
+      "response_hash": "sha256:85968c632ad4276a",
+      "raw_chars": 1494,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1494,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "enterobactin",
+    "L-serine",
+    "pyruvate",
+    "EntC (isochorismate synthase)",
+    "EntB (bifunctional isochorismatase/aryl carrier protein)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)"
+  ],
+  "unmatched_terms": [
+    "ATP",
+    "NADH",
+    "NAD+",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "Fur (ferric uptake regulator)"
+  ],
+  "coverage_ratio": 0.705882,
+  "core_accepted_processes": 10,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 10,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

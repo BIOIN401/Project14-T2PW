@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric enterobactin",
+    "EntC",
+    "EntB",
+    "EntE",
+    "EntF",
+    "EntD",
+    "Fur",
+    "RyhB",
+    "Fnr",
+    "FepA"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric enterobactin"
+    ],
+    "key_proteins": [
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntF",
+      "EntD",
+      "Fur",
+      "RyhB",
+      "Fnr",
+      "FepA"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "outer membrane",
+      "periplasm",
+      "extracellular space"
+    ],
+    "main_subprocesses": [
+      "chorismate to isochorismate",
+      "isochorismate to DHB",
+      "DHB activation to DHB-AMP",
+      "assembly of enterobactin",
+      "regulation by Fur and RyhB"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "body",
+      "discussion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 0.7,
+    "selected_example": "enterobactin biosynthesis",
+    "candidate_examples": [
+      {
+        "name": "enterobactin biosynthesis",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "chorismate",
+          "isochorismate",
+          "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+          "DHB-AMP",
+          "enterobactin"
+        ],
+        "key_proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntF",
+          "EntD",
+          "Fur",
+          "RyhB",
+          "Fnr",
+          "FepA"
+        ],
+        "main_subprocesses": [
+          "chorismate to isochorismate",
+          "isochorismate to DHB",
+          "DHB activation to DHB-AMP",
+          "assembly of enterobactin",
+          "regulation by Fur and RyhB"
+        ],
+        "evidence": "The enterobactin biosynthesis pathway ... The ent (enterobactin) operon in Escherichia coli comprises six genes (entA, entB, entC, entD, entE, and entF)..."
+      },
+      {
+        "name": "salmochelin biosynthesis",
+        "organism": "Salmonella enterica",
+        "key_compounds": [
+          "salmochelin",
+          "enterobactin"
+        ],
+        "key_proteins": [
+          "IroN"
+        ],
+        "main_subprocesses": [
+          "glycosylation of enterobactin"
+        ],
+        "evidence": "salmochelin, a glycosylated derivative of enterobactin produced by pathogens such as Salmonella and Escherichia coli"
+      },
+      {
+        "name": "yersiniabactin biosynthesis",
+        "organism": "Klebsiella pneumoniae",
+        "key_compounds": [
+          "yersiniabactin"
+        ],
+        "key_proteins": [],
+        "main_subprocesses": [],
+        "evidence": "some bacteria produce entirely distinct siderophores, such as yersiniabactin (in Klebsiella pneumoniae)"
+      },
+      {
+        "name": "aerobactin biosynthesis",
+        "organism": "Shigella",
+        "key_compounds": [
+          "aerobactin"
+        ],
+        "key_proteins": [
+          "IucA"
+        ],
+        "main_subprocesses": [],
+        "evidence": "Although Shigella possesses the genetic machinery to produce two siderophores, enterobactin and aerobactin"
+      }
+    ],
+    "excluded_examples": [
+      "salmochelin biosynthesis",
+      "yersiniabactin biosynthesis",
+      "aerobactin biosynthesis"
+    ],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:294ef907fbd3911e",
+      "response_hash": "sha256:edafc8b794c223d5",
+      "raw_chars": 2731,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2731,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric enterobactin",
+    "EntC",
+    "EntB",
+    "EntE"
+  ],
+  "unmatched_terms": [
+    "EntF",
+    "EntD",
+    "Fur",
+    "RyhB",
+    "Fnr",
+    "FepA"
+  ],
+  "coverage_ratio": 0.6,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 4,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

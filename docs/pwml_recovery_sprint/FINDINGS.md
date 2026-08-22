@@ -3982,3 +3982,247 @@ answer.** That is the seam behaving exactly as designed and is worth recording a
 **Corrected in `topics_t101.txt`** with the reasoning inline, and the two legs re-run from
 `topics_t101_rerun_pmc12312563.txt` so the other four are not re-executed. **No code defect. No
 card.**
+
+---
+
+## F-094 — PMC12452463/strict shipped `release_ready`, and the product contract says that outcome is never permitted
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-22 from T-104**
+- Evidence: `runs_verify/2026-08-21_2239`, leg 17/20; `evidence/t104_acceptance_report.{txt,json}`
+
+### The measurement
+
+```
+PMC12452463  strict : PASS
+   release : release_ready [pipeline ran; strict gates passed; semantic evaluation passed]
+   payload=final_mapped.json  reactions=5  connected_core=2
+   support: attribution=0% (0/5 reactions)  recall=0% (0/3 paper-stated reactions)
+   enzyme recall: 2/3 (67%)   missing: EntE
+   errors: missing pathway anchors=1, missing supported reactions=3, quarantined processes=2
+```
+
+### Independently corroborated by the artifact name
+
+`PRODUCT_CONTRACT.md` §13 fixes the naming: *"`pathway.pwml` = `release_ready` only.
+`pathway.review_required.pwml` = valid, needs review."* The committed strict artifacts are:
+
+```
+PMC12096016    pathway.review_required.pwml
+PMC12180156    pathway.review_required.pwml
+PMC12452463    pathway.pwml                  <-- the one paper the contract forbids to reach this
+PMC12782028    pathway.review_required.pwml
+PMC12856317    pathway.review_required.pwml
+```
+
+PMC12452463 is the **only** strict leg in the run that emitted a bare `pathway.pwml`. The violation
+is therefore visible in the shipped artifact set itself, not only in the release field.
+
+### Why it is a contract violation and not a benchmark disagreement
+
+`PRODUCT_CONTRACT.md` §13 "Standing policy positions" states for this exact paper:
+
+> Gold `export_rationale` records the route as chemically **broken** (EntA absent; nothing converts
+> 2,3-dihydro-2,3-dihydroxybenzoate onward). Correct outcome after the index fix is
+> `review_required` with `strict_acceptance_eligible=false`. **Never strict success.**
+
+The contract outranks any test, benchmark result or inference from the code. `release_ready` is
+strict success. No interpretation of the run makes this compliant.
+
+The supporting numbers agree with the gold rather than with the release decision: **0% attribution
+(0/5) and 0% recall (0/3)** of paper-stated reactions, `EntE` missing, 2 quarantined processes. The
+pipeline shipped as release-ready a pathway in which not one retained reaction is attributable to a
+paper-stated signature.
+
+### This answers the open question carried out of T-103, and the answer is "yes, it mattered"
+
+T-103 recorded that PMC12452463/strict reached the contractually required `review_required` **via
+the semantic gate** (`actor_named_in_its_own_cited_span`, C-071), not via the route the gold
+rationale describes, while coverage still passed (`minimum_core_satisfied: True` despite
+`missing_anchors: ["EntA","Fur"]`, completeness 0.857). The open question was whether the gap
+between the required outcome and the reason for producing it was load-bearing.
+
+**It was.** In T-104 the semantic gate did not fire and nothing else held the leg: it went past
+`review_required` to `release_ready`. The required outcome had been resting entirely on one gate,
+and the coverage route that the gold calls broken still reports satisfied.
+
+### Honest limit on the comparison
+
+T-103 ran with `T2PW_SPECIES_LLM=0` and `T2PW_OFFLINE_CURATOR=1`; T-104 ran with both live, as an
+RC requires. **The two legs are therefore not a clean A/B, and this must not be quoted as a
+"regression from T-103".** It does not need to be: the violation is absolute against the contract
+at T-104 alone. Per the standing trap, a single-leg change is not called a regression without a
+re-run.
+
+**Unowned. No card opened — this session was scoped to runs, triage and recording.**
+
+---
+
+## F-095 — the three gold organism traps abort as `scope_conflict`, and the gold expects two of them to export
+
+- **Severity** HIGH · **Class `policy_disagreement`** · **Registered 2026-08-22 from T-104**
+- **Needs a product-owner decision. Explicitly NOT a licence to change code.**
+
+### The measurement
+
+`PMC12657337`, `PMC12421875` and `PMC12312563` carry `requested_organism: "Bacillus subtilis"` in
+the pinned gold set while the papers are *E. coli*, *L. lactis* and *L. monocytogenes*. All six
+legs ended `SCOPE_CONFLICT` / `boundary=scope_ambiguity`. Stage 0 read the organism correctly every
+time.
+
+The pipeline nevertheless extracted good payloads before refusing:
+
+| paper | gold `export` | gold `min_connected` | reactions | connected core | enzyme recall | metabolite recall |
+|---|---|---|---|---|---|---|
+| PMC12657337 | `strict_exportable` | 3 | 5 | **4** | 3/3 (100%) | 6/6 (100%) |
+| PMC12421875 | `strict_exportable` | 7 | 11 | **10** | 8/8 (100%) | 10/10 (100%) |
+
+Both **exceed** their gold connected-core floor with full enzyme and metabolite recall, and both
+pass `organism_compatible` — no retained reaction is attributed to a forbidden organism.
+
+### Why this is a policy disagreement and not a defect on either side
+
+Both behaviours are deliberate:
+
+* **The gold set** built these as traps on purpose — three `relevance_note`s say "ORGANISM TRAP" in
+  capitals, and each case lists `Bacillus subtilis` in `forbidden_organisms`. Its scored property is
+  the exported label: *"Every exported reaction must carry organism Escherichia coli; labelling them
+  Bacillus subtilis, the requested organism, is a failure."* That test presupposes an export.
+* **The pipeline** refuses on purpose — `config.py:194` `eligibility_stage0_conflict_aborts = True`,
+  *"A Stage-0 reading that contradicts the batch request stops that run."*
+
+`PRODUCT_CONTRACT.md` contains **no clause governing a requested-vs-observed organism conflict**, so
+the contract does not settle it. Under the §14 adjudication rule only a `product_contract_violation`
+justifies code, therefore **no code change is authorized by this finding.**
+
+### Why it is the highest-leverage open item anyway
+
+The scorer's own blocker ranking makes `scope_conflict` the **sole** blocker for both papers:
+
+```
+STRICT_EXPORT   1. scope_conflict  expected benefit: 2 paper(s) released outright
+                   sole blocker for: PMC12421875, PMC12657337
+RESEARCH_DELIV  1. scope_conflict  expected benefit: 3 paper(s) released outright
+                   sole blocker for: PMC12312563, PMC12421875, PMC12657337
+```
+
+Strict PWML success is **0/4**; two of those four are these papers. This one policy question governs
+half the strict denominator.
+
+### The decision the product owner has to take
+
+1. **Refuse is correct** — then the gold set's `expected_export` for PMC12657337 and PMC12421875 is
+   wrong and the gold needs amending; the strict denominator drops from 4 to 2.
+2. **Extract-and-relabel is correct** — then `eligibility_stage0_conflict_aborts` needs a scoped
+   change so a paper whose organism is *read correctly* is exported under the **observed** organism,
+   with the request recorded. This is the reading the gold's `export_rationale` assumes.
+
+**Do not resolve this by editing the topics file.** Supplying the actual organism removes the trap
+by handing the pipeline the answer and makes `forbidden_organisms` unexercisable.
+
+### Correction to the record F-093 left
+
+F-093 concluded that PMC12312563's `Bacillus subtilis` request was simply wrong because "its scope
+is recorded in no topics file". That is true of *topics* files; **the pinned gold set has recorded it
+all along as a deliberate override**, and `bench_acceptance.py --verify-plan` ratifies it as
+`[pinned_override]`. F-093's "prefer the derived field" lesson remains correct for *reconstructing a
+lost* scope and is not withdrawn; it does not govern a scope that is pinned and verifiable. The
+T-101 re-run it prompted stands on its own terms.
+
+---
+
+## F-096 — seven false real identifiers were emitted on legs the pipeline reported as PASS
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-22 from T-104**
+- Acceptance priority 1 is declared absolute: "any non-zero count fails them however good the rest
+  looks." Observed: **7**, papers PMC12180156, PMC12782028, PMC12856317.
+
+### What was emitted, verbatim from the scorer
+
+| paper / leg | entity | forbidden kind | accessions attached |
+|---|---|---|---|
+| PMC12856317 strict + research | `Pyridoxal 5'-phosphate` | `cofactor_as_protein` | drugbank DB00114, hmdb HMDB0001491, kegg C00018, chebi 18405, pubchem 1051 |
+| PMC12180156 research | `succinyl-CoA` | `placeholder_product` | hmdb HMDB0001022, kegg C00091, chebi 15380, pubchem 439161 |
+| PMC12782028 research | `SREBF1`, `SREBF2` | `regulator_as_metabolite` | uniprot P36956, Q12772 |
+| PMC12782028 research | `LIPA`, `LBR` | `heading_or_prose` | uniprot P38571, Q14739 |
+
+Gold reasons, quoted:
+
+* PLP — *"The ALAS2 cofactor. Never a substrate, never a product, never a protein."*
+* succinyl-CoA — *"**HALLUCINATION TEST**: zero occurrences in the entire 67,304-character file, body
+  and references alike. The paper names ALAS2 without ever naming its substrates or its product, so
+  any of these is fabrication."*
+* SREBF1/2 — *"Transcription factors that appear in the Reactome cholesterol-biosynthesis gene list
+  but catalyse nothing. The list is a membership set from enrichment statistics, not a reaction
+  participant set."*
+* LIPA — *"A degradative lysosomal acid lipase... Directionally the opposite of biosynthesis."*
+
+### Why this is the worst class in the set
+
+`goldset.py`'s own design note: *"Emitting one of these carrying a real external accession is the
+single worst outcome the pipeline can produce, because every structural gate passes and the result
+is silently wrong."*
+
+That is exactly what happened — **every one of these legs was reported `PASS`.** PMC12782028's
+research leg additionally reports *"20 verified / 0 Unknown-backed / 0 unresolved, of 20 protein
+row(s); every protein row carries a real external identity"*, which reads as a perfect identity
+result while four of those rows are enrichment-list membership entities that catalyse nothing.
+
+`PMC12180156/research` is the sharpest case: a metabolite that **appears nowhere in the source text**
+was emitted with four real database accessions.
+
+A second-order defect on the same paper: `drugbank:db00114` is claimed by **two differently-named
+entities**, `ALAS2` and `Pyridoxal 5'-phosphate` (`accession_claimed_by_multiple_entities`).
+
+### Scope limit on the count
+
+The report's own caveat: 8 legs were scored from `merged_payload.json`, which is pre-mapping, so
+their identity counts are **floors, not measurements**. All four rows above were scored from
+`final_mapped.json` and are real measurements. **The true total may be higher than 7; it cannot be
+lower.**
+
+**Unowned. No card opened.**
+
+---
+
+## F-097 — the batch runner calls the gold-specified-correct negative-control outcome a research-mode defect
+
+- **Severity** LOW (reporting / triage doctrine, no wrong artifact shipped) · **Class
+  `policy_disagreement`** · **Registered 2026-08-22 from T-104**
+
+`SUMMARY.txt` files PMC13231680 under **"!! RESEARCH-MODE DEFECT !!"**, `class=broken`, above the
+standing text *"Research mode is fail-open by design... therefore ANY research failure is a code
+defect, not a data problem. Fix these before anything else."*
+
+Both its legs ended `FAIL (no_reactions)` — *"the pipeline produced a pathway with no reactions and
+no transports"*.
+
+The gold set declares this paper a **negative control** (`mechanistic_relevance: context_only`) and
+its `export_rationale` states: *"Nothing lipid-A-related is exportable at any level of partiality.
+**The correct pipeline outcome is an empty pathway plus a rejection reason.**"*
+
+An empty pathway plus a rejection reason is precisely what the pipeline produced. The acceptance
+scorer agrees and excludes the paper as a declared negative control. **The blanket doctrine "ANY
+research failure is a code defect" is wrong for a paper the gold set defines as one that must
+produce nothing**, and it points the reader at "fix these before anything else". Left unqualified it
+invites a change that would break a correct behaviour.
+
+Note the runner is not wrong about the *other* paper in that section: PMC12444477's double timeout is
+a real defect.
+
+**Unowned. Reporting-side only — no pipeline change implied.**
+
+---
+
+## F-092 re-confirmed at T-104 (not a new finding)
+
+Both PMC12444477 legs timed out at exactly 1800 s and both recorded:
+
+> *"the child process was still running after 1800s and was killed, so this paper+mode produced
+> nothing (**budget_exhausted**)"*
+
+The hard-coded phrase *"produced nothing"* and the terminal reason `budget_exhausted` rather than
+`operation_timeout` are exactly the F-092 defect, now observed on a third and fourth leg. **Recorded,
+not fixed** — F-092 is open and unowned, and a milestone run is not the place to change the runner.
+
+Separately, PMC12444477 is the sole extraction blocker in the run: it is `relevance=core` and neither
+mode produced any payload, which is why extraction success is 7/8 rather than 8/8.

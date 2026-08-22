@@ -1,0 +1,35 @@
+RESULT: FAIL
+========================================
+paper      : PMC12657337
+title      : (unknown)
+slug       : PMC12657337
+mode       : research
+status     : scope_conflict
+stage      : stage1
+wall time  : 960.5s (16m00s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : (unclassified)
+message      : Stage 0 read a scope that contradicts the batch request, so this paper is not the paper the topic line asked for: Stage 0 read organism 'Escherichia coli' but the batch requested 'Bacillus subtilis'
+issue codes  : scope_conflict
+
+DETAIL / TRACEBACK
+----------------------------------------
+Stage 0 read organism 'Escherichia coli' but the batch requested 'Bacillus subtilis'
+
+COUNTS
+----------------------------------------
+  scope_conflicts = 1
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (1120 B)
+  - extraction_boundary_report.json  (3009 B)
+  - merged_payload.json  (18552 B)
+  - rag_admission_report.json  (345624 B)
+  - scope_conflict.json  (622 B)
+  - stage0_attempts.json  (827 B)
+  - stage1_payload.json  (18128 B)

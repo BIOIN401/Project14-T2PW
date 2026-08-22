@@ -1,0 +1,930 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "pathwhiz",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:5fbc6e34c8a98c96",
+  "resulting_payload_hash": "sha256:37b5d8a625e7045c",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "pathwhiz",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate",
+      "23dihydroxybenzoate",
+      "chorismate",
+      "dhbamp",
+      "entb",
+      "entc",
+      "entd",
+      "ente",
+      "enterobactin",
+      "entf",
+      "fepa",
+      "ferricenterobactin",
+      "fur",
+      "isochorismate",
+      "ryhb"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:3fd45e65f94a3a97",
+  "ok": true,
+  "counts": {
+    "core_accepted": 7,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 2,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "Chorismate to isochorismate (EntC)",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate entc",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "isochorismatase",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Activation of DHB to DHB-AMP (EntE)",
+      "essential_participant": "enterobactin synthase",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "activation of dhb to dhbamp ente",
+        "dhbamp",
+        "enterobactin synthase"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "ambiguous_entity_type:protein_complexes+proteins",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/2",
+          "inputs": [
+            "2,3-dihydro-2,3-dihydroxybenzoate"
+          ],
+          "outputs": [
+            "DHB-AMP"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "Activation of DHB to DHB-AMP (EntE)",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "84 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ],
+          "biological_state": "Cytosolic state",
+          "evidence": "84 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "84 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Enterobactin assembly (synthase complex)",
+      "essential_participant": "enterobactin synthase",
+      "iteration": 0,
+      "core_terms": [
+        "dhbamp",
+        "enterobactin",
+        "enterobactin assembly synthase complex",
+        "enterobactin synthase",
+        "enterobactin synthase complex"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "ambiguous_entity_type:protein_complexes+proteins",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "DHB-AMP"
+          ],
+          "outputs": [
+            "enterobactin"
+          ],
+          "locked_reaction_id": "rxn_lock_003",
+          "name": "Enterobactin assembly (synthase complex)",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "92 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "135 chars elided",
+              "confidence": 0.9,
+              "provenance": "inferred"
+            }
+          ],
+          "biological_state": "Cytosolic state",
+          "evidence": "127 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "92 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "135 chars elided",
+              "confidence": 0.9,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "Enterobactin iron binding",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin iron binding",
+        "fe3",
+        "ferricenterobactin"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "Ferric-enterobactin import via FepA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "ferricenterobactin",
+        "ferricenterobactin import via fepa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Activation of DHB to DHB-AMP (EntE)",
+      "essential_participant": "enterobactin synthase",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "activation of dhb to dhbamp ente",
+        "dhbamp",
+        "enterobactin synthase"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "ambiguous_entity_type:protein_complexes+proteins",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/2",
+          "inputs": [
+            "2,3-dihydro-2,3-dihydroxybenzoate"
+          ],
+          "outputs": [
+            "DHB-AMP"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "Activation of DHB to DHB-AMP (EntE)",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "84 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ],
+          "biological_state": "Cytosolic state",
+          "evidence": "84 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "84 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase"
+      },
+      "original_process": {
+        "inputs": [
+          "2,3-dihydro-2,3-dihydroxybenzoate"
+        ],
+        "outputs": [
+          "DHB-AMP"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "Activation of DHB to DHB-AMP (EntE)",
+        "enzymes": [
+          {
+            "entity": "enterobactin synthase",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation forming DHB-AMP",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "biological_state": "Cytosolic state",
+        "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation forming DHB-AMP",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_broken_reference: ambiguous_entity_type:protein_complexes+proteins)",
+            "review_required": true,
+            "uncertainty": "the row could not be serialized as strict PWML, so whether the biology it named is real was never decided",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "enterobactin synthase",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation forming DHB-AMP",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Enterobactin assembly (synthase complex)",
+      "essential_participant": "enterobactin synthase",
+      "iteration": 0,
+      "core_terms": [
+        "dhbamp",
+        "enterobactin",
+        "enterobactin assembly synthase complex",
+        "enterobactin synthase",
+        "enterobactin synthase complex"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "ambiguous_entity_type:protein_complexes+proteins",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "DHB-AMP"
+          ],
+          "outputs": [
+            "enterobactin"
+          ],
+          "locked_reaction_id": "rxn_lock_003",
+          "name": "Enterobactin assembly (synthase complex)",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "92 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "135 chars elided",
+              "confidence": 0.9,
+              "provenance": "inferred"
+            }
+          ],
+          "biological_state": "Cytosolic state",
+          "evidence": "127 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "92 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "enterobactin synthase",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "135 chars elided",
+              "confidence": 0.9,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase"
+      },
+      "original_process": {
+        "inputs": [
+          "DHB-AMP"
+        ],
+        "outputs": [
+          "enterobactin"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "Enterobactin assembly (synthase complex)",
+        "enzymes": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "assembly of three DHB molecules into enterobactin catalyzed by enterobactin synthase complex",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "enterobactin synthase",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "omplex) assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by enterobactin synthase complex",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          }
+        ],
+        "biological_state": "Cytosolic state",
+        "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by enterobactin synthase complex",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_broken_reference: ambiguous_entity_type:protein_complexes+proteins)",
+            "review_required": true,
+            "uncertainty": "the row could not be serialized as strict PWML, so whether the biology it named is real was never decided",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "assembly of three DHB molecules into enterobactin catalyzed by enterobactin synthase complex",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "enterobactin synthase",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "omplex) assembly of three DHB molecules into the cyclic trilactone structure of enterobactin catalyzed by enterobactin synthase complex",
+            "confidence": 0.9,
+            "provenance": "inferred"
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "Chorismate to isochorismate (EntC)",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate entc",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "isochorismatase",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "Enterobactin iron binding",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin iron binding",
+        "fe3",
+        "ferricenterobactin"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "Ferric-enterobactin import via FepA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "ferricenterobactin",
+        "ferricenterobactin import via fepa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "release_ready",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": true,
+    "completeness": 0.8,
+    "missing_anchors": [
+      "DHB-AMP",
+      "Fur",
+      "RyhB"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: DHB-AMP, Fur, RyhB; candidate processes withheld by strict admission (quarantined_broken_reference:2); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [],
+    "applied": true,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [
+      "rxn_lock_001",
+      "rxn_lock_003"
+    ],
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 2,
+    "quarantined_locked_reactions": 2,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate",
+      "2,3-dihydroxybenzoate",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric-enterobactin",
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntD",
+      "EntF",
+      "Fur",
+      "RyhB",
+      "FepA"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate",
+        "2,3-dihydroxybenzoate",
+        "DHB-AMP",
+        "enterobactin",
+        "ferric-enterobactin"
+      ],
+      "key_proteins": [
+        "EntC",
+        "EntB",
+        "EntE",
+        "EntD",
+        "EntF",
+        "Fur",
+        "RyhB",
+        "FepA"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "outer membrane",
+        "extracellular space"
+      ],
+      "main_subprocesses": [
+        "chorismate to isochorismate",
+        "isochorismate to DHB",
+        "DHB activation to DHB-AMP",
+        "assembly of enterobactin",
+        "iron sequestering by enterobactin",
+        "ferri-enterobactin uptake via FepA",
+        "Fur-mediated transcriptional repression",
+        "RyhB sRNA post-transcriptional regulation"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "body",
+        "results",
+        "discussion",
+        "supplementary"
+      ],
+      "pathway_relevance_score": 0.8,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:294ef907fbd3911e",
+        "response_hash": "sha256:437c8fac4401300d",
+        "raw_chars": 1085,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1085,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate",
+      "2,3-dihydroxybenzoate",
+      "enterobactin",
+      "ferric-enterobactin",
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntD",
+      "EntF",
+      "FepA"
+    ],
+    "unmatched_terms": [
+      "DHB-AMP",
+      "Fur",
+      "RyhB"
+    ],
+    "coverage_ratio": 0.8,
+    "core_accepted_processes": 7,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 7,
+    "quarantined_processes": 2,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:5fbc6e34c8a98c96.sha256:3fd45e65f94a3a97"
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "DHB-AMP",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "proteins",
+          "name": "EntE",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "enterobactin synthase",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "protein_complexes",
+          "name": "enterobactin synthase complex",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "protein_complexes",
+          "name": "enterobactin synthase",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "nucleic_acids",
+          "name": "RyhB",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "DHB-AMP",
+          "reason": "location_entity_removed",
+          "biological_state": "Cytosolic state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "EntE",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_escherichia_colimembrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "enterobactin synthase",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "enterobactin synthase complex",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

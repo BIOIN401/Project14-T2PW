@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        2,
+        3,
+        3,
+        -3,
+        6
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 3,
+      "warning_count": 5,
+      "patch_count": 6,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 3,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Add missing substrate (succinyl-CoA) and assign ALAS2's verified UniProt/PW ID per retry context. Remove quarantined protein references from element_locations to align with active entity lists.",
+      "top_errors": [
+        "Protein 'ALAS2' is missing a UniProt or DrugBank identifier.",
+        "Protein 'ferrochelatase' referenced in element_locations is not declared in entities.proteins (it has been quarantined).",
+        "Protein 'SFXN2' referenced in element_locations is not declared in entities.proteins (it has been quarantined)."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

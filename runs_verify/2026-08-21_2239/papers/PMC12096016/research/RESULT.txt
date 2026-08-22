@@ -1,0 +1,63 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1116.2s (18m36s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 7
+  entities = 22
+  gate_errors = 1
+  gate_errors_not_blocking = 1
+  gate_review_flags = 1
+  normalization_actions = 3
+  proteins = 9
+  reactions = 3
+  review_flags = 1
+  runtime_schema_findings = 6
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 10, 'b': 0, 'c': 4, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (3660 B)
+  - contract_reports.json  (10373 B)
+  - coverage_summary.json  (3388 B)
+  - final_mapped.json  (172426 B)
+  - final_stage3_gate_report.json  (11524 B)
+  - gap_iteration_summary.json  (37461 B)
+  - gate_fail_report.json  (8586 B)
+  - graph_closure_iterations.json  (1112 B)
+  - initial_stage3_gate_report.json  (8586 B)
+  - merged_payload.json  (23477 B)
+  - quarantine_report.json  (15650 B)
+  - rag_admission_report.json  (250685 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (37804 B)
+  - research_pathway_elements.csv  (3933 B)
+  - research_pathway_report.txt  (11085 B)
+  - review_flags.json  (7383 B)
+  - stage1_payload.json  (22088 B)

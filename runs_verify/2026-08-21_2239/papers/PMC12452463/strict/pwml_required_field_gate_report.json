@@ -1,0 +1,75 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "pathway_missing_pw_id",
+      "message": "Pathway has no pw_id / pathbank_pathway_id.",
+      "pointer": "/metadata/pw_id"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Chorismate to isochorismate (EntC)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/0",
+      "reaction_name": "Chorismate to isochorismate (EntC)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Chorismate to isochorismate (EntC)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/outputs/0",
+      "reaction_name": "Chorismate to isochorismate (EntC)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/inputs/0",
+      "reaction_name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/outputs/0",
+      "reaction_name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Enterobactin iron binding' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/inputs/0",
+      "reaction_name": "Enterobactin iron binding"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Enterobactin iron binding' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/inputs/1",
+      "reaction_name": "Enterobactin iron binding"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Enterobactin iron binding' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/outputs/0",
+      "reaction_name": "Enterobactin iron binding"
+    }
+  ],
+  "summary": {
+    "error_count": 0,
+    "warning_count": 8,
+    "error_codes": [],
+    "warning_codes": [
+      "pathway_missing_pw_id",
+      "reaction_participant_missing_stoichiometry"
+    ],
+    "checked_as": "payload",
+    "strict_db": true
+  },
+  "stage": "required_field_gate",
+  "pipeline_order": [
+    "audit_normalize",
+    "db_hydration",
+    "api_enrichment",
+    "llm_gap_resolver_with_tools",
+    "required_field_gate",
+    "pwml_ir_build",
+    "pwml_writer",
+    "pwml_qa"
+  ]
+}

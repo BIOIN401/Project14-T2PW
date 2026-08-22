@@ -1,0 +1,3227 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Escherichia coli",
+      "pathwhiz_id": 3,
+      "taxonomy_id": "562",
+      "classification": "Prokaryote"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "cytoplasm"
+    },
+    {
+      "key": "scl_2",
+      "name": "extracellular"
+    },
+    {
+      "key": "scl_3",
+      "name": "outer membrane"
+    },
+    {
+      "key": "scl_4",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    },
+    {
+      "key": "scl_5",
+      "name": "Inner Membrane"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "cytoplasmic state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "extracellular state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_2",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_3",
+      "name": "outer membrane state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_3",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_4",
+      "name": "AutoState_escherichia_coliinner_membrane",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_5",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "chorismate",
+        "pathwhiz_id": 7748,
+        "pathbank_compound_id": 7748,
+        "mapped_ids": {
+          "hmdb": "HMDB0012199",
+          "kegg": "C00251",
+          "chebi": "17333",
+          "pubchem": "12039",
+          "cas": "617-12-9",
+          "biocyc": "CPD-9517",
+          "chemspider": "11542",
+          "pathbank_compound_id": "7748"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "chorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 7748,
+              "name": "Chorismate",
+              "short_name": "Chorism",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0012199",
+                "kegg": "C00251",
+                "chebi": "CHEBI:17333",
+                "pubchem": "12039",
+                "cas": "617-12-9",
+                "biocyc": "CPD-9517",
+                "chemspider": "11542",
+                "pathbank_compound_id": "7748"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 7748,
+          "resolved_name": "Chorismate"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 7748,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0012199",
+        "kegg_id": "C00251",
+        "chebi_id": "17333",
+        "pubchem_cid": "12039",
+        "cas": "617-12-9",
+        "biocyc_id": "CPD-9517",
+        "chemspider_id": "11542",
+        "short_name": "Chorism",
+        "synonyms": [
+          "Chorismate",
+          "Chorismic acid",
+          "(3R,4R)-3-[(1-Carboxyethenyl)oxy]-4-hydroxycyclohexa-1,5-diene-1-carboxylate"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "isochorismate",
+        "pathwhiz_id": 40741,
+        "pathbank_compound_id": 40741,
+        "mapped_ids": {
+          "kegg": "C00885",
+          "chebi": "29780",
+          "pubchem": "4141",
+          "pathbank_compound_id": "40741"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "isochorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40741,
+              "name": "isochorismate",
+              "short_name": "isochor",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:29780",
+                "pathbank_compound_id": "40741"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 40741,
+          "resolved_name": "isochorismate"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40741,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "kegg_id": "C00885",
+        "chebi_id": "29780",
+        "pubchem_cid": "4141",
+        "short_name": "isochor",
+        "synonyms": [
+          "Isochorismate",
+          "Isochorismic acid"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+        "pathwhiz_id": 40770,
+        "pathbank_compound_id": 40770,
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40770,
+              "name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+              "short_name": "223D3D",
+              "score": 0.565,
+              "mapped_ids": {
+                "kegg": "C04171",
+                "chebi": "CHEBI:15941"
+              }
+            },
+            {
+              "pathbank_compound_id": 41128,
+              "name": "2,3-Dihydro-2,3-dihydroxybenzoic acid",
+              "short_name": "DDB",
+              "score": 0.565,
+              "mapped_ids": {
+                "chebi": "CHEBI:15941",
+                "pubchem": "23615184"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.565,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          }
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40770,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "short_name": "223D3D",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "2,3-dihydroxybenzoic acid (2,3-DHB)",
+        "pathwhiz_id": 40792,
+        "pathbank_compound_id": 40792,
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydroxybenzoic acid (2,3-DHB)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40792,
+              "name": "2,3-Dihydroxybenzoic acid",
+              "short_name": "23DBA",
+              "score": 0.73,
+              "mapped_ids": {
+                "chebi": "CHEBI:18026"
+              }
+            },
+            {
+              "pathbank_compound_id": 296,
+              "name": "2-Pyrocatechuic acid",
+              "short_name": "DHBA",
+              "score": 0.6567,
+              "mapped_ids": {
+                "hmdb": "HMDB0000397",
+                "kegg": "C00196",
+                "chebi": "CHEBI:18026",
+                "pubchem": "19",
+                "cas": "303-38-8",
+                "chemspider": "18",
+                "drugbank": "DB01672"
+              }
+            },
+            {
+              "pathbank_compound_id": 41128,
+              "name": "2,3-Dihydro-2,3-dihydroxybenzoic acid",
+              "short_name": "DDB",
+              "score": 0.6567,
+              "mapped_ids": {
+                "chebi": "CHEBI:15941",
+                "pubchem": "23615184"
+              }
+            },
+            {
+              "pathbank_compound_id": 40770,
+              "name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+              "short_name": "223D3D",
+              "score": 0.4275,
+              "mapped_ids": {
+                "kegg": "C04171",
+                "chebi": "CHEBI:15941"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.73,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          }
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40792,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "short_name": "23DBA",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_5",
+        "name": "enterobactin",
+        "pathwhiz_id": 40793,
+        "pathbank_compound_id": 40793,
+        "mapped_ids": {
+          "chebi": "28855",
+          "pathbank_compound_id": "40793"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "enterobactin"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40793,
+              "name": "enterobactin",
+              "short_name": "Entrobn",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:28855",
+                "pathbank_compound_id": "40793"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40793,
+          "resolved_name": "enterobactin"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40793,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "chebi_id": "28855",
+        "short_name": "Entrobn",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          },
+          {
+            "biological_state": "extracellular state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_6",
+        "name": "L-serine",
+        "pathwhiz_id": 120,
+        "pathbank_compound_id": 120,
+        "mapped_ids": {
+          "hmdb": "HMDB0000187",
+          "kegg": "C00065",
+          "chebi": "17115",
+          "pubchem": "5951",
+          "cas": "56-45-1",
+          "biocyc": "SER",
+          "chemspider": "5736",
+          "drugbank": "DB00133",
+          "pathbank_compound_id": "120"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "L-serine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 120,
+              "name": "L-Serine",
+              "short_name": "Ser",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000187",
+                "kegg": "C00065",
+                "chebi": "CHEBI:17115",
+                "pubchem": "5951",
+                "cas": "56-45-1",
+                "biocyc": "SER",
+                "chemspider": "5736",
+                "drugbank": "DB00133",
+                "pathbank_compound_id": "120"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 120,
+          "resolved_name": "L-Serine"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 120,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000187",
+        "kegg_id": "C00065",
+        "chebi_id": "17115",
+        "pubchem_cid": "5951",
+        "cas": "56-45-1",
+        "biocyc_id": "SER",
+        "chemspider_id": "5736",
+        "short_name": "Ser",
+        "synonyms": [
+          "L-Serine",
+          "L-2-Amino-3-hydroxypropionic acid",
+          "L-3-Hydroxy-alanine",
+          "Serine"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_7",
+        "name": "Adenosine triphosphate",
+        "pathwhiz_id": 414,
+        "pathbank_compound_id": 414,
+        "mapped_ids": {
+          "hmdb": "HMDB0000538",
+          "kegg": "C00002",
+          "chebi": "15422",
+          "pubchem": "5957",
+          "cas": "56-65-5",
+          "biocyc": "ATP",
+          "chemspider": "5742",
+          "drugbank": "DB00171",
+          "pathbank_compound_id": "414"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "ATP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 414,
+              "name": "Adenosine triphosphate",
+              "short_name": "ATP",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000538",
+                "kegg": "C00002",
+                "chebi": "CHEBI:15422",
+                "pubchem": "5957",
+                "cas": "56-65-5",
+                "biocyc": "ATP",
+                "chemspider": "5742",
+                "drugbank": "DB00171",
+                "pathbank_compound_id": "414"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 414,
+          "resolved_name": "Adenosine triphosphate"
+        },
+        "raw_name": "ATP",
+        "db_status": "matched_offline_name_index",
+        "db_id": 414,
+        "db_row": {
+          "id": 414,
+          "name": "Adenosine triphosphate"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000538",
+        "kegg_id": "C00002",
+        "chebi_id": "15422",
+        "pubchem_cid": "5957",
+        "cas": "56-65-5",
+        "biocyc_id": "ATP",
+        "chemspider_id": "5742",
+        "short_name": "ATP",
+        "synonyms": [
+          "ATP",
+          "Adenosine 5'-triphosphate"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_8",
+        "name": "pyruvate",
+        "pathwhiz_id": 108870,
+        "pathbank_compound_id": 108870,
+        "mapped_ids": {
+          "pathbank_compound_id": "108870"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "pyruvate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 108870,
+              "name": "Pyruvate",
+              "short_name": "",
+              "score": 1.0,
+              "mapped_ids": {
+                "pathbank_compound_id": "108870"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 108870,
+          "resolved_name": "Pyruvate"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 108870,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_9",
+        "name": "2,3-dihydroxybenzoyl-AMP",
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydroxybenzoyl-AMP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "2,3-dihydroxybenzoyl-AMP",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "2,3-dihydroxybenzoyl-AMP",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_10",
+        "name": "Adenosine monophosphate",
+        "pathwhiz_id": 32,
+        "pathbank_compound_id": 32,
+        "mapped_ids": {
+          "hmdb": "HMDB0000045",
+          "kegg": "C00020",
+          "chebi": "16027",
+          "pubchem": "6083",
+          "cas": "61-19-8",
+          "biocyc": "AMP",
+          "chemspider": "5858",
+          "drugbank": "DB00131",
+          "pathbank_compound_id": "32"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "AMP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 32,
+              "name": "Adenosine monophosphate",
+              "short_name": "AMP",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000045",
+                "kegg": "C00020",
+                "chebi": "CHEBI:16027",
+                "pubchem": "6083",
+                "cas": "61-19-8",
+                "biocyc": "AMP",
+                "chemspider": "5858",
+                "drugbank": "DB00131",
+                "pathbank_compound_id": "32"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "provider": "PathBankDB",
+          "pathbank_compound_id": 32,
+          "resolved_name": "Adenosine monophosphate"
+        },
+        "raw_name": "AMP",
+        "db_status": "matched_offline_name_index",
+        "db_id": 32,
+        "db_row": {
+          "id": 32,
+          "name": "Adenosine monophosphate"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000045",
+        "kegg_id": "C00020",
+        "chebi_id": "16027",
+        "pubchem_cid": "6083",
+        "cas": "61-19-8",
+        "biocyc_id": "AMP",
+        "chemspider_id": "5858",
+        "short_name": "AMP",
+        "synonyms": [
+          "AMP",
+          "Adenosine 5'-monophosphate",
+          "Adenylic acid",
+          "Adenylate",
+          "5'-AMP",
+          "5'-Adenylic acid",
+          "5'-Adenosine monophosphate",
+          "Adenosine 5'-phosphate"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_11",
+        "name": "ferric-enterobactin",
+        "pathwhiz_id": 41655,
+        "pathbank_compound_id": 41655,
+        "mapped_ids": {
+          "pubchem": "440956",
+          "pathbank_compound_id": "41655"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "ferric-enterobactin"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 41655,
+              "name": "Ferric enterobactin",
+              "short_name": "Ferric",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "440956",
+                "pathbank_compound_id": "41655"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 41655,
+          "resolved_name": "Ferric enterobactin"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 41655,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "pubchem_cid": "440956",
+        "short_name": "Ferric",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "extracellular state"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "EntC",
+        "pathwhiz_id": 6238,
+        "pathbank_protein_id": 6238,
+        "mapped_ids": {
+          "uniprot": "P0AEJ2",
+          "pathbank_protein_id": "6238",
+          "gene_name": "entC"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6238,
+              "name": "Isochorismate synthase entC",
+              "uniprot": "P0AEJ2",
+              "gene_name": "entC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6238, uniprot:P0AEJ2",
+            "judged_candidate": {
+              "pathbank_protein_id": 6238,
+              "name": "Isochorismate synthase entC",
+              "uniprot": "P0AEJ2",
+              "gene_name": "entC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6238,
+                "name": "Isochorismate synthase entC",
+                "uniprot": "P0AEJ2",
+                "gene_name": "entC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "EntC",
+              "kind": "protein",
+              "resolved_name": "Isochorismate synthase entC",
+              "identity": "uniprot:P0AEJ2",
+              "compared_names": [
+                "Isochorismate synthase entC"
+              ]
+            }
+          },
+          "pathbank_protein_id": 6238,
+          "resolved_name": "Isochorismate synthase entC",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Isochorismate mutase",
+          "entC",
+          "Isochorismate synthase EntC"
+        ],
+        "uniprot": "P0AEJ2",
+        "gene_name": "entC",
+        "ec_number": "5.4.4.2",
+        "ec_numbers": [
+          "5.4.4.2"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "EntB",
+        "pathwhiz_id": 6224,
+        "pathbank_protein_id": 6224,
+        "mapped_ids": {
+          "uniprot": "P0ADI4",
+          "pathbank_protein_id": "6224",
+          "gene_name": "entB"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4",
+            "judged_candidate": {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6224,
+                "name": "Isochorismatase",
+                "uniprot": "P0ADI4",
+                "gene_name": "entB",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntB",
+              "kind": "protein",
+              "resolved_name": "Isochorismatase",
+              "identity": "uniprot:P0ADI4",
+              "compared_names": [
+                "Isochorismatase"
+              ],
+              "matched_symbol": "entB"
+            }
+          },
+          "pathbank_protein_id": 6224,
+          "resolved_name": "Isochorismatase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Enterobactin biosynthesis bifunctional protein EntB",
+          "Enterochelin synthase B",
+          "entB",
+          "entG",
+          "Enterobactin synthase component B"
+        ],
+        "uniprot": "P0ADI4",
+        "gene_name": "entB",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "3.3.2.1"
+        ]
+      },
+      {
+        "key": "prot_3",
+        "name": "EntA",
+        "pathwhiz_id": 6341,
+        "pathbank_protein_id": 6341,
+        "mapped_ids": {
+          "uniprot": "P15047",
+          "pathbank_protein_id": "6341",
+          "gene_name": "entA"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6341,
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "uniprot": "P15047",
+              "gene_name": "entA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6341, uniprot:P15047",
+            "judged_candidate": {
+              "pathbank_protein_id": 6341,
+              "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "uniprot": "P15047",
+              "gene_name": "entA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6341,
+                "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+                "uniprot": "P15047",
+                "gene_name": "entA",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntA",
+              "kind": "protein",
+              "resolved_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "identity": "uniprot:P15047",
+              "compared_names": [
+                "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase"
+              ],
+              "matched_symbol": "entA"
+            }
+          },
+          "pathbank_protein_id": 6341,
+          "resolved_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Trans-2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+          "entA",
+          "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase"
+        ],
+        "uniprot": "P15047",
+        "gene_name": "entA",
+        "ec_number": "1.3.1.28",
+        "ec_numbers": [
+          "1.3.1.28"
+        ]
+      },
+      {
+        "key": "prot_4",
+        "name": "EntE",
+        "pathwhiz_id": 6301,
+        "pathbank_protein_id": 6301,
+        "mapped_ids": {
+          "uniprot": "P10378",
+          "pathbank_protein_id": "6301",
+          "gene_name": "entE"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntE",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "uniprot": "P10378",
+              "gene_name": "entE",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntE",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6301, uniprot:P10378",
+            "judged_candidate": {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "uniprot": "P10378",
+              "gene_name": "entE",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6301,
+                "name": "Enterobactin synthase component E",
+                "uniprot": "P10378",
+                "gene_name": "entE",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntE",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component E",
+              "identity": "uniprot:P10378",
+              "compared_names": [
+                "Enterobactin synthase component E"
+              ],
+              "matched_symbol": "entE"
+            }
+          },
+          "pathbank_protein_id": 6301,
+          "resolved_name": "Enterobactin synthase component E",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "2,3-dihydroxybenzoate-AMP ligase",
+          "2,3-dihydroxybenzoate-AMP synthase",
+          "Dihydroxybenzoic acid-activating enzyme",
+          "Enterochelin synthase E",
+          "entE",
+          "Enterobactin synthase component E"
+        ],
+        "uniprot": "P10378",
+        "gene_name": "entE",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "6.2.1.71"
+        ]
+      },
+      {
+        "key": "prot_5",
+        "name": "EntF",
+        "pathwhiz_id": 6312,
+        "pathbank_protein_id": 6312,
+        "mapped_ids": {
+          "uniprot": "P11454",
+          "pathbank_protein_id": "6312",
+          "gene_name": "entF"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntF",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6312,
+              "name": "Enterobactin synthase component F",
+              "uniprot": "P11454",
+              "gene_name": "entF",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntF",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6312, uniprot:P11454",
+            "judged_candidate": {
+              "pathbank_protein_id": 6312,
+              "name": "Enterobactin synthase component F",
+              "uniprot": "P11454",
+              "gene_name": "entF",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6312,
+                "name": "Enterobactin synthase component F",
+                "uniprot": "P11454",
+                "gene_name": "entF",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntF",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component F",
+              "identity": "uniprot:P11454",
+              "compared_names": [
+                "Enterobactin synthase component F"
+              ],
+              "matched_symbol": "entF"
+            }
+          },
+          "pathbank_protein_id": 6312,
+          "resolved_name": "Enterobactin synthase component F",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Enterochelin synthase F",
+          "Nonribosomal peptide synthetase EntF",
+          "entF",
+          "Enterobactin synthase component F"
+        ],
+        "uniprot": "P11454",
+        "gene_name": "entF",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "6.2.1.72"
+        ]
+      },
+      {
+        "key": "prot_6",
+        "name": "EntD",
+        "pathwhiz_id": 6383,
+        "pathbank_protein_id": 6383,
+        "mapped_ids": {
+          "uniprot": "P19925",
+          "pathbank_protein_id": "6383",
+          "gene_name": "entD"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6383,
+              "name": "4'-phosphopantetheinyl transferase entD",
+              "uniprot": "P19925",
+              "gene_name": "entD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6383, uniprot:P19925",
+            "judged_candidate": {
+              "pathbank_protein_id": 6383,
+              "name": "4'-phosphopantetheinyl transferase entD",
+              "uniprot": "P19925",
+              "gene_name": "entD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6383,
+                "name": "4'-phosphopantetheinyl transferase entD",
+                "uniprot": "P19925",
+                "gene_name": "entD",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "EntD",
+              "kind": "protein",
+              "resolved_name": "4'-phosphopantetheinyl transferase entD",
+              "identity": "uniprot:P19925",
+              "compared_names": [
+                "4'-phosphopantetheinyl transferase entD"
+              ]
+            }
+          },
+          "pathbank_protein_id": 6383,
+          "resolved_name": "4'-phosphopantetheinyl transferase entD",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "4'-phosphopantetheinyl transferase EntD",
+          "Enterochelin synthase D",
+          "entD",
+          "Enterobactin synthase component D"
+        ],
+        "uniprot": "P19925",
+        "gene_name": "entD"
+      },
+      {
+        "key": "prot_7",
+        "name": "TolC",
+        "pathwhiz_id": 7446,
+        "pathbank_protein_id": 7446,
+        "mapped_ids": {
+          "uniprot": "P02930",
+          "pathbank_protein_id": "7446",
+          "gene_name": "tolC"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "TolC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 7446,
+              "name": "Outer membrane protein tolC",
+              "uniprot": "P02930",
+              "gene_name": "tolC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "TolC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:7446, uniprot:P02930",
+            "judged_candidate": {
+              "pathbank_protein_id": 7446,
+              "name": "Outer membrane protein tolC",
+              "uniprot": "P02930",
+              "gene_name": "tolC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 7446,
+                "name": "Outer membrane protein tolC",
+                "uniprot": "P02930",
+                "gene_name": "tolC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "TolC",
+              "kind": "protein",
+              "resolved_name": "Outer membrane protein tolC",
+              "identity": "uniprot:P02930",
+              "compared_names": [
+                "Outer membrane protein tolC"
+              ]
+            }
+          },
+          "pathbank_protein_id": 7446,
+          "resolved_name": "Outer membrane protein tolC",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Multidrug efflux pump subunit TolC",
+          "Outer membrane factor TolC",
+          "tolC",
+          "colE1-i",
+          "mtcB",
+          "mukA",
+          "refI",
+          "toc",
+          "weeA",
+          "Outer membrane protein TolC"
+        ],
+        "uniprot": "P02930",
+        "gene_name": "tolC"
+      },
+      {
+        "key": "prot_8",
+        "name": "TonB",
+        "pathwhiz_id": 7427,
+        "pathbank_protein_id": 7427,
+        "mapped_ids": {
+          "uniprot": "P02929",
+          "pathbank_protein_id": "7427",
+          "gene_name": "tonB"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "TonB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 7427,
+              "name": "Protein tonB",
+              "uniprot": "P02929",
+              "gene_name": "tonB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "TonB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:7427, uniprot:P02929",
+            "judged_candidate": {
+              "pathbank_protein_id": 7427,
+              "name": "Protein tonB",
+              "uniprot": "P02929",
+              "gene_name": "tonB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 7427,
+                "name": "Protein tonB",
+                "uniprot": "P02929",
+                "gene_name": "tonB",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "TonB",
+              "kind": "protein",
+              "resolved_name": "Protein tonB",
+              "identity": "uniprot:P02929",
+              "compared_names": [
+                "Protein tonB"
+              ]
+            }
+          },
+          "pathbank_protein_id": 7427,
+          "resolved_name": "Protein tonB",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "tonB",
+          "exbA",
+          "Protein TonB"
+        ],
+        "uniprot": "P02929",
+        "gene_name": "tonB"
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "Isochorismate synthase",
+        "pathwhiz_id": 1143,
+        "pathbank_complex_id": 1143,
+        "mapping_meta": {
+          "pathbank_complex_id": 1143,
+          "pathbank_protein_complex_id": 1143,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1143,
+              "pathbank_protein_complex_id": 1143,
+              "name": "Isochorismate synthase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "Isochorismate synthase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "isochorismatase",
+        "pathwhiz_id": 1189,
+        "pathbank_complex_id": 1189,
+        "mapping_meta": {
+          "pathbank_complex_id": 1189,
+          "pathbank_protein_complex_id": 1189,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1189,
+              "pathbank_protein_complex_id": 1189,
+              "name": "isochorismatase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "isochorismatase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_2",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "oxidoreductase (entA)",
+        "pathwhiz_id": 1190,
+        "pathbank_complex_id": 1190,
+        "mapping_meta": {
+          "pathbank_complex_id": 1190,
+          "pathbank_protein_complex_id": 1190,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1190,
+              "pathbank_protein_complex_id": 1190,
+              "name": "oxidoreductase (entA)",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "oxidoreductase (entA)",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_3",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_4",
+        "name": "enterobactin synthase",
+        "pathwhiz_id": 3623,
+        "pathbank_complex_id": 3623,
+        "mapping_meta": {
+          "pathbank_complex_id": 3623,
+          "pathbank_protein_complex_id": 3623,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 3623,
+              "pathbank_protein_complex_id": 3623,
+              "name": "enterobactin synthase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 4
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "enterobactin synthase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_2",
+            "stoichiometry": 1
+          },
+          {
+            "protein_key": "prot_6",
+            "stoichiometry": 1
+          },
+          {
+            "protein_key": "prot_5",
+            "stoichiometry": 1
+          },
+          {
+            "protein_key": "prot_4",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "EntC-catalyzed isochorismate formation",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "EntB isochorismatase reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_2_right_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "EntA-catalyzed 2,3-diDHB dehydrogenation",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_4",
+        "type": "reaction",
+        "name": "EntE-catalyzed 2,3-DHB adenylation",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_4_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_4_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_4_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_9",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_4_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_5",
+        "type": "reaction",
+        "name": "EntF-catalyzed enterobactin synthesis",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_5_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_9",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_5_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_5_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_5_right_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_10",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_5_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [
+      {
+        "key": "tr_1",
+        "type": "transport",
+        "name": "Enterobactin secretion via TolC",
+        "transport_elements": [
+          {
+            "key": "tr_1_el_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "left_biological_state_key": "bs_1",
+            "right_biological_state_key": "bs_2",
+            "stoichiometry": 1
+          }
+        ],
+        "transporters": [
+          {
+            "key": "tr_1_transporter_1",
+            "entity_type": "protein",
+            "entity_key": "prot_7",
+            "biological_state_key": "bs_1"
+          }
+        ]
+      },
+      {
+        "key": "tr_2",
+        "type": "transport",
+        "name": "Ferric-enterobactin import via TonB",
+        "transport_elements": [
+          {
+            "key": "tr_2_el_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_11",
+            "left_biological_state_key": "bs_2",
+            "right_biological_state_key": "bs_1",
+            "stoichiometry": 1
+          }
+        ],
+        "transporters": [
+          {
+            "key": "tr_2_transporter_1",
+            "entity_type": "protein",
+            "entity_key": "prot_8",
+            "biological_state_key": "bs_1"
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "2,3-DHB inhibition of EntB isochorismatase",
+        "interaction_type": "inhibits",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_2"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "EntD modifies EntB",
+        "interaction_type": "modifies",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_6"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_2"
+        }
+      },
+      {
+        "key": "int_3",
+        "type": "interaction",
+        "name": "EntD modifies EntF",
+        "interaction_type": "modifies",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_6"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_5"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 1620,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_1",
+      "x": 1680,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 42,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_9",
+      "biological_state_key": "bs_1",
+      "x": 2160,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_4",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 747,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_9",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 652,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_10",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_10",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 747,
+      "zindex": 10,
+      "visualization_template_id": 44,
+      "hidden": false
+    },
+    {
+      "key": "cl_11",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_2",
+      "x": 1065,
+      "y": 729,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_7",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 639,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_12",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_11",
+      "biological_state_key": "bs_2",
+      "x": 1315,
+      "y": 729,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_13",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_11",
+      "biological_state_key": "bs_1",
+      "x": 1605,
+      "y": 729,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_8",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 639,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_4",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_5",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_1",
+      "x": 640,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_6",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_4",
+      "biological_state_key": "bs_1",
+      "x": 840,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_7",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_5",
+      "biological_state_key": "bs_1",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_8",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_6",
+      "biological_state_key": "bs_1",
+      "x": 1240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_9",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_7",
+      "biological_state_key": "bs_3",
+      "x": 1440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_10",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_8",
+      "biological_state_key": "bs_4",
+      "x": 40,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_4",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_4",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 350,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_3",
+      "biological_state_key": "bs_3",
+      "x": 0,
+      "y": 700,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_4",
+      "biological_state_key": "bs_4",
+      "x": 0,
+      "y": 1050,
+      "width": 3200,
+      "height": 350,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 489 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M700 489 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M920 489 L1080 442",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M920 489 L1080 537",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M1240 442 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M1460 489 L1620 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M1460 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_11",
+      "path": "M1780 489 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_12",
+      "path": "M1840 537 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_13",
+      "path": "M2000 489 L2160 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_14",
+      "path": "M2000 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_15",
+      "path": "M2320 489 L380 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_16",
+      "path": "M220 777 L380 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_17",
+      "path": "M380 729 L540 682",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_18",
+      "path": "M380 729 L540 777",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_19",
+      "path": "M2000 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_20",
+      "path": "M600 672 L920 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_21",
+      "path": "M920 729 L1125 749",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_22",
+      "path": "M1375 749 L1460 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_23",
+      "path": "M1460 729 L1665 749",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_3"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_4"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_right_2",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_7"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_10"
+        }
+      ]
+    },
+    {
+      "key": "rv_4",
+      "type": "reaction_visualization",
+      "process_key": "rxn_4",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_4_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_11"
+        },
+        {
+          "process_member_key": "rxn_4_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_6",
+          "edge_key": "edge_12"
+        },
+        {
+          "process_member_key": "rxn_4_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_7",
+          "edge_key": "edge_13"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_14"
+        }
+      ]
+    },
+    {
+      "key": "rv_5",
+      "type": "reaction_visualization",
+      "process_key": "rxn_5",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_5_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_7",
+          "edge_key": "edge_15"
+        },
+        {
+          "process_member_key": "rxn_5_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_8",
+          "edge_key": "edge_16"
+        },
+        {
+          "process_member_key": "rxn_5_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_9",
+          "edge_key": "edge_17"
+        },
+        {
+          "process_member_key": "rxn_5_right_2",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_10",
+          "edge_key": "edge_18"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_19"
+        }
+      ]
+    },
+    {
+      "key": "tv_1",
+      "type": "transport_visualization",
+      "process_key": "tr_1",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "tr_1_el_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_9",
+          "edge_key": "edge_20"
+        },
+        {
+          "process_member_key": "tr_1_el_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_11",
+          "edge_key": "edge_21"
+        },
+        {
+          "process_member_key": "tr_1_transporter_1",
+          "role": "transporter",
+          "member_type": "protein",
+          "location_key": "pl_1",
+          "edge_key": null
+        }
+      ]
+    },
+    {
+      "key": "tv_2",
+      "type": "transport_visualization",
+      "process_key": "tr_2",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "tr_2_el_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_12",
+          "edge_key": "edge_22"
+        },
+        {
+          "process_member_key": "tr_2_el_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_13",
+          "edge_key": "edge_23"
+        },
+        {
+          "process_member_key": "tr_2_transporter_1",
+          "role": "transporter",
+          "member_type": "protein",
+          "location_key": "pl_2",
+          "edge_key": null
+        }
+      ]
+    }
+  ]
+}
