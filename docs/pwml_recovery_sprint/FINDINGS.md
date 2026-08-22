@@ -4119,6 +4119,23 @@ half the strict denominator.
 **Do not resolve this by editing the topics file.** Supplying the actual organism removes the trap
 by handing the pipeline the answer and makes `forbidden_organisms` unexercisable.
 
+### Disposition — RESOLVED by D-062 (2026-08-22)
+
+The product owner took **neither** of the two readings above. **D-062** rules that a Stage-0
+organism conflict whose reading is *correct* must **preserve the pathway as `review_required`
+carrying the OBSERVED organism**, with the requested scope recorded alongside — it neither exports
+strict under the wrong request nor drops the run.
+
+The decisive point was merge rule 7: *"preserves incomplete-but-correct pathways as
+`review_required` rather than dropping them."* Folding these legs to `STATUS_INELIGIBLE` — whose
+definition reads *"not even a run: nothing was attempted, so nothing failed"* — was false on the
+evidence, since both papers cleared the gold's own connected-core floor before being discarded.
+
+**The Stage-0 guard is not weakened; only the disposition of a correct reading changes.** This does
+not raise the strict PWML rate — `review_required` is not a strict export — and it does not ratify
+the gold's `expected_export: strict_exportable` for PMC12657337 and PMC12421875, which D-062 leaves
+open for reconciliation when the implementing card is written. No card was opened in this session.
+
 ### Correction to the record F-093 left
 
 F-093 concluded that PMC12312563's `Bacillus subtilis` request was simply wrong because "its scope

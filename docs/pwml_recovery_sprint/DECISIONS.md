@@ -3622,3 +3622,108 @@ authorized the file to grow; it did not authorize moving pinned lines.** Line 47
 byte-identical after the change.
 
 **New pinned line count: 578** (was 541). That figure now binds in place of 541.
+
+---
+
+## D-062 — a Stage-0 organism conflict preserves the pathway as `review_required` under the OBSERVED organism; it neither exports strict nor drops the run · 2026-08-22 · LOCKED
+
+**Product-owner ruling, taken in the T-104 session in response to F-095.** Recorded by the Lead
+Orchestrator; the decision is the product owner's, not the orchestrator's.
+
+### The question F-095 put
+
+Three pinned gold cases — `PMC12657337`, `PMC12421875`, `PMC12312563` — carry
+`requested_organism: "Bacillus subtilis"` while the papers are *E. coli*, *L. lactis* and
+*L. monocytogenes*. They are deliberate traps: each `relevance_note` says "ORGANISM TRAP" in
+capitals and each case lists `Bacillus subtilis` in `forbidden_organisms`.
+
+At T-104 all six legs ended `scope_conflict`. Two of them had already extracted payloads that
+**exceed** their gold connected-core floor with 100% enzyme and metabolite recall:
+
+| paper | gold `min_connected` | connected core | enzyme recall | metabolite recall |
+|---|---|---|---|---|
+| PMC12657337 | 3 | **4** | 3/3 | 6/6 |
+| PMC12421875 | 7 | **10** | 8/8 | 10/10 |
+
+`PRODUCT_CONTRACT.md` carried no clause on a requested-versus-observed organism conflict, so the
+contract did not settle it. Two intentional behaviours were in conflict: the gold set expects an
+export labelled with the *actual* organism, and `config.py:194`
+`eligibility_stage0_conflict_aborts = True` stops the run.
+
+### The ruling
+
+**Neither of the two obvious readings. A third.**
+
+When Stage 0 reads an organism that contradicts the batch request, and the reading is *correct*:
+
+1. The run **does not** export a strict, release-ready artifact under the requested organism. The
+   request was wrong and a release-grade artifact must not be produced from a wrong request.
+2. The run **does not** drop the paper either. The extracted pathway is **preserved as
+   `review_required`, carrying the OBSERVED organism**, with the requested scope recorded alongside
+   it so the mismatch stays auditable.
+
+### Why the drop was the part that had to change
+
+Merge rule 7 binds the whole sprint:
+
+> It preserves incomplete-but-correct pathways as `review_required` rather than dropping them.
+
+The current behaviour folds `scope_conflict` to `STATUS_INELIGIBLE`, whose own definition in
+`batch/report.py` reads *"It is NOT a failure and not even a run: nothing was attempted, so nothing
+failed."* For these two papers that is untrue on the evidence: something **was** attempted, it
+succeeded, and it cleared the gold's own connected-core floor. A correct-but-mis-scoped pathway was
+discarded. That is the case merge rule 7 exists to prevent, and the drop is what this ruling
+reverses.
+
+### What this does NOT authorize
+
+* **It does not weaken the Stage-0 guard.** The guard's reading is correct and stays. What changes
+  is the *disposition* of a correct reading, not the detection.
+* **It does not raise the strict PWML rate.** A `review_required` artifact is not a strict export.
+  Anyone quoting a strict-rate improvement from this ruling has misapplied it.
+* **It does not license editing the topics file.** Supplying the actual organism removes the trap by
+  handing the pipeline the answer and makes `forbidden_organisms` unexercisable. The pinned scopes
+  stay as the gold set pins them, and `bench_acceptance.py --verify-plan` must keep returning `OK`
+  with all ten `[pinned_override]`.
+* **It is not itself a card.** No implementation was authorized in the T-104 session. The card that
+  implements it must carry its own G9 proof and stay inside a declared ownership boundary.
+
+### Consequence for the gold set
+
+The gold's `expected_export: strict_exportable` for `PMC12657337` and `PMC12421875` is **not**
+ratified by this ruling. Under D-062 the correct outcome for those two is `review_required`, so
+either the gold field or this ruling will need reconciling when the implementing card is written.
+**That reconciliation is a separate decision and is explicitly left open here.** Until it is taken,
+neither paper counts as a strict-export success and the strict denominator is unchanged.
+
+---
+
+## D-063 — T-105 is HELD until F-094 and F-096 corrections are merged · 2026-08-22 · LOCKED
+
+**Product-owner ruling, taken in the T-104 session.**
+
+T-104 ran and is recorded as `MEASURED — NOT ACCEPTED`. T-105 is the **second** release candidate;
+`MASTER_PLAN.md` requires `T-104 → triage/correction → T-105`, and its acceptance is *"remaining
+failures explained and classified"* — a question that only has meaning after corrections exist.
+
+The T-104 session was scoped to runs, triage and recording, with no authorization to implement
+corrections. Re-running the same 20 legs against unchanged code would therefore have produced no new
+acceptance information, would have cost ~5.5 h, and would have **collapsed the two release
+candidates into one**, which the sprint has forbidden since PACK 9.
+
+**T-105's prerequisite chain, restated:**
+
+1. Cards are opened for **F-094** (`product_contract_violation` — PMC12452463/strict reached
+   `release_ready`, which `PRODUCT_CONTRACT.md` §13 forbids outright) and **F-096**
+   (`product_contract_violation` — 7 false real identifiers emitted on legs reported `PASS`).
+2. Those cards are implemented, reviewed against the actual diff, and merged under the standing
+   merge rules.
+3. T-105 re-runs the same 20 pinned legs.
+
+**F-095/D-062 is NOT in that chain.** Its implementing card may be sequenced independently; T-105
+does not wait on it, and D-062's `review_required` outcome does not change the strict rate either
+way.
+
+**The blocker recorded against T-105 is now: "F-094 and F-096 corrections not yet merged."** It is no
+longer "T-104 has not run" — T-104 ran on 2026-08-21/22 into `runs_verify/2026-08-21_2239`
+(committed `2673067`).
