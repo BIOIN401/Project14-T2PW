@@ -1,0 +1,208 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Endoplasmic Reticulum Membrane' from biological_state context.",
+      "pointer": "/biological_states/2",
+      "component_type": "subcellular_locations",
+      "name": "Endoplasmic Reticulum Membrane"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Lanosterol synthase' matched 2 distinct entity rows (prot_1, pc_1); payload row order bound it to 'Lanosterol synthase' (pc_1).",
+      "pointer": "/processes/reactions/0/enzymes/0",
+      "name": "Lanosterol synthase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_1",
+        "pc_1"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "LSS",
+        "Lanosterol synthase"
+      ],
+      "entity_pathwhiz_ids": [
+        421,
+        239
+      ],
+      "bound_entity_key": "pc_1",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Lanosterol synthase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Lanosterol synthase' matched 2 distinct entity rows (prot_1, pc_1); payload row order bound it to 'Lanosterol synthase' (pc_1).",
+      "pointer": "/processes/reactions/0/enzymes/1",
+      "name": "Lanosterol synthase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_1",
+        "pc_1"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "LSS",
+        "Lanosterol synthase"
+      ],
+      "entity_pathwhiz_ids": [
+        421,
+        239
+      ],
+      "bound_entity_key": "pc_1",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Lanosterol synthase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Lanosterol 14-alpha demethylase' matched 2 distinct entity rows (prot_2, pc_2); payload row order bound it to 'Lanosterol 14-alpha demethylase' (pc_2).",
+      "pointer": "/processes/reactions/1/enzymes/0",
+      "name": "Lanosterol 14-alpha demethylase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_2",
+        "pc_2"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "CYP51A1",
+        "Lanosterol 14-alpha demethylase"
+      ],
+      "entity_pathwhiz_ids": [
+        259,
+        442
+      ],
+      "bound_entity_key": "pc_2",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Lanosterol 14-alpha demethylase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Lanosterol 14-alpha demethylase' matched 2 distinct entity rows (prot_2, pc_2); payload row order bound it to 'Lanosterol 14-alpha demethylase' (pc_2).",
+      "pointer": "/processes/reactions/1/enzymes/1",
+      "name": "Lanosterol 14-alpha demethylase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_2",
+        "pc_2"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "CYP51A1",
+        "Lanosterol 14-alpha demethylase"
+      ],
+      "entity_pathwhiz_ids": [
+        259,
+        442
+      ],
+      "bound_entity_key": "pc_2",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Lanosterol 14-alpha demethylase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Delta(24)-sterol reductase' matched 2 distinct entity rows (prot_3, pc_3); payload row order bound it to 'Delta(24)-sterol reductase' (pc_3).",
+      "pointer": "/processes/reactions/2/enzymes/0",
+      "name": "Delta(24)-sterol reductase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_3",
+        "pc_3"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "DHCR24",
+        "Delta(24)-sterol reductase"
+      ],
+      "entity_pathwhiz_ids": [
+        1688,
+        441
+      ],
+      "bound_entity_key": "pc_3",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Delta(24)-sterol reductase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'Delta(24)-sterol reductase' matched 2 distinct entity rows (prot_3, pc_3); payload row order bound it to 'Delta(24)-sterol reductase' (pc_3).",
+      "pointer": "/processes/reactions/2/enzymes/1",
+      "name": "Delta(24)-sterol reductase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_3",
+        "pc_3"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "DHCR24",
+        "Delta(24)-sterol reductase"
+      ],
+      "entity_pathwhiz_ids": [
+        1688,
+        441
+      ],
+      "bound_entity_key": "pc_3",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "Delta(24)-sterol reductase"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 3,
+    "compounds": 5,
+    "proteins": 3,
+    "reactions": 3,
+    "transports": 0,
+    "locations": 16,
+    "edges": 9,
+    "process_visualizations": 3
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 11,
+      "biological_states": 3,
+      "processes": 3,
+      "process_members": 9,
+      "locations": 16,
+      "edges": 9,
+      "process_visualizations": 3
+    }
+  }
+}

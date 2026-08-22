@@ -1,0 +1,151 @@
+{
+  "run_id": "sha256:815b459424bb6789",
+  "boundary_count": 4,
+  "outcomes": [
+    "invalid_json",
+    "valid_json_zero_processes"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "invalid_json",
+      "model": "openrouter/free",
+      "finish_reason": "length",
+      "attempts": 1,
+      "response_status": "ok",
+      "request_hash": "sha256:38d0f93053001907",
+      "response_hash": "sha256:4cde05a8d9c68303",
+      "raw_chars": 40537,
+      "raw_preview": "We need to extract PWML JSON according to schema. The input includes pathway context: document_type primary_research, context_type single_pathway, scope_status clear, scope_clarity_score 1.0, selected… (+40294 chars elided)",
+      "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 40537,
+          "finish_reason": "length"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_json_repair",
+      "outcome": "invalid_json",
+      "model": "openrouter/free",
+      "finish_reason": "length",
+      "attempts": 1,
+      "response_status": "ok",
+      "request_hash": "sha256:4cde05a8d9c68303",
+      "response_hash": "sha256:3e48019bcc08487f",
+      "raw_chars": 66007,
+      "raw_preview": "The user gave a malformed JSON document that is actually a long text description, not JSON. The parser error says Expecting value at line 1 column 1. So the document is not JSON at all. The task: \"Ret… (+65568 chars elided)",
+      "repair_kind": "json_syntax"
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "invalid_json",
+      "model": "openrouter/free",
+      "finish_reason": "length",
+      "attempts": 2,
+      "response_status": "ok",
+      "request_hash": "sha256:bf08ba7133e30150",
+      "response_hash": "sha256:d0a06e5aac8e1135",
+      "raw_chars": 60802,
+      "raw_preview": "We need to produce valid JSON according to schema. Must extract entities, compartments, biological_states, element locations, processes (reactions, transports, interactions), visualizations empty. We … (+58803 chars elided)",
+      "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 60802,
+          "finish_reason": "length"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction_ladder_termination",
+      "outcome": "valid_json_zero_processes",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 3,
+      "response_status": "",
+      "terminal_reason": "attempt_cap_reached",
+      "extraction_ladder": {
+        "attempt_cap": 3,
+        "attempts_issued": 3,
+        "attempts_remaining": 0,
+        "attempts": [
+          {
+            "attempt": 1,
+            "rung": "normal",
+            "model": "env:OPENROUTER_EXTRACTION_MODEL",
+            "scope": "full_text",
+            "request_hash": "sha256:c4cb265541db6204",
+            "response_hash": "sha256:4cde05a8d9c68303",
+            "structurally_empty": false,
+            "model_calls": 1
+          },
+          {
+            "attempt": 2,
+            "rung": "localized_json_repair",
+            "model": "env:OPENROUTER_EXTRACTION_MODEL",
+            "scope": "full_text",
+            "request_hash": "sha256:63e5122f45152c6f",
+            "response_hash": "",
+            "structurally_empty": false,
+            "model_calls": 1
+          },
+          {
+            "attempt": 3,
+            "rung": "normal",
+            "model": "env:OPENROUTER_EXTRACTION_MODEL",
+            "scope": "full_text",
+            "request_hash": "sha256:48de83f6d64c00c8",
+            "response_hash": "sha256:d0a06e5aac8e1135",
+            "structurally_empty": false,
+            "model_calls": 1
+          }
+        ],
+        "identical_empty_response_hash": "",
+        "budget_determinable": false,
+        "checkpoints": [],
+        "last_completed_stage": "stage0_preprocess",
+        "current_structured_payload": {},
+        "budget": {
+          "budget_determinable": false
+        },
+        "skipped_next_step": {
+          "rung": "materially_different_strategy",
+          "attempt": 4,
+          "allowed": false,
+          "budget_conditional": true,
+          "skip_cause": "strategy_not_materially_different",
+          "detail": "same model as an earlier attempt and no narrower scope: a prompt tweak is not a rung"
+        },
+        "skipped_steps": [
+          {
+            "rung": "localized_json_repair",
+            "attempt": 4,
+            "allowed": false,
+            "budget_conditional": false,
+            "skip_cause": "attempt_cap_reached",
+            "termination_reason": "attempt_cap_reached",
+            "detail": "3 of 3 permitted model attempts already issued"
+          },
+          {
+            "rung": "materially_different_strategy",
+            "attempt": 4,
+            "allowed": false,
+            "budget_conditional": true,
+            "skip_cause": "strategy_not_materially_different",
+            "detail": "same model as an earlier attempt and no narrower scope: a prompt tweak is not a rung"
+          }
+        ],
+        "termination_reason": "attempt_cap_reached"
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "cytoplasmic state",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "label": "t101-m2-legs-deepseek",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_t101.txt",
+    "--out",
+    "runs_verify",
+    "--modes",
+    "strict,research",
+    "--timeout",
+    "1800",
+    "--deadline",
+    "3",
+    "--fresh"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-22T00:21:58+00:00",
+  "finished_at": "2026-08-22T02:12:17+00:00",
+  "duration_seconds": 6618.8668172,
+  "timeout_seconds": 11400.0,
+  "root_pid": 38340,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 38352,
+      "name": "python.exe",
+      "ppid": 38340
+    },
+    {
+      "pid": 38384,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 38404,
+      "name": "python.exe",
+      "ppid": 38384
+    },
+    {
+      "pid": 38824,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 38844,
+      "name": "python.exe",
+      "ppid": 38824
+    },
+    {
+      "pid": 48528,
+      "name": "taskkill.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 48636,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 48656,
+      "name": "python.exe",
+      "ppid": 48636
+    },
+    {
+      "pid": 49740,
+      "name": "python.exe",
+      "ppid": 56944
+    },
+    {
+      "pid": 56944,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 62740,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 64020,
+      "name": "python.exe",
+      "ppid": 62740
+    },
+    {
+      "pid": 72088,
+      "name": "python.exe",
+      "ppid": 72304
+    },
+    {
+      "pid": 72304,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 75968,
+      "name": "python.exe",
+      "ppid": 38352
+    },
+    {
+      "pid": 75988,
+      "name": "python.exe",
+      "ppid": 75968
+    }
+  ],
+  "descendants_terminated": [
+    38352,
+    38384,
+    38404,
+    38824,
+    38844,
+    48528,
+    48636,
+    48656,
+    49740,
+    56944,
+    62740,
+    64020,
+    72088,
+    72304,
+    75968,
+    75988
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28304,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 37968,
+      "name": "python.exe"
+    },
+    {
+      "pid": 38000,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\T-101\\05-t101-m2-legs-deepseek.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "3daa8750f2d08f715822b8be2267d8b609dc1cc0",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "t101-m2-ds",
+    "token": "t101-m2-ds:38000:2743b58b0bb4aaed",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

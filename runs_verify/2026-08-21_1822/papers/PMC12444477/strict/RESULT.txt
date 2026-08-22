@@ -1,0 +1,70 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : strict
+status     : timeout
+stage      : unknown
+wall time  : 1800.5s (30m00s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : the child process was still running after 1800s and was killed, so this paper+mode produced nothing (budget_exhausted)
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+The parent kills a stuck child rather than letting it eat the night. Typical causes: an LLM request with no server-side timeout, a wedged PathBank MySQL socket, or a Streamlit rerun that never returns.
+
+This is an OPERATIONAL outcome (budget_exhausted), never a biological one: 1800s of a 1800s leg budget were spent and the leg was cut off, so nothing about this paper was judged.
+
+--- child stderr (tail) ---
+2026-08-21 18:22:05.608 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+LLM returned an empty completion for rag_prose_extraction (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+2026-08-21 18:46:25.847 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:25.848 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:25.849 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:25.852 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:26.568 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:26.570 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:26.572 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-08-21 18:46:26.577 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

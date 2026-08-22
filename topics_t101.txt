@@ -15,6 +15,15 @@
 # PMC12444477 and PMC12782028 scopes are verbatim from topics_regression_research.txt
 # / topics_verify_subset.txt and topics_flip_strict.txt respectively.
 #
+# CORRECTED 2026-08-21 after the T-101 deepseek run returned SCOPE_CONFLICT on this
+# line. The organism was WRONG and the run caught it:
+#   Stage 0 read organism 'Listeria monocytogenes' but the batch requested 'Bacillus subtilis'
+# The PATHWAY was right; only the organism was wrong. I took the organism from
+# 00_PAPER.txt's recorded field, but that field stores the REQUEST that was made -- so I
+# recovered the very request topics_verify_subset.txt:13 already records as a Stage-0
+# scope abort. The correct answer was in the run SLUG I quoted two lines below:
+# "structures-of-listeria-monocytogenes-mend-in-th". Confirmed against 01_source_text.txt.
+#
 # PMC12312563 scope was RECOVERED, not copied: it is recorded in no topics file, and
 # topics_verify_subset.txt:13 lists the id as a Stage-0 scope abort, which is what
 # happens scopeless. The scope below comes from the one successful slugged run,
@@ -27,4 +36,4 @@
 # C-064 (merged d0b5d51), so it is assessable.
 PMC12444477 | lipid A biosynthesis | Escherichia coli
 PMC12782028 | cholesterol biosynthesis | Homo sapiens
-PMC12312563 | menaquinone biosynthesis | Bacillus subtilis
+PMC12312563 | menaquinone biosynthesis | Listeria monocytogenes

@@ -3833,3 +3833,152 @@ about, and applying it unreviewed would be a worse error than the stale string.
 C-071 already owns `release_status.py` for one appended literal and its merge is held on Decision 5 anyway,
 so there is no time pressure. The four sites are named above; the recommended text drops the number rather
 than changing it to five.
+
+---
+
+## F-092 — two identical wall-clock timeouts recorded two different terminal reasons, and neither was `operation_timeout`
+
+- **Severity** **HIGH** · **Registered 2026-08-21** from the **T-101 live run**, `runs_verify/2026-08-21_1822`, integration `839f529`
+- **This is what T-101 was for.** The milestone's third acceptance clause is *"`budget_exhausted` distinct from failure"*, and measuring it found the seam is inconsistent with itself.
+- **Not a model artifact.** Both legs are the same paper (PMC12444477), same run, same model, same 1800 s per-leg timeout. **The only difference is where the timeout was detected.**
+
+### The measurement
+
+```
+--- PMC12444477 strict
+   status               'timeout'
+   failure_kind         'timeout'
+   termination_reason   'budget_exhausted'
+   stage                'unknown'
+   message              'the child process was still running after 1800s and was killed,
+                         so this paper+mode produced nothing (budget_exhausted)'
+
+--- PMC12444477 research
+   status               'timeout'
+   failure_kind         'timeout'
+   (termination_reason  ABSENT -- the key is not present at all)
+   stage                'input'
+   message              'extraction did not finish inside the time budget'
+```
+
+And, across the entire run directory:
+
+```
+grep -ric "operation_timeout"  ->  no hits anywhere
+```
+
+### Three distinct defects, one seam
+
+**1. `operation_timeout` is never used, on a run containing two wall-clock timeouts.**
+D-005 names `operation_timeout` as a termination reason and `OPERATIONAL_TERMINATION_REASONS`
+is exactly `{budget_exhausted, operation_timeout}`. **A child killed after exceeding its wall
+clock is the paradigm case for `operation_timeout`, and it was not used once.**
+
+**2. A wall-clock kill is labelled `budget_exhausted`, which is a different fact.**
+D-024 is explicit that a configured ceiling and an exhausted resource are different events, and
+that is the whole reason `attempt_cap_reached` exists. **A leg that ran out of CLOCK is not a leg
+that ran out of BUDGET.** Labelling the outer child-kill `budget_exhausted` collapses precisely
+the distinction D-005 and D-024 exist to preserve — and it corrupts any denominator built on
+`OPERATIONAL_TERMINATION_REASONS`, because both members now mean "we stopped it".
+
+**3. The inner deadline path records NO terminal reason at all.**
+This is the **F-070 defect class** — a leg that reliably terminates and says nothing — reappearing
+on the extraction deadline path. C-064 closed it for the RAG round cap. **It is still open here.**
+
+**The two paths disagree because they are two paths.** The batch runner's outer kill synthesises
+`budget_exhausted` from outside the pipeline; the extraction deadline fires inside and its reason
+never reaches the manifest. Neither consults the vocabulary D-005 defines.
+
+### T-101 acceptance clause 1 is VIOLATED, and the phrase is hard-coded
+
+The clause is *"no leg reports 'produced nothing'"*. `PMC12444477/strict` reports exactly that,
+and the string is **not** an inference from an empty artifact set — it is **hard-coded into the
+runner's timeout message**:
+
+> *"…was killed, so this paper+mode **produced nothing** (budget_exhausted)"*
+
+So the acceptance criterion cannot pass for **any** outer-killed leg, regardless of what that leg
+actually produced. **The criterion is measuring a string literal, not a state.** Whoever owns the
+fix must decide whether the clause means *"no leg emits this phrase"* or *"no leg silently yields
+an empty artifact set"* — they are different tests and only the second is worth having.
+
+### Remedy direction — UNOWNED, and it is not a one-liner
+
+* The outer child-kill path should record **`operation_timeout`**, not `budget_exhausted`.
+* The inner extraction-deadline path should record a terminal reason **at all**, and the same one.
+* The runner's timeout message should stop asserting *"produced nothing"* as a fact about output
+  it never inspected — the strict leg wrote `extraction_boundary_report.json` and
+  `stage0_attempts.json` before it was killed, so *"produced nothing"* is **false as written**.
+
+**⚠ Do not fix this by widening `OPERATIONAL_TERMINATION_REASONS`.** D-024 kept
+`attempt_cap_reached` out of that set deliberately, and D-057 kept `round_cap_reached` out for
+the same reason. The set is not the problem; the two paths not using it correctly are.
+
+### What is NOT claimed
+
+**Clause 2 of T-101's acceptance — *"`identical_empty_response` recorded where two draws share a
+hash"* — was NOT exercised.** `grep -ric identical_empty_response` over the run returns nothing,
+because no two draws shared a hash on these three papers. **That is not a pass and not a failure;
+it is unexercised**, and T-101 cannot discharge that clause on this evidence. Recording it as
+"clean" would be exactly the vacuous-pass failure mode RULING 13 exists to prevent.
+
+---
+
+## F-093 — the T-101 topics scope for PMC12312563 was recovered from the wrong field, and the scope guard caught it
+
+- **Severity** LOW (control-plane / measurement input, **self-inflicted, corrected**) · **Registered 2026-08-21**
+- **Registered against the orchestrator**, not against any card. Recorded because the *mechanism*
+  of the mistake is reusable and will bite the next person who reconstructs a lost scope.
+
+### What happened
+
+`topics_t101.txt` was authored this session with
+`PMC12312563 | menaquinone biosynthesis | Bacillus subtilis`. The live run returned:
+
+```
+Stage 0 read organism 'Listeria monocytogenes' but the batch requested 'Bacillus subtilis'
+status: scope_conflict     both legs
+```
+
+**The pathway was right. Only the organism was wrong.**
+
+### Why it was wrong, and this is the reusable part
+
+PMC12312563's scope is recorded in **no topics file** — `topics_verify_subset.txt:13` lists the id
+as a **Stage-0 scope abort**. It was reconstructed from the one historically successful run, whose
+directory is:
+
+```
+runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/
+```
+
+**The slug says `listeria-monocytogenes`.** The organism was nevertheless taken from that run's
+`00_PAPER.txt` `organism:` field, which read `Bacillus subtilis`.
+
+**That field records the REQUEST that was made, not the paper's subject.** So the reconstruction
+faithfully recovered a *prior request* — and the prior request is exactly the one already on
+record as producing a Stage-0 scope abort. **The evidence that the recovered value fails was
+sitting in the same file it was recovered from.**
+
+Confirmed against `01_source_text.txt` (47,976 bytes): *Listeria* appears, *Bacillus subtilis*
+appears once as a homolog aside. Stage 0's reading is correct.
+
+### The lesson
+
+**When reconstructing a lost input, prefer a field the system DERIVED over a field a human
+SUPPLIED.** A run directory's slug is derived from the paper; `00_PAPER.txt`'s `organism:` is
+echoed from the request. Both were in front of the orchestrator; the derived one was right and the
+supplied one was wrong, and they were quoted **two lines apart in the same authored file**.
+
+### The guard worked, and that is the other half
+
+`scope_conflict` refused to process the paper as though it were about an organism it is not,
+wrote `scope_conflict.json` naming both the requested and observed values, and cost 8m49s + 4m41s
+rather than a whole leg. **A bad input produced a precise refusal instead of a plausible wrong
+answer.** That is the seam behaving exactly as designed and is worth recording as a positive.
+
+### Disposition
+
+**Corrected in `topics_t101.txt`** with the reasoning inline, and the two legs re-run from
+`topics_t101_rerun_pmc12312563.txt` so the other four are not re-executed. **No code defect. No
+card.**

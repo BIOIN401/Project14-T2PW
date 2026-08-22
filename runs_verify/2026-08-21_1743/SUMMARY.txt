@@ -1,0 +1,63 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-08-21T17:43:36
+papers attempted : 1
+strict PWML      : 0 pass / 1 fail
+research relaxed : 0 pass / 0 fail
+timeouts         : 0
+skipped          : 0
+ineligible       : 0  (screened out, not failures)
+pass, no deliv.  : 0  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 1 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+research-mode defects: NONE -- research mode held fail-open on all 1 paper(s).
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            0  (strict FAIL + research FAIL -- real bug, also a research defect)
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        1  (a mode is missing, skipped or unrecognised)
+    PMC12444477
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> incomplete
+    id     : PMC12444477
+    slug   : PMC12444477
+    uri    : (none)
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=734.1s (12m14s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : unknown
+        message      : Extraction failed: Chunk 1 failed to produce valid JSON.
+        issue_codes  : (none reported)
+        files        : 2
+            - papers/PMC12444477/strict/extraction_boundary_report.json (5.3 kB)
+            - papers/PMC12444477/strict/stage0_attempts.json (816 B)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     (none)
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     (none)
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

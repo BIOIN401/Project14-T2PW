@@ -1,0 +1,12 @@
+# T-101 re-run of ONE paper only, 2026-08-21.
+#
+# The first deepseek T-101 run (runs_verify/2026-08-21_1822) returned SCOPE_CONFLICT on
+# both PMC12312563 legs because the orchestrator's recovered organism was wrong:
+#   Stage 0 read organism 'Listeria monocytogenes' but the batch requested 'Bacillus subtilis'
+#
+# The pathway was correct. Only the organism was wrong, and the scope guard refused the
+# paper rather than processing it as something it is not -- which is the guard working.
+#
+# This file re-runs ONLY that paper, with the corrected organism, so the other four legs
+# are not re-executed. Scored together with 2026-08-21_1822 for T-101.
+PMC12312563 | menaquinone biosynthesis | Listeria monocytogenes
