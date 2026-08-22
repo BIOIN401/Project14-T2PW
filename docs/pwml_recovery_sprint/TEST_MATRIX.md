@@ -475,8 +475,8 @@ Scheduled by the Lead Orchestrator only. Agents never launch a benchmark.
 | ID | Milestone | After | Legs | Wall clock | Acceptance |
 |---|---|---|---|---|---|
 | T-100 | M1 | Wave B | PMC12452463 ×2, PMC12096016 ×2 | ~1.5 h | both pass the quarantine boundary; **PMC12452463 → `review_required`, not strict success** (TRAP-1) |
-| T-101 | M2 | Wave C | + PMC12444477 ×2, PMC12782028, PMC12312563 | ~2 h | no leg reports "produced nothing"; `identical_empty_response` recorded where two draws share a hash; `budget_exhausted` distinct from failure |
-| T-102 | M3 | C-052 | PMC12856317 | ~25 min | reload + re-export with **all resolvers disabled** → identical `canonical_graph_sha256`; equivalence proven by parsing and normalizing JSON, PWML and SBML |
+| T-101 | M2 | Wave C | + PMC12444477 ×2, PMC12782028, PMC12312563 | ~2 h | no leg reports "produced nothing"; `identical_empty_response` recorded where two draws share a hash; `budget_exhausted` distinct from failure — **RAN 2026-08-21 (`runs_verify/2026-08-21_1822` + `_2014`, deepseek-v4-flash). STATUS: `MEASURED`, NOT PASS. Clause 1 VIOLATED (the phrase is hard-coded in the runner's timeout message, so it cannot pass for any outer-killed leg); clause 2 UNEXERCISED (no two draws shared a hash — not a pass); clause 3 INCONSISTENT — F-092. Never record as PASS.** |
+| T-102 | M3 | C-052 | PMC12856317 | ~25 min | reload + re-export with **all resolvers disabled** → identical `canonical_graph_sha256`; equivalence proven by parsing and normalizing JSON, PWML and SBML — **STATUS: `MEASURED — organism/SBML axis structurally unreachable (F-009)`. This is its only legitimate status. Never record as PASS.** |
 | T-103 | M4 | C-055 | 4 RAG legs | ~1.5 h | every RAG round re-entered normalization, mapping, gates, persistence, classification |
 | T-104 | M5 first RC | Wave E | full pinned, 20 legs | ~7 h | full acceptance matrix vs `BASELINE.md` |
 | T-105 | M5 second RC | Day 6 | full pinned, 20 legs | ~7 h | remaining failures explained and classified |
