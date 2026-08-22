@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        8,
+        3,
+        1,
+        -9,
+        10
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 3,
+      "warning_count": 7,
+      "patch_count": 10,
+      "accepted_patch_count": 9,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Removed the placeholder protein 'enterobactin synthase' that lacked species and identifiers, and replaced the protein complex's component list with the three actual proteins (EntD, EntE, EntF) as supported by evidence. Added missing species… (+80 chars elided)",
+      "top_errors": [
+        "Protein 'enterobactin synthase' is missing species/organism and identifiers; it is a placeholder that should be removed.",
+        "Protein complex 'enterobactin synthase complex' is missing species/organism.",
+        "Component 'enterobactin synthase' is missing species/organism and identifiers; it references a placeholder protein that will be removed."
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 11,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

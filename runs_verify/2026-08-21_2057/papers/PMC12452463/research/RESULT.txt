@@ -1,0 +1,70 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1074.7s (17m54s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+  ! runtime-schema finding (informational, not blocking): and 2 more finding(s); all of them are in contract_reports.json
+  ! strict gate error (research mode: review flag, not blocking): gate.generated_protein_complex_enterobactin_synthase_complex_componen @ /entities/protein_complexes/0/components/0: Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry.
+  ! strict gate error (research mode: review flag, not blocking): gate.generated_protein_complex_enterobactin_synthase_complex_componen @ /entities/protein_complexes/0/components/1: Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry.
+  ! strict gate error (research mode: review flag, not blocking): gate.generated_protein_complex_enterobactin_synthase_complex_componen @ /entities/protein_complexes/0/components/2: Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 5
+  entities = 13
+  gate_errors = 3
+  gate_errors_not_blocking = 3
+  gate_review_flags = 3
+  normalization_actions = 2
+  proteins = 5
+  reactions = 4
+  review_flags = 6
+  runtime_schema_findings = 12
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 9, 'b': 0, 'c': 8, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1544 B)
+  - contract_reports.json  (20540 B)
+  - coverage_summary.json  (3876 B)
+  - final_mapped.json  (116669 B)
+  - final_stage3_gate_report.json  (4426 B)
+  - gap_iteration_summary.json  (60037 B)
+  - gate_fail_report.json  (4382 B)
+  - graph_closure_iterations.json  (373 B)
+  - initial_stage3_gate_report.json  (4382 B)
+  - merged_payload.json  (13271 B)
+  - quarantine_report.json  (16591 B)
+  - rag_admission_report.json  (205762 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (45309 B)
+  - research_pathway_elements.csv  (5089 B)
+  - research_pathway_report.txt  (9717 B)
+  - review_flags.json  (5761 B)
+  - stage1_payload.json  (11790 B)

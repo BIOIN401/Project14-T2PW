@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric-enterobactin (FeEnt)",
+    "EntC",
+    "EntB",
+    "EntE",
+    "EntD",
+    "EntF",
+    "Fur",
+    "FepA",
+    "RyhB"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric-enterobactin (FeEnt)"
+    ],
+    "key_proteins": [
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntD",
+      "EntF",
+      "Fur",
+      "FepA",
+      "RyhB"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "inner membrane",
+      "periplasm",
+      "outer membrane",
+      "extracellular space"
+    ],
+    "main_subprocesses": [
+      "Conversion of chorismate to isochorismate (EntC)",
+      "Conversion of isochorismate to 2,3-dihydroxybenzoate (EntB)",
+      "Activation of DHB to DHB-AMP (EntE)",
+      "Assembly of enterobactin cyclic trilactone (EntD/EntE/EntF)",
+      "Iron-regulated transcription by Fur and RyhB sRNA"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "body",
+      "conclusion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "single_example_review_section",
+    "context_type": "single_pathway",
+    "scope_status": "targeted",
+    "scope_clarity_score": 1.0,
+    "selected_example": "enterobactin biosynthesis",
+    "candidate_examples": [
+      {
+        "name": "enterobactin biosynthesis",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "chorismate",
+          "isochorismate",
+          "2,3-dihydroxybenzoate (DHB)",
+          "DHB-AMP",
+          "enterobactin",
+          "ferric-enterobactin (FeEnt)"
+        ],
+        "key_proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur",
+          "FepA"
+        ],
+        "main_subprocesses": [
+          "Chorismate to isochorismate",
+          "Isochorismate to DHB",
+          "Activation of DHB to DHB-AMP",
+          "Assembly of enterobactin",
+          "Iron-regulated transcription by Fur"
+        ],
+        "evidence": "The text describes the enterobactin biosynthesis pathway in Escherichia coli in detail in section 'Enterobactin biosynthesis and regulation', including the ent operon and the four enzymatic steps."
+      }
+    ],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:294ef907fbd3911e",
+      "response_hash": "sha256:d4cf4b0de80f0b73",
+      "raw_chars": 2121,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2121,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric-enterobactin (FeEnt)",
+    "EntC",
+    "EntB",
+    "EntE",
+    "EntD",
+    "EntF"
+  ],
+  "unmatched_terms": [
+    "Fur",
+    "FepA",
+    "RyhB"
+  ],
+  "coverage_ratio": 0.785714,
+  "core_accepted_processes": 9,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 9,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

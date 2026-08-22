@@ -2115,3 +2115,128 @@ SMOKE **473** on the branch and **473** post-merge at integration. Chunk D on th
 **`executed=187/187, omissions=0, additions=0, failed=none`** — the run the author asked for,
 covering the 23 `test_streamlit_quarantine_boundary.py` AppTest nodes it flagged as unmeasured
 and correctly refused to call proven from reasoning alone.
+
+---
+
+## T-103 (M4) — RAN 2026-08-21, `runs_verify/2026-08-21_2057`
+
+4 legs, **1h13m**, exit 1, `FINAL SURVIVING COUNT: 0`, `cleanup: success`, heavy mutex acquired and
+released by the wrapper. `T2PW_SPECIES_LLM=0` (mandatory, PACK 9 RULING 3) and
+`T2PW_OFFLINE_CURATOR=1`, both in the bounded child environment via the shell-prefix form D-058
+corrected.
+
+| leg | outcome | wall |
+|---|---|---|
+| PMC12452463 strict | FAIL (contract) | 15m05s |
+| PMC12452463 research | PASS WITH WARNINGS | 17m54s |
+| PMC12096016 strict | FAIL (contract) | 15m31s |
+| PMC12096016 research | PASS WITH WARNINGS | 23m59s |
+
+### Acceptance — SATISFIED for one round, and the qualification is the important half
+
+Acceptance is *"every RAG round re-entered normalization, mapping, gates, persistence,
+classification."* Measured on all four legs:
+
+```
+PMC12452463 strict    round_count=1  mapped_ids_added=2  locations_added=1   items=5
+PMC12452463 research  round_count=1  mapped_ids_added=1  locations_added=11  items=11
+PMC12096016 strict    round_count=1  mapped_ids_added=4  locations_added=12  items=13
+PMC12096016 research  round_count=1  mapped_ids_added=4  locations_added=3   items=7
+```
+
+Every round did real work, and `contract_reports.json` shows the stage chain re-entered, each
+report carrying its own `stage`:
+
+| report | stage | proves |
+|---|---|---|
+| `post_normalization_contract_report` | `post_normalization` | **normalization** |
+| `stage2_contract_report` | `post_mapping` | **mapping** |
+| **`post_remap_contract_report`** | **`post_remap`** | **mapping RE-ENTERED — a second mapping contract after the audit** |
+| `post_audit_contract_report` | `post_audit` | audit |
+| `pre_export_runtime_schema_report` | — | **gates** |
+| artifacts on disk | — | **persistence** |
+| `quarantine_report.json` → `release` | — | **classification** |
+
+**`post_remap` is the load-bearing one.** A single mapping report proves mapping ran; a *second*
+one after the audit is what "re-entered" means.
+
+### ⚠ The qualification, stated rather than glossed
+
+**`round_count = 1` on every leg, so "every round" means exactly one round per leg.**
+`RAG_LOOP_MAX_ROUNDS` is unset, so `rag_loop_max_rounds()` returns 1 — which is the production
+default, and D-058 predicted 1× before the run. **This confirms the prediction.**
+
+**But it means multi-round re-entry is NOT tested by this run.** The acceptance says *"every
+round"*; with one round, the universal claim is verified over a set of size one. A second round
+re-entering correctly is **unmeasured**, and anyone quoting T-103 as proof that the loop
+re-enters on iteration N > 1 would be over-reading it.
+
+**T-103's status is therefore `MEASURED — acceptance satisfied at round_count=1; multi-round
+re-entry untested`.** Not PASS without that qualifier.
+
+---
+
+## ⭐ The result that matters most: PMC12452463 reaches the contractually required status
+
+This was not T-103's acceptance criterion. It fell out of the run, and it closes a chain this
+sprint has been working on for weeks.
+
+`runs_verify/2026-08-21_2057/papers/PMC12452463/strict/quarantine_report.json`:
+
+```
+status                      review_required
+strict_acceptance_eligible  false
+strict_gates_passed         true
+degree_zero_exports         []
+closure_converged           true
+entity_type_overlaps        []
+unexportable_entities       []
+minimum_core_satisfied      True        coverage.reasons  []
+refusal_reasons             []
+semantic_evaluation         failed
+semantic_failed_checks      ["actor_named_in_its_own_cited_span"]
+reasons                     ["semantic_evaluation_failed:actor_named_in_its_own_cited_span"]
+missing_anchors             ["EntA", "Fur"]
+```
+
+**`PRODUCT_CONTRACT.md:341` (§13, LOCKED) reads:** *"Correct outcome after the index fix is
+`review_required` with `strict_acceptance_eligible=false`. **Never strict success.**"*
+
+**D-056 ratified that "the index fix" is C-010 (merged `72ee20f`), so that row binds today — and
+the measured outcome matches it exactly.**
+
+### Four things this settles, each by measurement rather than argument
+
+**1. T-100's acceptance criterion / TRAP-1 is met.** *"PMC12452463 → `review_required`, not strict
+success"* (`TEST_MATRIX.md:477`). Measured: `review_required`, `strict_acceptance_eligible=false`.
+
+**2. F-062 is CONFIRMED CLOSED, and the confirmation arrived earlier than expected.**
+`F-062-DISPOSITION.md` concluded F-062 needs no code card because C-067 removed the trigger, and
+said the confirming measurement belonged to **T-104** because the quarantine input payload is not
+persisted. **T-103 produced it incidentally.** `strict_gates_passed = true` and
+`refusal_reasons = []` — **no structural reason fires at all**, so the seam F-062 described cannot
+be reached on this leg. The disposition is now measured, not inferred.
+
+**3. F-081's own MEDIUM caveat is REFUTED.** F-081 held its theorem at MEDIUM and named what would
+overturn it: *"If the flagged row's synonym set is disjoint from `keep_norms`, the theorem is
+wrong and there is a third divergence not yet found."* Measured: **`degree_zero_exports = []`**.
+C-067's synonym-resolving detector finds nothing on the leg that used to carry the identical
+`Isochorismatase (EntB)` flag. **There is no third divergence.** F-081 may be upgraded to HIGH.
+
+**4. C-071 is working in production, on the exact paper the contract names.** The demotion is
+carried by `actor_named_in_its_own_cited_span` — the check merged hours earlier — firing on a
+real leg, not a fixture. It is the sole reason for the demotion; every structural gate passed.
+
+### One honest qualification on the mechanism
+
+**The leg reaches the right STATUS, but not by the route the contract's rationale describes.** The
+gold `export_rationale` calls the route chemically broken because **EntA is absent**. The pipeline
+does record that — `missing_anchors: ["EntA", "Fur"]`, `expansion_blocked_reason: "2 requested-core
+anchor(s) matched no admitted process: EntA, Fur"`, `completeness: 0.857` — but coverage still
+passed (`minimum_core_satisfied: True`), and the demotion is carried by the **semantic** gate
+instead.
+
+**So the contract's required outcome and the pipeline's reason for producing it are not the same
+fact.** That is worth stating before anyone quotes this as end-to-end vindication. **It is a real
+question for T-104 triage**, and it should be carried there explicitly rather than discovered
+again.

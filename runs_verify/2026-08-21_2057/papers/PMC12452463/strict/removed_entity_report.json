@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [],
+  "counts": {
+    "entities": 1,
+    "locations": 1,
+    "biological_states": 0
+  }
+}

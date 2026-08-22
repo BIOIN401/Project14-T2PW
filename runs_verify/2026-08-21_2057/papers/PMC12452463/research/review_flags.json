@@ -1,0 +1,157 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'enterobactin synthase' is missing species/organism.",
+      "detail": {
+        "name": "enterobactin synthase"
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/protein_complexes/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' is missing species/organism.",
+      "detail": {
+        "name": "enterobactin synthase complex",
+        "class": "protein_complex",
+        "generated": true,
+        "generation_reason": "complex_named_source_entity_wrapper",
+        "confidence": 0.8,
+        "provenance": "inferred",
+        "components": [
+          {
+            "name": "enterobactin synthase",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.",
+      "detail": {
+        "pointer": "/entities/proteins/5/name",
+        "name": "enterobactin synthase"
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/0",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry.",
+      "detail": {
+        "component_name": "EntD",
+        "stoichiometry_type": "NoneType",
+        "component": {
+          "name": "EntD",
+          "mapped_ids": {
+            "uniprot": "P19925",
+            "pathbank_protein_id": "6383"
+          },
+          "pathbank_protein_id": 6383,
+          "mapping_status": "mapped"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/1",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry.",
+      "detail": {
+        "component_name": "EntE",
+        "stoichiometry_type": "NoneType",
+        "component": {
+          "name": "EntE",
+          "mapped_ids": {
+            "uniprot": "P10378",
+            "pathbank_protein_id": "6301"
+          },
+          "pathbank_protein_id": 6301,
+          "mapping_status": "mapped"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/protein_complexes/0/components/2",
+      "reason": "Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry.",
+      "detail": {
+        "component_name": "EntF",
+        "stoichiometry_type": "NoneType",
+        "component": {
+          "name": "EntF",
+          "mapped_ids": {
+            "uniprot": "P11454",
+            "pathbank_protein_id": "6312"
+          },
+          "pathbank_protein_id": 6312,
+          "mapping_status": "mapped"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.generated_protein_complex_enterobactin_synthase_complex_componen",
+      "pointer": "/entities/protein_complexes/0/components/0",
+      "message": "Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate",
+      "found": "component_name=EntD"
+    },
+    {
+      "code": "gate.generated_protein_complex_enterobactin_synthase_complex_componen",
+      "pointer": "/entities/protein_complexes/0/components/1",
+      "message": "Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate",
+      "found": "component_name=EntE"
+    },
+    {
+      "code": "gate.generated_protein_complex_enterobactin_synthase_complex_componen",
+      "pointer": "/entities/protein_complexes/0/components/2",
+      "message": "Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate",
+      "found": "component_name=EntF"
+    }
+  ]
+}

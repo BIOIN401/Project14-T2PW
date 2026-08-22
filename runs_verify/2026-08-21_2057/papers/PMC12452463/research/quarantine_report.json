@@ -1,0 +1,598 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:1a59faff282dc66b",
+  "resulting_payload_hash": "sha256:1a59faff282dc66b",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydroxybenzoate dhb",
+      "chorismate",
+      "dhbamp",
+      "entb",
+      "entc",
+      "entd",
+      "ente",
+      "enterobactin",
+      "entf",
+      "fepa",
+      "ferricenterobactin feent",
+      "fur",
+      "isochorismate",
+      "ryhb"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:9b7b38c717fa148a",
+  "ok": true,
+  "counts": {
+    "core_accepted": 9,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed conversion of chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entccatalyzed conversion of chorismate to isochorismate",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB-catalyzed conversion of isochorismate to DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "entb",
+        "entbcatalyzed conversion of isochorismate to dhb",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntE-catalyzed activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "dhbamp",
+        "ente",
+        "entecatalyzed activation of dhb to dhbamp"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Enterobactin synthase complex-catalyzed assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "enterobactin synthase complexcatalyzed assembly of enterobactin"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd component of enterobactin synthase complex",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntE component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ente",
+        "ente component of enterobactin synthase complex",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntF component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin synthase complex",
+        "entf",
+        "entf component of enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC-catalyzed conversion of chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entccatalyzed conversion of chorismate to isochorismate",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB-catalyzed conversion of isochorismate to DHB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "entb",
+        "entbcatalyzed conversion of isochorismate to dhb",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntE-catalyzed activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "dhbamp",
+        "ente",
+        "entecatalyzed activation of dhb to dhbamp"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Enterobactin synthase complex-catalyzed assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "enterobactin synthase complexcatalyzed assembly of enterobactin"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd component of enterobactin synthase complex",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntE component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ente",
+        "ente component of enterobactin synthase complex",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntF component of enterobactin synthase complex",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin synthase complex",
+        "entf",
+        "entf component of enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "release_ready",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": true,
+    "completeness": 0.785714,
+    "missing_anchors": [
+      "Fur",
+      "FepA",
+      "RyhB"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: Fur, FepA, RyhB",
+    "coverage_evaluated": true,
+    "reasons": [],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 4,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric-enterobactin (FeEnt)",
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntD",
+      "EntF",
+      "Fur",
+      "FepA",
+      "RyhB"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydroxybenzoate (DHB)",
+        "DHB-AMP",
+        "enterobactin",
+        "ferric-enterobactin (FeEnt)"
+      ],
+      "key_proteins": [
+        "EntC",
+        "EntB",
+        "EntE",
+        "EntD",
+        "EntF",
+        "Fur",
+        "FepA",
+        "RyhB"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "inner membrane",
+        "periplasm",
+        "outer membrane",
+        "extracellular space"
+      ],
+      "main_subprocesses": [
+        "Conversion of chorismate to isochorismate (EntC)",
+        "Conversion of isochorismate to 2,3-dihydroxybenzoate (EntB)",
+        "Activation of DHB to DHB-AMP (EntE)",
+        "Assembly of enterobactin cyclic trilactone (EntD/EntE/EntF)",
+        "Iron-regulated transcription by Fur and RyhB sRNA"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "body",
+        "conclusion"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "single_example_review_section",
+      "context_type": "single_pathway",
+      "scope_status": "targeted",
+      "scope_clarity_score": 1.0,
+      "selected_example": "enterobactin biosynthesis",
+      "candidate_examples": [
+        {
+          "name": "enterobactin biosynthesis",
+          "organism": "Escherichia coli",
+          "key_compounds": [
+            "chorismate",
+            "isochorismate",
+            "2,3-dihydroxybenzoate (DHB)",
+            "DHB-AMP",
+            "enterobactin",
+            "ferric-enterobactin (FeEnt)"
+          ],
+          "key_proteins": [
+            "EntC",
+            "EntB",
+            "EntE",
+            "EntD",
+            "EntF",
+            "Fur",
+            "FepA"
+          ],
+          "main_subprocesses": [
+            "Chorismate to isochorismate",
+            "Isochorismate to DHB",
+            "Activation of DHB to DHB-AMP",
+            "Assembly of enterobactin",
+            "Iron-regulated transcription by Fur"
+          ],
+          "evidence": "The text describes the enterobactin biosynthesis pathway in Escherichia coli in detail in section 'Enterobactin biosynthesis and regulation', including the ent operon and the four enzymatic steps."
+        }
+      ],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:294ef907fbd3911e",
+        "response_hash": "sha256:d4cf4b0de80f0b73",
+        "raw_chars": 2121,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 2121,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric-enterobactin (FeEnt)",
+      "EntC",
+      "EntB",
+      "EntE",
+      "EntD",
+      "EntF"
+    ],
+    "unmatched_terms": [
+      "Fur",
+      "FepA",
+      "RyhB"
+    ],
+    "coverage_ratio": 0.785714,
+    "core_accepted_processes": 9,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 9,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 1,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:1a59faff282dc66b.sha256:9b7b38c717fa148a",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

@@ -1,0 +1,662 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "pathwhiz",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:115ffa855941ca47",
+  "resulting_payload_hash": "sha256:be879457773154f0",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "pathwhiz",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate 23didhb",
+      "23dihydroxybenzoic acid 23dhb",
+      "atp",
+      "chorismate",
+      "enta 23dihydro23dihydroxybenzoate dehydrogenase",
+      "entb bifunctional isochorismatasearyl carrier protein",
+      "entc isochorismate synthase",
+      "entd phosphopantetheinyl transferase",
+      "ente 23dihydroxybenzoylamp ligase",
+      "enterobactin",
+      "entf enterobactin synthase",
+      "ferric enterobactin",
+      "fur ferric uptake regulator",
+      "isochorismate",
+      "lserine",
+      "mend 2succinyl5enolpyruvyl6hydroxy3cyclohexene1carboxylate synthase",
+      "nadh",
+      "pyruvate"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:2c7d22b97c0ef624",
+  "ok": true,
+  "counts": {
+    "core_accepted": 11,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC isochorismate synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc isochorismate synthase reaction",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb isochorismatase reaction",
+        "isochorismatase",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta dehydrogenase reaction",
+        "nad+",
+        "nadh",
+        "oxidoreductase enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente adenylation reaction",
+        "enterobactin synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF enterobactin synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoylamp",
+        "enterobactin",
+        "enterobactin synthase",
+        "entf enterobactin synthase reaction",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "LDH coupled reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lactate",
+        "lactate dehydrogenase",
+        "ldh coupled reaction",
+        "nad+",
+        "nadh",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "ferric enterobactin import",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferric enterobactin",
+        "ferric enterobactin import"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD phosphopantetheinylates EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd phosphopantetheinylates entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntD phosphopantetheinylates EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd phosphopantetheinylates entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC isochorismate synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc isochorismate synthase reaction",
+        "isochorismate",
+        "isochorismate synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB isochorismatase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb isochorismatase reaction",
+        "isochorismatase",
+        "isochorismate",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntA dehydrogenase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "23dihydroxybenzoic acid",
+        "enta dehydrogenase reaction",
+        "nad+",
+        "nadh",
+        "oxidoreductase enta"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "EntE adenylation reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoic acid",
+        "23dihydroxybenzoylamp",
+        "adenosine triphosphate",
+        "ente adenylation reaction",
+        "enterobactin synthase"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "EntF enterobactin synthase reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoylamp",
+        "enterobactin",
+        "enterobactin synthase",
+        "entf enterobactin synthase reaction",
+        "lserine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "LDH coupled reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lactate",
+        "lactate dehydrogenase",
+        "ldh coupled reaction",
+        "nad+",
+        "nadh",
+        "pyruvate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "ferric enterobactin import",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferric enterobactin",
+        "ferric enterobactin import"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "2,3-DHB competitive inhibition of EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dhb competitive inhibition of entb",
+        "23dihydroxybenzoic acid",
+        "entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD phosphopantetheinylates EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd phosphopantetheinylates entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntD phosphopantetheinylates EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd phosphopantetheinylates entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "actor_named_in_its_own_cited_span"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.833333,
+    "missing_anchors": [
+      "ATP",
+      "Fur (ferric uptake regulator)",
+      "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: ATP, Fur (ferric uptake regulator), MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)",
+    "coverage_evaluated": true,
+    "reasons": [
+      "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+    ],
+    "applied": true,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 6,
+    "exported_locked_reactions": 6,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "ferric enterobactin",
+      "NADH",
+      "pyruvate",
+      "ATP",
+      "L-serine",
+      "EntC (isochorismate synthase)",
+      "EntB (bifunctional isochorismatase/aryl carrier protein)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "Fur (ferric uptake regulator)",
+      "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydroxybenzoic acid (2,3-DHB)",
+        "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+        "enterobactin",
+        "ferric enterobactin",
+        "NADH",
+        "pyruvate",
+        "ATP",
+        "L-serine"
+      ],
+      "key_proteins": [
+        "EntC (isochorismate synthase)",
+        "EntB (bifunctional isochorismatase/aryl carrier protein)",
+        "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+        "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+        "EntF (enterobactin synthase)",
+        "EntD (phosphopantetheinyl transferase)",
+        "Fur (ferric uptake regulator)",
+        "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "extracellular environment"
+      ],
+      "main_subprocesses": [
+        "isochorismate synthesis from chorismate (EntC)",
+        "isochorismate hydrolysis to 2,3-dihydro-2,3-dihydroxybenzoate (EntB N-terminal domain)",
+        "dehydrogenation to 2,3-DHB (EntA)",
+        "adenylation of 2,3-DHB (EntE)",
+        "phosphopantetheinylation of EntB (EntD)",
+        "non-ribosomal peptide synthesis and cyclization (EntF)",
+        "ferric enterobactin uptake (TonB-dependent)"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results and discussion",
+        "conclusions"
+      ],
+      "pathway_relevance_score": 0.95,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:cd637a10d6ea5563",
+        "response_hash": "sha256:3c467d67e8c8c1f3",
+        "raw_chars": 1665,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1665,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "ferric enterobactin",
+      "NADH",
+      "pyruvate",
+      "L-serine",
+      "EntC (isochorismate synthase)",
+      "EntB (bifunctional isochorismatase/aryl carrier protein)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)"
+    ],
+    "unmatched_terms": [
+      "ATP",
+      "Fur (ferric uptake regulator)",
+      "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)"
+    ],
+    "coverage_ratio": 0.833333,
+    "core_accepted_processes": 11,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 11,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:115ffa855941ca47.sha256:2c7d22b97c0ef624"
+}

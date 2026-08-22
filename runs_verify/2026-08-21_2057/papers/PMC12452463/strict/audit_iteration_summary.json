@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 4500,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        4,
+        5,
+        1,
+        -3,
+        4
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 5,
+      "warning_count": 4,
+      "patch_count": 4,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Removed the false protein 'enterobactin synthase' and replaced the complex components with the actual proteins (EntD, EntE, EntF) per evidence; added missing species/organism to the complex; removed the interaction referencing an unresolvab… (+88 chars elided)",
+      "top_errors": [
+        "Stage 3 registry reference validation failed: unknown entity: ent operon",
+        "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+        "Generated protein complex 'enterobactin synthase complex' is missing species/organism."
+      ],
+      "gap_mapped_ids_added": 2,
+      "gap_locations_added": 1,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

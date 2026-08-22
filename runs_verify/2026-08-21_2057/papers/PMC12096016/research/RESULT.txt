@@ -1,0 +1,63 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1439.3s (23m59s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/11/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/11/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.unknown_protein_modifier_reference @ /processes/reactions/5/enzymes/0: Unknown protein/modifier reference: 2,3-dihydroxybenzoic acid
+  ! strict gate error (research mode: review flag, not blocking): gate.unknown_protein_modifier_reference @ /processes/reactions/5/modifiers/0: Unknown protein/modifier reference: 2,3-dihydroxybenzoic acid
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 12
+  entities = 23
+  gate_errors = 3
+  gate_errors_not_blocking = 3
+  gate_review_flags = 3
+  normalization_actions = 4
+  proteins = 8
+  reactions = 6
+  review_flags = 4
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 19, 'b': 0, 'c': 7, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1457 B)
+  - contract_reports.json  (15236 B)
+  - coverage_summary.json  (3672 B)
+  - final_mapped.json  (225422 B)
+  - final_stage3_gate_report.json  (13010 B)
+  - gap_iteration_summary.json  (36795 B)
+  - gate_fail_report.json  (9195 B)
+  - graph_closure_iterations.json  (2072 B)
+  - initial_stage3_gate_report.json  (9195 B)
+  - merged_payload.json  (27341 B)
+  - quarantine_report.json  (24600 B)
+  - rag_admission_report.json  (405967 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (67342 B)
+  - research_pathway_elements.csv  (7525 B)
+  - research_pathway_report.txt  (14265 B)
+  - review_flags.json  (10537 B)
+  - stage1_payload.json  (23551 B)

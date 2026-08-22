@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric-enterobactin",
+    "EntA",
+    "EntB",
+    "EntC",
+    "EntD",
+    "EntE",
+    "EntF",
+    "FepA",
+    "Fur"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric-enterobactin"
+    ],
+    "key_proteins": [
+      "EntA",
+      "EntB",
+      "EntC",
+      "EntD",
+      "EntE",
+      "EntF",
+      "FepA",
+      "Fur"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "extracellular space",
+      "outer membrane"
+    ],
+    "main_subprocesses": [
+      "conversion of chorismate to isochorismate",
+      "conversion of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "activation of DHB to DHB-AMP",
+      "assembly of enterobactin from three DHB molecules",
+      "Fur-mediated transcriptional regulation",
+      "RyhB-mediated post-transcriptional regulation"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "enterobactin biosynthesis and regulation",
+      "role of enterobactin in bacterial virulence",
+      "enterobactin and host-pathogen interactions",
+      "targeting enterobactin for vaccine development",
+      "enterobactin as a target for antibiotic development",
+      "biotechnology applications",
+      "future directions",
+      "conclusion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "single_example_review_section",
+    "context_type": "single_example_review_section",
+    "scope_status": "targeted",
+    "scope_clarity_score": 1.0,
+    "selected_example": "enterobactin biosynthesis in Escherichia coli",
+    "candidate_examples": [
+      {
+        "name": "enterobactin biosynthesis",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "chorismate",
+          "isochorismate",
+          "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+          "DHB-AMP",
+          "enterobactin",
+          "ferric-enterobactin"
+        ],
+        "key_proteins": [
+          "EntA",
+          "EntB",
+          "EntC",
+          "EntD",
+          "EntE",
+          "EntF",
+          "FepA",
+          "Fur"
+        ],
+        "main_subprocesses": [
+          "conversion of chorismate to isochorismate",
+          "conversion of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+          "activation of DHB to DHB-AMP",
+          "assembly of enterobactin from three DHB molecules",
+          "Fur-mediated transcriptional regulation",
+          "RyhB-mediated post-transcriptional regulation"
+        ],
+        "evidence": "The enterobactin biosynthesis pathway involves EntC, EntB, EntE, EntD, and EntF enzymes converting chorismate to enterobactin (Figure 1)."
+      }
+    ],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:294ef907fbd3911e",
+      "response_hash": "sha256:7894d23469dfd15b",
+      "raw_chars": 2572,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2572,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric-enterobactin",
+    "EntB",
+    "EntC",
+    "EntD",
+    "EntE",
+    "EntF",
+    "FepA"
+  ],
+  "unmatched_terms": [
+    "EntA",
+    "Fur"
+  ],
+  "coverage_ratio": 0.857143,
+  "core_accepted_processes": 7,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 7,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

@@ -1,0 +1,259 @@
+RESULT: FAIL
+========================================
+paper      : PMC12096016
+title      : (unknown)
+slug       : PMC12096016
+mode       : strict
+status     : fail
+stage      : pwml_export
+wall time  : 931.6s (15m31s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : PWML export failed: PWML required-field gate failed.
+issue codes  : reaction_enzyme_must_be_protein_complex
+
+DETAIL / TRACEBACK
+----------------------------------------
+PWML export failed: PWML required-field gate failed.
+PWML export failed: PWML required-field gate failed.
+Required-field gate errors: 2; warnings: 20.
+Post-normalization gate produced 1 audit issue(s); the audit loop ran before export.
+13 QA issues need review.
+pwml result read from pwml_export_result
+{
+  "ok": false,
+  "error": "PWML required-field gate failed.",
+  "counts": {},
+  "issues": 2,
+  "output_path": "",
+  "qa": {},
+  "grounding_report": {},
+  "stage3_gate_report": {
+    "ok": true,
+    "normalization_stats": {
+      "complexes_created": 0,
+      "composites_rewritten": 0,
+      "reactions_rewritten": 0,
+      "scaffold_split_reactions": 0,
+      "entities_moved_out_of_compounds": 0,
+      "entities_added_as_compounds": 0,
+      "entities_added_as_proteins": 0,
+      "catalysts_promoted_to_enzymes": 0,
+      "interaction_enzymes_promoted": 0,
+      "scaffold_inputs_added": 0,
+      "scaffold_in_modifiers_count": 0,
+      "n_plus_tokens_remaining": 0,
+      "complexes_list": [
+        "Isochorismate synthase",
+        "enterobactin synthase",
+        "isochorismatase",
+        "oxidoreductase (entA)"
+      ],
+      "n_autostate_created": 0,
+      "n_entities_assigned_to_autostate": 0,
+      "transporters_attached": 0,
+      "enzymes_attached_from_reaction_evidence": 0,
+      "modifier_refs_canonicalized": 0,
+      "modifier_refs_dropped": 0,
+      "forbidden_complexes_removed": 0,
+      "dedupe_removed_reactions": 0,
+      "dedupe_removed_transports": 0,
+      "dedupe_removed": 0,
+      "dedupe_removed_total": 0,
+      "no_op_removed_count": 0,
+      "no_op_quarantined_count": 0,
+      "locked_no_op_quarantined_count": 0,
+      "evidenced_no_op_quarantined_count": 0,
+      "unsupported_no_op_dropped_count": 0,
+      "duplicate_locked_reactions_quarantined_count": 0,
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "complex_named_proteins_relocated": 0,
+      "nucleic_acid_named_entities_relocated": 0,
+      "entity_type_mismatches_flagged": 0,
+      "unresolved_complex_components_dropped": 0,
+      "component_only_proteins_removed": 0,
+      "pruned_disconnected_proteins": [],
+      "pruned_disconnected_proteins_count": 0,
+      "alias_example_mappings": [],
+      "false_protein_promotions_blocked": 0,
+      "unused_proteins_quarantined": 0,
+      "unused_proteins_flagged_for_review": 0,
+      "alias_canonicalization": {
+        "n_same_as_groups": 0,
+        "n_aliases_rewritten": 0,
+        "n_entities_deduped": 0,
+        "n_single_protein_complexes_removed": 0,
+        "example_mappings": []
+      }
+    },
+    "connectivity": {
+      "n_reactions": 6,
+      "n_transports": 2,
+      "n_interactions": 3,
+      "n_reaction_coupled_transports": 0,
+      "n_nodes": 41,
+      "n_edges": 58,
+      "n_components": 1,
+      "main_component_size": 41,
+      "largest_component_pct": 100.0,
+      "n_isolated_nodes": 0,
+      "proteins_degree0": 0,
+      "proteins_attached_pct": 100.0
+    },
+    "errors": []
+  },
+  "stage3_contract_report": {
+    "ok": true,
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "feed_audit",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    }
+  },
+  "required_gate_report": {
+    "ok": false,
+    "errors": [
+      {
+        "code": "reaction_enzyme_must_be_protein_complex",
+        "message": "Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity.",
+        "pointer": "/processes/reactions/5/enzymes/0",
+        "reaction_name": "LDH coupled reaction",
+        "enzyme_name": "lactate dehydrogenase",
+        "entity_type": "protein"
+      },
+      {
+        "code": "reaction_enzyme_must_be_protein_complex",
+        "message": "Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity.",
+        "pointer": "/processes/reactions/5/modifiers/0",
+        "reaction_name": "LDH coupled reaction",
+        "enzyme_name": "lactate dehydrogenase",
+        "entity_type": "protein"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "pathway_missing_pw_id",
+        "message": "Pathway has no pw_id / pathbank_pathway_id.",
+        "pointer": "/metadata/pw_id"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntC isochorismate synthase reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/0/inputs/0",
+        "reaction_name": "EntC isochorismate synthase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntC isochorismate synthase reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/0/outputs/0",
+        "reaction_name": "EntC isochorismate synthase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntB isochorismatase reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/1/inputs/0",
+        "reaction_name": "EntB isochorismatase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntB isochorismatase reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/1/outputs/0",
+        "reaction_name": "EntB isochorismatase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntB isochorismatase reaction' outputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/1/outputs/1",
+        "reaction_name": "EntB isochorismatase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntA dehydrogenase reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/2/inputs/0",
+        "reaction_name": "EntA dehydrogenase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntA dehydrogenase reaction' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/2/inputs/1",
+        "reaction_name": "EntA dehydrogenase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntA dehydrogenase reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/2/outputs/0",
+        "reaction_name": "EntA dehydrogenase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntA dehydrogenase reaction' outputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/2/outputs/1",
+        "reaction_name": "EntA dehydrogenase reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'EntE adenylation reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/3/inputs/0",
+        "reaction_name": "EntE adenylation reaction"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Re
+
+... [detail truncated at 8000 chars; 25837 more character(s) dropped. The full reports are on disk in this folder: audit_iteration_summary.json, contract_reports.json, coverage_summary.json, final_mapped.json, final_stage3_gate_report.json, gap_iteration_summary.json, gate_fail_report.json, graph_closure_iterations.json, initial_stage3_gate_report.json, merged_payload.json, pwml_required_field_gate_report.json, quarantine_report.json, rag_admission_report.json, removed_entity_report.json, stage1_payload.json]
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 13
+  entities = 28
+  gate_errors = 0
+  proteins = 7
+  reactions = 6
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1179 B)
+  - contract_reports.json  (6415 B)
+  - coverage_summary.json  (4192 B)
+  - final_mapped.json  (239366 B)
+  - final_stage3_gate_report.json  (2844 B)
+  - gap_iteration_summary.json  (60196 B)
+  - gate_fail_report.json  (8551 B)
+  - graph_closure_iterations.json  (976 B)
+  - initial_stage3_gate_report.json  (8551 B)
+  - merged_payload.json  (30307 B)
+  - pwml_required_field_gate_report.json  (7490 B)
+  - quarantine_report.json  (18888 B)
+  - rag_admission_report.json  (385764 B)
+  - removed_entity_report.json  (644 B)
+  - stage1_payload.json  (27295 B)
