@@ -1,0 +1,23 @@
+[20:14:27] STARTING a fresh run 2026-08-21_2014 (--fresh was given)
+[20:14:27]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[20:14:27] fetching papers (topics=topics_t101_rerun_pmc12312563.txt, limit=none) ...
+[20:14:27]   + PMC12312563  (47406 chars)  (untitled)
+[20:14:27] planned 1 paper(s) x 2 mode(s) = 2 run(s); 0 candidate(s) skipped (see skipped.json)
+[20:14:27] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[20:14:27] running 2 paper+mode pair(s) sequentially
+[20:14:27] whole-night deadline : 1.0h from now
+[20:14:27] [1/2] PMC12312563 / strict -> starting (timeout 1800s)
+[20:36:23] [1/2] PMC12312563 / strict -> FAIL (contract) in 1315.3s (21m55s)
+[20:36:23]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:36:23]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:36:23]     1/1 done | strict 0 pass 1 fail | research 0 pass
+[20:36:23] [2/2] PMC12312563 / research -> starting (timeout 1800s)
+[20:55:56] [2/2] PMC12312563 / research -> PASS WITH WARNINGS in 1173.3s (19m33s)
+[20:55:56]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:55:56]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[20:55:56]     ! strict gate error (research mode: review flag, not blocking): gate.protein_mend_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'MenD' is missing a UniProt or DrugBank identifier.
+[20:55:56]     1/1 done | strict 0 pass 1 fail | research 1 pass | 1 NO DELIVERABLE
+[20:55:56] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-21_2014
+[20:55:56] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-21_2014\SUMMARY.txt
+[20:55:56] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-21_2014\failures_by_code.txt
+[20:55:56] FAILURES: 1 of 2 paper+mode run(s) did not pass

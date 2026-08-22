@@ -1,0 +1,295 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Listeria monocytogenes",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "evidence": "the last cytosolic metabolite of the pathway",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "2-oxoglutarate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "thiamine diphosphate (ThDP)",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "Mg2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Listeria monocytogenes"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "MenD tetramer",
+        "components": [
+          "MenD"
+        ],
+        "evidence": "the enzyme has a homotetrameric quaternary structure",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "the enzyme has a homotetrameric quaternary structure"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Listeria monocytogenes cytoplasmic state",
+      "species": "Listeria monocytogenes",
+      "subcellular_location": "cytoplasm",
+      "evidence": "the last cytosolic metabolite of the pathway"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "2-oxoglutarate",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cytoplasmic state",
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "biological_state": "Listeria monocytogenes cytoplasmic state",
+        "evidence": "DHNA has some ability to inhibit the activity of Lmo MenD",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "thiamine diphosphate (ThDP)",
+        "entity_2": "MenD",
+        "name": "ThDP is cofactor of MenD",
+        "relationship": "cofactor_of",
+        "biological_state": "Listeria monocytogenes cytoplasmic state",
+        "evidence": "thiamine diphosphate (ThDP)-dependent decarboxylase MenD"
+      },
+      {
+        "entity_1": "Mg2+",
+        "entity_2": "MenD",
+        "name": "Mg2+ is cofactor of MenD",
+        "relationship": "cofactor_of",
+        "biological_state": "Listeria monocytogenes cytoplasmic state",
+        "evidence": "ThDP diphosphate group tethers the cofactor to the enzyme via interactions with a divalent magnesium cation"
+      },
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+        "entity_2": "MenD",
+        "name": "DHNA allosterically inhibits MenD",
+        "relationship": "allosteric_inhibitor_of",
+        "biological_state": "Listeria monocytogenes cytoplasmic state",
+        "evidence": "weak inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid, an allosteric regulator of Mycobacterium tuberculosis MenD"
+      }
+    ]
+  },
+  "element_locations": {},
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

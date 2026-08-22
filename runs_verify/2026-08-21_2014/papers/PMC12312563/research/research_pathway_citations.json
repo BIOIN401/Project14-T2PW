@@ -1,0 +1,499 @@
+{
+  "citations": {
+    "entities": [
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "40741",
+        "identifier_source": "pathbank_compound_id",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "isochorismate   [Tier A]   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "isochorismate",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/0",
+        "rag_confidence": 0.6,
+        "reason": "external identifier 40741 (pathbank_compound_id)",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "",
+        "identifier_source": "",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "SEPHCHC   [Tier C]   ! SINGLE-SOURCE - REVIEW REQUIRED   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "! SINGLE-SOURCE - REVIEW REQUIRED",
+        "name": "SEPHCHC",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/1",
+        "rag_confidence": 0.6,
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C",
+        "tier_label": "single-source (review)"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "DB02926",
+        "identifier_source": "drugbank",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "α-ketoglutarate   [Tier A]   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "",
+        "name": "α-ketoglutarate",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/compounds/2",
+        "rag_confidence": 0.6,
+        "reason": "external identifier DB02926 (drugbank)",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A",
+        "tier_label": "DB-grounded"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [
+          {
+            "category": "BIOLOGY/PROVENANCE",
+            "code": "(no code)",
+            "message": "{'name': 'MenD', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended novel (implausible_name_match)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Listeria monocytogenes', 'species': 'Listeria monocytogenes', 'species_name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'species_ref': {'name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'MenD', 'organism': 'Listeria monocytogenes'}, 'provider': 'UniProt', 'source': 'api', 'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False, 'resolution': {'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:\"MenD\" OR gene:\"MenD\") AND organism_name:\"Listeria monocytogenes\"', '(protein_name:\"MenD\" OR gene:\"MenD\")'], 'identity_verdict': {'verified': False, 'reason': 'ambiguous_insufficient_margin', 'entity_name': 'MenD', 'organism': 'Listeria monocytogenes', 'checks': {'identifier_resolution': 'ok', 'candidate_evidence': 'ok', 'entity_type': 'ok', 'species': 'ok', 'name': 'keep', 'score': 'ok', 'margin': 'insufficient:0.00<0.1'}, 'score': 0.85, 'margin': 0.0, 'verification_status': 'rejected', 'identity': 'uniprot:Q71YZ2', 'judged_candidate': {'accession': 'Q71YZ2', 'protein_name': '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase', 'gene_names': '1 item(s), 8 chars elided', 'organism': 'Listeria monocytogenes serotype 4b (strain F2365)', 'reviewed': True, 'score': 0.85, 'matched_query': 'MenD', 'alias_source': 'primary_name'}, 'judged_candidates': ['8 key(s), 293 chars elided', '8 key(s), 309 chars elided', '8 key(s), 300 chars elided', '8 key(s), 273 chars elided', '8 key(s), 274 chars elided', '8 key(s), 281 chars elided', '8 key(s), 287 chars elided', '8 key(s), 294 chars elided'], 'species_compatibility': 'ok', 'name_gate': {'verdict': 'keep', 'reason': 'exact_symbol_identity', 'entity_name': 'MenD', 'kind': 'protein', 'resolved_name': '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase', 'identity': 'uniprot:Q71YZ2', 'compared_names': '1 item(s), 75 chars elided', 'matched_symbol': 'menD'}, 'competing_accessions': ['a0a0h3gd77', 'q8y6k9']}}}",
+            "pointer": "/entities/proteins/0",
+            "stage": "post_normalization"
+          }
+        ],
+        "identifier": "",
+        "identifier_source": "",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "MenD   [Tier C]   ! SINGLE-SOURCE - REVIEW REQUIRED   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "! SINGLE-SOURCE - REVIEW REQUIRED",
+        "name": "MenD",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/entities/proteins/0",
+        "rag_confidence": 0.6,
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C",
+        "tier_label": "single-source (review)"
+      },
+      {
+        "distinct_paper_count": 0,
+        "equation": "",
+        "flags": [],
+        "identifier": "",
+        "identifier_source": "",
+        "inputs": [],
+        "is_review_only": false,
+        "kind": "entity",
+        "line": "MenD   [Tier C]   ! SINGLE-SOURCE - REVIEW REQUIRED   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "! SINGLE-SOURCE - REVIEW REQUIRED",
+        "name": "MenD",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [],
+        "pointer": "/processes/reactions/0/enzymes/0",
+        "rag_confidence": 0.6,
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C",
+        "tier_label": "single-source (review)"
+      }
+    ],
+    "reactions": [
+      {
+        "distinct_paper_count": 0,
+        "equation": "α-ketoglutarate + isochorismate -> SEPHCHC",
+        "flags": [],
+        "identifier": "",
+        "identifier_source": "",
+        "inputs": [
+          "α-ketoglutarate",
+          "isochorismate"
+        ],
+        "is_review_only": false,
+        "kind": "reaction",
+        "line": "MenD reaction: α-ketoglutarate + isochorismate -> SEPHCHC   [Tier C]   ! SINGLE-SOURCE - REVIEW REQUIRED   sources: menaquinone biosynthesis (seed_paper) -- (section unknown)",
+        "marker": "! SINGLE-SOURCE - REVIEW REQUIRED",
+        "name": "MenD reaction",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "pointer": "/processes/reactions/0",
+        "rag_confidence": 0.6,
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+            "document_type": "",
+            "is_review": false,
+            "kind": "seed / unverified pointer",
+            "quote": "",
+            "retrieval_score": null,
+            "retrieved": false,
+            "section": "(section unknown)",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C",
+        "tier_label": "single-source (review)"
+      }
+    ]
+  },
+  "format_gaps": [],
+  "limitations": [
+    "A review that CITES the seed paper cannot be distinguished from an independent corroboration. Reference sections are discarded at ingest and CandidatePaper carries no DOI, so there is no citation graph to check. When a review corroborates a step, treat it as 'possibly the same claim restated', never as a second independent finding.",
+    "No page numbers exist in this pipeline. Chunk positions are hashed away at ingest, so every citation below gives the section plus the verbatim quoted passage and nothing more. Any page reference you need must be looked up in the source paper by hand.",
+    "rag_confidence is an internal heuristic (the top retrieval score, or 0.5 + 0.1 per provenance pointer when no score exists). It is NOT a probability and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval score'.",
+    "A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is corroborated but still has no external identifier, and a Tier A identifier was accepted only when it was a genuine match (best-effort guesses and the PathBank Unknown sentinel are refused).",
+    "Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no PWML. This report is a review artifact, not an import-ready pathway."
+  ],
+  "pathway": {
+    "export_mode": "research",
+    "name": "menaquinone biosynthesis"
+  },
+  "review_flags": [
+    {
+      "category": "BIOLOGY/PROVENANCE",
+      "code": "(no code)",
+      "message": "{'name': 'MenD', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended novel (implausible_name_match)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Listeria monocytogenes', 'species': 'Listeria monocytogenes', 'species_name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'species_ref': {'name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Listeria monocytogenes', 'pathbank_species_id': 676, 'species_id': 676, 'taxonomy_id': '1639', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'MenD', 'organism': 'Listeria monocytogenes'}, 'provider': 'UniProt', 'source': 'api', 'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False, 'resolution': {'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}, 'queries_tried': ['(protein_name:\"MenD\" OR gene:\"MenD\") AND organism_name:\"Listeria monocytogenes\"', '(protein_name:\"MenD\" OR gene:\"MenD\")'], 'identity_verdict': {'verified': False, 'reason': 'ambiguous_insufficient_margin', 'entity_name': 'MenD', 'organism': 'Listeria monocytogenes', 'checks': {'identifier_resolution': 'ok', 'candidate_evidence': 'ok', 'entity_type': 'ok', 'species': 'ok', 'name': 'keep', 'score': 'ok', 'margin': 'insufficient:0.00<0.1'}, 'score': 0.85, 'margin': 0.0, 'verification_status': 'rejected', 'identity': 'uniprot:Q71YZ2', 'judged_candidate': {'accession': 'Q71YZ2', 'protein_name': '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase', 'gene_names': '1 item(s), 8 chars elided', 'organism': 'Listeria monocytogenes serotype 4b (strain F2365)', 'reviewed': True, 'score': 0.85, 'matched_query': 'MenD', 'alias_source': 'primary_name'}, 'judged_candidates': ['8 key(s), 293 chars elided', '8 key(s), 309 chars elided', '8 key(s), 300 chars elided', '8 key(s), 273 chars elided', '8 key(s), 274 chars elided', '8 key(s), 281 chars elided', '8 key(s), 287 chars elided', '8 key(s), 294 chars elided'], 'species_compatibility': 'ok', 'name_gate': {'verdict': 'keep', 'reason': 'exact_symbol_identity', 'entity_name': 'MenD', 'kind': 'protein', 'resolved_name': '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase', 'identity': 'uniprot:Q71YZ2', 'compared_names': '1 item(s), 75 chars elided', 'matched_symbol': 'menD'}, 'competing_accessions': ['a0a0h3gd77', 'q8y6k9']}}}",
+      "pointer": "/entities/proteins/0",
+      "stage": "post_normalization"
+    }
+  ],
+  "sources": [
+    {
+      "citation": "menaquinone biosynthesis (seed_paper) -- (section unknown)",
+      "document_type": "",
+      "is_review": false,
+      "kind": "seed / unverified pointer",
+      "quote": "",
+      "retrieval_score": null,
+      "retrieved": false,
+      "section": "(section unknown)",
+      "source_id": "seed_paper",
+      "title": "menaquinone biosynthesis",
+      "uri": ""
+    }
+  ],
+  "summary": {
+    "distinct_sources_cited": 1,
+    "element_count": 6,
+    "entity_count": 5,
+    "page_numbers_available": false,
+    "pwml_emitted": false,
+    "reaction_count": 1,
+    "review_flag_count": 1,
+    "review_required_count": 4,
+    "skipped_format_rule_count": 0,
+    "tier_counts": {
+      "A": 2,
+      "B": 0,
+      "C": 4,
+      "D": 0
+    },
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    },
+    "unsourced_count": 0
+  },
+  "tiers": {
+    "assignments": [
+      {
+        "distinct_paper_count": 0,
+        "identifier": "40741",
+        "identifier_source": "pathbank_compound_id",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "isochorismate",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/0",
+        "reason": "external identifier 40741 (pathbank_compound_id)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "",
+        "identifier_source": "",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "single-source (review)",
+        "name": "SEPHCHC",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/1",
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "DB02926",
+        "identifier_source": "drugbank",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "DB-grounded",
+        "name": "α-ketoglutarate",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/compounds/2",
+        "reason": "external identifier DB02926 (drugbank)",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "A"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "",
+        "identifier_source": "",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "single-source (review)",
+        "name": "MenD",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/entities/proteins/0",
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "",
+        "identifier_source": "",
+        "is_review_only": false,
+        "kind": "reaction",
+        "label": "single-source (review)",
+        "name": "MenD reaction",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/processes/reactions/0",
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C"
+      },
+      {
+        "distinct_paper_count": 0,
+        "identifier": "",
+        "identifier_source": "",
+        "is_review_only": false,
+        "kind": "entity",
+        "label": "single-source (review)",
+        "name": "MenD",
+        "notes": [
+          "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        ],
+        "pointer": "/processes/reactions/0/enzymes/0",
+        "reason": "stated in a single source",
+        "sources": [
+          {
+            "chunk_id": "",
+            "document_type": "",
+            "is_review": false,
+            "label": "seed / unverified pointer",
+            "quote": "",
+            "retrieved": false,
+            "section": "",
+            "source_id": "seed_paper",
+            "title": "menaquinone biosynthesis",
+            "uri": ""
+          }
+        ],
+        "tier": "C"
+      }
+    ],
+    "counts": {
+      "A": 2,
+      "B": 0,
+      "C": 4,
+      "D": 0
+    },
+    "mode": "research",
+    "notes": [
+      "research mode: Tier C/D elements need human review before this pathway is believed"
+    ],
+    "online": false,
+    "review_required": true,
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    }
+  }
+}

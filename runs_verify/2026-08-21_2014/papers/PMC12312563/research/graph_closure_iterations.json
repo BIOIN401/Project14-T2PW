@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "Oxoglutaric acid",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "isochorismate",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "SEPHCHC",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "ThDP",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "DHNA",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "intermediate I",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "intermediate II",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "proteins",
+          "name": "MenD",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "DHNA",
+          "reason": "location_entity_removed",
+          "biological_state": "cytosolic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "ThDP",
+          "reason": "location_entity_removed",
+          "biological_state": "cytosolic state"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "Oxoglutaric acid",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "isochorismate",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "SEPHCHC",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "intermediate I",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "intermediate II",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "MenD",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_listeria_monocytogenescytoplasm"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "cytosolic state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_listeria_monocytogenescytoplasm",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

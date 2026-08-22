@@ -1,0 +1,4615 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.940038,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.940038,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.940038,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.940038,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.940038,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.940038,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.768965,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.768965,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.768965,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.768965,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.768965,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.768965,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.930515,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.930515,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.930515,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.930515,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.930515,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.930515,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.873404,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.873404,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.873404,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.873404,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-7ca4ec0b",
+      "gap_ids": [
+        "gap-orphan_metabolite-7ca4ec0b"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.873404,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.873404,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.923102,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923102,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.923102,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923102,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.923102,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.923102,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.866888,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866888,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.866888,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866888,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-a83446ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-a83446ff"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.866888,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.866888,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.952243,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.952243,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.952243,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.952243,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.952243,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.952243,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.78664,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78664,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.78664,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78664,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-03d52a4f",
+      "gap_ids": [
+        "gap-missing_compartment-03d52a4f"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.78664,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.78664,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-03d52a4f asks for a compartment/location for '2-oxoglutarate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.951564,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.951564,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.951564,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.951564,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.951564,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.951564,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.816431,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.816431,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.816431,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.816431,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-d9f2b266",
+      "gap_ids": [
+        "gap-missing_compartment-d9f2b266"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.816431,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.816431,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-d9f2b266 asks for a compartment/location for 'isochorismate'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.901412,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.901412,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.901412,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.901412,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.901412,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.901412,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.787402,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.787402,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.787402,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.787402,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.787402,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.787402,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-e1ef7dfd",
+      "gap_ids": [
+        "gap-missing_compartment-e1ef7dfd"
+      ],
+      "name": "DHNA-CoA to DHNA conversion",
+      "inputs": [
+        "DHNA-CoA"
+      ],
+      "outputs": [
+        "DHNA"
+      ],
+      "enzymes": [
+        "LMRG_02730",
+        "MenI"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "10.1101/2020.12.21.423900",
+        "title": "<i>Listeria monocytogenes</i>  MenI encodes a DHNA-CoA thioesterase necessary for menaquinone biosynthesis, cytosolic survival, and virulence",
+        "uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "69a4cdf11a3047280dd6355c8d9f3f92",
+        "source_id": "10.1101/2020.12.21.423900",
+        "source_uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "section": "abstract",
+        "score": 0.702835,
+        "span": "Taken together, these data implicate LMRG_02730 (renamed MenI) as a DHNA-CoA thioesterase and suggest that while DHNA protects the bacteria from killing in the macrophage cytosol, DHNA-CoA is necessary for intracellular bacterial replication."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.702835,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-e1ef7dfd asks for a compartment/location for 'SEPHCHC'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.957097,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957097,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.957097,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957097,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.957097,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957097,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.770857,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.770857,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.770857,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.770857,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-de2caf99",
+      "gap_ids": [
+        "gap-missing_compartment-de2caf99"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.770857,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.770857,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-de2caf99 asks for a compartment/location for 'ThDP'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.892164,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.892164,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.892164,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.892164,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.892164,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.892164,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-4c80fef5",
+      "gap_ids": [
+        "gap-missing_compartment-4c80fef5"
+      ],
+      "name": "DHNA-CoA to DHNA conversion",
+      "inputs": [
+        "DHNA-CoA"
+      ],
+      "outputs": [
+        "DHNA"
+      ],
+      "enzymes": [
+        "LMRG_02730",
+        "MenI"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "10.1101/2020.12.21.423900",
+        "title": "<i>Listeria monocytogenes</i>  MenI encodes a DHNA-CoA thioesterase necessary for menaquinone biosynthesis, cytosolic survival, and virulence",
+        "uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "69a4cdf11a3047280dd6355c8d9f3f92",
+        "source_id": "10.1101/2020.12.21.423900",
+        "source_uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "section": "abstract",
+        "score": 0.756866,
+        "span": "Taken together, these data implicate LMRG_02730 (renamed MenI) as a DHNA-CoA thioesterase and suggest that while DHNA protects the bacteria from killing in the macrophage cytosol, DHNA-CoA is necessary for intracellular bacterial replication."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.756866,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-4c80fef5 asks for a compartment/location for 'intermediate I'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.893844,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.893844,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.893844,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.893844,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.893844,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.893844,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.883333,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.883333,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-215a2fd0",
+      "gap_ids": [
+        "gap-missing_compartment-215a2fd0"
+      ],
+      "name": "DHNA-CoA to DHNA conversion",
+      "inputs": [
+        "DHNA-CoA"
+      ],
+      "outputs": [
+        "DHNA"
+      ],
+      "enzymes": [
+        "LMRG_02730",
+        "MenI"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "10.1101/2020.12.21.423900",
+        "title": "<i>Listeria monocytogenes</i>  MenI encodes a DHNA-CoA thioesterase necessary for menaquinone biosynthesis, cytosolic survival, and virulence",
+        "uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "69a4cdf11a3047280dd6355c8d9f3f92",
+        "source_id": "10.1101/2020.12.21.423900",
+        "source_uri": "https://doi.org/10.1101/2020.12.21.423900",
+        "section": "abstract",
+        "score": 0.756171,
+        "span": "Taken together, these data implicate LMRG_02730 (renamed MenI) as a DHNA-CoA thioesterase and suggest that while DHNA protects the bacteria from killing in the macrophage cytosol, DHNA-CoA is necessary for intracellular bacterial replication."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.756171,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-215a2fd0 asks for a compartment/location for 'intermediate II'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.970418,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.970418,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.970418,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.970418,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.970418,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.970418,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.75665,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.75665,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.75665,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.75665,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-missing_compartment-84442b26",
+      "gap_ids": [
+        "gap-missing_compartment-84442b26"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.75665,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.75665,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-missing_compartment-84442b26 asks for a compartment/location for 'MenD'; a reaction row expresses no location"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.948919,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948919,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.948919,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948919,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.948919,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.948919,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.933777,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.933777,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.933777,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.933777,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.933777,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.933777,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.752298,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.752298,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.752298,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.752298,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.752298,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.752298,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.937089,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.937089,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.937089,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.937089,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.937089,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.937089,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.690168,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.690168,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.690168,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.690168,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-26f06eb7",
+      "gap_ids": [
+        "gap-dangling_reaction-26f06eb7"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.690168,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.690168,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.95637,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.95637,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.95637,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.95637,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.95637,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.95637,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.765583,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.765583,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.765583,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.765583,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.765583,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.765583,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "α-ketoglutarate -> intermediate I",
+      "inputs": [
+        "α-ketoglutarate"
+      ],
+      "outputs": [
+        "intermediate I"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.962159,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.962159,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.962159,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.962159,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "intermediate II -> SEPHCHC",
+      "inputs": [
+        "intermediate II"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.962159,
+        "span": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC (Fig. 1 ▸ ;"
+      },
+      "organism": "Listeria monocytogenes",
+      "observed_organisms": [
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.962159,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA) -> 1,4-dihydroxy-2-naphthoate (DHNA)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)"
+      ],
+      "outputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.778781,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778781,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "1,4-dihydroxy-2-naphthoate (DHNA) -> menaquinone (MK)",
+      "inputs": [
+        "1,4-dihydroxy-2-naphthoate (DHNA)"
+      ],
+      "outputs": [
+        "menaquinone (MK)"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.778781,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778781,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "unknown downstream product of DHNA -> protection from bacteriolysis",
+      "inputs": [
+        "unknown downstream product of DHNA"
+      ],
+      "outputs": [
+        "protection from bacteriolysis"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC8091085",
+        "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+        "uri": "https://doi.org/10.1128/iai.00792-20",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "fb1cf2b2fe9282c18bd86aaa6187ed8d",
+        "source_id": "PMC8091085",
+        "source_uri": "https://doi.org/10.1128/iai.00792-20",
+        "section": "abstract",
+        "score": 0.778781,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Escherichia coli",
+        "Listeria monocytogenes"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis",
+      "requested_organism": "Listeria monocytogenes",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778781,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 90,
+    "considered": 90
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 48,
+    "evidence_relation_roles_unassignable": 30,
+    "evidence_states_no_reaction_relation": 3,
+    "no_local_evidence_span": 57
+  },
+  "by_gap": {
+    "gap-dangling_reaction-26f06eb7": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-03d52a4f": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-215a2fd0": {
+      "accepted": 0,
+      "rejected": 7
+    },
+    "gap-missing_compartment-4c80fef5": {
+      "accepted": 0,
+      "rejected": 7
+    },
+    "gap-missing_compartment-84442b26": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-d9f2b266": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-de2caf99": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-missing_compartment-e1ef7dfd": {
+      "accepted": 0,
+      "rejected": 7
+    },
+    "gap-orphan_metabolite-4456e181": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-orphan_metabolite-49085564": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-orphan_metabolite-695eb3b5": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-orphan_metabolite-7ca4ec0b": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-orphan_metabolite-a83446ff": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-orphan_metabolite-b269b2ff": {
+      "accepted": 0,
+      "rejected": 6
+    },
+    "gap-unmapped_enzyme-de91fbb1": {
+      "accepted": 0,
+      "rejected": 3
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "label": "MenD",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 1,
+    "unresolved_for_unknown_fallback": 1,
+    "unknown_fallback_present": 0
+  }
+}

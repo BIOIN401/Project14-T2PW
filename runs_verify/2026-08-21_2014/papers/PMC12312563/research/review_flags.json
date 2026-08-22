@@ -1,0 +1,168 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'MenD' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Listeria monocytogenes",
+        "species": "Listeria monocytogenes",
+        "species_name": "Listeria monocytogenes",
+        "pathbank_species_id": 676,
+        "species_id": 676,
+        "taxonomy_id": "1639",
+        "species_ref": {
+          "name": "Listeria monocytogenes",
+          "pathbank_species_id": 676,
+          "species_id": 676,
+          "taxonomy_id": "1639",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Listeria monocytogenes",
+            "pathbank_species_id": 676,
+            "species_id": 676,
+            "taxonomy_id": "1639",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MenD",
+            "organism": "Listeria monocytogenes"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"MenD\" OR gene:\"MenD\") AND organism_name:\"Listeria monocytogenes\"",
+            "(protein_name:\"MenD\" OR gene:\"MenD\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "MenD",
+            "organism": "Listeria monocytogenes",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:Q71YZ2",
+            "judged_candidate": {
+              "accession": "Q71YZ2",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Listeria monocytogenes serotype 4b (strain F2365)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 293 chars elided",
+              "8 key(s), 309 chars elided",
+              "8 key(s), 300 chars elided",
+              "8 key(s), 273 chars elided",
+              "8 key(s), 274 chars elided",
+              "8 key(s), 281 chars elided",
+              "8 key(s), 287 chars elided",
+              "8 key(s), 294 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "MenD",
+              "kind": "protein",
+              "resolved_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "identity": "uniprot:Q71YZ2",
+              "compared_names": "1 item(s), 75 chars elided",
+              "matched_symbol": "menD"
+            },
+            "competing_accessions": [
+              "a0a0h3gd77",
+              "q8y6k9"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_mend_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/0",
+      "message": "Protein 'MenD' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}

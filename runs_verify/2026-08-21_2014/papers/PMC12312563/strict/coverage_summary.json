@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "2-oxoglutarate",
+    "isochorismate",
+    "SEPHCHC",
+    "thiamine diphosphate (ThDP)",
+    "intermediate I",
+    "intermediate II",
+    "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+    "Mg2+",
+    "menaquinone",
+    "MenD (SEPHCHC synthase)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "menaquinone biosynthesis",
+    "likely_organism": "Listeria monocytogenes",
+    "key_compounds": [
+      "2-oxoglutarate",
+      "isochorismate",
+      "SEPHCHC",
+      "thiamine diphosphate (ThDP)",
+      "intermediate I",
+      "intermediate II",
+      "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+      "Mg2+",
+      "menaquinone"
+    ],
+    "key_proteins": [
+      "MenD (SEPHCHC synthase)"
+    ],
+    "likely_compartments": [
+      "cytoplasm"
+    ],
+    "main_subprocesses": [
+      "ThDP ylide formation",
+      "decarboxylation of 2-oxoglutarate to form intermediate I",
+      "condensation of intermediate I with isochorismate to form intermediate II",
+      "breakdown of intermediate II to release SEPHCHC"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "methods",
+      "results and discussion",
+      "conclusion",
+      "supplementary"
+    ],
+    "pathway_relevance_score": 1.0,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:2ab538c16a3ceb91",
+      "response_hash": "sha256:f4c4ef35bcb141b6",
+      "raw_chars": 1107,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1107,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "2-oxoglutarate",
+    "isochorismate",
+    "SEPHCHC",
+    "thiamine diphosphate (ThDP)",
+    "1,4-dihydroxy-2-naphthoic acid (DHNA)",
+    "Mg2+",
+    "MenD (SEPHCHC synthase)"
+  ],
+  "unmatched_terms": [
+    "intermediate I",
+    "intermediate II",
+    "menaquinone"
+  ],
+  "coverage_ratio": 0.7,
+  "core_accepted_processes": 5,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 5,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

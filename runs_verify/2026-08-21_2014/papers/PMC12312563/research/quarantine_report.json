@@ -1,0 +1,1050 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:694cdac016b44f63",
+  "resulting_payload_hash": "sha256:694cdac016b44f63",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "2oxoglutarate",
+      "dhna",
+      "intermediate i",
+      "intermediate ii",
+      "isochorismate",
+      "menaquinone",
+      "mend",
+      "sephchc",
+      "sephchc synthase",
+      "thdp"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:a279986f4a03d881",
+  "ok": true,
+  "counts": {
+    "core_accepted": 0,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 5,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "MenD reaction",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "isochorismate",
+        "mend",
+        "mend reaction",
+        "oxoglutaric acid",
+        "sephchc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/0",
+          "inputs": [
+            "Oxoglutaric acid",
+            "isochorismate"
+          ],
+          "outputs": [
+            "SEPHCHC"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "MenD reaction",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "42 chars elided"
+            }
+          ],
+          "evidence": "92 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "42 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "MenD"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "decarboxylation of 2oxoglutarate to intermediate i",
+        "intermediate i",
+        "mend",
+        "oxoglutaric acid"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/1",
+          "inputs": [
+            "Oxoglutaric acid"
+          ],
+          "outputs": [
+            "intermediate I"
+          ],
+          "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "57 chars elided"
+            }
+          ],
+          "evidence": "57 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "57 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Addition of isochorismate to intermediate I forming intermediate II",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "addition of isochorismate to intermediate i forming intermediate ii",
+        "intermediate i",
+        "intermediate ii",
+        "isochorismate",
+        "mend"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/2",
+          "inputs": [
+            "intermediate I",
+            "isochorismate"
+          ],
+          "outputs": [
+            "intermediate II"
+          ],
+          "name": "Addition of isochorismate to intermediate I forming intermediate II",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "63 chars elided"
+            }
+          ],
+          "evidence": "63 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "63 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Breakdown of intermediate II to SEPHCHC",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "breakdown of intermediate ii to sephchc",
+        "intermediate ii",
+        "mend",
+        "sephchc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "intermediate II"
+          ],
+          "outputs": [
+            "SEPHCHC"
+          ],
+          "name": "Breakdown of intermediate II to SEPHCHC",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "28 chars elided"
+            }
+          ],
+          "evidence": "28 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "28 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "DHNA inhibits MenD",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "dhna",
+        "dhna inhibits mend",
+        "mend"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "DHNA",
+          "entity_2": "MenD",
+          "name": "DHNA inhibits MenD",
+          "relationship": "inhibits",
+          "evidence": "84 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "MenD"
+      }
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "MenD reaction",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "isochorismate",
+        "mend",
+        "mend reaction",
+        "oxoglutaric acid",
+        "sephchc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/0",
+          "inputs": [
+            "Oxoglutaric acid",
+            "isochorismate"
+          ],
+          "outputs": [
+            "SEPHCHC"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "MenD reaction",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "42 chars elided"
+            }
+          ],
+          "evidence": "92 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "42 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "MenD"
+      },
+      "original_process": {
+        "inputs": [
+          "Oxoglutaric acid",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "MenD catalyses the first irreversible step"
+          }
+        ],
+        "evidence": "MenD catalyses the first irreversible step of the classical menaquinone-biosynthesis pathway",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "MenD catalyses the first irreversible step",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "decarboxylation of 2oxoglutarate to intermediate i",
+        "intermediate i",
+        "mend",
+        "oxoglutaric acid"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/1",
+          "inputs": [
+            "Oxoglutaric acid"
+          ],
+          "outputs": [
+            "intermediate I"
+          ],
+          "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "57 chars elided"
+            }
+          ],
+          "evidence": "57 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "57 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      },
+      "original_process": {
+        "inputs": [
+          "Oxoglutaric acid"
+        ],
+        "outputs": [
+          "intermediate I"
+        ],
+        "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+        "enzymes": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I"
+          }
+        ],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ],
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Addition of isochorismate to intermediate I forming intermediate II",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "addition of isochorismate to intermediate i forming intermediate ii",
+        "intermediate i",
+        "intermediate ii",
+        "isochorismate",
+        "mend"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/2",
+          "inputs": [
+            "intermediate I",
+            "isochorismate"
+          ],
+          "outputs": [
+            "intermediate II"
+          ],
+          "name": "Addition of isochorismate to intermediate I forming intermediate II",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "63 chars elided"
+            }
+          ],
+          "evidence": "63 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "63 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      },
+      "original_process": {
+        "inputs": [
+          "intermediate I",
+          "isochorismate"
+        ],
+        "outputs": [
+          "intermediate II"
+        ],
+        "name": "Addition of isochorismate to intermediate I forming intermediate II",
+        "enzymes": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "subsequent addition of isochorismate generating intermediate II"
+          }
+        ],
+        "evidence": "subsequent addition of isochorismate generating intermediate II",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "subsequent addition of isochorismate generating intermediate II",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ],
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Breakdown of intermediate II to SEPHCHC",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "breakdown of intermediate ii to sephchc",
+        "intermediate ii",
+        "mend",
+        "sephchc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "intermediate II"
+          ],
+          "outputs": [
+            "SEPHCHC"
+          ],
+          "name": "Breakdown of intermediate II to SEPHCHC",
+          "enzymes": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 0.95,
+              "provenance": "inferred",
+              "evidence": "28 chars elided"
+            }
+          ],
+          "evidence": "28 chars elided",
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "MenD",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "28 chars elided",
+              "confidence": 0.95,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "MenD"
+      },
+      "original_process": {
+        "inputs": [
+          "intermediate II"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "name": "Breakdown of intermediate II to SEPHCHC",
+        "enzymes": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "breakdown to release SEPHCHC"
+          }
+        ],
+        "evidence": "breakdown to release SEPHCHC",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "MenD",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "breakdown to release SEPHCHC",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ],
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "DHNA inhibits MenD",
+      "essential_participant": "MenD",
+      "iteration": 0,
+      "core_terms": [
+        "dhna",
+        "dhna inhibits mend",
+        "mend"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "DHNA",
+          "entity_2": "MenD",
+          "name": "DHNA inhibits MenD",
+          "relationship": "inhibits",
+          "evidence": "84 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "MenD"
+      },
+      "original_process": {
+        "entity_1": "DHNA",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "evidence": "weak inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "diagnostic_only",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "requested_pathway_anchors_present"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": false,
+        "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.0,
+    "missing_anchors": [
+      "menaquinone",
+      "ThDP",
+      "2-oxoglutarate",
+      "isochorismate",
+      "SEPHCHC",
+      "intermediate I",
+      "intermediate II",
+      "DHNA",
+      "MenD",
+      "SEPHCHC synthase"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "10 requested-core anchor(s) matched no admitted process: menaquinone, ThDP, 2-oxoglutarate, isochorismate, SEPHCHC, intermediate I, intermediate II, DHNA, MenD, SEPHCHC synthase; candidate processes withheld by strict admission (quarantined_unmapped_entity:5); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "no_defensible_connected_core",
+      "no_surviving_process",
+      "core_process_count_below_minimum:0<1",
+      "requested_core_coverage_below_minimum:0.000<0.500"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [
+      "rxn_lock_001"
+    ],
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 0,
+    "quarantined_locked_reactions": 1,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "menaquinone",
+      "ThDP",
+      "2-oxoglutarate",
+      "isochorismate",
+      "SEPHCHC",
+      "intermediate I",
+      "intermediate II",
+      "DHNA",
+      "MenD",
+      "SEPHCHC synthase"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "menaquinone biosynthesis",
+      "likely_organism": "Listeria monocytogenes",
+      "key_compounds": [
+        "menaquinone",
+        "ThDP",
+        "2-oxoglutarate",
+        "isochorismate",
+        "SEPHCHC",
+        "intermediate I",
+        "intermediate II",
+        "DHNA"
+      ],
+      "key_proteins": [
+        "MenD",
+        "SEPHCHC synthase"
+      ],
+      "likely_compartments": [],
+      "main_subprocesses": [
+        "decarboxylation of 2-oxoglutarate to form intermediate I",
+        "addition of isochorismate to form intermediate II",
+        "breakdown of intermediate II to release SEPHCHC"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results and discussion",
+        "methods",
+        "supplementary"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:2ab538c16a3ceb91",
+        "response_hash": "sha256:4b7ec2ae0a9807d8",
+        "raw_chars": 955,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 955,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [],
+    "unmatched_terms": [
+      "menaquinone",
+      "ThDP",
+      "2-oxoglutarate",
+      "isochorismate",
+      "SEPHCHC",
+      "intermediate I",
+      "intermediate II",
+      "DHNA",
+      "MenD",
+      "SEPHCHC synthase"
+    ],
+    "coverage_ratio": 0.0,
+    "core_accepted_processes": 0,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 0,
+    "quarantined_processes": 5,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": false,
+    "reasons": [
+      "no_surviving_process",
+      "core_process_count_below_minimum:0<1",
+      "requested_core_coverage_below_minimum:0.000<0.500"
+    ]
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:694cdac016b44f63.sha256:a279986f4a03d881",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [
+      {
+        "pointer": "/processes/reactions/0",
+        "name": "MenD reaction",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "MenD",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/reactions/1",
+        "name": "Decarboxylation of 2-oxoglutarate to intermediate I",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "MenD",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/reactions/2",
+        "name": "Addition of isochorismate to intermediate I forming intermediate II",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "MenD",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/reactions/3",
+        "name": "Breakdown of intermediate II to SEPHCHC",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "MenD",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/0",
+        "name": "DHNA inhibits MenD",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "MenD",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      }
+    ],
+    "would_have_quarantined": 5,
+    "would_have_refused": [
+      "minimum_core:no_surviving_process",
+      "minimum_core:core_process_count_below_minimum:0<1",
+      "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+    ]
+  }
+}

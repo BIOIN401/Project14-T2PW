@@ -1,0 +1,1330 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 6,
+        "organisms_added": 0,
+        "locations_added": 6,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 8,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:mend",
+            "entity_type": "protein",
+            "name": "MenD",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:ketoglutarate",
+            "entity_type": "compound",
+            "name": "α-ketoglutarate",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:sephchc",
+            "entity_type": "compound",
+            "name": "SEPHCHC",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:thdp",
+            "entity_type": "compound",
+            "name": "ThDP",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:dhna",
+            "entity_type": "compound",
+            "name": "DHNA",
+            "path": "/entities/compounds/4",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:intermediate i",
+            "entity_type": "compound",
+            "name": "intermediate I",
+            "path": "/entities/compounds/5",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:intermediate ii",
+            "entity_type": "compound",
+            "name": "intermediate II",
+            "path": "/entities/compounds/6",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:0ce47d3b10b2f334",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:mend\", \"resolve_ids\": { \"strategy\": \"db_only\", \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"none\", \"hmdb_lookup\": fal… (+179 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:mend",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:ketoglutarate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:sephchc",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:thdp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:dhna",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:intermediate i",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:intermediate ii",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:mend",
+            "entity_type": "protein",
+            "name": "MenD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "MenD",
+                "organism": "Listeria monocytogenes",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:387da47a40109ccd",
+                  "preview": "{\"uniprot\": \"Q71YZ2\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 133,
+                  "hash": "sha256:fe875b618b390b03",
+                  "preview": "[\"(protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\") AND organism_name:\\\"Listeria monocytogenes\\\"\", \"(protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1256,
+                  "hash": "sha256:3d5682e3be44bdd7",
+                  "preview": "[{\"accession\": \"Q71YZ2\", \"protein_name\": \"2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase\", \"organism\": \"Listeria monocytogenes serotype 4b (strain F2365)\", \"reviewed\": true, \"… (+1056 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2983,
+                  "hash": "sha256:3543283b7dcb8e43",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\") AND organism_name:\\\"Listeria monocytogenes\\\" | (protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\")\", \"map… (+2783 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:387da47a40109ccd",
+                  "preview": "{\"uniprot\": \"Q71YZ2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3c28345cb62b7a93",
+                  "preview": "{\"uniprot\": \"Q8Y6K9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:728064a6d5c83b37",
+                  "preview": "{\"uniprot\": \"A0A0H3GD77\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:4838db1a7da7380f",
+                  "preview": "{\"uniprot\": \"P17109\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:993601e6527a702e",
+                  "preview": "{\"uniprot\": \"P23970\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.56,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e22b622563b0ac99",
+                  "preview": "{\"uniprot\": \"A9GFL5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.532,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7f651548f79b7a80",
+                  "preview": "{\"uniprot\": \"B5R2Z0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.532,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d075589fd89846d0",
+                  "preview": "{\"uniprot\": \"B5RCD4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "Candidate 0 is the best_effort_fallback from the API, matching the organism Listeria monocytogenes and the protein MenD, with highest confidence and reviewed status.",
+              "source": "llm",
+              "raw": {
+                "chars": 228,
+                "hash": "sha256:88571014fb4dd471",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"Candidate 0 is the best_effort_fallback from the API, matching the organism Listeria monocytogenes and the protein MenD, with highest confidence a… (+22 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 9.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:e53ec64af3188177",
+                  "preview": "location_frequency=9"
+                },
+                "organism_compatibility": "uncertain",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "uncertain",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.9,
+              "reason": "Higher evidence score (9) from pathbank_db compared to Cytosol (1).",
+              "source": "llm",
+              "raw": {
+                "chars": 118,
+                "hash": "sha256:e09e640843d9794e",
+                "preview": "{\"choice\":\"Cytoplasm\",\"confidence\":0.9,\"reason\":\"Higher evidence score (9) from pathbank_db compared to Cytosol (1).\"}"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "AutoState_listeria_monocytogenescytoplasm"
+          },
+          {
+            "issue_key": "compound:ketoglutarate",
+            "entity_type": "compound",
+            "name": "α-ketoglutarate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "α-ketoglutarate",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "α-ketoglutarate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 1099,
+                  "hash": "sha256:561fcb878d62503c",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000208\", \"kegg\": \"C00026\", \"chebi\": \"CHEBI:30915\", \"pubchem\": \"51\", \"cas\": \"328-50-7\", \"biocyc\": \"2-KETOGLUT… (+899 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 204,
+                  "hash": "sha256:f9a343258d182a28",
+                  "preview": "{\"hmdb\": \"HMDB0000208\", \"kegg\": \"C00026\", \"chebi\": \"CHEBI:30915\", \"pubchem\": \"51\", \"cas\": \"328-50-7\", \"biocyc\": \"2-KETOGLUTARATE\", \"chemspider\": \"50\", \"drugbank\": \"DB02926\", \"pathbank_compound_id\": \"1… (+4 chars elided)",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "deterministic_top",
+              "source": "deterministic"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "isochorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 171,
+                  "hash": "sha256:b9855c4a3d39d029",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C18054\", \"name\": \"2-Amino-2-deoxyisochorismate\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "isochorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 348,
+                  "hash": "sha256:9bd7de4d44cf80d2",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00885\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": … (+148 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc48c64e22695323",
+                  "preview": "{\"kegg\": \"C18054\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "llm_selected",
+              "source": "llm",
+              "raw": {
+                "chars": 38,
+                "hash": "sha256:2f37f3942d0b9fb7",
+                "preview": "{\"selected_index\":0,\"confidence\":0.95}"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:sephchc",
+            "entity_type": "compound",
+            "name": "SEPHCHC",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "SEPHCHC",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 1,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3c7a4f691da02ae9",
+                  "preview": "{\"kegg\": \"C16519\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 127,
+                  "hash": "sha256:43965057831008bc",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C16519\", \"name\": \"2-Succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate\", \"score\": 0.95}]",
+                  "items": 1
+                }
+              },
+              "hmdb": {
+                "query": "SEPHCHC",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 304,
+                  "hash": "sha256:58f1a175bb997843",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C16519\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C16519\", \"name\": \"2-Succinyl-5-enolpyruvyl-… (+104 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3c7a4f691da02ae9",
+                  "preview": "{\"kegg\": \"C16519\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "deterministic_top",
+              "source": "deterministic"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:thdp",
+            "entity_type": "compound",
+            "name": "ThDP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "ThDP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 1,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 94,
+                  "hash": "sha256:bc3ce321a63eb7c7",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C13378\", \"name\": \"alpha,beta-Dihydroxyethyl-TPP\", \"score\": 0.35}]",
+                  "items": 1
+                }
+              },
+              "hmdb": {
+                "query": "ThDP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 223,
+                  "hash": "sha256:69cfa45672aa1813",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.35, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C13378\", \"name\": \"alpha,beta-Dihydroxyethyl-TPP\", \"score\": 0.35}], \"provider\": \"ChEBI/KEGG/… (+23 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9831215ec42131f1",
+                  "preview": "{\"kegg\": \"C13378\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.42,
+              "reason": "deterministic_top",
+              "source": "deterministic"
+            }
+          },
+          {
+            "issue_key": "compound:dhna",
+            "entity_type": "compound",
+            "name": "DHNA",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "DHNA",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "DHNA",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:intermediate i",
+            "entity_type": "compound",
+            "name": "intermediate I",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "intermediate I",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 619,
+                  "hash": "sha256:f337a4be8c8db0e9",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C22686\", \"name\": \"4-Dimethylamino-2,2-diphenylvaleronitrile\", \"score\": 0.55}, {\"database\": \"kegg\", \"id\": \"C22688\", \"name\": \"2-Methyl-3-morpholino-1,1-diphenylpropane-carbo… (+419 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "intermediate I",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 1132,
+                  "hash": "sha256:8576d5257b997c74",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.55, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C22686\", \"name\": \"4-Dimethylamino-2,2-diphenylvaleronitrile\", \"score\": 0.55}, {\"database\": … (+932 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:82654cf64a1591c0",
+                  "preview": "{\"kegg\": \"C22686\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d932988b61336695",
+                  "preview": "{\"kegg\": \"C22688\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:511793c54f4522e9",
+                  "preview": "{\"kegg\": \"C18293\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b2919f3b46976348",
+                  "preview": "{\"kegg\": \"C18294\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9fb945905fc88c2f",
+                  "preview": "{\"kegg\": \"C18327\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:fca3527fbf0704f5",
+                  "preview": "{\"kegg\": \"C18328\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:699124f7d6526483",
+                  "preview": "{\"kegg\": \"C18329\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:647c318c6dd269d9",
+                  "preview": "{\"kegg\": \"C18330\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.55,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:intermediate ii",
+            "entity_type": "compound",
+            "name": "intermediate II",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "intermediate II",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "intermediate II",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 100,
+                  "hash": "sha256:338c6c7782faa968",
+                  "preview": "{\"organism\": \"Listeria monocytogenes\", \"taxonomy_id\": \"1639\", \"lineage\": \"\", \"cell_type\": \"unknown\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Listeria monocytogenes",
+              "taxonomy_id": "1639",
+              "lineage": "",
+              "cell_type": "unknown"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

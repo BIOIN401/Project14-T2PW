@@ -1,0 +1,96 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '0' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/0/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '1' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/1/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '2' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/2/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '3' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/3/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '4' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/4/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '5' has no biological_state location.",
+      "pointer": "/element_locations/compound_locations/5/biological_state",
+      "entity_name": ""
+    },
+    {
+      "code": "visible_entity_missing_location_state",
+      "message": "Visible entity '0' has no biological_state location.",
+      "pointer": "/element_locations/protein_locations/0/biological_state",
+      "entity_name": ""
+    }
+  ],
+  "warnings": [
+    {
+      "code": "pathway_missing_pw_id",
+      "message": "Pathway has no pw_id / pathbank_pathway_id.",
+      "pointer": "/metadata/pw_id"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/0",
+      "reaction_name": "MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/1",
+      "reaction_name": "MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/outputs/0",
+      "reaction_name": "MenD-catalyzed conversion of 2-oxoglutarate and isochorismate to SEPHCHC"
+    }
+  ],
+  "summary": {
+    "error_count": 7,
+    "warning_count": 4,
+    "error_codes": [
+      "visible_entity_missing_location_state"
+    ],
+    "warning_codes": [
+      "pathway_missing_pw_id",
+      "reaction_participant_missing_stoichiometry"
+    ],
+    "checked_as": "payload",
+    "strict_db": true
+  },
+  "stage": "required_field_gate",
+  "pipeline_order": [
+    "audit_normalize",
+    "db_hydration",
+    "api_enrichment",
+    "llm_gap_resolver_with_tools",
+    "required_field_gate",
+    "pwml_ir_build",
+    "pwml_writer",
+    "pwml_qa"
+  ]
+}

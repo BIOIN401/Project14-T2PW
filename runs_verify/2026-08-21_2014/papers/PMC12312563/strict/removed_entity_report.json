@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "protein_complexes",
+      "name": "MenD tetramer",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "MenD tetramer",
+      "reason": "location_entity_removed",
+      "biological_state": "__auto_state__",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [],
+  "counts": {
+    "entities": 1,
+    "locations": 1,
+    "biological_states": 0
+  }
+}

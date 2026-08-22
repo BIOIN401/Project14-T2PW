@@ -1,0 +1,42 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        4,
+        1,
+        0,
+        -3,
+        3
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 1,
+      "warning_count": 12,
+      "patch_count": 3,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Added UniProt identifier to MenD from top candidate, set homotetramer stoichiometry in complex, and assigned all entities to cytoplasm to meet SBML compartment requirements. Ambiguous and novel compound mappings are left as warnings pending… (+15 chars elided)",
+      "top_errors": [
+        "Protein 'MenD' is missing a UniProt or DrugBank identifier, which is required for SBML conversion."
+      ],
+      "gap_mapped_ids_added": 6,
+      "gap_locations_added": 8,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}
