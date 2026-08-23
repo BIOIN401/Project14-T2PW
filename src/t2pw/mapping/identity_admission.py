@@ -71,15 +71,20 @@ and only 3 of those are hallucinations. The product owner's ruling of 2026-08-23
 names both of the missing routes by name, and each is implemented above as a
 strictly ADDITIVE clause that can only KEEP an accession:
 
-* "**or another permitted provenance route**" -> :func:`provenance_route`.
-  34 of the 39 are rows the RAG path imported from a NAMED other document
-  (``PlsB`` / ``uniprot:P0A7A7`` / ``rag_provenance.source_id = PMC12898747``).
-  The seed paper is not their evidence base, so they are ``not_evaluated``.
+* "**or another permitted provenance route**" -> :func:`provenance_route`
+  rescues **32**. 30 of them were imported from a NAMED other document
+  (``PlsB`` / ``uniprot:P0A7A7`` / ``rag_provenance.source_id = PMC12898747``);
+  the seed paper is not their evidence base, so they are ``not_evaluated``. The
+  other 2 declare ``source_id = "seed_paper"`` and still abstain -- see
+  :data:`SELF_REFERENTIAL_ROUTE_SOURCE`, which explains why that is the right
+  answer and why the route's VALUE is not what excuses them.
 * "**a proven alias**", "**legitimate aliases must retain valid mappings**" ->
-  :meth:`SourceIndex.names_in_one_span`. 2 of the remaining 5 are alias/format
-  misses whose variant sits on the PAPER's side rather than in the row's own
-  ``synonyms``: ``pyridoxal phosphate`` against "pyridoxal 5'-phosphate", and
-  ``CoA-SH`` against "succinyl-CoA".
+  :meth:`SourceIndex.names_in_one_span` rescues **4**: alias/format misses whose
+  variant sits on the PAPER's side rather than in the row's own ``synonyms``.
+
+The two clauses are disjoint here -- the names are looked for before the route is
+consulted, so a row the span clause finds never reaches the route -- and 32 + 4
+is the whole of the 36.
 
 What survives is 3: ``succinyl-CoA`` on two PMC12180156 legs and
 ``protoporphyrin IX`` on a third -- names with ZERO occurrences in a 67,553-
@@ -113,6 +118,7 @@ __all__ = [
     "MIN_SUPPORT_CHARS",
     "EXTERNAL_ACCESSION_KEYS",
     "PROVENANCE_ROUTE_KEYS",
+    "SELF_REFERENTIAL_ROUTE_SOURCE",
     "provenance_route",
     "SourceIndex",
     "normalize_text",
@@ -206,6 +212,48 @@ EXTERNAL_ACCESSION_KEYS: frozenset = frozenset({
 #: ``source_refs`` as a route would walk the hallucination out through the door
 #: built for legitimate imports.
 PROVENANCE_ROUTE_KEYS: Tuple[str, ...] = ("rag_provenance", "source_papers")
+
+#: The ``rag_provenance.source_id`` a synthesized row carries when the chunk it
+#: was matched against came from the SEED PAPER's own text rather than from a
+#: retrieved second document.
+#:
+#: WHY THIS CONSTANT EXISTS AT ALL. It is never read. :func:`provenance_route`
+#: does not test it, and a row carrying it abstains exactly like any other routed
+#: row. It is here because that outcome is a DECISION and the reviewer was right
+#: that silence about it is the defect: read literally, the ruling's "another
+#: permitted provenance route" does not cover a route that names this very paper,
+#: so a reader is owed the reason the row abstains anyway.
+#:
+#: THE REASON, AND IT IS NOT THE VALUE. ``seed_paper`` is not a licence and
+#: nothing here treats it as one. What the route MARK establishes -- whichever
+#: chunk it points at -- is that the row's NAME was written by the RAG
+#: synthesizer, whose vocabulary is the pathway record's, not the paper's surface
+#: spelling. Both corpus rows show it directly: their ``source_title`` is a
+#: PATHWAY ("menaquinone biosynthesis", "lipid A modification (colistin
+#: resistance)"), not a paper title, and each offers exactly one candidate name
+#: and no synonyms.
+#:
+#:   ``α-ketoglutarate`` (``runs/2026-07-27_1623/.../PMC12312563/strict``, 9 real
+#:   accessions) -- that paper writes ``2-oxoglutarate`` 8 times and
+#:   ``ketoglutarate`` 0 times. Same molecule, other name.
+#:
+#:   ``pmrCAB operon`` (``runs/2026-07-28_0919/.../PMC13278307/strict``,
+#:   ``uniprot``) -- that paper writes ``pmrA`` 4 times and ``pmrCAB`` 0 times.
+#:   The operon whose regulator the paper discusses throughout.
+#:
+#: Both are SYNONYM MISSES, not hallucinations, and refusing them is exactly the
+#: collateral this card exists to avoid -- the same defect class as the four rows
+#: :meth:`SourceIndex.names_in_one_span` rescues, differing only in that no
+#: rewriting of the comparison could close them. So the conservative direction is
+#: the correct one, and it is the one this module takes everywhere else: an
+#: ambiguity resolves TOWARDS SUPPORT, and ``not_evaluated`` is not ``supported``
+#: -- the row keeps the accessions it already had and acquires nothing.
+#:
+#: What this is NOT: a way for a synthesized row to launder an identity. It
+#: withholds no refusal that the KIND rule (pass B) would make, which needs no
+#: index at all, and it cannot manufacture an accession, because this module only
+#: ever answers questions.
+SELF_REFERENTIAL_ROUTE_SOURCE = "seed_paper"
 
 #: Placeholder spellings that name no record: ``map_ids``'
 #: ``_is_real_protein_identifier`` list plus ``"0"``, because a PathBank scalar
@@ -312,8 +360,8 @@ class SourceIndex:
         instead of the row. The six alias cases C-073 measured were kept because
         the ROW carried the variant spelling in its own ``synonyms``; a row that
         carries none is not thereby unsupported, because the variation can sit on
-        the paper's side just as easily. Measured on the committed corpus, two
-        rows are exactly that shape and both are legitimate:
+        the paper's side just as easily. Measured on the committed corpus, FOUR
+        rows are exactly that shape and every one of them is legitimate:
 
         * ``pyridoxal phosphate`` (``runs_verify/2026-08-04_1504/.../PMC12856317``)
           -- the paper writes "pyridoxal 5'-phosphate", which folds to
@@ -323,6 +371,8 @@ class SourceIndex:
           ``coa sh``; the paper writes ``succinyl coa``. ``sh`` is two characters,
           which :data:`MIN_SUPPORT_CHARS` already rules is evidence in NEITHER
           direction, so what is left to look for is ``coa``, and it is there.
+        * ``PG phosphate`` (``runs/2026-07-28_0919/.../PMC12444477/strict``).
+        * ``PEtN-lipid A`` (``runs/2026-07-28_0919/.../PMC13278307/strict``).
 
         Only INSIGNIFICANT tokens may sit between two matched words: shorter than
         :data:`MIN_SUPPORT_CHARS`, or a bare number. That is the same threshold
@@ -441,6 +491,14 @@ def provenance_route(row: Any) -> str:
     Names the key rather than returning a bool, so the answer is auditable.
     Total, and never raises: an unexpected shape under either key is simply not a
     route.
+
+    Deliberately blind to the route's VALUE. A route whose ``source_id`` is
+    :data:`SELF_REFERENTIAL_ROUTE_SOURCE` -- the seed paper itself -- is still a
+    route here, and the two corpus rows that carry one still abstain. That is a
+    decision, not an oversight, and its reasoning is written out in full on that
+    constant: the mark establishes who WROTE the name, not which document is the
+    row's alibi, and both measured cases are synonym misses whose refusal would
+    be collateral.
     """
     row = _safe_dict(row)
     for key in PROVENANCE_ROUTE_KEYS:
@@ -489,12 +547,14 @@ def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
     asking the wrong document, and the honest answer to a question the evidence
     cannot address is ``not_evaluated``, never ``unsupported``
     (PRODUCT_CONTRACT § 8). Measured over all 70 committed ``final_mapped.json``
-    artifacts replayed against their own ``01_source_text.txt``: 35 of 39
-    refusals are rows of exactly this shape, each naming the paper it was
+    artifacts replayed against their own ``01_source_text.txt``: this clause
+    rescues 32 of the 39 refusals. 30 of those name the document they were
     imported from -- ``PlsB`` carrying ``uniprot:P0A7A7`` and
     ``rag_provenance.source_id = PMC12898747`` is the type case, and stripping it
     would be precisely the "legitimate mappings must be retained" half of the
-    ruling being violated to enforce the other half.
+    ruling being violated to enforce the other half. The remaining 2 name
+    ``seed_paper`` and are the case :data:`SELF_REFERENTIAL_ROUTE_SOURCE` exists
+    to make explicit rather than leave to be discovered.
 
     The names are looked for FIRST, so a row that IS named in the seed paper is
     reported ``supported`` with the matched name recorded, exactly as before; the

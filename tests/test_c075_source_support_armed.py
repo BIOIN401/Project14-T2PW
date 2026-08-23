@@ -57,11 +57,12 @@ same kind of claim and are not offered as the same kind of proof:
 WHY B AND C EXIST AT ALL. C-073's 1-catch / 0-collateral figure was measured on
 ONE run (2026-08-21_2239, 102 eligible rows). Replayed over all 70 committed
 ``final_mapped.json`` artifacts against their own ``01_source_text.txt`` -- 678
-eligible rows -- the C-073 predicate refuses 39, and 36 of those are legitimate:
-34 rows the RAG path imported from a named other document, and 2 of the
-remaining 5 are alias/format misses whose variant spelling sits on the paper's
-side rather than in the row's own ``synonyms``. Section 8 replays the whole
-corpus and pins what is left.
+eligible rows -- the C-073 predicate refuses 39, and 36 of those are legitimate.
+The two clauses that rescue them are disjoint, because the names are looked for
+before the route is consulted: the provenance route rescues **32** (30 naming
+another document, 2 naming ``seed_paper`` -- section 11), and the source-side
+alias clause rescues **4**. Section 8 replays the whole corpus and pins what is
+left; section 10 pins that neither clause can ever take anything away.
 """
 
 from __future__ import annotations
@@ -530,8 +531,10 @@ def test_arm_b_a_row_imported_from_another_named_paper_keeps_its_identifiers(
     The ruling admits "another permitted provenance route" beside paper evidence.
     This row states which document it came from; the seed paper is simply not its
     evidence base, so the honest answer is ``not_evaluated``, never
-    ``unsupported`` (PRODUCT_CONTRACT section 8). Measured, 34 of the 39 refusals
-    the unqualified rule makes over the committed corpus are this exact shape.
+    ``unsupported`` (PRODUCT_CONTRACT section 8). Measured, this clause rescues
+    32 of the 39 refusals the unqualified rule makes over the committed corpus;
+    30 of those name the document they were imported from, as this fixture does,
+    and the other 2 are section 11's.
     """
     result = run_offline(
         _imported_payload(source_index(SOURCE_WITHOUT_MALONYL)), tmp_path / "cache.json"
@@ -881,9 +884,10 @@ def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper()
 
 
 def test_corpus_every_row_the_rag_route_imported_keeps_every_accession() -> None:
-    """THE ANTI-COLLATERAL ARM, at corpus scale. 34 refusals disappear when the
-    ruling's provenance route is honoured, and each of those rows names the paper
-    it was imported from. Not one of them may lose an accession."""
+    """THE ANTI-COLLATERAL ARM, at corpus scale. 32 refusals disappear when the
+    ruling's provenance route is honoured -- 30 of them naming another document,
+    2 naming ``seed_paper`` (section 11). Not one row that carries a route may
+    lose an accession, whichever document the route points at."""
     from t2pw.mapping import identity_admission as ia
 
     artifacts = _committed_artifacts()
@@ -1145,3 +1149,173 @@ def test_source_refs_is_not_a_route_read_off_the_real_artifact() -> None:
         and entry["rule"] == ia.RULE_NOT_SUPPORTED
         for entry in report["withheld"]
     ), "the hallucination survived"
+
+
+# =============================================================================
+# 11. the self-referential route (C-075 correction round 2)
+# =============================================================================
+#
+# THE CASE THE REVIEWER FOUND, AND IT DESERVED A NAME. ``provenance_route`` is
+# blind to the route's VALUE, so two corpus rows are excused on a route whose
+# ``source_id`` is ``"seed_paper"`` -- a route that names this very paper. Read
+# literally, the ruling's "another permitted provenance route" does not cover
+# that, so the abstention is a DECISION and these arms are what make it one
+# instead of an accident.
+#
+# THE DECISION IS (b): a self-referential route still abstains. The reasoning is
+# on ``identity_admission.SELF_REFERENTIAL_ROUTE_SOURCE`` in full; the short form
+# is that the mark establishes who WROTE the name -- the RAG synthesizer, out of
+# a pathway record's vocabulary -- not which document is the row's alibi. Both
+# measured rows are synonym misses, and refusing them would be exactly the
+# collateral this card exists to avoid.
+#
+# ``seed_paper`` IS NOT A LICENCE. Nothing in the module reads the value, these
+# rows acquire no identifier they did not already have, ``not_evaluated`` is not
+# ``supported``, and pass B still refuses them anything a kind conflict would.
+# The last two arms below pin those three limits so a future reader cannot mistake
+# the abstention for permission.
+
+#: The two rows, verbatim from committed artifacts, with the paper's own spelling
+#: of each beside it. Neither row offers a synonym; each offers one name.
+SEED_PAPER_ROUTE_CASES = [
+    pytest.param(
+        "compounds",
+        {
+            "name": "α-ketoglutarate",
+            "class": "compound",
+            "rag_provenance": {
+                "source_id": "seed_paper",
+                "source_title": "menaquinone biosynthesis",
+                "source_type": "paper",
+            },
+            "mapped_ids": dict(HEME_IDS),
+        },
+        "MenD condenses 2-oxoglutarate with isochorismate in menaquinone biosynthesis.",
+        id="alpha-ketoglutarate-vs-2-oxoglutarate",
+    ),
+    pytest.param(
+        "proteins",
+        {
+            "name": "pmrCAB operon",
+            "class": "protein",
+            "rag_provenance": {
+                "source_id": "seed_paper",
+                "source_title": "lipid A modification (colistin resistance)",
+                "source_type": "paper",
+                "section": "introduction",
+            },
+            "mapped_ids": {"uniprot": "P30843"},
+        },
+        "Activation of pmrA drives phosphoethanolamine addition to lipid A.",
+        id="pmrcab-operon-vs-pmra",
+    ),
+]
+
+
+@pytest.mark.parametrize("bucket,row_fields,source", SEED_PAPER_ROUTE_CASES)
+def test_a_self_referential_route_still_abstains(
+    bucket: str, row_fields: Dict[str, Any], source: str, tmp_path: Path
+) -> None:
+    """DECISION (b), pinned. The route names this paper, the paper does not name
+    the row, and the row keeps its identifiers anyway -- because the name is the
+    synthesizer's spelling of something the paper really does discuss under
+    another one. Measured in the real sources: PMC12312563 writes
+    ``2-oxoglutarate`` 8 times and ``ketoglutarate`` 0 times; PMC13278307 writes
+    ``pmrA`` 4 times and ``pmrCAB`` 0 times.
+
+    Were this to flip, ``α-ketoglutarate`` would lose 9 real accessions and
+    ``pmrCAB operon`` its ``uniprot`` -- collateral on a synonym miss, which is
+    worse than the defect the pass exists to fix."""
+    payload = {
+        "entities": {"compounds": [], "proteins": [], "protein_complexes": []},
+        "processes": {"reactions": []},
+        SOURCE_INDEX_KEY: source_index(source),
+    }
+    row = copy.deepcopy(row_fields)
+    payload["entities"][bucket] = [row]
+    # The two passes directly, as C-073's replay arm does it: an offline
+    # ``map_payload`` re-runs the protein ladder, which has its own opinion about
+    # an unresolvable UniProt accession, and this assertion is about THIS pass.
+    report = map_ids._admit_identities(payload, payload["entities"])
+    shipped = row.get("mapped_ids") or {}
+
+    assert set(row_fields["mapped_ids"]) <= set(shipped), (
+        f"{row_fields['name']} lost accessions on a synonym miss: {shipped}"
+    )
+    assert report["counts"]["identifiers_withheld"] == 0
+    assert report["counts"]["not_evaluated"] == 1
+
+
+def test_the_route_value_is_never_read_so_seed_paper_is_not_a_special_case() -> None:
+    """The route's VALUE is not what excuses the row -- the abstention is. The
+    predicate never inspects ``source_id``, so ``seed_paper`` gets no treatment a
+    retrieved document does not, and the constant that names it is documentation,
+    not a branch."""
+    from t2pw.mapping import identity_admission as ia
+
+    seed = {"rag_provenance": {"source_id": ia.SELF_REFERENTIAL_ROUTE_SOURCE}}
+    other = {"rag_provenance": {"source_id": "PMC12898747"}}
+    nameless = {"rag_provenance": {"section": "introduction"}}
+
+    assert ia.provenance_route(seed) == "rag_provenance"
+    assert ia.provenance_route(other) == "rag_provenance"
+    assert ia.provenance_route(nameless) == "rag_provenance"
+    # The value is documented, never dispatched on. Asked of the AST rather than
+    # of the text, so the prose that explains the constant does not read as a use
+    # of it: the only binding occurrence may be the assignment itself.
+    import ast
+
+    tree = ast.parse(Path(ia.__file__).read_text(encoding="utf-8"))
+    loads = [
+        node for node in ast.walk(tree)
+        if isinstance(node, ast.Name)
+        and node.id == "SELF_REFERENTIAL_ROUTE_SOURCE"
+        and isinstance(node.ctx, ast.Load)
+    ]
+    assert not loads, (
+        f"the constant is READ at line(s) {[n.lineno for n in loads]} -- it is meant to be "
+        f"documentation, not a branch, so a self-referential route gets no special case"
+    )
+
+
+def test_an_abstaining_row_acquires_nothing_and_is_never_called_supported(
+    tmp_path: Path,
+) -> None:
+    """THE THREE LIMITS on the abstention, in one arm. A routed row (a) gains no
+    identifier it did not arrive with, (b) is reported ``not_evaluated`` and
+    never ``supported``, and (c) is still refused by pass B, which needs no
+    source index and does not consult the route at all."""
+    from t2pw.mapping import identity_admission as ia
+
+    compound = {
+        "name": "Pyridoxal 5-phosphate", "class": "compound",
+        "rag_provenance": {"source_id": ia.SELF_REFERENTIAL_ROUTE_SOURCE},
+        "mapped_ids": {"drugbank": "DB00114"},
+    }
+    protein = {
+        "name": "ALAS2", "class": "protein",
+        "rag_provenance": {"source_id": ia.SELF_REFERENTIAL_ROUTE_SOURCE},
+        "mapped_ids": {"drugbank": "DB00114"},
+    }
+    lone = {
+        "name": "α-ketoglutarate", "class": "compound",
+        "rag_provenance": {"source_id": ia.SELF_REFERENTIAL_ROUTE_SOURCE},
+        "mapped_ids": dict(HEME_IDS),
+    }
+    payload = {
+        "entities": {"compounds": [compound, lone], "proteins": [protein],
+                     "protein_complexes": []},
+        "processes": {"reactions": []},
+        SOURCE_INDEX_KEY: source_index("This paper names none of those three."),
+    }
+    report = map_ids._admit_identities(payload, payload["entities"])
+
+    # (b) the pass abstained on all three and claimed support for none
+    assert report["counts"]["supported"] == 0
+    assert report["counts"]["not_evaluated"] == 3
+    # (c) pass B is unmoved by the route
+    assert report["counts"]["kind_conflicts"] == 1
+    assert not (compound.get("mapped_ids") or {}).get("drugbank")
+    assert not (protein.get("mapped_ids") or {}).get("drugbank")
+    # (a) and nothing was gained anywhere
+    assert lone["mapped_ids"] == HEME_IDS
