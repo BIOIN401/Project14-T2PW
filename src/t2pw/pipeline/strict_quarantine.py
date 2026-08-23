@@ -113,6 +113,8 @@ __all__ = [
     "quarantine_and_close",
     "evaluate_core_coverage",
     "collect_requested_core_terms",
+    "requested_scope_is_a_single_reaction",
+    "largest_connected_core_reactions",
     "write_quarantine_artifacts",
     "admitted_payload_hash",
     "QUARANTINE_POLICY_VERSION",
@@ -802,6 +804,87 @@ def collect_requested_core_terms(
         add_all(container.get("key_compounds"))
         add_all(container.get("key_proteins"))
     return out
+
+
+def requested_scope_is_a_single_reaction(
+    pathway_context: Optional[Mapping[str, Any]] = None,
+) -> bool:
+    """Whether the REQUEST itself asks for a one-reaction pathway (C-074 arm A).
+
+    The connected-pathway floor in :func:`~t2pw.pipeline.release_status.classify_release_status`
+    refuses ``release_ready`` to a payload of fewer than
+    ``MIN_CONNECTED_CORE_REACTIONS`` connected reactions. This is its ONE
+    exemption, and everything about how it is derived is the point:
+
+    * **From the request, never from what survived.** A floor a payload can
+      satisfy by being small is not a floor. Nothing here reads ``payload``,
+      ``admissions`` or the reduced graph -- the same rule
+      :func:`collect_requested_core_terms` states for the core terms, for the
+      same reason.
+    * **Never from a paper identifier.** No PMC id, no benchmark pathway name and
+      no gold value appears here or anywhere else this floor reads.
+      ``tests/test_c074_strict_core_floor.py`` asserts that over ``src/``.
+    * **Only a STATED request can state a scope.** A context that names no
+      pathway asked for nothing (F-100, arm B), so it cannot have asked for one
+      reaction either, and this returns ``False`` -- which leaves the floor in
+      force rather than exempting the very legs arm B refuses.
+
+    What counts as asking for one step is the Stage-0 context's own
+    ``main_subprocesses``: the list of steps the request implies, produced when
+    the request was read and before any extraction could bias it. Exactly one
+    named step is a single-step request. Measured over all 38 committed
+    ``quarantine_report.json`` legs, every one names three or more, so this
+    exemption fires on none of them -- it is a carve-out for a request shape the
+    corpus does not yet contain, not a hole in the floor.
+
+    An explicit ``requested_core`` argument is deliberately NOT consulted and is
+    NOT a scope statement. It is a list of anchors, and a one-anchor list
+    (one end product) is the most ordinary way to ask for a long pathway; reading it as
+    "one reaction" would exempt the commonest request there is.
+    """
+
+    context = _safe_dict(pathway_context)
+    if not str(context.get("pathway_name") or "").strip():
+        return False
+    subprocesses = [
+        str(step).strip()
+        for step in _safe_list(context.get("main_subprocesses"))
+        if isinstance(step, str) and str(step).strip()
+    ]
+    return len(subprocesses) == 1
+
+
+def largest_connected_core_reactions(semantic_report: Any) -> Optional[int]:
+    """The connected-core size the production semantic pass ALREADY measured.
+
+    ``semantic_production.evaluate_production_semantics`` computes
+    ``report.graph = _connected_core(processes, _cofactor_names())`` on every run
+    (``semantic_production.py:468``) and that graph carries ``largest_core_size``:
+    the number of reactions joined into one chain through shared non-cofactor
+    metabolites. C-074 reuses that number and computes NOTHING of its own -- a
+    second connectivity implementation could disagree with the one the semantic
+    record reports, and then the release status and its own evidence would be
+    describing different graphs.
+
+    INTERACTIONS CANNOT REACH THIS NUMBER, which is the 3-vs-1 discrepancy F-101
+    was registered from: ``_connected_core`` walks ``bench.semantic._processes``,
+    whose bucket list is ``("reactions", "transports",
+    "reaction_coupled_transports")``. ``interactions`` is not in it.
+
+    ``None`` when the report carries no measurable graph -- a run that produced no
+    payload, or a record read back from a version that did not have one. Not
+    measured is never a demotion: the cap treats ``None`` as "no floor was
+    evaluated" exactly as ``semantic_production._check_connected_core`` treats a
+    ``minimum`` of ``None``.
+    """
+
+    graph = getattr(semantic_report, "graph", None)
+    if not isinstance(graph, Mapping) or "largest_core_size" not in graph:
+        return None
+    try:
+        return int(graph.get("largest_core_size"))
+    except (TypeError, ValueError):
+        return None
 
 
 def _process_core_terms(bucket: str, process: Mapping[str, Any]) -> Set[str]:
@@ -2378,6 +2461,19 @@ def quarantine_and_close(
         semantic_report
     )
 
+    # C-074 arm A (F-101). The connected-core size the semantic pass above just
+    # measured on THIS graph, handed to the classifier as an input rather than
+    # re-derived there: ``release_status`` is ``t2pw.pipeline`` and must not reach
+    # into ``t2pw.bench`` to learn it, and this seam is the one place already
+    # authorized to hold both. ``None`` means the graph carried no measurable
+    # size, and an unmeasured floor never demotes.
+    #
+    # ``single_reaction_scope_requested`` is read from ``pathway_context`` -- the
+    # REQUEST -- and from nothing else. Not from ``working``, not from ``coverage``,
+    # not from any identifier of the paper.
+    connected_core_reactions = largest_connected_core_reactions(semantic_report)
+    single_reaction_scope = requested_scope_is_a_single_reaction(pathway_context)
+
     release = classify_release_status(
         coverage,
         pipeline_executed=True,
@@ -2391,6 +2487,8 @@ def quarantine_and_close(
         semantic_not_evaluated_reason=semantic_reason,
         semantic_failed_checks=semantic_failed,
         semantic_check_evaluability=semantic_evaluable,
+        connected_core_reactions=connected_core_reactions,
+        single_reaction_scope_requested=single_reaction_scope,
     )
 
     # ── Research mode: decide, then apply nothing ────────────────────────────
