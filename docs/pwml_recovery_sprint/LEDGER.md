@@ -2359,3 +2359,134 @@ already failing for other reasons. **A reviewer or a later session must not read
 The reviewer flagged that "the T-105 strict denominator should be expected to move by more than
 one leg, and that delta is unmeasured". It is measured above: three legs move status, zero rates
 move. No further action.
+
+---
+
+## C-073 — ACCEPTED, MERGED `6373ad1`, reviewed tips `01f2bd3` (REJECT) then `2be4740` (APPROVE) (2026-08-22, unattended correction phase)
+
+**One evidence-backed REJECT, one correction round, then APPROVE.** Closes **F-096** partially —
+see "What it does NOT fix", which is the more important half of this entry.
+
+`agent/c073-identity-admission`, worktree `C:/t/c073`, base `20e6b68`.
+Diff: `mapping/identity_admission.py` +433 (new), `mapping/map_ids.py` +307,
+`pipeline/entity_admission.py` +47, `tests/test_c073_identity_admission.py` +964 (new).
+**+1751 / −0. Zero deleted lines in `src`.**
+
+### The rejection, and why it matters more than the approval
+
+The first tip refused a shared accession whenever its claimants had **different names**. My card's
+§2 handed the implementer a "zero collateral" figure and told them not to re-derive it. That figure
+was measured over the ten T-104 legs only. **Over all 53 committed `final_mapped.json` artifacts the
+rule strips 92 claimant-incidences across 36 distinct rows in 10 artifacts, of which exactly ONE is
+the F-096 target.** The other 41 pairs are one entity written two ways, both rows legitimately
+owning the accession:
+
+```
+uniprot:P0ADI4        EntB / Isochorismatase (EntB)                    x6 artifacts
+uniprot:P10378        EntE / enterobactin synthase                     x2
+8 namespaces          PEtN / Phosphoethanolamine
+chebi:16412           LPS / lipopolysaccharide
+uniprot:A0A0H3GEM5    LMRG_02730 / MenI          (locus tag vs gene symbol)
+uniprot:P0A7A7        PlsB / PlsB glycerol-3-phosphate acyltransferase
+```
+
+The reviewer also found it **contradicts D-035 clause 3c**, which rules that a matching stable
+external identifier is *proof two differently-named rows are the same biological entity*. The rule
+read that identical fact as proof at least one row was false, and stripped it from both.
+
+**The card error was mine.** A measurement handed to an implementer must carry its sample size, not
+just its result; "do not re-derive this" removed the only check that would have caught it. The
+implementer was entitled to rely on what the card asserted.
+
+### The correction
+
+Refuse a shared `(namespace, accession)` **only when two claimants differ in KIND and in normalized
+NAME** (`identity_admission.py:398-401`, `left[0] != right[0] and left[1] != right[1]`):
+
+- **kind** = protein-ish (`proteins`, `protein_complexes`) vs compound-ish (`compounds`). One
+  accession cannot denote a protein and a metabolite at once. This is also what F-096 actually
+  found — the gold calls the PLP row `cofactor_as_protein`, a **type** error.
+- **name** is retained so a routing artefact — one entity landed in both buckets under one name —
+  cannot read as a type error.
+- **within one kind nothing is touched**, which is exactly D-035 clause 3c.
+
+### Measured, three times independently
+
+| corpus | old predicate | new predicate |
+|---|---|---|
+| 53 committed artifacts, 547 eligible rows | 42 pairs / 92 incidences / 10 artifacts | **1 pair / 2 rows / 1 artifact** |
+
+Target caught **1/1**, collateral **0**. Derived by the implementer, by the reviewer, and by the
+orchestrator, with three separate scripts.
+
+The 53-artifact replay is now a **test**
+(`test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral`), not a probe, so the
+evidence cannot rot. It is **corpus-pinned**: it will go red the first time a committed run carries
+a genuine cross-kind defect. That is a deliberate re-baseline, not a regression.
+
+### What it does NOT fix — read this before quoting the card as closing F-096
+
+**Priority 1 does not move. It stays at 7.**
+
+- **Pass A (source support) is DORMANT in production.** My card's §4a asserted that
+  `screen_additions` receives `seed_text` on the batch path, citing `streamlit_app.py:5554/:5674`.
+  **False** — those are `maybe_run_rag` and `run_rag_rounds`. `final_payload` is built by
+  `merge_additions` at `streamlit_app.py:5606`; the RAG merge is `:5660`; the one EDITABLE merge
+  site, `pipeline.py:732`, produces only an inner QA-loop payload. Both merge sites document the
+  omission as deliberate. Corroborated: zero `evidence_span_not_locatable` removals across all ten
+  T-104 legs. Arming it is two lines, one inside `streamlit_app.py`, which carries the product
+  owner's uncommitted edit and must not be touched. **BLOCKED on the product owner, not on code.**
+- **The accession conflict is not counted by priority 1.** `semantic.py:908-919` appends
+  `accession_claimed_by_multiple_entities` to `findings` but **never increments `false_real`**;
+  only `:867` and `:893` do. So the one thing this card fixes in production is invisible to the
+  metric it was chartered against.
+
+Pass A itself is sound and measured — 1 catch (`succinyl-CoA`, PMC12180156/research, the gold's
+designated HALLUCINATION TEST), 0 collateral over 102 rows, reproduced by the reviewer. It is
+correct code waiting on a wiring decision.
+
+**Also unreachable by design, and correctly not attempted:** `Pyridoxal 5'-phosphate` ×2, `SREBF1`,
+`SREBF2`, `LIPA`, `LBR`. All are genuinely named in their own papers, carry correct accessions for
+the molecule named, and are byte-identical in provenance (`extracted`, confidence 1.0) to the 16
+legitimate cholesterol enzymes in the same leg. Their falseness is a biological ROLE judgement. No
+heuristic was smuggled in to reach them; the reviewer verified that.
+
+### Gates
+
+| gate | result |
+|---|---|
+| focused + all affected @ tip | `240 passed` (reviewer) |
+| `map_payload` consumers + real-artifact replay | `315 passed` (reviewer) — `FULL_STACK_BASELINE` identical at base, round 1 and round 2 |
+| implementer full set incl. smoke | `725 passed` |
+| SMOKE at tip / after merge | `473` / **`473 passed`** |
+| lineage golden | byte-identical, `md5 ad1827e42faf7807867a3da2a64724de` |
+| C-060 A6 | green; narrowing is future-only, pinned by `test_seed_text_alone_never_writes_the_index` |
+| G9 | **6** behavioural base failures available, **2** claimed. Underclaimed, the safe direction |
+| process lifecycle | `FINAL SURVIVING COUNT : 0` and `cleanup : success` on all 39 G11 jobs |
+
+### Rulings I made
+
+1. **The §5 / §4b inconsistency resolves in the implementer's favour.** §5's table said
+   "`map_payload` tail only" while §4b named `_mapping_lineage_facts` as the site to record the
+   refusal. The edit is one guarded branch, inert on any payload without the new record
+   (`map_ids.py:8805`), and the golden is byte-identical. In bounds.
+2. **Conditional emission of `report["identity_admission"]` is honest and stays.** It is emitted
+   only when an index is present or something was withheld, which keeps the pinned golden still.
+   Crucially "no index offered" reports as silence or `not_evaluated`, **never** as "supported" —
+   verified on all 53 index-free artifacts.
+3. **Keeping `Kdo-lipid IV_A` / `lipid IV A` is correct.** They are genuinely distinct molecules
+   sharing `chebi:60365` — a real mis-resolution — but there is no type error, so an identity-layer
+   gate has no basis to pick a victim. D-034 already ratified a loud fail-closed refusal for that
+   class; a second silent response could remove the very collision that makes the leg refuse.
+
+### Residues registered, none blocking
+
+- **The composite case.** If one pair has two same-kind claimants AND one cross-kind claimant, all
+  three lose the accession, including the two innocent 3c-agreeing rows. Occurrence on the committed
+  corpus: **0/53**, asserted explicitly by the replay. Defensible — once an accession provably
+  denotes both a protein and a metabolite, no claimant carries evidence it owns it — but
+  `identity_admission.py:34-38` overstates the guarantee by saying within-kind rows are left
+  "completely alone". Worth a docstring correction, not a code change.
+- **F-099** — withholding a PathBank scalar is not durable to pre-freeze resolution.
+- Module docstring and the G9 note in the test file still say "collision" where the concept is now
+  "kind conflict". Cosmetic.

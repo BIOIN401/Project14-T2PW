@@ -1,0 +1,26 @@
+# Post-merge affected-paper validation for C-072 + C-073, run with --modes strict,research.
+# Four legs. Scope lines verbatim from topics_t104.txt / pinned_v1.json (2026-08-01.1).
+#
+# PMC12856317 - C-073 cohort. This is the ONLY leg in the T-104 corpus carrying an accession
+#   collision: drugbank:DB00114 claimed by both ALAS2 and Pyridoxal 5'-phosphate on the
+#   research leg. Pass B of C-073 needs no source text and is live as merged, so this is the
+#   leg that proves C-073 changes production behaviour at all.
+#   MUST HOLD: the collision is gone; ALAS2 keeps uniprot/pathbank_protein_id; PLP keeps
+#   chebi/kegg/hmdb/pubchem/cas/biocyc/chemspider/pathbank_compound_id; Glycine,
+#   aminolevulinic acid and heme keep their accessions; succinyl-CoA - which IS named in this
+#   paper - keeps its accessions.
+#   WILL NOT CHANGE: Pyridoxal 5'-phosphate still counts as a false real identifier. It is
+#   genuinely named in this paper and its accessions are correct for the molecule named; its
+#   falseness is a biological ROLE judgement outside C-073's scope.
+#
+# PMC12452463 - C-072 cohort, second attempt. Attempt 1 (runs_verify/2026-08-22_1821) reached
+#   the contract outcome but via the SEMANTIC gate, so C-072's cap never fired and the run
+#   proved nothing about the card. The cap fires only when the semantic gate does not, so
+#   whether a draw exercises it is stochastic. Two more draws here (strict + research) are two
+#   more chances; if neither exercises it, that is recorded as-is and the card rests on the
+#   merged real-artifact replay, which is deterministic.
+#   MUST HOLD on strict: review_required, strict_acceptance_eligible=false,
+#   NO bare pathway.pwml. If the cap does fire, `reasons` carries
+#   requested_core_anchors_unmatched rather than semantic_evaluation_failed.
+PMC12856317 | heme biosynthesis | Homo sapiens
+PMC12452463 | enterobactin biosynthesis | Escherichia coli

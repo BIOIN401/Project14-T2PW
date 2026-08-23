@@ -4296,3 +4296,66 @@ for example the gate-failure terminal path at `driver.py:1879` - would leave a g
 measurement gap. No T-104 leg failed that way. If a T-105 leg does, this finding does not cover it.
 
 **No pipeline card opened. Reporting-side only.**
+
+---
+
+## F-099 - withholding a PathBank scalar is not durable to the strict PWML export against a live DB
+
+- **Severity** LOW (one row in the whole committed corpus; does not touch the accessions priority 1
+  counts) - **Class `product_contract_violation`**
+- **Registered 2026-08-22 by the orchestrator during the C-073 correction phase**
+- Disclosed by the C-073 implementer as outside its ownership boundary; verified independently.
+
+### The mechanism
+
+C-073's identity admission withholds an unsupported or kind-conflicting identifier by moving it
+into `mapping_meta.rejected_mapped_ids` and clearing it from `mapped_ids` and its scalar column.
+For a compound that includes the `pathbank_compound_id` scalar.
+
+`src/t2pw/pwml/compound_resolution.py:503-504`:
+
+```python
+legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
+if legacy_id is not None:
+    fallback = dict(row)
+    fallback["db_status"] = "legacy_id_unverified"
+    ...
+```
+
+The legacy branch is taken **only when the row still carries a PathBank id**. With the id
+withheld, `legacy_id` is `None`, the branch is skipped, and the row falls through to
+`PathWhizCompoundResolver`, which resolves **by name**. Against a reachable PathBank the resolver
+can therefore re-attach the very record the identity gate just refused, pre-freeze.
+
+The refusal is a statement about the ENTITY - "this stage cannot support this identity". A
+name-keyed re-lookup downstream does not consult that statement, so the two disagree and the
+later one wins.
+
+### What is and is not affected
+
+- **Not affected: `mapped_ids`.** hmdb / kegg / chebi / pubchem / cas / biocyc / chemspider stay
+  withheld, and those are what F-096 and acceptance priority 1 actually count. `final_mapped.json`
+  records the refusal correctly.
+- **Affected: the strict PWML export path only, and only with a live PathBank.** The re-resolution
+  is name-keyed, so it can only fire for a row whose name the DB recognises.
+- **Blast radius, measured:** exactly one row in the 53-artifact committed corpus
+  (`succinyl-CoA`, PMC12180156/research, withheld by Pass A). Pass B has never withheld a PathBank
+  scalar - its only corpus hit is `drugbank`. And Pass A is dormant in production pending the
+  wiring blocker, so **today this cannot fire at all.**
+
+### Why it is recorded now rather than fixed
+
+`pwml/compound_resolution.py` and `pipeline/prefreeze_resolution.py` are outside C-073's ownership
+boundary, and the fix is not obviously narrow: the right shape is probably for the resolver to
+consult `rejected_mapped_ids` before a name-keyed lookup, which is a change to a shared resolution
+path used by every compound on every leg. That deserves its own card, its own corpus measurement
+and its own review - not a widening of a card already in its second round.
+
+It is also **not currently reachable**: the only pass that withholds a PathBank scalar is Pass A,
+and Pass A cannot fire until the source-index wiring lands. **This finding becomes live at the
+same moment that wiring does, and should be carded together with it.**
+
+### Related
+
+Same root shape as merge rule 8's concern - a later stage repairing what an earlier gate refused -
+but on the identity axis rather than the biology axis, and pre-freeze rather than post-freeze.
