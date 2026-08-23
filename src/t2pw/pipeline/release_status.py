@@ -111,6 +111,17 @@ REASON_NO_DEFENSIBLE_CONNECTED_CORE = "no_defensible_connected_core"
 REASON_COVERAGE_NOT_EVALUATED = "requested_core_coverage_not_evaluated"
 REASON_SEMANTIC_EVALUATION_FAILED = "semantic_evaluation_failed"
 
+#: F-094 / PRODUCT_CONTRACT 13. A declared requested core one or more of whose
+#: anchors matched NO admitted process. Distinct from
+#: :data:`COVERAGE_REASON_BELOW_MINIMUM` on purpose: that one is a RATIO falling
+#: under a tunable threshold, this one is the unconditional fact that part of what
+#: was asked for is absent from what survived. A run can satisfy the ratio
+#: comfortably (0.8 >= 0.5, measured on PMC12452463/strict at T-104) and still be
+#: missing three named anchors, which is precisely the case the ratio cannot see.
+#: The unmatched anchor names are appended after a ``:`` so the record says WHICH,
+#: exactly as ``semantic_evaluation_failed`` names its checks.
+REASON_REQUESTED_CORE_ANCHORS_UNMATCHED = "requested_core_anchors_unmatched"
+
 #: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
 #: consumer has to re-type the string it string-matches on.
 COVERAGE_REASON_EMPTY = "no_surviving_process"
@@ -470,6 +481,16 @@ def classify_release_status(
       ``diagnostic_only``, so a technical refusal is never restated as a
       biological one.
 
+    Then the INCOMPLETE-CORE CAP (F-094, PRODUCT_CONTRACT 13), a second cap of the
+    same shape and with the same three restrictions, and **independent of the
+    semantic one**: when a requested core was DECLARED and one or more of its
+    anchors matched no admitted process, ``release_ready`` is not available and the
+    status is ``review_required``, whatever the semantic verdict says. It reads no
+    semantic field, so a run whose semantics passed and whose structural gates are
+    all green is still demoted while part of what was asked for is missing from
+    what survived. It is not a blanket demotion: a declared core with every anchor
+    matched is untouched.
+
     Because a cap is monotone it can only ever **remove** strict successes, never
     create one -- no new strict success without measured evidence.
 
@@ -549,6 +570,42 @@ def classify_release_status(
         reasons.append(
             f"{REASON_SEMANTIC_EVALUATION_FAILED}:{','.join(failed)}" if failed
             else REASON_SEMANTIC_EVALUATION_FAILED
+        )
+
+    # The INCOMPLETE-CORE cap (F-094, PRODUCT_CONTRACT 13). A SECOND, INDEPENDENT
+    # cap of exactly the same shape as the semantic one above, and independent of
+    # it in the only sense that matters: it reads no semantic field, so it holds
+    # with ``semantic_evaluation == "passed"`` and every structural gate green.
+    #
+    # Why it cannot live in ``evaluate_core_coverage``: that function's
+    # ``minimum_core_satisfied`` is ``not reasons``, and its three reasons are all
+    # THRESHOLD questions -- nothing survived, too few core processes, ratio under
+    # ``min_core_coverage``. Unmatched anchors are recorded there
+    # (``unmatched_terms``) but are deliberately not one of them, because the
+    # pinned 0.5 threshold has to stay load-bearing. So the fact is available and
+    # simply never asked, which is how PMC12452463/strict finished T-104 at
+    # coverage 0.8 with three unmatched anchors, its own
+    # ``expansion_blocked_reason`` saying admitting them "would require unsupported
+    # biology", and a ``release_ready`` status that asked for no human review.
+    #
+    # A cap, not a move, on all four counts:
+    #   * only from ``release_ready`` -- it can remove a strict success and can
+    #     never manufacture one;
+    #   * exactly ONE step, to ``review_required``. Never ``diagnostic_only``: an
+    #     incomplete core is "valid, needs review", and merge rule 7 preserves an
+    #     incomplete-but-correct pathway rather than dropping it. The payload and
+    #     the surviving processes are untouched here, as everywhere in this
+    #     function;
+    #   * never applied to a status already ``review_required`` or
+    #     ``diagnostic_only``, so a technical refusal is never restated as a
+    #     completeness one and no reason is accumulated twice;
+    #   * only in the DECLARED regime. With no requested core, relevance is
+    #     unjudgeable (``completeness`` is ``None`` above by the same rule) and
+    #     there is no anchor to be missing.
+    if status == RELEASE_READY and verdict is not None and verdict.declared and missing:
+        status = REVIEW_REQUIRED
+        reasons.append(
+            f"{REASON_REQUESTED_CORE_ANCHORS_UNMATCHED}:{','.join(missing)}"
         )
 
     return ReleaseStatus(
