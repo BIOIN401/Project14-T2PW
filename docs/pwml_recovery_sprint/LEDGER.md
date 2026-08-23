@@ -2490,3 +2490,102 @@ heuristic was smuggled in to reach them; the reviewer verified that.
 - **F-099** — withholding a PathBank scalar is not durable to pre-freeze resolution.
 - Module docstring and the G9 note in the test file still say "collision" where the concept is now
   "kind conflict". Cosmetic.
+
+---
+
+# Final correction wave before T-106 — session of 2026-08-23 (second session)
+
+Opened at integration tip `129d9b2`. Local = origin = `git ls-remote` verified at start; no merge
+in progress; 0 staged; heavy lock absent; 0 sprint-owned Python processes (the two
+`ms-python.isort` servers are the product owner's IDE and are never touched).
+
+**Correction to the handoff's start-state table.** `HANDOFF-T106.md:16` records the product-owner
+edit's file hash as `sha256:e50a248bb7189c22…`. The measured value is
+`sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`, and the file's mtime
+(2026-08-23 13:12) **predates the handoff's own** (15:55), so the file has not moved since the
+handoff was written and the recorded hash is simply wrong. The load-bearing invariant — **35
+insertions / 2 deletions, uncommitted** — holds and has been re-verified after every commit this
+session. Use the measured hash from here on.
+
+## Live-run ledger
+
+**No live paper leg, and no LLM-backed command, has been run this session.** Every measurement so
+far is current-source inspection or deterministic replay of committed T-104 / T-105 artifacts.
+Implementation and measurement lanes are all explicitly forbidden from running live legs; the
+orchestrator is the sole owner of live execution.
+
+| # | paper / mode | purpose | status |
+|---|---|---|---|
+| — | — | — | none run yet |
+
+Preflight facts established for the cohort and T-106, offline:
+
+* LM Studio is up at `http://127.0.0.1:1234/v1` and serves
+  `text-embedding-nomic-embed-text-v1.5`, which is `RAG_EMBEDDING_MODEL` in `.env`.
+* `.env` pins `deepseek/deepseek-v4-flash` for `OPENROUTER_MODEL`,
+  `OPENROUTER_EXTRACTION_MODEL` and `OPENROUTER_CURATOR_MODEL`. No fallback model was enabled.
+* PathBank is reachable: all 11 `db_resolution` records in the committed corpus read
+  `available: True` with no unavailability reason.
+* Cohort topic files written (untracked, deliberately): `topics_cohort_both.txt` (PMC12856317,
+  PMC13231680 — both modes) and `topics_cohort_research.txt` (PMC12180156, PMC12782028 — research
+  only). Six legs, which is the §12 minimum without paying for two unneeded strict legs.
+
+## Findings this session
+
+| finding | class | severity | blocks T-106 | carded |
+|---|---|---|---|---|
+| **F-106** — seed provenance mark carries a pathway name where a paper title belongs | `reporting_defect` | LOW | **no** | **no — deliberately not carded** |
+| **F-099** — AMENDED, re-measured after the pass was armed | `product_contract_violation` | LOW → **HIGH** | **yes** | **C-078** |
+
+F-106's registered premise was corrected on measurement: the three provenance fields are not
+mutually inconsistent, only `source_title` is wrong, because Stage 0's context schema has no
+document-title field at all. C-075's verdict is unaffected and this was proved, not asserted — its
+route clause tests carrier presence only, and a fabricated tuple, a `{"x": 1}` carrier and the real
+tuple give byte-identical outcomes.
+
+## Cards dispatched
+
+| card | finding / ruling | branch | worktree | base | state |
+|---|---|---|---|---|---|
+| **C-076** | F-102 · identity ruling 2026-08-23 | `agent/c076-alias-holo-apo-identity` | `C:/t/c076` | `129d9b2` | dispatched |
+| **C-077** | F-095 · **D-062** (LOCKED, never implemented) | `agent/c077-stage0-conflict-disposition` | `C:/t/c077` | `129d9b2` | dispatched |
+| **C-078** | F-099 as amended | `agent/c078-refusal-durable-through-resolution` | — | `9831fc1` | chartered, queued behind a free lane |
+
+### C-077 — the D-062 seam, measured before chartering
+
+`driver.py:2130` calls `_reconcile_stage0_scope` at step 3b, after Stage 1 and **before** the
+payload counts, audit, DB mapping, freeze and export. With `stage0_conflict_aborts` true
+(`config.py:194`, the default) it sets `outcome.status = _STATUS_SCOPE_CONFLICT` and returns, and
+no release classification is ever attached.
+
+All six T-105 `scope_conflict` rows confirm it: `stage=stage1`, `release_status=null`, and every one
+had already written `stage1_payload.json` and `merged_payload.json`. The observed organism was read
+correctly and is already recorded — PMC12421875/strict carries `observed_organisms:
+["Lactococcus lactis"]` against the requested `Bacillus subtilis`.
+
+The detection is correct. The classification is the untruth: `OUTCOME_SCOPE_CONFLICT` sits in
+`INELIGIBLE_OUTCOMES` (`eligibility.py:123-131`) whose docstring reads *"nothing was attempted, so
+nothing failed"*, and `report.py:49/140` imports that set so `_norm_status` folds the row to
+`STATUS_INELIGIBLE`, which repeats the claim. For these six legs it is false on the evidence.
+
+The card is scoped to the disposition only. Driving the run onward into audit and export under a
+contradicted organism would be a **new product decision nobody has taken**, and is the one shape
+that could accidentally produce the strict export D-062 forbids.
+
+## Sequencing decision — F-099 and F-105 are NOT one card
+
+§10 of the session charter asked whether they form one coherent seam. Measured: they do not.
+F-099 is pre-freeze compound identity admission (`pwml/compound_resolution.py`); F-105 is prompt
+serialisation in the interactive curator (`curation/interactive_curator.py:164`). They share a
+cause — the source-support pass being armed — but not a security or provenance boundary, and the
+charter's own rule is to keep them separate unless the boundary is shared. **Separate.**
+
+F-099 is batch-reachable and on the T-106 path, so it is carded now as C-078. **F-105 is not
+T-106-reachable** — its own registration says the batch legs T-106 runs do not touch the
+interactive curator — so it queues behind the blockers and must close before the interactive app is
+used against a real paper, not before T-106.
+
+The F-105 fix shape is already measured and is small: `strip_payload_for_interactive_context`
+(`interactive_curator.py:164`) is a blacklist, and the allow-list constant it should consult already
+exists as `PROMPT_OMITTED_PAYLOAD_KEYS` (`curation/audit_json_llm.py:41`), keyed off
+`identity_admission.SOURCE_INDEX_KEY`.
