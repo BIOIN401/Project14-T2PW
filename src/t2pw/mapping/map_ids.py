@@ -8058,8 +8058,10 @@ def _record_mapping_lineage(entities: Dict[str, Any]) -> Dict[str, int]:
 
 
 def _identity_admission_kind(bucket: str) -> str:
-    """Which scalar column ``_strip_rejected_identifiers`` should also clear."""
-    return "protein" if bucket in {"proteins", "protein_complexes"} else "compound"
+    """This bucket's kind class -- which is also the scalar column
+    ``_strip_rejected_identifiers`` should clear. One notion, one definition,
+    owned by the predicate module."""
+    return identity_admission.entity_kind_class(bucket)
 
 
 def _identity_admission_rows(entities: Dict[str, Any]) -> List[Tuple[str, Dict[str, Any]]]:
@@ -8140,12 +8142,20 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
     which is the point -- the same name in PMC12856317 IS in that source and is
     kept.
 
-    PASS B -- incompatible claim. One accession cannot name two different
-    molecules. Where a ``(namespace, accession)`` pair is claimed by two rows
-    with DIFFERENT normalized names, it is withheld from EVERY claimant: neither
-    row carries evidence that it, rather than its rival, owns the accession, so
-    picking a winner would ship a coin toss as a fact. Two rows with the same
-    normalized name are one entity written twice and are not a collision.
+    PASS B -- incompatible KIND. One accession cannot denote both a protein and a
+    metabolite. Where a ``(namespace, accession)`` pair is claimed by rows that
+    differ in kind AND in normalized name, it is withheld from EVERY claimant:
+    neither row carries evidence that it, rather than its rival, owns the
+    accession, so picking a winner would ship a coin toss as a fact.
+
+    A shared accession WITHIN one kind is not touched. D-035 clause 3c makes it
+    PROOF that two differently-named rows are the same biological entity, and a
+    name-difference rule would read that locked decision backwards: measured over
+    all committed ``final_mapped.json`` artifacts it refuses 41 correct pairs
+    (``EntB`` / ``Isochorismatase (EntB)`` on ``uniprot:P0ADI4``, ``PEtN`` /
+    ``Phosphoethanolamine``, ``LMRG_02730`` / ``MenI``) to catch the 1 real one.
+    Two rows with the same normalized name are one entity written twice and are
+    never a conflict, whichever buckets they landed in.
 
     Pass A runs first so that a row whose whole identity is already refused does
     not go on to contest an accession it is no longer shipping.
@@ -8172,10 +8182,10 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
             "offered": identity_admission.SOURCE_INDEX_KEY in _safe_dict(payload),
         },
         "withheld": [],
-        "collisions": [],
+        "kind_conflicts": [],
         "counts": {
             "rows_examined": 0, "supported": 0, "not_evaluated": 0,
-            "rows_withheld": 0, "identifiers_withheld": 0, "collisions": 0,
+            "rows_withheld": 0, "identifiers_withheld": 0, "kind_conflicts": 0,
         },
     }
 
@@ -8212,31 +8222,41 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
         })
 
     # ── pass B ───────────────────────────────────────────────────────────────
-    surviving = [(bucket, row, _identity_admission_eligible(row)) for bucket, row in rows]
-    collisions = identity_admission.find_accession_collisions(
-        (row.get("name"), shipping) for _bucket, row, shipping in surviving if shipping
+    surviving = [
+        (bucket, identity_admission.entity_kind_class(bucket), row, _identity_admission_eligible(row))
+        for bucket, row in rows
+    ]
+    conflicts = identity_admission.find_kind_conflicting_accessions(
+        (kind, row.get("name"), shipping)
+        for _bucket, kind, row, shipping in surviving
+        if shipping
     )
-    if collisions:
-        contested = list(collisions)
-        report["counts"]["collisions"] = len(contested)
-        report["collisions"] = [
-            {"namespace": namespace, "accession": accession, "claimants": list(claimants)}
-            for (namespace, accession), claimants in collisions.items()
+    if conflicts:
+        contested = list(conflicts)
+        report["counts"]["kind_conflicts"] = len(contested)
+        report["kind_conflicts"] = [
+            {
+                "namespace": namespace,
+                "accession": accession,
+                "claimants": [dict(claimant) for claimant in claimants],
+            }
+            for (namespace, accession), claimants in conflicts.items()
         ]
-        for bucket, row, shipping in surviving:
+        for bucket, _kind, row, shipping in surviving:
             doomed = {
                 namespace: value
                 for namespace, value in shipping.items()
-                if identity_admission.collision_matches(namespace, value, contested)
+                if identity_admission.conflict_matches(namespace, value, contested)
             }
             if not doomed:
                 continue
             removed = _withhold_identity(
                 row, doomed, bucket=bucket,
-                rule=identity_admission.RULE_ACCESSION_COLLISION,
+                rule=identity_admission.RULE_ACCESSION_KIND_CONFLICT,
                 detail=(
-                    "this accession is also claimed by a differently-named entity in the "
-                    "same payload, so no claimant may ship it"
+                    "this accession is also claimed by a differently-named entity of the "
+                    "other kind (protein vs compound) in the same payload, so no claimant "
+                    "may ship it"
                 ),
             )
             if not removed:
@@ -8244,14 +8264,14 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
             existing = next(
                 (entry for entry in report["withheld"]
                  if entry["name"] == str(row.get("name") or "") and entry["bucket"] == bucket
-                 and entry["rule"] == identity_admission.RULE_ACCESSION_COLLISION),
+                 and entry["rule"] == identity_admission.RULE_ACCESSION_KIND_CONFLICT),
                 None,
             )
             if existing is None:
                 report["counts"]["rows_withheld"] += 1
                 report["withheld"].append({
                     "bucket": bucket, "name": str(row.get("name") or ""),
-                    "rule": identity_admission.RULE_ACCESSION_COLLISION,
+                    "rule": identity_admission.RULE_ACCESSION_KIND_CONFLICT,
                     "identifiers": dict(removed),
                 })
             else:

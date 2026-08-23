@@ -16,13 +16,26 @@ This module owns the two PURE PREDICATES the correction needs, and nothing else:
    Stage-2 merge; the predicate here just asks whether any name the row offers is
    locatable in that index.
 
-2. **Does one accession answer to two differently-named entities?**
-   ``drugbank:DB00114`` was claimed by both ``ALAS2`` and ``Pyridoxal
-   5'-phosphate`` on PMC12856317/research. Two different molecules cannot both be
-   DB00114, so the claim is incompatible and may not ship. The rule already
-   existed twice in ``bench/`` -- but only AFTER the strict quarantine, by which
-   time the accession is already inside ``final_mapped.json``, which is a bench
-   observation, not a gate.
+2. **Does one accession answer to entities of INCOMPATIBLE KINDS?**
+   ``drugbank:DB00114`` was claimed by both the protein ``ALAS2`` and the
+   compound ``Pyridoxal 5'-phosphate`` on PMC12856317/research. One accession
+   cannot denote both a protein and a metabolite, and F-096's gold classifies
+   that row as ``cofactor_as_protein`` -- a TYPE error. That is the defect, and
+   the predicate names it directly. The rule already existed twice in ``bench/``
+   -- but only AFTER the strict quarantine, by which time the accession is
+   already inside ``final_mapped.json``, which is a bench observation, not a gate.
+
+   **A shared accession WITHIN one kind is not a collision at all.** D-035
+   clause 3c is explicit that "at least one matching stable external identifier"
+   is *proof that two differently-named rows are the same biological entity*.
+   Reading that same fact as evidence that one of them is false would stand a
+   LOCKED decision on its head. Measured over all committed ``final_mapped.json``
+   artifacts, a name-difference predicate refuses 41 such pairs -- ``EntB`` /
+   ``Isochorismatase (EntB)`` on ``uniprot:P0ADI4``, ``PEtN`` /
+   ``Phosphoethanolamine`` across eight namespaces, ``LMRG_02730`` / ``MenI``
+   (locus tag against gene symbol) -- every one of them one entity written twice,
+   and every one of them legitimately owning the accession. The kind predicate
+   refuses 1 and keeps all 41.
 
 WHAT THIS MODULE MAY DO, AND THE DIRECTION OF ITS ERRORS
 --------------------------------------------------------
@@ -62,7 +75,9 @@ __all__ = [
     "REPORT_KEY",
     "META_KEY",
     "RULE_NOT_SUPPORTED",
-    "RULE_ACCESSION_COLLISION",
+    "RULE_ACCESSION_KIND_CONFLICT",
+    "ENTITY_KIND_PROTEIN",
+    "ENTITY_KIND_COMPOUND",
     "STATUS_SUPPORTED",
     "STATUS_UNSUPPORTED",
     "STATUS_NOT_EVALUATED",
@@ -80,8 +95,9 @@ __all__ = [
     "external_accessions",
     "identity_support",
     "accession_key",
-    "find_accession_collisions",
-    "collision_matches",
+    "entity_kind_class",
+    "find_kind_conflicting_accessions",
+    "conflict_matches",
 ]
 
 #: Bumped only when the stored shape changes meaning. A reader that does not know
@@ -98,7 +114,22 @@ REPORT_KEY = "identity_admission"
 META_KEY = "identity_admission"
 
 RULE_NOT_SUPPORTED = "identity_not_supported_by_source"
-RULE_ACCESSION_COLLISION = "accession_claimed_by_a_differently_named_entity"
+
+#: One accession, two INCOMPATIBLE KINDS. Deliberately NOT "two different
+#: names": D-035 clause 3c makes a shared identifier proof that two
+#: differently-named rows are the SAME entity, so a name-difference rule would
+#: read a locked decision backwards and strip 41 correct accessions to catch 1
+#: false one. What cannot be true is that one accession denotes both a protein
+#: and a metabolite.
+RULE_ACCESSION_KIND_CONFLICT = "accession_claimed_across_incompatible_entity_kinds"
+
+#: The two kind classes this predicate distinguishes, and the only distinction
+#: it draws. ``protein_complexes`` is protein-ish: a complex of proteins sharing
+#: a UniProt accession with one of its own components is D-035 3c agreement, not
+#: a type error -- ``EntB`` / ``Isochorismatase (EntB)`` is exactly that shape.
+ENTITY_KIND_PROTEIN = "protein"
+ENTITY_KIND_COMPOUND = "compound"
+_PROTEIN_BUCKETS: frozenset = frozenset({"proteins", "protein_complexes"})
 
 STATUS_SUPPORTED = "supported"
 STATUS_UNSUPPORTED = "unsupported"
@@ -338,33 +369,65 @@ def accession_key(namespace: Any, value: Any) -> str:
     return text
 
 
-def find_accession_collisions(
-    claims: Iterable[Tuple[Any, Dict[str, str]]],
-) -> Dict[Tuple[str, str], Tuple[str, ...]]:
-    """Which ``(namespace, accession)`` pairs answer to more than one name.
+def entity_kind_class(bucket: Any) -> str:
+    """Which of the two incompatible kinds a bucket belongs to.
 
-    ``claims`` is ``(entity name, accessions)`` per row. Two rows that normalize
-    to the SAME name are one entity written twice -- a duplicate row, somebody
-    else's finding -- and are never a collision. Returns the offending pairs
-    mapped to their claimant names, sorted, so the caller's report is stable.
+    Total, and biased towards ``compound``: an unrecognised bucket is not
+    protein-ish, and the caller only ever hands this the three buckets the mapper
+    resolves identifiers for.
     """
-    seen: Dict[Tuple[str, str], Dict[str, str]] = {}
-    for name, accessions in claims:
+    return ENTITY_KIND_PROTEIN if str(bucket or "") in _PROTEIN_BUCKETS else ENTITY_KIND_COMPOUND
+
+
+def find_kind_conflicting_accessions(
+    claims: Iterable[Tuple[Any, Any, Dict[str, str]]],
+) -> Dict[Tuple[str, str], Tuple[Dict[str, str], ...]]:
+    """Which ``(namespace, accession)`` pairs are claimed across incompatible kinds.
+
+    ``claims`` is ``(kind_class, entity name, accessions)`` per row.
+
+    A pair is refused ONLY when two of its claimants differ in **kind** AND in
+    **normalized name**. Both conditions are load-bearing:
+
+    * **Different kinds** is the incompatibility. One accession cannot denote a
+      protein and a metabolite at once. Same-kind agreement is D-035 clause 3c
+      evidence that the rows are the same entity and is left completely alone.
+    * **Different names** keeps a routing artefact from reading as a type error.
+      The same entity resolved into both ``compounds`` and ``proteins`` -- which
+      ``route_entity_for_mapping`` can do -- is one entity written twice, not a
+      protein masquerading as a metabolite.
+
+    Returns the offending pairs mapped to their claimants (``kind`` and ``name``),
+    sorted, so the caller's report is stable.
+    """
+    seen: Dict[Tuple[str, str], Dict[Tuple[str, str], str]] = {}
+    for kind, name, accessions in claims:
         key_name = normalize_name_key(name)
         if not key_name:
             continue
+        kind_class = str(kind or ENTITY_KIND_COMPOUND)
         for namespace, value in _safe_dict(accessions).items():
             folded = accession_key(namespace, value)
             if not folded:
                 continue
-            seen.setdefault((str(namespace), folded), {})[key_name] = str(name or "")
-    return {
-        pair: tuple(sorted(names.values()))
-        for pair, names in sorted(seen.items())
-        if len(names) > 1
-    }
+            seen.setdefault((str(namespace), folded), {})[(kind_class, key_name)] = str(name or "")
+
+    out: Dict[Tuple[str, str], Tuple[Dict[str, str], ...]] = {}
+    for pair, claimants in sorted(seen.items()):
+        keys = list(claimants)
+        conflicted = any(
+            left[0] != right[0] and left[1] != right[1]
+            for index, left in enumerate(keys)
+            for right in keys[index + 1:]
+        )
+        if conflicted:
+            out[pair] = tuple(
+                {"kind": kind_class, "name": claimants[(kind_class, key_name)]}
+                for kind_class, key_name in sorted(keys)
+            )
+    return out
 
 
-def collision_matches(namespace: Any, value: Any, colliding: Sequence[Tuple[str, str]]) -> bool:
-    """Whether this row's identifier is one of the contested pairs."""
-    return (str(namespace), accession_key(namespace, value)) in set(colliding)
+def conflict_matches(namespace: Any, value: Any, contested: Sequence[Tuple[str, str]]) -> bool:
+    """Whether this row's identifier is one of the kind-conflicting pairs."""
+    return (str(namespace), accession_key(namespace, value)) in set(contested)

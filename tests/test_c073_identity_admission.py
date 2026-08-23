@@ -32,7 +32,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from unittest.mock import patch
 
 import pytest
@@ -286,130 +286,317 @@ def test_paper_relativity_the_same_name_is_withheld_here_and_kept_there(tmp_path
     assert (_row(present, "heme").get("mapped_ids") or {}).get("kegg") == HEME_IDS["kegg"]
 
 
-# ── 4. duplicate accession claims ────────────────────────────────────────────
+# ── 4. incompatible-kind accession claims ────────────────────────────────────────────
 
 
-def _collision_payload(name_a: str, name_b: str, accession: str = "DB00114") -> Dict[str, Any]:
+def _shared_accession_payload(
+    rows: List[Tuple[str, str, Dict[str, str]]],
+) -> Dict[str, Any]:
+    """A payload placing each ``(bucket, name, mapped_ids)`` row where it belongs."""
+    entities: Dict[str, Any] = {"compounds": [], "proteins": [], "protein_complexes": []}
+    for bucket, name, ids in rows:
+        row: Dict[str, Any] = {"name": name, "mapped_ids": dict(ids)}
+        if bucket == "compounds":
+            row["class"] = "compound"
+        entities[bucket].append(row)
+    return {"entities": entities, "processes": {"reactions": []}}
+
+
+#: The resolver result the protein loop must return for ``ALAS2`` to still be
+#: HOLDING ``drugbank:DB00114`` when the tail passes run. Measured
+#: (``evidence/g11/C-073/26``): a bare protein row loses every identifier in the
+#: offline loop, so an un-stubbed fixture would prove nothing -- the conflict
+#: would have dissolved before Pass B ever saw it. Stubbing the resolver is the
+#: same convention ``test_map_ids_name_gate._run_map_payload`` uses.
+def _alas2_pathbank_result() -> Dict[str, Any]:
+    return {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "mapped_ids": {"uniprot": "P22557", "drugbank": "DB00114",
+                       "pathbank_protein_id": "3286"},
+        "confidence": 1.0,
+        "chosen_rule": "exact_protein_name_species",
+        "resolved_name": "ALAS2",
+        "candidates": [{
+            "accession": "P22557",
+            "protein_name": "ALAS2",
+            "gene_names": ["ALAS2"],
+            "organism": "Homo sapiens",
+            "reviewed": True,
+            "score": 1.0,
+            "matched_query": "ALAS2",
+            "alias_source": "primary_name",
+            "pathbank_protein_id": 3286,
+            "mapped_ids": {"uniprot": "P22557", "drugbank": "DB00114"},
+        }],
+        "resolution": {"status": "matched", "order_step": "exact_protein_name_species"},
+    }
+
+
+def _cross_kind_payload() -> Dict[str, Any]:
+    """PMC12856317/research's real shape: one compound and one protein, both
+    holding ``drugbank:DB00114``."""
     return {
         "entities": {
-            "compounds": [
-                {"name": name_a, "class": "compound",
-                 "mapped_ids": {"drugbank": accession, "kegg": "C00018"}},
-                {"name": name_b, "class": "compound",
-                 "mapped_ids": {"drugbank": accession, "kegg": "C00250"}},
-            ],
-            "proteins": [],
-            "protein_complexes": [],
-        },
-        "processes": {"reactions": [{"name": "r", "inputs": [name_a], "outputs": [name_b]}]},
-    }
-
-
-def test_an_accession_claimed_by_two_differently_named_entities_does_not_ship(
-    tmp_path: Path,
-) -> None:
-    """PMC12856317/research shipped ``drugbank:DB00114`` on BOTH ``ALAS2`` and
-    ``Pyridoxal 5'-phosphate``. Two different molecules cannot both be DB00114.
-
-    THE DETERMINISTIC RULE: neither claimant keeps it. Nothing on either row says
-    it, rather than its rival, owns the accession, so choosing a winner would ship
-    a coin toss as a fact. Withholding from all is order-independent and needs no
-    tie-break nobody can justify. Every other identifier on both rows survives."""
-    result = run_offline(
-        _collision_payload("ALAS2", "Pyridoxal 5'-phosphate"), tmp_path / "cache.json"
-    )
-    alas2 = _row(result, "ALAS2").get("mapped_ids") or {}
-    plp = _row(result, "Pyridoxal 5'-phosphate").get("mapped_ids") or {}
-
-    assert not alas2.get("drugbank")
-    assert not plp.get("drugbank")
-    assert alas2.get("kegg") == "C00018"
-    assert plp.get("kegg") == "C00250"
-
-
-def test_the_collision_refusal_is_recorded_on_both_claimants(tmp_path: Path) -> None:
-    from t2pw.mapping import identity_admission
-
-    result = run_offline(
-        _collision_payload("ALAS2", "Pyridoxal 5'-phosphate"), tmp_path / "cache.json"
-    )
-    for name in ("ALAS2", "Pyridoxal 5'-phosphate"):
-        meta = _row(result, name).get("mapping_meta") or {}
-        assert (meta.get("rejected_mapped_ids") or {}).get("drugbank") == "DB00114"
-        record = meta.get(identity_admission.META_KEY) or {}
-        assert identity_admission.RULE_ACCESSION_COLLISION in (record.get("rules") or [])
-
-    section = result["report"][identity_admission.REPORT_KEY]
-    assert section["counts"]["collisions"] == 1
-    assert section["collisions"][0]["namespace"] == "drugbank"
-    assert sorted(section["collisions"][0]["claimants"]) == ["ALAS2", "Pyridoxal 5'-phosphate"]
-
-
-def test_two_rows_with_the_same_normalized_name_are_not_a_collision(tmp_path: Path) -> None:
-    """A duplicate row is one entity written twice -- somebody else's finding, and
-    not a reason to take a correct accession off either copy. Punctuation and case
-    do not make two names different."""
-    result = run_offline(
-        _collision_payload("ferric-enterobactin", "Ferric Enterobactin"), tmp_path / "cache.json"
-    )
-    assert (_row(result, "ferric-enterobactin").get("mapped_ids") or {}).get("drugbank") == "DB00114"
-    assert (_row(result, "Ferric Enterobactin").get("mapped_ids") or {}).get("drugbank") == "DB00114"
-
-
-def test_one_entity_claiming_an_accession_from_two_buckets_is_not_a_collision() -> None:
-    """ADVERSARIAL. The same entity resolved into two buckets is still ONE name,
-    so the accession is uncontested and both copies keep it.
-
-    Exercised against the two passes directly: routing a protein-shaped name
-    through the compound loop is a different mechanism's business, and this
-    assertion is about the cross-row index, not about which loop claimed the row.
-    """
-    payload = {
-        "entities": {
-            "compounds": [{"name": "ALAS2", "class": "compound",
-                           "mapped_ids": {"drugbank": "DB00114"}}],
-            "proteins": [{"name": "ALAS2", "mapped_ids": {"drugbank": "DB00114"}}],
-            "protein_complexes": [],
-        },
-        "processes": {"reactions": []},
-    }
-    report = map_ids._admit_identities(payload, payload["entities"])
-
-    assert report["counts"]["collisions"] == 0
-    assert report["counts"]["identifiers_withheld"] == 0
-    assert payload["entities"]["compounds"][0]["mapped_ids"]["drugbank"] == "DB00114"
-    assert payload["entities"]["proteins"][0]["mapped_ids"]["drugbank"] == "DB00114"
-
-
-def test_the_real_collision_shape_a_protein_and_a_compound() -> None:
-    """The shape PMC12856317/research actually shipped: the compound ``Pyridoxal
-    5'-phosphate`` and the protein ``ALAS2``, both claiming ``drugbank:DB00114``.
-    Both lose it; both keep everything else and both survive as rows."""
-    from t2pw.mapping import identity_admission
-
-    payload = {
-        "entities": {
-            "compounds": [{"name": "Pyridoxal 5'-phosphate", "class": "compound",
+            "compounds": [{"name": "Pyridoxal 5-phosphate", "class": "compound",
                            "mapped_ids": {"drugbank": "DB00114", "kegg": "C00018"}}],
-            "proteins": [{"name": "ALAS2",
+            "proteins": [{"name": "ALAS2", "organism": "Homo sapiens",
                           "mapped_ids": {"drugbank": "DB00114", "uniprot": "P22557"}}],
             "protein_complexes": [],
         },
         "processes": {"reactions": []},
     }
+
+
+def run_offline_with_protein(
+    payload: Dict[str, Any], cache_path: Path, result: Dict[str, Any]
+) -> Dict[str, Any]:
+    """``run_offline`` with the protein resolver answering ``result``."""
+    env = {"T2PW_SPECIES_LLM": "0", "T2PW_SPECIES_NCBI": "0"}
+    with patch.dict(os.environ, env), patch.object(
+        map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: None)
+    ), patch.object(
+        map_ids, "_ai_protein_synonym_lookup", return_value=[]
+    ), patch.object(
+        map_ids.HttpClient, "get", side_effect=_NoNetwork("network")
+    ), patch.object(
+        map_ids, "_map_protein_with_strategy", return_value=result
+    ), patch.object(
+        map_ids, "map_protein_uniprot",
+        return_value={"status": "unmapped", "reason": "no_match", "candidates": []},
+    ), patch.object(
+        map_ids, "_rewrite_reaction_protein_enzymes_to_complexes",
+        return_value={"summary": {}, "actions": []},
+    ):
+        return map_payload(
+            payload, cache_path=cache_path, id_source="db", use_cache=False,
+            allow_complex_wrapper_creation=False,
+        )
+
+
+def test_g9_an_accession_claimed_across_incompatible_kinds_does_not_ship(
+    tmp_path: Path,
+) -> None:
+    """THE SECOND G9 PROOF. PMC12856317/research shipped ``drugbank:DB00114`` on
+    BOTH the protein ``ALAS2`` and the compound ``Pyridoxal 5'-phosphate``. One
+    accession cannot denote a protein and a metabolite at once, and F-096's gold
+    classifies that row as ``cofactor_as_protein`` -- a TYPE error.
+
+    THE DETERMINISTIC RULE: neither claimant keeps it. Nothing on either row says
+    it, rather than its rival, owns the accession, so choosing a winner would ship
+    a coin toss as a fact. Withholding from all is order-independent and needs no
+    tie-break nobody can justify. Every OTHER identifier on both rows survives.
+
+    On ``20e6b68`` no cross-row accession index exists at all, so both ship and
+    this fails. Nothing here names a symbol this card adds."""
+    result = run_offline_with_protein(
+        _cross_kind_payload(), tmp_path / "cache.json", _alas2_pathbank_result()
+    )
+    compound = _row(result, "Pyridoxal 5-phosphate").get("mapped_ids") or {}
+    protein = _row(result, "ALAS2", bucket="proteins").get("mapped_ids") or {}
+
+    assert not compound.get("drugbank"), f"the compound still ships DB00114: {compound}"
+    assert not protein.get("drugbank"), f"the protein still ships DB00114: {protein}"
+    # everything else is untouched
+    assert compound.get("kegg") == "C00018"
+    assert protein.get("uniprot") == "P22557"
+
+
+def test_the_kind_conflict_refusal_is_recorded_on_both_claimants(tmp_path: Path) -> None:
+    from t2pw.mapping import identity_admission
+
+    result = run_offline_with_protein(
+        _cross_kind_payload(), tmp_path / "cache.json", _alas2_pathbank_result()
+    )
+    for name, bucket in (("Pyridoxal 5-phosphate", "compounds"), ("ALAS2", "proteins")):
+        meta = _row(result, name, bucket=bucket).get("mapping_meta") or {}
+        assert (meta.get("rejected_mapped_ids") or {}).get("drugbank") == "DB00114"
+        record = meta.get(identity_admission.META_KEY) or {}
+        assert identity_admission.RULE_ACCESSION_KIND_CONFLICT in (record.get("rules") or [])
+
+    section = result["report"][identity_admission.REPORT_KEY]
+    assert section["counts"]["kind_conflicts"] == 1
+    entry = section["kind_conflicts"][0]
+    assert entry["namespace"] == "drugbank"
+    assert {(c["kind"], c["name"]) for c in entry["claimants"]} == {
+        ("compound", "Pyridoxal 5-phosphate"), ("protein", "ALAS2"),
+    }
+
+
+# ── D-035 clause 3c: a shared accession WITHIN one kind is proof of identity ──
+
+
+def test_a_shared_accession_within_one_kind_is_never_touched() -> None:
+    """THE ANTI-COLLATERAL ARM FOR PASS B, and the reason the predicate is about
+    KIND rather than about names.
+
+    ``EntB`` and ``Isochorismatase (EntB)`` are the REAL rows of
+    ``runs_verify/2026-08-04_1754/.../PMC12096016/research/final_mapped.json``:
+    both in ``entities.proteins``, both carrying ``uniprot:P0ADI4``,
+    ``pathbank_protein_id:6224`` and ``gene_name:entB``. They are one enzyme
+    written two ways.
+
+    D-035 clause 3c (LOCKED) says a matching stable external identifier is PROOF
+    that two differently-named rows are the same biological entity. A predicate
+    that read that same fact as evidence one of them is false would stand a
+    locked decision on its head -- and measured over all 53 committed
+    ``final_mapped.json`` artifacts it strips 92 rows across 42 pairs, 41 of them
+    correct. Both rows keep everything."""
+    payload = _shared_accession_payload([
+        ("proteins", "EntB",
+         {"uniprot": "P0ADI4", "pathbank_protein_id": "6224", "gene_name": "entB"}),
+        ("proteins", "Isochorismatase (EntB)",
+         {"uniprot": "P0ADI4", "pathbank_protein_id": "6224", "gene_name": "entB"}),
+    ])
+    report = map_ids._admit_identities(payload, payload["entities"])
+
+    assert report["counts"]["kind_conflicts"] == 0
+    assert report["counts"]["identifiers_withheld"] == 0
+    for row in payload["entities"]["proteins"]:
+        assert row["mapped_ids"]["uniprot"] == "P0ADI4"
+        assert row["mapped_ids"]["pathbank_protein_id"] == "6224"
+
+
+@pytest.mark.parametrize(
+    "bucket,rows,namespace,accession",
+    [
+        pytest.param("proteins",
+                     ["EntE", "enterobactin synthase"], "uniprot", "P10378",
+                     id="entE-vs-enterobactin-synthase"),
+        pytest.param("compounds",
+                     ["PEtN", "Phosphoethanolamine"], "chebi", "58190",
+                     id="petn-vs-phosphoethanolamine"),
+        pytest.param("compounds",
+                     ["LPS", "lipopolysaccharide"], "chebi", "16412",
+                     id="lps-vs-lipopolysaccharide"),
+        pytest.param("proteins",
+                     ["LMRG_02730", "MenI"], "uniprot", "A0A0H3GEM5",
+                     id="locus-tag-vs-gene-symbol"),
+        pytest.param("proteins",
+                     ["PlsB", "PlsB glycerol-3-phosphate acyltransferase"],
+                     "uniprot", "P0A7A7",
+                     id="symbol-vs-full-enzyme-name"),
+    ],
+)
+def test_measured_within_kind_pairs_all_keep_their_accession(
+    bucket: str, rows: List[str], namespace: str, accession: str
+) -> None:
+    """Each of these is a real pair from the committed corpus that the rejected
+    name-difference predicate stripped. Every one of them is one entity written
+    two ways, and every one keeps its accession."""
+    payload = _shared_accession_payload(
+        [(bucket, name, {namespace: accession}) for name in rows]
+    )
+    report = map_ids._admit_identities(payload, payload["entities"])
+
+    assert report["counts"]["identifiers_withheld"] == 0
+    for row in payload["entities"][bucket]:
+        assert row["mapped_ids"][namespace] == accession
+
+
+def test_a_protein_complex_is_protein_ish_not_a_conflicting_kind() -> None:
+    """A complex sharing a UniProt accession with one of its own components is
+    D-035 3c agreement, not a type error. ``entities.protein_complexes`` is on
+    the protein side of the only distinction this predicate draws."""
+    payload = _shared_accession_payload([
+        ("proteins", "EntB", {"uniprot": "P0ADI4"}),
+        ("protein_complexes", "isochorismatase", {"uniprot": "P0ADI4"}),
+    ])
+    report = map_ids._admit_identities(payload, payload["entities"])
+
+    assert report["counts"]["kind_conflicts"] == 0
+    assert payload["entities"]["proteins"][0]["mapped_ids"]["uniprot"] == "P0ADI4"
+    assert payload["entities"]["protein_complexes"][0]["mapped_ids"]["uniprot"] == "P0ADI4"
+
+
+def test_two_rows_with_the_same_normalized_name_are_not_a_conflict(tmp_path: Path) -> None:
+    """A duplicate row is one entity written twice -- somebody else's finding, and
+    not a reason to take a correct accession off either copy. Punctuation and case
+    do not make two names different."""
+    payload = _shared_accession_payload([
+        ("compounds", "ferric-enterobactin", {"drugbank": "DB00114", "kegg": "C00018"}),
+        ("compounds", "Ferric Enterobactin", {"drugbank": "DB00114", "kegg": "C00250"}),
+    ])
+    result = run_offline(payload, tmp_path / "cache.json")
+
+    assert (_row(result, "ferric-enterobactin").get("mapped_ids") or {}).get("drugbank") == "DB00114"
+    assert (_row(result, "Ferric Enterobactin").get("mapped_ids") or {}).get("drugbank") == "DB00114"
+
+
+def test_one_entity_claiming_an_accession_from_two_buckets_is_not_a_conflict() -> None:
+    """ADVERSARIAL, and the reason the predicate needs BOTH conditions. The same
+    entity routed into ``compounds`` AND ``proteins`` spans two kinds, but it is
+    ONE name -- a routing artefact, not a protein masquerading as a metabolite.
+    ``route_entity_for_mapping`` really does produce this shape."""
+    payload = _shared_accession_payload([
+        ("compounds", "ALAS2", {"drugbank": "DB00114"}),
+        ("proteins", "ALAS2", {"drugbank": "DB00114"}),
+    ])
+    report = map_ids._admit_identities(payload, payload["entities"])
+
+    assert report["counts"]["kind_conflicts"] == 0
+    assert report["counts"]["identifiers_withheld"] == 0
+    assert payload["entities"]["compounds"][0]["mapped_ids"]["drugbank"] == "DB00114"
+    assert payload["entities"]["proteins"][0]["mapped_ids"]["drugbank"] == "DB00114"
+
+
+def test_the_real_cross_kind_shape_survives_as_rows() -> None:
+    """Merge rule 7 for Pass B: the incompatible claim does not ship, and both
+    entities survive with their names, their kinds and their other identifiers."""
+    from t2pw.mapping import identity_admission
+
+    payload = _shared_accession_payload([
+        ("compounds", "Pyridoxal 5-phosphate", {"drugbank": "DB00114", "kegg": "C00018"}),
+        ("proteins", "ALAS2", {"drugbank": "DB00114", "uniprot": "P22557"}),
+    ])
     report = map_ids._admit_identities(payload, payload["entities"])
     compound = payload["entities"]["compounds"][0]
     protein = payload["entities"]["proteins"][0]
 
-    assert report["counts"]["collisions"] == 1
+    assert report["counts"]["kind_conflicts"] == 1
     assert not compound["mapped_ids"].get("drugbank")
     assert not protein["mapped_ids"].get("drugbank")
     assert compound["mapped_ids"]["kegg"] == "C00018"
     assert protein["mapped_ids"]["uniprot"] == "P22557"
-    assert compound["name"] == "Pyridoxal 5'-phosphate" and protein["name"] == "ALAS2"
+    assert compound["name"] == "Pyridoxal 5-phosphate" and protein["name"] == "ALAS2"
     for row in (compound, protein):
         record = row["mapping_meta"][identity_admission.META_KEY]
-        assert record["rules"] == [identity_admission.RULE_ACCESSION_COLLISION]
+        assert record["rules"] == [identity_admission.RULE_ACCESSION_KIND_CONFLICT]
+
+
+def test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral() -> None:
+    """THE LOAD-BEARING EVIDENCE, replayed as a test rather than left in a probe.
+
+    Over every committed ``final_mapped.json``: exactly one cross-kind conflict
+    (``drugbank:DB00114``), and every within-kind pair keeps everything. The
+    rejected name-difference predicate refused 42 pairs across 10 artifacts and
+    stripped 92 rows here; 41 of those pairs were correct."""
+    import subprocess
+
+    listing = subprocess.run(
+        ["git", "ls-files", "*final_mapped.json"],
+        capture_output=True, text=True, cwd=str(ROOT),
+    )
+    artifacts = [ROOT / rel for rel in listing.stdout.split()]
+    if not artifacts:
+        pytest.skip("no committed final_mapped.json artifacts")
+
+    conflicts: List[Any] = []
+    withheld: List[Any] = []
+    for path in artifacts:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        entities = payload.get("entities") or {}
+        report = map_ids._admit_identities(payload, entities)
+        conflicts.extend(report["kind_conflicts"])
+        withheld.extend(report["withheld"])
+
+    assert len(artifacts) >= 53
+    assert len(conflicts) == 1, f"expected one cross-kind conflict, got {conflicts}"
+    assert conflicts[0]["namespace"] == "drugbank"
+    assert conflicts[0]["accession"] == "db00114"
+    assert {c["kind"] for c in conflicts[0]["claimants"]} == {"protein", "compound"}
+    assert len(withheld) == 2, f"collateral: {withheld}"
 
 
 # ── 5. fail open ─────────────────────────────────────────────────────────────
