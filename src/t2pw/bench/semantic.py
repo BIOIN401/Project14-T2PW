@@ -845,17 +845,97 @@ def _check_id_conflicts(
     2. a **placeholder posing as a real mapping** -- delegated to
        ``entity_identity.placeholder_claims_real_identity``, the one gate that
        can see a fabricated accession on an Unknown-backed row;
-    3. **one accession claimed by two different entity names** -- a name/ID
-       collision, which silently fuses two molecules in the exported graph.
+    3. one accession claimed by two entities **of incompatible kind** -- a
+       name/ID collision, which silently fuses a protein and a metabolite in the
+       exported graph.
+
+    C-076 / F-102 narrowed (3), and exempted one case from (1). Both rules used
+    to fire on a *name* difference alone. That is the predicate C-073's review
+    rejected in the pipeline, for contradicting **D-035 clause 3c**: a matching
+    stable external identifier is *proof* that two differently-named rows are
+    the same entity. The pipeline was corrected to a cross-kind rule; the scorer
+    was not, so it went on demoting real legs with the rejected rule.
+
+    * (3) now needs an **incompatible kind** as well as a different name.
+      Protein-ish versus compound-ish, read from
+      ``identity_admission.entity_kind_class`` -- the pipeline's own definition,
+      imported rather than restated so the two cannot drift apart. ``EntB`` and
+      ``holo-EntB``, or ``EntE`` and ``enterobactin synthase``, sharing one
+      UniProt accession is agreement. ``drugbank:DB00114`` on both ``ALAS2``
+      (protein) and ``Pyridoxal 5'-phosphate`` (compound) is still a collision,
+      and that is the one true defect C-073 fixed upstream.
+    * (1) exempts a gold entry of kind ``modification_state`` -- a holo/apo or
+      otherwise post-translationally modified form of ONE polypeptide -- but
+      **only when every accession it carries is also claimed by a real,
+      differently-named parent row of the same kind**. Sharing the parent's
+      accession is the legitimate case the ruling protects. Inventing an
+      accession of its own is still a fabricated identity, and a
+      ``strain_or_construct`` -- the ``R196A`` point mutant is a *different
+      polypeptide sequence* -- is never exempt.
+
+    Deliberately unchanged: an exempt row is silent rather than reported, because
+    a finding of any kind would keep ``ok`` false and so keep gating the leg,
+    which is exactly what the ruling forbids; a forbidden identifier carrying NO
+    accession still reports ``forbidden_identity_present_unmapped``; and
+    ``false_real`` still counts (1) and (2) only -- the collision branch has
+    never incremented it and still does not.
     """
 
+    from t2pw.mapping.identity_admission import entity_kind_class
     from t2pw.pipeline.entity_identity import placeholder_claims_real_identity
+
+    #: Gold ``kind`` for a modification state of one polypeptide (holo/apo,
+    #: phosphopantetheinylated, metal-loaded). Function-local: this is the only
+    #: reader, and C-076's boundary owns nothing else in this module.
+    modification_state = "modification_state"
 
     findings: List[Dict[str, Any]] = []
     false_real = 0
     by_accession: Dict[Tuple[str, str], List[str]] = {}
+    #: Same keys as ``by_accession``, carrying what the verdicts below need that a
+    #: display name cannot answer: ``(kind class, normalized name, is forbidden)``.
+    claimants: Dict[Tuple[str, str], List[Tuple[str, str, bool]]] = {}
 
+    # -- pass 1: who claims which accession ---------------------------------
+    # Two of the three rules are about a row's CO-CLAIMANTS, so no verdict can be
+    # reached before every row has been seen. Hence two passes over the same
+    # rows: ``_external_ids`` and ``forbidden_match`` are both pure, and emitting
+    # every finding in the second pass keeps them in payload order, exactly as a
+    # single pass did.
     for bucket in _ENTITY_BUCKETS:
+        kind_class = entity_kind_class(bucket)
+        for index, row in enumerate(entities.get(bucket, [])):
+            name = canonical_text(row.get("name"))
+            holder = name or f"/entities/{bucket}/{index}"
+            is_forbidden = case.forbidden_match(name) is not None
+            for namespace, accession in _external_ids(row).items():
+                key = (namespace, accession.casefold())
+                by_accession.setdefault(key, []).append(holder)
+                claimants.setdefault(key, []).append((kind_class, normalize_name(holder), is_forbidden))
+
+    def _shares_a_parent_accession(kind_class: str, holder: str, ids: Mapping[str, str]) -> bool:
+        """Is EVERY accession on this row also claimed by a real parent row?
+
+        "Real parent" is same kind, a different normalized name, and **not itself
+        forbidden** -- so two modification states cannot vouch for each other's
+        invented accession, and one that carries an accession nothing else claims
+        is not sharing anything.
+        """
+
+        if not ids:
+            return False
+        norm = normalize_name(holder)
+        for namespace, accession in ids.items():
+            if not any(
+                other_kind == kind_class and other_name != norm and not other_forbidden
+                for other_kind, other_name, other_forbidden in claimants.get((namespace, accession.casefold()), ())
+            ):
+                return False
+        return True
+
+    # -- pass 2: one verdict per row, in payload order ----------------------
+    for bucket in _ENTITY_BUCKETS:
+        kind_class = entity_kind_class(bucket)
         for index, row in enumerate(entities.get(bucket, [])):
             name = canonical_text(row.get("name"))
             pointer = f"/entities/{bucket}/{index}"
@@ -864,18 +944,22 @@ def _check_id_conflicts(
             forbidden = case.forbidden_match(name)
             if forbidden is not None:
                 if ids:
-                    false_real += 1
-                    findings.append(
-                        {
-                            "pointer": pointer,
-                            "name": name,
-                            "kind": "false_real_identifier",
-                            "forbidden_kind": forbidden.kind,
-                            "identifiers": ids,
-                            "reason": forbidden.reason
-                            or f"'{name}' is not a real distinct identity ({forbidden.kind}) but carries {ids}",
-                        }
+                    exempt = forbidden.kind == modification_state and _shares_a_parent_accession(
+                        kind_class, name or pointer, ids
                     )
+                    if not exempt:
+                        false_real += 1
+                        findings.append(
+                            {
+                                "pointer": pointer,
+                                "name": name,
+                                "kind": "false_real_identifier",
+                                "forbidden_kind": forbidden.kind,
+                                "identifiers": ids,
+                                "reason": forbidden.reason
+                                or f"'{name}' is not a real distinct identity ({forbidden.kind}) but carries {ids}",
+                            }
+                        )
                 else:
                     findings.append(
                         {
@@ -902,21 +986,37 @@ def _check_id_conflicts(
                     }
                 )
 
-            for namespace, accession in ids.items():
-                by_accession.setdefault((namespace, accession.casefold()), []).append(name or pointer)
-
     for (namespace, accession), holders in sorted(by_accession.items()):
         distinct = sorted({normalize_name(h) for h in holders if h})
-        if len(distinct) > 1:
-            findings.append(
-                {
-                    "kind": "accession_claimed_by_multiple_entities",
-                    "namespace": namespace,
-                    "identifier": accession,
-                    "entities": sorted(set(holders)),
-                    "reason": f"{namespace}:{accession} is claimed by {len(distinct)} differently-named entities",
-                }
-            )
+        if len(distinct) < 2:
+            continue
+        # D-035 clause 3c. A shared stable accession is PROOF that two
+        # differently-named rows are the same entity, so a name difference alone
+        # is agreement, not collision. Only an incompatible KIND turns it back
+        # into one: an accession cannot denote a protein and a metabolite at
+        # once. Both halves are load-bearing, exactly as they are in
+        # ``identity_admission.find_kind_conflicting_accessions``, whose rule
+        # this is now the scorer's side of.
+        kinds = sorted({(kind, folded) for kind, folded, _ in claimants.get((namespace, accession), ())})
+        cross_kind = any(
+            left[0] != right[0] and left[1] != right[1]
+            for position, left in enumerate(kinds)
+            for right in kinds[position + 1:]
+        )
+        if not cross_kind:
+            continue
+        findings.append(
+            {
+                "kind": "accession_claimed_by_multiple_entities",
+                "namespace": namespace,
+                "identifier": accession,
+                "entities": sorted(set(holders)),
+                "reason": (
+                    f"{namespace}:{accession} is claimed by {len(distinct)} differently-named "
+                    "entities of incompatible kind (protein-ish vs compound-ish)"
+                ),
+            }
+        )
 
     ok = not findings
     summary = (

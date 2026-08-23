@@ -497,10 +497,24 @@ def test_forbidden_identifier_carrying_a_real_accession_is_a_false_real_identifi
 
 
 def test_one_accession_claimed_by_two_entities_is_a_conflict():
+    # C-076 / F-102 narrowed this obligation to a CROSS-KIND claim. The node id
+    # is kept deliberately, so the obligation stays where readers of this file
+    # expect it and the smoke count does not move.
+    #
+    # It used to pin two PROTEINS -- ``MenD`` and ``MenF`` -- sharing one UniProt
+    # accession. That is the predicate C-073's review rejected in the pipeline,
+    # for contradicting **D-035 clause 3c**: a matching stable external
+    # identifier is *proof* that two differently-named rows are the same entity,
+    # so a name difference alone is agreement, not collision. The product owner's
+    # ruling of 2026-08-23 rejected it in the scorer too. What survives is the
+    # one true defect C-073 fixed upstream: an accession cannot denote a protein
+    # and a metabolite at once. The within-kind half is pinned in
+    # ``tests/test_c076_alias_holo_apo_identity.py``.
     case = _case()
     payload = _payload(
         [{"name": "menaquinone biosynthesis", "inputs": ["a"], "outputs": ["b"], "evidence": "e"}],
-        proteins=[{"name": "MenD", "uniprot": "P80867"}, {"name": "MenF", "uniprot": "P80867"}],
+        proteins=[{"name": "ALAS2", "drugbank": "DB00114"}],
+        compounds=[{"name": "Pyridoxal 5'-phosphate", "drugbank": "DB00114"}],
     )
     _declare(payload)
     report = validate_semantic_coverage(case, payload)

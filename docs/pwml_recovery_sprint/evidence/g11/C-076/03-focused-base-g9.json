@@ -1,0 +1,79 @@
+{
+  "label": "focused-base-g9",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c076base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c076base",
+    "--pin-verdict",
+    "C:/t/c076/docs/pwml_recovery_sprint/evidence/g11/pin/C-076/03-focused-base-g9.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt76b",
+    "tests/test_c076_alias_holo_apo_identity.py"
+  ],
+  "cwd": "C:/t/c076base",
+  "started_at": "2026-08-23T22:17:31+00:00",
+  "finished_at": "2026-08-23T22:17:40+00:00",
+  "duration_seconds": 9.342211700000007,
+  "timeout_seconds": 600.0,
+  "root_pid": 49080,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 49092,
+      "name": "python.exe",
+      "ppid": 49080
+    }
+  ],
+  "descendants_terminated": [
+    49092
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48780,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c076/docs/pwml_recovery_sprint/evidence/g11/C-076/03-focused-base-g9.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c076\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c076",
+    "repo_head": "129d9b2c070cbfa9a40b5523020fd933315ccbea",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

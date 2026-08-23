@@ -1796,11 +1796,15 @@
           "aliases": [
             "holo-EntB",
             "apo-Fur",
-            "holo-Fur",
-            "R196A"
+            "holo-Fur"
           ],
+          "kind": "modification_state",
+          "reason": "Cofactor-loading states of ONE polypeptide: EntB with and without its phosphopantetheine arm, Fur with and without bound Fe(II). They are distinct pathway states, not distinct proteins, so they MAY carry the parent protein's accession (D-035 clause 3c). A state carrying an accession no parent row claims is still a fabricated identity, and none of them is a separate protein entry."
+        },
+        {
+          "name": "R196A",
           "kind": "strain_or_construct",
-          "reason": "Modification states and a site-directed mutant; all collapse to the parent protein."
+          "reason": "A site-directed point mutant, i.e. a DIFFERENT polypeptide sequence from wild-type EntB rather than a state of it. It is not the parent protein and may never carry the parent's accession."
         },
         {
           "name": "NADH",

@@ -1,0 +1,128 @@
+{
+  "label": "affected-semantic-tip",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-076/10-affected-semantic-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt76e",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_cofactor_policy.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c076_alias_holo_apo_identity.py"
+  ],
+  "cwd": "C:\\t\\c076",
+  "started_at": "2026-08-23T22:26:23+00:00",
+  "finished_at": "2026-08-23T22:27:18+00:00",
+  "duration_seconds": 54.53557379999984,
+  "timeout_seconds": 900.0,
+  "root_pid": 51452,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 55788,
+      "name": "python.exe",
+      "ppid": 51452
+    },
+    {
+      "pid": 55212,
+      "name": "git.exe",
+      "ppid": 55788
+    },
+    {
+      "pid": 52244,
+      "name": "python.exe",
+      "ppid": 55788
+    },
+    {
+      "pid": 52428,
+      "name": "python.exe",
+      "ppid": 52244
+    },
+    {
+      "pid": 56080,
+      "name": "git.exe",
+      "ppid": 55788
+    },
+    {
+      "pid": 51368,
+      "name": "git.exe",
+      "ppid": 55788
+    },
+    {
+      "pid": 53464,
+      "name": "git.exe",
+      "ppid": 55788
+    },
+    {
+      "pid": 56548,
+      "name": "git.exe",
+      "ppid": 55788
+    }
+  ],
+  "descendants_terminated": [
+    51368,
+    52244,
+    52428,
+    53464,
+    55212,
+    55788,
+    56080,
+    56548
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 54776,
+      "name": "python.exe"
+    },
+    {
+      "pid": 56104,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-076/10-affected-semantic-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c076\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c076",
+    "repo_head": "129d9b2c070cbfa9a40b5523020fd933315ccbea",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

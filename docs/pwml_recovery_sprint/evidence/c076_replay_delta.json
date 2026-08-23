@@ -1,0 +1,89 @@
+{
+  "card": "C-076",
+  "finding": "F-102",
+  "base_sha": "129d9b2",
+  "what_was_rescored": "runs_verify/2026-08-22_2147 (the T-105 artifacts). NOT re-recorded against T-105, which is a frozen historical failed RC; this delta is reported for T-106's baseline.",
+  "command": "scripts/bench_acceptance.py --run-dir runs_verify/2026-08-22_2147",
+  "totals": {
+    "accession_claimed_by_multiple_entities": {
+      "base": 2,
+      "tip": 0
+    },
+    "acceptance_priority_1_false_real_identifiers": {
+      "base": 7,
+      "tip": 6
+    },
+    "every_other_scientific_error": "unchanged",
+    "denominators": "identical",
+    "completion": "identical (10/10 papers, 20/20 legs)"
+  },
+  "collisions_removed": [
+    {
+      "leg": "PMC12096016:research",
+      "accession": "uniprot:p0adi4",
+      "claimants": [
+        "EntB",
+        "holo-EntB"
+      ],
+      "both_in": "entities.proteins"
+    },
+    {
+      "leg": "PMC12452463:strict",
+      "accession": "uniprot:p10378",
+      "claimants": [
+        "EntE",
+        "enterobactin synthase"
+      ],
+      "both_in": "entities.proteins"
+    }
+  ],
+  "false_real_identifier_removed": [
+    {
+      "leg": "PMC12096016:research",
+      "name": "holo-EntB",
+      "identifiers": {
+        "uniprot": "P0ADI4"
+      },
+      "why": "a modification_state sharing the parent EntB row's accession"
+    }
+  ],
+  "legs_that_moved": {
+    "PMC12096016:research": {
+      "base": {
+        "ok": false,
+        "findings": 4,
+        "accession_claimed_by_multiple_entities": 1,
+        "false_real_identifier": 2,
+        "false_real_identifiers_error": 2
+      },
+      "tip": {
+        "ok": false,
+        "findings": 2,
+        "accession_claimed_by_multiple_entities": 0,
+        "false_real_identifier": 1,
+        "false_real_identifiers_error": 1
+      }
+    },
+    "PMC12452463:strict": {
+      "base": {
+        "ok": false,
+        "findings": 2,
+        "accession_claimed_by_multiple_entities": 1,
+        "false_real_identifier": 0,
+        "false_real_identifiers_error": 0
+      },
+      "tip": {
+        "ok": false,
+        "findings": 1,
+        "accession_claimed_by_multiple_entities": 0,
+        "false_real_identifier": 0,
+        "false_real_identifiers_error": 0
+      }
+    }
+  },
+  "gating_flips": {
+    "no_real_id_or_name_conflict_ok_false_to_true": [],
+    "note": "NONE. Both affected legs keep findings this card does not touch: PMC12096016/research keeps NADH (false_real) + apo-EntB (unmapped); PMC12452463/strict keeps 'enterobactin synthase complex' (unmapped)."
+  },
+  "runtime_release_status_unaffected": "bench/semantic_production.py::_audit_entities carries a SECOND copy of the within-kind collision rule and is what feeds the runtime release_status via strict_quarantine.py:2424. It is outside C-076's ownership boundary and is NOT changed here, so no run's release_status moves. Reported for a follow-up card."
+}
