@@ -772,9 +772,15 @@ def classify_release_status(
     # one block. Applied in sequence, the first to fire would take the status out
     # of ``release_ready`` and silence the second -- and on the leg F-100 was
     # registered from BOTH hold, so the record would have lost the very fact the
-    # finding is about. This is the same rule ``semantic_failed_checks`` above
-    # already follows: the FACT is recorded whenever it holds, cap or no cap, and
-    # only the STATUS is capped once.
+    # finding is about. Both facts are therefore recorded, and the status is
+    # capped ONCE.
+    #
+    # Recorded FROM ``release_ready`` ONLY, unlike ``semantic_failed_checks``
+    # above, which records on a FAILED verdict cap or no cap. The difference is
+    # deliberate and is C-072 precedent: a status the chain already lowered was
+    # lowered for a TECHNICAL reason, and appending a completeness reason to it
+    # would restate that refusal as a biological one. The two arms differ from
+    # each other in nothing.
     below_connected_core_floor = (
         connected_core_reactions is not None
         and not single_reaction_scope_requested

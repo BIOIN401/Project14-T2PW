@@ -132,6 +132,20 @@ from test_strict_quarantine_contract_alignment import _base  # noqa: E402
 #: cleanly where it is not reachable.
 BASE_SHA = "9cb491c9867a254c7dbf29bdbb01789803680ef9"
 
+#: The two production files C-074 owns. The diff guard at the bottom of this
+#: module is scoped to these rather than to all of ``src/``.
+#:
+#: NOT A WEAKENING. Every production line this card adds is in one of the two, so
+#: the guard still reads the whole C-074 diff. What the scope removes is reach
+#: this test never had any business having: once merged, an unscoped guard would
+#: police every LATER card additions to ``src/`` from inside a C-074 test file,
+#: failing on work this module knows nothing about. Boundary enforcement belongs
+#: to the merge gate, not here.
+OWNED_SOURCE_FILES = (
+    "src/t2pw/pipeline/release_status.py",
+    "src/t2pw/pipeline/strict_quarantine.py",
+)
+
 #: The committed run the two findings were measured on.
 RUN_DIR = ROOT / "runs_verify" / "2026-08-22_2147"
 
@@ -1003,11 +1017,14 @@ def test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src() -> No
     Asserted over the DIFF rather than over the files, because both files this
     card touches already cite measured legs by id in comments that predate it.
     What must hold is that C-074 added none.
+
+    Scoped to :data:`OWNED_SOURCE_FILES`, which is where every production line of
+    this card lives; see that constant for why the scope is not a weakening.
     """
 
     try:
         diff = subprocess.run(
-            ["git", "diff", BASE_SHA, "--", "src/"],
+            ["git", "diff", BASE_SHA, "--", *OWNED_SOURCE_FILES],
             cwd=str(ROOT),
             capture_output=True,
             text=True,
@@ -1025,8 +1042,10 @@ def test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src() -> No
         for line in diff.stdout.splitlines()
         if line.startswith("+") and not line.startswith("+++")
     ]
-    if not added:
-        pytest.skip("no added source lines to inspect")
+    # An ASSERT, not a skip: the base SHA is an ancestor of every branch this
+    # runs on, so the diff is never empty, and a guard that silently skips is a
+    # guard that has stopped guarding.
+    assert added, f"no added lines in {OWNED_SOURCE_FILES} against {BASE_SHA[:7]}"
 
     papers, pathways = _gold_identity()
     offenders: List[str] = []
@@ -1044,13 +1063,29 @@ def test_this_diff_puts_no_benchmark_paper_or_gold_pathway_name_into_src() -> No
 
 
 def test_neither_arm_reads_the_payload_for_its_request_side_input() -> None:
-    """The floor's exemption is derived from the REQUEST, never from what
-    survived. Asserted structurally: the predicate's only parameter is the
-    context, so there is no payload for it to read."""
+    """The floor exemption is derived from the REQUEST, never from what survived.
+
+    Asserted structurally, and against the PRODUCTION symbol: imported
+    function-locally so the module still collects at the base SHA, which is what
+    keeps the two G9 proofs above behavioural rather than symbol-absence.
+
+    INSPECTING THE MODULE-LEVEL WRAPPER AT THE TOP OF THIS FILE INSTEAD WOULD BE
+    VACUOUS. The wrapper takes ``pathway_context`` by construction, so the
+    assertion would stay green if production later grew a ``payload=``
+    parameter -- which is the exact regression this guard exists to catch. The
+    module check below is what makes that impossible to reintroduce quietly.
+    """
 
     import inspect
 
-    signature = inspect.signature(requested_scope_is_a_single_reaction)
+    from t2pw.pipeline.strict_quarantine import (
+        requested_scope_is_a_single_reaction as production,
+    )
+
+    assert production.__module__ == "t2pw.pipeline.strict_quarantine", (
+        "this guard must bind to production, never to the wrapper in this module"
+    )
+    signature = inspect.signature(production)
     assert list(signature.parameters) == ["pathway_context"], (
         "a payload-shaped parameter here would let the floor score itself"
     )
