@@ -183,6 +183,21 @@ WARN_SCOPE_CONFLICT_PREFIX = "stage-0 scope conflict (recorded, run continued): 
 #: Artifact naming the requested vs Stage-0-observed scope and the conflicts.
 SCOPE_CONFLICT_NAME = "scope_conflict.json"
 
+#: Why an aborted Stage-0 scope conflict has no PWML (D-062, C-077). Named HERE
+#: and not in ``pipeline.release_status``: that module is the classifier and this
+#: is one caller's reason line, exactly as ``_finalize_gate_failure`` gets its
+#: ``strict_technical_gates_blocked_export`` from the classifier's own vocabulary
+#: while this seam's cause has no entry there.
+#:
+#: The wording is deliberate on both halves. It says the run STOPPED BEFORE
+#: SERIALIZATION -- which is what happened -- and it does NOT say "no defensible
+#: connected core", which would be false: the payload that reached this point is
+#: on disk as ``stage1_payload.json`` and ``merged_payload.json`` and, on two of
+#: the six T-105 conflict legs, clears the gold set's own connected-core floor.
+#: This is the same distinction ``_finalize_gate_failure`` draws in its docstring
+#: -- ``diagnostic_only`` is a statement about SERIALIZATION, not about biology.
+REASON_STAGE0_SCOPE_CONFLICT = "stage0_scope_conflict_stopped_the_run_before_serialization"
+
 #: Warning text when the app rendered no extraction-focus box but the paper had a
 #: topic to name in it. Not a failure -- but a topic-fetched review will then be
 #: refused as ``ambiguous_review_scope``, and the reason must be on the record.
@@ -503,6 +518,73 @@ def _requested_scope(paper: Any) -> RequestedScope:
     )
 
 
+def _finalize_scope_conflict(outcome: RunOutcome, *, scope: RequestedScope) -> None:
+    """Terminal path: Stage 0 read a scope that contradicts the batch request.
+
+    Classifies the run as well as stopping it -- the same two-questions split
+    :func:`_finalize_gate_failure` makes, and for the same reason. Stopping the
+    run said only "this is not the requested paper"; every downstream reader then
+    had to re-derive "so was anything ever attempted?" from an absence. Measured
+    on the six T-105 conflict legs of ``runs_verify/2026-08-22_2147``, all six
+    manifest rows carried NO ``release_status`` at all, so ``batch.report``'s only
+    surviving reading of them was ``STATUS_INELIGIBLE`` -- whose own definition
+    says *"nothing was attempted, so nothing failed"*. That is false on the
+    evidence: Stage 1 completed, and ``stage1_payload.json`` and
+    ``merged_payload.json`` were both written before this function is reached.
+    D-062 reverses exactly that drop.
+
+    WHAT IS CLASSIFIED, AND WHY IT IS NOT ``review_required``
+    --------------------------------------------------------
+    D-062's ruling names ``review_required``. It is NOT constructible at this
+    seam, and that is a measurement, not a preference:
+
+    * ``PRODUCT_CONTRACT`` section 4 defines ``review_required`` as "**Valid,
+      useful PWML produced**, but one or more important biological uncertainties
+      are explicitly identified", and :attr:`ReleaseStatus.produced_pwml` encodes
+      that -- ``diagnostic_only`` is documented there as "the one state with no
+      final PWML". This seam is reached BEFORE the audit, the DB mapping, the
+      freeze and the export, so no PWML exists and none can.
+    * The only route to ``REVIEW_REQUIRED`` through
+      :func:`~t2pw.pipeline.release_status.classify_release_status` runs through
+      ``strict_gates_passed=True``. The strict technical gates never ran here.
+      Asserting they passed would fabricate a measurement, which is the one thing
+      a classifier input must never do.
+
+    So this path records what it can actually stand behind: the pipeline DID
+    execute, and the strict gates did NOT pass. That is ``diagnostic_only``, and
+    it is a statement about SERIALIZATION rather than about the biology --
+    :data:`REASON_STAGE0_SCOPE_CONFLICT` says so in the reason line rather than
+    letting ``strict_technical_gates_blocked_export`` stand alone and imply a gate
+    verdict nobody measured. Producing a ``review_required`` PWML instead would
+    require driving the run onward under an organism known to be wrong, which is a
+    product decision nobody has taken; it is escalated, not assumed.
+
+    ``strict_acceptance_eligible`` is ``False`` either way
+    (``release_status.py:836`` pins it to ``status == RELEASE_READY``), so
+    nothing here can raise the strict rate -- D-062's second prohibition.
+
+    THE REQUEST IS RECORDED, NEVER REWRITTEN. ``requested_scope`` lands beside
+    ``observed_context`` on the outcome and in the manifest row, in separate
+    fields. Measured on the same six legs, the requested ORGANISM reached the row
+    nowhere: ``topic`` carries the requested pathway alone and
+    ``scope_conflicts`` carries it only inside a prose sentence, so D-062's "with
+    the requested scope recorded alongside it so the mismatch stays auditable" was
+    not true of the preserved record. It is now.
+    """
+
+    from t2pw.pipeline.release_status import classify_release_status
+
+    outcome.requested_scope = scope.to_dict()
+    outcome.release_status = classify_release_status(
+        # Both observations, and both this path's own: Stage 1 completed (the
+        # caller only reaches here after ``pipeline_ready``), and the strict
+        # technical gates did not pass because they never ran.
+        pipeline_executed=True,
+        strict_gates_passed=False,
+        extra_reasons=(REASON_STAGE0_SCOPE_CONFLICT,),
+    )
+
+
 def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
     """Fold Stage 0's reading of this paper into the run, without rewriting the request.
 
@@ -577,6 +659,12 @@ def _reconcile_stage0_scope(at: Any, paper: Any, outcome: RunOutcome) -> bool:
             f"is not the paper the topic line asked for: {detail}"
         )
         outcome.detail = detail
+        # D-062 / C-077. Stopping the run and CLASSIFYING it are two questions;
+        # this path used to answer only the first, so the manifest row's only
+        # surviving reading was ``STATUS_INELIGIBLE`` -- "nothing was attempted".
+        # Something was attempted and it completed. See _finalize_scope_conflict,
+        # including why the honest classification here is not ``review_required``.
+        _finalize_scope_conflict(outcome, scope=scope)
         return True
     outcome.warnings.append(f"{WARN_SCOPE_CONFLICT_PREFIX}{detail}")
     return False
@@ -699,6 +787,13 @@ class RunOutcome:
     #: What Stage 0 observed (pathways / organisms / aliases / ambiguities). Kept
     #: separate from the request so neither can be mistaken for the other.
     observed_context: Dict[str, Any] = field(default_factory=dict)
+    #: The batch's REQUEST for this paper, recorded when Stage 0 read something
+    #: that contradicts it (D-062: "with the requested scope recorded alongside it
+    #: so the mismatch stays auditable"). The OTHER half of the pair above, and
+    #: kept in its own field for the same reason: the requested organism is never
+    #: written into an observed one, and vice versa. Empty on every run that had
+    #: nothing to reconcile, so an unaffected row is byte-identical to before.
+    requested_scope: Dict[str, Any] = field(default_factory=dict)
     #: The release classification this run CARRIES -- the record the quarantine
     #: boundary froze, or the one ``_finalize_gate_failure`` built for a run the
     #: gates blocked. ``None`` means the run has none; it never means "not
@@ -766,6 +861,14 @@ class RunOutcome:
             row["scope_conflicts"] = list(self.scope_conflicts)
         if self.observed_context:
             row["observed_context"] = dict(self.observed_context)
+        # The request, beside the observation, never merged into it. Measured on
+        # the six T-105 conflict legs, the requested ORGANISM reached the row
+        # nowhere -- ``topic`` is the requested pathway alone -- so the mismatch
+        # D-062 requires to stay auditable was only recoverable by opening a
+        # per-paper file. Conditional like the two above, so a run with nothing
+        # to reconcile writes exactly the row it wrote before.
+        if self.requested_scope:
+            row["requested_scope"] = dict(self.requested_scope)
         # D-004 / D-038: the manifest records structured status INDEPENDENTLY of
         # the filename, so a consumer never has to equate ``pathway.pwml`` with
         # strict success. Exactly two keys, both conditional. D-038 struck

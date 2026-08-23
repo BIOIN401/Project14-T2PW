@@ -1,0 +1,325 @@
+{
+  "label": "c077-affected",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-077/08-c077-affected.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt77f",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_run.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_deadline_budget.py",
+    "tests/test_deadline_leg_timeout.py",
+    "tests/test_failure_detail.py",
+    "tests/test_paper_eligibility.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_release_status_classification.py"
+  ],
+  "cwd": "C:\\t\\c077",
+  "started_at": "2026-08-23T22:27:31+00:00",
+  "finished_at": "2026-08-23T22:30:26+00:00",
+  "duration_seconds": 175.38941739999973,
+  "timeout_seconds": 900.0,
+  "root_pid": 57064,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 57180,
+      "name": "python.exe",
+      "ppid": 57064
+    },
+    {
+      "pid": 46036,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 57152,
+      "name": "python.exe",
+      "ppid": 46036
+    },
+    {
+      "pid": 43416,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 55704,
+      "name": "python.exe",
+      "ppid": 43416
+    },
+    {
+      "pid": 55344,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 57204,
+      "name": "python.exe",
+      "ppid": 55344
+    },
+    {
+      "pid": 56756,
+      "name": "python.exe",
+      "ppid": 56956
+    },
+    {
+      "pid": 56956,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 55204,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 57128,
+      "name": "python.exe",
+      "ppid": 55204
+    },
+    {
+      "pid": 48024,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 54212,
+      "name": "python.exe",
+      "ppid": 48024
+    },
+    {
+      "pid": 54840,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 56860,
+      "name": "python.exe",
+      "ppid": 54840
+    },
+    {
+      "pid": 52092,
+      "name": "python.exe",
+      "ppid": 56860
+    },
+    {
+      "pid": 53804,
+      "name": "python.exe",
+      "ppid": 52092
+    },
+    {
+      "pid": 53488,
+      "name": "python.exe",
+      "ppid": 54952
+    },
+    {
+      "pid": 54952,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 54236,
+      "name": "python.exe",
+      "ppid": 57132
+    },
+    {
+      "pid": 57132,
+      "name": "python.exe",
+      "ppid": 53488
+    },
+    {
+      "pid": 56884,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 55476,
+      "name": "python.exe",
+      "ppid": 56884
+    },
+    {
+      "pid": 56412,
+      "name": "taskkill.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 54496,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 55900,
+      "name": "python.exe",
+      "ppid": 54496
+    },
+    {
+      "pid": 53080,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 56676,
+      "name": "python.exe",
+      "ppid": 53080
+    },
+    {
+      "pid": 50536,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 56804,
+      "name": "python.exe",
+      "ppid": 50536
+    },
+    {
+      "pid": 57492,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 57512,
+      "name": "python.exe",
+      "ppid": 57492
+    },
+    {
+      "pid": 58132,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 58152,
+      "name": "python.exe",
+      "ppid": 58132
+    },
+    {
+      "pid": 58244,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 58264,
+      "name": "python.exe",
+      "ppid": 58244
+    },
+    {
+      "pid": 58296,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 58316,
+      "name": "python.exe",
+      "ppid": 58296
+    },
+    {
+      "pid": 58340,
+      "name": "python.exe",
+      "ppid": 57180
+    },
+    {
+      "pid": 57620,
+      "name": "git.exe",
+      "ppid": 57180
+    }
+  ],
+  "descendants_terminated": [
+    43416,
+    46036,
+    48024,
+    50536,
+    52092,
+    53080,
+    53488,
+    53804,
+    54212,
+    54236,
+    54496,
+    54840,
+    54952,
+    55204,
+    55344,
+    55476,
+    55704,
+    55900,
+    56412,
+    56676,
+    56756,
+    56804,
+    56860,
+    56884,
+    56956,
+    57128,
+    57132,
+    57152,
+    57180,
+    57204,
+    57492,
+    57512,
+    57620,
+    58132,
+    58152,
+    58244,
+    58264,
+    58296,
+    58316,
+    58340
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 53024,
+      "name": "python.exe"
+    },
+    {
+      "pid": 55516,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-077/08-c077-affected.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c077\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c077",
+    "repo_head": "129d9b2c070cbfa9a40b5523020fd933315ccbea",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

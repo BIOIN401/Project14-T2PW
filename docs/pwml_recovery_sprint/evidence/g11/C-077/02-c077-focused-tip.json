@@ -1,0 +1,109 @@
+{
+  "label": "c077-focused-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-077/02-c077-focused-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt77b",
+    "tests/test_c077_stage0_conflict_disposition.py"
+  ],
+  "cwd": "C:\\t\\c077",
+  "started_at": "2026-08-23T22:21:15+00:00",
+  "finished_at": "2026-08-23T22:21:41+00:00",
+  "duration_seconds": 25.160454999999956,
+  "timeout_seconds": 600.0,
+  "root_pid": 51640,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 31716,
+      "name": "python.exe",
+      "ppid": 51640
+    }
+  ],
+  "descendants_terminated": [
+    31716
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 35936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 40696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 46416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 51416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 51428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 52328,
+      "name": "python.exe"
+    },
+    {
+      "pid": 52380,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-077/02-c077-focused-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c077\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c077",
+    "repo_head": "129d9b2c070cbfa9a40b5523020fd933315ccbea",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

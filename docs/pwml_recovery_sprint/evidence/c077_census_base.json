@@ -1,0 +1,545 @@
+{
+ "agreeing_stage0_research": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "normalization_actions": 0,
+   "proteins": 1,
+   "reactions": 1,
+   "review_flags": 0,
+   "skipped_format_rules": 0,
+   "stage0_observed_organisms": 1,
+   "stage0_observed_pathways": 1,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 163,
+    "name": "review_flags.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "mode": "research",
+  "observed_context": {
+   "aliases": [],
+   "ambiguities": [],
+   "observed_organisms": [
+    "Escherichia coli"
+   ],
+   "observed_pathways": [
+    "lipid A biosynthesis"
+   ]
+  },
+  "paper_id": "PMC1",
+  "seconds": "<elapsed>",
+  "stage": "research_report",
+  "status": "pass",
+  "warnings": [
+   "no research report: RAG did not trigger for this paper"
+  ]
+ },
+ "agreeing_stage0_strict": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "proteins": 1,
+   "pwml": {
+    "compounds": 2,
+    "reactions": 1
+   },
+   "pwml_bytes": 43,
+   "reactions": 1,
+   "stage0_observed_organisms": 1,
+   "stage0_observed_pathways": 1,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 43,
+    "name": "pathway.pwml"
+   },
+   {
+    "bytes": 48,
+    "name": "pwml_ir.json"
+   },
+   {
+    "bytes": 40,
+    "name": "pwml_ir_report.json"
+   },
+   {
+    "bytes": 17,
+    "name": "pwml_validation_report.json"
+   },
+   {
+    "bytes": 16,
+    "name": "pwml_qa.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "strict run completed; pathway.pwml is 43 bytes",
+  "mode": "strict",
+  "observed_context": {
+   "aliases": [],
+   "ambiguities": [],
+   "observed_organisms": [
+    "Escherichia coli"
+   ],
+   "observed_pathways": [
+    "lipid A biosynthesis"
+   ]
+  },
+  "paper_id": "PMC1",
+  "pwml_artifact": "pathway.pwml",
+  "release_status": {
+   "status": "release_ready",
+   "strict_acceptance_eligible": true
+  },
+  "seconds": "<elapsed>",
+  "stage": "pwml_export",
+  "status": "pass",
+  "warnings": []
+ },
+ "annotate_only_conflict": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "normalization_actions": 0,
+   "proteins": 1,
+   "reactions": 1,
+   "review_flags": 0,
+   "scope_conflicts": 1,
+   "skipped_format_rules": 0,
+   "stage0_observed_organisms": 1,
+   "stage0_observed_pathways": 1,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 596,
+    "name": "scope_conflict.json"
+   },
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 163,
+    "name": "review_flags.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "mode": "research",
+  "observed_context": {
+   "aliases": [],
+   "ambiguities": [],
+   "observed_organisms": [
+    "Lactococcus lactis"
+   ],
+   "observed_pathways": [
+    "menaquinone biosynthesis"
+   ]
+  },
+  "paper_id": "PMC12421875",
+  "scope_conflicts": [
+   "Stage 0 read organism 'Lactococcus lactis' but the batch requested 'Bacillus subtilis'"
+  ],
+  "seconds": "<elapsed>",
+  "stage": "research_report",
+  "status": "pass",
+  "warnings": [
+   "stage-0 scope conflict (recorded, run continued): Stage 0 read organism 'Lactococcus lactis' but the batch requested 'Bacillus subtilis'",
+   "no research report: RAG did not trigger for this paper"
+  ]
+ },
+ "empty_payload": {
+  "counts": {
+   "compounds": 0,
+   "entities": 0,
+   "proteins": 0,
+   "reactions": 0,
+   "transports": 0
+  },
+  "detail": "(no app error; the payload is simply empty)",
+  "failure_kind": "no_reactions",
+  "files": [
+   {
+    "bytes": 39,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 39,
+    "name": "merged_payload.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "the pipeline produced a pathway with no reactions and no transports",
+  "mode": "research",
+  "paper_id": "PMC1",
+  "seconds": "<elapsed>",
+  "stage": "stage1",
+  "status": "fail",
+  "warnings": []
+ },
+ "legacy_plan_record": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "normalization_actions": 0,
+   "proteins": 1,
+   "reactions": 1,
+   "review_flags": 0,
+   "skipped_format_rules": 0,
+   "stage0_observed_organisms": 1,
+   "stage0_observed_pathways": 1,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 163,
+    "name": "review_flags.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "mode": "research",
+  "observed_context": {
+   "aliases": [],
+   "ambiguities": [],
+   "observed_organisms": [
+    "Escherichia coli"
+   ],
+   "observed_pathways": [
+    "lipid A biosynthesis"
+   ]
+  },
+  "paper_id": "PMC5",
+  "seconds": "<elapsed>",
+  "stage": "research_report",
+  "status": "pass",
+  "warnings": [
+   "no research report: RAG did not trigger for this paper"
+  ]
+ },
+ "pinned_paper_no_request": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "normalization_actions": 0,
+   "proteins": 1,
+   "reactions": 1,
+   "review_flags": 0,
+   "skipped_format_rules": 0,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 163,
+    "name": "review_flags.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "mode": "research",
+  "paper_id": "PMC9",
+  "seconds": "<elapsed>",
+  "stage": "research_report",
+  "status": "pass",
+  "warnings": [
+   "no research report: RAG did not trigger for this paper"
+  ]
+ },
+ "research_pass": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "normalization_actions": 0,
+   "proteins": 1,
+   "reactions": 1,
+   "review_flags": 0,
+   "skipped_format_rules": 0,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 163,
+    "name": "review_flags.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "mode": "research",
+  "paper_id": "PMC1",
+  "seconds": "<elapsed>",
+  "stage": "research_report",
+  "status": "pass",
+  "warnings": [
+   "no research report: RAG did not trigger for this paper"
+  ]
+ },
+ "stage1_refused": {
+  "counts": {},
+  "detail": "Payload must include a processes object",
+  "failure_kind": "contract",
+  "files": [],
+  "issue_codes": [
+   "processes_required"
+  ],
+  "message": "Payload must include a processes object",
+  "mode": "strict",
+  "paper_id": "PMC1",
+  "seconds": "<elapsed>",
+  "stage": "stage1",
+  "status": "fail",
+  "warnings": []
+ },
+ "strict_gate_fail": {
+  "counts": {
+   "blocking_issues": 1,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 1,
+   "proteins": 1,
+   "reactions": 1,
+   "transports": 0
+  },
+  "detail": "{\n  \"gate_verdict\": {\n    \"failed\": true,\n    \"source\": \"legacy_artifacts\",\n    \"reason\": \"legacy_artifact_set\",\n    \"stage\": \"post_normalization_hard_gates\"\n  },\n  \"final_stage3_gate_report\": {},\n  \"superseded_gate_fail_report\": {\n    \"status\": \"failed\",\n    \"stage\": \"post_normalization_hard_gates\",\n    \"errors\": [\n      {\n        \"path\": \"/x\",\n        \"reason\": \"Forbidden complex reference detected: z\"\n      }\n    ]\n  }\n}",
+  "failure_kind": "contract",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 177,
+    "name": "gate_fail_report.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   }
+  ],
+  "issue_codes": [
+   "gate.forbidden_complex_reference_detected"
+  ],
+  "message": "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates",
+  "mode": "strict",
+  "paper_id": "PMC1",
+  "release_status": {
+   "completeness": null,
+   "coverage_evaluated": false,
+   "expansion_blocked_reason": "",
+   "missing_anchors": [],
+   "pipeline_executed": true,
+   "reasons": [
+    "strict_technical_gates_blocked_export"
+   ],
+   "retrieval_attempts": null,
+   "semantic_check_evaluability": [],
+   "semantic_evaluation": "not_evaluated",
+   "semantic_failed_checks": [],
+   "semantic_not_evaluated_reason": "no semantic verdict reached this classification: the caller passed no semantic input, so this is a MISSING INPUT, NOT a semantic failure and NOT a pass",
+   "status": "diagnostic_only",
+   "strict_acceptance_eligible": false,
+   "strict_gates_passed": false
+  },
+  "seconds": "<elapsed>",
+  "stage": "post_pipeline",
+  "status": "fail",
+  "warnings": []
+ },
+ "strict_pass": {
+  "counts": {
+   "blocking_issues": 0,
+   "compounds": 2,
+   "entities": 3,
+   "gate_errors": 0,
+   "proteins": 1,
+   "pwml": {
+    "compounds": 2,
+    "reactions": 1
+   },
+   "pwml_bytes": 43,
+   "reactions": 1,
+   "transports": 0
+  },
+  "detail": "",
+  "failure_kind": "",
+  "files": [
+   {
+    "bytes": 265,
+    "name": "stage1_payload.json"
+   },
+   {
+    "bytes": 439,
+    "name": "merged_payload.json"
+   },
+   {
+    "bytes": 99,
+    "name": "contract_reports.json"
+   },
+   {
+    "bytes": 439,
+    "name": "final_mapped.json"
+   },
+   {
+    "bytes": 43,
+    "name": "pathway.pwml"
+   },
+   {
+    "bytes": 48,
+    "name": "pwml_ir.json"
+   },
+   {
+    "bytes": 40,
+    "name": "pwml_ir_report.json"
+   },
+   {
+    "bytes": 17,
+    "name": "pwml_validation_report.json"
+   },
+   {
+    "bytes": 16,
+    "name": "pwml_qa.json"
+   }
+  ],
+  "issue_codes": [],
+  "message": "strict run completed; pathway.pwml is 43 bytes",
+  "mode": "strict",
+  "paper_id": "PMC1",
+  "pwml_artifact": "pathway.pwml",
+  "release_status": {
+   "status": "release_ready",
+   "strict_acceptance_eligible": true
+  },
+  "seconds": "<elapsed>",
+  "stage": "pwml_export",
+  "status": "pass",
+  "warnings": []
+ }
+}
