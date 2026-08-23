@@ -4495,3 +4495,106 @@ question about whether a modified form of a protein is the same biological entit
 Do not "fix" this by reverting C-073's predicate — that was reviewed and rejected on measured
 evidence. Do not edit the gold to make a number move. The decision is which of D-035 clause 3c and
 the gold's `forbidden_identity` list governs a holo/apo pair, and it belongs to the product owner.
+
+---
+
+## F-103 — an unstated request produces a satisfied coverage verdict
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-23 from T-105**
+- **Root cause of F-100.** Owned by **C-074 arm B**.
+
+### The measurement
+
+`runs_verify/2026-08-22_2147`, `PMC13231680/strict` — the declared negative control, requested as
+**lipid A biosynthesis in Escherichia coli**:
+
+```
+coverage.requested_core_source : pathway_context
+coverage.requested_context     : {"pathway_name": "",          <-- EMPTY
+                                  "likely_organism": "Escherichia coli",
+                                  "key_compounds": ["phthalylsulfacetamide (PSA)","meropenem (MEM)",
+                                                    "Zn2+","sulfacetamide"],
+                                  "key_proteins":  ["NDM-1 (...)","LpxC (...)"]}
+coverage.requested_core_declared : True
+coverage.coverage_ratio          : 1.0
+coverage.unmatched_terms         : []
+release.status                   : release_ready
+```
+
+The requested pathway **never reached the context**. `pathway_name` is the empty string, and the
+key terms are the paper's own subject matter. Coverage then scored 6/6 against those terms,
+reported `completeness: 1.0`, and the leg shipped a bare `pathway.pwml`.
+
+### Why this defeats the check
+
+`collect_requested_core_terms` (`strict_quarantine.py:753`) documents the hazard itself:
+
+> *"Never derived from the surviving graph. Terms taken from what survived would match whatever
+> survived, which is not a test."*
+
+The terms here are not literally taken from the surviving graph — they come from a **Stage-0
+reading of the same paper**, which defeats the check by the identical mechanism one step earlier.
+The docstring's stated assumption, that `key_compounds` / `key_proteins` are *"what the preprocessor
+produced when it read the request, before any extraction could bias them"*, does not hold when
+Stage 0 reads the paper to build the context.
+
+Contrast `PMC12856317/strict` in the same run, where `pathway_name` is `"heme biosynthesis"` and
+the key terms are genuine heme-pathway members. **The field is right when Stage 0 states a pathway
+and degenerate when it does not** — so the defect is specifically the unstated case, not the
+context mechanism as a whole.
+
+### The rule that is missing
+
+`evaluate_core_coverage` has no notion of "the request was never stated". `requested_core_declared`
+is True whenever *any* terms were collected, regardless of whether a pathway was named.
+"Nothing was asked for" is currently read as "nothing is missing".
+
+### Scope note
+
+This finding is about the **release decision** only. Whether Stage 0 *should* propagate the batch's
+requested pathway into `pathway_context` is a separate question about the acquisition seam, and it
+is **not** carded here — C-074 makes the unstated case unjudgeable rather than satisfied, which is
+correct regardless of how the context comes to be empty.
+
+---
+
+## F-104 — a job with many short-lived children can never produce a compliant G11 report
+
+- **Severity** LOW (infrastructure / evidence discipline; no wrong artifact shipped) ·
+  **Class `policy_disagreement`**
+- **Registered 2026-08-23**, surfaced by the C-075 implementer.
+
+### The measurement
+
+`bounded_run.py` records **every** descendant PID it observes into its JSON report.
+`g11_evidence.py` caps a report at 64 KiB. The base-tree export helper `c045b_base_tree.py` spawns
+**1,745 short-lived `git.exe` children**, producing a 172,974-byte report that `check` then fails
+as `report_too_large`.
+
+The run itself was clean: `exit code (real) : 0`, `FINAL SURVIVING COUNT : 0`,
+`cleanup : success`, duration 224.84 s.
+
+### Why it is recorded rather than worked around
+
+Editing a G11 report is forbidden, so the implementer deleted the oversized artifact rather than
+commit a non-compliant one, and said so. That is the correct call under the current rules and it is
+the reason this finding exists rather than a silently trimmed file.
+
+**This is the F-090 hazard actually biting.** F-090 (MEDIUM, open) predicted exactly this and noted
+it *"did not bite at T-104 (45 descendants fit)"* and *"only threatens base-tree exports"*. It has
+now bitten, on a base-tree export, as predicted.
+
+### The disagreement to settle
+
+The descendant list is written for survivor accounting, and the lifecycle rule that matters is
+`FINAL SURVIVING COUNT : 0` — a number, not the list. A report that records 1,745 dead PIDs proves
+nothing the count does not. Candidate resolutions, none taken here:
+
+1. record descendants as a **count plus the survivors only**, keeping full detail only when
+   survivors are non-zero;
+2. raise or remove the 64 KiB cap for reports whose survivor count is zero;
+3. accept that base-tree exports are exempt and record them out of band.
+
+All three change evidence policy, which is a product-owner call. **No card opened.** Until it is
+settled, any job spawning thousands of children should be expected to fail `check` even when the
+run is perfectly clean, and that failure must not be read as a lifecycle violation.
