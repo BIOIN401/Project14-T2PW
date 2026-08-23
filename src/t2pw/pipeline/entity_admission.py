@@ -63,6 +63,7 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
+from t2pw.mapping import identity_admission
 from t2pw.pipeline.cofactor_policy import (
     ASSAY_REPORTER,
     COFACTOR_OR_CURRENCY,
@@ -407,6 +408,7 @@ def screen_additions(
     payload: Any,
     *,
     seed_text: str = "",
+    source_text: str = "",
     admission_report: Optional[Dict[str, Any]] = None,
     context: Optional[PathwayContext] = None,
 ) -> Tuple[Any, Dict[str, Any]]:
@@ -415,6 +417,32 @@ def screen_additions(
     Total: a payload that is not a dict is returned untouched with an empty
     ledger. Every branch below either drops a row or leaves it exactly as it was;
     no branch constructs, renames or repairs one.
+
+    C-073 ADDS ONE WRITE, AND IT IS NOT A SCREEN. Stage 2's identifier mapper
+    "resolves names against databases and never reads the paper"
+    (``map_ids.py:7719-7722``), which is why it shipped ``succinyl-CoA`` with
+    four real accessions out of a paper containing zero occurrences of
+    "succinyl". This function is the last place before mapping that HOLDS the
+    paper, so it leaves a compact, versioned, normalized copy of it on the
+    payload at :data:`identity_admission.SOURCE_INDEX_KEY`. That changes no call
+    signature anywhere: the key travels with the payload the caller keeps, the
+    same way this function's ledger already travels to ``final_mapped.json``.
+
+    ``source_text`` is a SEPARATE parameter from ``seed_text``, and the index is
+    built from ``source_text`` ALONE. Two reasons, both load-bearing:
+
+    * ``seed_text`` is the ``_unlocatable`` evidence-span rule's only input, and
+      both production merge sites withhold it deliberately
+      (``pipeline.py:726-731`` calls arming it "a pinned-baseline move, not
+      wiring"). Supplying the paper for the identity index must not, as a side
+      effect, arm a removal rule somebody decided to leave off.
+    * A6 (``test_entity_admission.py::test_new_acceptance_a6_the_gate_only_ever_subtracts``)
+      requires that this function add no top-level payload key. The index IS such
+      a key -- the one addition C-073 charters -- so it is written only when a
+      caller explicitly asks for it by name. No caller does today, so A6's
+      property holds unchanged for every existing call site, and wiring
+      ``source_text=`` at a merge site is a deliberate, visible decision rather
+      than something that happens to a caller that passed ``seed_text``.
     """
     ledger: Dict[str, Any] = {
         "schema_version": SCHEMA_VERSION, "removed": [], "demoted": [],
@@ -423,6 +451,25 @@ def screen_additions(
     }
     if not isinstance(payload, dict):
         return payload, ledger
+
+    # Before every other branch, so no early return anywhere below can leave a
+    # leg without an index. Absent text writes NO KEY at all rather than an empty
+    # one, so a payload with no paper is byte-identical to today's.
+    index = identity_admission.build_source_index(source_text)
+    if index is not None:
+        payload[identity_admission.SOURCE_INDEX_KEY] = index
+        # A receipt, not the blob: the index itself would bloat every artifact by
+        # the size of the paper. Written only when there IS an index, so a leg
+        # with no paper emits the ledger C-060 pinned, key for key. It is a
+        # convenience only -- :func:`carry_forward` rebuilds the ledger from its
+        # own field list, so a RAG leg's second merge drops this receipt while
+        # keeping the index on the payload. The authoritative record of what
+        # mapping could evaluate is ``report["identity_admission"]["source_index"]``.
+        ledger["source_index"] = {
+            "schema_version": identity_admission.SCHEMA_VERSION,
+            "status": "written",
+            "length": int(index["length"]),
+        }
 
     reactions_before = _reaction_count(payload)
     orphaned = _screen_hallucinations(payload, seed_text, admission_report, ledger)
