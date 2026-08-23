@@ -1,0 +1,144 @@
+{
+  "label": "smoke-tip",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-076/07-smoke-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt76s",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\t\\c076",
+  "started_at": "2026-08-23T22:19:58+00:00",
+  "finished_at": "2026-08-23T22:22:28+00:00",
+  "duration_seconds": 149.1284963999999,
+  "timeout_seconds": 900.0,
+  "root_pid": 51416,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 51428,
+      "name": "python.exe",
+      "ppid": 51416
+    },
+    {
+      "pid": 51896,
+      "name": "python.exe",
+      "ppid": 51428
+    },
+    {
+      "pid": 51916,
+      "name": "python.exe",
+      "ppid": 51896
+    },
+    {
+      "pid": 51940,
+      "name": "python.exe",
+      "ppid": 51428
+    },
+    {
+      "pid": 51960,
+      "name": "python.exe",
+      "ppid": 51940
+    },
+    {
+      "pid": 51512,
+      "name": "python.exe",
+      "ppid": 51516
+    },
+    {
+      "pid": 51516,
+      "name": "python.exe",
+      "ppid": 51428
+    },
+    {
+      "pid": 51932,
+      "name": "python.exe",
+      "ppid": 52036
+    },
+    {
+      "pid": 52036,
+      "name": "python.exe",
+      "ppid": 51428
+    }
+  ],
+  "descendants_terminated": [
+    51428,
+    51512,
+    51516,
+    51896,
+    51916,
+    51932,
+    51940,
+    51960,
+    52036
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 35936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 40696,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-076/07-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c076\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c076",
+    "repo_head": "129d9b2c070cbfa9a40b5523020fd933315ccbea",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
