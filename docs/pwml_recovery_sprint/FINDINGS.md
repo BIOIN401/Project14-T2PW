@@ -4646,3 +4646,308 @@ revisit.
 of registration, so no production path writes the index yet. This finding becomes live at exactly
 the moment that hunk lands, and should be closed **before** the interactive app is used against a
 real paper — the batch legs that T-106 runs do not touch the interactive curator.
+
+---
+
+## F-106 — the seed paper's provenance mark carries a PATHWAY NAME where a paper title belongs
+
+- **Severity** LOW (curator-facing reporting only; no wrong artifact ships, no gate reads it) ·
+  **Class `reporting_defect`**
+- **Registered 2026-08-23**, surfaced by the C-075 reviewer. **Does NOT block T-106.**
+- **C-075's verdict is unaffected** — proved below, not asserted.
+
+### The observation
+
+Two corpus rows carry a `rag_provenance` record whose `source_title` is a *pathway name*:
+
+```
+runs/2026-07-27_1623/.../PMC12312563__structures-of-listeria.../strict   entity "α-ketoglutarate"
+  rag_provenance = {"source_id": "seed_paper",
+                    "source_title": "menaquinone biosynthesis",          <-- a PATHWAY
+                    "source_type": "paper", "chunk_id": ""}
+  the real paper title sits one field away, in the row's own source_papers:
+    {"source_id": "PMC12312563", "title": "Structures of Listeria monocytogenes MenD in ThDP-bound
+     and in-crystallo captured intermediate I-bound forms."}
+
+runs/2026-07-28_0919/.../PMC13278307__an-overview-of-mobile-colistin.../strict  entity "pmrCAB operon"
+  rag_provenance = {"source_id": "seed_paper",
+                    "source_title": "lipid A modification (colistin resistance)",   <-- a PATHWAY
+                    "source_type": "paper", "section": "introduction",
+                    "chunk_id": "cbea424a0ce3ebb83a7dacb98484ae4c"}
+```
+
+**The premise needs one correction before anything else.** The three fields are not mutually
+inconsistent: `source_type: "paper"` is TRUE (the seed *is* a paper) and `source_id: "seed_paper"`
+is TRUE (`provenance.py:102` `SEED_SOURCE_ID`). **Exactly one field is wrong — `source_title`.**
+That matters for scoping: this is one mislabeled string, not a fabricated provenance record.
+
+### Where the mislabel originates — two adjacent lines, both in the app
+
+The pathway name reaches `source_title` by two routes, and the two observed rows exercise one each.
+
+**Chunk route** (produced the `pmrCAB operon` row — it carries a `chunk_id`):
+
+`src/t2pw/app/streamlit_app.py:590`
+```python
+seed=ingest.seed_candidate(
+    seed_text,
+    title=str(_safe_dict(pathway_context).get("pathway_name") or ""),   # <-- HERE
+```
+becomes `CandidatePaper.title` (`ingest.py:288`, whose honest fallback `"uploaded seed paper"` is
+reached only when `pathway_name` is empty), then every seed `Chunk.source_title` with
+`source_type="paper"` hardcoded (`ingest.py:344-345` and `375-376`) and `source_id=SEED_SOURCE_ID`
+(`ingest.py:286`), then `rag_provenance` via `synthesize._provenance_from_chunk` (`synthesize.py:411-417`).
+
+**Descriptor route** (produced the `α-ketoglutarate` row — `chunk_id` is `""`):
+
+`src/t2pw/app/streamlit_app.py:637`, inside the literal at `:633-640`
+```python
+_seed_name = str(pathway_context.get("pathway_name") or pathway_context.get("title") or "").strip()
+...
+"source_id": "seed_paper",
+"source_title": _seed_name or "uploaded seed paper",    # <-- HERE
+"source_type": "paper",
+```
+consumed by `synthesize._seed_source_descriptor` (`synthesize.py:446-470`) and stamped as the
+fallback provenance at `synthesize.py:946-947`.
+
+**Why a pathway name is what lands there.** Stage 0's context schema has **no document-title field
+at all** — `src/t2pw/llm/prompts/preprocess_system.txt:151-155` and `:189`, where `pathway_name` is
+specified as *"short name of the pathway (e.g., \"obafluorin biosynthesis\")"*. So
+`streamlit_app.py:630`'s `pathway_context.get("title")` fallback can never fire, and the only
+non-empty string available at that seam is the pathway name. The app is not mislabeling by
+accident so much as reaching for a field that does not exist.
+
+### It cannot change admission. Measured, not read.
+
+`provenance_route` (`identity_admission.py:504-510`) tests **key presence and non-emptiness only**:
+
+```python
+for key in PROVENANCE_ROUTE_KEYS:
+    value = row.get(key)
+    if isinstance(value, dict) and value:
+        return key
+```
+
+Replayed offline over the two committed artifacts against their own `01_source_text.txt`
+(`evidence/g11/F-106/03-replay-identity-support-r3.json`, exit 0, `FINAL SURVIVING COUNT : 0`,
+`cleanup : success`) — only the `rag_provenance` field values vary between variants:
+
+```
+as-committed                 -> not_evaluated  identity_from_another_admitted_source  route=rag_provenance
+source_title="" type=pathbank-> not_evaluated  identity_from_another_admitted_source  route=rag_provenance
+fabricated id AND title      -> not_evaluated  identity_from_another_admitted_source  route=rag_provenance
+{"whatever": 1}  (no source fields at all)
+                             -> not_evaluated  identity_from_another_admitted_source  route=rag_provenance
+rag_provenance = {}          -> unsupported    identity_not_supported_by_source       route=-
+rag_provenance DELETED       -> not_evaluated  identity_from_another_admitted_source  route=source_papers
+```
+
+Two things follow. **The values are inert** — a wholly fabricated `source_id`/`source_title`/
+`source_type` behaves identically to the committed one, and to a dict with no source fields at all.
+**The mislabeled tuple is not even the load-bearing route for these two rows**: delete
+`rag_provenance` outright and both still route on `source_papers`, which names a real PMC id
+(`PMC12312563`, `PMC12844150`).
+
+And the route never grants anything. `identity_admission.py:583-586` returns
+`STATUS_NOT_EVALUATED`, never `STATUS_SUPPORTED`; `map_ids._admit_identities` pass A
+(`map_ids.py:8198-8213`) `continue`s on both `supported` and `not_evaluated` and calls
+`_withhold_identity` **only** on `unsupported`. The pass can withhold. It cannot admit.
+
+The committed suite already pins this and did so before this finding existed:
+`tests/test_c075_source_support_armed.py:1249-1283`
+(`test_the_route_value_is_never_read_so_seed_paper_is_not_a_special_case`) asserts *via the AST*
+that `SELF_REFERENTIAL_ROUTE_SOURCE` has zero `Load` occurrences, and `:1286+`
+(`test_an_abstaining_row_acquires_nothing_and_is_never_called_supported`) pins
+`supported == 0`, `not_evaluated == 3`, and pass B still stripping the kind conflict.
+
+### The real escape hatch, stated honestly — and it is not this
+
+A genuinely unsupported row *is* rescued by **the presence of any non-empty route carrier**.
+Probe on the F-096 hallucination (`runs/2026-08-02_2130/papers/PMC12180156/strict`,
+`evidence/g11/F-106/04-fabricated-mark-probe.json`, exit 0, `FINAL SURVIVING COUNT : 0`,
+`cleanup : success`):
+
+```
+succinyl-CoA (8 accessions), as-committed  -> unsupported   <-- correctly refused
+  + rag_provenance {"source_id":"seed_paper","source_title":"menaquinone biosynthesis", ...}
+                                            -> not_evaluated
+  + rag_provenance {"x": 1}                 -> not_evaluated   <-- SAME
+```
+
+`{"x": 1}` is as effective as the full fabricated tuple. So the admission surface is *carrier
+presence*, which is the product owner's 2026-08-23 ruling implemented as written, measured by
+C-075 at 32 rescues / 0 collateral / 3 hallucinations still refused over 678 eligible rows.
+**Correcting `source_title` would not narrow that surface by a single row.** Anyone who wants that
+surface narrowed is asking for a different decision from the product owner, not for this defect.
+
+### The two rows are sound, and their synonym evidence never touches the mark
+
+Both identities were resolved by the mapper from its own candidates, recorded in `mapping_meta`:
+
+| row | resolver evidence | paper's own spelling (measured) |
+|---|---|---|
+| `α-ketoglutarate` | `source: "db"`, `providers: ["PathBankDB"]`, one candidate `pathbank_compound_id 134` *Oxoglutaric acid* (`short_name` AKG), score 1.0, `chosen_rule: pathbank_compound_id`, `confidence: 1.0` → 9 accessions incl. `HMDB0000208` | `2-oxoglutarate` **8×**, `ketoglutarate` **0×** |
+| `pmrCAB operon` | `provider: "UniProt"`, `source: "api"`, `P30843` *Transcriptional regulatory protein BasR*, `gene_names: ["basR","pmrA"]`, E. coli K12, `reviewed: true`, score 0.85, `alias_source: "gene_name"`, `matched_alias: "pmrA"` | `PmrAB` **4×**, `pmrCAB` **0×** |
+
+Neither resolution consulted `rag_provenance`. `rag/conform.py:283-292` reaches the same verdict
+independently, from an audit of every `merged_payload.json` under `runs/`: it names
+`'pmrCAB operon' (PMC13278307)` and `'α-ketoglutarate' (PMC12312563)` among seed-tagged rows that
+are the ONLY row for their species, and refuses to gate on the tag because *"a tag-based rule would
+have deleted real chemistry"*.
+
+**One precision correction to C-075's own prose, which is not an evidence failure.**
+`identity_admission.py:242-243` and `tests/test_c075_source_support_armed.py:1226-1228` state that
+PMC13278307 *"writes `pmrA` 4 times"*. Measured: all four occurrences are inside **`PmrAB`** (raw
+case-insensitive `pmrA` = 4, raw `PmrAB` = 4; under the module's own `normalize_text`, token
+`pmra` = **0** and `pmrab` = **4**). The substance holds exactly — the paper discusses the PmrAB
+regulator throughout and never writes `pmrCAB` — but the count is of a substring, not a standalone
+token. Recorded here so that a future reader who re-measures `pmra` = 0 does not mistake an
+imprecise count for a fabricated citation.
+
+### Where the wrong title actually surfaces
+
+Only in prose a human reads:
+
+- `rag/tiers.py:275` — `cited = ", ".join(s["title"] or s["source_id"] for s in quoted[:3])` builds
+  the tier **reason** string, so a curator can be told `"menaquinone biosynthesis"` is one of the
+  *"identified papers"*. The tier itself is decided on `source_id` counts (`tiers.py:273`
+  `independent = len({s["source_id"] for s in quoted})`) and never on the title;
+  `source_type` is not even in tiers' `rag_provenance` carrier map (`tiers.py:100-103`).
+- `pipeline/lineage.py:113` — `source_type` is declared *"advisory FREE text, not a closed
+  vocabulary: never aggregate on it"*, so by its own contract it drives nothing.
+- `rag/provenance.py:168-177` (`_has_resolvable_source`), `bench/semantic.py:476`,
+  `pipeline/strict_quarantine.py:2386` — all three test **non-emptiness or presence** of
+  `source_id` / the carrier. None reads `source_title`; none reads `source_type`.
+
+That is the whole blast radius: one misleading sentence in a curator-facing rationale.
+
+### Classification and the T-106 verdict
+
+`reporting_defect`. The sprint's rule is that only `product_contract_violation` justifies a code
+change, and nothing here violates the contract — no artifact is wrong, no gate consumes the field,
+no identifier is admitted or withheld differently, and the two affected rows are correct biology
+with database- and resolver-grounded identities.
+
+**It does not block T-106.** No release gate and no acceptance scorer reads `source_title` or
+`source_type`, so fixing it cannot move a T-106 number in either direction; and both origin lines
+sit in `streamlit_app.py`, the file the whole RC runs through, where a cosmetic edit before a
+20-leg run is pure downside. **No card is opened.** If it is ever fixed, fix it as a rider on a
+card that already owns `streamlit_app.py:588-592` and `:633-640` — pass the seed document's own
+title where one exists and otherwise let `ingest.py:288`'s existing `"uploaded seed paper"`
+fallback stand — and only after T-106.
+
+### C-075 is not affected
+
+Its trusted-route clause does not rest on trusting the mark's **values**. It rests on the mark's
+**presence**, the value is never read (pinned by AST assertion), the route yields `not_evaluated`
+and never `supported`, the pass can only withhold, and both affected rows would route identically
+on `source_papers` with the seed record deleted. C-075's measured numbers — 32 route rescues,
+4 span rescues, 3 hallucinations still refused, 0 collateral over 678 eligible rows — are numbers
+about carrier presence and are untouched by this finding. **No re-review is owed.**
+
+---
+
+## F-099 — AMENDMENT, 2026-08-23: re-measured after the pass was armed. Severity was wrong, and it blocks T-106
+
+- **Severity revised LOW → HIGH.** Class unchanged: **`product_contract_violation`**.
+- **Amended by the Lead Orchestrator, 2026-08-23**, at integration tip `9831fc1`.
+- **Carded as C-078** (`prompts/C-078.md`). Evidence: `evidence/g11/F-099/01-blastradius.json`,
+  `02-seamdetail.json`, `03-dblive.json` — all three `FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+
+### Why it was re-measured
+
+The original entry deferred the finding on the grounds that *"Pass A is dormant in production
+pending the wiring blocker, so **today this cannot fire at all**."* That blocker is discharged: the
+wiring hunk landed at `f12115a` and C-075 merged at `81b0bf9`. The pass is armed. The finding
+became reachable at that moment and its recorded blast radius had never been re-derived against the
+committed corpus.
+
+Re-deriving it changed the answer in two independent ways. Both are measured offline from committed
+artifacts and current source.
+
+### Correction 1 — the scope note is wrong. `mapped_ids` IS affected
+
+The original entry states: *"Not affected: `mapped_ids`. hmdb / kegg / chebi / pubchem / cas /
+biocyc / chemspider stay withheld… Affected: the strict PWML export path only."*
+
+`db_resolver.py:459-472`, the admitted branch of `apply_compound_db_resolution`, ends:
+
+```python
+out["hmdb_id"]     = chosen.get("hmdb_id")
+out["kegg_id"]     = chosen.get("kegg_id")
+out["pubchem_cid"] = chosen.get("pubchem_cid")
+out["chebi_id"]    = chosen.get("chebi_id")
+for key in ["description", "cas", "biocyc_id", "chemspider_id", "drugbank_id"]:
+    out[key] = chosen.get(key)
+out["mapped_ids"] = _mapped_ids_from_row(chosen)      # wholesale overwrite
+```
+
+`mapped_ids` is **rebuilt from the DB row** — not merged, not filtered. Every namespace the identity
+gate withheld returns if the matched PathBank record carries it, and those namespaces are exactly
+what acceptance **priority 1** counts.
+
+This runs **pre-freeze**, so the restored identity enters the canonical graph. That is not an
+exporter repairing biology after the freeze (merge rule 8); it is the refused identity becoming
+canonical.
+
+### Correction 2 — the corpus figure is 5, not 1
+
+The original *"exactly one row in the 53-artifact committed corpus (`succinyl-CoA`,
+PMC12180156/research, withheld by Pass A)"* was measured on a Pass-A-only corpus. Against the 22
+committed `final_mapped.json` artifacts of T-104 and T-105:
+
+```
+rows carrying mapping_meta               : 379
+rows with non-empty rejected_mapped_ids  : 11
+  of those, in a compounds container     :  8
+  of those, refusal names a pathbank id  :  5   <- the exact F-099 seam
+```
+
+All five are `2,3-dihydro-2,3-dihydroxybenzoate`, each with `chebi`, `kegg`, `pubchem` and
+`pathbank_compound_id` refused and the PathBank scalar genuinely cleared from the row — which is
+precisely the precondition that skips the legacy branch at `compound_resolution.py:502` and drops
+the row into the name-keyed resolver:
+
+| leg | rejected namespaces | pathbank scalar still on row |
+|---|---|---|
+| PMC12096016/research | chebi, kegg, pathbank_compound_id, pubchem | False |
+| PMC12096016/research | chebi, kegg, pathbank_compound_id, pubchem | False |
+| PMC12096016/strict | chebi, kegg, pathbank_compound_id, pubchem | False |
+| PMC12452463/strict | chebi, kegg, pathbank_compound_id, pubchem | False |
+| PMC12452463/strict | chebi, kegg, pathbank_compound_id, pubchem | False |
+
+The mechanism discriminates correctly, which is the evidence this reading is real rather than a
+pattern match: `Fe3+` (PMC12096016/research) has only `kegg` refused, **still carries its PathBank
+scalar**, and therefore takes the legacy branch untouched. The five that fall through are exactly
+the five whose scalar is gone.
+
+Two of the affected legs are load-bearing. **PMC12452463/strict** is F-094's leg — the only strict
+leg that emitted a bare `pathway.pwml`. **PMC12096016** is C-076's leg.
+
+### The live-DB precondition holds
+
+F-099 is conditional on a reachable PathBank. All 11 `db_resolution` records in the committed corpus
+read `available: True` with **no** unavailability reason. The DB was reachable on both T-104 and
+T-105 and is reachable now.
+
+### Also confirmed
+
+`grep -rn "rejected_mapped_ids" src/ --include=*.py` returns hits in `mapping/identity_admission.py`,
+`mapping/map_ids.py` and `pipeline/entity_identity.py`, and **zero hits anywhere in
+`src/t2pw/pwml/`**. The refusal record is not consulted at this seam at all.
+
+### Open, deliberately not carded here
+
+Three refused rows — `Fur`, `apo-EntB`, `holo-EntB` on PMC12096016/research — carry a refused
+`uniprot` and are proteins. `pwml/` has an admission gate for compounds only; `_admit_db_identity`
+has no protein counterpart. **Whether the protein path has the same defect is a separate question**
+and C-078 is instructed to report on it without changing it.
+
+### The one premise C-078 must prove before it may implement
+
+Everything above shows the re-attachment *can* happen. It does not establish that pre-freeze
+compound resolution runs **after** the identity gate on a production leg. If the gate re-imposes its
+refusal downstream, the finding is moot. C-078 §3 requires that ordering to be proven behaviourally
+through a production entry point before any fix is written, and to be reported rather than worked
+around if it does not hold.
