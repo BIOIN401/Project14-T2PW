@@ -5574,6 +5574,7 @@ if submit:
             stage_one_in_scope,
             stage_two if isinstance(stage_two, dict) else {},
             pathway_context=pathway_context_from_stage_zero(pathway_context),
+            source_text=text,
         )
 
     # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather

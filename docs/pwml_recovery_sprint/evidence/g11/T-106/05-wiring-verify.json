@@ -1,0 +1,90 @@
+{
+  "label": "wiring-verify",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/wire",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_entity_admission.py",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-23T19:14:42+00:00",
+  "finished_at": "2026-08-23T19:15:12+00:00",
+  "duration_seconds": 29.307340600003954,
+  "timeout_seconds": 900.0,
+  "root_pid": 370892,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 370956,
+      "name": "python.exe",
+      "ppid": 370892
+    }
+  ],
+  "descendants_terminated": [
+    370956
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 11212,
+      "name": "python.exe"
+    },
+    {
+      "pid": 23400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 370708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 370720,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/T-106/05-wiring-verify.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "81b0bf9e6e57ea6f542f49d6b8756e7fc7ef7dc1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "wire",
+    "token": "wire:370720:d4adfb25f8e99b28",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
