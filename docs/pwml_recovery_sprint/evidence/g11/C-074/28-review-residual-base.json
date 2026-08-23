@@ -1,0 +1,94 @@
+{
+  "label": "rev-c074-residual-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/rvc74rb",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_semantic_production_no_gold.py"
+  ],
+  "cwd": "C:\\t\\c074base",
+  "started_at": "2026-08-23T18:33:38+00:00",
+  "finished_at": "2026-08-23T18:33:47+00:00",
+  "duration_seconds": 9.016955099999905,
+  "timeout_seconds": 2400.0,
+  "root_pid": 318804,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 316888,
+      "name": "python.exe",
+      "ppid": 318804
+    },
+    {
+      "pid": 321088,
+      "name": "python.exe",
+      "ppid": 316888
+    }
+  ],
+  "descendants_terminated": [
+    316888,
+    321088
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 11212,
+      "name": "python.exe"
+    },
+    {
+      "pid": 23400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 317488,
+      "name": "python.exe"
+    },
+    {
+      "pid": 320196,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/C-074/28-review-residual-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "012daf4c2453c13355c725ef28dc0aea655068f4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "revc074",
+    "token": "revc074:317488:fad5394fab00ccfb",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

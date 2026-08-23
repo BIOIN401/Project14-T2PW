@@ -4598,3 +4598,51 @@ nothing the count does not. Candidate resolutions, none taken here:
 All three change evidence policy, which is a product-owner call. **No card opened.** Until it is
 settled, any job spawning thousands of children should be expected to fail `check` even when the
 run is perfectly clean, and that failure must not be read as a lifecycle violation.
+
+---
+
+## F-105 — the source index rides into the interactive curator prompt at a second, unfixed site
+
+- **Severity** MEDIUM (cost and prompt quality; no wrong artifact shipped) ·
+  **Class `product_contract_violation`**
+- **Registered 2026-08-23**, surfaced by the C-075 reviewer. **Blocks arming the app in anger.**
+
+### The measurement
+
+C-075 Extension A fixed the audit LLM prompt by filtering at serialization
+(`audit_json_llm.payload_for_prompt`, keyed off `identity_admission.SOURCE_INDEX_KEY`). Verified on
+a real leg: index blob 64,880 bytes, prompt byte-identical with and without the key present,
+`source_text_index` absent from the prompt, and the payload the audit returns still carries the
+index so `map_payload` still refuses `succinyl-CoA`.
+
+**There is a second site with the same shape and it is not fixed.**
+
+`src/t2pw/curation/interactive_curator.py:164`
+`strip_payload_for_interactive_context` is a **blacklist** — `_RAW_TEXT_KEYS` (exact membership)
+and `_BULKY_KEY_TOKENS` (substring). `source_text_index` matches neither: the exact set carries
+`source_text`, not `source_text_index`, and no bulky token is a substring of it.
+
+`run_interactive_curator_round` (`streamlit_app.py:2804`) then `json.dumps` that payload into a
+multimodal prompt (`interactive_curator.py:255-259`). Once the source index is armed, roughly
+65 KB of index rides into **every interactive curator round**.
+
+### Why it is registered rather than fixed
+
+`interactive_curator.py` is outside C-075's ownership boundary, and the C-075 implementer
+correctly declined to reach for it. Widening a card mid-correction to a file it does not own is
+how boundaries stop meaning anything.
+
+### The design point worth keeping
+
+Extension A and this site fail differently for the same reason: **one filters by an allow-list
+keyed off the constant, the other by a blacklist that has to be remembered.** A blacklist silently
+admits every future key. If this is carded, prefer making the interactive path consult the same
+`PROMPT_OMITTED_PAYLOAD_KEYS` constant rather than adding one more string to a list nobody will
+revisit.
+
+### Scope
+
+**Not currently reachable.** The wiring hunk that arms the source index is not merged at the time
+of registration, so no production path writes the index yet. This finding becomes live at exactly
+the moment that hunk lands, and should be closed **before** the interactive app is used against a
+real paper — the batch legs that T-106 runs do not touch the interactive curator.
