@@ -1,0 +1,685 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 2,
+        "organisms_added": 0,
+        "locations_added": 2,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 5,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:lserine",
+            "entity_type": "compound",
+            "name": "L-serine",
+            "path": "/entities/compounds/5",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:atp",
+            "entity_type": "compound",
+            "name": "ATP",
+            "path": "/entities/compounds/7",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "path": "/entities/compounds/10",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 0,
+            "hash": "sha256:e3b0c44298fc1c14",
+            "preview": ""
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "compound:isochorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:lserine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:atp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "isochorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 171,
+                  "hash": "sha256:b9855c4a3d39d029",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C18054\", \"name\": \"2-Amino-2-deoxyisochorismate\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "isochorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 781,
+                  "hash": "sha256:856c0c5f9e32c155",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}, \"pathbank_compound_id\": 407… (+581 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 348,
+                  "hash": "sha256:9bd7de4d44cf80d2",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00885\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": … (+148 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 94,
+                  "hash": "sha256:d53d7ac5b017f98f",
+                  "preview": "{\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc48c64e22695323",
+                  "preview": "{\"kegg\": \"C18054\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 from PathBankDB has the highest confidence and provides comprehensive mapped IDs (KEGG, ChEBI, PubChem, PathBank) for isochorismate, matching the compound entity type exactly. Candidate 1 is a subset with lower confidence, and c… (+116 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:622b3f115d8dc1c8",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 from PathBankDB has the highest confidence and provides comprehensive mapped IDs (KEGG, ChEBI, PubChem, PathBank) for isochorismate, mat… (+200 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 583,
+                  "hash": "sha256:7f0136d67bda9ebf",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00230\", \"name\": \"3,4-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\"… (+383 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 647,
+                  "hash": "sha256:a16697c9b9ab744e",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}, \"pathbank_compound_id\":… (+447 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 808,
+                  "hash": "sha256:71e87596ec2b78b7",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.322, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00… (+608 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 98,
+                  "hash": "sha256:14f9c8cfe7f435ce",
+                  "preview": "{\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3a2cb4d502bc3734",
+                  "preview": "{\"kegg\": \"C00196\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5e4c17c01923df66",
+                  "preview": "{\"kegg\": \"C00230\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:47f492d610d578ea",
+                  "preview": "{\"kegg\": \"C04171\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2966d747fb28a1c6",
+                  "preview": "{\"kegg\": \"C04524\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b3fa608cf2977dd3",
+                  "preview": "{\"kegg\": \"C05200\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:65888b5a46e7c2e6",
+                  "preview": "{\"kegg\": \"C21853\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "PathBankDB candidate provides exact match to compound name with high confidence and multiple mapped IDs including KEGG C04171.",
+              "source": "llm",
+              "raw": {
+                "chars": 188,
+                "hash": "sha256:1318168b379b8563",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"PathBankDB candidate provides exact match to compound name with high confidence and multiple mapped IDs including KEGG C04171.\" }"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:lserine",
+            "entity_type": "compound",
+            "name": "L-serine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "L-serine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:05b1a7b54688d2da",
+                  "preview": "{\"kegg\": \"C00065\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 501,
+                  "hash": "sha256:0480fc3da3489966",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00065\", \"name\": \"L-Serine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C02189\", \"name\": \"[Protein]-L-serine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02703\", \"name\"… (+301 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "L-serine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:atp",
+            "entity_type": "compound",
+            "name": "ATP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "ATP",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b66cf626f741e636",
+                  "preview": "{\"kegg\": \"C00002\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 496,
+                  "hash": "sha256:ddb599f2b35bfb66",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00002\", \"name\": \"ATP\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C13740\", \"name\": \"alpha,beta-Methylene ATP\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C13741\", \"name… (+296 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "ATP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

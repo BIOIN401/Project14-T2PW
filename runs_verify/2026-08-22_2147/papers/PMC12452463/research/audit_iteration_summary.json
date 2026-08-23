@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        9,
+        3,
+        1,
+        -10,
+        11
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 3,
+      "warning_count": 9,
+      "patch_count": 11,
+      "accepted_patch_count": 10,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Removed bare unresolved protein 'enterobactin synthase' (a complex name, not a protein), replaced complex components with EntD, EntE, EntF per evidence, and added missing species/organism fields to the complex. These changes resolve the pos… (+106 chars elided)",
+      "top_errors": [
+        "Bare unresolved protein 'enterobactin synthase' with no class, organism, or identifiers; it is actually a complex name, not a protein.",
+        "Complex 'enterobactin synthase complex' has a single component 'enterobactin synthase' with stoichiometry 1, but evidence says the complex includes EntD, EntE, and EntF.",
+        "Protein complex 'enterobactin synthase complex' is missing species/organism fields."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

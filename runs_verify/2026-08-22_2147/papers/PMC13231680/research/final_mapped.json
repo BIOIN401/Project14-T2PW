@@ -1,0 +1,1799 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via explicit_entity_species",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "explicit_entity_species"
+              }
+            ]
+          }
+        ],
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "562",
+            "classification": "Prokaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "explicit_entity_species"
+          }
+        },
+        "classification": "Prokaryote",
+        "species_canonicalization": {
+          "status": "deterministic"
+        }
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "outer membrane",
+        "evidence": "gram-negative bacteria, which possess outer membrane permeability barriers",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      },
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (no_db_candidates)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "phthalylsulfacetamide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "Escherichia coli state"
+          }
+        ],
+        "raw_name": "phthalylsulfacetamide",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "phthalylsulfacetamide",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": ""
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "389924",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "40466974",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "9229",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "96036-03-2",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:43968",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "DB00760",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0014898",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "389924",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "40466974",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "9229",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "96036-03-2",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:43968",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00760",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0014898",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "meropenem"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9229,
+              "name": "Meropenem",
+              "short_name": "Meropen",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014898",
+                "chebi": "CHEBI:43968",
+                "pubchem": "40466974",
+                "cas": "96036-03-2",
+                "chemspider": "389924",
+                "drugbank": "DB00760",
+                "pathbank_compound_id": "9229"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9229,
+          "resolved_name": "Meropenem"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0014898",
+          "chebi": "43968",
+          "pubchem": "40466974",
+          "cas": "96036-03-2",
+          "chemspider": "389924",
+          "drugbank": "DB00760",
+          "pathbank_compound_id": "9229"
+        },
+        "pathbank_compound_id": 9229,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "error",
+            "primary_name": "",
+            "synonyms": [],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "",
+            "charge": 0,
+            "mass_monoisotopic": 0.0,
+            "mass_average": 0.0,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [],
+            "pathways": [],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0014898",
+              "chebi_id": "CHEBI:43968",
+              "pubchem_id": "40466974",
+              "cas": "96036-03-2",
+              "chemspider": "389924",
+              "drugbank_id": "DB00760",
+              "pathbank_compound_id": "9229"
+            },
+            "kegg": {},
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:43968",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-27T23:10:52Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0014898",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0014898",
+                "retrieved_at": "2026-07-27T23:10:53Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:43968",
+                "retrieved_at": "2026-07-27T23:10:52Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0014898",
+                "retrieved_at": "2026-07-27T23:10:53Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0014898",
+        "chebi_id": "43968",
+        "pubchem_cid": "40466974",
+        "cas": "96036-03-2",
+        "chemspider_id": "389924",
+        "short_name": "Meropen",
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "Escherichia coli state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 9229,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 9229
+      },
+      {
+        "name": "sulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "144-80-9",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "5129",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "5320",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "9119",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:63845",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "DB00634",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0014772",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "144-80-9",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "5129",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "5320",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "9119",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:63845",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "DB00634",
+                "source_type": "drugbank",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0014772",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "sulfacetamide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9119,
+              "name": "Sulfacetamide",
+              "short_name": "Sulface",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014772",
+                "chebi": "CHEBI:63845",
+                "pubchem": "5320",
+                "cas": "144-80-9",
+                "chemspider": "5129",
+                "drugbank": "DB00634",
+                "pathbank_compound_id": "9119"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9119,
+          "resolved_name": "Sulfacetamide"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0014772",
+          "chebi": "63845",
+          "pubchem": "5320",
+          "cas": "144-80-9",
+          "chemspider": "5129",
+          "drugbank": "DB00634",
+          "pathbank_compound_id": "9119"
+        },
+        "pathbank_compound_id": 9119,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "error",
+            "primary_name": "",
+            "synonyms": [],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "",
+            "charge": 0,
+            "mass_monoisotopic": 0.0,
+            "mass_average": 0.0,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [],
+            "pathways": [],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0014772",
+              "chebi_id": "CHEBI:63845",
+              "pubchem_id": "5320",
+              "cas": "144-80-9",
+              "chemspider": "5129",
+              "drugbank_id": "DB00634",
+              "pathbank_compound_id": "9119"
+            },
+            "kegg": {},
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:63845",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-27T23:10:57Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0014772",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0014772",
+                "retrieved_at": "2026-07-27T23:10:57Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:63845",
+                "retrieved_at": "2026-07-27T23:10:57Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0014772",
+                "retrieved_at": "2026-07-27T23:10:57Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0014772",
+        "chebi_id": "63845",
+        "pubchem_cid": "5320",
+        "cas": "144-80-9",
+        "chemspider_id": "5129",
+        "short_name": "Sulface",
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "Escherichia coli state"
+          }
+        ],
+        "db_status": "legacy_id_unverified",
+        "db_id": 9119,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 9119
+      },
+      {
+        "name": "Zn2+",
+        "class": "ion",
+        "confidence": 0.7,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "the match was refused without a record being retrieved (no_shared_meaningful_token), so the identifier was removed (kegg=C00038)",
+            "review_required": true,
+            "uncertainty": "no retrieved record contradicts this identifier: the refusal judged this entity's name against Zinc (II) ion, Zinc, ZN%2b2 and found no shared evidence. The removal is a lexical refusal, not a refutation",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous_synonym)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          },
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution filled a missing identifier mapping for this compound from a api candidate the paper never supplied",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "C00038",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "ChEBI/KEGG/HMDB"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "Zn2+"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "resolved_name": "Zinc (II) ion",
+          "name_gate": {
+            "verdict": "reject",
+            "reason": "no_shared_meaningful_token",
+            "entity_name": "Zn2+",
+            "kind": "compound",
+            "resolved_name": "Zinc (II) ion",
+            "identity": "kegg:C00038",
+            "compared_names": [
+              "Zinc (II) ion",
+              "Zinc",
+              "ZN%2b2"
+            ]
+          },
+          "rejected_mapped_ids": {
+            "kegg": "C00038"
+          }
+        },
+        "mapped_ids": {},
+        "synonyms": [],
+        "compound_class": "ion",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "Escherichia coli state"
+          }
+        ],
+        "raw_name": "Zn2+",
+        "db_status": "ambiguous",
+        "db_match": {
+          "status": "ambiguous",
+          "raw_name": "Zn2+",
+          "chosen": null,
+          "candidates": [
+            {
+              "id": 1005,
+              "name": "Zinc (II) ion",
+              "hmdb_id": "HMDB0001303",
+              "kegg_id": "C00038",
+              "pubchem_cid": "32051",
+              "chebi_id": "29105",
+              "pwc_id": "PW_C001005",
+              "short_name": "Zinc",
+              "chosen_rule": "exact_short_name_or_synonym",
+              "confidence": 0.7,
+              "db_row": {
+                "id": 1005,
+                "name": "Zinc (II) ion",
+                "hmdb_id": "HMDB0001303",
+                "description": "Zinc is an essential element, necessary for sustaining all life.Physiologically, it exists as an ion in the body. It is estimated that 3000 of the hundreds of thousands of proteins in the human body contain zinc prosthetic groups. In addition, there are over a dozen types of cells in the human body that secrete zinc ions, and the roles of these secreted zinc signals in medicine and health are now being actively studied. Intriguingly, brain cells in the mammalian forebrain are one type of cell that secretes zinc, along with its other neuronal messenger substances. Cells in the salivary gland, prostate, immune system and intestine are other types that secrete zinc. Obtaining a sufficient zinc intake during pregnancy and in young children is a problem, especially among those who cannot afford a good and varied diet. Brain development is stunted by zinc deficiency in utero and in youth. Zinc is an activator of certain enzymes, such as carbonic anhydrase. Carbonic anhydrase is important in the transport of carbon dioxide in vertebrate blood. Even though zinc is an essential requirement for a healthy body, too much zinc can be harmful. Excessive absorption of zinc can also suppress copper and iron absorption. The free zinc ion in solution is highly toxic to plants, invertebrates, and even vertebrate fish. The Free Ion Activity Model (FIAM) is well-established in the literature, and shows that just micromolar amounts of the free ion kills some organisms.",
+                "cas": "23713-49-7",
+                "kegg_id": "C00038",
+                "pubchem_cid": "32051",
+                "chebi_id": "29105",
+                "biocyc_id": "ZN%2b2",
+                "chemspider_id": "29723",
+                "drugbank_id": "DB01593",
+                "pwc_id": "PW_C001005",
+                "short_name": "Zinc"
+              }
+            },
+            {
+              "id": 9795,
+              "name": "Zinc",
+              "hmdb_id": "HMDB0015532",
+              "kegg_id": null,
+              "pubchem_cid": "23994",
+              "chebi_id": "27363",
+              "pwc_id": "PW_C009795",
+              "short_name": "Zinc",
+              "chosen_rule": "exact_short_name_or_synonym",
+              "confidence": 0.7,
+              "db_row": {
+                "id": 9795,
+                "name": "Zinc",
+                "hmdb_id": "HMDB0015532",
+                "description": "Zinc is an essential element, necessary for sustaining all life. It is a trace element in the diet, forming an essential part of many enzymes, and playing an important role in protein synthesis and in cell division. Physiologically, it exists as an ion in the body. It is estimated that 3000 of the hundreds of thousands of proteins in the human body contain zinc prosthetic groups. In addition, there are over a dozen cell types in the human body that secrete zinc ions, and the roles of these secreted zinc signals in medicine and health are now being actively studied. Intriguingly, brain cells in the mammalian forebrain are one type of cell that secretes zinc, along with its other neuronal messenger substances. Cells in the salivary gland, prostate, immune system, and intestine are other types that secrete zinc. Obtaining a sufficient zinc intake during pregnancy and in young children is a problem, especially among those who cannot afford a good and varied diet. Zinc deficiency is associated with anemia, short stature, hypogonadism, impaired wound healing, and geophagia. Brain development is stunted by zinc deficiency in utero and in youth. Zinc is an activator of certain enzymes, such as carbonic anhydrase. Carbonic anhydrase is important in the transport of carbon dioxide in vertebrate blood. Even though zinc is an essential requirement for a healthy body, too much zinc can be harmful. Excessive absorption of zinc can also suppress copper and iron absorption. The free zinc ion in solution is highly toxic to plants, invertebrates, and even vertebrate fish. The Free Ion Activity Model (FIAM) is well-established in the literature and shows that just micromolar amounts of the free ion kill some organisms.",
+                "cas": "7440-66-6",
+                "kegg_id": null,
+                "pubchem_cid": "23994",
+                "chebi_id": "27363",
+                "biocyc_id": null,
+                "chemspider_id": "22430",
+                "drugbank_id": "DB01593",
+                "pwc_id": "PW_C009795",
+                "short_name": "Zinc"
+              }
+            }
+          ],
+          "chosen_rule": "exact_short_name_or_synonym",
+          "confidence": 0.7,
+          "reason": "multiple_rows_for_exact_short_name_or_synonym"
+        },
+        "chosen_rule": "exact_short_name_or_synonym"
+      },
+      {
+        "name": "hydrolyzed meropenem",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "inferred",
+        "source_refs": [
+          "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics, including broad-spectrum cephalosporins and carbapenems"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "hydrolyzed meropenem"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "provenance_lineage": [
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (no_db_candidates)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "Escherichia coli state"
+          }
+        ],
+        "raw_name": "hydrolyzed meropenem",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "hydrolyzed meropenem",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": ""
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via api_uniprot top_unique_candidate",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "api_uniprot top_unique_candidate"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "api_uniprot top_unique_candidate"
+              },
+              {
+                "source_id": "H6UKU8",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "api_uniprot top_unique_candidate"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "NDM-1",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "H6UKU8",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "NDM-1",
+                "bla-ndm"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "E5KIY2",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "bla NDM-1",
+                "blaNDM-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.425,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.97,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "alias_source": "primary_name",
+          "resolved_name": "beta-lactamase",
+          "queries_tried": [
+            "(protein_name:\"NDM-1\" OR gene:\"NDM-1\") AND organism_name:\"Escherichia coli\""
+          ],
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "NDM-1",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 0.97,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "uniprot:H6UKU8",
+            "judged_candidate": {
+              "accession": "H6UKU8",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "NDM-1",
+                "bla-ndm"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              {
+                "accession": "H6UKU8",
+                "protein_name": "beta-lactamase",
+                "gene_names": [
+                  "NDM-1",
+                  "bla-ndm"
+                ],
+                "organism": "Escherichia coli",
+                "reviewed": false,
+                "score": 0.97,
+                "matched_query": "NDM-1",
+                "alias_source": "primary_name"
+              },
+              {
+                "accession": "E5KIY2",
+                "protein_name": "beta-lactamase",
+                "gene_names": [
+                  "bla NDM-1",
+                  "blaNDM-1"
+                ],
+                "organism": "Escherichia coli",
+                "reviewed": false,
+                "score": 0.425,
+                "matched_query": "NDM-1",
+                "alias_source": "primary_name"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "NDM-1",
+              "kind": "protein",
+              "resolved_name": "beta-lactamase",
+              "identity": "uniprot:H6UKU8",
+              "compared_names": [
+                "beta-lactamase"
+              ],
+              "matched_symbol": "NDM-1"
+            }
+          },
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "H6UKU8"
+        },
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "H6UKU8",
+              "recommended_name": "beta-lactamase",
+              "alternative_names": [],
+              "gene_names": [
+                "bla-ndm",
+                "NDM-1"
+              ],
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "function_text": "",
+              "catalytic_activity": [
+                "a beta-lactam + H2O = a substituted beta-amino acid"
+              ],
+              "enzyme_commission": [
+                "3.5.2.6"
+              ],
+              "pathways": [],
+              "keywords": [
+                "Antibiotic resistance",
+                "Periplasm",
+                "Plasmid",
+                "Signal"
+              ],
+              "subcellular_locations": [
+                "Periplasm"
+              ],
+              "go_mf_ids": [
+                "GO:0008800"
+              ],
+              "go_bp_ids": [
+                "GO:0046677"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0042597"
+              ],
+              "protein_existence": "3: Inferred from homology",
+              "sequence_length": 206,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [],
+              "reactome_ids": [],
+              "string_id": "",
+              "provenance": {
+                "source": "UniProt",
+                "query": "H6UKU8",
+                "source_url": "https://rest.uniprot.org/uniprotkb/H6UKU8.json",
+                "retrieved_at": "2026-07-27T23:10:47Z"
+              }
+            }
+          }
+        },
+        "uniprot": "H6UKU8",
+        "gene_name": "bla-ndm",
+        "ec_number": "3.5.2.6",
+        "ec_numbers": [
+          "3.5.2.6"
+        ],
+        "synonyms": [
+          "bla-ndm",
+          "NDM-1",
+          "beta-lactamase"
+        ]
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6026",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P0A725",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "lpxC",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6026",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P0A725",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6026, uniprot:P0A725",
+            "judged_candidate": {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6026,
+                "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+                "uniprot": "P0A725",
+                "gene_name": "lpxC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxC",
+              "kind": "protein",
+              "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "identity": "uniprot:P0A725",
+              "compared_names": [
+                "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase"
+              ],
+              "matched_symbol": "lpxC"
+            }
+          },
+          "pathbank_protein_id": 6026,
+          "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P0A725",
+          "pathbank_protein_id": "6026",
+          "gene_name": "lpxC"
+        },
+        "pathbank_protein_id": 6026,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P0A725",
+              "recommended_name": "UDP-3-O-acyl-N-acetylglucosamine deacetylase",
+              "alternative_names": [
+                "Protein EnvA",
+                "UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase"
+              ],
+              "gene_names": [
+                "lpxC",
+                "asmB",
+                "envA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Catalyzes the hydrolysis of UDP-3-O-myristoyl-N-acetylglucosamine to form UDP-3-O-myristoylglucosamine and acetate, the committed step in lipid A biosynthesis",
+              "catalytic_activity": [
+                "a UDP-3-O-[(3R)-3-hydroxyacyl]-N-acetyl-alpha-D-glucosamine + H2O = a UDP-3-O-[(3R)-3-hydroxyacyl]-alpha-D-glucosamine + acetate"
+              ],
+              "enzyme_commission": [
+                "3.5.1.108"
+              ],
+              "pathways": [
+                "Glycolipid biosynthesis; lipid IV(A) biosynthesis; lipid IV(A) from (3R)-3-hydroxytetradecanoyl-[acyl-carrier-protein] and UDP-N-acetyl-alpha-D-glucosamine: step 2/6"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Direct protein sequencing",
+                "Hydrolase",
+                "Iron",
+                "Lipid A biosynthesis",
+                "Lipid biosynthesis",
+                "Lipid metabolism",
+                "Metal-binding",
+                "Reference proteome",
+                "Zinc"
+              ],
+              "subcellular_locations": [],
+              "go_mf_ids": [
+                "GO:0019213",
+                "GO:0005506",
+                "GO:0103117",
+                "GO:0008270"
+              ],
+              "go_bp_ids": [
+                "GO:0009245"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005737",
+                "GO:0016020"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 305,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "4IS9",
+                "4ISA",
+                "4MDT",
+                "4MQY",
+                "7PHJ"
+              ],
+              "reactome_ids": [],
+              "string_id": "511145.b0096",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P0A725",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P0A725.json",
+                "retrieved_at": "2026-07-22T18:31:24Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P0A725",
+        "gene_name": "lpxC",
+        "ec_number": "3.5.1.108",
+        "ec_numbers": [
+          "3.5.1.108"
+        ],
+        "synonyms": [
+          "Protein EnvA",
+          "UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase",
+          "lpxC",
+          "asmB",
+          "envA",
+          "UDP-3-O-acyl-N-acetylglucosamine deacetylase"
+        ]
+      }
+    ],
+    "protein_complexes": []
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli state",
+      "species": "Escherichia coli",
+      "evidence": "NDM-1-positive Escherichia coli",
+      "subcellular_location": "cell",
+      "provenance_lineage": [
+        {
+          "stage": "audit_repair",
+          "origin": "audit_modified",
+          "support": "unsupported",
+          "paper_explicit": "not_evaluated",
+          "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+          "review_required": false,
+          "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Escherichia coli"
+    },
+    {
+      "name": "AutoState_escherichia_colicytoplasm",
+      "subcellular_location": "Cytoplasm",
+      "compartment_canonical": "cytosol",
+      "species": "Escherichia coli",
+      "provenance_lineage": [
+        {
+          "stage": "gap_resolution",
+          "origin": "inferred",
+          "support": "derived",
+          "paper_explicit": "not_evaluated",
+          "reason": "gap resolution synthesized this biological state to place protein 'LpxC' at 'Cytoplasm'; no existing state matched that species and compartment",
+          "review_required": false,
+          "uncertainty": "",
+          "sources": []
+        }
+      ]
+    }
+  ],
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "PSA inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "Zn2+",
+        "name": "PSA interacts with Zn2+",
+        "relationship": "interacts",
+        "evidence": "PSA forms significant electrostatic and metal-coordination interactions with the active site Zn²⁺ ion",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "PSA potentially interacts with LpxC",
+        "relationship": "interacts",
+        "evidence": "PSA may potentially interact with LpxC",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "phthalylsulfacetamide"
+        ],
+        "outputs": [
+          "sulfacetamide"
+        ],
+        "name": "PSA decomposition to sulfacetamide",
+        "evidence": "PSA is decomposed in the intestine, resulting in an antibacterial effect; may be converted into sulfacetamide",
+        "spontaneous": false,
+        "enzymes": [],
+        "modifiers": []
+      },
+      {
+        "inputs": [
+          "meropenem"
+        ],
+        "outputs": [
+          "hydrolyzed meropenem"
+        ],
+        "name": "NDM-1 catalyzed hydrolysis of meropenem",
+        "enzymes": [
+          {
+            "entity": "NDM-1",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 0.95,
+            "provenance": "inferred",
+            "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics"
+          }
+        ],
+        "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics, including broad-spectrum cephalosporins and carbapenems",
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "NDM-1",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics",
+            "confidence": 0.95,
+            "provenance": "inferred"
+          }
+        ]
+      }
+    ],
+    "transports": []
+  },
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "phthalylsulfacetamide",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place compound 'phthalylsulfacetamide' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "compound": "meropenem",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place compound 'meropenem' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "compound": "sulfacetamide",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place compound 'sulfacetamide' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "compound": "Zn2+",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place compound 'Zn2+' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "compound": "hydrolyzed meropenem",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place compound 'hydrolyzed meropenem' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "NDM-1",
+        "biological_state": "Escherichia coli state",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "inferred",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place protein 'NDM-1' at 'cell'; the payload linked it to no compartment at all",
+            "review_required": true,
+            "uncertainty": "no location evidence was retrieved for this entity; the compartment is this stage's default, not a reported one",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "AutoState_escherichia_colicytoplasm",
+        "provenance_lineage": [
+          {
+            "stage": "gap_resolution",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "gap resolution created this location row to place protein 'LpxC' at 'Cytoplasm'; the payload linked it to no compartment at all",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "Cytoplasm",
+                "source_type": "pathbank_db",
+                "uri": "",
+                "locator": "protein=LpxC; location_frequency=223"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 2,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 0,
+      "unused_proteins_flagged_for_review": 0
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "prefreeze_db_resolution": {
+    "available": true
+  }
+}

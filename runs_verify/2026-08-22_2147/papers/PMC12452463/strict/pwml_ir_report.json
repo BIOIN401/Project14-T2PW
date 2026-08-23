@@ -1,0 +1,71 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'EntE' matched 2 distinct entity rows (prot_4, prot_7); payload row order bound it to 'EntE' (prot_4).",
+      "pointer": "/element_locations/protein_locations/4/protein",
+      "name": "EntE",
+      "role": "reaction_member",
+      "entity_keys": [
+        "prot_4",
+        "prot_7"
+      ],
+      "entity_types": [
+        "protein",
+        "protein"
+      ],
+      "entity_names": [
+        "EntE",
+        "enterobactin synthase"
+      ],
+      "entity_pathwhiz_ids": [
+        6301,
+        6301
+      ],
+      "bound_entity_key": "prot_4",
+      "bound_entity_type": "protein",
+      "bound_entity_name": "EntE"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 4,
+    "compounds": 7,
+    "proteins": 7,
+    "reactions": 4,
+    "transports": 2,
+    "locations": 21,
+    "edges": 16,
+    "process_visualizations": 6
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 17,
+      "biological_states": 4,
+      "processes": 9,
+      "process_members": 15,
+      "locations": 21,
+      "edges": 16,
+      "process_visualizations": 6
+    }
+  }
+}

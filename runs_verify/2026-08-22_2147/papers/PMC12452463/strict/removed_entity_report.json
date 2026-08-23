@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "Fe2+",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fnr",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "nucleic_acids",
+      "name": "ent operon",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "nucleic_acids",
+      "name": "RyhB",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "Fe2+",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "EntA",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fnr",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/nucleic_acid_locations",
+      "name": "ent operon",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/nucleic_acid_locations",
+      "name": "RyhB",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [],
+  "counts": {
+    "entities": 6,
+    "locations": 6,
+    "biological_states": 0
+  }
+}

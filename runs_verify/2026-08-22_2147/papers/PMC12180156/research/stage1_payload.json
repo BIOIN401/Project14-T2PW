@@ -1,0 +1,247 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondria",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "iron",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "SFXN2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondria",
+      "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial state",
+        "evidence": "mitochondrial iron regulation"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of ALAS2",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase",
+        "relationship": "interaction",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ]
+  }
+}

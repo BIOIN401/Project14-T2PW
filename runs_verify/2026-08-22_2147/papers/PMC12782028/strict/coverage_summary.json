@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "cholesterol",
+    "lanosterol",
+    "desmosterol",
+    "2,3-oxidosqualene",
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+    "4,4-dimethylsterols",
+    "4alpha-methylsterols",
+    "oxysterols",
+    "CYP51A1",
+    "DHCR24",
+    "LSS",
+    "MSMO1",
+    "SQLE",
+    "FDFT1",
+    "HMGCR",
+    "HMGCS1",
+    "FDPS",
+    "MVD",
+    "MVK",
+    "IDI1",
+    "ACAT2",
+    "EBP",
+    "LBR",
+    "HSD17B7",
+    "NSDHL",
+    "SREBF1",
+    "SREBF2"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "cholesterol biosynthesis",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "cholesterol",
+      "lanosterol",
+      "desmosterol",
+      "2,3-oxidosqualene",
+      "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+      "4,4-dimethylsterols",
+      "4alpha-methylsterols",
+      "oxysterols"
+    ],
+    "key_proteins": [
+      "CYP51A1",
+      "DHCR24",
+      "LSS",
+      "MSMO1",
+      "SQLE",
+      "FDFT1",
+      "HMGCR",
+      "HMGCS1",
+      "FDPS",
+      "MVD",
+      "MVK",
+      "IDI1",
+      "ACAT2",
+      "EBP",
+      "LBR",
+      "HSD17B7",
+      "NSDHL",
+      "SREBF1",
+      "SREBF2"
+    ],
+    "likely_compartments": [
+      "endoplasmic reticulum"
+    ],
+    "main_subprocesses": [
+      "conversion of 2,3-oxidosqualene to lanosterol",
+      "lanosterol 14α-demethylation",
+      "demethylation of 4,4-dimethyl and 4alpha-methylsterols",
+      "conversion of desmosterol to cholesterol",
+      "mevalonate pathway"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "results",
+      "discussion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:1d4c790eaba99912",
+      "response_hash": "sha256:c6ee43177ff7c725",
+      "raw_chars": 1237,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1237,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "cholesterol",
+    "lanosterol",
+    "desmosterol",
+    "2,3-oxidosqualene",
+    "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+    "CYP51A1",
+    "DHCR24",
+    "LSS"
+  ],
+  "unmatched_terms": [
+    "4,4-dimethylsterols",
+    "4alpha-methylsterols",
+    "oxysterols",
+    "MSMO1",
+    "SQLE",
+    "FDFT1",
+    "HMGCR",
+    "HMGCS1",
+    "FDPS",
+    "MVD",
+    "MVK",
+    "IDI1",
+    "ACAT2",
+    "EBP",
+    "LBR",
+    "HSD17B7",
+    "NSDHL",
+    "SREBF1",
+    "SREBF2"
+  ],
+  "coverage_ratio": 0.296296,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": false,
+  "reasons": [
+    "requested_core_coverage_below_minimum:0.296<0.500"
+  ]
+}

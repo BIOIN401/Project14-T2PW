@@ -1,0 +1,56 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 855.3s (14m15s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_type_error @ /entities/compounds/2/synonyms: Expected an array.
+
+message    : strict run completed; pathway.pwml is 21203 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 5
+  entities = 10
+  gate_errors = 0
+  proteins = 1
+  pwml = {'compounds': 5, 'proteins': 1, 'reactions': 1, 'edges': 4}
+  pwml_bytes = 21203
+  reactions = 1
+  runtime_schema_findings = 3
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2145 B)
+  - contract_reports.json  (7087 B)
+  - coverage_summary.json  (2496 B)
+  - final_mapped.json  (94824 B)
+  - final_stage3_gate_report.json  (2748 B)
+  - gap_iteration_summary.json  (20113 B)
+  - gate_fail_report.json  (6978 B)
+  - graph_closure_iterations.json  (373 B)
+  - initial_stage3_gate_report.json  (6978 B)
+  - merged_payload.json  (8347 B)
+  - pathway.pwml  (21203 B)
+  - pwml_ir.json  (26568 B)
+  - pwml_ir_report.json  (846 B)
+  - pwml_ir_validation.json  (231 B)
+  - pwml_qa.json  (518 B)
+  - pwml_required_field_gate_report.json  (1641 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (8524 B)
+  - rag_admission_report.json  (69710 B)
+  - removed_entity_report.json  (241 B)
+  - stage1_payload.json  (7095 B)

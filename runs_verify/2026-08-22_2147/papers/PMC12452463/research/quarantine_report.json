@@ -1,0 +1,516 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:73b84bd374afbd0a",
+  "resulting_payload_hash": "sha256:73b84bd374afbd0a",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate dhb",
+      "23dihydroxybenzoate dhb",
+      "chorismate",
+      "dhbamp",
+      "entb isochorismatase",
+      "entc isochorismate synthase",
+      "entd phosphopantetheinyl transferase",
+      "ente 23dihydroxybenzoateamp ligase",
+      "enterobactin",
+      "entf nonribosomal peptide synthetase",
+      "fepa outer membrane receptor",
+      "ferric enterobactin feent",
+      "fur ferric uptake regulator",
+      "isochorismate",
+      "ryhb small rna",
+      "salmochelin"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:610f813dc345352c",
+  "ok": true,
+  "counts": {
+    "core_accepted": 6,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate",
+        "entc",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "activation of dhb to dhbamp",
+        "dhbamp",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "assembly of enterobactin",
+        "enterobactin",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate",
+        "entc",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "entb",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "activation of dhb to dhbamp",
+        "dhbamp",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate",
+        "assembly of enterobactin",
+        "enterobactin",
+        "enterobactin synthase complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.6875,
+    "missing_anchors": [
+      "2,3-dihydroxybenzoate (DHB)",
+      "salmochelin",
+      "Fur (ferric uptake regulator)",
+      "FepA (outer membrane receptor)",
+      "RyhB (small RNA)"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "5 requested-core anchor(s) matched no admitted process: 2,3-dihydroxybenzoate (DHB), salmochelin, Fur (ferric uptake regulator), FepA (outer membrane receptor), RyhB (small RNA)",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:2,3-dihydroxybenzoate (DHB),salmochelin,Fur (ferric uptake regulator),FepA (outer membrane receptor),RyhB (small RNA)"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 4,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric enterobactin (FeEnt)",
+      "salmochelin",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)",
+      "Fur (ferric uptake regulator)",
+      "FepA (outer membrane receptor)",
+      "RyhB (small RNA)"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "2,3-dihydroxybenzoate (DHB)",
+        "DHB-AMP",
+        "enterobactin",
+        "ferric enterobactin (FeEnt)",
+        "salmochelin"
+      ],
+      "key_proteins": [
+        "EntC (isochorismate synthase)",
+        "EntB (isochorismatase)",
+        "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+        "EntD (phosphopantetheinyl transferase)",
+        "EntF (nonribosomal peptide synthetase)",
+        "Fur (ferric uptake regulator)",
+        "FepA (outer membrane receptor)",
+        "RyhB (small RNA)"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "outer membrane",
+        "periplasm",
+        "extracellular space"
+      ],
+      "main_subprocesses": [
+        "chorismate to isochorismate (EntC)",
+        "isochorismate to DHB (EntB)",
+        "activation of DHB to DHB-AMP (EntE)",
+        "assembly of three DHB into cyclic trilactone enterobactin (EntD/EntE/EntF complex)",
+        "regulation by Fur and RyhB"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "Enterobactin biosynthesis and regulation",
+        "Role of enterobactin in bacterial virulence",
+        "Enterobactin and host-pathogen interactions",
+        "Targeting enterobactin for vaccine development",
+        "Enterobactin as a target for antibiotic development",
+        "Biotechnology applications",
+        "Future directions",
+        "conclusion"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 1.0,
+      "selected_example": "enterobactin biosynthesis in Escherichia coli",
+      "candidate_examples": [
+        {
+          "name": "enterobactin biosynthesis in Escherichia coli",
+          "organism": "Escherichia coli",
+          "key_compounds": [
+            "chorismate",
+            "isochorismate",
+            "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "2,3-dihydroxybenzoate (DHB)",
+            "DHB-AMP",
+            "enterobactin",
+            "ferric enterobactin (FeEnt)",
+            "salmochelin"
+          ],
+          "key_proteins": [
+            "EntC",
+            "EntB",
+            "EntE",
+            "EntD",
+            "EntF",
+            "Fur",
+            "FepA",
+            "RyhB"
+          ],
+          "main_subprocesses": [
+            "chorismate to isochorismate (EntC)",
+            "isochorismate to DHB (EntB)",
+            "activation of DHB to DHB-AMP (EntE)",
+            "assembly of three DHB into cyclic trilactone enterobactin (EntD/EntE/EntF complex)",
+            "regulation by Fur and RyhB"
+          ],
+          "evidence": "The ent (enterobactin) operon in Escherichia coli comprises six genes (entA, entB, entC, entD, entE, and entF), each encoding an enzyme essential for the production of enterobactin."
+        }
+      ],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:294ef907fbd3911e",
+        "response_hash": "sha256:0a13b8056f6172a0",
+        "raw_chars": 2821,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 2821,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric enterobactin (FeEnt)",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)"
+    ],
+    "unmatched_terms": [
+      "2,3-dihydroxybenzoate (DHB)",
+      "salmochelin",
+      "Fur (ferric uptake regulator)",
+      "FepA (outer membrane receptor)",
+      "RyhB (small RNA)"
+    ],
+    "coverage_ratio": 0.6875,
+    "core_accepted_processes": 6,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 6,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:73b84bd374afbd0a.sha256:610f813dc345352c",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

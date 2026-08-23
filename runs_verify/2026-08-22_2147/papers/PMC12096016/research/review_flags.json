@@ -1,0 +1,182 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'apo-EntB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "apo-EntB",
+        "class": "protein",
+        "evidence": "76 chars elided",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": "1 item(s), 80 chars elided",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "apo-EntB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate"
+          },
+          "queries_tried": [
+            "(protein_name:\"apo-EntB\" OR gene:\"apo-EntB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"apo EntB\" OR gene:\"apo EntB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"apo-EntB\" OR gene:\"apo-EntB\")",
+            "(protein_name:\"apo EntB\" OR gene:\"apo EntB\")",
+            "(protein_name:\"EntB\" OR gene:\"EntB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"EntB\" OR gene:\"EntB\")",
+            "\"EntB\" AND organism_name:\"Escherichia coli\"",
+            "\"EntB\"",
+            "(protein_name:\"Isochorismatase\" OR gene:\"Isochorismatase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"Isochorismatase\" OR gene:\"Isochorismatase\")",
+            "\"Isochorismatase\" AND organism_name:\"Escherichia coli\"",
+            "\"Isochorismatase\"",
+            "…+1 more item(s) elided"
+          ],
+          "literature_aliases": [
+            {
+              "alias": "EntB",
+              "source": "gene_name"
+            },
+            {
+              "alias": "Isochorismatase",
+              "source": "alternate_abbreviation"
+            },
+            {
+              "alias": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+              "source": "alternate_abbreviation"
+            },
+            {
+              "alias": "Enterobactin synthase component B",
+              "source": "alternate_abbreviation"
+            }
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "implausible_name_match",
+            "entity_name": "apo-EntB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "reject"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0ADI4",
+            "judged_candidate": {
+              "accession": "P0ADI4",
+              "protein_name": "Enterobactin synthase component B",
+              "gene_names": "2 item(s), 16 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "EntB",
+              "alias_source": "gene_name",
+              "matched_alias": "EntB"
+            },
+            "judged_candidates": [
+              "9 key(s), 265 chars elided",
+              "9 key(s), 252 chars elided",
+              "9 key(s), 370 chars elided",
+              "9 key(s), 266 chars elided",
+              "9 key(s), 261 chars elided",
+              "9 key(s), 272 chars elided",
+              "9 key(s), 291 chars elided",
+              "9 key(s), 277 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "reject",
+              "reason": "no_shared_meaningful_token",
+              "entity_name": "apo-EntB",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component B",
+              "identity": "uniprot:P0ADI4",
+              "compared_names": "1 item(s), 37 chars elided"
+            }
+          }
+        },
+        "provenance_lineage": [
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_apo_entb_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/8",
+      "message": "Protein 'apo-EntB' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}

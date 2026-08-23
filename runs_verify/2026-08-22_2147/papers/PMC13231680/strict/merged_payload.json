@@ -1,0 +1,240 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "Zn2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "sulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "phthalylsulfacetamide"
+        ],
+        "outputs": [
+          "sulfacetamide"
+        ],
+        "name": "PSA conversion to sulfacetamide",
+        "evidence": "PSA may be converted into sulfacetamide"
+      },
+      {
+        "inputs": [
+          "meropenem"
+        ],
+        "outputs": [
+          "meropenem"
+        ],
+        "name": "NDM-1 catalyzed meropenem hydrolysis",
+        "enzymes": [
+          {
+            "protein": "NDM-1",
+            "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics except monocyclic antibiotics, including broad-spectrum cephalosporins and carbapenems",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics except monocyclic antibiotics, including broad-spectrum cephalosporins and carbapenems"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "PSA inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1"
+      },
+      {
+        "entity_1": "NDM-1",
+        "entity_2": "meropenem",
+        "name": "NDM-1 catalyzes meropenem hydrolysis",
+        "relationship": "catalyzes hydrolysis of",
+        "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "Zn2+",
+        "name": "PSA interacts with Zn2+",
+        "relationship": "interacts with",
+        "evidence": "PSA stably binds to the active hydrolysis center of NDM-1, interacts with Zn2+"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "PSA may interact with LpxC",
+        "relationship": "may interact with",
+        "evidence": "Molecular docking analysis indicates that PSA may potentially interact with LpxC"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "Zn2+",
+        "name": "PSA interacts with Zn2+ in NDM-1 active site",
+        "relationship": "interacts with",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "PSA stably binds to the active hydrolysis center of NDM-1, interacts with Zn2+"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "NDM-1 is a periplasmic enzyme in E. coli; LpxC is a cytoplasmic enzyme involved in lipid A biosynthesis"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "NDM-1",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "NDM-1 is a periplasmic enzyme in E. coli"
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "Escherichia coli cytoplasm",
+        "evidence": "LpxC, a key enzyme involved in lipopolysaccharide synthesis"
+      }
+    ]
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  }
+}

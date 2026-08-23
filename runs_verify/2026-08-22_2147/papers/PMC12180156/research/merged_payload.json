@@ -1,0 +1,339 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondria",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "iron",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondria",
+      "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+    },
+    {
+      "name": "mitochondrial matrix",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial state",
+        "evidence": "mitochondrial iron regulation"
+      },
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "heme binds mature human ALAS2 with high affinity"
+      },
+      {
+        "compound": "glycine",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "Glycine is also required for the rate-limiting step in heme biosynthesis."
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "SFXN2",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation"
+      },
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "Erythroid heme production begins with the rate-limiting enzyme aminolevulinic acid synthase 2 (ALAS2) in the mitochondrion"
+      },
+      {
+        "protein": "ferrochelatase",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "heme biosynthesis is initiated and terminated in the mitochondrial matrix"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of ALAS2",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase",
+        "relationship": "interaction",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibits ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix",
+        "evidence": "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+      },
+      {
+        "entity_1": "ALAS2",
+        "entity_2": "δ-aminolevulinic acid synthase",
+        "name": "ALAS2 synonym",
+        "relationship": "SAME_AS",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "entity_1": "SFXN2",
+        "entity_2": "iron",
+        "name": "SFXN2 involved in iron regulation",
+        "relationship": "interaction",
+        "biological_state": "mitochondrial state",
+        "evidence": "SFXN2 and SFXN4 are implicated in mitochondrial iron regulation, heme biosynthesis"
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "protoporphyrin IX",
+          "iron"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "name": "ferrochelatase reaction",
+        "enzymes": [
+          {
+            "protein": "ferrochelatase",
+            "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels",
+            "provenance": "inferred",
+            "confidence": 0.9
+          }
+        ],
+        "biological_state": "mitochondrial matrix",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      }
+    ]
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  }
+}

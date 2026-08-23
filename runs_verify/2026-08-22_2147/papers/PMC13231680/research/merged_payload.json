@@ -1,0 +1,280 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "outer membrane",
+        "evidence": "gram-negative bacteria, which possess outer membrane permeability barriers",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "sulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "Zn2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "hydrolyzed meropenem",
+        "class": "compound",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics, including broad-spectrum cephalosporins and carbapenems"
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli state",
+      "species": "Escherichia coli",
+      "evidence": "NDM-1-positive Escherichia coli"
+    }
+  ],
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "PSA inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "Zn2+",
+        "name": "PSA interacts with Zn2+",
+        "relationship": "interacts",
+        "evidence": "PSA forms significant electrostatic and metal-coordination interactions with the active site Zn²⁺ ion",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "PSA potentially interacts with LpxC",
+        "relationship": "interacts",
+        "evidence": "PSA may potentially interact with LpxC",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "PSA",
+        "name": "Phthalylsulfacetamide abbreviation alias",
+        "relationship": "SAME_AS",
+        "evidence": "PSA is used as the abbreviation for phthalylsulfacetamide throughout the manuscript."
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "phthalylsulfacetamide"
+        ],
+        "outputs": [
+          "sulfacetamide"
+        ],
+        "name": "PSA decomposition to sulfacetamide",
+        "evidence": "PSA is decomposed in the intestine, resulting in an antibacterial effect; may be converted into sulfacetamide"
+      },
+      {
+        "inputs": [
+          "meropenem"
+        ],
+        "outputs": [
+          "hydrolyzed meropenem"
+        ],
+        "name": "NDM-1 catalyzed hydrolysis of meropenem",
+        "enzymes": [
+          {
+            "protein": "NDM-1",
+            "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "evidence": "NDM-1 can stably and efficiently hydrolyze all β-lactam antibiotics, including broad-spectrum cephalosporins and carbapenems"
+      }
+    ]
+  },
+  "element_locations": {},
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  }
+}

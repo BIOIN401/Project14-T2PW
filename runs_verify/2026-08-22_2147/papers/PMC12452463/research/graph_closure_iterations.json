@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "ferric enterobactin",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "proteins",
+          "name": "FepA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "ferric enterobactin",
+          "reason": "location_entity_removed",
+          "biological_state": "extracellular space"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "ferric enterobactin",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli cytoplasm"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FepA",
+          "reason": "location_entity_removed",
+          "biological_state": "E. coli outer membrane"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "E. coli state",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "extracellular space",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "E. coli cytoplasm",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "E. coli outer membrane",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

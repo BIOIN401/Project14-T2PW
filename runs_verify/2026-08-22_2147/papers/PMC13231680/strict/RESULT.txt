@@ -1,0 +1,53 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC13231680
+title      : (unknown)
+slug       : PMC13231680
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 428.4s (7m08s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 17445 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 4
+  entities = 8
+  gate_errors = 0
+  proteins = 2
+  pwml = {'compounds': 4, 'proteins': 2, 'reactions': 1, 'edges': 2}
+  pwml_bytes = 17445
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 0
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (937 B)
+  - contract_reports.json  (6415 B)
+  - coverage_summary.json  (2503 B)
+  - final_mapped.json  (58567 B)
+  - final_stage3_gate_report.json  (2721 B)
+  - gap_iteration_summary.json  (18555 B)
+  - graph_closure_iterations.json  (373 B)
+  - merged_payload.json  (7527 B)
+  - pathway.pwml  (17445 B)
+  - pwml_ir.json  (29627 B)
+  - pwml_ir_report.json  (1142 B)
+  - pwml_ir_validation.json  (230 B)
+  - pwml_qa.json  (350 B)
+  - pwml_required_field_gate_report.json  (1339 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (10547 B)
+  - rag_admission_report.json  (3775 B)
+  - removed_entity_report.json  (241 B)
+  - stage1_payload.json  (4028 B)

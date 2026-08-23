@@ -4359,3 +4359,139 @@ same moment that wiring does, and should be carded together with it.**
 
 Same root shape as merge rule 8's concern - a later stage repairing what an earlier gate refused -
 but on the identity axis rather than the biology axis, and pre-freeze rather than post-freeze.
+
+---
+
+## F-100 — the declared negative control produced reactions and shipped `release_ready`
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-23 from T-105**
+- Evidence: `runs_verify/2026-08-22_2147`, PMC13231680 both legs; `evidence/t105_acceptance_report.{txt,json}`
+
+### The measurement
+
+```
+PMC13231680 [NEGATIVE CONTROL]   gold: relevance=context_only  export=partial_only  min_connected=0
+  strict   : PASS   release : release_ready [pipeline ran; strict gates passed; semantic evaluation passed]
+             payload=final_mapped.json  reactions=1  connected_core=1   artifact: pathway.pwml
+             [FAIL] minimum_connected_core: negative control: 1 reaction(s) retained where the paper supports 0
+  research : PASS   reactions=2
+  errors: unsupported reactions=1 (strict), 2 (research)
+```
+
+The gold `export_rationale` is unambiguous: *"Nothing lipid-A-related is exportable at any level of
+partiality. **The correct pipeline outcome is an empty pathway plus a rejection reason.**"*
+
+At T-104 both legs produced exactly that — `FAIL (no_reactions)`, which F-097 defended as correct.
+At T-105 the same paper produced reactions and its strict leg emitted a **bare `pathway.pwml`**,
+which `PRODUCT_CONTRACT.md` §13 defines as `release_ready` — no human review needed — for a paper
+the gold says supports nothing.
+
+### This is priority 2 and it moved from PASS to FAIL
+
+T-104: priority 2 `[PASS]` — 0 unsupported retained reactions.
+T-105: priority 2 `[FAIL]` — **3**, all on this paper.
+
+### It is NOT caused by C-072 or C-073, and C-072 could not have caught it
+
+- C-072's cap only ever **demotes**; it cannot promote a leg to `release_ready`.
+- The cap is gated on `verdict.declared`. This gold case declares **0 anchors**
+  (`requested_pathway_anchors_present: 0/0`), so there is no declared core and the cap correctly
+  abstains. That is the designed behaviour, not a miss.
+- C-073 withholds identifiers; it neither creates nor retains reactions.
+
+The cause is Stage-1 draw variance: this draw extracted reactions where the T-104 draw extracted
+none. Per the standing trap, that is not called a deterministic regression on one observation —
+but the **contract outcome is wrong whenever it happens**, and the run recorded it happening.
+
+### What the pipeline lacks
+
+There is no production predicate that prevents a pathway from reaching `release_ready` when the
+requested-core declaration is empty. `evaluate_core_coverage` treats an undeclared core as
+unjudgeable (`completeness` is `None` by design, `release_status.py:188`), and `classify_release_status`
+falls through to `RELEASE_READY`. "Nothing was asked for" is currently read as "nothing is missing".
+
+---
+
+## F-101 — a one-reaction pathway shipped `release_ready` on a paper the gold says cannot export strict
+
+- **Severity** HIGH · **Class `product_contract_violation`** · **Registered 2026-08-23 from T-105**
+- Same family as F-094, reached by a route C-072 cannot see.
+
+### The measurement
+
+```
+PMC12856317   gold: relevance=partial  export=partial_only  min_connected=1
+  strict : PASS   release : release_ready [pipeline ran; strict gates passed; semantic evaluation passed]
+           payload=final_mapped.json  reactions=1  connected_core=1   artifact: pathway.pwml
+           [ok] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+           [ok] minimum_connected_core: largest chemically connected core is 1; this case requires 1
+```
+
+Gold `export_rationale`: *"A single reaction cannot constitute an exportable multi-step pathway.
+Emitting a strict heme biosynthesis pathway from this paper requires importing seven steps the
+paper never mentions."*
+
+### Why C-072 does not and should not fire here
+
+All four requested anchors matched, so `missing_anchors` is empty and the incomplete-core cap
+correctly abstains. C-072 fixed the mechanism F-094 identified — a declared core with **unmatched**
+anchors — and this leg is not that mechanism. **The card did its job; the class is wider than the
+card.**
+
+### The tension the gold itself carries
+
+The gold sets `min_connected: 1` for this case while its own `export_rationale` says one reaction
+is not exportable. The pipeline satisfies the floor and ships. Either the floor or the rationale
+has to give, and **that is a product-owner decision, not an orchestrator one.** Recorded, not taken.
+
+### Net effect on the run
+
+T-104 emitted **one** bare `pathway.pwml` (PMC12452463 — the F-094 violation, now fixed).
+T-105 emits **two** (PMC12856317, PMC13231680). **The bare-PWML count went up, not down.**
+Nobody should read T-105 as an improvement on this axis.
+
+---
+
+## F-102 — the acceptance scorer flags exactly the accession rule C-073's review rejected
+
+- **Severity** MEDIUM · **Class `policy_disagreement`** · **Registered 2026-08-23 from T-105**
+- Needs a product-owner decision. Explicitly NOT a licence to change code.
+
+### The measurement
+
+Every surviving `accession_claimed_by_multiple_entities` finding at T-105 is **within-kind**:
+
+```
+uniprot:P0ADI4   <- EntB / holo-EntB              (both entities.proteins)
+uniprot:P10378   <- EntE / enterobactin synthase  (both entities.proteins)
+```
+
+`bench/semantic.py:908-919` counts any accession answering to two differently-**named** rows as a
+conflict. `no_real_id_or_name_conflict` is a **gating** semantic check (`release_status.py:101`),
+so these demote real legs.
+
+### Why this is a disagreement and not a defect on one side
+
+C-073 was **rejected in review** for using precisely this predicate in the pipeline, because
+**D-035 clause 3c** rules that a matching stable external identifier is *proof two differently-named
+rows are the same biological entity*. The corrected pipeline rule refuses only **cross-kind** claims.
+Measured over 53 committed artifacts, the name-difference rule strips 92 claimant-incidences across
+36 rows of which 41 of 42 pairs are legitimate; the kind rule strips 2 rows, all target.
+
+So the pipeline now follows D-035 and **the scorer does not**. `EntE` / `enterobactin synthase`
+is the clearest case — those are the same protein under symbol and full enzyme name, exactly the
+shape clause 3c was written for.
+
+### The second-order problem: the gold disagrees with D-035 too
+
+`holo-EntB` carrying `uniprot:P0ADI4` is scored as a **false real identifier**
+(`forbidden_kind: strain_or_construct`), i.e. the gold says the holo form must not claim EntB's
+accession. D-035 clause 3c says a shared stable identifier proves they are the same entity.
+**Both cannot be right.** This is not a scorer bug and not a gold typo — it is an unresolved
+question about whether a modified form of a protein is the same biological entity as the protein.
+
+### What must NOT be done
+
+Do not "fix" this by reverting C-073's predicate — that was reviewed and rejected on measured
+evidence. Do not edit the gold to make a number move. The decision is which of D-035 clause 3c and
+the gold's `forbidden_identity` list governs a holo/apo pair, and it belongs to the product owner.

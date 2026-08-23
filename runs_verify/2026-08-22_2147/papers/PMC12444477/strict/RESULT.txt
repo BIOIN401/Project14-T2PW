@@ -1,0 +1,38 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : strict
+status     : timeout
+stage      : stage1
+wall time  : 1749.4s (29m09s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : audit and DB mapping did not finish inside the time budget
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+AppTest script run timed out after 471.9942160999999(s)
+
+COUNTS
+----------------------------------------
+  compounds = 14
+  entities = 34
+  proteins = 18
+  reactions = 8
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (5081 B)
+  - extraction_boundary_report.json  (5203 B)
+  - merged_payload.json  (50585 B)
+  - rag_admission_report.json  (324277 B)
+  - stage0_attempts.json  (828 B)
+  - stage1_payload.json  (43409 B)

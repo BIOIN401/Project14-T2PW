@@ -1,0 +1,582 @@
+====================================================================================================
+T2PW PINNED ACCEPTANCE EVALUATION
+====================================================================================================
+run directory : runs_verify\2026-08-22_2147
+gold set      : 2026-08-01.1  (C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\bench\gold\pinned_v1.json)
+papers        : 10
+legs          : 20 attempted, 19 scored (of 20 possible)
+
+====================================================================================================
+BENCHMARK COMPLETION -- reported separately from every rate
+====================================================================================================
+An unattempted or unscorable paper is missing coverage, NOT a pipeline failure.
+
+  planned gold cases          : 10
+  papers attempted            : 10
+  strict legs attempted       : 10
+  research legs attempted     : 10
+  legs attempted              : 20 of 20
+  payloads available          : 19
+  semantically scorable legs  : 19
+  fully completed cases       : 10
+
+  status: COMPLETE   (10/10 papers, 20/20 legs)
+
+====================================================================================================
+ACCEPTANCE PRIORITIES -- in the declared order
+====================================================================================================
+Priorities 1-3 are absolute: any non-zero count fails them however good the rest looks.
+
+  1. [FAIL] zero known false real identifiers
+          observed: 7
+          papers  : PMC12096016, PMC12180156, PMC12856317
+  2. [FAIL] zero unsupported retained reactions
+          observed: 3
+          papers  : PMC13231680
+  3. [FAIL] zero referential-integrity violations
+          observed: 2
+          papers  : PMC12444477
+  4. [PASS] meaningful requested-pathway coverage
+          observed: 1/8 = 12%
+  5. [FAIL] maximize strict PWML pass rate among eligible/exportable papers
+          observed: 0/4 = 0%
+
+====================================================================================================
+SEPARATED DENOMINATORS -- one question each
+====================================================================================================
+A rate here never shares a denominator with another rate. That is the whole point:
+a retrieval problem and an exporter problem used to move the same number.
+
+Note the two research rates. 'deliverable produced' is an OUTPUT rate -- the citation
+report exists. 'semantically confirmed' is a CORRECTNESS rate. A deliverable built on
+missing admission data, identity conflicts, unsupported reactions or orphaned
+references is produced but not confirmed, and must never be quoted as a success.
+
+  GOLD RELEVANCE PREVALENCE
+     question   : What fraction of the pinned gold set is mechanistically relevant to its requested pathway? This is a property of the GOLD SET, not a measurement of the screener.
+     population : every paper in the pinned gold set
+     result     : 8/10 = 80%
+     passing    : PMC12096016, PMC12312563, PMC12421875, PMC12444477, PMC12452463, PMC12657337, PMC12782028, PMC12856317
+     not passing: PMC12180156, PMC13231680
+     excluded   : PMC13231680 -- mechanistic_relevance=context_only (negative control)
+     excluded   : PMC12180156 -- mechanistic_relevance=context_only
+
+  EXTRACTION SUCCESS
+     question   : Of the relevant papers whose legs were attempted, how many produced a payload with at least one reaction?
+     population : relevant gold cases with at least one attempted leg
+     result     : 8/8 = 100%
+     passing    : PMC12096016, PMC12312563, PMC12421875, PMC12444477, PMC12452463, PMC12657337, PMC12782028, PMC12856317
+
+  SEMANTIC PATHWAY SUCCESS
+     question   : Of the relevant papers with a scorable payload, how many were CONFIRMED -- every check passed, every check was evaluable, and the run itself did not record a FAILED runtime semantic verdict? The runtime verdict can only REMOVE a confirmation here; a runtime pass is never counted as one.
+     population : relevant gold cases with at least one scorable payload
+     result     : 1/8 = 12%
+     passing    : PMC12421875
+     not passing: PMC12096016, PMC12312563, PMC12444477, PMC12452463, PMC12657337, PMC12782028, PMC12856317
+
+  STRICT PWML SUCCESS
+     question   : Of the strict-exportable papers whose strict leg was attempted, how many exported PWML?
+     population : strict_exportable gold cases with an attempted strict leg
+     result     : 0/4 = 0%
+     not passing: PMC12096016, PMC12421875, PMC12657337, PMC12782028
+     excluded   : PMC12444477 -- expected_export=partial_only: The enzyme roster and reaction order are fully extractable, but a complete ID-resolvable pathway cannot be built from this paper: it contains zero Uni
+     excluded   : PMC13231680 -- expected_export=partial_only: Nothing lipid-A-related is exportable at any level of partiality. The correct pipeline outcome is an empty pathway plus a rejection reason.
+     excluded   : PMC12312563 -- expected_export=partial_only: A single reaction cannot form a connected pathway, and no second reaction anywhere in the text shares a metabolite with it. Any strict-exportable path
+     excluded   : PMC12856317 -- expected_export=partial_only: A single reaction cannot constitute an exportable multi-step pathway. Emitting a strict heme biosynthesis pathway from this paper requires importing s
+     excluded   : PMC12180156 -- expected_export=partial_only: With zero heme-biosynthesis reactions recoverable, nothing about heme biosynthesis is exportable. At most the paper supports regulatory edges (SFXN4 i
+     excluded   : PMC12452463 -- expected_export=partial_only: A narrative review with no primary data, whose route is chemically BROKEN: with EntA absent, nothing converts 2,3-dihydro-2,3-dihydroxybenzoate onward
+
+  RESEARCH DELIVERABLE PRODUCED
+     question   : Of the relevant papers whose research leg was attempted, how many PRODUCED a reviewable deliverable? (output only -- says nothing about correctness)
+     population : relevant gold cases with an attempted research leg
+     result     : 4/8 = 50%
+     passing    : PMC12096016, PMC12452463, PMC12782028, PMC12856317
+     not passing: PMC12312563, PMC12421875, PMC12444477, PMC12657337
+     excluded   : PMC13231680 -- mechanistic_relevance=context_only
+     excluded   : PMC12180156 -- mechanistic_relevance=context_only
+
+  RESEARCH SEMANTICALLY CONFIRMED
+     question   : Of those, how many are scientifically CONFIRMED -- deliverable produced, every semantic check passed AND evaluable, no priority-1..3 error, and no FAILED runtime semantic verdict recorded by the run itself?
+     population : relevant gold cases with an attempted research leg
+     result     : 0/8 = 0%
+     not passing: PMC12096016, PMC12312563, PMC12421875, PMC12444477, PMC12452463, PMC12657337, PMC12782028, PMC12856317
+     excluded   : PMC13231680 -- mechanistic_relevance=context_only
+     excluded   : PMC12180156 -- mechanistic_relevance=context_only
+
+====================================================================================================
+SCIENTIFIC ERRORS -- counted separately, never summed
+====================================================================================================
+These are different kinds of wrongness, not severities of one kind. One fabricated
+accession is worse than forty honest Unknown-backed proteins, so they stay in columns.
+
+  false real identifiers                 7   papers: PMC12096016, PMC12180156, PMC12856317
+  placeholder backed proteins            2   papers: PMC12180156
+  unsupported reactions                  3   papers: PMC13231680
+  reactions missing source carrier       1   papers: PMC12444477
+  cross organism reactions               0
+  orphaned references                    2   papers: PMC12444477
+  missing pathway anchors                5   papers: PMC12421875, PMC12452463, PMC12782028
+  missing supported reactions           12   papers: PMC12096016, PMC12312563, PMC12452463, PMC12657337, PMC12782028
+  quarantined processes                  8   papers: PMC12096016, PMC12180156, PMC12452463, PMC13231680
+
+====================================================================================================
+REAL IDENTIFIERS versus UNKNOWN FALLBACKS
+====================================================================================================
+  verified (real external accession) : 49
+  placeholder (Unknown-backed)       : 2
+  unresolved (no identity at all)    : 64
+  PathBank Unknown sentinel (id 9659): 1
+
+  payload sources scored: final_mapped.json=12, merged_payload.json=7
+
+  ! Counts sourced from merged_payload.json are pre-mapping: that payload carries no accessions at
+  ! all, so 'verified: 0' there means 'mapping had not run yet', NOT 'mapping failed'. Only counts
+  ! sourced from final_mapped.json measure real resolution.
+
+====================================================================================================
+STRICT FAILURES BY ACTUAL BOUNDARY
+====================================================================================================
+Replaces failure_kind='contract', which reported the Stage-3 gate, the PWML
+required-field gate and a structural guard as the same thing.
+
+    3  scope_ambiguity  --  scope ambiguity / requested-vs-observed conflict
+    1  timeout  --  wall-clock timeout
+
+====================================================================================================
+RESEARCH-MODE FAILURES BY CORRECTED CAUSE
+====================================================================================================
+The old doctrine was 'a research failure can only mean the code is wrong'. It is not:
+the structural guards abort in both modes by design, and a deliberate stop is correct.
+
+    3  deliberate_ambiguity_stop
+       deliberate ambiguity stop (the run refused on purpose)
+    1  timeout
+       timeout
+
+====================================================================================================
+RESULTS PER PAPER
+====================================================================================================
+----------------------------------------------------------------------------------------------------
+PMC12444477  --  The regulation of lipid A biosynthesis
+   requested : lipid A biosynthesis | Escherichia coli   (paper is actually: Escherichia coli)
+   gold      : relevance=core  export=partial_only  min_connected=3  unknown_ok=True
+   strict   : TIMEOUT  boundary=timeout
+              audit and db mapping did not finish inside the time budget
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=10  connected_core=8
+              support: attribution=20% (2/10 reactions)  recall=100% (2/2 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 8/8 (100%)
+              metabolite recall: 6/8 (75%)   missing: Kdo, UMP
+              [ok  ] requested_pathway_anchors_present: 3/3 requested-pathway anchors present
+              [FAIL] reaction_source_carrier_present: 1 of 10 retained reaction(s) carry no source field at all
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 2/10 (20%), recall 2/2 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 2 identity conflict finding(s) total
+              [FAIL] no_rejected_rag_reaction_reintroduced: 2 rejected RAG claim(s) were reintroduced
+              [ok  ] minimum_connected_core: largest chemically connected core is 8 reaction(s); this case requires 3
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 19 unresolved, of 19 protein row(s); no placeholder forged an identity, but 19 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: reactions missing source carrier=1, orphaned references=2
+   research : TIMEOUT  boundary=timeout  cause=timeout
+              the child process was still running after 1800s and was killed, so this paper+mode
+              produced nothing (budget_exhausted)
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              semantic: not evaluated -- the run produced no payload to score
+----------------------------------------------------------------------------------------------------
+PMC13231680 [NEGATIVE CONTROL]  --  Mechanistic insights into phthalylsulfacetamide-induced restoration of mer
+   requested : lipid A biosynthesis | Escherichia coli   (paper is actually: Escherichia coli (NDM-1-positive clinical isolate) and Mus musculus)
+   gold      : relevance=context_only  export=partial_only  min_connected=0  unknown_ok=False
+   strict   : PASS
+              release : release_ready [pipeline ran; strict gates passed; semantic evaluation
+                        passed]
+              payload=final_mapped.json  reactions=1  connected_core=1
+              [ok  ] requested_pathway_anchors_present: 0/0 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [n/e ] retained_reactions_match_supported_signatures: not evaluated: this gold case states no supported reaction signatures
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 0 rejected RAG claim(s) reappear in the payload
+              [FAIL] minimum_connected_core: negative control: 1 reaction(s) retained where the paper supports 0
+              [ok  ] placeholder_identities_distinguished: 2 verified / 0 Unknown-backed placeholder / 0 unresolved, of 2 protein row(s); every protein row carries a real external identity
+              errors: unsupported reactions=1, quarantined processes=1
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=2  connected_core=1
+              [ok  ] requested_pathway_anchors_present: 0/0 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 2 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [n/e ] retained_reactions_match_supported_signatures: not evaluated: this gold case states no supported reaction signatures
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 1 rejected RAG claim(s) reappear in the payload
+              [FAIL] minimum_connected_core: negative control: 2 reaction(s) retained where the paper supports 0
+              [ok  ] placeholder_identities_distinguished: 2 verified / 0 Unknown-backed placeholder / 0 unresolved, of 2 protein row(s); every protein row carries a real external identity
+              errors: unsupported reactions=2
+----------------------------------------------------------------------------------------------------
+PMC12657337  --  High-level production of vitamin K2 in Escherichia coli via modular metabo
+   requested : menaquinone biosynthesis | Bacillus subtilis   (paper is actually: Escherichia coli)
+   gold      : relevance=core  export=strict_exportable  min_connected=3  unknown_ok=False
+   strict   : SCOPE_CONFLICT  boundary=scope_ambiguity
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'escherichia coli' but the
+              batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=4  connected_core=3
+              support: attribution=50% (2/4 reactions)  recall=67% (2/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 3/3 (100%)
+              metabolite recall: 5/6 (83%)   missing: isopentenyl pyrophosphate
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 4 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 2/4 (50%), recall 2/3 (67%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 3 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 6 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 3 reaction(s); this case requires 3
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 4 unresolved, of 4 protein row(s); no placeholder forged an identity, but 4 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing supported reactions=1
+   research : SCOPE_CONFLICT  boundary=scope_ambiguity  cause=deliberate_ambiguity_stop
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'escherichia coli' but the
+              batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=5  connected_core=4
+              support: attribution=40% (2/5 reactions)  recall=67% (2/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 3/3 (100%)
+              metabolite recall: 6/6 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 5 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 2/5 (40%), recall 2/3 (67%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 6 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 7 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 4 reaction(s); this case requires 3
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 5 unresolved, of 5 protein row(s); no placeholder forged an identity, but 5 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing supported reactions=1
+----------------------------------------------------------------------------------------------------
+PMC12421875  --  The growth benefits and toxicity of quinone biosynthesis are balanced by a
+   requested : menaquinone biosynthesis | Bacillus subtilis   (paper is actually: Lactococcus lactis)
+   gold      : relevance=core  export=strict_exportable  min_connected=7  unknown_ok=False
+   strict   : SCOPE_CONFLICT  boundary=scope_ambiguity
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'lactococcus lactis' but the
+              batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=12  connected_core=11
+              support: attribution=25% (3/12 reactions)  recall=100% (3/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 8/8 (100%)
+              metabolite recall: 10/10 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 12 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 3/12 (25%), recall 3/3 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [ok  ] no_real_id_or_name_conflict: no real-identifier or name conflict
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 12 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 11 reaction(s); this case requires 7
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 10 unresolved, of 10 protein row(s); no placeholder forged an identity, but 10 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+   research : SCOPE_CONFLICT  boundary=scope_ambiguity  cause=deliberate_ambiguity_stop
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'lactococcus lactis' but the
+              batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=11  connected_core=10
+              support: attribution=36% (4/11 reactions)  recall=100% (3/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 8/8 (100%)
+              metabolite recall: 10/10 (100%)
+              [FAIL] requested_pathway_anchors_present: 1 of 4 requested-pathway anchors absent: menaquinone biosynthesis
+              [ok  ] reaction_source_carrier_present: all 11 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 4/11 (36%), recall 3/3 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [ok  ] no_real_id_or_name_conflict: no real-identifier or name conflict
+              [FAIL] no_rejected_rag_reaction_reintroduced: 2 rejected RAG claim(s) were reintroduced
+              [ok  ] minimum_connected_core: largest chemically connected core is 10 reaction(s); this case requires 7
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 9 unresolved, of 9 protein row(s); no placeholder forged an identity, but 9 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing pathway anchors=1
+----------------------------------------------------------------------------------------------------
+PMC12312563  --  Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo c
+   requested : menaquinone biosynthesis | Bacillus subtilis   (paper is actually: Listeria monocytogenes)
+   gold      : relevance=partial  export=partial_only  min_connected=1  unknown_ok=False
+   strict   : SCOPE_CONFLICT  boundary=scope_ambiguity
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'listeria monocytogenes' but
+              the batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=1  connected_core=1
+              support: attribution=100% (1/1 reactions)  recall=100% (1/1 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 1/1 (100%)
+              metabolite recall: 3/3 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 1/1 (100%), recall 1/1 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 2 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 6 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 1 reaction(s); this case requires 1
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 1 unresolved, of 1 protein row(s); no placeholder forged an identity, but 1 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+   research : SCOPE_CONFLICT  boundary=scope_ambiguity  cause=deliberate_ambiguity_stop
+              stage 0 read a scope that contradicts the batch request, so this paper is not the
+              paper the topic line asked for: stage 0 read organism 'listeria monocytogenes' but
+              the batch requested 'bacillus subtilis'
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=merged_payload.json  reactions=3  connected_core=3
+              support: attribution=0% (0/3 reactions)  recall=0% (0/1 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 1/1 (100%)
+              metabolite recall: 3/3 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 3 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 0/3 (0%), recall 0/1 (0%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Bacillus subtilis)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 3 identity conflict finding(s) total
+              [FAIL] no_rejected_rag_reaction_reintroduced: 1 rejected RAG claim(s) were reintroduced
+              [ok  ] minimum_connected_core: largest chemically connected core is 3 reaction(s); this case requires 1
+              [ok  ] placeholder_identities_distinguished: 0 verified / 0 Unknown-backed placeholder / 1 unresolved, of 1 protein row(s); no placeholder forged an identity, but 1 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing supported reactions=1
+----------------------------------------------------------------------------------------------------
+PMC12856317  --  A reversible feedback mechanism regulating mitochondrial heme synthesis
+   requested : heme biosynthesis | Homo sapiens   (paper is actually: Homo sapiens)
+   gold      : relevance=partial  export=partial_only  min_connected=1  unknown_ok=False
+   strict   : PASS
+              release : release_ready [pipeline ran; strict gates passed; semantic evaluation
+                        passed]
+              payload=final_mapped.json  reactions=1  connected_core=1
+              support: attribution=100% (1/1 reactions)  recall=100% (1/1 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 1/1 (100%)
+              metabolite recall: 3/3 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 1/1 (100%), recall 1/1 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)
+              [FAIL] no_real_id_or_name_conflict: 1 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 6 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 1 reaction(s); this case requires 1
+              [ok  ] placeholder_identities_distinguished: 1 verified / 0 Unknown-backed placeholder / 1 unresolved, of 2 protein row(s); no placeholder forged an identity, but 1 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: false real identifiers=1
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=1  connected_core=1
+              support: attribution=100% (1/1 reactions)  recall=100% (1/1 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 1/1 (100%)
+              metabolite recall: 3/3 (100%)
+              [ok  ] requested_pathway_anchors_present: 4/4 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 1/1 (100%), recall 1/1 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)
+              [FAIL] no_real_id_or_name_conflict: 1 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 4 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 1 reaction(s); this case requires 1
+              [ok  ] placeholder_identities_distinguished: 1 verified / 0 Unknown-backed placeholder / 0 unresolved, of 1 protein row(s); every protein row carries a real external identity
+              errors: false real identifiers=1
+----------------------------------------------------------------------------------------------------
+PMC12180156  --  Update of the sideroflexin (SLC56) gene family
+   requested : heme biosynthesis | Homo sapiens   (paper is actually: Homo sapiens (comparative review across fourteen species))
+   gold      : relevance=context_only  export=partial_only  min_connected=0  unknown_ok=False
+   strict   : PASS
+              release : review_required [pipeline ran; strict gates passed; semantic evaluation
+                        passed]
+              payload=final_mapped.json  reactions=2  connected_core=2
+              metabolite recall: 2/2 (100%)
+              [ok  ] requested_pathway_anchors_present: 2/2 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 2 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [n/e ] retained_reactions_match_supported_signatures: not evaluated: this gold case states no supported reaction signatures
+              [FAIL] organism_compatible: 0 reaction(s) and 1 protein(s) attributed to a forbidden organism
+              [ok  ] no_real_id_or_name_conflict: no real-identifier or name conflict
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 2 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 2 reaction(s); this case requires 0
+              [FAIL] placeholder_identities_distinguished: 2 placeholder identity problem(s); 3 verified / 2 Unknown-backed placeholder / 2 unresolved, of 7 protein row(s)
+              errors: placeholder backed proteins=2, quarantined processes=1
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=1  connected_core=1
+              metabolite recall: 2/2 (100%)
+              [ok  ] requested_pathway_anchors_present: 2/2 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 1 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [n/e ] retained_reactions_match_supported_signatures: not evaluated: this gold case states no supported reaction signatures
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)
+              [FAIL] no_real_id_or_name_conflict: 1 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 8 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 1 reaction(s); this case requires 0
+              [ok  ] placeholder_identities_distinguished: 4 verified / 0 Unknown-backed placeholder / 0 unresolved, of 4 protein row(s); every protein row carries a real external identity
+              errors: false real identifiers=1
+----------------------------------------------------------------------------------------------------
+PMC12096016  --  The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a 
+   requested : enterobactin biosynthesis | Escherichia coli   (paper is actually: Escherichia coli)
+   gold      : relevance=core  export=strict_exportable  min_connected=4  unknown_ok=False
+   strict   : PASS
+              release : review_required [pipeline ran; strict gates passed; semantic evaluation
+                        failed]
+              payload=final_mapped.json  reactions=7  connected_core=5
+              support: attribution=0% (0/7 reactions)  recall=0% (0/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 5/5 (100%)
+              metabolite recall: 7/8 (88%)   missing: ATP
+              [ok  ] requested_pathway_anchors_present: 5/5 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 7 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 0/7 (0%), recall 0/3 (0%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 2 false real identifier(s); 2 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 13 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 5 reaction(s); this case requires 4
+              [ok  ] placeholder_identities_distinguished: 5 verified / 0 Unknown-backed placeholder / 4 unresolved, of 9 protein row(s); no placeholder forged an identity, but 4 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: false real identifiers=2, missing supported reactions=3
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=8  connected_core=5
+              support: attribution=25% (2/8 reactions)  recall=67% (2/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 5/5 (100%)
+              metabolite recall: 7/8 (88%)   missing: ATP
+              [ok  ] requested_pathway_anchors_present: 5/5 requested-pathway anchors present
+              [ok  ] reaction_source_carrier_present: all 8 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 2/8 (25%), recall 2/3 (67%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 2 false real identifier(s); 4 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 6 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 5 reaction(s); this case requires 4
+              [ok  ] placeholder_identities_distinguished: 9 verified / 0 Unknown-backed placeholder / 1 unresolved, of 10 protein row(s); no placeholder forged an identity, but 1 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: false real identifiers=2, missing supported reactions=1, quarantined processes=1
+----------------------------------------------------------------------------------------------------
+PMC12452463  --  Enterobactin: A key player in bacterial iron acquisition and virulence
+   requested : enterobactin biosynthesis | Escherichia coli   (paper is actually: Escherichia coli (review ranging over many enteric species))
+   gold      : relevance=partial  export=partial_only  min_connected=2  unknown_ok=False
+   strict   : PASS
+              release : review_required [pipeline ran; strict gates passed; semantic evaluation
+                        failed]
+              payload=final_mapped.json  reactions=6  connected_core=2
+              support: attribution=0% (0/6 reactions)  recall=0% (0/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 3/3 (100%)
+              metabolite recall: 5/5 (100%)
+              [FAIL] requested_pathway_anchors_present: 1 of 4 requested-pathway anchors absent: ent operon
+              [ok  ] reaction_source_carrier_present: all 6 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 0/6 (0%), recall 0/3 (0%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 2 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 17 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 2 reaction(s); this case requires 2
+              [ok  ] placeholder_identities_distinguished: 7 verified / 0 Unknown-backed placeholder / 3 unresolved, of 10 protein row(s); no placeholder forged an identity, but 3 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing pathway anchors=1, missing supported reactions=3, quarantined processes=4
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=4  connected_core=4
+              support: attribution=75% (3/4 reactions)  recall=100% (3/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 3/3 (100%)
+              metabolite recall: 5/5 (100%)
+              [FAIL] requested_pathway_anchors_present: 1 of 4 requested-pathway anchors absent: ent operon
+              [ok  ] reaction_source_carrier_present: all 4 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 3/4 (75%), recall 3/3 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Escherichia coli)
+              [FAIL] no_real_id_or_name_conflict: 0 false real identifier(s); 1 identity conflict finding(s) total
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 12 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 4 reaction(s); this case requires 2
+              [ok  ] placeholder_identities_distinguished: 6 verified / 0 Unknown-backed placeholder / 1 unresolved, of 7 protein row(s); no placeholder forged an identity, but 1 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing pathway anchors=1, quarantined processes=1
+----------------------------------------------------------------------------------------------------
+PMC12782028  --  Cholesterol and steroid synthesis pathways may be involved in the inhibiti
+   requested : cholesterol biosynthesis | Homo sapiens   (paper is actually: Homo sapiens)
+   gold      : relevance=partial  export=strict_exportable  min_connected=2  unknown_ok=False
+   strict   : PASS
+              release : review_required [pipeline ran; strict gates passed; semantic evaluation
+                        failed]
+              payload=final_mapped.json  reactions=3  connected_core=2
+              support: attribution=33% (1/3 reactions)  recall=33% (1/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 3/4 (75%)   missing: MSMO1
+              metabolite recall: 5/5 (100%)
+              [FAIL] requested_pathway_anchors_present: 1 of 4 requested-pathway anchors absent: mevalonate pathway
+              [ok  ] reaction_source_carrier_present: all 3 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [FAIL] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 1/3 (33%), recall 1/3 (33%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)
+              [ok  ] no_real_id_or_name_conflict: no real-identifier or name conflict
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 1 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 2 reaction(s); this case requires 2
+              [ok  ] placeholder_identities_distinguished: 3 verified / 0 Unknown-backed placeholder / 3 unresolved, of 6 protein row(s); no placeholder forged an identity, but 3 row(s) carry no identity at all -- this is NOT 'every protein resolved'
+              errors: missing pathway anchors=1, missing supported reactions=2
+   research : PASS
+              release : not recorded -- a technical PASS is a GATE result, not a release decision;
+                        semantic evaluation is reported separately and is never implied by it
+              payload=final_mapped.json  reactions=3  connected_core=2
+              support: attribution=100% (3/3 reactions)  recall=100% (3/3 paper-stated reactions)
+                       (signature set is a SUBSET, so unattributed rows are not counted as fabrications)
+              enzyme recall: 4/4 (100%)
+              metabolite recall: 5/5 (100%)
+              [FAIL] requested_pathway_anchors_present: 1 of 4 requested-pathway anchors absent: mevalonate pathway
+              [ok  ] reaction_source_carrier_present: all 3 retained reaction(s) carry a source field (a carrier only -- see the supported-signature check for actual support)
+              [ok  ] retained_reactions_match_supported_signatures: attribution rate (signature set is a SUBSET) 3/3 (100%), recall 3/3 (100%)
+              [ok  ] organism_compatible: no retained reaction is attributed to a forbidden organism (requested: Homo sapiens)
+              [ok  ] no_real_id_or_name_conflict: no real-identifier or name conflict
+              [ok  ] no_rejected_rag_reaction_reintroduced: none of the 33 rejected RAG claim(s) reappear in the payload
+              [ok  ] minimum_connected_core: largest chemically connected core is 2 reaction(s); this case requires 2
+              [ok  ] placeholder_identities_distinguished: 6 verified / 0 Unknown-backed placeholder / 0 unresolved, of 6 protein row(s); every protein row carries a real external identity
+              errors: missing pathway anchors=1
+
+====================================================================================================
+REMAINING BLOCKERS -- three separate rankings, never merged
+====================================================================================================
+Ranked by EXPECTED benefit (papers for which this is the only root cause), then by
+total papers touched. 'Papers released' only means something inside one population:
+a partial_only paper is not in the strict denominator, so fixing its strict gate
+cannot raise the strict rate however real the work is.
+
+----------------------------------------------------------------------------------------------------
+STRICT_EXPORT
+  strict-export blockers -- strict legs of strict_exportable cases ONLY. Fixing anything here can raise the strict PWML rate.
+
+  1. other
+       unclassified issue code: scope_conflict
+       expected benefit: 2 paper(s) released outright; touches 2 paper(s)
+       sole blocker for: PMC12421875, PMC12657337
+       papers          : PMC12421875, PMC12657337
+       example codes   : scope_conflict
+
+----------------------------------------------------------------------------------------------------
+RESEARCH_DELIVERABLE
+  research-deliverable blockers -- research legs of relevant cases. Fixing these cannot change the strict rate.
+
+  1. other
+       unclassified issue code: scope_conflict
+       expected benefit: 3 paper(s) released outright; touches 3 paper(s)
+       sole blocker for: PMC12312563, PMC12421875, PMC12657337
+       papers          : PMC12312563, PMC12421875, PMC12657337
+       example codes   : scope_conflict
+
+----------------------------------------------------------------------------------------------------
+EXTRACTION
+  extraction blockers -- legs that never produced a payload, in either mode. Upstream of both rates.
+
+  1. other
+       unclassified issue code: timeout
+       expected benefit: 1 paper(s) released outright; touches 1 paper(s)
+       sole blocker for: PMC12444477
+       papers          : PMC12444477
+       example codes   : timeout
+
+====================================================================================================
+READ THIS BEFORE TRUSTING THE NUMBERS ABOVE
+====================================================================================================
+  ! 7 leg(s) were scored from merged_payload.json, which is pre-mapping. Their identity and
+    false-identifier counts are floors, not measurements: run the batch with the updated driver so
+    final_mapped.json is persisted on failure paths.
+
+  ! 4 check(s) across all legs could not be evaluated (most likely the RAG admission report, which
+    the driver did not previously persist). They are excluded from 'confirmed' and are NOT counted
+    as passes.

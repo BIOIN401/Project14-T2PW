@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "proteins",
+          "name": "MSMO1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "SQLE",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "FDFT1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        }
+      ],
+      "removed_locations": [],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

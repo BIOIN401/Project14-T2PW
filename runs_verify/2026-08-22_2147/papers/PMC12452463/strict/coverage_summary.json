@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "enterobactin",
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "ferric iron (Fe3+)",
+    "EntA",
+    "EntB",
+    "EntC",
+    "EntD",
+    "EntE",
+    "EntF",
+    "Fur",
+    "FepA"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "enterobactin",
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "ferric iron (Fe3+)"
+    ],
+    "key_proteins": [
+      "EntA",
+      "EntB",
+      "EntC",
+      "EntD",
+      "EntE",
+      "EntF",
+      "Fur",
+      "FepA"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "outer membrane",
+      "inner membrane"
+    ],
+    "main_subprocesses": [
+      "Conversion of chorismate to isochorismate",
+      "Conversion of isochorismate to 2,3-dihydroxybenzoate",
+      "Activation of DHB to DHB-AMP",
+      "Assembly of three DHB molecules into cyclic trilactone enterobactin"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "biosynthesis and regulation",
+      "role in virulence",
+      "vaccine development",
+      "antibiotic development",
+      "biotechnology applications"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "single_example_review_section",
+    "context_type": "single_pathway",
+    "scope_status": "targeted",
+    "scope_clarity_score": 1.0,
+    "selected_example": "enterobactin biosynthesis in Escherichia coli",
+    "candidate_examples": [
+      {
+        "name": "enterobactin biosynthesis in Escherichia coli",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "enterobactin",
+          "chorismate",
+          "isochorismate",
+          "2,3-dihydroxybenzoate (DHB)",
+          "DHB-AMP",
+          "ferric iron (Fe3+)"
+        ],
+        "key_proteins": [
+          "EntA",
+          "EntB",
+          "EntC",
+          "EntD",
+          "EntE",
+          "EntF",
+          "Fur",
+          "FepA"
+        ],
+        "main_subprocesses": [
+          "Conversion of chorismate to isochorismate",
+          "Conversion of isochorismate to 2,3-dihydroxybenzoate",
+          "Activation of DHB to DHB-AMP",
+          "Assembly of three DHB molecules into cyclic trilactone enterobactin"
+        ],
+        "evidence": "The ent (enterobactin) operon in Escherichia coli comprises six genes (entA, entB, entC, entD, entE, and entF), each encoding an enzyme essential for the production of enterobactin."
+      }
+    ],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:294ef907fbd3911e",
+      "response_hash": "sha256:5d1a221dd4d064b8",
+      "raw_chars": 2193,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2193,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "enterobactin",
+    "chorismate",
+    "isochorismate",
+    "DHB-AMP",
+    "ferric iron (Fe3+)",
+    "EntB",
+    "EntC",
+    "EntD",
+    "EntE",
+    "EntF",
+    "FepA"
+  ],
+  "unmatched_terms": [
+    "2,3-dihydroxybenzoate (DHB)",
+    "EntA",
+    "Fur"
+  ],
+  "coverage_ratio": 0.785714,
+  "core_accepted_processes": 9,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 9,
+  "quarantined_processes": 4,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

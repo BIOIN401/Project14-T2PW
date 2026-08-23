@@ -1,0 +1,76 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        2,
+        1,
+        0,
+        -3,
+        3
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 1,
+      "warning_count": 3,
+      "patch_count": 3,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Add the resolved UniProt and PathBank identifiers to the ALAS2 protein entry based on the judged candidate in the mapping_meta, resolving the missing identifier gate failure. The glycine compound ambiguity is noted as a warning but not patc… (+56 chars elided)",
+      "top_errors": [
+        "Protein 'ALAS2' is missing a UniProt or DrugBank identifier."
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 3,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    },
+    {
+      "round": 2,
+      "temperature": 0.43000000000000005,
+      "max_tokens": 5200,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 2,
+      "patch_count": 0,
+      "accepted_patch_count": 0,
+      "rejected_patch_count": 0,
+      "llm_ok": false,
+      "llm_error": "LLM output was not valid JSON.",
+      "llm_repair_rationale": "",
+      "top_errors": [],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": false,
+      "gap_payload_changed": false,
+      "settled_payload_changed": false,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

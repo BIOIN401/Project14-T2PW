@@ -1,0 +1,40 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 4500,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        1,
+        0,
+        0,
+        -17,
+        17
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 4,
+      "patch_count": 17,
+      "accepted_patch_count": 17,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "The payload is structurally valid and ready for SBML conversion. The only changes are adding missing 'synonyms' arrays to all entities for consistency with downstream mapping and export. No type errors, missing compartments, or broken refer… (+17 chars elided)",
+      "top_errors": [],
+      "gap_mapped_ids_added": 2,
+      "gap_locations_added": 2,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 0,
+        "organisms_added": 0,
+        "locations_added": 0,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 1,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:52f272f9f1c81a29",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"compound:44dimethylcholesta891424trien3ol\", \"resolve_ids\": { \"strategy\": \"api_then_db\", \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"ful… (+193 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "resolve_ids": {
+              "strategy": "api_then_db"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "compound:44dimethylcholesta891424trien3ol",
+            "entity_type": "compound",
+            "name": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "4,4-dimethylcholesta-8(9),14,24-trien-3β-ol",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "api_then_db",
+              "attempts": [
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                },
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

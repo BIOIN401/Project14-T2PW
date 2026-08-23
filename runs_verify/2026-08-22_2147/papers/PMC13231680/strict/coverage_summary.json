@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "phthalylsulfacetamide (PSA)",
+    "meropenem (MEM)",
+    "Zn2+",
+    "sulfacetamide",
+    "NDM-1 (New Delhi metallo-β-lactamase-1)",
+    "LpxC (UDP-3-O-acyl-N-acetylglucosamine deacetylase)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "phthalylsulfacetamide (PSA)",
+      "meropenem (MEM)",
+      "Zn2+",
+      "sulfacetamide"
+    ],
+    "key_proteins": [
+      "NDM-1 (New Delhi metallo-β-lactamase-1)",
+      "LpxC (UDP-3-O-acyl-N-acetylglucosamine deacetylase)"
+    ],
+    "likely_compartments": [
+      "outer membrane",
+      "cytoplasm"
+    ],
+    "main_subprocesses": [
+      "β-lactam hydrolysis by NDM-1",
+      "NDM-1 inhibition by PSA",
+      "lipopolysaccharide biosynthesis (LpxC step)"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "methods",
+      "results",
+      "discussion",
+      "body"
+    ],
+    "pathway_relevance_score": 0.4,
+    "document_type": "primary_research",
+    "context_type": "enzyme_mechanism",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:02484518418aefad",
+      "response_hash": "sha256:6a2bd55394190f0f",
+      "raw_chars": 831,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 831,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "phthalylsulfacetamide (PSA)",
+    "meropenem (MEM)",
+    "Zn2+",
+    "sulfacetamide",
+    "NDM-1 (New Delhi metallo-β-lactamase-1)",
+    "LpxC (UDP-3-O-acyl-N-acetylglucosamine deacetylase)"
+  ],
+  "unmatched_terms": [],
+  "coverage_ratio": 1.0,
+  "core_accepted_processes": 5,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 5,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

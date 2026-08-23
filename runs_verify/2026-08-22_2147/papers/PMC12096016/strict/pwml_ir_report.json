@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component '4'-phosphopantetheinyl transferase entD' in complex 'enterobactin synthase' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/3/components/1",
+      "complex_key": "pc_4",
+      "complex_name": "enterobactin synthase",
+      "component_name": "4'-phosphopantetheinyl transferase entD"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 3,
+    "compounds": 12,
+    "proteins": 5,
+    "reactions": 5,
+    "transports": 2,
+    "locations": 25,
+    "edges": 24,
+    "process_visualizations": 7
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 21,
+      "biological_states": 3,
+      "processes": 8,
+      "process_members": 22,
+      "locations": 25,
+      "edges": 24,
+      "process_visualizations": 7
+    }
+  }
+}

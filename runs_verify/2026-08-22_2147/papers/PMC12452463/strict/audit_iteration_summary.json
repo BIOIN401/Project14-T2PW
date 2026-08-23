@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        2,
+        7,
+        2,
+        -14,
+        16
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 7,
+      "warning_count": 8,
+      "patch_count": 16,
+      "accepted_patch_count": 14,
+      "rejected_patch_count": 2,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "The most critical issues are missing species/organism and missing identifiers for the wrapper protein 'enterobactin synthase' and its complex. The wrapping protein and its complex are both derived from E. coli (supported by all component pr… (+232 chars elided)",
+      "top_errors": [
+        "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+        "Protein 'Fnr' is missing a UniProt or DrugBank identifier.",
+        "Protein 'enterobactin synthase' is missing species/organism."
+      ],
+      "gap_mapped_ids_added": 6,
+      "gap_locations_added": 2,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

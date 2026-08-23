@@ -1,0 +1,384 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:90cf179bb93d83ed",
+  "resulting_payload_hash": "sha256:90cf179bb93d83ed",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "lpxc",
+      "meropenem",
+      "ndm1",
+      "phthalylsulfacetamide",
+      "sulfacetamide",
+      "zn2+"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:7278eca1229362ef",
+  "ok": true,
+  "counts": {
+    "core_accepted": 5,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "PSA decomposition to sulfacetamide",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa decomposition to sulfacetamide",
+        "sulfacetamide"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "NDM-1 catalyzed hydrolysis of meropenem",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "hydrolyzed meropenem",
+        "meropenem",
+        "ndm1",
+        "ndm1 catalyzed hydrolysis of meropenem"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "PSA inhibits NDM-1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ndm1",
+        "phthalylsulfacetamide",
+        "psa inhibits ndm1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "PSA interacts with Zn2+",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa interacts with zn2+",
+        "zn2+"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "PSA potentially interacts with LpxC",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lpxc",
+        "phthalylsulfacetamide",
+        "psa potentially interacts with lpxc"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "PSA decomposition to sulfacetamide",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa decomposition to sulfacetamide",
+        "sulfacetamide"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "NDM-1 catalyzed hydrolysis of meropenem",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "hydrolyzed meropenem",
+        "meropenem",
+        "ndm1",
+        "ndm1 catalyzed hydrolysis of meropenem"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "PSA inhibits NDM-1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ndm1",
+        "phthalylsulfacetamide",
+        "psa inhibits ndm1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "PSA interacts with Zn2+",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa interacts with zn2+",
+        "zn2+"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "PSA potentially interacts with LpxC",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lpxc",
+        "phthalylsulfacetamide",
+        "psa potentially interacts with lpxc"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "release_ready",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": true,
+    "completeness": 1.0,
+    "missing_anchors": [],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "no further supported content remained at the freeze seam",
+    "coverage_evaluated": true,
+    "reasons": [],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": false,
+    "locked_reactions_found": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "phthalylsulfacetamide",
+      "meropenem",
+      "Zn2+",
+      "sulfacetamide",
+      "NDM-1",
+      "LpxC"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "NDM-1 inhibition by phthalylsulfacetamide",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "phthalylsulfacetamide",
+        "meropenem",
+        "Zn2+",
+        "sulfacetamide"
+      ],
+      "key_proteins": [
+        "NDM-1",
+        "LpxC"
+      ],
+      "likely_compartments": [
+        "outer membrane"
+      ],
+      "main_subprocesses": [
+        "NDM-1 active site binding",
+        "Zn2+ coordination",
+        "β-lactam hydrolysis inhibition",
+        "meropenem synergy",
+        "potential LpxC interaction"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "methods",
+        "results",
+        "discussion",
+        "conclusion"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "primary_research",
+      "context_type": "enzyme_mechanism",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:02484518418aefad",
+        "response_hash": "sha256:253164cd6ba26122",
+        "raw_chars": 893,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 893,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "phthalylsulfacetamide",
+      "meropenem",
+      "Zn2+",
+      "sulfacetamide",
+      "NDM-1",
+      "LpxC"
+    ],
+    "unmatched_terms": [],
+    "coverage_ratio": 1.0,
+    "core_accepted_processes": 5,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 5,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:90cf179bb93d83ed.sha256:7278eca1229362ef",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

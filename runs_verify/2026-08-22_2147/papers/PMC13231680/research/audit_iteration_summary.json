@@ -1,0 +1,40 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        3,
+        0,
+        0,
+        -1,
+        1
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 7,
+      "patch_count": 1,
+      "accepted_patch_count": 1,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "No structural errors or type conflicts were found. The payload is structurally valid for SBML conversion, but missing compartment locations and ambiguous mapping for Zn2+ are noted as warnings. No patches are required at this time; the warn… (+48 chars elided)",
+      "top_errors": [],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 7,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

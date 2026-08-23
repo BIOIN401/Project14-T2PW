@@ -1,0 +1,933 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Escherichia coli",
+      "pathwhiz_id": 3,
+      "taxonomy_id": "562",
+      "classification": "Prokaryote"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    },
+    {
+      "key": "scl_2",
+      "name": "cytoplasm"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "Escherichia coli cytoplasm",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_2",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "__auto_state__",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "phthalylsulfacetamide",
+        "mapping_meta": {
+          "query": {
+            "name": "phthalylsulfacetamide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "phthalylsulfacetamide",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "phthalylsulfacetamide",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "__auto_state__"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "meropenem",
+        "pathwhiz_id": 9229,
+        "pathbank_compound_id": 9229,
+        "mapped_ids": {
+          "hmdb": "HMDB0014898",
+          "chebi": "43968",
+          "pubchem": "40466974",
+          "cas": "96036-03-2",
+          "chemspider": "389924",
+          "drugbank": "DB00760",
+          "pathbank_compound_id": "9229"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "meropenem"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9229,
+              "name": "Meropenem",
+              "short_name": "Meropen",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014898",
+                "chebi": "CHEBI:43968",
+                "pubchem": "40466974",
+                "cas": "96036-03-2",
+                "chemspider": "389924",
+                "drugbank": "DB00760",
+                "pathbank_compound_id": "9229"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9229,
+          "resolved_name": "Meropenem"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 9229,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0014898",
+        "chebi_id": "43968",
+        "pubchem_cid": "40466974",
+        "cas": "96036-03-2",
+        "chemspider_id": "389924",
+        "short_name": "Meropen",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "__auto_state__"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "Zn2+",
+        "mapped_ids": {},
+        "mapping_meta": {
+          "query": {
+            "name": "Zn2+"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "resolved_name": "Zinc (II) ion",
+          "name_gate": {
+            "verdict": "reject",
+            "reason": "no_shared_meaningful_token",
+            "entity_name": "Zn2+",
+            "kind": "compound",
+            "resolved_name": "Zinc (II) ion",
+            "identity": "kegg:C00038",
+            "compared_names": [
+              "Zinc (II) ion",
+              "Zinc",
+              "ZN%2b2"
+            ]
+          },
+          "rejected_mapped_ids": {
+            "kegg": "C00038"
+          }
+        },
+        "raw_name": "Zn2+",
+        "db_status": "ambiguous",
+        "db_match": {
+          "status": "ambiguous",
+          "raw_name": "Zn2+",
+          "chosen": null,
+          "candidates": [
+            {
+              "id": 1005,
+              "name": "Zinc (II) ion",
+              "hmdb_id": "HMDB0001303",
+              "kegg_id": "C00038",
+              "pubchem_cid": "32051",
+              "chebi_id": "29105",
+              "pwc_id": "PW_C001005",
+              "short_name": "Zinc",
+              "chosen_rule": "exact_short_name_or_synonym",
+              "confidence": 0.7,
+              "db_row": {
+                "id": 1005,
+                "name": "Zinc (II) ion",
+                "hmdb_id": "HMDB0001303",
+                "description": "Zinc is an essential element, necessary for sustaining all life.Physiologically, it exists as an ion in the body. It is estimated that 3000 of the hundreds of thousands of proteins in the human body contain zinc prosthetic groups. In addition, there are over a dozen types of cells in the human body that secrete zinc ions, and the roles of these secreted zinc signals in medicine and health are now being actively studied. Intriguingly, brain cells in the mammalian forebrain are one type of cell that secretes zinc, along with its other neuronal messenger substances. Cells in the salivary gland, prostate, immune system and intestine are other types that secrete zinc. Obtaining a sufficient zinc intake during pregnancy and in young children is a problem, especially among those who cannot afford a good and varied diet. Brain development is stunted by zinc deficiency in utero and in youth. Zinc is an activator of certain enzymes, such as carbonic anhydrase. Carbonic anhydrase is important in the transport of carbon dioxide in vertebrate blood. Even though zinc is an essential requirement for a healthy body, too much zinc can be harmful. Excessive absorption of zinc can also suppress copper and iron absorption. The free zinc ion in solution is highly toxic to plants, invertebrates, and even vertebrate fish. The Free Ion Activity Model (FIAM) is well-established in the literature, and shows that just micromolar amounts of the free ion kills some organisms.",
+                "cas": "23713-49-7",
+                "kegg_id": "C00038",
+                "pubchem_cid": "32051",
+                "chebi_id": "29105",
+                "biocyc_id": "ZN%2b2",
+                "chemspider_id": "29723",
+                "drugbank_id": "DB01593",
+                "pwc_id": "PW_C001005",
+                "short_name": "Zinc"
+              }
+            },
+            {
+              "id": 9795,
+              "name": "Zinc",
+              "hmdb_id": "HMDB0015532",
+              "kegg_id": null,
+              "pubchem_cid": "23994",
+              "chebi_id": "27363",
+              "pwc_id": "PW_C009795",
+              "short_name": "Zinc",
+              "chosen_rule": "exact_short_name_or_synonym",
+              "confidence": 0.7,
+              "db_row": {
+                "id": 9795,
+                "name": "Zinc",
+                "hmdb_id": "HMDB0015532",
+                "description": "Zinc is an essential element, necessary for sustaining all life. It is a trace element in the diet, forming an essential part of many enzymes, and playing an important role in protein synthesis and in cell division. Physiologically, it exists as an ion in the body. It is estimated that 3000 of the hundreds of thousands of proteins in the human body contain zinc prosthetic groups. In addition, there are over a dozen cell types in the human body that secrete zinc ions, and the roles of these secreted zinc signals in medicine and health are now being actively studied. Intriguingly, brain cells in the mammalian forebrain are one type of cell that secretes zinc, along with its other neuronal messenger substances. Cells in the salivary gland, prostate, immune system, and intestine are other types that secrete zinc. Obtaining a sufficient zinc intake during pregnancy and in young children is a problem, especially among those who cannot afford a good and varied diet. Zinc deficiency is associated with anemia, short stature, hypogonadism, impaired wound healing, and geophagia. Brain development is stunted by zinc deficiency in utero and in youth. Zinc is an activator of certain enzymes, such as carbonic anhydrase. Carbonic anhydrase is important in the transport of carbon dioxide in vertebrate blood. Even though zinc is an essential requirement for a healthy body, too much zinc can be harmful. Excessive absorption of zinc can also suppress copper and iron absorption. The free zinc ion in solution is highly toxic to plants, invertebrates, and even vertebrate fish. The Free Ion Activity Model (FIAM) is well-established in the literature and shows that just micromolar amounts of the free ion kill some organisms.",
+                "cas": "7440-66-6",
+                "kegg_id": null,
+                "pubchem_cid": "23994",
+                "chebi_id": "27363",
+                "biocyc_id": null,
+                "chemspider_id": "22430",
+                "drugbank_id": "DB01593",
+                "pwc_id": "PW_C009795",
+                "short_name": "Zinc"
+              }
+            }
+          ],
+          "chosen_rule": "exact_short_name_or_synonym",
+          "confidence": 0.7,
+          "reason": "multiple_rows_for_exact_short_name_or_synonym"
+        },
+        "chosen_rule": "exact_short_name_or_synonym",
+        "class": "ion",
+        "confidence": 0.7,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "ion",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "__auto_state__"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "sulfacetamide",
+        "pathwhiz_id": 9119,
+        "pathbank_compound_id": 9119,
+        "mapped_ids": {
+          "hmdb": "HMDB0014772",
+          "chebi": "63845",
+          "pubchem": "5320",
+          "cas": "144-80-9",
+          "chemspider": "5129",
+          "drugbank": "DB00634",
+          "pathbank_compound_id": "9119"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "sulfacetamide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9119,
+              "name": "Sulfacetamide",
+              "short_name": "Sulface",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014772",
+                "chebi": "CHEBI:63845",
+                "pubchem": "5320",
+                "cas": "144-80-9",
+                "chemspider": "5129",
+                "drugbank": "DB00634",
+                "pathbank_compound_id": "9119"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9119,
+          "resolved_name": "Sulfacetamide"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 9119,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0014772",
+        "chebi_id": "63845",
+        "pubchem_cid": "5320",
+        "cas": "144-80-9",
+        "chemspider_id": "5129",
+        "short_name": "Sulface",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "__auto_state__"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "NDM-1",
+        "mapped_ids": {
+          "uniprot": "H6UKU8"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "NDM-1",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "H6UKU8",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "NDM-1",
+                "bla-ndm"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "E5KIY2",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "bla NDM-1",
+                "blaNDM-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.425,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.97,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "alias_source": "primary_name",
+          "resolved_name": "beta-lactamase",
+          "queries_tried": [
+            "(protein_name:\"NDM-1\" OR gene:\"NDM-1\") AND organism_name:\"Escherichia coli\""
+          ],
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "NDM-1",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 0.97,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "uniprot:H6UKU8",
+            "judged_candidate": {
+              "accession": "H6UKU8",
+              "protein_name": "beta-lactamase",
+              "gene_names": [
+                "NDM-1",
+                "bla-ndm"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "NDM-1",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              {
+                "accession": "H6UKU8",
+                "protein_name": "beta-lactamase",
+                "gene_names": [
+                  "NDM-1",
+                  "bla-ndm"
+                ],
+                "organism": "Escherichia coli",
+                "reviewed": false,
+                "score": 0.97,
+                "matched_query": "NDM-1",
+                "alias_source": "primary_name"
+              },
+              {
+                "accession": "E5KIY2",
+                "protein_name": "beta-lactamase",
+                "gene_names": [
+                  "bla NDM-1",
+                  "blaNDM-1"
+                ],
+                "organism": "Escherichia coli",
+                "reviewed": false,
+                "score": 0.425,
+                "matched_query": "NDM-1",
+                "alias_source": "primary_name"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "NDM-1",
+              "kind": "protein",
+              "resolved_name": "beta-lactamase",
+              "identity": "uniprot:H6UKU8",
+              "compared_names": [
+                "beta-lactamase"
+              ],
+              "matched_symbol": "NDM-1"
+            }
+          },
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "bla-ndm",
+          "NDM-1",
+          "beta-lactamase"
+        ],
+        "uniprot": "H6UKU8",
+        "gene_name": "bla-ndm",
+        "ec_number": "3.5.2.6",
+        "ec_numbers": [
+          "3.5.2.6"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "LpxC",
+        "pathwhiz_id": 6026,
+        "pathbank_protein_id": 6026,
+        "mapped_ids": {
+          "uniprot": "P0A725",
+          "pathbank_protein_id": "6026",
+          "gene_name": "lpxC"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6026, uniprot:P0A725",
+            "judged_candidate": {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6026,
+                "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+                "uniprot": "P0A725",
+                "gene_name": "lpxC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxC",
+              "kind": "protein",
+              "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "identity": "uniprot:P0A725",
+              "compared_names": [
+                "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase"
+              ],
+              "matched_symbol": "lpxC"
+            }
+          },
+          "pathbank_protein_id": 6026,
+          "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Protein EnvA",
+          "UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase",
+          "lpxC",
+          "asmB",
+          "envA",
+          "UDP-3-O-acyl-N-acetylglucosamine deacetylase"
+        ],
+        "uniprot": "P0A725",
+        "gene_name": "lpxC",
+        "ec_number": "3.5.1.108",
+        "ec_numbers": [
+          "3.5.1.108"
+        ]
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "PSA conversion to sulfacetamide",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "PSA inhibits NDM-1",
+        "interaction_type": "inhibits",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "NDM-1 catalyzes meropenem hydrolysis",
+        "interaction_type": "catalyzes hydrolysis of",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_2"
+        }
+      },
+      {
+        "key": "int_3",
+        "type": "interaction",
+        "name": "PSA interacts with Zn2+",
+        "interaction_type": "interacts with",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_3"
+        }
+      },
+      {
+        "key": "int_4",
+        "type": "interaction",
+        "name": "PSA may interact with LpxC",
+        "interaction_type": "may interact with",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_2"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_2",
+      "x": 840,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_2",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_2",
+      "x": 1240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 700,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 700,
+      "width": 3200,
+      "height": 700,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 489 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        }
+      ]
+    }
+  ]
+}

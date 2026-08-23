@@ -1,0 +1,663 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 1,
+        "organisms_added": 0,
+        "locations_added": 3,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 3,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "compound:aminolevulinic acid",
+            "entity_type": "compound",
+            "name": "aminolevulinic acid",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "entity_type": "compound",
+            "name": "succinyl-CoA",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:f60588a064b7aada",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"compound:aminolevulinic acid\", \"resolve_ids\": { \"strategy\": \"skip\" }, \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hm… (+192 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "compound:aminolevulinic acid",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "compound:aminolevulinic acid",
+            "entity_type": "compound",
+            "name": "aminolevulinic acid",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "aminolevulinic acid",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "aminolevulinic acid",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 11.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:2d5c5eb4d78532fc",
+                  "preview": "location_frequency=11"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cell Membrane",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrion",
+                "score": 15.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:11fed6725da9d690",
+                  "preview": "location_frequency=15"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Chloroplast",
+                "score": 4.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:a9fa2843987b89dc",
+                  "preview": "location_frequency=4"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrial Matrix",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrial Intermembrane Space",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Mitochondrion",
+              "confidence": 0.85,
+              "reason": "Mitochondrion has the highest frequency score (15) among candidates, and aminolevulinic acid is a key intermediate in heme biosynthesis which occurs in mitochondria of human cells. This is biologically plausible and consistent with the orga… (+28 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 337,
+                "hash": "sha256:7bb0def3148c3d2b",
+                "preview": "{ \"choice\": \"Mitochondrion\", \"confidence\": 0.85, \"reason\": \"Mitochondrion has the highest frequency score (15) among candidates, and aminolevulinic acid is a key intermediate in heme biosynthesis whic… (+131 chars elided)"
+              }
+            },
+            "chosen_location": "Mitochondrion",
+            "chosen_state": "AutoState_homo_sapiensmitochondrion"
+          },
+          {
+            "issue_key": "compound:succinylcoa",
+            "entity_type": "compound",
+            "name": "succinyl-CoA",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "succinyl-CoA",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:a1c31312bf0b11bc",
+                  "preview": "{\"kegg\": \"C00091\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 539,
+                  "hash": "sha256:bd2d18b1ffba1cce",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00091\", \"name\": \"Succinyl-CoA\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C09817\", \"name\": \"Benzylsuccinyl-CoA\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C09818\", \"n… (+339 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "succinyl-CoA",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 469,
+                  "hash": "sha256:2dbbd71dcca53ffd",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+269 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:62f9746cfb8cfcbe",
+                  "preview": "{\"kegg\": \"C22159\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "Top candidate with exact match to glycine (KEGG C00037) and highest confidence.",
+              "source": "llm",
+              "raw": {
+                "chars": 134,
+                "hash": "sha256:e0dcc55a64a8eef5",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.95, \"reason\": \"Top candidate with exact match to glycine (KEGG C00037) and highest confidence.\"}"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    },
+    {
+      "round": 2,
+      "summary": {
+        "mapped_ids_added": 0,
+        "organisms_added": 0,
+        "locations_added": 0,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 1,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": false,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [],
+            "reasons": [
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 405,
+            "hash": "sha256:8ca077c7afd8e066",
+            "preview": "{\"operations\": [{\"issue_key\": \"compound:glycine\", \"resolve_ids\": {\"strategy\": \"db_only\"}, \"resolve_location\": {\"strategy\": \"skip\"}, \"background\": {\"api_lookup\": \"none\", \"hmdb_lookup\": false, \"max_resu… (+205 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_only"
+            },
+            "resolve_location": {
+              "strategy": "skip"
+            },
+            "background": {
+              "api_lookup": "none",
+              "hmdb_lookup": false,
+              "max_results": 1
+            },
+            "rationale": "Entity type is compound; compound_unmapped_after_db_pass indicates prior DB failure. No ID mapping needed, no location needed. Skip further lookups to avoid redundant API calls."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

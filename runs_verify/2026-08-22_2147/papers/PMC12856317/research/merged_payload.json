@@ -1,0 +1,274 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "pyridoxal 5-phosphate",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mature ALAS2 after it is processed in the mitochondrial matrix"
+      }
+    ],
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "the cellular compartment where heme biosynthesis is initiated and terminated"
+      },
+      {
+        "compound": "pyridoxal 5-phosphate",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAS2 reaction",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "heme",
+        "entity_2": "ALAS2",
+        "name": "heme inhibition of ALAS2",
+        "relationship": "inhibits",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "acting as a reversible mixed inhibitor that reduces enzymatic activity",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ]
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [
+      {
+        "phase": "hallucination_gate",
+        "rule": "reagent_form_of_a_species_already_present",
+        "kind": "compound",
+        "entity": "hemin",
+        "evidence": "heme"
+      },
+      {
+        "phase": "hallucination_gate",
+        "rule": "references_a_removed_row",
+        "kind": "interaction",
+        "entity": "hemin",
+        "evidence": "hemin"
+      }
+    ],
+    "demoted": [],
+    "counts": {
+      "removed": 2,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

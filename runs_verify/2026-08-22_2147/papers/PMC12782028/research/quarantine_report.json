@@ -1,0 +1,352 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:ad09c5df0a9929b0",
+  "resulting_payload_hash": "sha256:ad09c5df0a9929b0",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23oxidosqualene",
+      "3hydroxy3methylglutarylcoa hmgcoa",
+      "cholesterol",
+      "cyp51a1 lanosterol 14demethylase",
+      "desmosterol",
+      "dhcr24 24dehydrocholesterol reductase",
+      "fdft1 farnesyldiphosphate farnesyltransferase",
+      "hmgcr 3hydroxy3methylglutarylcoa reductase",
+      "lanosterol",
+      "lss lanosterol synthase",
+      "msmo1 methylsterol monooxygenase 1",
+      "sqle squalene epoxidase"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:9db00d7a6c339372",
+  "ok": true,
+  "counts": {
+    "core_accepted": 3,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LSS reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23oxidosqualene",
+        "lanosterol",
+        "lss",
+        "lss reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "CYP51A1 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "44dimethylcholesta891424trien3ol",
+        "cyp51a1",
+        "cyp51a1 reaction",
+        "lanosterol"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "DHCR24 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "cholesterol",
+        "desmosterol",
+        "dhcr24",
+        "dhcr24 reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LSS reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23oxidosqualene",
+        "lanosterol",
+        "lss",
+        "lss reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "CYP51A1 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "44dimethylcholesta891424trien3ol",
+        "cyp51a1",
+        "cyp51a1 reaction",
+        "lanosterol"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "DHCR24 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "cholesterol",
+        "desmosterol",
+        "dhcr24",
+        "dhcr24 reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.583333,
+    "missing_anchors": [
+      "3-hydroxy-3-methylglutaryl-CoA (HMG-CoA)",
+      "MSMO1 (methylsterol monooxygenase 1)",
+      "SQLE (squalene epoxidase)",
+      "FDFT1 (farnesyl-diphosphate farnesyltransferase)",
+      "HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "5 requested-core anchor(s) matched no admitted process: 3-hydroxy-3-methylglutaryl-CoA (HMG-CoA), MSMO1 (methylsterol monooxygenase 1), SQLE (squalene epoxidase), FDFT1 (farnesyl-diphosphate farnesyltransferase), HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:3-hydroxy-3-methylglutaryl-CoA (HMG-CoA),MSMO1 (methylsterol monooxygenase 1),SQLE (squalene epoxidase),FDFT1 (farnesyl-diphosphate farnesyltransferase),HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 3,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "cholesterol",
+      "lanosterol",
+      "desmosterol",
+      "2,3-oxidosqualene",
+      "3-hydroxy-3-methylglutaryl-CoA (HMG-CoA)",
+      "LSS (lanosterol synthase)",
+      "CYP51A1 (lanosterol 14α-demethylase)",
+      "MSMO1 (methylsterol monooxygenase 1)",
+      "DHCR24 (24-dehydrocholesterol reductase)",
+      "SQLE (squalene epoxidase)",
+      "FDFT1 (farnesyl-diphosphate farnesyltransferase)",
+      "HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "cholesterol biosynthesis",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "cholesterol",
+        "lanosterol",
+        "desmosterol",
+        "2,3-oxidosqualene",
+        "3-hydroxy-3-methylglutaryl-CoA (HMG-CoA)"
+      ],
+      "key_proteins": [
+        "LSS (lanosterol synthase)",
+        "CYP51A1 (lanosterol 14α-demethylase)",
+        "MSMO1 (methylsterol monooxygenase 1)",
+        "DHCR24 (24-dehydrocholesterol reductase)",
+        "SQLE (squalene epoxidase)",
+        "FDFT1 (farnesyl-diphosphate farnesyltransferase)",
+        "HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)"
+      ],
+      "likely_compartments": [
+        "endoplasmic reticulum"
+      ],
+      "main_subprocesses": [
+        "Conversion of 2,3-oxidosqualene to lanosterol by LSS",
+        "14α-demethylation of lanosterol by CYP51A1",
+        "Demethylation of 4,4-dimethyl and 4alpha-methylsterols by MSMO1",
+        "Reduction of desmosterol to cholesterol by DHCR24"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "results",
+        "discussion"
+      ],
+      "pathway_relevance_score": 0.7,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:1d4c790eaba99912",
+        "response_hash": "sha256:d774e5f136d5ca95",
+        "raw_chars": 1246,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1246,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "cholesterol",
+      "lanosterol",
+      "desmosterol",
+      "2,3-oxidosqualene",
+      "LSS (lanosterol synthase)",
+      "CYP51A1 (lanosterol 14α-demethylase)",
+      "DHCR24 (24-dehydrocholesterol reductase)"
+    ],
+    "unmatched_terms": [
+      "3-hydroxy-3-methylglutaryl-CoA (HMG-CoA)",
+      "MSMO1 (methylsterol monooxygenase 1)",
+      "SQLE (squalene epoxidase)",
+      "FDFT1 (farnesyl-diphosphate farnesyltransferase)",
+      "HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)"
+    ],
+    "coverage_ratio": 0.583333,
+    "core_accepted_processes": 3,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 3,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:ad09c5df0a9929b0.sha256:9db00d7a6c339372",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}
