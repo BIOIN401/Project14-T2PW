@@ -85,8 +85,24 @@ SEMANTIC_NO_GATING_CHECK_EVALUABLE = (
 #: is always inapplicable in production; and ``CHECK_SOURCE_CARRIER`` and
 #: ``CHECK_CONNECTED_CORE`` are RECORDED BUT NON-GATING -- the first documents
 #: itself as hygiene that "deliberately does NOT claim the reaction is supported",
-#: so blocking a biological release on it would misuse it, and the second
-#: duplicates a floor the coverage verdict already enforced at this same seam.
+#: so blocking a biological release on it would misuse it.
+#:
+#: THE SECOND ONE'S OLD JUSTIFICATION WAS FALSE, and C-074 (F-101) replaces it
+#: rather than leaving it standing. It read "duplicates a floor the coverage
+#: verdict already enforced at this same seam". Measured, the two floors count
+#: different things: the coverage verdict's ``min_core_processes`` counts ACCEPTED
+#: PROCESSES INCLUDING INTERACTIONS against a threshold of 1, while
+#: ``CHECK_CONNECTED_CORE`` counts REACTIONS that join into one chain through
+#: shared non-cofactor metabolites. On the two legs F-100/F-101 were registered
+#: from they disagree 3-vs-1 and 5-vs-1, so the coverage floor was passing
+#: single-reaction payloads the connectivity floor would have stopped.
+#:
+#: The set below is still CLOSED and ``CHECK_CONNECTED_CORE`` is still not in it:
+#: widening the gating set is a ratification (D-039 section 3), and the semantic
+#: verdict is not where a structural floor belongs anyway. What C-074 adds instead
+#: is :data:`MIN_CONNECTED_CORE_REACTIONS` and the CAP in
+#: :func:`classify_release_status` that reads the size the production seam already
+#: computes -- a cap, so it can only ever remove ``release_ready``.
 #:
 #: LOCAL RESTATEMENT of ``bench.semantic``'s ``CHECK_*`` names, the same house
 #: pattern ``semantic_production._contains_token`` uses for ``goldset``: this is
@@ -121,6 +137,34 @@ REASON_SEMANTIC_EVALUATION_FAILED = "semantic_evaluation_failed"
 #: The unmatched anchor names are appended after a ``:`` so the record says WHICH,
 #: exactly as ``semantic_evaluation_failed`` names its checks.
 REASON_REQUESTED_CORE_ANCHORS_UNMATCHED = "requested_core_anchors_unmatched"
+
+#: C-074 / F-101, PRODUCT_CONTRACT 13. The smallest CHEMICALLY CONNECTED core a
+#: run may call ``release_ready``. Two, because one is not a pathway: a single
+#: reaction has no step to be connected TO, and PRODUCT_CONTRACT 13 defines a bare
+#: ``pathway.pwml`` as "ship it, no review needed" -- which a one-reaction payload
+#: emitted for a multi-step request is not.
+#:
+#: Deliberately NOT the same number as, and not derived from,
+#: ``strict_quarantine.DEFAULT_MIN_CORE_PROCESSES``. That one counts accepted
+#: processes INCLUDING interactions and is pinned at 1 by
+#: ``test_strict_quarantine_release_seam.py:222``; this one counts reactions that
+#: join into one chain. Tying them together is what made the old "duplicates a
+#: floor" justification above look true.
+MIN_CONNECTED_CORE_REACTIONS = 2
+
+#: The largest chemically connected core is under
+#: :data:`MIN_CONNECTED_CORE_REACTIONS` and the request did not ask for a
+#: single-reaction pathway. The observed and required sizes are appended after a
+#: ``:`` so the record says WHICH shortfall, exactly as
+#: ``requested_core_coverage_below_minimum`` does.
+REASON_CONNECTED_CORE_BELOW_FLOOR = "connected_core_below_minimum"
+
+#: C-074 / F-100. A context that CLAIMS to declare a requested core while naming
+#: no pathway at all. Not a coverage failure and deliberately not worded as one:
+#: coverage against terms nobody asked for is UNEVALUABLE, the same regime
+#: :data:`REASON_COVERAGE_NOT_EVALUATED` names, and "nothing was asked for" must
+#: never read as "nothing is missing".
+REASON_REQUESTED_PATHWAY_NOT_STATED = "requested_pathway_not_stated"
 
 #: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
 #: consumer has to re-type the string it string-matches on.
@@ -223,6 +267,73 @@ class CoverageVerdict(dict):
     @property
     def empty_graph(self) -> bool:
         return self._has_reason(COVERAGE_REASON_EMPTY)
+
+    # -- C-074 / F-100: was the request actually STATED? -------------------
+    @property
+    def requested_core_source(self) -> str:
+        """Which input produced the terms: ``explicit_argument`` /
+        ``pathway_context`` / ``payload`` / ``none``. Written by
+        ``evaluate_core_coverage``; a record written before that key existed
+        reads as ``""`` and is treated as "not recorded", never as a source."""
+
+        return str(self.get("requested_core_source") or "")
+
+    @property
+    def requested_context(self) -> Optional[Mapping[str, Any]]:
+        """The Stage-0 context exactly as production handed it over, or ``None``
+        when no context reached the check at all. The distinction is the whole
+        point of the field and it is the whole point of the rule below."""
+
+        context = self.get("requested_context")
+        return context if isinstance(context, Mapping) else None
+
+    @property
+    def requested_pathway_name(self) -> str:
+        context = self.requested_context
+        return str((context or {}).get("pathway_name") or "").strip()
+
+    @property
+    def declares_core_without_stating_a_pathway(self) -> bool:
+        """A context that CLAIMS a requested core while naming no pathway (F-100).
+
+        Measured on the leg F-100 was registered from:
+        ``requested_core_declared`` True, ``coverage_ratio`` 1.0,
+        ``unmatched_terms`` empty -- and ``pathway_name`` the empty string, with
+        the six "requested" terms being the PAPER's own key compounds and
+        proteins read by Stage 0. The batch had asked for something else
+        entirely. Scoring a request nobody stated
+        against terms taken from the paper is not a test, which is the same
+        failure mode ``collect_requested_core_terms`` already refuses to commit
+        with survivor-derived terms.
+
+        THREE conditions, and each excludes a regime that must not move:
+
+        * ``declared`` -- with no terms at all relevance is already unjudgeable
+          and ``completeness`` is already ``None``. The undeclared regime is
+          untouched.
+        * **the terms came FROM the context** (``requested_core_source ==
+          "pathway_context"``). This is the "CLAIMS to declare a core" clause and
+          it is doing real work, not decoration. An ``explicit_argument`` source
+          means a caller passed ``requested_core=`` by hand, which STATES the
+          request whatever the context says (C-074 section 3, arm B). A
+          ``payload`` source means the terms were scraped off the payload's own
+          ``metadata`` because nobody handed a context over -- a context carrying
+          only, say, a PathWhiz category never claimed to declare anything, and
+          demoting on it would demote shaped unit-test payloads for a fact about
+          the harness. Measured: ``test_semantic_release_gating`` supplies
+          exactly that shape.
+        * a context mapping is actually present and names no pathway -- a run
+          where NO context reached the check carries ``None`` here and behaves
+          exactly as it did before this property existed. That is what keeps
+          every context-free payload out of the new refusal.
+        """
+
+        return bool(
+            self.declared
+            and self.requested_core_source == "pathway_context"
+            and self.requested_context is not None
+            and not self.requested_pathway_name
+        )
 
     @property
     def has_surviving_core(self) -> bool:
@@ -452,6 +563,9 @@ def classify_release_status(
     semantic_not_evaluated_reason: str = SEMANTIC_INPUT_NOT_WIRED,
     semantic_failed_checks: Sequence[str] = (),
     semantic_check_evaluability: Sequence[Any] = (),
+    connected_core_reactions: Optional[int] = None,
+    min_connected_core_reactions: int = MIN_CONNECTED_CORE_REACTIONS,
+    single_reaction_scope_requested: bool = False,
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
 
@@ -490,6 +604,17 @@ def classify_release_status(
     all green is still demoted while part of what was asked for is missing from
     what survived. It is not a blanket demotion: a declared core with every anchor
     matched is untouched.
+
+    Then the CONNECTED-PATHWAY FLOOR (C-074 arm A, F-101) and the UNSTATED-REQUEST
+    cap (C-074 arm B, F-100), a third and a fourth cap of exactly the same shape.
+    The first refuses ``release_ready`` to a payload whose largest chemically
+    connected core is under :data:`MIN_CONNECTED_CORE_REACTIONS` reactions unless
+    a single-reaction pathway is what the REQUEST asked for; the second refuses it
+    to a context that claims a requested core while naming no pathway, because a
+    request nobody stated cannot be reported as satisfied. Both read only inputs a
+    caller supplies or the coverage verdict already carries, and
+    ``connected_core_reactions`` defaults to ``None`` -- not measured, so never a
+    demotion -- which is what keeps every pre-C-074 caller byte-identical.
 
     Because a cap is monotone it can only ever **remove** strict successes, never
     create one -- no new strict success without measured evidence.
@@ -608,6 +733,90 @@ def classify_release_status(
             f"{REASON_REQUESTED_CORE_ANCHORS_UNMATCHED}:{','.join(missing)}"
         )
 
+    # The CONNECTED-PATHWAY FLOOR (C-074 arm A, F-101). A THIRD cap of the same
+    # shape, and the one the caps above cannot express: F-101's leg had every
+    # requested anchor matched, coverage 1.0, semantics passing and every
+    # structural gate green, and shipped a bare ``pathway.pwml`` containing ONE
+    # reaction. PRODUCT_CONTRACT 13 reads a bare PWML as "ship it, no review
+    # needed"; a single reaction is not a multi-step pathway, and gold's own
+    # ``export_rationale`` on that leg says emitting the requested pathway from
+    # that paper "requires importing seven steps the paper never mentions".
+    #
+    # WHAT IS COUNTED, and why it is not the coverage floor: the largest
+    # CHEMICALLY CONNECTED core -- reactions joined through shared non-cofactor
+    # metabolites -- as ``bench.semantic._connected_core`` already computes it on
+    # every production run (``semantic_production.py:468``). The coverage floor
+    # next to it counts accepted processes INCLUDING INTERACTIONS at a threshold
+    # of 1. On F-101's leg those read 1 and 3; on F-100's, 1 and 5. Interactions
+    # are not reactions and never enter this number.
+    #
+    # NOT RECORDED IS NOT A FAILURE. ``None`` -- the default, and what every
+    # caller that does not measure connectivity passes -- means the size was not
+    # measured, and an unmeasured floor never demotes. A caller that measures it
+    # passes the integer. This is the D-038 rule and it is why adding this
+    # parameter leaves every existing caller's record byte-identical.
+    #
+    # THE ONE EXEMPTION IS READ FROM THE REQUEST. ``single_reaction_scope_requested``
+    # is derived by the caller from what was ASKED FOR -- never from what
+    # survived, which would make the floor score itself, and never from a paper
+    # identifier, which would hardcode a benchmark into production.
+    #
+    # A cap, on all four counts, exactly like the two above: only from
+    # ``release_ready``; exactly one step, to ``review_required``, never
+    # ``diagnostic_only`` -- the payload and its surviving processes are
+    # untouched here and merge rule 7 preserves an incomplete-but-correct pathway
+    # rather than dropping it; never applied to a status the chain already
+    # lowered; and it can only ever REMOVE a strict success.
+    #
+    # BOTH ARMS ARE EVALUATED BEFORE EITHER IS APPLIED, which is why they share
+    # one block. Applied in sequence, the first to fire would take the status out
+    # of ``release_ready`` and silence the second -- and on the leg F-100 was
+    # registered from BOTH hold, so the record would have lost the very fact the
+    # finding is about. Both facts are therefore recorded, and the status is
+    # capped ONCE.
+    #
+    # Recorded FROM ``release_ready`` ONLY, unlike ``semantic_failed_checks``
+    # above, which records on a FAILED verdict cap or no cap. The difference is
+    # deliberate and is C-072 precedent: a status the chain already lowered was
+    # lowered for a TECHNICAL reason, and appending a completeness reason to it
+    # would restate that refusal as a biological one. The two arms differ from
+    # each other in nothing.
+    below_connected_core_floor = (
+        connected_core_reactions is not None
+        and not single_reaction_scope_requested
+        and int(connected_core_reactions) < int(min_connected_core_reactions)
+    )
+    request_was_never_stated = (
+        verdict is not None and verdict.declares_core_without_stating_a_pathway
+    )
+    if status == RELEASE_READY and below_connected_core_floor:
+        reasons.append(
+            f"{REASON_CONNECTED_CORE_BELOW_FLOOR}:"
+            f"{int(connected_core_reactions)}<{int(min_connected_core_reactions)}"
+        )
+
+    # THE UNSTATED REQUEST (C-074 arm B, F-100). A FOURTH cap, same shape again.
+    # "Nothing was asked for" is currently read as "nothing is missing": a context
+    # that declares a core while naming no pathway had its coverage scored against
+    # terms Stage 0 read out of THE SAME PAPER, so the ratio came back 1.0 and the
+    # gate passed on the declared NEGATIVE CONTROL of the batch.
+    #
+    # Recorded as UNEVALUABLE, not as a coverage failure -- the reason constant
+    # says so and the coverage verdict itself is untouched, so the measured ratio
+    # stays on the record as the evidence it is rather than being overwritten by a
+    # number this cap invented. That is the same grain as ``completeness`` being
+    # ``None`` rather than ``0.0`` in the undeclared regime.
+    #
+    # See ``CoverageVerdict.declares_core_without_stating_a_pathway`` for why the
+    # undeclared regime and the no-context-at-all regime are both excluded by
+    # construction.
+    if status == RELEASE_READY and request_was_never_stated:
+        reasons.append(REASON_REQUESTED_PATHWAY_NOT_STATED)
+        reasons.append(REASON_COVERAGE_NOT_EVALUATED)
+    # ONE step, once, however many of the two facts hold.
+    if status == RELEASE_READY and (below_connected_core_floor or request_was_never_stated):
+        status = REVIEW_REQUIRED
+
     return ReleaseStatus(
         status=status,
         pipeline_executed=bool(pipeline_executed),
@@ -688,6 +897,8 @@ __all__ = [
     "REASON_SERIALIZATION_REQUIRES_INVENTION",
     "REASON_NO_DEFENSIBLE_CONNECTED_CORE", "REASON_COVERAGE_NOT_EVALUATED",
     "REASON_SEMANTIC_EVALUATION_FAILED",
+    "MIN_CONNECTED_CORE_REACTIONS", "REASON_CONNECTED_CORE_BELOW_FLOOR",
+    "REASON_REQUESTED_PATHWAY_NOT_STATED",
     "CoverageVerdict", "ReleaseStatus",
     "coverage_verdict", "classify_release_status", "semantic_verdict", "describe",
 ]
