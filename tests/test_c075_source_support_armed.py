@@ -42,6 +42,16 @@ same kind of claim and are not offered as the same kind of proof:
     the index. They correct a latent defect that arming would otherwise have
     shipped, not a defect users have seen.
 
+  ARM D -- THE AUDIT PROMPT (section 9), added in correction round 1. The two
+    prompt arms ARE base-failing behavioural proofs: they call only
+    ``audit_json_llm._build_llm_prompt``, which exists on base, and on base the
+    armed leg's prompt carries the whole index and both assertions fail. The
+    ``payload_for_prompt`` arm beside them names a new symbol and is not offered
+    as one.
+
+  Section 10's additivity arm patches a constant this card adds, so it too is
+  symbol-dependent and is offered as a PROPERTY check, not as a G9 proof.
+
   Everything else is a preservation or fail-open arm and claims nothing about G9.
 
 WHY B AND C EXIST AT ALL. C-073's 1-catch / 0-collateral figure was measured on
@@ -219,6 +229,14 @@ def armed_chain(
 
     merged = merge_additions(payload, {}, source_text=source_text)
     return run_offline(merged, cache_path)
+
+
+def armed_payload_from_merge() -> Dict[str, Any]:
+    """The heme leg as the ARMED Stage-2 merge really produces it -- index and
+    all -- so section 9 audits the object production hands the audit loop."""
+    from t2pw.pipeline.pipeline import merge_additions
+
+    return merge_additions(heme_payload(), {}, source_text=SOURCE_WITHOUT_SUCCINYL)
 
 
 # =============================================================================
@@ -932,3 +950,198 @@ def test_corpus_the_index_is_the_paper_and_nothing_is_added_to_it() -> None:
         assert index["length"] == len(raw)
         assert len(index["normalized"]) <= len(raw)
         assert len(json.dumps(index, ensure_ascii=False)) <= len(raw) + 128
+
+
+# =============================================================================
+# 9. the audit prompt must not carry the paper (C-075 correction round 1)
+# =============================================================================
+#
+# Arming the merge site puts a ~56 KB normalized copy of the paper on
+# ``final_payload``, and the audit loop json.dumps THE WHOLE PAYLOAD into its
+# user message (``audit_json_llm._build_llm_prompt``, called at :1409 with the
+# raw payload; ``strip_payload_for_interactive_context`` is not on that path at
+# all -- it is only reachable from ``interactive_curator.py:188`` and ``:255``).
+# Unfixed, every audit round of every leg would carry the paper, risking prompt
+# truncation and degraded audit quality across the whole run: a self-inflicted
+# regression worse than the defect being fixed.
+#
+# The fix is at the SERIALIZATION, never at the payload. The payload must keep
+# the index, because the AUTHORITATIVE mapping run happens AFTER the audit
+# (``streamlit_app.py:4225``) and a payload that reached it without an index
+# would fail open and withhold nothing.
+
+
+def test_the_audit_prompt_does_not_carry_the_source_index() -> None:
+    """(a) of the correction: the blob is gone from the prompt, and the payload
+    the auditor still needs to see is all still there."""
+    from t2pw.curation import audit_json_llm
+
+    payload = heme_payload(source_index(SOURCE_WITHOUT_SUCCINYL))
+    prompt = audit_json_llm._build_llm_prompt(payload)
+
+    assert SOURCE_INDEX_KEY not in prompt
+    assert _fold(SOURCE_WITHOUT_SUCCINYL)[:40] not in prompt
+    # ... and the structure the auditor actually judges is untouched
+    assert "succinyl-CoA" in prompt and "ALAS2 condensation" in prompt
+    assert "entities" in prompt and "processes" in prompt
+
+
+def test_the_audit_prompt_shrinks_by_the_whole_index_and_no_more() -> None:
+    """The saving is exactly the blob. Measured over the committed corpus the
+    index is ~56 KB per leg; here the fixture's is small, but the property that
+    matters is that the delta is the index's own serialized size and nothing
+    else disappeared with it."""
+    from t2pw.curation import audit_json_llm
+
+    without = heme_payload()
+    with_index = heme_payload(source_index(SOURCE_WITHOUT_SUCCINYL))
+
+    bare = audit_json_llm._build_llm_prompt(without)
+    armed = audit_json_llm._build_llm_prompt(with_index)
+    assert armed == bare, "the armed leg's prompt is no longer byte-identical to today's"
+
+
+def test_payload_for_prompt_never_mutates_and_never_rebuilds_needlessly() -> None:
+    """The half that keeps mapping working. It filters a COPY, and a payload with
+    nothing to filter is returned as the very same object -- so no existing
+    prompt changes by one byte and no caller's payload is edited underneath it."""
+    from t2pw.curation import audit_json_llm
+
+    payload = heme_payload(source_index(SOURCE_WITHOUT_SUCCINYL))
+    seen = audit_json_llm.payload_for_prompt(payload)
+
+    assert SOURCE_INDEX_KEY not in seen
+    assert SOURCE_INDEX_KEY in payload, "the caller's payload was edited"
+    assert seen["entities"] is payload["entities"], "the payload was needlessly rebuilt"
+
+    bare = heme_payload()
+    assert audit_json_llm.payload_for_prompt(bare) is bare
+    assert audit_json_llm.payload_for_prompt("not-a-dict") == "not-a-dict"
+
+
+def test_the_audited_payload_still_carries_the_index_and_mapping_still_refuses(
+    tmp_path: Path,
+) -> None:
+    """(b) of the correction, end to end. Through the real ``audit_payload`` with
+    the LLM mocked: the prompt the model saw has no index, the payload that comes
+    out the other side still has one, and ``map_payload`` -- which in production
+    runs AFTER the audit -- still withholds ``succinyl-CoA``.
+
+    That last assertion is the one that would catch a "fix" that stripped the key
+    from the payload instead of from the serialization: mapping would fail open
+    and this leg would ship all eight fabricated accessions again."""
+    from t2pw.curation import audit_json_llm
+
+    payload = armed_payload_from_merge()
+    prompts: List[str] = []
+
+    def _chat(messages, **_kwargs):
+        prompts.append(messages[-1]["content"])
+        return json.dumps({"issues": {}, "patch": []})
+
+    with patch.object(audit_json_llm, "chat", _chat):
+        result = audit_json_llm.audit_payload(payload, use_llm=True)
+
+    assert prompts, "the audit never called the model"
+    assert SOURCE_INDEX_KEY not in prompts[0]
+    assert isinstance(result["report"], dict)
+
+    # the payload survived the audit intact -- index and all
+    assert payload[SOURCE_INDEX_KEY]["length"] == len(SOURCE_WITHOUT_SUCCINYL)
+
+    mapped = run_offline(payload, tmp_path / "cache.json")
+    assert not _ids(mapped, "succinyl-CoA").get("kegg")
+    assert _ids(mapped, "heme") == HEME_IDS
+
+
+# =============================================================================
+# 10. the two properties a reviewer will attack
+# =============================================================================
+
+
+def test_both_new_clauses_are_strictly_additive_over_the_whole_corpus() -> None:
+    """THE PROPERTY. Neither clause can CREATE a refusal or new collateral.
+
+    Run over every committed artifact twice: once with both clauses neutralized
+    -- which is exactly the C-073 predicate -- and once as shipped. Every row's
+    surviving accession set at tip must be a SUPERSET of its set under C-073.
+    A single accession present under C-073 and absent here would mean one of the
+    clauses had taken something away, which is the only way either could do harm.
+
+    Stated per row rather than per corpus on purpose: a count could stay equal
+    while one row lost an accession and another gained one."""
+    from t2pw.mapping import identity_admission as ia
+
+    artifacts = _committed_artifacts()
+    if not artifacts:
+        pytest.skip("no committed final_mapped.json artifacts")
+
+    def _survivors(payload: Dict[str, Any]) -> Dict[Tuple[str, str], Dict[str, str]]:
+        entities = payload.get("entities") or {}
+        map_ids._admit_identities(payload, entities)
+        return {
+            (bucket, str(row.get("name"))): dict(ia.external_accessions(row))
+            for bucket, row in map_ids._identity_admission_rows(entities)
+        }
+
+    compared = 0
+    for path in artifacts:
+        source = path.parent.parent / "01_source_text.txt"
+        if not source.exists():
+            continue
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw[ia.SOURCE_INDEX_KEY] = ia.build_source_index(
+            source.read_text(encoding="utf-8", errors="replace")
+        )
+        with patch.object(ia, "PROVENANCE_ROUTE_KEYS", ()), patch.object(
+            ia.SourceIndex, "names_in_one_span", lambda self, needle: False
+        ):
+            before = _survivors(copy.deepcopy(raw))
+        after = _survivors(copy.deepcopy(raw))
+
+        for key, kept in before.items():
+            compared += 1
+            assert set(kept) <= set(after.get(key, {})), (
+                f"{key} in {path.relative_to(ROOT)} LOST "
+                f"{sorted(set(kept) - set(after.get(key, {})))} -- a clause that was "
+                f"supposed to only keep took something away"
+            )
+    assert compared >= 678, f"the additivity check no longer covers the corpus: {compared}"
+
+
+def test_source_refs_is_not_a_route_read_off_the_real_artifact() -> None:
+    """THE EVIDENCE for excluding ``source_refs``, taken from the artifact rather
+    than from a literal. The hallucinated ``succinyl-CoA`` of
+    ``runs/2026-08-02_2130/papers/PMC12180156/strict`` carries a ``source_refs``
+    entry -- and it is an evidence QUOTE, not a source id, and its own paper does
+    not contain it. Had ``source_refs`` been read as a provenance route, this row
+    would have walked out through the door built for legitimate imports."""
+    from t2pw.mapping import identity_admission as ia
+
+    artifact = ROOT / "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json"
+    source = ROOT / "runs/2026-08-02_2130/papers/PMC12180156/01_source_text.txt"
+    if not artifact.exists() or not source.exists():
+        pytest.skip(f"run directory absent: {artifact}")
+
+    payload = json.loads(artifact.read_text(encoding="utf-8"))
+    row = next(
+        r for r in payload["entities"]["compounds"]
+        if isinstance(r, dict) and r.get("name") == "succinyl-CoA"
+    )
+    refs = row.get("source_refs") or []
+
+    assert refs and not str(refs[0]).startswith("PMC"), "source_refs here is a quote, not an id"
+    assert ia.provenance_route(row) == "", "the quote was read as a provenance route"
+    # and the quote itself is not in the paper it claims to come from
+    folded = ia.normalize_text(source.read_text(encoding="utf-8", errors="replace"))
+    assert "succinyl" not in folded
+
+    payload[ia.SOURCE_INDEX_KEY] = ia.build_source_index(
+        source.read_text(encoding="utf-8", errors="replace")
+    )
+    report = map_ids._admit_identities(payload, payload["entities"])
+    assert any(
+        entry["name"] == "succinyl-CoA"
+        and entry["rule"] == ia.RULE_NOT_SUPPORTED
+        for entry in report["withheld"]
+    ), "the hallucination survived"
