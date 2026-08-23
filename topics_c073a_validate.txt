@@ -1,0 +1,21 @@
+# C-073 targeted paper validation, cohort A -- F-096.
+#
+# TWO legs: PMC12856317 strict and research. Run with --modes strict,research.
+# Scope line verbatim from topics_t104.txt / pinned_v1.json (2026-08-01.1).
+#
+# WHAT THIS COHORT MEASURES
+#   - the accession-collision refusal: at T-104 drugbank:DB00114 was claimed by
+#     BOTH "ALAS2" and "Pyridoxal 5'-phosphate" on the research leg
+#     (accession_claimed_by_multiple_entities, the only collision in the run).
+#     After C-073 that incompatible claim must not ship.
+#   - preservation: Glycine, aminolevulinic acid, heme, ALAS2 and the ALAS2
+#     complex must KEEP their accessions. Stripping any of them is a reject.
+#   - succinyl-CoA on THIS paper is in the source text and must be KEPT. The
+#     same name is a hallucination on PMC12180156 and must be refused there.
+#     That contrast is the point of running both cohorts.
+#
+# NOT fixed by C-073 and expected to persist: Pyridoxal 5'-phosphate is
+# genuinely named in this paper ("PLP", "pyridoxal 5-phosphate") and carries
+# correct accessions for the molecule named. Its falseness is a biological role
+# judgement, not an identity error. Do not read its survival as a C-073 failure.
+PMC12856317 | heme biosynthesis | Homo sapiens

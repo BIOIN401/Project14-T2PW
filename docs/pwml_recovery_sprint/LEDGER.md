@@ -2240,3 +2240,122 @@ instead.
 fact.** That is worth stating before anyone quotes this as end-to-end vindication. **It is a real
 question for T-104 triage**, and it should be carried there explicitly rather than discovered
 again.
+
+---
+
+## C-072 - ACCEPTED, MERGED `d7f4f96`, reviewed tip `b86cc41` (2026-08-22, unattended correction phase)
+
+**One `APPROVE` from an independent reviewer after ZERO correction rounds.** Closes **F-094**
+(HIGH, `product_contract_violation`) - the first of the two corrections D-063 makes T-105 wait on.
+
+`agent/c072-incomplete-core-demotion`, worktree `C:/t/c072`, base `20e6b68`.
+Diff: `release_status.py` +57/-0, `tests/test_c072_incomplete_core_demotion.py` +454/-0.
+**Insertions only; zero deleted lines in `src`.**
+
+### The change
+
+One new cap in `classify_release_status`, at `release_status.py:605`:
+
+```python
+if status == RELEASE_READY and verdict is not None and verdict.declared and missing:
+    status = REVIEW_REQUIRED
+    reasons.append(f"{REASON_REQUESTED_CORE_ANCHORS_UNMATCHED}:{','.join(missing)}")
+```
+
+A declared requested core with one or more anchors matching no admitted process is incomplete,
+so `release_ready` - which asserts no human review is needed - is not available.
+
+### The ruling I made: why NOT in `evaluate_core_coverage`
+
+The obvious placement is a fourth clause in `evaluate_core_coverage.reasons`, which feeds
+`minimum_core_satisfied = not reasons` (`strict_quarantine.py:960`). **Rejected.** All three
+existing clauses are THRESHOLD questions; adding an unconditional one would make the pinned
+`min_core_coverage = 0.5` non-load-bearing and break the two tests that pin it
+(`test_release_status_classification.py:301`, `test_strict_quarantine_release_seam.py:222`).
+Placing the cap in the classifier leaves the coverage function untouched and the threshold
+meaningful. No existing test changed value anywhere in the card.
+
+### Why this is not a re-firing of the semantic gate
+
+F-094's content is that the required outcome had been resting entirely on C-071's
+`actor_named_in_its_own_cited_span`: at T-103 that gate fired and the leg reached
+`review_required`; at T-104 it did not fire and nothing else held the leg. A correction that
+only makes the semantic gate fire again rebuilds the same single point of failure.
+
+The new cap reads **no semantic field** - its three operands are `status`, `verdict.declared`
+and `missing`. It sits after the semantic cap and fires when that one did not. Both the
+implementer and the reviewer proved it with `semantic_evaluation == "passed"`,
+`semantic_failed_checks = ()` and every structural gate green.
+
+### G9 - independently reproduced, not accepted on report
+
+The reviewer did NOT reuse the implementer's stash-based base measurement. It cut a detached
+worktree at `20e6b68`, confirmed the new constant was absent, and ran the new test file there
+tree-pinned via `pinned_pytest.py --expect-tree`:
+
+```
+AssertionError: assert 'release_ready' == 'review_required'
+```
+
+`5 failed, 6 passed` on base - collection succeeded and imports resolved, so this is a
+**behavioural** failure, not symbol absence. The six that pass on base are the control arms,
+which assert UNCHANGED behaviour; that is the correct shape. The constant-name test is
+explicitly labelled as not being the proof, and the module deliberately does not import the
+constant at module scope, which is why base collection did not error.
+
+### Gates
+
+| gate | result |
+|---|---|
+| focused (card 9, 6 files) | `99 passed` (implementer) |
+| obligation set (card 8, 9 files) | `133 passed` (reviewer) |
+| blast radius, 16 files | `543 passed` (reviewer) |
+| SMOKE at tip | `473 passed`, pin verdict `violations: []` (reviewer) |
+| SMOKE on integration after merge | **`473 passed`** (orchestrator) |
+| `test_strict_failure_replay.py` | `2 failed, 37 passed, 8 skipped` - **exactly the pre-charged baseline**, measured by orchestrator AND reviewer |
+| process lifecycle | `FINAL SURVIVING COUNT : 0` and `cleanup : success` on **every** job, all parties |
+
+**SMOKE is 473, measured three times this session at three different tips.** `CLAUDE.md` merge
+rule 10 still says 465 and is stale by the C-067 delta; `TEST_MATRIX.md` 473 is correct.
+
+### Blast radius - measured by the orchestrator, larger than F-094 described
+
+F-094 says PMC12452463/strict was "the only strict leg producing a bare `pathway.pwml`". True,
+and it hid something: **three T-104 legs finished `release_ready`, not one.** The other two are
+research legs, which emit no PWML and so were invisible to the artifact-name argument. All three
+carry a declared core with unmatched anchors, so C-072 demotes all three:
+
+| leg | T-104 | completeness | unmatched anchors |
+|---|---|---|---|
+| PMC12452463/strict | `release_ready` | 0.800 | DHB-AMP, Fur, RyhB |
+| PMC12096016/research | `release_ready` | 0.667 | NADH, L-serine, ATP, EntH, Fur, MenD |
+| PMC12782028/research | `release_ready` | 0.563 | MSMO1, SQLE, FDFT1, HMGCR, HMGCS1, FDPS, MVD |
+
+The two research demotions are a **deliberate, contract-consistent side effect**, not a
+surprise: a declared core missing 6 of 18 and 7 of 16 anchors is incomplete on exactly the
+reading that condemns PMC12452463. Recorded here so T-105 triage does not rediscover them as a
+finding. PMC12856317/strict - completeness 1.0, zero unmatched anchors - is the control that
+proves the cap is not a blanket demotion, and must stay unchanged at T-105.
+
+### It fixes a contract violation and moves NO acceptance rate
+
+Measured, not assumed:
+
+- **Strict PWML success stays 0/4.** The four gold `strict_exportable` cases are PMC12657337,
+  PMC12421875, PMC12096016, PMC12782028. PMC12452463 is `export=partial_only` and was never in
+  that denominator; PMC12096016/strict and PMC12782028/strict were ALREADY `review_required`.
+- **Research deliverable stays 4/8.** `acceptance.py:605` computes `deliverable` as a pure
+  filename test (`research_pathway_report.txt`) and never reads `release_status`.
+- **Strict deliverable is unaffected.** `_STRICT_DELIVERABLES` (`acceptance.py:99`) accepts BOTH
+  PWML names by design - D-004 split them precisely so "did an importable file land?" stays
+  separate from "may this count as strict success?".
+
+That the correction moves no rate is the correct outcome, not a disappointment: the rates were
+already failing for other reasons. **A reviewer or a later session must not read the unchanged
+0/4 as evidence that C-072 did nothing.**
+
+### Reviewer's open item, closed here
+
+The reviewer flagged that "the T-105 strict denominator should be expected to move by more than
+one leg, and that delta is unmeasured". It is measured above: three legs move status, zero rates
+move. No further action.

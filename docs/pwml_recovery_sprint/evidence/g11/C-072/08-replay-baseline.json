@@ -1,0 +1,86 @@
+{
+  "label": "c072-replay-baseline",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_strict_failure_replay.py",
+    "-q",
+    "--basetemp=C:/t/bt/c072rep"
+  ],
+  "cwd": "C:\\t\\c072",
+  "started_at": "2026-08-23T00:14:36+00:00",
+  "finished_at": "2026-08-23T00:14:38+00:00",
+  "duration_seconds": 2.034186899996712,
+  "timeout_seconds": 540.0,
+  "root_pid": 321972,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 331576,
+      "name": "python.exe",
+      "ppid": 321972
+    }
+  ],
+  "descendants_terminated": [
+    331576
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 22524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 326728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329756,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/C-072/08-replay-baseline.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "20e6b68b46acb3979c8af57dd1f981cb3d4717b2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "c072-replay",
+    "token": "c072-replay:326728:7cbd2ae6715132ca",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

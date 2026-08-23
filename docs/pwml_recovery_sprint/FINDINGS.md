@@ -4243,3 +4243,56 @@ not fixed** — F-092 is open and unowned, and a milestone run is not the place 
 
 Separately, PMC12444477 is the sole extraction blocker in the run: it is `relevance=core` and neither
 mode produced any payload, which is why extraction success is 7/8 rather than 8/8.
+
+---
+
+## F-098 - the "floor, not measurement" caveat on priority 1 is dischargeable by evidence, not by a card
+
+- **Severity** LOW (measurement doctrine; no wrong artifact shipped) - **Class `policy_disagreement`**
+- **Registered 2026-08-22 by the orchestrator during the T-104 correction phase**
+- Evidence: `evidence/g11/C-073/01`-`06`; artifact census over `runs_verify/2026-08-21_2239`
+
+### What the acceptance report recommended
+
+*"Run the batch with the updated driver so `final_mapped.json` is persisted on failure paths."*
+The stated purpose is to convert the 8 legs scored from pre-mapping `merged_payload.json` from
+floors into measurements, making priority 1 trustworthy.
+
+### Why that card should not be written
+
+An artifact census over all 20 T-104 legs:
+
+| legs | `final_mapped.json` | `merged_payload.json` | outcome |
+|---|---|---|---|
+| 10 PASS | present | present | scored from `final_mapped.json` |
+| 6 `scope_conflict` + 2 `no_reactions` | **absent** | present | scored from `merged_payload.json` |
+| 2 TIMEOUT | absent | absent | no payload at all |
+
+`merged_payload.json` carries **zero** `mapped_ids` on *every* leg, PASS legs included
+(`PMC12856317/strict`: 0 in `merged_payload.json`, 12 in `final_mapped.json`). That is
+`driver.py:1248-1253` working as documented, not a defect.
+
+On the 8 failure legs the mapping stage **never executed** - Stage 0 aborted on the organism
+conflict, or the pathway had no reactions to map. `final_mapped.json` is therefore not
+*unpersisted*; it does not exist, because nothing produced it. A driver change cannot persist an
+object that was never built.
+
+### The consequence for the count
+
+**7 is a measurement over every leg on which an external accession can exist**, not a floor in any
+sense that matters. A leg that never reached mapping cannot emit a false real identifier. The
+caveat is literally true and practically empty.
+
+### What is actually worth changing, and it is reporting-side only
+
+`bench/acceptance.py:930` / `:1042-1046` emit the same "floor" caveat whether the leg reached
+mapping and lost the artifact, or never reached mapping at all. Those are different facts and only
+the first is a measurement gap. The scorer should distinguish
+`mapping_did_not_execute` from `mapped_artifact_missing`.
+
+**Residual risk, stated honestly:** this holds for the three failure modes T-104 exhibited
+(`scope_conflict` at Stage 0, `no_reactions`, TIMEOUT). A failure that aborts *after* mapping -
+for example the gate-failure terminal path at `driver.py:1879` - would leave a genuine
+measurement gap. No T-104 leg failed that way. If a T-105 leg does, this finding does not cover it.
+
+**No pipeline card opened. Reporting-side only.**

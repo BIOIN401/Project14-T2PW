@@ -1,0 +1,86 @@
+{
+  "label": "c072-base-sha-proof",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_c072_incomplete_core_demotion.py",
+    "-q",
+    "--basetemp=C:/t/bt/c072b"
+  ],
+  "cwd": "C:\\t\\c072",
+  "started_at": "2026-08-23T00:07:54+00:00",
+  "finished_at": "2026-08-23T00:07:55+00:00",
+  "duration_seconds": 0.7583146000106353,
+  "timeout_seconds": 900.0,
+  "root_pid": 327236,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 326496,
+      "name": "python.exe",
+      "ppid": 327236
+    }
+  ],
+  "descendants_terminated": [
+    326496
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 22524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 318692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 323800,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/C-072/02-c072-base-sha-proof.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "20e6b68b46acb3979c8af57dd1f981cb3d4717b2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "c072",
+    "token": "c072:323800:e1c0ad20b790314c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

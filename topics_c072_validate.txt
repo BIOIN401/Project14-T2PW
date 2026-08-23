@@ -1,0 +1,23 @@
+# C-072 targeted paper validation -- F-094.
+#
+# ONE leg: PMC12452463 strict. Run with --modes strict.
+# Scope line copied verbatim from topics_t104.txt, which took it verbatim from
+# the requested_pathway / requested_organism fields of the pinned gold case in
+# src/t2pw/bench/gold/pinned_v1.json (version 2026-08-01.1). Not reconstructed.
+#
+# REQUIRED OUTCOME (PRODUCT_CONTRACT.md section 13, quoted):
+#   "Correct outcome after the index fix is review_required with
+#    strict_acceptance_eligible=false. Never strict success."
+#
+# So this leg must show, after C-072:
+#   release status              review_required
+#   strict_acceptance_eligible  false
+#   artifact present            pathway.review_required.pwml
+#   artifact ABSENT             pathway.pwml          <- the T-104 violation
+#   payload                     preserved, not dropped
+#
+# and it must reach that outcome with semantic_evaluation == "passed", because
+# F-094's content is that the outcome had been resting entirely on C-071's
+# semantic gate. If this leg only passes because the semantic gate fired again,
+# the correction has NOT been validated.
+PMC12452463 | enterobactin biosynthesis | Escherichia coli

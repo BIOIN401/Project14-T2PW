@@ -1,0 +1,25 @@
+# C-073 targeted paper validation, cohort B -- F-096.
+#
+# TWO legs: PMC12180156 research and PMC12782028 research.
+# Run with --modes research.
+# Scope lines verbatim from topics_t104.txt / pinned_v1.json (2026-08-01.1).
+#
+# PMC12180156 research IS THE SHARPEST ADVERSARIAL CASE IN THE SPRINT.
+# The gold calls succinyl-CoA a HALLUCINATION TEST: zero occurrences in the
+# entire 67,304-character source, body and references alike. At T-104 it was
+# emitted carrying four real database accessions (hmdb HMDB0001022,
+# kegg C00091, chebi 15380, pubchem 439161).
+# After C-073 that entity must NOT ship a real external accession, and must
+# still EXIST as a row -- withheld, not deleted (merge rule 7).
+# Preservation on the same leg: heme, Glycine, delta-aminolevulinic acid,
+# ferrochelatase, ALAS2 and SFXN4 must keep their accessions.
+#
+# PMC12782028 research is the preservation-heavy leg: 24 mapped rows, of which
+# 20 legitimate cholesterol-biosynthesis enzymes must be untouched.
+# NOT fixed by C-073: SREBF1, SREBF2, LIPA and LBR. All four are genuinely
+# named in the paper's quoted Reactome gene list and carry correct accessions
+# for the gene named; separating them from the 16 legitimate enzymes is a
+# biological role judgement. Their survival is an expected, measured limit --
+# not a C-073 failure. See the residue finding.
+PMC12180156 | heme biosynthesis | Homo sapiens
+PMC12782028 | cholesterol biosynthesis | Homo sapiens
