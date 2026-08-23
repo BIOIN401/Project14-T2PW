@@ -2589,3 +2589,88 @@ The F-105 fix shape is already measured and is small: `strip_payload_for_interac
 (`interactive_curator.py:164`) is a blacklist, and the allow-list constant it should consult already
 exists as `PROMPT_OMITTED_PAYLOAD_KEYS` (`curation/audit_json_llm.py:41`), keyed off
 `identity_admission.SOURCE_INDEX_KEY`.
+
+## Merges — final correction wave
+
+| card | merge | closes | SMOKE after | reviewer |
+|---|---|---|---|---|
+| **C-077** | `26fa809` | F-095 / **D-062** disposition | **473** (51.83 s) | APPROVE, actual diff |
+| **C-076** | `3b7a7b1` | **F-102** scorer/gold identity | **473** (41.93 s) | APPROVE, actual diff |
+
+Both reviewers re-measured rather than quoting the implementer, and both found the committed G11
+evidence insufficient to confirm SMOKE on its own — the JSON retains no stdout and the pin verdicts
+carry no counts. Each ran both sides itself. That is now a standing expectation for this gate.
+
+### C-077 — what shipped, and the one thing it did not
+
+`diagnostic_only` with an explicit `stage0_scope_conflict_stopped_the_run_before_serialization`
+reason, plus `requested_scope` recorded beside `observed_context`. **Not D-062's literal
+`review_required`**, deliberately and disclosed.
+
+The reviewer proved that state unreachable two ways: by reading (`classify_release_status` is one
+`elif` chain whose second arm pins `diagnostic_only` when the strict gates did not pass, and all
+five `REVIEW_REQUIRED` sites sit below it or are guarded on `status == RELEASE_READY`), and by a
+**196,800-combination sweep** of the documented input surface with `strict_gates_passed=False`
+pinned — `diagnostic_only` 196,800 times, `REVIEW_REQUIRED` zero — against a control arm at
+`True` returning 24. The only routes to `review_required` were to fabricate a gate result,
+hand-build a `ReleaseStatus` (forbidden by the charter), or edit an out-of-bounds module.
+
+Registered as **F-107** for a product ruling. Two non-blocking residues the reviewer surfaced:
+the record inherits `strict_technical_gates_blocked_export` so `describe()` renders *"strict gates
+failed"* for a leg whose gates never **ran**; and the `scope_conflict` → `STATUS_INELIGIBLE` fold is
+unchanged, so D-062's §2b untruth is corrected in the machine-readable record but not in the
+rendered summary. Both belong with F-107's ruling.
+
+### C-076 — the out-of-table test edit, and why it was allowed
+
+`tests/test_bench_goldset_and_semantic.py` is outside the §5 table and in SMOKE. The reviewer proved
+the edit was **forced, not convenient**, by running the base payload through the tip scorer:
+`MenD`/`MenF` sharing `P80867` now yields `ok=True` with no findings, so the base assertion would
+have failed and merge rules 4 and 10 would have broken. The obligation that test encoded is exactly
+the rule the product owner's ruling rejects. Node id unchanged (it is a context line), file count
+62 → 62, both assertions byte-identical — only the payload moved from within-kind to cross-kind.
+
+Cross-kind safety was established by exhaustive probe, not argument: all **246** combinations of
+2–4 rows over 3 buckets × 3 names sharing one accession, zero disagreements with the pipeline's
+`find_kind_conflicting_accessions`, zero genuine cross-kind conflicts suppressed. Structurally the
+tip branch adds a condition to the base branch, so tip findings ⊆ base findings — the change can
+only remove findings, never invent one.
+
+**Delta for T-106's baseline** (do not apply to T-105): `accession_claimed_by_multiple_entities`
+2 → 0; priority 1 `false_real_identifiers` 7 → 6; priorities 2/3/4/5 identical; **no leg's gating
+`no_real_id_or_name_conflict` flips**; 2 legs moved, 18 unchanged.
+
+### A known gap the ruling leaves open
+
+The ruling says *"biologically unrelated **or** cross-kind"*. Both seams implement **cross-kind
+only** — there is no biological-relatedness oracle in either. Two genuinely unrelated same-kind
+proteins fused onto one accession by a mapper bug are now invisible to the benchmark. That mirrors
+the pipeline's pre-existing blind spot and is what charter §4 Arm A directs, so it is not a
+deviation — but the "unrelated within one kind" half is **unmeasured corpus-wide** and is recorded
+here as a known gap rather than an assumed non-issue.
+
+### The F-108 flip question — adjudicated
+
+The C-076 reviewer concluded that aligning the production seam would flip `PMC12452463/strict` to
+`release_ready`, and flagged its own probe as *"indicative, not definitive"*. **Adjudicated against
+that reading**, and both accounts are written into `prompts/C-080.md` §2e so the implementer settles
+it rather than inherits it.
+
+`classify_release_status` applies its caps in order, each guarded on `status == RELEASE_READY`. The
+semantic cap (`release_status.py:693`) fires first in the recorded run and demotes to
+`review_required`, which makes the incomplete-core cap (`:730`) unreachable — so **its reason never
+reaches the persisted record**, and that absence is precisely what made the single-element
+`semantic_failed_checks` list look conclusive. Remove the semantic failure and the order inverts:
+status stays `release_ready` through `:693`, and `:730` fires because the leg has `declared: true`
+and `missing: [DHB, EntA, Fur]`. The in-source comment at `:715-730` labels that cap **"A SECOND,
+INDEPENDENT"** guard, for F-094 specifically.
+
+The §2d replay executed the real classifier on each leg's own recorded coverage verdict and
+reproduced all three recorded statuses **exactly before the toggle**, which is what makes its
+counterfactual trustworthy.
+
+### Live-run ledger — still empty
+
+**No live paper leg and no LLM-backed command has run this session.** Everything above is current
+source, committed unit/integration tests, or deterministic replay of committed T-104 / T-105
+artifacts. Two merges, five charters, four findings, zero credits.
