@@ -1,0 +1,3012 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via biological_state_species",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "biological_state_species"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "biological_state_species"
+              }
+            ]
+          }
+        ],
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "single_pathway_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "taxonomy_backfill": {
+            "source": "ncbi",
+            "taxonomy_id": "562",
+            "classification": "Prokaryote"
+          },
+          "resolution": {
+            "status": "matched",
+            "order_step": "biological_state_species"
+          }
+        },
+        "classification": "Prokaryote",
+        "species_canonicalization": {
+          "status": "deterministic"
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "11542",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "12039",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "617-12-9",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "7748",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "C00251",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:17333",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CPD-9517",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "HMDB0012199",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "11542",
+                "source_type": "chemspider",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "12039",
+                "source_type": "pubchem",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "617-12-9",
+                "source_type": "cas",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "7748",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "C00251",
+                "source_type": "kegg",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:17333",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CPD-9517",
+                "source_type": "biocyc",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "HMDB0012199",
+                "source_type": "hmdb",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "chorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 7748,
+              "name": "Chorismate",
+              "short_name": "Chorism",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0012199",
+                "kegg": "C00251",
+                "chebi": "CHEBI:17333",
+                "pubchem": "12039",
+                "cas": "617-12-9",
+                "biocyc": "CPD-9517",
+                "chemspider": "11542",
+                "pathbank_compound_id": "7748"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 7748,
+          "resolved_name": "Chorismate"
+        },
+        "mapped_ids": {
+          "hmdb": "HMDB0012199",
+          "kegg": "C00251",
+          "chebi": "17333",
+          "pubchem": "12039",
+          "cas": "617-12-9",
+          "biocyc": "CPD-9517",
+          "chemspider": "11542",
+          "pathbank_compound_id": "7748"
+        },
+        "pathbank_compound_id": 7748,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok_with_warnings",
+            "primary_name": "Chorismate",
+            "synonyms": [
+              "Chorismate",
+              "Chorismic acid",
+              "(3R,4R)-3-[(1-Carboxyethenyl)oxy]-4-hydroxycyclohexa-1,5-diene-1-carboxylate"
+            ],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C10H10O6",
+            "charge": 0,
+            "mass_monoisotopic": 226.0477,
+            "mass_average": 226.18,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [],
+            "pathways": [
+              "Ubiquinone and other terpenoid-quinone biosynthesis",
+              "Phenylalanine, tyrosine and tryptophan biosynthesis",
+              "Phenazine biosynthesis",
+              "Folate biosynthesis",
+              "Biosynthesis of various alkaloids",
+              "Biosynthesis of various other secondary metabolites",
+              "Biosynthesis of various antibiotics",
+              "Biosynthesis of various plant secondary metabolites",
+              "Biosynthesis of siderophore group nonribosomal peptides",
+              "Biosynthesis of enediyne antibiotics",
+              "Biosynthesis of plant secondary metabolites",
+              "Biosynthesis of phenylpropanoids",
+              "Biosynthesis of alkaloids derived from shikimate pathway",
+              "Biosynthesis of plant hormones",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Biosynthesis of amino acids",
+              "Biosynthesis of cofactors"
+            ],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "hmdb_id": "HMDB0012199",
+              "kegg_id": "C00251",
+              "chebi_id": "CHEBI:17333",
+              "pubchem_id": "12039",
+              "cas": "617-12-9",
+              "biocyc": "CPD-9517",
+              "chemspider": "11542",
+              "pathbank_compound_id": "7748"
+            },
+            "kegg": {
+              "status": "ok",
+              "source": "KEGG",
+              "id": "C00251",
+              "primary_name": "Chorismate",
+              "synonyms": [
+                "Chorismate",
+                "Chorismic acid",
+                "(3R,4R)-3-[(1-Carboxyethenyl)oxy]-4-hydroxycyclohexa-1,5-diene-1-carboxylate"
+              ],
+              "formula": "C10H10O6",
+              "mass_monoisotopic": 226.0477,
+              "mass_average": 226.18,
+              "pathways": [
+                "Ubiquinone and other terpenoid-quinone biosynthesis",
+                "Phenylalanine, tyrosine and tryptophan biosynthesis",
+                "Phenazine biosynthesis",
+                "Folate biosynthesis",
+                "Biosynthesis of various alkaloids",
+                "Biosynthesis of various other secondary metabolites",
+                "Biosynthesis of various antibiotics",
+                "Biosynthesis of various plant secondary metabolites",
+                "Biosynthesis of siderophore group nonribosomal peptides",
+                "Biosynthesis of enediyne antibiotics",
+                "Biosynthesis of plant secondary metabolites",
+                "Biosynthesis of phenylpropanoids",
+                "Biosynthesis of alkaloids derived from shikimate pathway",
+                "Biosynthesis of plant hormones",
+                "Metabolic pathways",
+                "Biosynthesis of secondary metabolites",
+                "Biosynthesis of amino acids",
+                "Biosynthesis of cofactors"
+              ],
+              "kegg_class": [],
+              "cross_references": {
+                "kegg_id": "C00251",
+                "pubchem_id": "3550",
+                "chebi_id": "17333"
+              },
+              "provenance": {
+                "source": "KEGG",
+                "id": "C00251",
+                "source_url": "https://rest.kegg.jp/get/cpd:C00251",
+                "retrieved_at": "2026-07-29T09:02:54Z",
+                "status": "ok"
+              }
+            },
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:17333",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-07-29T09:03:07Z"
+              }
+            },
+            "hmdb": {
+              "status": "not_found",
+              "error_message": "HTTP 403",
+              "provenance": {
+                "source": "HMDB",
+                "id": "HMDB0012199",
+                "source_url": "https://hmdb.ca/metabolites/HMDB0012199",
+                "retrieved_at": "2026-07-29T09:02:56Z"
+              }
+            },
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:17333",
+                "retrieved_at": "2026-07-29T09:03:07Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              },
+              {
+                "source": "HMDB",
+                "id": "HMDB0012199",
+                "retrieved_at": "2026-07-29T09:02:56Z",
+                "status": "not_found",
+                "error_if_any": "HTTP 403"
+              },
+              {
+                "source": "KEGG",
+                "id": "C00251",
+                "retrieved_at": "2026-07-29T09:02:54Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        },
+        "hmdb_id": "HMDB0012199",
+        "kegg_id": "C00251",
+        "chebi_id": "17333",
+        "pubchem_cid": "12039",
+        "cas": "617-12-9",
+        "biocyc_id": "CPD-9517",
+        "chemspider_id": "11542",
+        "short_name": "Chorism",
+        "synonyms": [
+          "Chorismate",
+          "Chorismic acid",
+          "(3R,4R)-3-[(1-Carboxyethenyl)oxy]-4-hydroxycyclohexa-1,5-diene-1-carboxylate"
+        ],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "db_status": "legacy_id_unverified",
+        "db_id": 7748,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 7748
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous_exact_name)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "isochorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40741,
+              "name": "isochorismate",
+              "short_name": "isochor",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:29780",
+                "pathbank_compound_id": "40741"
+              }
+            },
+            {
+              "pathbank_compound_id": 104648,
+              "name": "Isochorismate",
+              "short_name": "Isochor",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:17582",
+                "pubchem": "4141",
+                "pathbank_compound_id": "104648"
+              }
+            }
+          ],
+          "chosen_rule": "exact_normalized_name",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_exact_name",
+            "order_step": "exact_normalized_name"
+          }
+        },
+        "short_name": "isochor",
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "db_status": "legacy_id_unverified",
+        "db_id": 40741,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 40741,
+        "pathbank_compound_id": 40741
+      },
+      {
+        "name": "2,3-dihydroxybenzoate (DHB)",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "2,3-dihydroxybenzoate (DHB)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 296,
+              "name": "2-Pyrocatechuic acid",
+              "short_name": "DHBA",
+              "score": 0.565,
+              "mapped_ids": {
+                "hmdb": "HMDB0000397",
+                "kegg": "C00196",
+                "chebi": "CHEBI:18026",
+                "pubchem": "19",
+                "cas": "303-38-8",
+                "chemspider": "18",
+                "drugbank": "DB01672"
+              }
+            },
+            {
+              "pathbank_compound_id": 40792,
+              "name": "2,3-Dihydroxybenzoic acid",
+              "short_name": "23DBA",
+              "score": 0.565,
+              "mapped_ids": {
+                "chebi": "CHEBI:18026"
+              }
+            },
+            {
+              "pathbank_compound_id": 41128,
+              "name": "2,3-Dihydro-2,3-dihydroxybenzoic acid",
+              "short_name": "DDB",
+              "score": 0.4471,
+              "mapped_ids": {
+                "chebi": "CHEBI:15941",
+                "pubchem": "23615184"
+              }
+            },
+            {
+              "pathbank_compound_id": 40770,
+              "name": "(2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate",
+              "short_name": "223D3D",
+              "score": 0.4275,
+              "mapped_ids": {
+                "kegg": "C04171",
+                "chebi": "CHEBI:15941"
+              }
+            },
+            {
+              "pathbank_compound_id": 40794,
+              "name": "bacillibactin",
+              "short_name": "Bacilli",
+              "score": 0.29,
+              "mapped_ids": {
+                "chebi": "CHEBI:31432"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.565,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          }
+        },
+        "short_name": "DHBA",
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "db_status": "legacy_id_unverified",
+        "db_id": 296,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 296,
+        "pathbank_compound_id": 296
+      },
+      {
+        "name": "DHB-AMP",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (no_db_candidates)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "DHB-AMP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "raw_name": "DHB-AMP",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "DHB-AMP",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": ""
+      },
+      {
+        "name": "enterobactin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via exact_normalized_name exact_normalized_name",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "40793",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              },
+              {
+                "source_id": "CHEBI:28855",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "exact_normalized_name exact_normalized_name"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_compound_id pathbank_compound_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "40793",
+                "source_type": "pathbank_compound_id",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              },
+              {
+                "source_id": "CHEBI:28855",
+                "source_type": "chebi",
+                "uri": "",
+                "locator": "pathbank_compound_id pathbank_compound_id"
+              }
+            ]
+          }
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "enterobactin"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40793,
+              "name": "enterobactin",
+              "short_name": "Entrobn",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:28855",
+                "pathbank_compound_id": "40793"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40793,
+          "resolved_name": "enterobactin"
+        },
+        "mapped_ids": {
+          "chebi": "28855",
+          "pathbank_compound_id": "40793"
+        },
+        "pathbank_compound_id": 40793,
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "error",
+            "primary_name": "",
+            "synonyms": [],
+            "description": "",
+            "taxonomy": {},
+            "ontology_classification": {},
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "",
+            "charge": 0,
+            "mass_monoisotopic": 0.0,
+            "mass_average": 0.0,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [],
+            "pathways": [],
+            "cellular_locations": [],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "chebi_id": "CHEBI:28855",
+              "pathbank_compound_id": "40793"
+            },
+            "kegg": {},
+            "chebi": {
+              "status": "error",
+              "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+              "provenance": {
+                "source": "ChEBI",
+                "id": "CHEBI:28855",
+                "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+                "retrieved_at": "2026-08-04T02:12:34Z"
+              }
+            },
+            "hmdb": {},
+            "is_generic_class": false,
+            "sources": [
+              {
+                "source": "ChEBI",
+                "id": "CHEBI:28855",
+                "retrieved_at": "2026-08-04T02:12:34Z",
+                "status": "error",
+                "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+              }
+            ]
+          }
+        },
+        "chebi_id": "28855",
+        "short_name": "Entrobn",
+        "synonyms": [],
+        "compound_class": "compound",
+        "type": "Compound",
+        "compound_type": "Compound",
+        "db_status": "legacy_id_unverified",
+        "db_id": 40793,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "pathwhiz_id": 40793
+      }
+    ],
+    "proteins": [
+      {
+        "name": "EntC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6238",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P0AEJ2",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "entC",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6238",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P0AEJ2",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6238,
+              "name": "Isochorismate synthase entC",
+              "uniprot": "P0AEJ2",
+              "gene_name": "entC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6238, uniprot:P0AEJ2",
+            "judged_candidate": {
+              "pathbank_protein_id": 6238,
+              "name": "Isochorismate synthase entC",
+              "uniprot": "P0AEJ2",
+              "gene_name": "entC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6238,
+                "name": "Isochorismate synthase entC",
+                "uniprot": "P0AEJ2",
+                "gene_name": "entC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "EntC",
+              "kind": "protein",
+              "resolved_name": "Isochorismate synthase entC",
+              "identity": "uniprot:P0AEJ2",
+              "compared_names": [
+                "Isochorismate synthase entC"
+              ]
+            }
+          },
+          "pathbank_protein_id": 6238,
+          "resolved_name": "Isochorismate synthase entC",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P0AEJ2",
+          "pathbank_protein_id": "6238",
+          "gene_name": "entC"
+        },
+        "pathbank_protein_id": 6238,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P0AEJ2",
+              "recommended_name": "Isochorismate synthase EntC",
+              "alternative_names": [
+                "Isochorismate mutase"
+              ],
+              "gene_names": [
+                "entC"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Involved in the biosynthesis of the siderophore enterobactin (macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine). Catalyzes the reversible conversion of chorismate to isochorismate",
+              "catalytic_activity": [
+                "chorismate = isochorismate"
+              ],
+              "enzyme_commission": [
+                "5.4.4.2"
+              ],
+              "pathways": [
+                "Siderophore biosynthesis; enterobactin biosynthesis"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Direct protein sequencing",
+                "Enterobactin biosynthesis",
+                "Isomerase",
+                "Magnesium",
+                "Metal-binding",
+                "Reference proteome"
+              ],
+              "subcellular_locations": [],
+              "go_mf_ids": [
+                "GO:0008909",
+                "GO:0000287"
+              ],
+              "go_bp_ids": [
+                "GO:0009239"
+              ],
+              "go_cellular_component_ids": [],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 391,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "3HWO",
+                "5JXZ",
+                "5JY4",
+                "5JY8",
+                "5JZD"
+              ],
+              "reactome_ids": [],
+              "string_id": "511145.b0593",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P0AEJ2",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P0AEJ2.json",
+                "retrieved_at": "2026-08-05T00:19:30Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P0AEJ2",
+        "gene_name": "entC",
+        "ec_number": "5.4.4.2",
+        "ec_numbers": [
+          "5.4.4.2"
+        ],
+        "synonyms": [
+          "Isochorismate mutase",
+          "entC",
+          "Isochorismate synthase EntC"
+        ]
+      },
+      {
+        "name": "EntB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6224",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P0ADI4",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "entB",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6224",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P0ADI4",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6224, uniprot:P0ADI4",
+            "judged_candidate": {
+              "pathbank_protein_id": 6224,
+              "name": "Isochorismatase",
+              "uniprot": "P0ADI4",
+              "gene_name": "entB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6224,
+                "name": "Isochorismatase",
+                "uniprot": "P0ADI4",
+                "gene_name": "entB",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntB",
+              "kind": "protein",
+              "resolved_name": "Isochorismatase",
+              "identity": "uniprot:P0ADI4",
+              "compared_names": [
+                "Isochorismatase"
+              ],
+              "matched_symbol": "entB"
+            }
+          },
+          "pathbank_protein_id": 6224,
+          "resolved_name": "Isochorismatase",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P0ADI4",
+          "pathbank_protein_id": "6224",
+          "gene_name": "entB"
+        },
+        "pathbank_protein_id": 6224,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P0ADI4",
+              "recommended_name": "Enterobactin synthase component B",
+              "alternative_names": [
+                "Enterobactin biosynthesis bifunctional protein EntB",
+                "Enterochelin synthase B"
+              ],
+              "gene_names": [
+                "entB",
+                "entG"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine. The serine trilactone serves as a scaffolding for the three catechol functionalities that provide hexadentate coordination for the tightly ligated iron(3+) atoms. EntB is a bifunctional protein that serves as an isochorismate lyase and an aryl carrier protein (ArCP). Catalyzes the conversion of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB), the precursor of 2,3-dihydroxybenzoate (DHB). In the enterobactin assembly, EntB functions as an aryl carrier protein phosphopantetheinylated near the C terminus by EntD to yield holo-EntB, which is then acylated by EntE with 2,3-dihydroxybenzoyl-AMP to form DHB-holo-EntB. Then this product will serve in the formation of the amide bond between 2,3-dihydroxybenzoate (DHB) and L-serine",
+              "catalytic_activity": [
+                "3 2,3-dihydroxybenzoate + 3 L-serine + 6 ATP = enterobactin + 6 AMP + 6 diphosphate + 4 H(+)",
+                "isochorismate + H2O = (2S,3S)-2,3-dihydroxy-2,3-dihydrobenzoate + pyruvate"
+              ],
+              "enzyme_commission": [
+                "6.3.2.14",
+                "3.3.2.1"
+              ],
+              "pathways": [
+                "Siderophore biosynthesis; enterobactin biosynthesis"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Cytoplasm",
+                "Direct protein sequencing",
+                "Enterobactin biosynthesis",
+                "Hydrolase",
+                "Ligase",
+                "Magnesium",
+                "Metal-binding",
+                "Multifunctional enzyme",
+                "Phosphopantetheine",
+                "Phosphoprotein",
+                "Reference proteome"
+              ],
+              "subcellular_locations": [
+                "Cytoplasm"
+              ],
+              "go_mf_ids": [
+                "GO:0047527",
+                "GO:0042802",
+                "GO:0008908",
+                "GO:0000287",
+                "GO:0031177",
+                "GO:0016765"
+              ],
+              "go_bp_ids": [
+                "GO:0009239"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005829",
+                "GO:0005886"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 285,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "2FQ1",
+                "3RG2",
+                "4IZ6"
+              ],
+              "reactome_ids": [],
+              "string_id": "511145.b0595",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P0ADI4",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P0ADI4.json",
+                "retrieved_at": "2026-08-05T00:19:30Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P0ADI4",
+        "gene_name": "entB",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "3.3.2.1"
+        ],
+        "synonyms": [
+          "Enterobactin biosynthesis bifunctional protein EntB",
+          "Enterochelin synthase B",
+          "entB",
+          "entG",
+          "Enterobactin synthase component B"
+        ]
+      },
+      {
+        "name": "EntE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6301",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P10378",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "entE",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6301",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P10378",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntE",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "uniprot": "P10378",
+              "gene_name": "entE",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntE",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6301, uniprot:P10378",
+            "judged_candidate": {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "uniprot": "P10378",
+              "gene_name": "entE",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6301,
+                "name": "Enterobactin synthase component E",
+                "uniprot": "P10378",
+                "gene_name": "entE",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntE",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component E",
+              "identity": "uniprot:P10378",
+              "compared_names": [
+                "Enterobactin synthase component E"
+              ],
+              "matched_symbol": "entE"
+            }
+          },
+          "pathbank_protein_id": 6301,
+          "resolved_name": "Enterobactin synthase component E",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P10378",
+          "pathbank_protein_id": "6301",
+          "gene_name": "entE"
+        },
+        "pathbank_protein_id": 6301,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P10378",
+              "recommended_name": "Enterobactin synthase component E",
+              "alternative_names": [
+                "2,3-dihydroxybenzoate-AMP ligase",
+                "2,3-dihydroxybenzoate-AMP synthase",
+                "Dihydroxybenzoic acid-activating enzyme",
+                "Enterochelin synthase E"
+              ],
+              "gene_names": [
+                "entE"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine. The serine trilactone serves as a scaffolding for the three catechol functionalities that provide hexadentate coordination for the tightly ligated iron(2+) atoms. EntE processes via a two-step adenylation-ligation reaction (bi-uni-uni-bi ping-pong mechanism). First, it catalyzes the activation of the carboxylate group of 2,3-dihydroxy-benzoate (DHB), via a reversible ATP-dependent pyrophosphate exchange reactions to yield the acyladenylate intermediate 2,3-dihydroxybenzoyl-AMP. It can also transfer AMP to salicylate, 2,4-dihydroxybenzoate, gentisate and 2,3,4-trihydroxybenzoate. In the second step, DHB is transferred from 2,3-dihydroxybenzoyl-AMP onto the phosphopantetheinylated EntB (holo-EntB) to form DHB-holo-EntB. Then this product will serve in the formation of the amide bond between 2,3-dihydroxybenzoate (DHB) and L-serine. It can also transfer adenylated salicylate to holo-EntB",
+              "catalytic_activity": [
+                "3 2,3-dihydroxybenzoate + 3 L-serine + 6 ATP = enterobactin + 6 AMP + 6 diphosphate + 4 H(+)",
+                "2,3-dihydroxybenzoate + holo-[ACP] + ATP = 2,3-dihydroxybenzoyl-[ACP] + AMP + diphosphate",
+                "2,3-dihydroxybenzoyl-5'-AMP + holo-[ACP] = 2,3-dihydroxybenzoyl-[ACP] + AMP + H(+)"
+              ],
+              "enzyme_commission": [
+                "6.3.2.14",
+                "6.2.1.71"
+              ],
+              "pathways": [
+                "Siderophore biosynthesis; enterobactin biosynthesis"
+              ],
+              "keywords": [
+                "3D-structure",
+                "Acyltransferase",
+                "ATP-binding",
+                "Enterobactin biosynthesis",
+                "Ligase",
+                "Membrane",
+                "Nucleotide-binding",
+                "Reference proteome",
+                "Transferase"
+              ],
+              "subcellular_locations": [
+                "Membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0008668",
+                "GO:0047527",
+                "GO:0016746",
+                "GO:0005524"
+              ],
+              "go_bp_ids": [
+                "GO:0009239"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005829",
+                "GO:0016020"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 536,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "3RG2",
+                "4IZ6",
+                "6IYK",
+                "6IYL",
+                "8K5S",
+                "8K5T"
+              ],
+              "reactome_ids": [],
+              "string_id": "511145.b0594",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P10378",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P10378.json",
+                "retrieved_at": "2026-08-05T00:19:30Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P10378",
+        "gene_name": "entE",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "6.2.1.71"
+        ],
+        "synonyms": [
+          "2,3-dihydroxybenzoate-AMP ligase",
+          "2,3-dihydroxybenzoate-AMP synthase",
+          "Dihydroxybenzoic acid-activating enzyme",
+          "Enterochelin synthase E",
+          "entE",
+          "Enterobactin synthase component E"
+        ]
+      },
+      {
+        "name": "EntD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6383",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P19925",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "entD",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6383",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P19925",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6383,
+              "name": "4'-phosphopantetheinyl transferase entD",
+              "uniprot": "P19925",
+              "gene_name": "entD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6383, uniprot:P19925",
+            "judged_candidate": {
+              "pathbank_protein_id": 6383,
+              "name": "4'-phosphopantetheinyl transferase entD",
+              "uniprot": "P19925",
+              "gene_name": "entD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6383,
+                "name": "4'-phosphopantetheinyl transferase entD",
+                "uniprot": "P19925",
+                "gene_name": "entD",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "EntD",
+              "kind": "protein",
+              "resolved_name": "4'-phosphopantetheinyl transferase entD",
+              "identity": "uniprot:P19925",
+              "compared_names": [
+                "4'-phosphopantetheinyl transferase entD"
+              ]
+            }
+          },
+          "pathbank_protein_id": 6383,
+          "resolved_name": "4'-phosphopantetheinyl transferase entD",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P19925",
+          "pathbank_protein_id": "6383",
+          "gene_name": "entD"
+        },
+        "pathbank_protein_id": 6383,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P19925",
+              "recommended_name": "Enterobactin synthase component D",
+              "alternative_names": [
+                "4'-phosphopantetheinyl transferase EntD",
+                "Enterochelin synthase D"
+              ],
+              "gene_names": [
+                "entD"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine. The serine trilactone serves as a scaffolding for the three catechol functionalities that provide hexadentate coordination for the tightly ligated iron(2+) atoms. Plays an essential role in the assembly of the enterobactin by catalyzing the transfer of the 4'-phosphopantetheine (Ppant) moiety from coenzyme A to the apo-domains of both EntB (ArCP domain) and EntF (PCP domain) to yield their holo-forms which make them competent for the activation of 2,3-dihydroxybenzoate (DHB) and L-serine, respectively",
+              "catalytic_activity": [
+                "apo-[aryl-carrier protein] + CoA = holo-[aryl-carrier protein] + adenosine 3',5'-bisphosphate + H(+)",
+                "apo-[peptidyl-carrier protein] + CoA = holo-[peptidyl-carrier protein] + adenosine 3',5'-bisphosphate + H(+)"
+              ],
+              "enzyme_commission": [],
+              "pathways": [
+                "Siderophore biosynthesis; enterobactin biosynthesis"
+              ],
+              "keywords": [
+                "Enterobactin biosynthesis",
+                "Magnesium",
+                "Membrane",
+                "Metal-binding",
+                "Reference proteome",
+                "Transferase"
+              ],
+              "subcellular_locations": [
+                "Membrane"
+              ],
+              "go_mf_ids": [
+                "GO:0008897",
+                "GO:0000287"
+              ],
+              "go_bp_ids": [
+                "GO:0009239",
+                "GO:0009237"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0009366",
+                "GO:0016020"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 206,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [],
+              "reactome_ids": [],
+              "string_id": "511145.b0583",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P19925",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P19925.json",
+                "retrieved_at": "2026-08-05T00:19:30Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P19925",
+        "gene_name": "entD",
+        "synonyms": [
+          "4'-phosphopantetheinyl transferase EntD",
+          "Enterochelin synthase D",
+          "entD",
+          "Enterobactin synthase component D"
+        ]
+      },
+      {
+        "name": "EntF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via pathbank_protein_id pathbank_protein_id",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "6312",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "P11454",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              },
+              {
+                "source_id": "entF",
+                "source_type": "gene_name",
+                "uri": "",
+                "locator": "pathbank_protein_id pathbank_protein_id"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "indirect",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via synonym_or_fuzzy_species db_top_candidate_relaxed",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "6312",
+                "source_type": "pathbank_protein_id",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              },
+              {
+                "source_id": "P11454",
+                "source_type": "uniprot",
+                "uri": "",
+                "locator": "synonym_or_fuzzy_species db_top_candidate_relaxed"
+              }
+            ]
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "EntF",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6312,
+              "name": "Enterobactin synthase component F",
+              "uniprot": "P11454",
+              "gene_name": "entF",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "EntF",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6312, uniprot:P11454",
+            "judged_candidate": {
+              "pathbank_protein_id": 6312,
+              "name": "Enterobactin synthase component F",
+              "uniprot": "P11454",
+              "gene_name": "entF",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6312,
+                "name": "Enterobactin synthase component F",
+                "uniprot": "P11454",
+                "gene_name": "entF",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "EntF",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component F",
+              "identity": "uniprot:P11454",
+              "compared_names": [
+                "Enterobactin synthase component F"
+              ],
+              "matched_symbol": "entF"
+            }
+          },
+          "pathbank_protein_id": 6312,
+          "resolved_name": "Enterobactin synthase component F",
+          "identity_status": "verified"
+        },
+        "mapped_ids": {
+          "uniprot": "P11454",
+          "pathbank_protein_id": "6312",
+          "gene_name": "entF"
+        },
+        "pathbank_protein_id": 6312,
+        "enrichment": {
+          "protein": {
+            "uniprot": {
+              "status": "ok",
+              "uniprot_id": "P11454",
+              "recommended_name": "Enterobactin synthase component F",
+              "alternative_names": [
+                "Enterochelin synthase F",
+                "Nonribosomal peptide synthetase EntF"
+              ],
+              "gene_names": [
+                "entF"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "taxonomy_id": "83333",
+              "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine (PubMed:1338974, PubMed:1826089, PubMed:216414, PubMed:9485415). EntF catalyzes the activation of L-serine via ATP-dependent PPi exchange reaction to form seryladenylate (PubMed:10688898, PubMed:1338974, PubMed:1826089, PubMed:9485415). Activated L-serine is loaded onto the peptidyl carrier domain via a thioester linkage to the phosphopanthetheine moiety, forming seryl-S-Ppant-EntF (PubMed:9485415). EntF acts then as the sole catalyst for the formation of the three amide and three ester linkages found in enterobactin, using seryladenylate and 2,3-dihydroxybenzoate-S-Ppant-EntB (DHB-S-Ppant-EntB) as substrates, via the formation of a DHB-Ser-S-Ppant-EntF intermediate (PubMed:9485415)",
+              "catalytic_activity": [
+                "3 2,3-dihydroxybenzoate + 3 L-serine + 6 ATP = enterobactin + 6 AMP + 6 diphosphate + 4 H(+)",
+                "holo-[peptidyl-carrier protein] + L-serine + ATP = L-seryl-[peptidyl-carrier protein] + AMP + diphosphate"
+              ],
+              "enzyme_commission": [
+                "6.3.2.14",
+                "6.2.1.72"
+              ],
+              "pathways": [
+                "Siderophore biosynthesis; enterobactin biosynthesis"
+              ],
+              "keywords": [
+                "3D-structure",
+                "ATP-binding",
+                "Cytoplasm",
+                "Direct protein sequencing",
+                "Enterobactin biosynthesis",
+                "Ligase",
+                "Multifunctional enzyme",
+                "Nucleotide-binding",
+                "Phosphopantetheine",
+                "Phosphoprotein",
+                "Reference proteome",
+                "Transferase"
+              ],
+              "subcellular_locations": [
+                "Cytoplasm"
+              ],
+              "go_mf_ids": [
+                "GO:0047527",
+                "GO:0005524",
+                "GO:0016779",
+                "GO:0031177"
+              ],
+              "go_bp_ids": [
+                "GO:0043041",
+                "GO:0009239"
+              ],
+              "go_cellular_component_ids": [
+                "GO:0005737",
+                "GO:0005829",
+                "GO:0009366",
+                "GO:0005886"
+              ],
+              "protein_existence": "1: Evidence at protein level",
+              "sequence_length": 1293,
+              "transmembrane_regions_count": 0,
+              "signal_peptide": {
+                "present": false,
+                "region": ""
+              },
+              "pdb_ids": [
+                "2ROQ",
+                "3TEJ",
+                "5JA1",
+                "5JA2",
+                "5T3D"
+              ],
+              "reactome_ids": [],
+              "string_id": "511145.b0586",
+              "provenance": {
+                "source": "UniProt",
+                "query": "P11454",
+                "source_url": "https://rest.uniprot.org/uniprotkb/P11454.json",
+                "retrieved_at": "2026-08-05T00:19:30Z"
+              }
+            }
+          }
+        },
+        "uniprot": "P11454",
+        "gene_name": "entF",
+        "ec_number": "6.3.2.14",
+        "ec_numbers": [
+          "6.3.2.14",
+          "6.2.1.72"
+        ],
+        "synonyms": [
+          "Enterochelin synthase F",
+          "Nonribosomal peptide synthetase EntF",
+          "entF",
+          "Enterobactin synthase component F"
+        ]
+      },
+      {
+        "name": "enterobactin synthase",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "organism": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "single_pathway_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "single_pathway_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "enterobactin synthase",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "enterobactin synthase",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.91,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "pathbank_protein_id:6301, uniprot:P10378",
+            "judged_candidate": {
+              "pathbank_protein_id": 6301,
+              "name": "Enterobactin synthase component E",
+              "gene_name": "entE",
+              "uniprot": "P10378",
+              "species_id": 3,
+              "score": 0.91,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6301,
+                "name": "Enterobactin synthase component E",
+                "gene_name": "entE",
+                "uniprot": "P10378",
+                "species_id": 3,
+                "score": 0.91,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              },
+              {
+                "pathbank_protein_id": 6312,
+                "name": "Enterobactin synthase component F",
+                "gene_name": "entF",
+                "uniprot": "P11454",
+                "species_id": 3,
+                "score": 0.91,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "enterobactin synthase",
+              "kind": "protein",
+              "resolved_name": "Enterobactin synthase component E",
+              "identity": "uniprot:P10378",
+              "compared_names": [
+                "Enterobactin synthase component E"
+              ]
+            },
+            "competing_accessions": [
+              "p11454"
+            ]
+          }
+        },
+        "provenance_lineage": [
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "synonyms": []
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "FepA",
+        "evidence": "specific outer membrane receptors (e.g. FepA in E. coli)",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "specific outer membrane receptors (e.g. FepA in E. coli)"
+        ],
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "organism": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "route": "complex",
+          "query": {
+            "name": "FepA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "resolved_component_species",
+          "confidence": 0.55,
+          "candidates": [
+            {
+              "pathbank_complex_id": 3624,
+              "pathbank_protein_complex_id": 3624,
+              "name": "ferric enterobactin outer membrane transport complex",
+              "species_id": 3,
+              "component_protein_id": 7426,
+              "score": 0.55
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "resolved_component_species"
+          },
+          "issues": [],
+          "species_id": 3,
+          "pathbank_complex_id": 3624,
+          "pathbank_protein_complex_id": 3624
+        },
+        "provenance_lineage": [
+          {
+            "stage": "identifier_mapping",
+            "origin": "database_grounded",
+            "support": "direct",
+            "paper_explicit": "not_evaluated",
+            "reason": "resolved against a database record via resolved_component_species resolved_component_species",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": [
+              {
+                "source_id": "3",
+                "source_type": "pathbank_species_id",
+                "uri": "",
+                "locator": "resolved_component_species resolved_component_species"
+              },
+              {
+                "source_id": "3624",
+                "source_type": "pathbank_complex_id",
+                "uri": "",
+                "locator": "resolved_component_species resolved_component_species"
+              },
+              {
+                "source_id": "3624",
+                "source_type": "pathbank_protein_complex_id",
+                "uri": "",
+                "locator": "resolved_component_species resolved_component_species"
+              },
+              {
+                "source_id": "562",
+                "source_type": "taxonomy_id",
+                "uri": "",
+                "locator": "resolved_component_species resolved_component_species"
+              }
+            ]
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended unresolved (no_components)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "components": [
+          {
+            "name": "Protein tonB",
+            "pathbank_protein_id": 7427,
+            "stoichiometry": 1,
+            "uniprot": "P02929",
+            "mapped_ids": {
+              "uniprot": "P02929",
+              "pathbank_protein_id": "7427"
+            },
+            "gene_name": "tonB",
+            "species_id": 3
+          },
+          {
+            "name": "Biopolymer transport protein exbB",
+            "pathbank_protein_id": 7392,
+            "stoichiometry": 1,
+            "uniprot": "P0ABU7",
+            "mapped_ids": {
+              "uniprot": "P0ABU7",
+              "pathbank_protein_id": "7392"
+            },
+            "gene_name": "exbB",
+            "species_id": 3
+          },
+          {
+            "name": "Biopolymer transport protein exbD",
+            "pathbank_protein_id": 7425,
+            "stoichiometry": 1,
+            "uniprot": "P0ABV2",
+            "mapped_ids": {
+              "uniprot": "P0ABV2",
+              "pathbank_protein_id": "7425"
+            },
+            "gene_name": "exbD",
+            "species_id": 3
+          },
+          {
+            "name": "Ferrienterobactin receptor",
+            "pathbank_protein_id": 7426,
+            "stoichiometry": 1,
+            "uniprot": "P05825",
+            "mapped_ids": {
+              "uniprot": "P05825",
+              "pathbank_protein_id": "7426"
+            },
+            "gene_name": "fepA",
+            "species_id": 3
+          }
+        ],
+        "pathbank_complex_id": 3624,
+        "pathbank_protein_complex_id": 3624
+      },
+      {
+        "name": "enterobactin synthase complex",
+        "class": "protein_complex",
+        "generated": true,
+        "generation_reason": "complex_named_source_entity_wrapper",
+        "confidence": 0.8,
+        "provenance": "inferred",
+        "components": [
+          {
+            "name": "enterobactin synthase",
+            "stoichiometry": 1
+          }
+        ],
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "organism": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "single_pathway_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "single_pathway_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "route": "complex",
+          "query": {
+            "name": "enterobactin synthase complex",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.7567,
+          "candidates": [
+            {
+              "pathbank_complex_id": 3623,
+              "pathbank_protein_complex_id": 3623,
+              "name": "enterobactin synthase",
+              "species_id": 3,
+              "score": 0.7567
+            }
+          ],
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous_complex_name_species",
+            "order_step": "complex_name_species"
+          },
+          "issues": []
+        },
+        "provenance_lineage": [
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (ambiguous_complex_name_species)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cell",
+        "mapping_meta": {
+          "resolution": {
+            "status": "not_applicable",
+            "issue": "entity_bucket_not_mapped",
+            "order_step": "not_applicable"
+          }
+        }
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli cellular state",
+      "species": "Escherichia coli",
+      "evidence": "Biosynthetic pathway of enterobactin in Escherichia coli",
+      "subcellular_location": "cell",
+      "provenance_lineage": [
+        {
+          "stage": "audit_repair",
+          "origin": "audit_modified",
+          "support": "unsupported",
+          "paper_explicit": "not_evaluated",
+          "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+          "review_required": false,
+          "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell",
+      "species": "Escherichia coli"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "EntC reaction",
+        "enzymes": [
+          {
+            "entity": "EntC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "catalyzed by isochorismate synthase (EntC)"
+          }
+        ],
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "conversion of chorismate to isochorismate, catalyzed by isochorismate synthase (EntC)",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntC",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "catalyzed by isochorismate synthase (EntC)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "2,3-dihydroxybenzoate (DHB)"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "EntB reaction",
+        "enzymes": [
+          {
+            "entity": "EntB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)"
+          }
+        ],
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntD",
+            "entity_type": "protein",
+            "role": "activator",
+            "evidence": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins.",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "EntB",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "Isochorismatase (EntB) converts isochorismate into 2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-dihydroxybenzoate (DHB)"
+        ],
+        "outputs": [
+          "DHB-AMP"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "EntE reaction",
+        "enzymes": [
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP"
+          }
+        ],
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "EntE",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "2,3-Dihydroxybenzoate-AMP ligase (EntE) activates DHB by adenylation, forming DHB-AMP",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2,3-dihydroxybenzoate (DHB)"
+        ],
+        "outputs": [
+          "enterobactin"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "enterobactin synthase complex reaction",
+        "enzymes": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
+          }
+        ],
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "EntD",
+        "entity_2": "EntF",
+        "name": "EntD activates EntF",
+        "relationship": "activates",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF enabling them to function as carrier proteins."
+      },
+      {
+        "entity_1": "Fur",
+        "entity_2": "ent operon",
+        "name": "Fur represses ent operon",
+        "relationship": "represses",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "Under iron-replete conditions, Fur binds ferrous iron (Fe2+) to form a complex that represses the transcription of enterobactin biosynthesis genes (entA-entF) by binding to their promoter regions."
+      },
+      {
+        "entity_1": "RyhB",
+        "entity_2": "entC mRNA",
+        "name": "RyhB inhibits entC mRNA",
+        "relationship": "inhibits",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF... leading to the inhibition of their translation and/or degradation of the mRNA transcripts."
+      },
+      {
+        "entity_1": "RyhB",
+        "entity_2": "entF mRNA",
+        "name": "RyhB inhibits entF mRNA",
+        "relationship": "inhibits",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF... leading to the inhibition of their translation and/or degradation of the mRNA transcripts."
+      },
+      {
+        "entity_1": "enterobactin",
+        "entity_2": "Fe3+",
+        "name": "enterobactin binds Fe3+",
+        "relationship": "binds",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity."
+      },
+      {
+        "entity_1": "FepA",
+        "entity_2": "ferri-enterobactin",
+        "name": "FepA transports ferri-enterobactin",
+        "relationship": "transports",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell."
+      }
+    ],
+    "transports": []
+  },
+  "element_locations": {
+    "compound_locations": [],
+    "protein_locations": []
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": []
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 4,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "protein_export_policy": {
+    "stage": "post_mapping",
+    "summary": {
+      "verified_real_proteins": 5,
+      "unknown_backed_functional_complexes": 0,
+      "ambiguous_real_candidates_rejected": 0,
+      "unused_proteins_quarantined": 0,
+      "false_protein_promotions_blocked": 0,
+      "bare_unresolved_proteins_remaining": 1,
+      "unused_proteins_flagged_for_review": 0
+    },
+    "minimum_score": 0.5,
+    "minimum_margin": 0.1
+  },
+  "prefreeze_db_resolution": {
+    "available": true
+  }
+}

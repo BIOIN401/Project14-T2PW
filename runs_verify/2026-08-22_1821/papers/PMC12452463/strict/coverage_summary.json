@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "DHB-AMP",
+    "enterobactin",
+    "ferric iron (Fe3+)",
+    "ferri-enterobactin",
+    "EntC (isochorismate synthase)",
+    "EntB (isochorismatase)",
+    "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "EntF (nonribosomal peptide synthetase)",
+    "Fur (ferric uptake regulator)",
+    "FepA (outer membrane receptor)",
+    "RyhB (small RNA)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric iron (Fe3+)",
+      "ferri-enterobactin"
+    ],
+    "key_proteins": [
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)",
+      "Fur (ferric uptake regulator)",
+      "FepA (outer membrane receptor)",
+      "RyhB (small RNA)"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "outer membrane",
+      "periplasm",
+      "extracellular space"
+    ],
+    "main_subprocesses": [
+      "conversion of chorismate to isochorismate",
+      "conversion of isochorismate to DHB",
+      "activation of DHB to DHB-AMP",
+      "assembly of DHB into cyclic trilactone enterobactin",
+      "iron-dependent transcriptional regulation by Fur",
+      "post-transcriptional regulation by RyhB sRNA"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "body",
+      "discussion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 0.7,
+    "selected_example": "enterobactin biosynthesis in Escherichia coli",
+    "candidate_examples": [
+      {
+        "name": "enterobactin biosynthesis in Escherichia coli",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "chorismate",
+          "isochorismate",
+          "DHB",
+          "DHB-AMP",
+          "enterobactin"
+        ],
+        "key_proteins": [
+          "EntC",
+          "EntB",
+          "EntE",
+          "EntD",
+          "EntF",
+          "Fur",
+          "FepA",
+          "RyhB"
+        ],
+        "main_subprocesses": [
+          "chorismate to isochorismate",
+          "isochorismate to DHB",
+          "DHB activation",
+          "enterobactin assembly",
+          "Fur regulation",
+          "RyhB regulation"
+        ],
+        "evidence": "The enterobactin biosynthesis pathway... The ent (enterobactin) operon in Escherichia coli comprises six genes (entA, entB, entC, entD, entE, and entF)..."
+      }
+    ],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:294ef907fbd3911e",
+      "response_hash": "sha256:ad79d7b07094a55a",
+      "raw_chars": 2279,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2279,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+    "enterobactin",
+    "ferri-enterobactin",
+    "EntC (isochorismate synthase)",
+    "EntB (isochorismatase)",
+    "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "EntF (nonribosomal peptide synthetase)"
+  ],
+  "unmatched_terms": [
+    "DHB-AMP",
+    "ferric iron (Fe3+)",
+    "Fur (ferric uptake regulator)",
+    "FepA (outer membrane receptor)",
+    "RyhB (small RNA)"
+  ],
+  "coverage_ratio": 0.666667,
+  "core_accepted_processes": 8,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 8,
+  "quarantined_processes": 2,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

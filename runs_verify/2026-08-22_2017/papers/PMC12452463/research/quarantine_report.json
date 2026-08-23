@@ -1,0 +1,1157 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:fe954d538ae39900",
+  "resulting_payload_hash": "sha256:fe954d538ae39900",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate dhb",
+      "chorismate",
+      "dhbamp",
+      "entb isochorismatasecarrier protein",
+      "entc isochorismate synthase",
+      "entd phosphopantetheinyl transferase",
+      "ente 23dihydroxybenzoateamp ligase",
+      "enterobactin",
+      "entf nonribosomal peptide synthetase",
+      "ferric iron fe3+",
+      "ferrienterobactin",
+      "fur ferric uptake regulator",
+      "isochorismate",
+      "ryhb small rna"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:2c826e975ff50d1d",
+  "ok": true,
+  "counts": {
+    "core_accepted": 4,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 6,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entc reaction",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "entb",
+        "entb reaction",
+        "entd",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntE reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "dhbamp",
+        "ente",
+        "ente reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "enterobactin synthase complex reaction",
+      "essential_participant": "enterobactin synthase complex",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "enterobactin synthase complex reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "2,3-dihydroxybenzoate (DHB)"
+          ],
+          "outputs": [
+            "enterobactin"
+          ],
+          "locked_reaction_id": "rxn_lock_004",
+          "name": "enterobactin synthase complex reaction",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "83 chars elided"
+            }
+          ],
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "84 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "83 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase complex"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD activates EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd activates entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "Fur represses ent operon",
+      "essential_participant": "Fur",
+      "iteration": 0,
+      "core_terms": [
+        "ent operon",
+        "fur",
+        "fur represses ent operon"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "Fur",
+          "entity_2": "ent operon",
+          "name": "Fur represses ent operon",
+          "relationship": "represses",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "196 chars elided"
+        },
+        "participant": "Fur"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "RyhB inhibits entC mRNA",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "entc mrna",
+        "ryhb",
+        "ryhb inhibits entc mrna"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/2",
+          "entity_1": "RyhB",
+          "entity_2": "entC mRNA",
+          "name": "RyhB inhibits entC mRNA",
+          "relationship": "inhibits",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "182 chars elided"
+        },
+        "participant": "RyhB"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "RyhB inhibits entF mRNA",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "entf mrna",
+        "ryhb",
+        "ryhb inhibits entf mrna"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/3",
+          "entity_1": "RyhB",
+          "entity_2": "entF mRNA",
+          "name": "RyhB inhibits entF mRNA",
+          "relationship": "inhibits",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "182 chars elided"
+        },
+        "participant": "RyhB"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "enterobactin binds Fe3+",
+      "essential_participant": "Fe3+",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin binds fe3+",
+        "fe3+"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_2",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/4",
+          "entity_1": "enterobactin",
+          "entity_2": "Fe3+",
+          "name": "enterobactin binds Fe3+",
+          "relationship": "binds",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "119 chars elided"
+        },
+        "participant": "Fe3+"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "FepA transports ferri-enterobactin",
+      "essential_participant": "ferri-enterobactin",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "fepa transports ferrienterobactin",
+        "ferrienterobactin"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_2",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/5",
+          "entity_1": "FepA",
+          "entity_2": "ferri-enterobactin",
+          "name": "FepA transports ferri-enterobactin",
+          "relationship": "transports",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "167 chars elided"
+        },
+        "participant": "ferri-enterobactin"
+      }
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "enterobactin synthase complex reaction",
+      "essential_participant": "enterobactin synthase complex",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "enterobactin synthase complex reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "2,3-dihydroxybenzoate (DHB)"
+          ],
+          "outputs": [
+            "enterobactin"
+          ],
+          "locked_reaction_id": "rxn_lock_004",
+          "name": "enterobactin synthase complex reaction",
+          "enzymes": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "83 chars elided"
+            }
+          ],
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "84 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "enterobactin synthase complex",
+              "entity_type": "protein_complex",
+              "role": "catalyst",
+              "evidence": "83 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "enterobactin synthase complex"
+      },
+      "original_process": {
+        "inputs": [
+          "2,3-dihydroxybenzoate (DHB)"
+        ],
+        "outputs": [
+          "enterobactin"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "enterobactin synthase complex reaction",
+        "enzymes": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF"
+          }
+        ],
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "assembly of three DHB molecules into the cyclic trilactone structure of enterobactin",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "enterobactin synthase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "Fur represses ent operon",
+      "essential_participant": "Fur",
+      "iteration": 0,
+      "core_terms": [
+        "ent operon",
+        "fur",
+        "fur represses ent operon"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "Fur",
+          "entity_2": "ent operon",
+          "name": "Fur represses ent operon",
+          "relationship": "represses",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "196 chars elided"
+        },
+        "participant": "Fur"
+      },
+      "original_process": {
+        "entity_1": "Fur",
+        "entity_2": "ent operon",
+        "name": "Fur represses ent operon",
+        "relationship": "represses",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "Under iron-replete conditions, Fur binds ferrous iron (Fe2+) to form a complex that represses the transcription of enterobactin biosynthesis genes (entA-entF) by binding to their promoter regions.",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: undeclared_entity_in_entity_1)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "RyhB inhibits entC mRNA",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "entc mrna",
+        "ryhb",
+        "ryhb inhibits entc mrna"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/2",
+          "entity_1": "RyhB",
+          "entity_2": "entC mRNA",
+          "name": "RyhB inhibits entC mRNA",
+          "relationship": "inhibits",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "182 chars elided"
+        },
+        "participant": "RyhB"
+      },
+      "original_process": {
+        "entity_1": "RyhB",
+        "entity_2": "entC mRNA",
+        "name": "RyhB inhibits entC mRNA",
+        "relationship": "inhibits",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF... leading to the inhibition of their translation and/or degradation of the mRNA transcripts.",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: undeclared_entity_in_entity_1)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "RyhB inhibits entF mRNA",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "entf mrna",
+        "ryhb",
+        "ryhb inhibits entf mrna"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_1",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/3",
+          "entity_1": "RyhB",
+          "entity_2": "entF mRNA",
+          "name": "RyhB inhibits entF mRNA",
+          "relationship": "inhibits",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "182 chars elided"
+        },
+        "participant": "RyhB"
+      },
+      "original_process": {
+        "entity_1": "RyhB",
+        "entity_2": "entF mRNA",
+        "name": "RyhB inhibits entF mRNA",
+        "relationship": "inhibits",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF... leading to the inhibition of their translation and/or degradation of the mRNA transcripts.",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: undeclared_entity_in_entity_1)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "enterobactin binds Fe3+",
+      "essential_participant": "Fe3+",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin binds fe3+",
+        "fe3+"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_2",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/4",
+          "entity_1": "enterobactin",
+          "entity_2": "Fe3+",
+          "name": "enterobactin binds Fe3+",
+          "relationship": "binds",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "119 chars elided"
+        },
+        "participant": "Fe3+"
+      },
+      "original_process": {
+        "entity_1": "enterobactin",
+        "entity_2": "Fe3+",
+        "name": "enterobactin binds Fe3+",
+        "relationship": "binds",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: undeclared_entity_in_entity_2)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "FepA transports ferri-enterobactin",
+      "essential_participant": "ferri-enterobactin",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "fepa transports ferrienterobactin",
+        "ferrienterobactin"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "undeclared_entity_in_entity_2",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/5",
+          "entity_1": "FepA",
+          "entity_2": "ferri-enterobactin",
+          "name": "FepA transports ferri-enterobactin",
+          "relationship": "transports",
+          "biological_state": "Escherichia coli cellular state",
+          "evidence": "167 chars elided"
+        },
+        "participant": "ferri-enterobactin"
+      },
+      "original_process": {
+        "entity_1": "FepA",
+        "entity_2": "ferri-enterobactin",
+        "name": "FepA transports ferri-enterobactin",
+        "relationship": "transports",
+        "biological_state": "Escherichia coli cellular state",
+        "evidence": "The iron-bound enterobactin (ferri-enterobactin) is recognized by specific outer membrane receptors (e.g. FepA in E. coli), which transport it into the bacterial cell.",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: undeclared_entity_in_entity_2)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "EntC reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "entc",
+        "entc reaction",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "EntB reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "entb",
+        "entb reaction",
+        "entd",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "EntE reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "dhbamp",
+        "ente",
+        "ente reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "EntD activates EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd activates entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "requested_pathway_anchors_present"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.785714,
+    "missing_anchors": [
+      "ferric iron (Fe3+)",
+      "Fur (ferric uptake regulator)",
+      "RyhB (small RNA)"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: ferric iron (Fe3+), Fur (ferric uptake regulator), RyhB (small RNA); candidate processes withheld by strict admission (quarantined_unmapped_entity:6); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "semantic_evaluation_failed:requested_pathway_anchors_present"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [
+      "rxn_lock_004"
+    ],
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 1,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric iron (Fe3+)",
+      "ferri-enterobactin",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase/carrier protein)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)",
+      "Fur (ferric uptake regulator)",
+      "RyhB (small RNA)"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "DHB-AMP",
+        "enterobactin",
+        "ferric iron (Fe3+)",
+        "ferri-enterobactin"
+      ],
+      "key_proteins": [
+        "EntC (isochorismate synthase)",
+        "EntB (isochorismatase/carrier protein)",
+        "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+        "EntD (phosphopantetheinyl transferase)",
+        "EntF (nonribosomal peptide synthetase)",
+        "Fur (ferric uptake regulator)",
+        "RyhB (small RNA)"
+      ],
+      "likely_compartments": [],
+      "main_subprocesses": [
+        "conversion of chorismate to isochorismate (EntC)",
+        "conversion of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)",
+        "activation of DHB to DHB-AMP (EntE)",
+        "assembly of enterobactin by EntD/EntE/EntF complex",
+        "regulation by Fur protein",
+        "post-transcriptional regulation by RyhB sRNA"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "Enterobactin biosynthesis and regulation",
+        "Role of enterobactin in bacterial virulence"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 1.0,
+      "selected_example": "enterobactin biosynthesis in Escherichia coli",
+      "candidate_examples": [
+        {
+          "name": "enterobactin biosynthesis in Escherichia coli",
+          "organism": "Escherichia coli",
+          "key_compounds": [
+            "chorismate",
+            "isochorismate",
+            "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "DHB-AMP",
+            "enterobactin",
+            "ferric iron (Fe3+)",
+            "ferri-enterobactin"
+          ],
+          "key_proteins": [
+            "EntC (isochorismate synthase)",
+            "EntB (isochorismatase/carrier protein)",
+            "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+            "EntD (phosphopantetheinyl transferase)",
+            "EntF (nonribosomal peptide synthetase)",
+            "Fur (ferric uptake regulator)",
+            "RyhB (small RNA)"
+          ],
+          "main_subprocesses": [
+            "conversion of chorismate to isochorismate (EntC)",
+            "conversion of isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate (EntB)",
+            "activation of DHB to DHB-AMP (EntE)",
+            "assembly of enterobactin by EntD/EntE/EntF complex",
+            "regulation by Fur protein",
+            "post-transcriptional regulation by RyhB sRNA"
+          ],
+          "evidence": "The enterobactin biosynthesis pathway Enterobactin, a catechol-type siderophore, is synthesized through a well-characterized biosynthetic pathway involving several key genes and enzymatic steps (Figure 1)."
+        },
+        {
+          "name": "enterobactin in Salmonella enterica serovar Typhimurium",
+          "organism": "Salmonella enterica serovar Typhimurium",
+          "key_compounds": [
+            "enterobactin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "Enterobactin is crucial for Salmonella to acquire iron during systemic infections, such as typhoid fever and gastroenteritis."
+        },
+        {
+          "name": "enterobactin in Klebsiella pneumoniae",
+          "organism": "Klebsiella pneumoniae",
+          "key_compounds": [
+            "enterobactin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "In Klebsiella pneumoniae enterobactin is critical for the bacterium to acquire iron during pneumonia and bloodstream infections."
+        },
+        {
+          "name": "enterobactin in Shigella",
+          "organism": "Shigella",
+          "key_compounds": [
+            "enterobactin",
+            "aerobactin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "Although Shigella possesses the genetic machinery to produce two siderophores, enterobactin and aerobactin, the enterobactin system is seldom utilized."
+        },
+        {
+          "name": "salmochelin (glycosylated enterobactin) in Salmonella and Escherichia coli",
+          "organism": "Salmonella enterica and Escherichia coli",
+          "key_compounds": [
+            "salmochelin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "salmochelin, a glycosylated derivative of enterobactin produced by pathogens such as Salmonella and Escherichia coli"
+        },
+        {
+          "name": "yersiniabactin in Klebsiella pneumoniae",
+          "organism": "Klebsiella pneumoniae",
+          "key_compounds": [
+            "yersiniabactin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "some bacteria produce entirely distinct siderophores, such as yersiniabactin (in Klebsiella pneumoniae)"
+        },
+        {
+          "name": "aerobactin in Shigella",
+          "organism": "Shigella",
+          "key_compounds": [
+            "aerobactin"
+          ],
+          "key_proteins": [],
+          "main_subprocesses": [],
+          "evidence": "Shigella possesses the genetic machinery to produce two siderophores, enterobactin and aerobactin"
+        },
+        {
+          "name": "enterobactin in Pectobacterium atrosepticum",
+          "organism": "Pectobacterium atrosepticum",
+          "key_compounds": [
+            "enterobactin"
+          ],
+          "key_proteins": [
+            "EntA"
+          ],
+          "main_subprocesses": [],
+          "evidence": "In Pectobacterium atrosepticum, the ΔentA mutant showed reduced oxidative stress resistance and virulence in salicylic acid-primed plants"
+        },
+        {
+          "name": "enterobactin in Serratia plymuthica",
+          "organism": "Serratia plymuthica",
+          "key_compounds": [
+            "enterobactin"
+          ],
+          "key_proteins": [
+            "SchF0"
+          ],
+          "main_subprocesses": [],
+          "evidence": "Serratia plymuthica V4 mutants lacking enterobactin biosynthesis (via SchF0 knockout) exhibited significant fitness defects"
+        }
+      ],
+      "excluded_examples": [
+        "enterobactin in Salmonella enterica serovar Typhimurium",
+        "enterobactin in Klebsiella pneumoniae",
+        "enterobactin in Shigella",
+        "salmochelin (glycosylated enterobactin) in Salmonella and Escherichia coli",
+        "yersiniabactin in Klebsiella pneumoniae",
+        "aerobactin in Shigella",
+        "enterobactin in Pectobacterium atrosepticum",
+        "enterobactin in Serratia plymuthica"
+      ],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:294ef907fbd3911e",
+        "response_hash": "sha256:42e1296dc0ed0396",
+        "raw_chars": 6050,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 6050,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferri-enterobactin",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase/carrier protein)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)"
+    ],
+    "unmatched_terms": [
+      "ferric iron (Fe3+)",
+      "Fur (ferric uptake regulator)",
+      "RyhB (small RNA)"
+    ],
+    "coverage_ratio": 0.785714,
+    "core_accepted_processes": 4,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 4,
+    "quarantined_processes": 6,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:fe954d538ae39900.sha256:2c826e975ff50d1d",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [
+      {
+        "pointer": "/processes/reactions/3",
+        "name": "enterobactin synthase complex reaction",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity",
+        "essential_participant": "enterobactin synthase complex",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/1",
+        "name": "Fur represses ent operon",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "undeclared_entity_in_entity_1",
+        "essential_participant": "Fur",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/2",
+        "name": "RyhB inhibits entC mRNA",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "undeclared_entity_in_entity_1",
+        "essential_participant": "RyhB",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/3",
+        "name": "RyhB inhibits entF mRNA",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "undeclared_entity_in_entity_1",
+        "essential_participant": "RyhB",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/4",
+        "name": "enterobactin binds Fe3+",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "undeclared_entity_in_entity_2",
+        "essential_participant": "Fe3+",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/5",
+        "name": "FepA transports ferri-enterobactin",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "undeclared_entity_in_entity_2",
+        "essential_participant": "ferri-enterobactin",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      }
+    ],
+    "would_have_quarantined": 6,
+    "would_have_refused": []
+  }
+}

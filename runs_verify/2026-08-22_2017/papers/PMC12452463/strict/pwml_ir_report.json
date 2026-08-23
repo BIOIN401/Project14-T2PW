@@ -1,0 +1,66 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Cytosol' from biological_state context.",
+      "pointer": "/biological_states/1",
+      "component_type": "subcellular_locations",
+      "name": "Cytosol"
+    },
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Cytoplasm' from biological_state context.",
+      "pointer": "/biological_states/2",
+      "component_type": "subcellular_locations",
+      "name": "Cytoplasm"
+    },
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Membrane' from biological_state context.",
+      "pointer": "/biological_states/3",
+      "component_type": "subcellular_locations",
+      "name": "Membrane"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 4,
+    "compounds": 5,
+    "proteins": 5,
+    "reactions": 4,
+    "transports": 0,
+    "locations": 14,
+    "edges": 12,
+    "process_visualizations": 4
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 14,
+      "biological_states": 4,
+      "processes": 7,
+      "process_members": 12,
+      "locations": 14,
+      "edges": 12,
+      "process_visualizations": 4
+    }
+  }
+}

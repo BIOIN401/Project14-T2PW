@@ -1,0 +1,56 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1064.0s (17m43s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates
+issue codes  : gate.unknown_protein_modifier_reference
+
+DETAIL / TRACEBACK
+----------------------------------------
+Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.
+[post_normalization_contract_report] gate.unknown_protein_modifier_reference @ /processes/reactions/0/modifiers/0: Unknown protein/modifier reference: pyridoxal 5'-phosphate
+
+COUNTS
+----------------------------------------
+  blocking_issues = 1
+  compounds = 5
+  contract_errors = 1
+  entities = 10
+  gate_errors = 1
+  proteins = 1
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (3215 B)
+  - contract_reports.json  (10436 B)
+  - coverage_summary.json  (2507 B)
+  - final_mapped.json  (96884 B)
+  - final_stage3_gate_report.json  (3385 B)
+  - gap_iteration_summary.json  (12065 B)
+  - gate_fail_report.json  (6978 B)
+  - graph_closure_iterations.json  (727 B)
+  - initial_stage3_gate_report.json  (6978 B)
+  - merged_payload.json  (8769 B)
+  - quarantine_report.json  (8765 B)
+  - rag_admission_report.json  (80892 B)
+  - removed_entity_report.json  (401 B)
+  - stage1_payload.json  (8028 B)
