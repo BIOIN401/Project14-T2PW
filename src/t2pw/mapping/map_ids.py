@@ -14,6 +14,7 @@ from xml.etree import ElementTree
 
 import requests
 
+from t2pw.mapping import identity_admission
 from t2pw.pipeline.entity_identity import (
     IDENTITY_PLACEHOLDER,
     IDENTITY_UNRESOLVED,
@@ -7801,6 +7802,54 @@ def _mapping_lineage_facts(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     )).strip()
     locator = route or str(meta.get("provider") or meta.get("source") or "") or status
     issue = str(resolution.get("issue") or resolution.get("failed_check") or "")
+
+    # C-073 identity admission. An accession this stage REFUSED TO SHIP is a
+    # decision § 3 has to be able to answer for, and it is neither a refutation
+    # (no record was retrieved that contradicts anything) nor a lookup failure.
+    # A row that still ships other grounded identifiers keeps the origin those
+    # identifiers earn and carries the refusal as an uncertainty; a row left with
+    # nothing reads ``excluded``, sourceless, exactly as an unevidenced removal
+    # does below. The branch is inert on every payload without the record.
+    admission = _safe_dict(meta.get(identity_admission.META_KEY))
+    withheld = _safe_dict(admission.get("withheld"))
+    if withheld:
+        taken = ", ".join(f"{key}={value}" for key, value in sorted(withheld.items()))
+        rules = ", ".join(sorted({
+            str(rule) for rule in _safe_list(admission.get("rules")) if str(rule or "").strip()
+        })) or identity_admission.RULE_NOT_SUPPORTED
+        remaining = _mapping_lineage_sources(
+            _mapping_lineage_row_ids(row, meta), locator=locator
+        )
+        uncertainty = (
+            f"identity admission withheld {taken} ({rules}); the entity, its name and its "
+            "graph role are preserved and the identifier is recorded under "
+            "rejected_mapped_ids rather than deleted"
+        )
+        if remaining and status == "matched":
+            indirect = any(
+                token in route.casefold() for token in _MAPPING_LINEAGE_INDIRECT_ROUTES
+            )
+            return {
+                "origin": "database_grounded",
+                "support": "indirect" if indirect else "direct",
+                "sources": remaining,
+                "reason": (
+                    f"resolved against a database record via {locator}, with "
+                    f"{len(withheld)} identifier(s) withheld by identity admission"
+                ),
+                "review_required": True,
+                "uncertainty": uncertainty,
+            }
+        return {
+            "origin": "excluded", "support": "unsupported", "sources": (),
+            "reason": (
+                "the identifier was withheld because this stage could not support the "
+                f"claim it makes ({rules}): {taken}"
+            ),
+            "review_required": True,
+            "uncertainty": uncertainty,
+        }
+
     verdict = _safe_dict(meta.get("identity_verdict"))
 
     # Refutation. A protein that went through the ladder is judged on its
@@ -7990,6 +8039,245 @@ def _record_mapping_lineage(entities: Dict[str, Any]) -> Dict[str, int]:
                 continue
             counts["attributed"] += 1
     return counts
+
+
+# ── C-073 identity admission (F-096) ─────────────────────────────────────────
+# Two refusals this stage could not make before, both run at the tail of
+# ``map_payload`` and both PRE-FREEZE, inside mapping: merge rule 8 forbids an
+# exporter repairing biology after the canonical graph is frozen, and the card
+# explicitly forbids "merely deleting identifiers after export".
+#
+# Neither refusal DELETES anything (merge rule 7). The identifiers come off
+# ``mapped_ids`` through the same ``_strip_rejected_identifiers`` the name gate
+# uses and land under ``mapping_meta.rejected_mapped_ids`` with a reason; the
+# entity row keeps its name, its class and every process that references it.
+#
+# Both fail open. Pass A cannot run without a source index and never invents one;
+# pass B needs no index at all, because a collision is visible in the payload's
+# own rows. "Not evaluated" is never "false" (PRODUCT_CONTRACT § 8).
+
+
+def _identity_admission_kind(bucket: str) -> str:
+    """This bucket's kind class -- which is also the scalar column
+    ``_strip_rejected_identifiers`` should clear. One notion, one definition,
+    owned by the predicate module."""
+    return identity_admission.entity_kind_class(bucket)
+
+
+def _identity_admission_rows(entities: Dict[str, Any]) -> List[Tuple[str, Dict[str, Any]]]:
+    """Every named row in a bucket this mapper resolves identifiers for.
+
+    Confined to :data:`_DIRECTLY_MAPPED_ENTITY_BUCKETS`, so species rows,
+    subcellular locations, cell types and every other bucket this stage stamps
+    ``not_applicable`` are outside the gate by construction rather than by luck.
+    """
+    out: List[Tuple[str, Dict[str, Any]]] = []
+    for bucket in sorted(_DIRECTLY_MAPPED_ENTITY_BUCKETS):
+        for row in _safe_list(entities.get(bucket)):
+            if isinstance(row, dict) and _canonical_name(str(row.get("name") or "")):
+                out.append((bucket, row))
+    return out
+
+
+def _identity_admission_eligible(row: Dict[str, Any]) -> Dict[str, str]:
+    """The real external accessions a row is about to ship, or ``{}``.
+
+    An Unknown-backed placeholder ships no identity CLAIM -- PRODUCT_CONTRACT
+    § 13 keeps it precisely because the biology is preserved while the identity
+    is not asserted -- so there is nothing to withhold and it is skipped.
+    """
+    meta = _safe_dict(row.get("mapping_meta"))
+    if is_pathbank_unknown_protein(row) or str(meta.get("identity_status") or "") == IDENTITY_PLACEHOLDER:
+        return {}
+    return identity_admission.external_accessions(row)
+
+
+def _withhold_identity(
+    row: Dict[str, Any],
+    doomed: Dict[str, str],
+    *,
+    bucket: str,
+    rule: str,
+    detail: str,
+) -> Dict[str, str]:
+    """Take ``doomed`` off the row and file it, auditably. Returns what moved.
+
+    The identifiers are moved, never dropped: ``_strip_rejected_identifiers``
+    removes exactly the values that match, and they are merged into -- never over
+    -- whatever ``rejected_mapped_ids`` the name gate already recorded on this
+    row, because a second refusal on a second pass must not erase the first.
+    """
+    removed = _strip_rejected_identifiers(row, doomed, kind=_identity_admission_kind(bucket))
+    if not removed:
+        return {}
+    meta = row.get("mapping_meta")
+    if not isinstance(meta, dict):
+        meta = {}
+        row["mapping_meta"] = meta
+    rejected = dict(_safe_dict(meta.get("rejected_mapped_ids")))
+    rejected.update(removed)
+    meta["rejected_mapped_ids"] = rejected
+
+    record = meta.get(identity_admission.META_KEY)
+    if not isinstance(record, dict):
+        record = {"schema_version": identity_admission.SCHEMA_VERSION, "withheld": {}, "rules": [], "details": []}
+        meta[identity_admission.META_KEY] = record
+    record.setdefault("withheld", {}).update(removed)
+    rules = record.setdefault("rules", [])
+    if rule not in rules:
+        rules.append(rule)
+    record.setdefault("details", []).append({"rule": rule, "detail": detail, "identifiers": dict(removed)})
+    return removed
+
+
+def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict[str, Any]:
+    """Withhold identities this stage cannot support. Returns the audit record.
+
+    PASS A -- unsupported identity. A row about to ship real external accessions
+    must have at least one of its ``name``, ``raw_name``, ``short_name``,
+    ``aliases`` or ``synonyms`` locatable in the source index, compared
+    punctuation- and case-insensitively. ``succinyl-CoA`` on PMC12180156 has
+    none: zero occurrences of "succinyl" in 67,304 characters, shipped with four
+    real accessions on a leg that passed every gate. The rule is PAPER-RELATIVE,
+    which is the point -- the same name in PMC12856317 IS in that source and is
+    kept.
+
+    PASS B -- incompatible KIND. One accession cannot denote both a protein and a
+    metabolite. Where a ``(namespace, accession)`` pair is claimed by rows that
+    differ in kind AND in normalized name, it is withheld from EVERY claimant:
+    neither row carries evidence that it, rather than its rival, owns the
+    accession, so picking a winner would ship a coin toss as a fact.
+
+    A shared accession WITHIN one kind is not touched. D-035 clause 3c makes it
+    PROOF that two differently-named rows are the same biological entity, and a
+    name-difference rule would read that locked decision backwards: measured over
+    all committed ``final_mapped.json`` artifacts it refuses 41 correct pairs
+    (``EntB`` / ``Isochorismatase (EntB)`` on ``uniprot:P0ADI4``, ``PEtN`` /
+    ``Phosphoethanolamine``, ``LMRG_02730`` / ``MenI``) to catch the 1 real one.
+    Two rows with the same normalized name are one entity written twice and are
+    never a conflict, whichever buckets they landed in.
+
+    Pass A runs first so that a row whose whole identity is already refused does
+    not go on to contest an accession it is no longer shipping.
+    """
+    index = identity_admission.read_source_index(payload)
+    rows = _identity_admission_rows(entities)
+    offered = _safe_dict(payload).get(identity_admission.SOURCE_INDEX_KEY)
+    if index is not None:
+        index_status, index_reason = "evaluated", ""
+    elif isinstance(offered, dict) and not str(offered.get("normalized") or "").strip():
+        index_status, index_reason = (
+            identity_admission.STATUS_NOT_EVALUATED, identity_admission.NOT_EVALUATED_EMPTY_INDEX
+        )
+    else:
+        index_status, index_reason = (
+            identity_admission.STATUS_NOT_EVALUATED, identity_admission.NOT_EVALUATED_NO_INDEX
+        )
+    report: Dict[str, Any] = {
+        "schema_version": identity_admission.SCHEMA_VERSION,
+        "source_index": {
+            "status": index_status,
+            "reason": index_reason,
+            "length": index.length if index is not None else 0,
+            "offered": identity_admission.SOURCE_INDEX_KEY in _safe_dict(payload),
+        },
+        "withheld": [],
+        "kind_conflicts": [],
+        "counts": {
+            "rows_examined": 0, "supported": 0, "not_evaluated": 0,
+            "rows_withheld": 0, "identifiers_withheld": 0, "kind_conflicts": 0,
+        },
+    }
+
+    # ── pass A ───────────────────────────────────────────────────────────────
+    for bucket, row in rows:
+        shipping = _identity_admission_eligible(row)
+        if not shipping:
+            continue
+        report["counts"]["rows_examined"] += 1
+        support = identity_admission.identity_support(row, index)
+        if support["status"] == identity_admission.STATUS_SUPPORTED:
+            report["counts"]["supported"] += 1
+            continue
+        if support["status"] == identity_admission.STATUS_NOT_EVALUATED:
+            report["counts"]["not_evaluated"] += 1
+            continue
+        removed = _withhold_identity(
+            row, shipping, bucket=bucket,
+            rule=identity_admission.RULE_NOT_SUPPORTED,
+            detail=(
+                f"no name, raw_name, short_name, alias or synonym of this entity is "
+                f"locatable in the source ({support['evaluated']} name(s) looked for)"
+            ),
+        )
+        if not removed:
+            continue
+        report["counts"]["rows_withheld"] += 1
+        report["counts"]["identifiers_withheld"] += len(removed)
+        report["withheld"].append({
+            "bucket": bucket, "name": str(row.get("name") or ""),
+            "rule": identity_admission.RULE_NOT_SUPPORTED,
+            "identifiers": dict(removed),
+            "names_evaluated": support["evaluated"],
+        })
+
+    # ── pass B ───────────────────────────────────────────────────────────────
+    surviving = [
+        (bucket, identity_admission.entity_kind_class(bucket), row, _identity_admission_eligible(row))
+        for bucket, row in rows
+    ]
+    conflicts = identity_admission.find_kind_conflicting_accessions(
+        (kind, row.get("name"), shipping)
+        for _bucket, kind, row, shipping in surviving
+        if shipping
+    )
+    if conflicts:
+        contested = list(conflicts)
+        report["counts"]["kind_conflicts"] = len(contested)
+        report["kind_conflicts"] = [
+            {
+                "namespace": namespace,
+                "accession": accession,
+                "claimants": [dict(claimant) for claimant in claimants],
+            }
+            for (namespace, accession), claimants in conflicts.items()
+        ]
+        for bucket, _kind, row, shipping in surviving:
+            doomed = {
+                namespace: value
+                for namespace, value in shipping.items()
+                if identity_admission.conflict_matches(namespace, value, contested)
+            }
+            if not doomed:
+                continue
+            removed = _withhold_identity(
+                row, doomed, bucket=bucket,
+                rule=identity_admission.RULE_ACCESSION_KIND_CONFLICT,
+                detail=(
+                    "this accession is also claimed by a differently-named entity of the "
+                    "other kind (protein vs compound) in the same payload, so no claimant "
+                    "may ship it"
+                ),
+            )
+            if not removed:
+                continue
+            existing = next(
+                (entry for entry in report["withheld"]
+                 if entry["name"] == str(row.get("name") or "") and entry["bucket"] == bucket
+                 and entry["rule"] == identity_admission.RULE_ACCESSION_KIND_CONFLICT),
+                None,
+            )
+            if existing is None:
+                report["counts"]["rows_withheld"] += 1
+                report["withheld"].append({
+                    "bucket": bucket, "name": str(row.get("name") or ""),
+                    "rule": identity_admission.RULE_ACCESSION_KIND_CONFLICT,
+                    "identifiers": dict(removed),
+                })
+            else:
+                existing["identifiers"].update(removed)
+            report["counts"]["identifiers_withheld"] += len(removed)
+    return report
 
 
 def _stamp_named_entity_mapping_metadata(entities: Dict[str, Any]) -> Dict[str, int]:
@@ -8857,6 +9145,14 @@ def map_payload(
     if db is not None:
         db.close()
 
+    # C-073 / F-096. Deliberately here: after every resolution loop, so it judges
+    # what the payload is ACTUALLY about to ship rather than what a loop intended;
+    # after ``cache.save()``, so a withheld identifier cannot reach the mapping
+    # cache file; and before the attribution pass below, so the refusal it makes
+    # is the thing § 3 attributes. It is still inside mapping and still
+    # pre-freeze, which is what merge rule 8 requires of a biological refusal.
+    identity_admission_report = _admit_identities(mapped, entities)
+
     # PRODUCT_CONTRACT § 3 attribution for this stage, deliberately last and
     # deliberately after ``cache.save()``: every mapping decision is already
     # made, so this pass can only describe them, and no lineage write can reach
@@ -8995,6 +9291,17 @@ def map_payload(
         "mapping_metadata_policy": mapping_metadata_policy,
         "protein_export_policy": protein_export_policy,
     }
+    # Reported when this pass was OFFERED evidence -- the payload carries a source
+    # index key, usable or not -- or when it withheld something. A payload that
+    # offers none gets silence, not a section claiming "not evaluated" about a
+    # question nobody asked, and that is also what keeps ``map_payload``'s
+    # observable output byte-identical on every legacy payload and on the pinned
+    # lineage golden (§ 7), which carries rows with accessions and no index.
+    # Offered-but-unusable is the case that MUST speak: the section then reads
+    # ``source_index.status == "not_evaluated"``, never "supported", so a reader
+    # can tell fail-open from a clean bill of health.
+    if identity_admission.SOURCE_INDEX_KEY in mapped or identity_admission_report["withheld"]:
+        report[identity_admission.REPORT_KEY] = identity_admission_report
     return {"payload": mapped, "report": report}
 
 
