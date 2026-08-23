@@ -4951,3 +4951,450 @@ compound resolution runs **after** the identity gate on a production leg. If the
 refusal downstream, the finding is moot. C-078 §3 requires that ordering to be proven behaviourally
 through a production entry point before any fix is written, and to be reported rather than worked
 around if it does not hold.
+
+---
+
+## F-092 — AMENDMENT, 2026-08-23: re-measured at `5f8a230`. One defect of three survives, and it does not block T-106
+
+- **Severity revised HIGH → MEDIUM.** The finding is now **split by defect**, because its three
+  parts do not share a class and two of them do not justify code.
+- **Amended by the measurement lane, 2026-08-23**, at integration tip `5f8a230`.
+- Evidence: `evidence/g11/F-092/01-replay-classify.json` (deterministic replay of the stored
+  T-104/T-105 rows through the current vocabulary and the current serializer),
+  `02-pin-test.json` (`test_deadline_leg_timeout.py` + `test_batch_driver_seam_golden.py`,
+  9 passed). Both `FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+- **No live leg was run and the timeout was not reproduced.** T-101, T-104 and T-105 recorded
+  this seam on six legs between them; a seventh 30-minute kill would have bought nothing.
+- **Still holds at `50420a1`.** The tip advanced twice during the re-measurement (`30b8fd6`
+  LEDGER, `50420a1` C-079 charter). Both are docs-only — `git diff 5f8a230..50420a1 -- src/ tests/`
+  is empty — and C-079's boundary is `src/t2pw/curation/**`, disjoint from everything below.
+
+### The seam did not move, so nothing merged since could have closed it
+
+The re-measurement was commissioned on the hypothesis that the deadline module landed after
+F-092 was registered and may already have closed part of it. **It did not, and it could not.**
+
+```
+git log -1 --format=%cI 985355f   ->  2026-08-13T09:26:36-06:00   C-032: one monotonic per-leg deadline
+git log -1 --format=%cI 839f529   ->  2026-08-21T17:43:16-06:00   the SHA F-092 was measured at
+git merge-base --is-ancestor 985355f 839f529   ->  YES
+
+git diff --stat 839f529 HEAD -- src/t2pw/batch/driver.py \
+                                src/t2pw/batch/runner.py \
+                                src/t2pw/pipeline/deadline.py
+   ->  (empty)
+```
+
+C-032 shipped `deadline.py`, `runner._timeout_row`'s `classify_child_kill` call and
+`driver._finalize_timeout`'s `classify_interaction_timeout` call **in one commit, eight days
+before F-092 was written**. All three files are **byte-identical** between `839f529` and
+`5f8a230`. F-092 was therefore measured against the current code from the start, and "the
+deadline module may have closed it" is not available as an explanation for anything below.
+
+### What T-104 and T-105 actually recorded
+
+Four legs, two runs, one paper. The two runs disagree — and the disagreement is the finding.
+
+| run | leg | path | `status` / `failure_kind` | `stage` | `seconds` | `termination_reason` | `operational_failure` | `budget` |
+|---|---|---|---|---|---|---|---|---|
+| T-104 `2026-08-21_2239` | strict | OUTER `runner._timeout_row` | `timeout` / `timeout` | `unknown` | 1800.26 | `budget_exhausted` | `True` | present |
+| T-104 | research | OUTER | `timeout` / `timeout` | `unknown` | 1800.37 | `budget_exhausted` | `True` | present |
+| T-105 `2026-08-22_2147` | strict | **INNER** `driver._finalize_timeout` | `timeout` / `timeout` | `stage1` | 1749.44 | **ABSENT** | **ABSENT** | **ABSENT** |
+| T-105 | research | OUTER | `timeout` / `timeout` | `unknown` | 1800.30 | `budget_exhausted` | `True` | present |
+
+Messages, verbatim:
+
+```
+OUTER (3 legs)  'the child process was still running after 1800s and was killed,
+                 so this paper+mode produced nothing (budget_exhausted)'
+INNER (T-105 strict)
+                'audit and DB mapping did not finish inside the time budget'
+                detail: 'AppTest script run timed out after 471.9942160999999(s)'
+```
+
+Each of the three OUTER rows carries a full `budget` record — `leg_timeout_seconds: 1800.0`,
+`leg_timeout_default_seconds: 3600.0`, `leg_timeout_overridden: true`,
+`child_deadline_seconds: 1680.0`, and a negative `remaining_seconds` (`-0.26`, `-0.37`, `-0.30`)
+showing each child was killed just past its ceiling. The INNER row carries no `budget` key at all.
+
+```
+grep -ric "operation_timeout"  runs_verify/2026-08-22_2147/   ->  no hits anywhere
+grep -ric "operation_timeout"  runs_verify/2026-08-21_2239/   ->  no hits anywhere
+```
+
+### Per-defect verdict
+
+| # | Defect as registered | At `5f8a230` | Class | Justifies code? |
+|---|---|---|---|---|
+| 1 | `operation_timeout` never used on a run with wall-clock timeouts | **reproduces, but is not independent** — it is the *observable* of defect 3 | inherits defect 3 | no separate card |
+| 2 | A wall-clock kill labelled `budget_exhausted` is the wrong fact | **REFUTED** | **`policy_disagreement`** | **no** |
+| 3 | The inner deadline path records no terminal reason at all | **reproduces** | **`product_contract_violation`** | yes, after T-106 |
+| — | T-101 clause 1 violated by a hard-coded `"produced nothing"` | string is real; **the premise that it is false is itself false** | `policy_disagreement` (acceptance wording) | no |
+
+### Defect 2 is REFUTED, and implementing its remedy would be the violation
+
+`PRODUCT_CONTRACT.md` § 9, which outranks any test, benchmark or inference from code, defines
+the two reasons at `:260-261`:
+
+| Reason | Means |
+|---|---|
+| `budget_exhausted` | another recovery step might have helped; **wall-clock did not allow it** |
+| `operation_timeout` | **an individual external operation** exceeded its deadline |
+
+**The contract equates `budget_exhausted` with the wall clock in its own definition.** D-005
+does the same throughout — *"one monotonic per-leg deadline across all stages, recording elapsed
+and remaining budget"*, and *"insufficient budget for the next rung → stop, record
+`budget_exhausted`"*. In D-005 the per-leg clock **is** the budget; there is no second,
+non-clock budget anywhere in the entry.
+
+F-092's argument — *"a leg that ran out of CLOCK is not a leg that ran out of BUDGET"* — has no
+support in either document. Its D-024 citation transposes an argument about the **attempt**
+ceiling onto the **wall-clock** ceiling. D-024's excluded reason is `attempt_cap_reached`, and
+the sentence F-092 leans on says the opposite of what it was cited for:
+
+> *"D-005 calls the cap 'a safety ceiling, not a promise', which is a different fact from **a leg
+> that ran out of clock**."*
+
+D-024 uses *"a leg that ran out of clock"* as the thing `OPERATIONAL_TERMINATION_REASONS`
+already covers, in order to exclude the attempt cap from it. It never says a clock-exhausted leg
+should be `operation_timeout`.
+
+The measured rows are arithmetically correct under that reading. Replayed through the current
+classifier (`evidence/g11/F-092/01-replay-classify.json`):
+
+```
+classify_child_kill(elapsed=1800.26, leg_timeout=1800)  -> 'budget_exhausted'   == recorded
+classify_child_kill(elapsed=1800.37, leg_timeout=1800)  -> 'budget_exhausted'   == recorded
+classify_child_kill(elapsed=1800.30, leg_timeout=1800)  -> 'budget_exhausted'   == recorded
+```
+
+All three children ran to the ceiling. `deadline.classify_child_kill` (`deadline.py:553-566`) is
+not a constant: `tests/test_deadline_leg_timeout.py:74-75` pins `_row(400.0)` →
+`OPERATION_TIMEOUT`, so the OUTER path **does** emit `operation_timeout` — for a child killed
+while leg budget remained, which is what the contract says that reason means, and which did not
+happen on any of these six legs.
+
+**Adopting F-092's remedy would relabel every ceiling kill as `operation_timeout`, contradict
+`PRODUCT_CONTRACT.md:260`, contradict D-005's *"record `budget_exhausted`"*, and break a green
+committed test.** Defect 2 is a `policy_disagreement` with the locked vocabulary, and the sprint
+rule that only `product_contract_violation` justifies code applies directly. **No code.**
+
+### Defect 3 REPRODUCES — and it is the entire explanation of defect 1
+
+`driver._finalize_timeout` classifies correctly and then the row throws the answer away.
+
+```
+driver.py:1730   outcome.termination_reason        = classify_interaction_timeout(detail, explicit=reason)
+driver.py:1731   outcome.termination_is_operational = is_operational(outcome.termination_reason)
+
+driver.py:684-710  RunOutcome dataclass fields  -> neither name is declared
+driver.py:746-781  RunOutcome.to_dict()         -> neither name is emitted
+```
+
+Behavioural replay at the tip, feeding back the **stored T-105 strict `detail` string**:
+
+```
+detail = 'AppTest script run timed out after 471.9942160999999(s)'
+outcome.termination_reason         = 'operation_timeout'
+outcome.termination_is_operational = True
+to_dict() keys = [counts, detail, failure_kind, files, issue_codes, message,
+                  mode, paper_id, seconds, stage, status, warnings]
+'termination_reason' in row  = False
+```
+
+**`operation_timeout` WAS computed on the T-105 strict leg and was discarded by the serializer.**
+That is the whole of defect 1: `operation_timeout` is absent from every run directory not because
+the vocabulary is unused, but because the one path that produced it cannot write it down.
+
+This violates `PRODUCT_CONTRACT.md` § 9 *"On timeout or budget exhaustion, preserve … elapsed and
+remaining budget · the next recovery step that was skipped · **the exact stop reason**."* The
+INNER row preserves neither the stop reason nor the budget. Class: **`product_contract_violation`**.
+
+**It is deliberate, not an oversight, and it is actively pinned green.** `_finalize_timeout`'s own
+docstring says so — *"Nothing is added to `RunOutcome.to_dict` — that would edit `RunOutcome`,
+outside this card's boundary"* — and C-032 shipped a test that asserts the absence:
+
+```python
+# tests/test_deadline_leg_timeout.py:125-135
+def test_a_driver_timeout_keeps_its_row_byte_identical() -> None:
+    """Preservation: the classification is an attribute, never a manifest field.
+    The golden driver diff hashes ``RunOutcome.to_dict()``; a new key here would
+    move the pinned ``input_timeout`` leg."""
+    row = _timed_out("app.run() timed out after 45s").to_dict()
+    assert "termination_reason" not in row and "release_status" not in row
+```
+
+That file is 7/7 green at the tip. Any fix must **invert** this assertion as a declared baseline
+move under merge rule 4, not quietly delete it.
+
+**Nothing downstream reads the field.** `git grep termination_reason operational_failure --
+src/t2pw/batch/report.py src/t2pw/bench` returns zero hits. The absence moves no acceptance
+number, no denominator and no release status. It costs the manifest its § 9 completeness — which
+is a real contract violation and worth one small card — but it costs T-106 nothing.
+
+### The `"produced nothing"` string — the string is real, the objection to it is not
+
+`src/t2pw/batch/runner.py:958` hard-codes the phrase, and it is emitted for every OUTER-killed leg
+regardless of that leg's output. So T-101 acceptance clause 1 (*"no leg reports 'produced
+nothing'"*) does grep a string literal rather than a state, and that observation stands.
+
+**But F-092's grounds for calling the phrase false do not survive measurement.** The entry states
+*"the strict leg wrote `extraction_boundary_report.json` and `stage0_attempts.json` before it was
+killed, so 'produced nothing' is **false as written**."* An artifact census says otherwise:
+
+```
+runs_verify/2026-08-21_1822/papers/PMC12444477/   (T-101)  strict/RESULT.txt   research/RESULT.txt
+runs_verify/2026-08-21_2239/papers/PMC12444477/   (T-104)  strict/RESULT.txt   research/RESULT.txt
+runs_verify/2026-08-22_2147/papers/PMC12444477/   (T-105)  research/RESULT.txt
+                                                           strict/  cleaning_report.json
+                                                                    extraction_boundary_report.json
+                                                                    merged_payload.json
+                                                                    rag_admission_report.json
+                                                                    stage0_attempts.json
+                                                                    stage1_payload.json
+```
+
+Those two files exist **only at T-105**, and only for the **strict** leg — the one leg that took
+the **INNER** path and therefore **never emits the phrase at all** (its message is *"audit and DB
+mapping did not finish inside the time budget"*). Every leg that does emit *"produced nothing"*
+carries `files: []` on its row and nothing but `RESULT.txt` on disk, because the parent never
+receives the child's `outcome.artifacts`. **On all six observed legs the phrase is true as
+written.**
+
+**There is also no message/detail self-contradiction.** `message` says *"produced nothing"*;
+`detail` says *"nothing about this paper was judged"*. Those agree — one is about artifacts, the
+other about the biological verdict, and both are correct. There is nothing here to fix in
+`runner.py`.
+
+What remains is a **measurement-criterion** question that belongs to whoever writes T-106's
+acceptance, not to the runner: clause 1 should assert *"no leg silently yields an empty artifact
+set"* rather than grepping for a phrase. `policy_disagreement`. **No code.**
+
+### T-106 verdict: DOES NOT BLOCK
+
+1. The only surviving defect writes nothing any scorer reads — zero hits in `bench/**` and
+   `batch/report.py`.
+2. It cannot move a T-106 number in either direction, so fixing it first buys no measurement.
+3. Its fix lands in `src/t2pw/batch/driver.py`, the file every leg of the RC runs through, and
+   must re-baseline a SHA-256 golden. Editing that file and re-capturing that golden immediately
+   before a 20-leg run is pure downside — the same reasoning F-106 applied to `streamlit_app.py`.
+4. T-106 will re-run PMC12444477 under the same 1800 s ceiling and will observe the seam again for
+   free. If a live confirmation of the INNER path is ever wanted, take it from there.
+
+**No card is opened here.**
+
+### If it is ever carded — the boundary, and why it is not disjoint today
+
+**Function-level the fix is disjoint from C-077; file-level it is not.**
+
+| Would change | Why |
+|---|---|
+| `src/t2pw/batch/driver.py` :: `RunOutcome` fields (`:684-710`) | declare `termination_reason: str = ""`, `termination_is_operational: bool = False` |
+| `src/t2pw/batch/driver.py` :: `RunOutcome.to_dict` (`:746-781`) | emit both **conditionally**, in the existing `if self.scope_conflicts:` style |
+| `tests/test_deadline_leg_timeout.py` (`:125-135`) | **invert** the pin, with the docstring rewritten to say why |
+| `tests/test_batch_driver_seam_golden.py` :: `GOLDEN` | re-baseline **one slot**, `input_timeout` |
+
+`src/t2pw/batch/driver.py` is on C-077's ownership table (`prompts/C-077.md:173`), and C-077 is
+dispatched in a worktree at `129d9b2`. Its function boundary there is `_reconcile_stage0_scope`
+only, so the two edits do not touch the same lines — but they are the same file on two live
+branches, which is a merge collision the sprint sequences rather than races. `src/t2pw/batch/runner.py`
+is explicitly **out** of C-077's bounds (`prompts/C-077.md:189`, *"owned by C-032"*), so the runner
+side is free — and, per the section above, the runner side needs no change.
+
+**Sequence it after C-077 merges and after T-106.** Nothing is lost by waiting.
+
+**Deliberately excluded from that boundary:** the `budget` record. § 9 also asks for *"elapsed and
+remaining budget"*, which the INNER row lacks, but `_finalize_timeout` has no `_Budget` in scope —
+supplying one means a new parameter threaded through all five call sites (`driver.py:2009, 2043,
+2069, 2171, 2394`). That is a wider change than the stop reason and should be judged separately.
+
+**Do not widen `OPERATIONAL_TERMINATION_REASONS`, and do not touch `classify_child_kill`.**
+F-092's original warning against the first is right and is reaffirmed. The second is new: the
+OUTER classification is **correct** and the only remaining fix is a serialization gap on the INNER
+path.
+
+---
+
+## F-107 — D-062's literal `review_required` is not constructible at the seam D-062 describes
+
+- **Severity** MEDIUM · **Class `policy_disagreement`** — it needs a product ruling, not a code fix
+- **Registered 2026-08-23 by the Lead Orchestrator**, surfaced by the C-077 implementer and
+  independently verified before registration. **Does NOT block T-106.**
+- **C-077 is not defective for this.** It delivered the honest disposition available at the seam and
+  escalated the rest rather than fabricating a measurement.
+
+### The ruling, and what the seam can actually support
+
+**D-062** (LOCKED, 2026-08-22) says a Stage-0 organism conflict preserves the extracted pathway
+**"as `review_required`, carrying the OBSERVED organism"**.
+
+`review_required` cannot be constructed where the conflict is detected. Two independent reasons,
+both verified against current source rather than taken from the implementer's report:
+
+1. **`classify_release_status` pins the status before any `REVIEW_REQUIRED` branch is reachable.**
+   `pipeline/release_status.py:641-660` is one `elif` chain, and its second arm is
+
+   ```python
+   elif not strict_gates_passed:
+       status = DIAGNOSTIC_ONLY
+       reasons.append(REASON_STRICT_GATES_BLOCKED)
+   ```
+
+   All five `status = REVIEW_REQUIRED` sites (`:651, :658, :694, :731, :818`) sit below it. The
+   strict technical gates never ran at this seam — the conflict aborts at `driver.py:2130`, step 3b,
+   before audit, DB mapping, freeze and export. Passing `strict_gates_passed=True` to reach
+   `review_required` would **fabricate a measurement**, which is the exact defect class
+   `_finalize_gate_failure`'s F-055 docstring exists to prevent.
+
+2. **`PRODUCT_CONTRACT` §4 defines `review_required` as "Valid, useful PWML *produced*"**, and
+   `ReleaseStatus.produced_pwml` encodes it. No PWML exists at this seam and none can. Measured: not
+   one of the six committed T-105 conflict legs holds a `.pwml` of any name.
+
+`PRODUCT_CONTRACT.md` **outranks any test, benchmark result or inference from the code**. It does
+not obviously outrank a locked product ruling, and that collision is what this finding records.
+
+### The third option, and why it was not taken in a card
+
+Delivering D-062's literal wording requires driving the run onward — audit → DB mapping → freeze →
+export — under an organism **known to be wrong**, emitting `pathway.review_required.pwml`
+(`driver.py:1423`).
+
+That is a **new product decision nobody has taken**. What an audit and a DB mapping should do when
+the organism is known wrong is settled nowhere in the contract or the decision log. It is also the
+one shape that could accidentally produce the strict export D-062 forbids outright. The Lead
+Orchestrator is not authorised to take it, so C-077 was scoped to the disposition and this was
+escalated.
+
+### What C-077 shipped instead, and why it is the lesser inexactness
+
+`diagnostic_only` with an explicit reason,
+`stage0_scope_conflict_stopped_the_run_before_serialization`, plus `requested_scope` beside
+`observed_context` on the manifest row.
+
+Note this is **also** inexact: `PRODUCT_CONTRACT` §4's gloss on `diagnostic_only` is *"recovery and
+retrieval could not establish a defensible pathway core"*, and that is untrue on these legs — at
+T-104, PMC12421875 reached a connected core of 10 against the gold's own floor of 7, with 8/8
+enzyme and 10/10 metabolite recall. The reason constant is worded to disclaim it, following the
+precedent `_finalize_gate_failure` already set for reading `diagnostic_only` as *"a statement about
+SERIALIZATION, not about the biology"*.
+
+**Both candidate states are inexact. `diagnostic_only` is the one already precedented for a stopped
+run and the only one that cannot fabricate a gate result.**
+
+### The real gap
+
+`PRODUCT_CONTRACT` §4 has **no state for "a defensible core was extracted but never serialized
+because a scope guard correctly stopped the run."** D-062 assumed one existed. Until the product
+owner rules, the conservative disposition stands.
+
+### What a ruling would need to settle
+
+1. Does the run continue to serialization under the OBSERVED organism, or does the record stay
+   pre-serialization?
+2. If it continues: what may the audit and the DB mapping do when the organism is known wrong, and
+   what stops that path from ever reaching a strict export?
+3. Or: does `PRODUCT_CONTRACT` §4 gain a fourth state for a defensible-but-unserialized core?
+4. D-062's own explicitly-left-open question should be settled in the same ruling — the gold's
+   `expected_export: strict_exportable` for `PMC12657337` and `PMC12421875` was never reconciled
+   with the ruling, and neither paper counts as a strict-export success until it is.
+
+### Why it does not block T-106
+
+The harm D-062 names is a completed extraction being recorded as *"nothing was attempted"*
+(`eligibility.py:123-131`, `report.py:76-81`). C-077 closes exactly that: the row now carries
+`release_status.pipeline_executed: true`, which is the machine-readable refutation, plus both the
+requested and observed scope in separate fields. The six T-106 conflict legs will be classified
+truthfully whichever way this is later ruled. What remains open is **which** truthful classification
+they get, not whether they get one.
+
+---
+
+## F-108 — the rejected within-kind accession rule also lives in the PRODUCTION release gate, not only the acceptance scorer
+
+- **Severity** HIGH · **Class `product_contract_violation`**
+- **Registered 2026-08-23 by the Lead Orchestrator**, disclosed by the C-076 implementer as outside
+  its ownership boundary and **independently verified before registration**.
+- **Widens F-102.** F-102 was registered as *"the pipeline now follows D-035; the scorer does not."*
+  Measured, that is only half true: the **identity admission** layer follows D-035 after C-073, but
+  the **semantic release gate** does not.
+- **Carded as C-080.** Evidence: `evidence/g11/F-094/01-reopen-probe.json`, `02-reopen-probe2.json`.
+
+### The second copy
+
+`src/t2pw/bench/semantic_production.py:252-260`, inside `_audit_entities`:
+
+```python
+for (namespace, accession), names in sorted(holders.items()):
+    distinct = sorted({_s.normalize_name(n) for n in names if n})
+    if len(distinct) > 1:
+        conflicts.append({
+            "kind": "accession_claimed_by_multiple_entities", ...
+            "reason": f"{namespace}:{accession} is claimed by {len(distinct)} differently-named entities",
+        })
+```
+
+**No kind check of any sort.** Any accession answering to two differently-*named* rows is a
+conflict — which is exactly the predicate C-073's review **rejected** as contradicting **D-035
+clause 3c**, and exactly what the product owner's 2026-08-23 identity ruling forbids flagging.
+
+This is not the benchmark scorer. It feeds `CheckResult(name=_s.CHECK_ID_CONFLICT, ...)`, and:
+
+* `bench/semantic.py:98` — `CHECK_ID_CONFLICT = "no_real_id_or_name_conflict"`;
+* `pipeline/release_status.py:114-119` — that name is a member of `SEMANTIC_GATING_CHECKS`;
+* `pipeline/strict_quarantine.py:2424` imports `evaluate_production_semantics` — **the production
+  release path**.
+
+So it gates real runs. C-076 corrects `bench/semantic.py` only, so after C-076 the two seams
+**disagree**: the acceptance scorer says these are not conflicts and the production gate still says
+they are.
+
+### It is demonstrably firing on real legs
+
+From the committed `quarantine_report.json` files — `release.semantic_failed_checks`:
+
+| run | leg | recorded status | failed gating checks |
+|---|---|---|---|
+| T-105 `2026-08-22_2147` | `PMC12096016/research` | `review_required` | `no_real_id_or_name_conflict`, `actor_named_in_its_own_cited_span` |
+| T-105 `2026-08-22_2147` | `PMC12452463/strict` | `review_required` | **`no_real_id_or_name_conflict` — sole failing check** |
+| T-104 `2026-08-21_2239` | `PMC12856317/research` | `review_required` | **`no_real_id_or_name_conflict` — sole failing check** |
+
+`PMC12096016`'s collisions were measured by C-076 to be `uniprot:P0ADI4` ← `EntB` / `holo-EntB` and
+`uniprot:P10378` ← `EntE` / `enterobactin synthase`, **all four claimants in `entities.proteins`** —
+i.e. precisely the within-kind case the ruling says must stop being a conflict.
+
+### Correcting it does NOT reopen F-094 — measured, because the risk was real
+
+`PMC12452463/strict` is F-094's leg, and F-094 is a `PRODUCT_CONTRACT` §13 violation. Its recorded
+coverage verdict is `minimum_core_satisfied: true`, `coverage_ratio: 0.785714`,
+`surviving_processes: 9`, `reasons: []` — so the technical chain reaches `release_ready` and **only
+the semantic cap demoted it**. That made "correcting this rule reopens F-094" a live hazard, and it
+had to be settled before the card was written rather than after.
+
+Settled by deterministic offline replay of `classify_release_status` using each leg's own recorded
+coverage verdict and semantic fields, toggling only whether `no_real_id_or_name_conflict` is among
+the failed checks. The replay reproduces all three recorded statuses exactly before the toggle,
+which is what makes the counterfactual trustworthy:
+
+| leg | as recorded | with the within-kind rule corrected | why it still holds |
+|---|---|---|---|
+| `PMC12452463/strict` | `review_required` | **`review_required`** | `requested_core_anchors_unmatched: 2,3-dihydroxybenzoate (DHB), EntA, Fur` — **C-072's rule, firing independently** |
+| `PMC12096016/research` | `review_required` | **`review_required`** | `semantic_evaluation_failed: actor_named_in_its_own_cited_span` |
+| `PMC12856317/research` | `review_required` | **`review_required`** | `requested_core_anchors_unmatched: hemin` |
+
+**No leg flips to `release_ready`. `strict_acceptance_eligible` stays `False` on all three.**
+F-094 stays closed by C-072's own mechanism, which is independent of the semantic cap. Correcting
+this rule raises the strict PWML rate by **zero** on all 22 committed legs, so it cannot be a case
+of weakening a gate to increase PWML production (merge rule 6).
+
+### What must be predicted for T-106, not discovered
+
+On T-106's draws a leg could fail **only** the within-kind check **and** have all its declared
+anchors matched. Such a leg would legitimately become `release_ready` under the ruling. That is the
+correct outcome, not a regression — but it must be predicted before the run and classified
+deliberately afterwards, never quoted as an unexplained strict-rate improvement.
+
+### Blocks T-106
+
+**Yes.** It gates real legs on a rule the product owner has ruled invalid, and leaving it means
+T-106's release path and its acceptance scorer measure two different things — which is precisely
+the condition that made T-105 unquotable on this axis.
