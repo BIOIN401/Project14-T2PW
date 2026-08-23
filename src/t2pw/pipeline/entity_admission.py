@@ -439,10 +439,17 @@ def screen_additions(
     * A6 (``test_entity_admission.py::test_new_acceptance_a6_the_gate_only_ever_subtracts``)
       requires that this function add no top-level payload key. The index IS such
       a key -- the one addition C-073 charters -- so it is written only when a
-      caller explicitly asks for it by name. No caller does today, so A6's
-      property holds unchanged for every existing call site, and wiring
-      ``source_text=`` at a merge site is a deliberate, visible decision rather
-      than something that happens to a caller that passed ``seed_text``.
+      caller explicitly asks for it by name, and wiring ``source_text=`` at a
+      merge site is a deliberate, visible decision rather than something that
+      happens to a caller that passed ``seed_text``.
+
+      C-075 armed exactly one such caller: the Stage-2 merge, which forwards the
+      paper through ``pipeline.merge_additions(source_text=...)``. Every OTHER
+      call site -- the QA feedback loop at ``pipeline.py:732``, the RAG merge,
+      ``interactive_curator``, and A6's own inputs -- still supplies none and is
+      byte-for-byte what it was, so A6's property is unchanged where A6 tests it.
+      A6 is a statement about what this function does with the arguments it is
+      GIVEN, and it passes none; arming a different call site cannot move it.
     """
     ledger: Dict[str, Any] = {
         "schema_version": SCHEMA_VERSION, "removed": [], "demoted": [],

@@ -1,0 +1,88 @@
+{
+  "label": "c075-focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-075/01-c075-focused.pin.json",
+    "-q",
+    "--basetemp=C:/t/tmp75/f1",
+    "tests/test_c075_source_support_armed.py"
+  ],
+  "cwd": "C:\\t\\c075",
+  "started_at": "2026-08-23T17:58:26+00:00",
+  "finished_at": "2026-08-23T17:58:29+00:00",
+  "duration_seconds": 2.872447000001557,
+  "timeout_seconds": 900.0,
+  "root_pid": 246400,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 246488,
+      "name": "python.exe",
+      "ppid": 246400
+    }
+  ],
+  "descendants_terminated": [
+    246488
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 11212,
+      "name": "python.exe"
+    },
+    {
+      "pid": 23400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 243840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 246516,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-075/01-c075-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c075\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c075",
+    "repo_head": "9cb491c9867a254c7dbf29bdbb01789803680ef9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-075",
+    "token": "C-075:243840:da93edfa46fa18a9",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
