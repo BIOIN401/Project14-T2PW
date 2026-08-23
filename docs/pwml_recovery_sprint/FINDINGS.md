@@ -5398,3 +5398,96 @@ deliberately afterwards, never quoted as an unexplained strict-rate improvement.
 **Yes.** It gates real legs on a rule the product owner has ruled invalid, and leaving it means
 T-106's release path and its acceptance scorer measure two different things — which is precisely
 the condition that made T-105 unquotable on this axis.
+
+---
+
+## F-109 — `TEST_MATRIX` § 0 rule 10 explicitly REFUSES `pythonpath = src`, and `pytest.ini` has carried it since C-070
+
+- **Severity** MEDIUM · **Class `control_plane_contradiction`** — a merge-gate document forbids, in
+  terms, something the tree it governs has been doing for many cards.
+- **Registered 2026-08-23 by the Lead Orchestrator**, surfaced by the C-079 implementer and
+  **verified directly before registration.** **Does NOT block T-106** — see the mitigation below.
+- **Not chargeable to C-079 or to C-070.** Neither introduced a defect; the two were written
+  without knowledge of each other.
+
+### The contradiction, both halves quoted
+
+`docs/pwml_recovery_sprint/TEST_MATRIX.md:101-110`, inside rule 10:
+
+> **`PYTHONPATH` is not evidence and a printed path is not evidence.** The venv's editable `.pth`
+> names the primary checkout's `src`, `pytest.ini` sets **no** `pythonpath` and there is no
+> `conftest.py` […] `pytest.ini` **must not** gain `pythonpath = src`: it was considered as a remedy
+> for F-003 and is **refused**, because pytest *prepends* those entries, so it would sit ahead of the
+> `PYTHONPATH` pin and **make every base-tree G9 proof silently measure the tip** — the same defect
+> class as F-003, aimed at the proofs themselves.
+
+`pytest.ini:1-8` at the current tip:
+
+```ini
+[pytest]
+testpaths = tests
+# F-066 / C-070. Resolved relative to rootdir and prepended to sys.path at config time,
+# before any collection. Without it a test file could only import t2pw when some file
+# collected earlier in the same run had already inserted src itself, so 21 of the 156
+# test files failed collection when run on their own while every multi-file chunk
+# stayed green. Not an editable install: nothing here mutates .venv.
+pythonpath = src
+```
+
+Added by **C-070** at `5bc600e` (*"a test file collects on its own, and no pinned count moves"*), for
+a real and unrelated defect: 21 of 156 test files could not be collected individually. Its own
+rationale comment is sound. It simply landed a remedy another document had already refused, and
+neither side was updated.
+
+### Why the stated hazard did NOT materialise
+
+The prohibition's reasoning is about `sys.path` **ordering**: a prepended `pythonpath` sitting ahead
+of a `PYTHONPATH` pin. Two things blunt it.
+
+1. **`pythonpath` is resolved relative to `rootdir`, not to the primary checkout.** A pytest run
+   whose `rootdir` is the base worktree resolves `src` to *that tree's own* `src`. The hazard is
+   real only when pytest is invoked with a rootdir in one tree and the intent to measure another.
+2. **Rule 10's own operative control is the resolved-path pin, not the prohibition.** The same rule
+   says: *"Only the **resolved** path, compared against the expected tree and written to a committed
+   verdict, settles which tree was measured."* That is `evidence/pinned_pytest.py` with
+   `--expect-tree` / `--pin-verdict`, and it asserts the resolved `t2pw.__file__` rather than trusting
+   any path variable. **It catches exactly the failure the prohibition was written to prevent.**
+
+### Audited: every base-tree G9 proof of this session was pinned
+
+| card | base proof | pin verdict |
+|---|---|---|
+| C-076 | reviewer's own base run | `t2pw` resolved in `C:\t\rv076b\src` |
+| C-077 | implementer + reviewer, both sides | `tree=C:\t\c077base`, `violations: []` |
+| C-078 | three base runs | pinned to `C:\t\c078base` / `C:\t\c078b2`, `violations: []` |
+| C-079 | base run of the committed test file | `expected_tree: C:\t\c079base`, `violations: []` |
+
+**Every one carries a committed verdict with `violations: []`.** No G9 proof in this correction wave
+rests on an unpinned run, so none is retroactively in doubt. The sprint's own mitigation held while
+the document that describes it had gone stale.
+
+### What needs deciding, and by whom
+
+One of two things is true and the doc owner must say which:
+
+1. **The prohibition is superseded.** The resolved-path pin makes the `pythonpath` ordering hazard
+   moot, C-070's collection fix is worth keeping, and rule 10's two sentences should be rewritten to
+   say so — stating that `pythonpath = src` is present, why it is safe, and that the pin is the
+   control.
+2. **The prohibition still stands.** Then `pytest.ini:8` must be removed and C-070's collection
+   defect solved another way, and every card merged since `5bc600e` whose G9 proof ran unpinned
+   would need re-examination.
+
+**Option 1 is the reading the evidence supports**, but the decision is the doc owner's, not the
+orchestrator's — rule 10 is a merge gate and rewriting a gate to match the code is exactly the move
+the sprint forbids doing unilaterally.
+
+### Why it does not block T-106
+
+T-106 is a benchmark run, not a G9 proof. It executes no base-vs-tip comparison and depends on
+neither the prohibition nor `pythonpath`. The correction-wave proofs it rests on are all pinned and
+audited above.
+
+**Standing instruction until this is ruled on:** every base-tree measurement continues to run
+through `pinned_pytest.py` with `--expect-tree` and a committed `--pin-verdict`. An unpinned base
+run is not evidence, regardless of which way rule 10 is eventually resolved.
