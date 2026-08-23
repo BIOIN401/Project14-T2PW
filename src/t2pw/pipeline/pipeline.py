@@ -1152,6 +1152,7 @@ def merge_additions(
     inference_additions: Dict[str, Any],
     *,
     seed_text: str = "",
+    source_text: str = "",
     rag_admission_report: Optional[Dict[str, Any]] = None,
     pathway_context: Optional[Any] = None,
 ) -> Dict[str, Any]:
@@ -1171,10 +1172,30 @@ def merge_additions(
     ``apply_post_merge_cleanup`` — so no exporter is repairing biology after the
     canonical graph is frozen (merge rule 8).
 
-    The three keyword arguments are the gate's evidence base, and each is inert
-    when absent: without ``seed_text`` the hallucination rule is not evaluated
-    (and "not evaluated" is never "false"), and without ``pathway_context`` the
+    The keyword arguments are the gate's evidence base, and each is inert when
+    absent: without ``seed_text`` the hallucination rule is not evaluated (and
+    "not evaluated" is never "false"), and without ``pathway_context`` the
     advisory phase abstains. Existing callers are unaffected.
+
+    ``source_text`` (C-075) is the SEED PAPER, forwarded so that
+    ``screen_additions`` — the last point in the pipeline that still holds the
+    paper — can leave its normalized source index on the merged payload for
+    Stage 2's identity-admission pass to read. It is forwarded and nothing more:
+    every decision made with it belongs to ``entity_admission`` and
+    ``map_ids._admit_identities``, and this function neither reads the index nor
+    acts on it.
+
+    It is DELIBERATELY SEPARATE from ``seed_text`` and must never be derived from
+    it here. ``seed_text`` is the ``_unlocatable`` evidence-span REMOVAL rule's
+    only input, and both production merge sites withhold it on purpose
+    (``pipeline.py:726-731`` calls arming it "a pinned-baseline move, not
+    wiring"); coupling the two would arm a removal rule as a side effect of
+    supplying identity evidence. The default ``""`` keeps every existing caller —
+    the QA feedback loop above, the RAG leg's second merge, and every test — byte
+    for byte what it was: no ``source_text`` means no index, which means Stage 2
+    answers ``not_evaluated``, never ``unsupported`` (PRODUCT_CONTRACT § 8). A
+    RAG leg still carries the index, because the second merge's ``base`` is the
+    first merge's output and ``deepcopy`` brings the key with it.
     """
     merged = deepcopy(base)
     inference_additions = clean_inference_output(inference_additions or {})
@@ -1219,6 +1240,7 @@ def merge_additions(
     merged, admission_ledger = screen_additions(
         merged,
         seed_text=seed_text,
+        source_text=source_text,
         admission_report=rag_admission_report,
         context=pathway_context,
     )

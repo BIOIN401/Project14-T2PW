@@ -10,10 +10,37 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.llm.client import PROVIDER, chat
+from t2pw.mapping import identity_admission
 from t2pw.pipeline.process_normalizer import validate_no_composites, validate_registry_references
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 logger = logging.getLogger(__name__)
+
+#: C-075. Top-level payload keys the audit PROMPT never needs, removed from the
+#: SERIALIZED COPY only. Nothing here is removed from the payload itself: the
+#: index has to survive the audit round trip, because the AUTHORITATIVE mapping
+#: run happens AFTER the audit (``streamlit_app.py:4225``) and a payload that
+#: reached it without an index would fail open and withhold nothing.
+#:
+#: WHY IT EXISTS. Arming C-075's source-support pass puts a normalized copy of
+#: the whole paper on ``final_payload`` at the Stage-2 merge, and the audit loop
+#: json.dumps THE ENTIRE PAYLOAD into its user message (:func:`_build_llm_prompt`).
+#: Measured over the committed corpus that blob is ~56 KB per leg -- mean 56,404
+#: bytes against a mean source of 58,320 -- so every audit round of every leg
+#: would carry it, risking prompt truncation and degraded audit quality across
+#: the whole run. The auditor has no use for it: it judges STRUCTURE, and the
+#: paper is not part of the structure it patches.
+#:
+#: PATCH POINTERS ARE UNAFFECTED. RFC6901 pointers address object members by
+#: NAME, not by position, so dropping a top-level key shifts no pointer into
+#: ``entities`` or ``processes``. It also removes the possibility of the model
+#: proposing a patch AGAINST the index, which it could do while it could see it.
+#:
+#: Key-driven and additive: a payload carrying none of these keys is serialized
+#: by the same object it always was, so no existing prompt changes by one byte.
+PROMPT_OMITTED_PAYLOAD_KEYS: frozenset = frozenset({
+    identity_admission.SOURCE_INDEX_KEY,
+})
 
 SYSTEM_PROMPT = """You are a strict JSON auditor and repair planner for PWML-like pathway payloads.
 Your job is to produce a safe, minimal patch plan that improves SBML conversion readiness.
@@ -1266,6 +1293,29 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
     return issues, patch_ops
 
 
+def payload_for_prompt(payload: Any) -> Any:
+    """The payload as the auditor should SEE it: itself, minus what it cannot use.
+
+    A shallow filtered copy, and only when there is something to filter -- the
+    caller's payload is never mutated and never rebuilt, so the object that
+    travels on to the patch application, the curator and the authoritative
+    mapping run is exactly the object that arrived. See
+    :data:`PROMPT_OMITTED_PAYLOAD_KEYS` for why the source index is on that list
+    and why removing it here cannot move an RFC6901 pointer.
+
+    Total: a non-dict is returned unchanged, because ``audit_payload`` already
+    refused one and this must not be the second place that decides.
+    """
+    if not isinstance(payload, dict):
+        return payload
+    if not any(key in payload for key in PROMPT_OMITTED_PAYLOAD_KEYS):
+        return payload
+    return {
+        key: value for key, value in payload.items()
+        if key not in PROMPT_OMITTED_PAYLOAD_KEYS
+    }
+
+
 def _build_llm_prompt(
     payload: Dict[str, Any],
     *,
@@ -1274,7 +1324,7 @@ def _build_llm_prompt(
     locked_reaction_indices: Optional[set] = None,
     locked_manifest: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
-    payload_str = json.dumps(payload, indent=2, ensure_ascii=False)
+    payload_str = json.dumps(payload_for_prompt(payload), indent=2, ensure_ascii=False)
     note = (context_note or "").strip()
     references = (retrieval_context or "").strip()
 

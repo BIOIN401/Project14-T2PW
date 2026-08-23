@@ -146,16 +146,32 @@ def _f1_payload() -> dict:
     }
 
 
+#: The app's local name for the seed paper at both merge sites
+#: (``streamlit_app.py:5679`` stores it as ``pipeline_source_text``). C-075 armed
+#: ``merge_additions(source_text=...)`` at the Stage-2 site, so the lifted
+#: statement now references this name and the exec namespace has to carry it or
+#: every arm below dies with ``NameError`` before reaching its assertion.
+#:
+#: EMPTY ON PURPOSE, and this is the only thing that changed in this file. This
+#: instrument owns C-060a's ``pathway_context`` wiring; supplying a paper here
+#: would arm ANOTHER card's rule inside it and change the gate's evidence base
+#: out from under the properties below. With ``""`` the gate writes no index and
+#: behaves exactly as C-060a pinned it. No assertion in this file was touched.
+APP_SOURCE_TEXT = ""
+
+
 def _stage_two_site(base, additions, ctx=ENTEROBACTIN_CTX):
     return _run_app_site(0, {
         "merge_additions": merge_additions, "stage_one_in_scope": base,
-        "stage_two": additions, "pathway_context": dict(ctx)})["final_payload"]
+        "stage_two": additions, "pathway_context": dict(ctx),
+        "text": APP_SOURCE_TEXT})["final_payload"]
 
 
 def _rag_site(base, envelope, ctx=ENTEROBACTIN_CTX):
     return _run_app_site(1, {
         "merge_additions": merge_additions, "final_payload": base,
-        "rag_envelope": envelope, "pathway_context": dict(ctx)})["merged"]
+        "rag_envelope": envelope, "pathway_context": dict(ctx),
+        "text": APP_SOURCE_TEXT})["merged"]
 
 
 def _names(payload, bucket="compounds"):

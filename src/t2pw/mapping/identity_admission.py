@@ -60,6 +60,36 @@ enough to look for is ``not_evaluated`` -- and PRODUCT_CONTRACT section 8's
 given no evidence about, which is what keeps unit tests, the
 ``interactive_curator`` path and every legacy payload behaving exactly as before.
 
+C-075 -- WHAT ARMING IT IN PRODUCTION REQUIRED
+----------------------------------------------
+C-073 shipped this module dormant: no production caller supplied the paper, so
+the answer was ``not_evaluated`` everywhere and the 1-catch / 0-collateral figure
+was measured on ONE run (2026-08-21_2239, 102 eligible rows). Replayed over all
+**70** committed ``final_mapped.json`` artifacts against their own
+``01_source_text.txt`` -- 678 eligible rows -- the same predicate refuses **39**,
+and only 3 of those are hallucinations. The product owner's ruling of 2026-08-23
+names both of the missing routes by name, and each is implemented above as a
+strictly ADDITIVE clause that can only KEEP an accession:
+
+* "**or another permitted provenance route**" -> :func:`provenance_route`
+  rescues **32**. 30 of them were imported from a NAMED other document
+  (``PlsB`` / ``uniprot:P0A7A7`` / ``rag_provenance.source_id = PMC12898747``);
+  the seed paper is not their evidence base, so they are ``not_evaluated``. The
+  other 2 declare ``source_id = "seed_paper"`` and still abstain -- see
+  :data:`SELF_REFERENTIAL_ROUTE_SOURCE`, which explains why that is the right
+  answer and why the route's VALUE is not what excuses them.
+* "**a proven alias**", "**legitimate aliases must retain valid mappings**" ->
+  :meth:`SourceIndex.names_in_one_span` rescues **4**: alias/format misses whose
+  variant sits on the PAPER's side rather than in the row's own ``synonyms``.
+
+The two clauses are disjoint here -- the names are looked for before the route is
+consulted, so a row the span clause finds never reaches the route -- and 32 + 4
+is the whole of the 36.
+
+What survives is 3: ``succinyl-CoA`` on two PMC12180156 legs and
+``protoporphyrin IX`` on a third -- names with ZERO occurrences in a 67,553-
+character paper, carrying no retrieval route. Collateral over 678 rows: 0.
+
 Pure, offline, deterministic: no LLM, no network, no database, no clock, no I/O,
 no mutation of anything the caller owns.
 """
@@ -84,8 +114,12 @@ __all__ = [
     "NOT_EVALUATED_NO_INDEX",
     "NOT_EVALUATED_EMPTY_INDEX",
     "NOT_EVALUATED_NO_NAME",
+    "NOT_EVALUATED_OTHER_PROVENANCE",
     "MIN_SUPPORT_CHARS",
     "EXTERNAL_ACCESSION_KEYS",
+    "PROVENANCE_ROUTE_KEYS",
+    "SELF_REFERENTIAL_ROUTE_SOURCE",
+    "provenance_route",
     "SourceIndex",
     "normalize_text",
     "normalize_name_key",
@@ -139,6 +173,11 @@ NOT_EVALUATED_NO_INDEX = "no_source_index"
 NOT_EVALUATED_EMPTY_INDEX = "empty_source_index"
 NOT_EVALUATED_NO_NAME = "no_evaluable_name"
 
+#: C-075. The row was never claiming to come from the seed paper: it was imported
+#: through the retrieval route and NAMES the document it came from, so the seed
+#: paper is not its evidence base and this predicate has nothing to say about it.
+NOT_EVALUATED_OTHER_PROVENANCE = "identity_from_another_admitted_source"
+
 #: A one- or two-character match is a coincidence, not a citation: "Fe" occurs
 #: inside "ferrochelatase" and every third English word contains "am". A
 #: candidate shorter than this is not evidence in EITHER direction -- it cannot
@@ -155,6 +194,66 @@ EXTERNAL_ACCESSION_KEYS: frozenset = frozenset({
     "chemspider", "pathbank_compound_id", "pathbank_protein_id",
     "pathbank_protein_complex_id", "pathbank_complex_id",
 })
+
+#: C-075 / the product owner's ruling of 2026-08-23: an identifier may survive on
+#: "paper evidence, a proven alias, **or another permitted provenance route**".
+#: These are the row-level marks of that other route -- the RAG retrieval path,
+#: which imports an entity from a DIFFERENT, admitted document and records which
+#: one. They are the source-NAMING half of ``pipeline._RAG_ROW_CARRIER_KEYS``
+#: (``rag_provenance``, ``source_papers``, ``rag_confidence``).
+#:
+#: ``rag_confidence`` is excluded because it is a SCORE and names no source.
+#: ``source_refs`` is excluded because it is overloaded: on a RAG row it holds
+#: source ids, but on a Stage-1 row it holds evidence QUOTES. Measured, the
+#: ``succinyl-CoA`` row of
+#: ``runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json`` carries a
+#: ``source_refs`` quote ("ALAS synthesizes the non-proteinogenic dALA from
+#: succinyl-coenzyme A ...") that its own paper does not contain -- so reading
+#: ``source_refs`` as a route would walk the hallucination out through the door
+#: built for legitimate imports.
+PROVENANCE_ROUTE_KEYS: Tuple[str, ...] = ("rag_provenance", "source_papers")
+
+#: The ``rag_provenance.source_id`` a synthesized row carries when the chunk it
+#: was matched against came from the SEED PAPER's own text rather than from a
+#: retrieved second document.
+#:
+#: WHY THIS CONSTANT EXISTS AT ALL. It is never read. :func:`provenance_route`
+#: does not test it, and a row carrying it abstains exactly like any other routed
+#: row. It is here because that outcome is a DECISION and the reviewer was right
+#: that silence about it is the defect: read literally, the ruling's "another
+#: permitted provenance route" does not cover a route that names this very paper,
+#: so a reader is owed the reason the row abstains anyway.
+#:
+#: THE REASON, AND IT IS NOT THE VALUE. ``seed_paper`` is not a licence and
+#: nothing here treats it as one. What the route MARK establishes -- whichever
+#: chunk it points at -- is that the row's NAME was written by the RAG
+#: synthesizer, whose vocabulary is the pathway record's, not the paper's surface
+#: spelling. Both corpus rows show it directly: their ``source_title`` is a
+#: PATHWAY ("menaquinone biosynthesis", "lipid A modification (colistin
+#: resistance)"), not a paper title, and each offers exactly one candidate name
+#: and no synonyms.
+#:
+#:   ``α-ketoglutarate`` (``runs/2026-07-27_1623/.../PMC12312563/strict``, 9 real
+#:   accessions) -- that paper writes ``2-oxoglutarate`` 8 times and
+#:   ``ketoglutarate`` 0 times. Same molecule, other name.
+#:
+#:   ``pmrCAB operon`` (``runs/2026-07-28_0919/.../PMC13278307/strict``,
+#:   ``uniprot``) -- that paper writes ``pmrA`` 4 times and ``pmrCAB`` 0 times.
+#:   The operon whose regulator the paper discusses throughout.
+#:
+#: Both are SYNONYM MISSES, not hallucinations, and refusing them is exactly the
+#: collateral this card exists to avoid -- the same defect class as the four rows
+#: :meth:`SourceIndex.names_in_one_span` rescues, differing only in that no
+#: rewriting of the comparison could close them. So the conservative direction is
+#: the correct one, and it is the one this module takes everywhere else: an
+#: ambiguity resolves TOWARDS SUPPORT, and ``not_evaluated`` is not ``supported``
+#: -- the row keeps the accessions it already had and acquires nothing.
+#:
+#: What this is NOT: a way for a synthesized row to launder an identity. It
+#: withholds no refusal that the KIND rule (pass B) would make, which needs no
+#: index at all, and it cannot manufacture an accession, because this module only
+#: ever answers questions.
+SELF_REFERENTIAL_ROUTE_SOURCE = "seed_paper"
 
 #: Placeholder spellings that name no record: ``map_ids``'
 #: ``_is_real_protein_identifier`` list plus ``"0"``, because a PathBank scalar
@@ -199,6 +298,16 @@ def normalize_text(value: Any) -> str:
     return _WHITESPACE_RE.sub(" ", folded).strip()
 
 
+def _is_insignificant(token: str) -> bool:
+    """Whether a source token is material this module already refuses to treat as
+    evidence: shorter than :data:`MIN_SUPPORT_CHARS`, or a bare number.
+
+    Used only to decide what may sit BETWEEN two matched words of one name -- a
+    locant (``5``), a stereodescriptor (``sn``, ``l``, ``d``), a Greek letter.
+    """
+    return len(token) < MIN_SUPPORT_CHARS or token.isdigit()
+
+
 def normalize_name_key(value: Any) -> str:
     """Fold a name to a comparison key: normalized, then spaces removed.
 
@@ -219,28 +328,102 @@ class SourceIndex:
     cannot manufacture a refusal.
     """
 
-    __slots__ = ("normalized", "squashed", "length")
+    __slots__ = ("normalized", "squashed", "length", "_tokens", "_positions")
 
     def __init__(self, normalized: str, length: int = 0) -> None:
         self.normalized = normalized
         self.squashed = normalized.replace(" ", "")
         self.length = int(length)
+        # Derived on first use and never stored on the payload: the token view
+        # costs one pass over a string the payload already carries, so nothing
+        # about the artifact's size changes.
+        self._tokens: Optional[List[str]] = None
+        self._positions: Optional[Dict[str, List[int]]] = None
 
     def __bool__(self) -> bool:
         return bool(self.normalized)
 
+    def _token_view(self) -> Tuple[List[str], Dict[str, List[int]]]:
+        if self._tokens is None:
+            tokens = self.normalized.split()
+            positions: Dict[str, List[int]] = {}
+            for offset, token in enumerate(tokens):
+                positions.setdefault(token, []).append(offset)
+            self._tokens, self._positions = tokens, positions
+        return self._tokens, (self._positions or {})
+
+    def names_in_one_span(self, needle: str) -> bool:
+        """Whether the candidate's SIGNIFICANT words occur here, in order, in one
+        span, separated only by material that is not evidence in its own right.
+
+        This is the "proven alias" half of the ruling, read off the SOURCE side
+        instead of the row. The six alias cases C-073 measured were kept because
+        the ROW carried the variant spelling in its own ``synonyms``; a row that
+        carries none is not thereby unsupported, because the variation can sit on
+        the paper's side just as easily. Measured on the committed corpus, FOUR
+        rows are exactly that shape and every one of them is legitimate:
+
+        * ``pyridoxal phosphate`` (``runs_verify/2026-08-04_1504/.../PMC12856317``)
+          -- the paper writes "pyridoxal 5'-phosphate", which folds to
+          ``pyridoxal 5 phosphate``. One locant sits between the two words, so
+          plain substring containment misses a cofactor the paper names outright.
+        * ``CoA-SH`` (``runs_verify/2026-08-04_1754/.../PMC12856317``) -- folds to
+          ``coa sh``; the paper writes ``succinyl coa``. ``sh`` is two characters,
+          which :data:`MIN_SUPPORT_CHARS` already rules is evidence in NEITHER
+          direction, so what is left to look for is ``coa``, and it is there.
+        * ``PG phosphate`` (``runs/2026-07-28_0919/.../PMC12444477/strict``).
+        * ``PEtN-lipid A`` (``runs/2026-07-28_0919/.../PMC13278307/strict``).
+
+        Only INSIGNIFICANT tokens may sit between two matched words: shorter than
+        :data:`MIN_SUPPORT_CHARS`, or a bare number. That is the same threshold
+        the rest of this module uses to decide what counts as evidence, not a new
+        one, and it is what stops two real words from opposite ends of a sentence
+        being read as one name.
+
+        Strictly ADDITIVE to :meth:`contains`: it is only ever consulted after
+        substring containment has already failed, and it can only turn a refusal
+        into a keep. No accession this predicate kept before can be taken away by
+        it, so it cannot create collateral -- only remove it.
+        """
+        significant = [word for word in needle.split() if len(word) >= MIN_SUPPORT_CHARS]
+        if not significant:
+            return False
+        tokens, positions = self._token_view()
+        starts = positions.get(significant[0]) or []
+        if not starts:
+            return False
+        if len(significant) == 1:
+            return True
+        total = len(tokens)
+        for start in starts:
+            cursor = start
+            for word in significant[1:]:
+                probe = cursor + 1
+                while probe < total and tokens[probe] != word and _is_insignificant(tokens[probe]):
+                    probe += 1
+                if probe >= total or tokens[probe] != word:
+                    cursor = -1
+                    break
+                cursor = probe
+            if cursor >= 0:
+                return True
+        return False
+
     def contains(self, candidate: Any) -> bool:
         """Whether ``candidate`` is locatable in the source, punctuation-blind.
 
-        Substring containment, not token equality: a paper writes ``Serine`` in
-        the middle of ``L-serine hydroxymethyltransferase`` and that still names
-        serine. The looser test is the safe direction here -- it can only KEEP an
-        accession, never take one away.
+        Substring containment first, not token equality: a paper writes
+        ``Serine`` in the middle of ``L-serine hydroxymethyltransferase`` and that
+        still names serine. Then, only if that failed,
+        :meth:`names_in_one_span`. The looser test is the safe direction here --
+        every clause can only KEEP an accession, never take one away.
         """
         needle = normalize_text(candidate)
         if len(needle.replace(" ", "")) < MIN_SUPPORT_CHARS:
             return False
-        return needle in self.normalized or needle.replace(" ", "") in self.squashed
+        if needle in self.normalized or needle.replace(" ", "") in self.squashed:
+            return True
+        return self.names_in_one_span(needle)
 
 
 def build_source_index(text: Any) -> Optional[Dict[str, Any]]:
@@ -302,6 +485,31 @@ def candidate_names(row: Any) -> List[str]:
     return out
 
 
+def provenance_route(row: Any) -> str:
+    """Which permitted non-paper provenance route this row came in on, or ``""``.
+
+    Names the key rather than returning a bool, so the answer is auditable.
+    Total, and never raises: an unexpected shape under either key is simply not a
+    route.
+
+    Deliberately blind to the route's VALUE. A route whose ``source_id`` is
+    :data:`SELF_REFERENTIAL_ROUTE_SOURCE` -- the seed paper itself -- is still a
+    route here, and the two corpus rows that carry one still abstain. That is a
+    decision, not an oversight, and its reasoning is written out in full on that
+    constant: the mark establishes who WROTE the name, not which document is the
+    row's alibi, and both measured cases are synonym misses whose refusal would
+    be collateral.
+    """
+    row = _safe_dict(row)
+    for key in PROVENANCE_ROUTE_KEYS:
+        value = row.get(key)
+        if isinstance(value, dict) and value:
+            return key
+        if isinstance(value, list) and any(item for item in value):
+            return key
+    return ""
+
+
 def _is_real_identifier(value: Any) -> bool:
     text = str(value or "").strip()
     return bool(text) and text.casefold() not in _SENTINEL_IDENTIFIERS
@@ -326,17 +534,38 @@ def external_accessions(row: Any) -> Dict[str, str]:
 def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
     """Is this row's identity locatable in the source paper? Never raises.
 
-    Returns ``{"status", "reason", "matched", "evaluated"}`` where ``status`` is
-    one of :data:`STATUS_SUPPORTED`, :data:`STATUS_UNSUPPORTED`,
+    Returns ``{"status", "reason", "matched", "evaluated", "route"}`` where
+    ``status`` is one of :data:`STATUS_SUPPORTED`, :data:`STATUS_UNSUPPORTED`,
     :data:`STATUS_NOT_EVALUATED`. ``matched`` names the candidate that was found,
-    which is what makes a KEEP auditable and not merely silent.
+    which is what makes a KEEP auditable and not merely silent; ``route`` names
+    the permitted non-paper provenance that abstained, and is ``""`` otherwise.
+
+    THE SEED PAPER IS NOT EVERY ROW'S EVIDENCE BASE (C-075). A row imported
+    through the retrieval route states which document it came from, and the
+    product owner's ruling admits "another permitted provenance route" alongside
+    paper evidence and proven aliases. Asking THIS paper about such a row is
+    asking the wrong document, and the honest answer to a question the evidence
+    cannot address is ``not_evaluated``, never ``unsupported``
+    (PRODUCT_CONTRACT § 8). Measured over all 70 committed ``final_mapped.json``
+    artifacts replayed against their own ``01_source_text.txt``: this clause
+    rescues 32 of the 39 refusals. 30 of those name the document they were
+    imported from -- ``PlsB`` carrying ``uniprot:P0A7A7`` and
+    ``rag_provenance.source_id = PMC12898747`` is the type case, and stripping it
+    would be precisely the "legitimate mappings must be retained" half of the
+    ruling being violated to enforce the other half. The remaining 2 name
+    ``seed_paper`` and are the case :data:`SELF_REFERENTIAL_ROUTE_SOURCE` exists
+    to make explicit rather than leave to be discovered.
+
+    The names are looked for FIRST, so a row that IS named in the seed paper is
+    reported ``supported`` with the matched name recorded, exactly as before; the
+    route is consulted only where the answer would otherwise have been a refusal.
     """
     if index is None:
         return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_NO_INDEX,
-                "matched": "", "evaluated": 0}
+                "matched": "", "evaluated": 0, "route": ""}
     if not index:
         return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_EMPTY_INDEX,
-                "matched": "", "evaluated": 0}
+                "matched": "", "evaluated": 0, "route": ""}
 
     evaluated = 0
     for candidate in candidate_names(row):
@@ -347,12 +576,16 @@ def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
         evaluated += 1
         if index.contains(candidate):
             return {"status": STATUS_SUPPORTED, "reason": "", "matched": candidate,
-                    "evaluated": evaluated}
+                    "evaluated": evaluated, "route": ""}
     if not evaluated:
         return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_NO_NAME,
-                "matched": "", "evaluated": 0}
+                "matched": "", "evaluated": 0, "route": ""}
+    route = provenance_route(row)
+    if route:
+        return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_OTHER_PROVENANCE,
+                "matched": "", "evaluated": evaluated, "route": route}
     return {"status": STATUS_UNSUPPORTED, "reason": RULE_NOT_SUPPORTED,
-            "matched": "", "evaluated": evaluated}
+            "matched": "", "evaluated": evaluated, "route": ""}
 
 
 def accession_key(namespace: Any, value: Any) -> str:
