@@ -5491,3 +5491,122 @@ audited above.
 **Standing instruction until this is ruled on:** every base-tree measurement continues to run
 through `pinned_pytest.py` with `--expect-tree` and a committed `--pin-verdict`. An unpinned base
 run is not evidence, regardless of which way rule 10 is eventually resolved.
+
+---
+
+## F-110 — the name gate cannot relate a trivial compound name to its formula or ion notation, and C-078 makes that bite
+
+- **Severity** **HIGH** · **Class `product_contract_violation`**
+- **Registered 2026-08-23 by the Lead Orchestrator**, surfaced by the C-078 implementer (§7e) and
+  **independently confirmed by the C-078 reviewer**, which found the second instance.
+- **Does NOT block T-106 — but its effect MUST be predicted before the run, not discovered after.**
+- Owner: `src/t2pw/mapping/`. **Out of C-078's bounds; C-078 is what makes it visible.**
+
+### The defect
+
+`map_ids._enforce_shipped_identity_names` refuses an identifier when the shipped name and the
+candidate names share no meaningful token. Measured on committed artifacts, it cannot relate a
+trivial chemical name to a formula or an ion notation:
+
+| leg | `entity_name` | `compared_names` | verdict |
+|---|---|---|---|
+| PMC12096016/research (T-105) | `ferric iron` | `["Fe3+", "Fe3+", "CPD-10134"]` | `no_shared_meaningful_token` → `kegg:C14819` refused |
+| PMC13231680 ×2 (T-105) | `Zn2+` | `["Zinc (II) ion", "Zinc", "ZN%2b2"]` | `no_shared_meaningful_token` → `kegg:C00038` refused |
+
+Both refusals are **biologically wrong**. Ferric iron *is* Fe³⁺ and *is* KEGG C14819 / ChEBI 29034 /
+HMDB0012943; Zn²⁺ *is* zinc(II) ion. This is **one defect class**, not two incidents: the gate has no
+way to relate a name to a formula.
+
+### Why it was invisible until now
+
+Before C-078, the pre-freeze name-keyed re-resolution silently **reversed** these refusals — so the
+row shipped correct identifiers and the bad refusal never surfaced. That masking is exactly what
+C-078 closed. The mask was not benign: the same seam also reversed *correct* refusals, and it did so
+onto a **different record** than the one refused (the DHB rows refused `pathbank_compound_id: 40770`
+while the resolver offered `41128`).
+
+So F-110 is a pre-existing defect that C-078 converts from *hidden and self-cancelling* into *visible
+and honest*. That is the right direction — `PRODUCT_CONTRACT` §2 ranks correctness above depth — but
+the visible cost lands on T-106.
+
+### THE T-106 PREDICTION — record this before the run
+
+`Fe3+` escaped nothing: C-078's guard fires on it, once, on the committed corpus. **`Zn2+` escaped
+C-078 only because its DB match came back `ambiguous`.** On a T-106 draw where the same match
+resolves uniquely, the guard strips it too.
+
+**Predicted T-106 exposure: metal ions and formula-named compounds lose their PathBank identity.**
+Concretely, expect on affected legs:
+
+* a **coverage / depth** reduction on compound rows named as ions or formulae;
+* affected rows carrying `db_status: identity_refused_review_required` with their extracted name
+  intact — **not** dropped (merge rule 7 holds; verified behaviourally at a production entry point,
+  `export ok=True` with the compound present in the frozen IR);
+* **no** movement in acceptance **priority 1**, which counts *false* real identifiers. Removing a
+  correct identifier removes nothing from that numerator. `Fe3+` appears nowhere in
+  `t105_acceptance_report.json` — zero hits for `Fe3`, `ferric` or `C14819`.
+
+**Classify any such drop deliberately as F-110, and never quote it as an unexplained coverage
+regression or as evidence against C-078.**
+
+### Fix, and why not before T-106
+
+The correct fix is in `mapping/` — teach the name gate formula/ion equivalence, or admit a candidate
+on corroborating external identifiers when the name comparison is uninformative. `mapping/` is a
+large shared surface every leg traverses, and changing it immediately before a 20-leg release
+candidate is the kind of late, broad change this sprint has repeatedly paid for. **Card it after
+T-106**, with the T-106 legs themselves as its measurement.
+
+---
+
+## F-111 — `g11_evidence.py check` cannot see a double-allocated report slot
+
+- **Severity** MEDIUM · **Class `process_tooling_gap`** · **Does not block T-106.**
+- **Registered 2026-08-23**, surfaced by the C-078 reviewer while auditing a disclosed deviation.
+
+During C-078, G11 slot **14** was genuinely double-allocated: `14-mono.json` (`chunkd-mono`) and a
+hand-formed `14-chunkd-outer.json`, both stamped `started_at 2026-08-23T23:04:50`. The implementer
+disclosed it and repaired it through the allocator (`next` → 46, then `os.replace`), and the
+surviving artifact `46-chunkd-outer.json` still carries the discrepancy in its own body:
+`json_report_path` reads `…/C-078/14-chunkd-outer.json`.
+
+**Ruled non-material for C-078**: nothing was fabricated, nothing lost or overwritten
+(`g11_evidence.py:216` takes `max(used)+1`, which tolerates a duplicate index), the repair used the
+allocator, and the artifact self-documents.
+
+**The finding is the tooling gap, not the incident.** `g11_evidence.py check` passed all 52 C-078
+artifacts as compliant *including this one*, because **it never cross-checks a report's filename
+against the `json_report_path` recorded inside it.** This class of defect is therefore invisible to
+the gate and was known only because an agent volunteered it. F-071's atomic staging prevents a
+*killed* job from leaving a partial report; it does not prevent a *hand-formed* path from bypassing
+allocation entirely.
+
+**Fix:** add a filename-vs-`json_report_path` consistency check to `g11_evidence.py check`, and make
+a duplicate sequence index a reported non-compliance rather than a silent tolerance. Card after
+T-106.
+
+**Standing instruction meanwhile:** always pre-allocate `--json` with `g11_evidence.py next`. Never
+hand-form a report path and promote it afterwards.
+
+---
+
+## F-112 — two committed tests are red because `runs_verify/**` grew, and both will mask a real regression
+
+- **Severity** MEDIUM · **Class `test_accounting_staleness`** · **Does not block T-106.**
+- **Registered 2026-08-23.** One instance disclosed by the C-078 implementer; the **second found by
+  the C-078 reviewer**, which noted the sprint record was calling it one red when it is two.
+
+| test | assertion | measured |
+|---|---|---|
+| `tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture` | GOLDEN/EXCLUDED accounting covers every committed leg fixture | fails |
+| `tests/test_c030_canonical_identity_fallback.py::test_the_census_reproduces_over_the_committed_corpus` | `len(_corpus()) == 35` | `assert 70 == 35` |
+
+**Both fail identically at base and at tip** across C-076, C-078 and C-079 measurements, so neither
+is collateral from any card in this wave. Both have the same root cause: run directories committed
+during the sprint (`runs_verify/2026-08-21_2239`, `runs_verify/2026-08-22_2147`) are not in the
+accounting sets these tests pin.
+
+Neither is in SMOKE, so neither blocks a merge gate. But each is a **pinned corpus census that can no
+longer detect what it exists to detect** — a genuine regression in either census would now be
+indistinguishable from the existing red. Re-baseline both, with the delta stated, after T-106 commits
+its own run directory (which will otherwise break them a third time).
