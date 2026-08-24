@@ -65,6 +65,7 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from t2pw.pwml.db_resolver import (
     PathWhizCompoundResolver,
+    _mapped_ids_from_row,
     apply_compound_db_resolution,
     normalize_chebi_id,
     normalize_hmdb_id,
@@ -379,8 +380,12 @@ _CORROBORATION_COLUMNS = {
 }
 
 
-def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
-    """Decide whether ``match`` may rename ``row`` and stamp identifiers on it.
+def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
+    """Weigh the MATCH: does this rule, at this confidence, justify an identity?
+
+    D-028's half of :func:`_admit_db_identity`, unchanged. The row's own refusal
+    record is **not** consulted here -- that is a property of the row, not of the
+    match, and it is applied by the caller below.
 
     Returns the decision **as a record**, never a bare bool: D-028 rule 4
     requires a refusal to be recorded for review rather than silently dropped,
@@ -455,6 +460,119 @@ def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, 
         return decision
 
     decision["reason"] = "unrecognized_rule_below_confidence_floor"
+    return decision
+
+
+#: **F-099 / C-078.** Every namespace ``apply_compound_db_resolution`` can write
+#: back onto a row, mapped to the one token both sides are compared through.
+#:
+#: The two sides spell the same fact differently. A row's refusal record --
+#: ``mapping_meta.rejected_mapped_ids`` -- is keyed like ``mapped_ids``
+#: (``map_ids._strip_rejected_identifiers`` builds it from that dict plus the
+#: ``pathbank_compound_id`` scalar), while the apply writes both ``mapped_ids``
+#: *and* the scalar columns ``kegg_id`` / ``chebi_id`` / ``pathwhiz_id`` /
+#: ``pw_compound_id`` for the same identifiers. Comparing raw keys would miss a
+#: refusal spelled the other way, so both sides normalize through this map first.
+#:
+#: A key the map does not know normalizes to **itself**, so an unrecognized
+#: refusal namespace can never collide by accident, and a namespace the apply
+#: never writes can never manufacture a refusal.
+_REFUSABLE_NAMESPACE = {
+    "pathbank_compound_id": "pathbank_compound_id",
+    "pw_compound_id": "pathbank_compound_id",
+    "pathwhiz_id": "pathbank_compound_id",
+    "db_id": "pathbank_compound_id",
+    "hmdb": "hmdb",
+    "hmdb_id": "hmdb",
+    "kegg": "kegg",
+    "kegg_id": "kegg",
+    "chebi": "chebi",
+    "chebi_id": "chebi",
+    "pubchem": "pubchem",
+    "pubchem_id": "pubchem",
+    "pubchem_cid": "pubchem",
+    "cas": "cas",
+    "biocyc": "biocyc",
+    "biocyc_id": "biocyc",
+    "chemspider": "chemspider",
+    "chemspider_id": "chemspider",
+    "drugbank": "drugbank",
+    "drugbank_id": "drugbank",
+    "pwc_id": "pwc_id",
+}
+
+#: :func:`_admit_db_identity`'s reason when the C-078 veto fires. Distinct from
+#: every D-028 rule reason: those say the match was too weak, this says the match
+#: may have been strong enough and is refused anyway.
+REFUSED_IDENTITY_WOULD_BE_RESTORED = "db_match_would_restore_refused_identifiers"
+
+
+def _id_namespace(key: Any) -> str:
+    return _REFUSABLE_NAMESPACE.get(str(key).strip().casefold(), str(key).strip().casefold())
+
+
+def _restored_refused_namespaces(row: Dict[str, Any], chosen: Dict[str, Any]) -> List[str]:
+    """Namespaces this row already refused that ``chosen`` would write back.
+
+    ``_mapped_ids_from_row`` is the same function the apply uses to rebuild
+    ``mapped_ids``, so this asks the question in the apply's own terms -- "which
+    of these identifiers would land on the row" -- rather than re-deriving a
+    parallel list that could drift from it. It drops empty values, which is why
+    a matched DB row carrying nothing in a refused namespace restores nothing and
+    is not vetoed.
+
+    Never raises and never mutates either argument.
+    """
+    rejected = _safe_dict(_safe_dict(row.get("mapping_meta")).get("rejected_mapped_ids"))
+    if not rejected or not chosen:
+        return []
+    refused = {_id_namespace(key) for key in rejected}
+    stamped = {_id_namespace(key) for key in _mapped_ids_from_row(chosen)}
+    return sorted(refused & stamped)
+
+
+def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
+    """Decide whether ``match`` may rename ``row`` and stamp identifiers on it.
+
+    Two questions, and until C-078 only the first was asked.
+    :func:`_db_match_rule_decision` weighs the **match** under D-028. This adds
+    the one fact that belongs to the **row**: *a DB match may not stamp an
+    identity that this row's own ``mapping_meta.rejected_mapped_ids`` already
+    refused* (F-099). On a collision the match becomes **record-only** -- the
+    caller already passes ``admit_identity=admission["admitted"]`` to
+    ``apply_compound_db_resolution``, whose one flag and one early return give
+    exactly D-028 rule 3's "no rename AND no identifier stamp, never a partial
+    apply", and whose ``IDENTITY_REFUSED_STATUS`` keeps the row in ``resolved``
+    with its extracted name for review (merge rule 7).
+
+    Why it is needed here, measured: the identity gate withholds an identifier by
+    moving it to ``rejected_mapped_ids`` and clearing it from ``mapped_ids`` and
+    its scalar column. Clearing the PathBank scalar is what makes ``legacy_id``
+    ``None`` at the caller, so the row falls through to a **name-keyed** lookup,
+    and ``apply_compound_db_resolution`` then rebuilds ``mapped_ids`` **wholesale**
+    from the matched DB row. On ``runs_verify/2026-08-22_2147`` and
+    ``.../2026-08-21_2239``, ``Fe3+`` (PMC12096016/research, extracted as *ferric
+    iron*) is that path completed: ``rejected_mapped_ids = {kegg: C14819}`` and
+    the committed ``final_mapped.json`` ships ``mapped_ids.kegg = C14819`` again,
+    byte-equal to ``_mapped_ids_from_row(db_match.chosen)``. Pre-freeze, so the
+    restored identity is canonical (``PRODUCT_CONTRACT`` §5), and no later stage
+    re-imposes the refusal.
+
+    **The veto only ever overrides an admission.** A decision the match rules
+    already refused keeps its own reason -- ``fuzzy_name_match_never_admitted``
+    and the short-abbreviation reasons are unchanged, and no refusal is ever
+    turned into an admission -- so the only behaviour this changes is the one
+    F-099 names. The overridden reason is preserved as ``admitted_by_match_rule``
+    so the record still says what the match was worth.
+    """
+    decision = _db_match_rule_decision(row, match)
+    restored = _restored_refused_namespaces(row, _safe_dict(match.get("chosen")))
+    if restored:
+        decision["refused_namespaces"] = restored
+        if decision.get("admitted"):
+            decision["admitted"] = False
+            decision["admitted_by_match_rule"] = decision["reason"]
+            decision["reason"] = REFUSED_IDENTITY_WOULD_BE_RESTORED
     return decision
 
 
