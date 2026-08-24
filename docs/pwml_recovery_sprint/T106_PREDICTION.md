@@ -134,3 +134,82 @@ same identity**, do not relabel it PASS if a new product-contract violation appe
 strict exports to improve the metric, and do not classify expected negative controls as pipeline
 defects. If T-106 finds a new violation, preserve the result, register the finding, and continue
 narrow evidence-backed work.
+
+---
+
+# AMENDMENT, written after C-080's review and before the run
+
+Three corrections from the C-080 reviewer. **§3 below supersedes §3 above.**
+
+## A. A claim of mine was overstated — corrected
+
+`FINDINGS.md` F-108 and `prompts/C-080.md` §2d/§2e say *"the replay reproduces all three recorded
+statuses exactly before the toggle, which is what makes the counterfactual trustworthy."*
+
+That is **true of the three named legs and false corpus-wide**: 7 of 38 legs diverge. All seven
+recorded `release_ready` and replay to `review_required`, because the current classifier applies
+C-072's and C-074's caps that did not exist when those artifacts were written.
+
+**The safety conclusion is unaffected, and the direction is why:** a leg already recorded
+`release_ready` cannot flip *to* `release_ready`. The upper bound stands. But the trustworthiness
+argument as I wrote it was broader than the evidence, and the committed probe exits **1** on exactly
+these divergences — so a future reader hitting a non-zero exit is seeing this, not a failure.
+
+## B. §3's risk was UNDERSTATED — this is the sharper and correct framing
+
+I wrote that `PMC12452463` reaches `release_ready` if *"a T-106 draw happens to match `DHB`, `EntA`
+and `Fur`."* That reads as bad luck. It is worse than that.
+
+The production gate **deliberately does not ask the gold-only forbidden-identifier question** — its
+own docstring says so, and C-080 did not change that. Meanwhile the gold set records:
+
+* `EntA` — `kind: placeholder_product`, reason: *"HALLUCINATION TEST: this review's own four-step
+  scheme SKIPS the EntA dehydrogenase step … Emitting an EntA reaction citing this paper is
+  completing the canonical pathway from memory."*
+* `DHB` — also `placeholder_product` (the paper contradicts itself between body and figure caption).
+* `export_rationale`: *"whose route is chemically BROKEN: with EntA absent, nothing converts
+  2,3-dihydro-2,3-dihydroxybenzoate onward."*
+
+So the anchor cap stops firing **precisely when the pipeline hallucinates the `EntA` step** — the
+exact fabrication the gold set was purpose-built to trap. **The hallucination would be the *cause*
+of the release, and nothing on the production release path would object.**
+
+**State it that way when classifying T-106. Not "the draw matched"; "a fabrication satisfied the
+only remaining guard."** If it happens, that is a `product_contract_violation` of the F-094 class,
+at the coverage/anchor layer — and it argues the class needs a *designed* guard rather than the
+accidental one C-076/C-080 correctly removed.
+
+Unchanged: do not charge it to C-076 or C-080, and do not answer it by restoring the within-kind
+rule.
+
+## C. The condition list is NINE, not five
+
+A leg becomes `release_ready` *because of* C-080 only when **all** of these hold, derived from
+`classify_release_status` at the merged tip:
+
+1. `pipeline_executed`
+2. `strict_gates_passed`
+3. `serializable_without_invention`
+4. a coverage verdict exists **and** `has_surviving_core`
+5. `minimum_core_satisfied`
+6. the semantic verdict becomes `passed` — `no_real_id_or_name_conflict` was the **only** failing
+   gating check, **and** at the tip that check emits nothing, which additionally requires **no
+   `placeholder_claims_real_identity` forgery on the leg**, because that finding lives in the *same*
+   check and C-080 does not touch it
+7. not (`verdict.declared and missing`) — **C-072**, `release_status.py:730`
+8. not (`connected_core_reactions < 2` and not `single_reaction_scope_requested`) — **C-074 arm A**,
+   `:784`, `MIN_CONNECTED_CORE_REACTIONS = 2`
+9. not `verdict.declares_core_without_stating_a_pathway` — **C-074 arm B / F-100**, `:789` / `:813`
+
+The two most easily dropped are **(9)** and the **no-forgery sub-condition inside (6)**. Both are
+real guards; neither appeared in my §3.
+
+**And there are three draw-sensitive guards, not two.** C-071's
+`actor_named_in_its_own_cited_span` is also a gating production check, and it fired on
+`PMC12096016/research` at T-105.
+
+## D. Consequence for the cohort
+
+`PMC12452463` and `PMC12096016` are in the affected-paper cohort (both modes) precisely so this is
+observed on 10 legs before it can happen inside a 20-leg release candidate. **If `PMC12452463`
+reaches `release_ready` in the cohort, T-106 does not start until that outcome is classified.**

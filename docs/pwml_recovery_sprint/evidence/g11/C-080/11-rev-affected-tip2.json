@@ -1,0 +1,118 @@
+{
+  "label": "rev-affected-tip2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--tb=line",
+    "--basetemp=C:/t/bt/rev080e",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c072_incomplete_core_demotion.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_release_seam.py"
+  ],
+  "cwd": "C:/t/c080",
+  "started_at": "2026-08-24T00:48:53+00:00",
+  "finished_at": "2026-08-24T00:49:11+00:00",
+  "duration_seconds": 18.007383199999822,
+  "timeout_seconds": 900.0,
+  "root_pid": 136196,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 136124,
+      "name": "python.exe",
+      "ppid": 136196
+    },
+    {
+      "pid": 136516,
+      "name": "git.exe",
+      "ppid": 136124
+    },
+    {
+      "pid": 133936,
+      "name": "git.exe",
+      "ppid": 136124
+    },
+    {
+      "pid": 126112,
+      "name": "git.exe",
+      "ppid": 136124
+    }
+  ],
+  "descendants_terminated": [
+    126112,
+    133936,
+    136124,
+    136516
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 136208,
+      "name": "python.exe"
+    },
+    {
+      "pid": 136308,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-080\\11-rev-affected-tip2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "2c3b87df7a9e0047196b41c9c5215c3623370ea9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-C080",
+    "token": "REV-C080:136308:1372f755a987df4e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

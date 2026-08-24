@@ -1,0 +1,154 @@
+{
+  "label": "rev-smoke-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--tb=line",
+    "--basetemp=C:/t/bt/rev080i",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:/t/c080",
+  "started_at": "2026-08-24T00:53:59+00:00",
+  "finished_at": "2026-08-24T00:54:38+00:00",
+  "duration_seconds": 39.34274100000039,
+  "timeout_seconds": 900.0,
+  "root_pid": 138368,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 137592,
+      "name": "python.exe",
+      "ppid": 138368
+    },
+    {
+      "pid": 138652,
+      "name": "python.exe",
+      "ppid": 137592
+    },
+    {
+      "pid": 138680,
+      "name": "python.exe",
+      "ppid": 138652
+    },
+    {
+      "pid": 138084,
+      "name": "python.exe",
+      "ppid": 137592
+    },
+    {
+      "pid": 138700,
+      "name": "python.exe",
+      "ppid": 138084
+    },
+    {
+      "pid": 117092,
+      "name": "python.exe",
+      "ppid": 137592
+    },
+    {
+      "pid": 138860,
+      "name": "python.exe",
+      "ppid": 117092
+    },
+    {
+      "pid": 138968,
+      "name": "python.exe",
+      "ppid": 137592
+    },
+    {
+      "pid": 138984,
+      "name": "python.exe",
+      "ppid": 138968
+    }
+  ],
+  "descendants_terminated": [
+    117092,
+    137592,
+    138084,
+    138652,
+    138680,
+    138700,
+    138860,
+    138968,
+    138984
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 137548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 137748,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-080\\14-rev-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "2c3b87df7a9e0047196b41c9c5215c3623370ea9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-C080",
+    "token": "REV-C080:137748:e4375b6fc83a46b5",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

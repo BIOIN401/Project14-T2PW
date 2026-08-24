@@ -5610,3 +5610,51 @@ Neither is in SMOKE, so neither blocks a merge gate. But each is a **pinned corp
 longer detect what it exists to detect** — a genuine regression in either census would now be
 indistinguishable from the existing red. Re-baseline both, with the delta stated, after T-106 commits
 its own run directory (which will otherwise break them a third time).
+
+---
+
+## F-113 — the 2026-08-23 identity ruling has no entry in `DECISIONS.md`
+
+- **Severity** LOW · **Class `control_plane_gap`** · **Does not block T-106.**
+- **Registered 2026-08-23**, surfaced by the C-080 reviewer.
+
+The product-owner identity ruling of 2026-08-23 — that a UniProt accession may be shared by proven
+aliases of one protein and by holo/apo states of one polypeptide, and that such rows must not be
+flagged as accession conflicts unless biologically unrelated or cross-kind — is quoted verbatim in
+`prompts/C-076.md` §1 and referenced throughout, but has **no append-only `D-xxx` entry** in
+`DECISIONS.md`. It lives only in card prose, the LEDGER's C-076 row, and `FINDINGS.md`.
+
+**Two merged cards now rest on it** — C-076 (`3b7a7b1`) and C-080 (`89aaced`) — and a third, C-073,
+was corrected against the D-035 clause it interprets. A locked ruling that governs merged production
+code belongs in the locked-decisions file, where the sprint's own rules say rulings live and where a
+later reader will look for it.
+
+**Product owner's to fix**; the orchestrator does not author `DECISIONS.md` entries. Recorded so the
+gap is visible rather than assumed.
+
+### A related gap in the same area
+
+The ruling's own wording is *"biologically unrelated **or** cross-kind"*. Both seams implement
+**cross-kind only**, because neither has a biological-relatedness oracle. Two genuinely unrelated
+same-kind proteins fused onto one accession by a mapper bug are now invisible to the scorer **and**
+to the production gate.
+
+That mirrors the pipeline's pre-existing blind spot and is what the C-076 charter directs, so it is
+not a deviation — but the "unrelated within one kind" half is **unmeasured corpus-wide**, and is
+recorded here as a known gap rather than an assumed non-issue.
+
+---
+
+## F-114 — a `--basetemp` whose PARENT does not exist errors the run, a second way to fake a regression
+
+- **Severity** LOW · **Class `process_tooling_gap`** · **Does not block T-106.**
+- **Registered 2026-08-23**, hit and disclosed by the C-080 reviewer.
+
+`TEST_MATRIX.md` § 0 documents that omitting `--basetemp` errors 83 tests with `PermissionError`.
+There is a second failure mode with the same consequence: a `--basetemp` whose **parent directory**
+does not exist errors the run outright. The reviewer's first affected-set run errored **55 tests**
+with `FileNotFoundError: 'C:\t\bt\rev080e'`; re-running after creating the parent gave `339 passed`.
+
+Both modes produce a large, plausible-looking failure count that is **infrastructure, not a test
+result**, and either could be reported as a false regression by an agent that does not recognise it.
+Worth one line in `TEST_MATRIX.md` § 0 beside the existing `PermissionError` note.
