@@ -834,6 +834,46 @@ def _external_ids(row: Mapping[str, Any]) -> Dict[str, str]:
     return out
 
 
+def accession_claimed_across_kinds(claimants: Iterable[Tuple[str, str]]) -> bool:
+    """Do two claimants of one accession differ in **kind** AND in **name**?
+
+    THE SINGLE DEFINITION of the concept for both semantic seams. C-080 MOVED it
+    here out of :func:`_check_id_conflicts`, unchanged, so that
+    ``semantic_production._audit_entities`` -- the copy that gates real runs --
+    reads the same predicate the acceptance scorer does instead of carrying a
+    third. Its body is byte-for-byte the pipeline's own in
+    ``mapping.identity_admission.find_kind_conflicting_accessions``, whose rule
+    this is the ``bench`` side of; that function is not called directly because it
+    folds accessions with ``accession_key`` while these two seams key on
+    ``_external_ids`` plus ``casefold``, and grouping the rows differently would
+    change which claims are compared.
+
+    ``claimants`` is ``(kind class, normalized name)`` per claiming row -- caller's
+    choice of kind vocabulary, since the only requirement is that both seams read
+    it from ``identity_admission.entity_kind_class``.
+
+    Both halves are load-bearing, and neither is new here:
+
+    * **Different kinds** is the incompatibility. One accession cannot denote a
+      protein and a metabolite at once. Same-kind agreement is **D-035 clause 3c**
+      evidence that the rows are the same entity -- ``EntB``/``holo-EntB``, or
+      ``EntE``/``enterobactin synthase`` -- and is left completely alone.
+    * **Different names** keeps a routing artefact from reading as a type error.
+      One entity resolved into both ``compounds`` and ``proteins`` is written
+      twice, not a protein masquerading as a metabolite.
+
+    Duplicate claimants collapse and the order of comparison is fixed by
+    ``sorted``, so the verdict does not depend on payload order.
+    """
+
+    kinds = sorted(set(claimants))
+    return any(
+        left[0] != right[0] and left[1] != right[1]
+        for position, left in enumerate(kinds)
+        for right in kinds[position + 1:]
+    )
+
+
 def _check_id_conflicts(
     case: GoldCase,
     entities: Mapping[str, List[Dict[str, Any]]],
@@ -996,12 +1036,11 @@ def _check_id_conflicts(
         # into one: an accession cannot denote a protein and a metabolite at
         # once. Both halves are load-bearing, exactly as they are in
         # ``identity_admission.find_kind_conflicting_accessions``, whose rule
-        # this is now the scorer's side of.
-        kinds = sorted({(kind, folded) for kind, folded, _ in claimants.get((namespace, accession), ())})
-        cross_kind = any(
-            left[0] != right[0] and left[1] != right[1]
-            for position, left in enumerate(kinds)
-            for right in kinds[position + 1:]
+        # this is now the scorer's side of. C-080 MOVED the comparison itself up
+        # to :func:`accession_claimed_across_kinds` so the production release gate
+        # can call the same definition; the rule is unchanged.
+        cross_kind = accession_claimed_across_kinds(
+            (kind, folded) for kind, folded, _ in claimants.get((namespace, accession), ())
         )
         if not cross_kind:
             continue
