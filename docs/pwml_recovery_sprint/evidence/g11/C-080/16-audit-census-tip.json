@@ -1,0 +1,85 @@
+{
+  "label": "audit-census-tip",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c080_audit_census.py",
+    "C:/t/c080",
+    "C:/t/c080_audit_tip.json"
+  ],
+  "cwd": "C:\\t\\c080",
+  "started_at": "2026-08-24T00:29:31+00:00",
+  "finished_at": "2026-08-24T00:29:32+00:00",
+  "duration_seconds": 0.40386250000119617,
+  "timeout_seconds": 900.0,
+  "root_pid": 119032,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 121096,
+      "name": "python.exe",
+      "ppid": 119032
+    }
+  ],
+  "descendants_terminated": [
+    121096
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 121940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 122988,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c080/docs/pwml_recovery_sprint/evidence/g11/C-080/16-audit-census-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c080\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c080",
+    "repo_head": "5194e7f646218fd42088a98077cd895c89302210",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-080",
+    "token": "C-080:121940:b7603c2a7dd50887",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
