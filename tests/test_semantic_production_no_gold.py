@@ -66,8 +66,25 @@ def test_a_clean_payload_passes_with_no_gold_case():
 
 
 def test_b_real_semantic_defects_fail_and_the_failure_names_them():
+    # C-080 / F-108 narrowed the collision half of this obligation to a
+    # CROSS-KIND claim, exactly as C-076 narrowed the acceptance scorer's own
+    # ``test_one_accession_claimed_by_two_entities_is_a_conflict``. The node id
+    # and the assertion shape are kept, so the obligation stays where readers of
+    # this file expect it and no test count moves.
+    #
+    # It used to append a second PROTEIN -- ``LpxD`` -- carrying LpxA's UniProt
+    # accession. That is the predicate C-073's review rejected in the pipeline for
+    # contradicting **D-035 clause 3c**: a matching stable external identifier is
+    # *proof* that two differently-named rows are the same entity, so a name
+    # difference alone is agreement, not collision. The product owner's ruling of
+    # 2026-08-23 rejected it in the scorer, and this card rejects it in the
+    # production release gate. What survives is the one true defect C-073 fixed
+    # upstream, in its natural form: the mapper has given the METABOLITE
+    # ``lipid X`` the accession of the ENZYME ``LpxA``, fusing a protein and a
+    # compound under one identifier. The within-kind half is pinned in
+    # ``tests/test_c080_production_gate_kind_aware.py``.
     broken = payload()
-    broken["entities"]["proteins"].append({"name": "LpxD", "uniprot": "P0A722", "identity_status": "verified"})
+    broken["entities"]["compounds"][1]["uniprot"] = "P0A722"
     broken["processes"]["reactions"][1]["organism"] = "Listeria monocytogenes"
     report = evaluate(broken)
     assert report.ok is False
@@ -76,7 +93,7 @@ def test_b_real_semantic_defects_fail_and_the_failure_names_them():
     collision = report.checks[bench_semantic.CHECK_ID_CONFLICT].findings[-1]
     assert collision["kind"] == "accession_claimed_by_multiple_entities"
     assert collision["identifier"] == "p0a722"
-    assert sorted(collision["entities"]) == ["LpxA", "LpxD"]
+    assert sorted(collision["entities"]) == ["LpxA", "lipid X"]
     cross = report.checks[bench_semantic.CHECK_ORGANISM].findings[0]
     assert cross["pointer"] == "/processes/reactions/1"
     assert cross["observed_organism"] == "Listeria monocytogenes"

@@ -204,8 +204,33 @@ def _audit_entities(
 
     ``no_real_id_or_name_conflict`` asks the two forgeries answerable without gold data: a
     placeholder posing as a real mapping, and one accession claimed by two
-    differently-named entities, which silently fuses two molecules in the exported graph.
-    The gold-only third -- a *forbidden* identifier carrying an accession -- is not asked.
+    differently-named entities **of incompatible kind**, which silently fuses two
+    molecules in the exported graph. The gold-only third -- a *forbidden* identifier
+    carrying an accession -- is not asked.
+
+    C-080 / F-108 added the kind half of that second rule, which this module was missing
+    while carrying a SECOND, independent copy of the collision predicate that gates real
+    runs (``strict_quarantine.py`` imports ``evaluate_production_semantics``, and
+    ``no_real_id_or_name_conflict`` is a member of ``release_status.SEMANTIC_GATING_CHECKS``).
+    A name difference alone was the predicate C-073's review rejected in the pipeline, for
+    contradicting **D-035 clause 3c**: a matching stable external identifier is *proof*
+    that two differently-named rows are the same entity. C-076 corrected the acceptance
+    scorer; until this card the two seams disagreed, so the scorer said ``EntB``/
+    ``holo-EntB`` on ``uniprot:P0ADI4`` was not a conflict while THIS gate went on demoting
+    the leg for it.
+
+    The predicate is ``semantic.accession_claimed_across_kinds`` -- C-076's, moved up to
+    module level by C-080 and CALLED here rather than restated, because a third copy would
+    diverge again at the next kind or key. The kind vocabulary is the pipeline's own
+    ``identity_admission.entity_kind_class``, imported for the same reason. Cross-kind
+    claims still fire: ``drugbank:DB00114`` on both ``ALAS2`` (protein) and
+    ``Pyridoxal 5'-phosphate`` (compound) is a real collision and is the one true defect
+    C-073 fixed upstream -- ``runs_verify/2026-08-21_2239/PMC12856317/research`` carries
+    exactly that shape and keeps failing this check.
+
+    STRICTLY MONOTONE, like the organism check above it: the added condition can only
+    REMOVE a collision finding, never add one, and it touches neither the placeholder arm
+    nor the census nor either returned count.
 
     ``placeholder_identities_distinguished`` asks only whether an Unknown-backed row
     admits what it is. Whether such a row should be exported at all is a standing policy
@@ -214,6 +239,7 @@ def _audit_entities(
     disagreement stays visible without this module adjudicating it.
     """
 
+    from t2pw.mapping.identity_admission import entity_kind_class
     from t2pw.pipeline.entity_identity import (
         IDENTITY_PLACEHOLDER, IDENTITY_UNRESOLVED, IDENTITY_VERIFIED,
         identity_status, placeholder_claims_real_identity,
@@ -226,7 +252,11 @@ def _audit_entities(
     conflicts: List[Dict[str, Any]] = []
     forged: List[Dict[str, Any]] = []
     holders: Dict[Tuple[str, str], List[str]] = {}
+    #: Same keys as ``holders``, carrying the one fact a display name cannot answer:
+    #: ``(kind class, normalized name)`` per claiming row.
+    claimants: Dict[Tuple[str, str], List[Tuple[str, str]]] = {}
     for bucket in _s._ENTITY_BUCKETS:
+        kind_class = entity_kind_class(bucket)
         for index, row in enumerate(entities.get(bucket, [])):
             pointer = f"/entities/{bucket}/{index}"
             name = _s.canonical_text(row.get("name"))
@@ -248,14 +278,20 @@ def _audit_entities(
                     "reason": f"placeholder is indistinguishable from a real mapping ({claim})",
                 })
             for namespace, accession in ids.items():
-                holders.setdefault((namespace, accession.casefold()), []).append(name or pointer)
+                key = (namespace, accession.casefold())
+                holders.setdefault(key, []).append(name or pointer)
+                claimants.setdefault(key, []).append((kind_class, _s.normalize_name(name or pointer)))
     for (namespace, accession), names in sorted(holders.items()):
         distinct = sorted({_s.normalize_name(n) for n in names if n})
-        if len(distinct) > 1:
+        # D-035 clause 3c, via C-076's predicate rather than a third copy of it: a
+        # different name alone is AGREEMENT that two rows are the same entity, and
+        # only an incompatible KIND turns a shared accession back into a collision.
+        if len(distinct) > 1 and _s.accession_claimed_across_kinds(claimants.get((namespace, accession), ())):
             conflicts.append({
                 "kind": "accession_claimed_by_multiple_entities", "namespace": namespace,
                 "identifier": accession, "entities": sorted(set(names)),
-                "reason": f"{namespace}:{accession} is claimed by {len(distinct)} differently-named entities",
+                "reason": f"{namespace}:{accession} is claimed by {len(distinct)} differently-named "
+                          "entities of incompatible kind (protein-ish vs compound-ish)",
             })
     backed = int(census[IDENTITY_PLACEHOLDER])
     breakdown = (

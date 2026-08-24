@@ -1,0 +1,88 @@
+{
+  "label": "forced-movement-tip",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c080/docs/pwml_recovery_sprint/evidence/g11/pin/C-080/08-forced-movement-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt80f",
+    "tests/test_semantic_production_no_gold.py"
+  ],
+  "cwd": "C:\\t\\c080",
+  "started_at": "2026-08-24T00:21:04+00:00",
+  "finished_at": "2026-08-24T00:21:07+00:00",
+  "duration_seconds": 2.1377324999994016,
+  "timeout_seconds": 900.0,
+  "root_pid": 116800,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 113692,
+      "name": "python.exe",
+      "ppid": 116800
+    }
+  ],
+  "descendants_terminated": [
+    113692
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 112012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116480,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c080/docs/pwml_recovery_sprint/evidence/g11/C-080/08-forced-movement-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c080\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c080",
+    "repo_head": "5194e7f646218fd42088a98077cd895c89302210",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-080",
+    "token": "C-080:112012:5cb58be4686c6b1e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
