@@ -1,0 +1,20 @@
+# Affected-paper validation cohort A -- both modes.
+#
+# Papers whose strict AND research legs must be revalidated after the
+# C-076..C-080 correction wave. Scopes copied verbatim from topics_t104.txt.
+#
+# PMC12856317 / PMC13231680: the handoff's minimum cohort (bare-PWML and
+#   negative-control checks). PMC13231680/strict also carries the Zn2+ name-gate
+#   refusal that F-110 predicts C-078 will now make bite.
+# PMC12096016 / PMC12452463: ADDED beyond the handoff minimum. These are the
+#   legs that actually carry the accessions C-076/C-080 stopped flagging
+#   (uniprot:P0ADI4 EntB/holo-EntB, uniprot:P10378 EntE/enterobactin synthase),
+#   and PMC12096016/research carries the Fe3+ case behind F-110.
+#   PMC12452463 is the leg T106_PREDICTION section 3 singles out as the one
+#   that may reach release_ready against gold's partial_only. Learning that
+#   here costs two legs; learning it inside T-106 costs a release candidate.
+
+PMC12856317 | heme biosynthesis | Homo sapiens
+PMC13231680 | lipid A biosynthesis | Escherichia coli
+PMC12096016 | enterobactin biosynthesis | Escherichia coli
+PMC12452463 | enterobactin biosynthesis | Escherichia coli

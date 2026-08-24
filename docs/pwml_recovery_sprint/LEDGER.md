@@ -2674,3 +2674,102 @@ counterfactual trustworthy.
 **No live paper leg and no LLM-backed command has run this session.** Everything above is current
 source, committed unit/integration tests, or deterministic replay of committed T-104 / T-105
 artifacts. Two merges, five charters, four findings, zero credits.
+
+## Merges, continued
+
+| card | merge | closes | SMOKE after | reviewer |
+|---|---|---|---|---|
+| **C-078** | `4797f58` | **F-099** (as amended) | **473** (52.91 s) | APPROVE |
+| **C-079** | `15a8a15` | **F-105** | **473** (50.46 s) | APPROVE |
+
+### C-078 — the charter was wrong four times and the implementer caught all four
+
+Confirmed independently by the reviewer:
+
+* **`Fe3+` is the one REALIZED hit, not the control the charter called it.** Its PathBank scalar is a
+  *consequence* of an admitted name-keyed match, proved four ways: `db_match.raw_name` is the
+  extracted name, `db_status` is `matched` not `legacy_id_unverified`, `db_row` is present (written
+  only on the admitted branch), and `mapped_ids` is byte-equal to a wholesale rebuild from the DB row.
+* **5 rows exposed, 0 landed.** All five `2,3-diDHB` rows are `db_status: ambiguous`, so the apply
+  took its not-matched early return. Realized blast radius on the committed corpus is **1**.
+* **The refusals are not C-073's** — grepping `identity_admission` across both run directories
+  returns zero files. 10 of 11 came from the name gate's `no_shared_meaningful_token`.
+* **The honest denominator is 130 compound rows / 122 refusal-free**, not 379/368, which required a
+  recursive walk reaching 22 `quarantined_proteins` rows this code never sees.
+
+The rename was AST-verified byte-identical, 2354 bytes each side.
+
+**The accepted cost.** The one row this patch changes carries a **biologically wrong** refusal —
+ferric iron *is* Fe³⁺ *is* KEGG C14819 — so nine correct identifiers are stripped. It ships because
+**D-028 (LOCKED) already decided this exact trade at this exact seam** and named its own casualties
+under *Measured effect*: *"legitimate identity lost, 3 of 124 real rows, stated rather than hidden"*,
+including `Zn²⁺ → Zinc`. Same case. The locked requirement is that the loss be **stated**, and it is.
+Not a new product decision.
+
+And leaving it was strictly worse: the DHB rows refused `pathbank_compound_id: 40770` while the
+resolver offers **41128** — a *different* record. The mask hid false restores as well as false
+refusals.
+
+### C-079 — non-vacuity proved by mutation, not assertion
+
+64,952 bytes stop entering every interactive curator round (65,777 → 825).
+
+The reviewer ran **two mutants**: deleting the allow-list clause breaks 8 of 16 tests, with the
+non-vacuity arm failing on its own guard message (*"neutralizing the clause changed nothing — the
+comparison above proves nothing"*); deleting the blacklist clauses instead breaks exactly the three
+additivity tests. A silently inert filter is caught either way.
+
+**The regression that would have mattered most did not happen:** `read_source_index` on the caller's
+payload still returns non-`None` at tip, and the stripper's two call sites neither feed mapping —
+so C-075's refusal of `succinyl-CoA` is intact.
+
+The new leaf module is **in boundary**: the charter pre-authorised a relocation, and every other
+destination is foreclosed — `identity_admission` is out of bounds, `interactive_curator` has zero
+`t2pw` module-scope imports at base, and `audit_json_llm` pulls in `openai`/`httpx`/`dotenv`/
+`t2pw.llm.client`, which **constructs an `OpenAI` client at module scope and raises on a bad
+provider**. Reproduced on both trees.
+
+**One finding recorded rather than waved through:** the implementer's reason for skipping the
+AppTest cohort rested on a false premise — `streamlit_app.py:1884` calls `compact_mapping_misses` on
+every refinement-review init, which *does* reach the changed predicate. The reviewer closed the gap
+with evidence rather than argument: full 187-node Chunk D gate at tip, `SETS_EQUAL=True`, 187/187,
+`failed=none`.
+
+## Findings registered this session
+
+| finding | class | blocks T-106 | disposition |
+|---|---|---|---|
+| **F-106** | `reporting_defect` | no | deliberately not carded |
+| **F-107** | `policy_disagreement` | no | needs a product ruling |
+| **F-108** | `product_contract_violation` | **yes** | **C-080** |
+| **F-109** | `control_plane_contradiction` | no | doc owner's call |
+| **F-110** | `product_contract_violation` | no — **but predicted** | card after T-106 |
+| **F-111** | `process_tooling_gap` | no | card after T-106 |
+| **F-112** | `test_accounting_staleness` | no | re-baseline after T-106 |
+
+`F-099` amended LOW → HIGH. `F-092` amended: two of its three defects **refuted**, not merely
+reclassified.
+
+## The affected-paper cohort — expanded beyond the handoff minimum, deliberately
+
+`topics_cohort_both.txt` (4 papers × 2 modes) + `topics_cohort_research.txt` (2 × research) =
+**10 legs**.
+
+The handoff's minimum was 6, written before C-076/C-078/C-080 existed. Four legs were added because
+the correction wave moved their exact seam:
+
+* **`PMC12096016`** (both modes) — carries `uniprot:P0ADI4` `EntB`/`holo-EntB`, the accession
+  C-076/C-080 stopped flagging, **and** the `Fe3+` row behind F-110.
+* **`PMC12452463`** (both modes) — carries `uniprot:P10378` `EntE`/`enterobactin synthase`, and is
+  the leg `T106_PREDICTION.md` §3 singles out as the one that may reach `release_ready` against
+  gold's `partial_only`.
+
+Learning that in a 10-leg cohort costs two extra legs. Learning it inside T-106 costs a release
+candidate. `--fresh` into a new run directory; without it `batch_run.py` silently skips finished
+pairs.
+
+## Live-run ledger
+
+**Still empty at this point.** Four merges, six charters, seven findings, two amendments — all from
+current source, committed tests, or deterministic replay of committed artifacts. **Zero credits.**
+The cohort is the first live spend of the session and does not start until C-080 merges.
