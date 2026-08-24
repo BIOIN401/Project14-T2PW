@@ -1,0 +1,579 @@
+MEASURED TREE  t2pw : C:\t\c080\src\t2pw\__init__.py
+MEASURED TREE  cwd  : C:\t\c080
+CORPUS ROOT         : C:\t\c080
+CHECK_ID_CONFLICT   : 'no_real_id_or_name_conflict'
+GATING?             : True
+
+==== PMC12096016/research       (2026-08-18_1328)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 7, 'compounds_total': 8}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:NADH,ATP,EntD,EntH,MenD,Fur,LDH']
+
+==== PMC12096016/strict         (2026-08-18_1328)
+   recorded status / elig      : diagnostic_only  False
+   recorded failed checks      : ['no_real_id_or_name_conflict']
+   measured id-check failed?   : False   reproduces record: DIVERGES
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 5, 'proteins_total': 11, 'compounds_total': 14}
+   replay as recorded          : diagnostic_only  MATCHES
+   measured-at-this-tree       : diagnostic_only  elig=False
+   conservative upper bound    : diagnostic_only  elig=False
+   reasons (upper bound)       : ['strict_technical_gates_blocked_export']
+
+==== PMC12452463/strict         (2026-08-18_1328)
+   recorded status / elig      : diagnostic_only  False
+   recorded failed checks      : ['no_real_id_or_name_conflict']
+   measured id-check failed?   : False   reproduces record: DIVERGES
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 7, 'proteins_total': 13, 'compounds_total': 10}
+   replay as recorded          : diagnostic_only  MATCHES
+   measured-at-this-tree       : diagnostic_only  elig=False
+   conservative upper bound    : diagnostic_only  elig=False
+   reasons (upper bound)       : ['strict_technical_gates_blocked_export']
+
+==== PMC12782028/research       (2026-08-21_1822)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 15, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 15, 'compounds_total': 6}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:MSMO1 (methylsterol monooxygenase 1),SQLE (squalene epoxidase),FDFT1 (farnesyl-diphosphate farnesyltransferase 1),HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase),HMGCS1 (3-hydroxy-3-methylglutaryl-CoA synthase 1),FDPS (farnesyl diphosphate synthase),MVD (mevalonate diphosphate decarboxylase)']
+
+==== PMC12782028/strict         (2026-08-21_1822)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 3, 'placeholder': 0, 'unresolved': 3, 'proteins_total': 6, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_coverage_below_minimum:0.280<0.500']
+
+==== PMC12312563/research       (2026-08-21_2014)
+   recorded status / elig      : diagnostic_only  False
+   recorded failed checks      : ['requested_pathway_anchors_present']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 0, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 1, 'compounds_total': 7}
+   replay as recorded          : diagnostic_only  MATCHES
+   measured-at-this-tree       : diagnostic_only  elig=False
+   conservative upper bound    : diagnostic_only  elig=False
+   reasons (upper bound)       : ['no_defensible_connected_core', 'no_surviving_process', 'core_process_count_below_minimum:0<1', 'requested_core_coverage_below_minimum:0.000<0.500']
+
+==== PMC12312563/strict         (2026-08-21_2014)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['requested_pathway_anchors_present']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 0, 'placeholder': 0, 'unresolved': 2, 'proteins_total': 2, 'compounds_total': 6}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:requested_pathway_anchors_present']
+
+==== PMC12096016/research       (2026-08-21_2057)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 7, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 8, 'compounds_total': 12}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12096016/strict         (2026-08-21_2057)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 7, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 11, 'compounds_total': 13}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12452463/research       (2026-08-21_2057)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 6, 'compounds_total': 5}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:Fur,FepA,RyhB']
+
+==== PMC12452463/strict         (2026-08-21_2057)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 10, 'compounds_total': 6}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12096016/research       (2026-08-21_2239)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 8, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 9, 'compounds_total': 7}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:NADH,L-serine,ATP,EntH,Fur,MenD']
+
+==== PMC12096016/strict         (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 8, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 12, 'compounds_total': 11}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12180156/research       (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 3, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 3, 'compounds_total': 4}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12180156/strict         (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['requested_pathway_anchors_present', 'actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 2, 'placeholder': 0, 'unresolved': 2, 'proteins_total': 4, 'compounds_total': 2}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:requested_pathway_anchors_present,actor_named_in_its_own_cited_span']
+
+==== PMC12452463/research       (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['requested_pathway_anchors_present']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 2, 'proteins_total': 7, 'compounds_total': 6}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:requested_pathway_anchors_present']
+
+==== PMC12452463/strict         (2026-08-21_2239)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 2, 'proteins_total': 7, 'compounds_total': 6}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:DHB-AMP,Fur,RyhB']
+
+==== PMC12782028/research       (2026-08-21_2239)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 20, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 20, 'compounds_total': 6}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:MSMO1,SQLE,FDFT1,HMGCR,HMGCS1,FDPS,MVD']
+
+==== PMC12782028/strict         (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 4, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 8, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12856317/research       (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['no_real_id_or_name_conflict']
+   measured id-check failed?   : True    reproduces record: MATCH
+   measured collisions         : ['drugbank:db00114 <- [\'ALAS2\', "Pyridoxal 5\'-phosphate"]']
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 1, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 2, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:hemin']
+
+==== PMC12856317/strict         (2026-08-21_2239)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 1, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 2, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12452463/strict         (2026-08-22_1821)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['requested_pathway_anchors_present']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 2, 'unresolved': 2, 'proteins_total': 9, 'compounds_total': 3}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:requested_pathway_anchors_present']
+
+==== PMC12452463/research       (2026-08-22_2017)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['requested_pathway_anchors_present']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 3, 'proteins_total': 8, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:requested_pathway_anchors_present']
+
+==== PMC12452463/strict         (2026-08-22_2017)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 9, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12856317/research       (2026-08-22_2017)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 2, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 3, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12856317/strict         (2026-08-22_2017)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 1, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 2, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12096016/research       (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['no_real_id_or_name_conflict', 'actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: DIVERGES
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 9, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 10, 'compounds_total': 12}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12096016/strict         (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 5, 'placeholder': 0, 'unresolved': 4, 'proteins_total': 9, 'compounds_total': 12}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12180156/research       (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 4, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 4, 'compounds_total': 4}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:glycine']
+
+==== PMC12180156/strict         (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 3, 'placeholder': 2, 'unresolved': 2, 'proteins_total': 7, 'compounds_total': 3}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:SFXN2']
+
+==== PMC12452463/research       (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 7, 'compounds_total': 6}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:2,3-dihydroxybenzoate (DHB),salmochelin,Fur (ferric uptake regulator),FepA (outer membrane receptor),RyhB (small RNA)']
+
+==== PMC12452463/strict         (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['no_real_id_or_name_conflict']
+   measured id-check failed?   : False   reproduces record: DIVERGES
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 7, 'placeholder': 0, 'unresolved': 3, 'proteins_total': 10, 'compounds_total': 7}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:2,3-dihydroxybenzoate (DHB),EntA,Fur']
+
+==== PMC12782028/research       (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 6, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 6, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_anchors_unmatched:3-hydroxy-3-methylglutaryl-CoA (HMG-CoA),MSMO1 (methylsterol monooxygenase 1),SQLE (squalene epoxidase),FDFT1 (farnesyl-diphosphate farnesyltransferase),HMGCR (3-hydroxy-3-methylglutaryl-CoA reductase)']
+
+==== PMC12782028/strict         (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 3, 'placeholder': 0, 'unresolved': 3, 'proteins_total': 6, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_core_coverage_below_minimum:0.296<0.500']
+
+==== PMC12856317/research       (2026-08-22_2147)
+   recorded status / elig      : review_required  False
+   recorded failed checks      : ['actor_named_in_its_own_cited_span']
+   measured id-check failed?   : False   reproduces record: MATCH
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 1, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 1, 'compounds_total': 5}
+   replay as recorded          : review_required  MATCHES
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+
+==== PMC12856317/strict         (2026-08-22_2147)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 1, 'placeholder': 0, 'unresolved': 1, 'proteins_total': 2, 'compounds_total': 5}
+   replay as recorded          : release_ready    MATCHES
+   measured-at-this-tree       : release_ready    elig=True
+   conservative upper bound    : release_ready    elig=True
+   reasons (upper bound)       : []
+
+==== PMC13231680/research       (2026-08-22_2147)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 2, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 2, 'compounds_total': 5}
+   replay as recorded          : release_ready    MATCHES
+   measured-at-this-tree       : release_ready    elig=True
+   conservative upper bound    : release_ready    elig=True
+   reasons (upper bound)       : []
+
+==== PMC13231680/strict         (2026-08-22_2147)
+   recorded status / elig      : release_ready    True
+   recorded failed checks      : []
+   measured id-check failed?   : False   reproduces record: n/a(passed)
+   measured collisions         : none
+   measured forgeries          : none
+   measured placeholder ok     : True   findings: none
+   census                      : {'verified': 2, 'placeholder': 0, 'unresolved': 0, 'proteins_total': 2, 'compounds_total': 4}
+   replay as recorded          : review_required  !!! DIVERGES !!!
+   measured-at-this-tree       : review_required  elig=False
+   conservative upper bound    : review_required  elig=False
+   reasons (upper bound)       : ['requested_pathway_not_stated', 'requested_core_coverage_not_evaluated']
+
+SUMMARY  (sample size: 38 legs)
+  legs whose faithful replay DIVERGES from the record : 7 ['PMC12096016/research', 'PMC12782028/research', 'PMC12452463/research', 'PMC12096016/research', 'PMC12452463/strict', 'PMC12782028/research', 'PMC13231680/strict']
+  legs whose id-check measurement DIVERGES            : 4 ['PMC12096016/strict', 'PMC12452463/strict', 'PMC12096016/research', 'PMC12452463/strict']
+  legs recorded release_ready                          : 9
+  legs release_ready under the MEASURED rule           : 2
+  legs release_ready under the UPPER BOUND             : 2
+  FLIPS to release_ready, measured                     : 0 []
+  FLIPS to release_ready, upper bound                  : 0 []
+  legs strict_acceptance_eligible under upper bound    : 2 ['PMC12856317/strict', 'PMC13231680/research']
+  total collision findings across corpus              : 1
+  total forgery findings across corpus                : 0
+  total placeholder findings across corpus            : 0
+
+  PMC12096016/research       release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12096016/strict         diagnostic_only  -> measured diagnostic_only  upper diagnostic_only 
+  PMC12452463/strict         diagnostic_only  -> measured diagnostic_only  upper diagnostic_only 
+  PMC12782028/research       release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12782028/strict         review_required  -> measured review_required  upper review_required 
+  PMC12312563/research       diagnostic_only  -> measured diagnostic_only  upper diagnostic_only 
+  PMC12312563/strict         review_required  -> measured review_required  upper review_required 
+  PMC12096016/research       review_required  -> measured review_required  upper review_required 
+  PMC12096016/strict         review_required  -> measured review_required  upper review_required 
+  PMC12452463/research       release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12452463/strict         review_required  -> measured review_required  upper review_required 
+  PMC12096016/research       release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12096016/strict         review_required  -> measured review_required  upper review_required 
+  PMC12180156/research       review_required  -> measured review_required  upper review_required 
+  PMC12180156/strict         review_required  -> measured review_required  upper review_required 
+  PMC12452463/research       review_required  -> measured review_required  upper review_required 
+  PMC12452463/strict         release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12782028/research       release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+  PMC12782028/strict         review_required  -> measured review_required  upper review_required 
+  PMC12856317/research       review_required  -> measured review_required  upper review_required 
+  PMC12856317/strict         review_required  -> measured review_required  upper review_required 
+  PMC12452463/strict         review_required  -> measured review_required  upper review_required 
+  PMC12452463/research       review_required  -> measured review_required  upper review_required 
+  PMC12452463/strict         review_required  -> measured review_required  upper review_required 
+  PMC12856317/research       review_required  -> measured review_required  upper review_required 
+  PMC12856317/strict         review_required  -> measured review_required  upper review_required 
+  PMC12096016/research       review_required  -> measured review_required  upper review_required 
+  PMC12096016/strict         review_required  -> measured review_required  upper review_required 
+  PMC12180156/research       review_required  -> measured review_required  upper review_required 
+  PMC12180156/strict         review_required  -> measured review_required  upper review_required 
+  PMC12452463/research       review_required  -> measured review_required  upper review_required 
+  PMC12452463/strict         review_required  -> measured review_required  upper review_required 
+  PMC12782028/research       review_required  -> measured review_required  upper review_required 
+  PMC12782028/strict         review_required  -> measured review_required  upper review_required 
+  PMC12856317/research       review_required  -> measured review_required  upper review_required 
+  PMC12856317/strict         release_ready    -> measured release_ready    upper release_ready   
+  PMC13231680/research       release_ready    -> measured release_ready    upper release_ready   
+  PMC13231680/strict         release_ready    -> measured review_required  upper review_required   <== STATUS MOVES
+
+VERDICT: NO LEG FLIPS TO release_ready (upper bound over 38 legs)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2cad75e902fab3f2178e1808953ada07d06c64a2  [git, worktree dirty=True]
+label                   : orch-flip-verify
+command                 : .venv\Scripts\python.exe C:/t/c080/docs/pwml_recovery_sprint/evidence/c080_release_flip_probe.py --root C:/t/c080
+cwd                     : C:/t/c080
+root PID / process group: 111388 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 1.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  108672:python.exe
+descendants terminated  : 1  108672
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\C-080\01-orch-flip-verify.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
