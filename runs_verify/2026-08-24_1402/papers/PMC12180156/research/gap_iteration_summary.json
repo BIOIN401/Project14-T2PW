@@ -1,0 +1,340 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 1,
+        "organisms_added": 0,
+        "locations_added": 1,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 1,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "path": "/entities/proteins/1",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:f7bd4f122bc5d1e2",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:ferrochelatase\", \"resolve_ids\": { \"strategy\": \"db_then_api\", \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hmd… (+194 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:ferrochelatase",
+            "entity_type": "protein",
+            "name": "ferrochelatase",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "ferrochelatase",
+                "organism": "Homo sapiens",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:4f18135b1b0a0281",
+                  "preview": "[\"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\"\", \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 724,
+                  "hash": "sha256:22430301f881a033",
+                  "preview": "[{\"accession\": \"B4DSA4\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sapiens\", \"reviewed\": false, \"score\": 0.8}, {\"accession\": \"Q5TZY0\", \"protein_name\": \"Ferrochelatase\", \"organism\": \"Homo sap… (+524 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 978,
+                  "hash": "sha256:70f190b8b5a3b961",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}, \"pathbank_protein_id\": 4374, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+778 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2347,
+                  "hash": "sha256:8fea90df9901c291",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"ferrochelatase\\\" OR gene:\\\"ferrochelatase\\\") AND organism_name:\\\"Homo sapiens\\\" | (protein_name:\\\"ferrochelatase\\\" OR g… (+2147 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:00053854ffd55f95",
+                  "preview": "{\"uniprot\": \"Q53FU1\", \"pathbank_protein_id\": \"4374\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:04fc47b4dd5f0f83",
+                  "preview": "{\"uniprot\": \"B4DSA4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef106ac2c4cd6525",
+                  "preview": "{\"uniprot\": \"Q5TZY0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ba89236fd8f333b4",
+                  "preview": "{\"uniprot\": \"A0A499FJN5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f6cd4380e019bb52",
+                  "preview": "{\"uniprot\": \"K7EJX5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:31a8090eb30dbd07",
+                  "preview": "{\"uniprot\": \"Q53FU1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2391adfe7b2d5748",
+                  "preview": "{\"uniprot\": \"Q7KZA3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef2a6430a154da7a",
+                  "preview": "{\"uniprot\": \"K7EJM8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 has highest confidence from PathBankDB, mapped IDs uniprot:Q53FU1 and pathbank_protein_id:4374, consistent with protein entity, organism Homo sapiens matches background context, and satisfies all selection criteria.",
+              "source": "llm",
+              "raw": {
+                "chars": 289,
+                "hash": "sha256:f35028fa043467d6",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 has highest confidence from PathBankDB, mapped IDs uniprot:Q53FU1 and pathbank_protein_id:4374, consistent with protein entity, organis… (+83 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 69.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 21,
+                  "hash": "sha256:2637d5ccd04f6316",
+                  "preview": "location_frequency=69"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Inner Membrane",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Periplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Mitochondrion",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "Mitochondrion",
+              "confidence": 1.0,
+              "reason": "Ferrochelatase in humans is a mitochondrial inner membrane protein, but based on provided candidate list, Mitochondrion has the highest biological plausibility for a eukaryotic ferrochelatase, and its frequency score (1) is equivalent to ot… (+291 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:021ec206361b66a6",
+                "preview": "{ \"choice\": \"Mitochondrion\", \"confidence\": 70, \"reason\": \"Ferrochelatase in humans is a mitochondrial inner membrane protein, but based on provided candidate list, Mitochondrion has the highest biolog… (+194 chars elided)"
+              }
+            },
+            "chosen_location": "Mitochondrion",
+            "chosen_state": "AutoState_homo_sapiensmitochondrion"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    },
+    {
+      "round": 2,
+      "summary": {},
+      "db": {},
+      "stage3": {},
+      "payload_changed": false,
+      "actionable_issue_count": 0
+    }
+  ]
+}

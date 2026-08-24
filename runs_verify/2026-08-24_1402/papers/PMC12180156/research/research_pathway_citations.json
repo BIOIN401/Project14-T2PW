@@ -1,0 +1,78 @@
+{
+  "citations": {
+    "entities": [],
+    "reactions": []
+  },
+  "format_gaps": [],
+  "limitations": [
+    "A review that CITES the seed paper cannot be distinguished from an independent corroboration. Reference sections are discarded at ingest and CandidatePaper carries no DOI, so there is no citation graph to check. When a review corroborates a step, treat it as 'possibly the same claim restated', never as a second independent finding.",
+    "No page numbers exist in this pipeline. Chunk positions are hashed away at ingest, so every citation below gives the section plus the verbatim quoted passage and nothing more. Any page reference you need must be looked up in the source paper by hand.",
+    "rag_confidence is an internal heuristic (the top retrieval score, or 0.5 + 0.1 per provenance pointer when no score exists). It is NOT a probability and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval score'.",
+    "A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is corroborated but still has no external identifier, and a Tier A identifier was accepted only when it was a genuine match (best-effort guesses and the PathBank Unknown sentinel are refused).",
+    "Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no PWML. This report is a review artifact, not an import-ready pathway."
+  ],
+  "pathway": {
+    "export_mode": "research",
+    "name": "(unnamed research pathway)"
+  },
+  "review_flags": [
+    {
+      "category": "BIOLOGY/PROVENANCE",
+      "code": "(no code)",
+      "message": "{'name': 'ferrochelatase', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended ambiguous (no_candidate_passed_identity_verification)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Homo sapiens', 'species': 'Homo sapiens', 'species_name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'species_ref': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'ferrochelatase', 'organism': 'Homo sapiens'}, 'provider': 'PathBankDB', 'source': 'db', 'candidates': [], 'chosen_rule': 'ambiguous_unverified', 'confidence': 1.0, 'reviewed': False, 'resolution': {'status': 'ambiguous', 'issue': 'no_candidate_passed_identity_verification', 'order_step': 'ambiguous_identity_verification'}, 'ambiguity': {'candidate_count': 3, 'verified_count': 0, 'verified_accessions': [], 'rejections': ['2 key(s), 66 chars elided', '2 key(s), 66 chars elided', '2 key(s), 66 chars elided'], 'reason': 'no_candidate_passed_identity_verification'}, 'rejected_candidates': [{'pathbank_protein_id': 4374, 'name': 'Ferrochelatase', 'uniprot': 'Q53FU1', 'gene_name': '', 'species_id': 1, 'score': 1.0, 'organism': 'Homo sapiens', 'taxonomy_id': '9606'}, {'pathbank_protein_id': 4375, 'name': 'Ferrochelatase', 'uniprot': 'Q5TZY0', 'gene_name': '', 'species_id': 1, 'score': 1.0, 'organism': 'Homo sapiens', 'taxonomy_id': '9606'}, {'pathbank_protein_id': 4376, 'name': 'Ferrochelatase', 'uniprot': 'Q7KZA3', 'gene_name': 'DKFZp686P18130', 'species_id': 1, 'score': 1.0, 'organism': 'Homo sapiens', 'taxonomy_id': '9606'}], 'identity_status': 'unresolved'}}",
+      "pointer": "/entities/proteins/1",
+      "stage": "post_normalization"
+    },
+    {
+      "category": "BIOLOGY/PROVENANCE",
+      "code": "(no code)",
+      "message": "{'name': 'ALAS2', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping', 'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': 'identifier resolution ended novel (implausible_name_match)', 'review_required': True, 'uncertainty': 'no database record was established for this entity', 'sources': []}], 'organism': 'Homo sapiens', 'species': 'Homo sapiens', 'species_name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'species_ref': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution': {'name': 'Homo sapiens', 'pathbank_species_id': 1, 'species_id': 1, 'taxonomy_id': '9606', 'common_name': 'Human', 'source': 'explicit_entity_species', 'status': 'matched', 'confidence': 1.0}, 'query': {'name': 'ALAS2', 'organism': 'Homo sapiens'}, 'provider': 'PathBankDB', 'source': 'db', 'candidates': [], 'chosen_rule': 'novel_protein', 'confidence': 0.0, 'reviewed': False, 'resolution': {'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}, 'identity_verdict': {'verified': False, 'reason': 'ambiguous_insufficient_margin', 'entity_name': 'ALAS2', 'organism': 'Homo sapiens', 'checks': {'identifier_resolution': 'ok', 'candidate_evidence': 'ok', 'entity_type': 'ok', 'species': 'ok', 'name': 'keep', 'score': 'ok', 'margin': 'insufficient:0.00<0.1'}, 'score': 1.0, 'margin': 0.0, 'verification_status': 'rejected', 'identity': 'pathbank_protein_id:17, uniprot:P22557', 'judged_candidate': {'pathbank_protein_id': 17, 'name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'gene_name': 'ALAS2', 'uniprot': 'P22557', 'species_id': 1, 'score': 1.0, 'organism': 'Homo sapiens', 'taxonomy_id': '9606'}, 'judged_candidates': ['8 key(s), 225 chars elided', '8 key(s), 201 chars elided', '8 key(s), 201 chars elided'], 'species_compatibility': 'ok', 'name_gate': {'verdict': 'keep', 'reason': 'exact_symbol_identity', 'entity_name': 'ALAS2', 'kind': 'protein', 'resolved_name': '5-aminolevulinate synthase, erythroid-specific, mitochondrial', 'identity': 'uniprot:P22557', 'compared_names': '1 item(s), 65 chars elided', 'matched_symbol': 'ALAS2'}, 'competing_accessions': ['q5jzf5', 'q8n6h3']}}}",
+      "pointer": "/entities/proteins/2",
+      "stage": "post_normalization"
+    }
+  ],
+  "sources": [],
+  "summary": {
+    "distinct_sources_cited": 0,
+    "element_count": 0,
+    "entity_count": 0,
+    "page_numbers_available": false,
+    "pwml_emitted": false,
+    "reaction_count": 0,
+    "review_flag_count": 2,
+    "review_required_count": 0,
+    "skipped_format_rule_count": 0,
+    "tier_counts": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0
+    },
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    },
+    "unsourced_count": 0
+  },
+  "tiers": {
+    "assignments": [],
+    "counts": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0
+    },
+    "mode": "research",
+    "notes": [],
+    "online": false,
+    "review_required": false,
+    "tier_labels": {
+      "A": "DB-grounded",
+      "B": "corroborated by a second paper (no identifier)",
+      "C": "single-source (review)",
+      "D": "UNSOURCED (review)"
+    }
+  }
+}

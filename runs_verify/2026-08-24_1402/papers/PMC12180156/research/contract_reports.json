@@ -1,0 +1,456 @@
+{
+  "post_extraction_contract_report": {
+    "stage": "post_extraction",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_extraction",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "report_schema_version": 1,
+    "phase": "post_extraction"
+  },
+  "post_extraction_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report": {
+    "stage": "post_mapping",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_mapping",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "report_schema_version": 1,
+    "phase": "post_mapping"
+  },
+  "stage2_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_normalization_contract_report": {
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/1/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/2/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/3/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 4,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/3/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 4
+    },
+    "report_schema_version": 1,
+    "phase": "audit_round"
+  },
+  "post_normalization_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_normalization",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/3/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 4,
+      "warning_count": 0
+    }
+  },
+  "post_audit_contract_report": {
+    "stage": "post_audit",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_audit",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/1/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/2/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/3/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 4,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/3/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 4
+    },
+    "report_schema_version": 1,
+    "phase": "post_audit"
+  },
+  "post_audit_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_audit",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/2/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/3/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 4,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report": {
+    "stage": "post_remap",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_remap",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "runtime_schema_type_error",
+          "pointer": "/processes/transports/0/transporters/0",
+          "message": "Expected an object.",
+          "expected": "object",
+          "received": "string"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 1,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "runtime_schema_type_error",
+        "pointer": "/processes/transports/0/transporters/0",
+        "message": "Expected an object.",
+        "expected": "object",
+        "received": "string"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 1
+    },
+    "report_schema_version": 1,
+    "phase": "post_remap"
+  },
+  "post_remap_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_remap",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_type_error",
+        "pointer": "/processes/transports/0/transporters/0",
+        "message": "Expected an object.",
+        "expected": "object",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 1,
+      "warning_count": 0
+    }
+  },
+  "post_enrichment_runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_enrichment",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_type_error",
+        "pointer": "/processes/transports/0/transporters/0",
+        "message": "Expected an object.",
+        "expected": "object",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 1,
+      "warning_count": 0
+    }
+  },
+  "pre_export_runtime_schema_report": {
+    "ok": false,
+    "boundary": "pre_export",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_type_error",
+        "pointer": "/processes/transports/0/transporters/0",
+        "message": "Expected an object.",
+        "expected": "object",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 1,
+      "warning_count": 0
+    }
+  }
+}

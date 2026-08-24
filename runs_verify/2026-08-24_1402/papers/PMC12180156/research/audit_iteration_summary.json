@@ -1,0 +1,77 @@
+{
+  "run_id": "",
+  "round_count": 2,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        3,
+        2,
+        0,
+        -6,
+        6
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 2,
+      "warning_count": 6,
+      "patch_count": 6,
+      "accepted_patch_count": 6,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Added three missing subcellular locations referenced by biological states, assigned UniProt P22557 to ALAS2 using mapping_meta candidate and paper evidence, and added cytosolic location for IRP1 inferred from interaction evidence. Ferrochel… (+105 chars elided)",
+      "top_errors": [
+        "Referenced subcellular locations 'cytosol', 'mitochondrial matrix', 'mitochondrial inner membrane' are missing from the declared list",
+        "Protein 'ferrochelatase' is missing a UniProt or DrugBank identifier and cannot be resolved from ambiguous candidates"
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 1,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    },
+    {
+      "round": 2,
+      "temperature": 0.15,
+      "max_tokens": 4300,
+      "candidate_count": 1,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 2,
+      "patch_count": 0,
+      "accepted_patch_count": 0,
+      "rejected_patch_count": 0,
+      "llm_ok": false,
+      "llm_error": "LLM output was not valid JSON.",
+      "llm_repair_rationale": "",
+      "top_errors": [],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": false,
+      "gap_payload_changed": false,
+      "settled_payload_changed": false,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

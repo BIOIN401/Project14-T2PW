@@ -1,0 +1,576 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:8611c3a955aefc3e",
+  "resulting_payload_hash": "sha256:8611c3a955aefc3e",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "alas2",
+      "aminolevulinic acid synthase alas2",
+      "ferrochelatase",
+      "glycine",
+      "heme",
+      "iron",
+      "sfxn4"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:a786ea498c02058a",
+  "ok": true,
+  "counts": {
+    "core_accepted": 3,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 1,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+      "essential_participant": "/entities/proteins/0",
+      "iteration": 0,
+      "core_terms": [
+        "entitiesproteins0",
+        "iron",
+        "iron redistribution from cytosolic state to mitochondrial matrix state"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "unresolved_actor_in_transporters",
+      "detail": {
+        "row": {
+          "pointer": "/processes/transports/0",
+          "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+          "cargo": "iron",
+          "from_biological_state": "cytosolic state",
+          "to_biological_state": "mitochondrial matrix state",
+          "elements_with_states": [
+            {
+              "element": "iron",
+              "side": "left",
+              "biological_state": "cytosolic state",
+              "evidence": "39 chars elided"
+            },
+            {
+              "element": "iron",
+              "side": "right",
+              "biological_state": "mitochondrial matrix state",
+              "evidence": "27 chars elided"
+            }
+          ],
+          "evidence": "67 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            },
+            {
+              "stage": "audit_repair",
+              "origin": "audit_modified",
+              "support": "unsupported",
+              "paper_explicit": "not_evaluated",
+              "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+              "review_required": false,
+              "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+              "sources": "0 item(s), 2 chars elided"
+            },
+            {
+              "stage": "audit_repair",
+              "origin": "audit_modified",
+              "support": "unsupported",
+              "paper_explicit": "not_evaluated",
+              "reason": "an accepted audit patch 'replace' operation produced this row's content; it matched no row in this container immediately before the operation",
+              "review_required": false,
+              "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "transporters": [
+            "/entities/proteins/0"
+          ]
+        },
+        "participant": "/entities/proteins/0"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "SFXN4 modulates ferrochelatase levels",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "sfxn4",
+        "sfxn4 modulates ferrochelatase levels"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "SFXN4 regulates IRP1 switch",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "irp1",
+        "sfxn4",
+        "sfxn4 regulates irp1 switch"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+      "essential_participant": "/entities/proteins/0",
+      "iteration": 0,
+      "core_terms": [
+        "entitiesproteins0",
+        "iron",
+        "iron redistribution from cytosolic state to mitochondrial matrix state"
+      ],
+      "state": "quarantined_broken_reference",
+      "reason": "unresolved_actor_in_transporters",
+      "detail": {
+        "row": {
+          "pointer": "/processes/transports/0",
+          "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+          "cargo": "iron",
+          "from_biological_state": "cytosolic state",
+          "to_biological_state": "mitochondrial matrix state",
+          "elements_with_states": [
+            {
+              "element": "iron",
+              "side": "left",
+              "biological_state": "cytosolic state",
+              "evidence": "39 chars elided"
+            },
+            {
+              "element": "iron",
+              "side": "right",
+              "biological_state": "mitochondrial matrix state",
+              "evidence": "27 chars elided"
+            }
+          ],
+          "evidence": "67 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            },
+            {
+              "stage": "audit_repair",
+              "origin": "audit_modified",
+              "support": "unsupported",
+              "paper_explicit": "not_evaluated",
+              "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+              "review_required": false,
+              "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+              "sources": "0 item(s), 2 chars elided"
+            },
+            {
+              "stage": "audit_repair",
+              "origin": "audit_modified",
+              "support": "unsupported",
+              "paper_explicit": "not_evaluated",
+              "reason": "an accepted audit patch 'replace' operation produced this row's content; it matched no row in this container immediately before the operation",
+              "review_required": false,
+              "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "transporters": [
+            "/entities/proteins/0"
+          ]
+        },
+        "participant": "/entities/proteins/0"
+      },
+      "original_process": {
+        "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+        "cargo": "iron",
+        "from_biological_state": "cytosolic state",
+        "to_biological_state": "mitochondrial matrix state",
+        "elements_with_states": [
+          {
+            "element": "iron",
+            "side": "left",
+            "biological_state": "cytosolic state",
+            "evidence": "redistribution of iron from the cytosol"
+          },
+          {
+            "element": "iron",
+            "side": "right",
+            "biological_state": "mitochondrial matrix state",
+            "evidence": "to the mitochondrial matrix"
+          }
+        ],
+        "evidence": "redistribution of iron from the cytosol to the mitochondrial matrix",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          },
+          {
+            "stage": "audit_repair",
+            "origin": "audit_modified",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "an accepted audit patch 'replace' operation produced this row's content; it matched no row in this container immediately before the operation",
+            "review_required": false,
+            "uncertainty": "audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this transport from the frozen graph (quarantined_broken_reference: unresolved_actor_in_transporters)",
+            "review_required": true,
+            "uncertainty": "the row could not be serialized as strict PWML, so whether the biology it named is real was never decided",
+            "sources": []
+          }
+        ],
+        "transporters": [
+          "/entities/proteins/0"
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "SFXN4 inhibits ALAS2 translation",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "sfxn4",
+        "sfxn4 inhibits alas2 translation"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "SFXN4 modulates ferrochelatase levels",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ferrochelatase",
+        "sfxn4",
+        "sfxn4 modulates ferrochelatase levels"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "SFXN4 regulates IRP1 switch",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "irp1",
+        "sfxn4",
+        "sfxn4 regulates irp1 switch"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "requested_pathway_anchors_present"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": false,
+        "inapplicable_reason": "no actor sub-entry on any retained reaction carries both a name with an identifying token and a cited evidence span, so no actor could be compared against its own span"
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.571429,
+    "missing_anchors": [
+      "heme",
+      "glycine",
+      "iron"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "3 requested-core anchor(s) matched no admitted process: heme, glycine, iron; candidate processes withheld by strict admission (quarantined_broken_reference:1); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "semantic_evaluation_failed:requested_pathway_anchors_present"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": false,
+    "locked_reactions_found": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "heme",
+      "glycine",
+      "iron",
+      "ferrochelatase",
+      "δ-aminolevulinic acid synthase (ALAS2)",
+      "SFXN4",
+      "ALAS2"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "heme biosynthesis",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "heme",
+        "glycine",
+        "iron",
+        "ferrochelatase",
+        "δ-aminolevulinic acid synthase (ALAS2)"
+      ],
+      "key_proteins": [
+        "SFXN4",
+        "ferrochelatase",
+        "ALAS2"
+      ],
+      "likely_compartments": [
+        "mitochondrion",
+        "mitochondrial inner membrane",
+        "cytosol"
+      ],
+      "main_subprocesses": [
+        "heme biosynthesis",
+        "iron-sulfur cluster biogenesis",
+        "mitochondrial iron regulation"
+      ],
+      "relevant_sections": [
+        "body"
+      ],
+      "pathway_relevance_score": 0.7,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 0.7,
+      "selected_example": "SFXN4 and heme biosynthesis",
+      "candidate_examples": [
+        {
+          "name": "SFXN4 and heme biosynthesis",
+          "organism": "Homo sapiens",
+          "key_compounds": [
+            "heme",
+            "glycine",
+            "iron",
+            "ferrochelatase",
+            "ALAS2"
+          ],
+          "key_proteins": [
+            "SFXN4",
+            "ferrochelatase",
+            "ALAS2"
+          ],
+          "main_subprocesses": [
+            "heme biosynthesis",
+            "iron-sulfur cluster biogenesis",
+            "mitochondrial iron regulation"
+          ],
+          "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+        }
+      ],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:5c639fc16ae8943d",
+        "response_hash": "sha256:669440b90226a5ea",
+        "raw_chars": 1346,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1346,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "ferrochelatase",
+      "δ-aminolevulinic acid synthase (ALAS2)",
+      "SFXN4",
+      "ALAS2"
+    ],
+    "unmatched_terms": [
+      "heme",
+      "glycine",
+      "iron"
+    ],
+    "coverage_ratio": 0.571429,
+    "core_accepted_processes": 3,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 3,
+    "quarantined_processes": 1,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:8611c3a955aefc3e.sha256:a786ea498c02058a",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [
+      {
+        "pointer": "/processes/transports/0",
+        "name": "iron redistribution from cytosolic state to mitochondrial matrix state",
+        "process_kind": "transport",
+        "state": "quarantined_broken_reference",
+        "reason": "unresolved_actor_in_transporters",
+        "essential_participant": "/entities/proteins/0",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      }
+    ],
+    "would_have_quarantined": 1,
+    "would_have_refused": []
+  }
+}

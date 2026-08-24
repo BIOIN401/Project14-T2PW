@@ -1,0 +1,197 @@
+{
+  "label": "cohort-both",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_cohort_both.txt",
+    "--modes",
+    "strict,research",
+    "--out",
+    "runs_verify",
+    "--fresh"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-24T18:03:56+00:00",
+  "finished_at": "2026-08-24T20:01:07+00:00",
+  "duration_seconds": 7030.5904992,
+  "timeout_seconds": 10800.0,
+  "root_pid": 384840,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 385596,
+      "name": "python.exe",
+      "ppid": 384840
+    },
+    {
+      "pid": 385492,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 385744,
+      "name": "python.exe",
+      "ppid": 385492
+    },
+    {
+      "pid": 384712,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 385848,
+      "name": "python.exe",
+      "ppid": 384712
+    },
+    {
+      "pid": 357880,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 389500,
+      "name": "python.exe",
+      "ppid": 357880
+    },
+    {
+      "pid": 386532,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 391756,
+      "name": "python.exe",
+      "ppid": 386532
+    },
+    {
+      "pid": 392028,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 395628,
+      "name": "python.exe",
+      "ppid": 392028
+    },
+    {
+      "pid": 394616,
+      "name": "python.exe",
+      "ppid": 396012
+    },
+    {
+      "pid": 396012,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 413164,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 402732,
+      "name": "python.exe",
+      "ppid": 413164
+    },
+    {
+      "pid": 412064,
+      "name": "python.exe",
+      "ppid": 420244
+    },
+    {
+      "pid": 420244,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 422760,
+      "name": "python.exe",
+      "ppid": 385596
+    },
+    {
+      "pid": 390316,
+      "name": "python.exe",
+      "ppid": 422760
+    }
+  ],
+  "descendants_terminated": [
+    357880,
+    384712,
+    385492,
+    385596,
+    385744,
+    385848,
+    386532,
+    389500,
+    390316,
+    391756,
+    392028,
+    394616,
+    395628,
+    396012,
+    402732,
+    412064,
+    413164,
+    420244,
+    422760
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28028,
+      "name": "python.exe"
+    },
+    {
+      "pid": 30584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 385440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 385796,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/T-106/11-cohort-both.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "cc8b6ae4ac0f4c96ef1272a295a91456d17977c6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "T-106-cohort",
+    "token": "T-106-cohort:385440:32a83f89e6b8fa15",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "proteins",
+          "name": "MSMO1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "SQLE",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "FDFT1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "HMGCR",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "HMGCS1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "FDPS",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "MVD",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "MVK",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "IDI1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "ACAT2",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "EBP",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LBR",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "NSDHL",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "SREBF1",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "SREBF2",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "HSD17B7",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LIPA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "MSMO1",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "SQLE",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FDFT1",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "HMGCR",
+          "reason": "location_entity_removed",
+          "biological_state": "Homo sapiens endoplasmic reticulum state"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "HMGCS1",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienscytosol"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "FDPS",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienscytoplasm"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "MVD",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienscytoplasm"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "MVK",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienscytoplasm"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "IDI1",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensperoxisome"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "ACAT2",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienscytoplasm"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "EBP",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LBR",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensinner_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "NSDHL",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "SREBF1",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensgolgi_apparatus"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "SREBF2",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "HSD17B7",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"
+        },
+        {
+          "bucket": "element_locations/protein_locations",
+          "name": "LIPA",
+          "reason": "location_entity_removed",
+          "biological_state": "AutoState_homo_sapienslysosome"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapiensendoplasmic_reticulum_membrane",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapienscytosol",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapienscytoplasm",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapiensperoxisome",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapiensinner_membrane",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapiensgolgi_apparatus",
+          "reason": "state_unreferenced_after_quarantine"
+        },
+        {
+          "bucket": "biological_states",
+          "name": "AutoState_homo_sapienslysosome",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

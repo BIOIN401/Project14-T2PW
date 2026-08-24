@@ -1,0 +1,227 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "MSMO1",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "SQLE",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "FDFT1",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "HMGCR",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "HMGCS1",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "FDPS",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "MVD",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "MVK",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "IDI1",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "ACAT2",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "EBP",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LBR",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "NSDHL",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "SREBF1",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "SREBF2",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "HSD17B7",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LIPA",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "MSMO1",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "SQLE",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "FDFT1",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "HMGCR",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "HMGCS1",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "FDPS",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "MVD",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "MVK",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "IDI1",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "ACAT2",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "EBP",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LBR",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "NSDHL",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "SREBF1",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "SREBF2",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "HSD17B7",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LIPA",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    }
+  ],
+  "strict_gate_errors_not_blocking": []
+}

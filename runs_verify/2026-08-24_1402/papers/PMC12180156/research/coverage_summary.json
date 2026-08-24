@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "heme",
+    "glycine",
+    "iron",
+    "ferrochelatase",
+    "δ-aminolevulinic acid synthase (ALAS2)",
+    "SFXN4",
+    "ALAS2"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "heme biosynthesis",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "heme",
+      "glycine",
+      "iron",
+      "ferrochelatase",
+      "δ-aminolevulinic acid synthase (ALAS2)"
+    ],
+    "key_proteins": [
+      "SFXN4",
+      "ferrochelatase",
+      "ALAS2"
+    ],
+    "likely_compartments": [
+      "mitochondrion",
+      "mitochondrial inner membrane",
+      "cytosol"
+    ],
+    "main_subprocesses": [
+      "heme biosynthesis",
+      "iron-sulfur cluster biogenesis",
+      "mitochondrial iron regulation"
+    ],
+    "relevant_sections": [
+      "body"
+    ],
+    "pathway_relevance_score": 0.7,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 0.7,
+    "selected_example": "SFXN4 and heme biosynthesis",
+    "candidate_examples": [
+      {
+        "name": "SFXN4 and heme biosynthesis",
+        "organism": "Homo sapiens",
+        "key_compounds": [
+          "heme",
+          "glycine",
+          "iron",
+          "ferrochelatase",
+          "ALAS2"
+        ],
+        "key_proteins": [
+          "SFXN4",
+          "ferrochelatase",
+          "ALAS2"
+        ],
+        "main_subprocesses": [
+          "heme biosynthesis",
+          "iron-sulfur cluster biogenesis",
+          "mitochondrial iron regulation"
+        ],
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway"
+      }
+    ],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:5c639fc16ae8943d",
+      "response_hash": "sha256:669440b90226a5ea",
+      "raw_chars": 1346,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1346,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "ferrochelatase",
+    "δ-aminolevulinic acid synthase (ALAS2)",
+    "SFXN4",
+    "ALAS2"
+  ],
+  "unmatched_terms": [
+    "heme",
+    "glycine",
+    "iron"
+  ],
+  "coverage_ratio": 0.571429,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 1,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

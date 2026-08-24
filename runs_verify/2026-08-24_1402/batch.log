@@ -1,0 +1,32 @@
+[14:02:09] STARTING a fresh run 2026-08-24_1402 (--fresh was given)
+[14:02:09]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[14:02:09] fetching papers (topics=topics_cohort_research.txt, limit=none) ...
+[14:02:09]   + PMC12180156  (67304 chars)  (untitled)
+[14:02:09]   + PMC12782028  (43679 chars)  (untitled)
+[14:02:09] planned 2 paper(s) x 1 mode(s) = 2 run(s); 0 candidate(s) skipped (see skipped.json)
+[14:02:09] acquisition funnel: requested 2, examined 2, eligible 2, ineligible 0, no_full_text 0, accepted 2
+[14:02:09] running 2 paper+mode pair(s) sequentially
+[14:02:09] whole-night deadline : 10.0h from now
+[14:02:09] [1/2] PMC12180156 / research -> starting (timeout 3600s)
+[14:15:31] [1/2] PMC12180156 / research -> PASS WITH WARNINGS in 802.2s (13m22s)
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_type_error @ /processes/transports/0/transporters/0: Expected an object.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_type_error @ /processes/transports/0/transporters/0: Expected an object.
+[14:15:31]     ! runtime-schema finding (informational, not blocking): and 1 more finding(s); all of them are in contract_reports.json
+[14:15:31]     1/2 done | strict 0 pass | research 1 pass | 1 NO DELIVERABLE
+[14:15:31] [2/2] PMC12782028 / research -> starting (timeout 3600s)
+[14:26:44] [2/2] PMC12782028 / research -> PASS WITH WARNINGS in 672.0s (11m12s)
+[14:26:44]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:26:44]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:26:44]     2/2 done | strict 0 pass | research 2 pass | 2 NO DELIVERABLE
+[14:26:44] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1402
+[14:26:44] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1402\SUMMARY.txt
+[14:26:44] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1402\failures_by_code.txt
+[14:26:44] PASSED WITH WARNINGS: 2 paper+mode run(s) passed but 2 produced no deliverable or lost an artifact on write -- see SUMMARY.txt

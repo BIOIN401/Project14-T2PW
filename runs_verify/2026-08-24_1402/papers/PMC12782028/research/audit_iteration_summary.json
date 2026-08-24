@@ -1,0 +1,40 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        17,
+        0,
+        0,
+        -2,
+        2
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 22,
+      "patch_count": 2,
+      "accepted_patch_count": 2,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Added protein location entries for CYP51A1 and DHCR24 to match their reactions' assigned biological state, ensuring compartment assignment for SBML conversion. No other structural issues require patching; remaining concerns (unmapped compou… (+95 chars elided)",
+      "top_errors": [],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 17,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}
