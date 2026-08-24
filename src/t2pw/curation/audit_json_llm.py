@@ -9,38 +9,22 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from t2pw.curation.prompt_payload_keys import PROMPT_OMITTED_PAYLOAD_KEYS
 from t2pw.llm.client import PROVIDER, chat
-from t2pw.mapping import identity_admission
 from t2pw.pipeline.process_normalizer import validate_no_composites, validate_registry_references
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 logger = logging.getLogger(__name__)
 
-#: C-075. Top-level payload keys the audit PROMPT never needs, removed from the
-#: SERIALIZED COPY only. Nothing here is removed from the payload itself: the
-#: index has to survive the audit round trip, because the AUTHORITATIVE mapping
-#: run happens AFTER the audit (``streamlit_app.py:4225``) and a payload that
-#: reached it without an index would fail open and withhold nothing.
-#:
-#: WHY IT EXISTS. Arming C-075's source-support pass puts a normalized copy of
-#: the whole paper on ``final_payload`` at the Stage-2 merge, and the audit loop
-#: json.dumps THE ENTIRE PAYLOAD into its user message (:func:`_build_llm_prompt`).
-#: Measured over the committed corpus that blob is ~56 KB per leg -- mean 56,404
-#: bytes against a mean source of 58,320 -- so every audit round of every leg
-#: would carry it, risking prompt truncation and degraded audit quality across
-#: the whole run. The auditor has no use for it: it judges STRUCTURE, and the
-#: paper is not part of the structure it patches.
-#:
-#: PATCH POINTERS ARE UNAFFECTED. RFC6901 pointers address object members by
-#: NAME, not by position, so dropping a top-level key shifts no pointer into
-#: ``entities`` or ``processes``. It also removes the possibility of the model
-#: proposing a patch AGAINST the index, which it could do while it could see it.
-#:
-#: Key-driven and additive: a payload carrying none of these keys is serialized
-#: by the same object it always was, so no existing prompt changes by one byte.
-PROMPT_OMITTED_PAYLOAD_KEYS: frozenset = frozenset({
-    identity_admission.SOURCE_INDEX_KEY,
-})
+#: C-079 re-export, and nothing else changed here. :data:`PROMPT_OMITTED_PAYLOAD_KEYS`
+#: was defined at this spot by C-075 and now lives in
+#: :mod:`t2pw.curation.prompt_payload_keys`, imported above, so this name still
+#: resolves for every existing caller and still names the SAME frozenset object.
+#: It moved because F-105 found a second serializer needing the same list --
+#: ``interactive_curator`` -- which cannot import THIS module without acquiring a
+#: module-scope dependency on ``t2pw.llm.client``, a module that constructs an
+#: OpenAI client and can raise while merely being imported. The reason lives in
+#: the new module's docstring; ``payload_for_prompt`` below is untouched.
 
 SYSTEM_PROMPT = """You are a strict JSON auditor and repair planner for PWML-like pathway payloads.
 Your job is to produce a safe, minimal patch plan that improves SBML conversion readiness.

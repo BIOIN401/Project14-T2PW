@@ -9,6 +9,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from t2pw.curation.prompt_payload_keys import PROMPT_OMITTED_PAYLOAD_KEYS
+
 
 INTERACTIVE_CONNECTIVITY_CONFIDENCE_THRESHOLD = 0.90
 
@@ -162,7 +164,13 @@ _HISTORY_KEYS = (
 
 
 def strip_payload_for_interactive_context(payload: dict) -> dict:
-    """Return a pathway payload copy with bulky non-authoritative context removed."""
+    """Return a pathway payload copy with bulky non-authoritative context removed.
+
+    A COPY, always: the caller's payload is deep-copied before anything is
+    dropped, so the object that travels on to patch application and to the
+    authoritative mapping run is exactly the object that arrived. C-079 changes
+    WHICH keys are dropped (see :func:`_should_drop_payload_key`), never that.
+    """
     if not isinstance(payload, dict):
         return {}
     return _strip_payload_value(copy.deepcopy(payload), parent_key=None)
@@ -862,6 +870,44 @@ def _build_interactive_curator_retry_messages(*, user_request: str, validation_e
 
 def _should_drop_payload_key(key: str, value: Any) -> bool:
     key_lower = key.lower()
+    # C-079 / F-105. THE ALLOW-LIST CLAUSE, and it is deliberately the FIRST one.
+    #
+    # Everything below this line is a blacklist: a set of exact names and a tuple
+    # of substrings, both of which only drop a key somebody remembered to write
+    # down. That is how the source index got into this prompt. It matched neither
+    # half -- ``_RAW_TEXT_KEYS`` carries ``source_text``, not ``source_text_index``,
+    # and no member of ``_BULKY_KEY_TOKENS`` is a substring of it -- so ~65 KB of
+    # normalized paper rode into every interactive round while the AUDIT prompt,
+    # filtering off the same list of prompt-useless keys, had already dropped it.
+    # Adding one more string to ``_RAW_TEXT_KEYS`` would have closed that symptom
+    # and left the next key to be discovered the same way.
+    #
+    # So this clause reads :data:`PROMPT_OMITTED_PAYLOAD_KEYS` -- the very object
+    # ``audit_json_llm.payload_for_prompt`` reads -- and the two serializers can no
+    # longer disagree about what a prompt may carry.
+    #
+    # FIRST, ahead of the core/mapped-id exemptions, because the constant is an
+    # explicit hand-curated statement and those exemptions exist to stop the
+    # HEURISTICS below from eating the pathway. The audit side has no such
+    # exemption at all, so deferring to them here would reintroduce exactly the
+    # drift this clause removes. Today the question is moot -- nothing in the
+    # constant is a core key or an id key -- and it is settled in advance.
+    #
+    # Both cases are tested because membership on the audit side is exact: a raw
+    # match keeps this filter a superset of that one for any future member,
+    # whatever its case, and the folded match additionally catches a payload that
+    # spells a listed key in mixed case.
+    #
+    # AT EVERY DEPTH, not just the top level, because this stripper is recursive
+    # and every other rule in it already is. That is a SUPERSET of the audit side,
+    # which only ever sees the top-level payload dict; a key the constant declares
+    # prompt-useless is prompt-useless wherever it is nested, and this function
+    # only ever shapes a COPY, so nothing downstream can lose it.
+    #
+    # ADDITIVE. A payload carrying none of these keys reaches the blacklist in the
+    # state it always did, so its serialization does not change by one byte.
+    if key in PROMPT_OMITTED_PAYLOAD_KEYS or key_lower in PROMPT_OMITTED_PAYLOAD_KEYS:
+        return True
     if key_lower in _CORE_PATHWAY_KEYS or _is_mapped_id_key(key_lower):
         return False
     if key_lower in _RAW_TEXT_KEYS:
