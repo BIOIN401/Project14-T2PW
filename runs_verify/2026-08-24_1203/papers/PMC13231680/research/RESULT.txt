@@ -1,0 +1,39 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : (unknown)
+slug       : PMC13231680
+mode       : research
+status     : fail
+stage      : stage1
+wall time  : 122.8s (2m02s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : no_reactions
+message      : the pipeline produced a pathway with no reactions and no transports
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+Multi-paper RAG produced no additional usable reactions (no evidence retrieved — check that the embeddings endpoint is running and papers were fetched). Keeping the single-paper extraction.
+
+COUNTS
+----------------------------------------
+  compounds = 0
+  entities = 2
+  proteins = 1
+  reactions = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 0
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (1029 B)
+  - extraction_boundary_report.json  (2984 B)
+  - merged_payload.json  (61927 B)
+  - rag_admission_report.json  (9422 B)
+  - stage0_attempts.json  (825 B)
+  - stage1_payload.json  (1142 B)

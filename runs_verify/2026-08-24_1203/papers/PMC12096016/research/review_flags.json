@@ -1,0 +1,220 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Fur",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Fur",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "ambiguous_unverified",
+          "confidence": 0.65,
+          "reviewed": false,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "no_candidate_passed_identity_verification",
+            "order_step": "ambiguous_identity_verification"
+          },
+          "ambiguity": {
+            "candidate_count": 10,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 5917,
+              "name": "Succinate dehydrogenase iron-sulfur subunit",
+              "gene_name": "sdhB",
+              "uniprot": "P07014",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 5979,
+              "name": "Cysteine desulfurase",
+              "gene_name": "iscS",
+              "uniprot": "P0A6B7",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6015,
+              "name": "Thiosulfate sulfurtransferase glpE",
+              "gene_name": "glpE",
+              "uniprot": "P0A6V5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6079,
+              "name": "Sulfurtransferase tusA",
+              "gene_name": "tusA",
+              "uniprot": "P0A890",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6151,
+              "name": "Formate dehydrogenase, nitrate-inducible, iron-sulfur subunit",
+              "gene_name": "fdnH",
+              "uniprot": "P0AAJ3",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6152,
+              "name": "Formate dehydrogenase-O iron-sulfur subunit",
+              "gene_name": "fdoH",
+              "uniprot": "P0AAJ5",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6154,
+              "name": "Sulfurtransferase tusE",
+              "gene_name": "tusE",
+              "uniprot": "P0AB18",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6201,
+              "name": "Fumarate reductase iron-sulfur subunit",
+              "gene_name": "frdB",
+              "uniprot": "P0AC47",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "identity_status": "unresolved"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "MenD",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "MenD",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/6",
+      "message": "Protein 'Fur' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}

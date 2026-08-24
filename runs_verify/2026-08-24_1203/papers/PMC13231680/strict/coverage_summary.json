@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "phthalylsulfacetamide",
+    "meropenem",
+    "Zn2+",
+    "NDM-1",
+    "LpxC"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "phthalylsulfacetamide",
+      "meropenem",
+      "Zn2+"
+    ],
+    "key_proteins": [
+      "NDM-1",
+      "LpxC"
+    ],
+    "likely_compartments": [],
+    "main_subprocesses": [
+      "NDM-1 inhibition",
+      "PSA binding to NDM-1 active site",
+      "restoration of meropenem bactericidal activity"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "methods",
+      "results",
+      "discussion",
+      "conclusion"
+    ],
+    "pathway_relevance_score": 0.2,
+    "document_type": "primary_research",
+    "context_type": "enzyme_mechanism",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:02484518418aefad",
+      "response_hash": "sha256:7996448c5523b492",
+      "raw_chars": 698,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 698,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "phthalylsulfacetamide",
+    "meropenem",
+    "Zn2+",
+    "NDM-1"
+  ],
+  "unmatched_terms": [
+    "LpxC"
+  ],
+  "coverage_ratio": 0.8,
+  "core_accepted_processes": 3,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 3,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

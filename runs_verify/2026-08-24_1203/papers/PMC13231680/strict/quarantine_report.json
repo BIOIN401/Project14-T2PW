@@ -1,0 +1,306 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "pathwhiz",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:a28720a4a7529b2d",
+  "resulting_payload_hash": "sha256:a28720a4a7529b2d",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "pathwhiz",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "lpxc",
+      "meropenem",
+      "ndm1",
+      "phthalylsulfacetamide",
+      "zn2+"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:fddbd723f6b3de46",
+  "ok": true,
+  "counts": {
+    "core_accepted": 3,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "NDM-1 catalyzed hydrolysis of meropenem",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "hydrolyzed meropenem",
+        "meropenem",
+        "ndm1 catalyzed hydrolysis of meropenem",
+        "ndm1 complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "PSA inhibits NDM-1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ndm1",
+        "phthalylsulfacetamide",
+        "psa inhibits ndm1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "PSA binds Zn2+",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa binds zn2+",
+        "zn2+"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "NDM-1 catalyzed hydrolysis of meropenem",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "hydrolyzed meropenem",
+        "meropenem",
+        "ndm1 catalyzed hydrolysis of meropenem",
+        "ndm1 complex"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "PSA inhibits NDM-1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "ndm1",
+        "phthalylsulfacetamide",
+        "psa inhibits ndm1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "PSA binds Zn2+",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "phthalylsulfacetamide",
+        "psa binds zn2+",
+        "zn2+"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": false,
+        "inapplicable_reason": "this run supplied no requested-pathway name to look for"
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.8,
+    "missing_anchors": [
+      "LpxC"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "1 requested-core anchor(s) matched no admitted process: LpxC",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:LpxC"
+    ],
+    "applied": true,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": false,
+    "locked_reactions_found": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "phthalylsulfacetamide",
+      "meropenem",
+      "Zn2+",
+      "NDM-1",
+      "LpxC"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "phthalylsulfacetamide",
+        "meropenem",
+        "Zn2+"
+      ],
+      "key_proteins": [
+        "NDM-1",
+        "LpxC"
+      ],
+      "likely_compartments": [],
+      "main_subprocesses": [
+        "NDM-1 inhibition",
+        "PSA binding to NDM-1 active site",
+        "restoration of meropenem bactericidal activity"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "methods",
+        "results",
+        "discussion",
+        "conclusion"
+      ],
+      "pathway_relevance_score": 0.2,
+      "document_type": "primary_research",
+      "context_type": "enzyme_mechanism",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:02484518418aefad",
+        "response_hash": "sha256:7996448c5523b492",
+        "raw_chars": 698,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 698,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "phthalylsulfacetamide",
+      "meropenem",
+      "Zn2+",
+      "NDM-1"
+    ],
+    "unmatched_terms": [
+      "LpxC"
+    ],
+    "coverage_ratio": 0.8,
+    "core_accepted_processes": 3,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 3,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 1,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:a28720a4a7529b2d.sha256:fddbd723f6b3de46"
+}

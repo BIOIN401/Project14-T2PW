@@ -1,0 +1,1188 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 5,
+        "organisms_added": 0,
+        "locations_added": 2,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 7,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:fur",
+            "entity_type": "protein",
+            "name": "Fur",
+            "path": "/entities/proteins/6",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:mend",
+            "entity_type": "protein",
+            "name": "MenD",
+            "path": "/entities/proteins/7",
+            "needs_id_mapping": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "location"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "path": "/entities/compounds/9",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:lactate",
+            "entity_type": "compound",
+            "name": "lactate",
+            "path": "/entities/compounds/10",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:ferric iron",
+            "entity_type": "compound",
+            "name": "ferric iron",
+            "path": "/entities/compounds/13",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:01b6b46ef4621d12",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:fur\", \"resolve_ids\": { \"strategy\": \"db_then_api\" }, \"resolve_location\": { \"strategy\": \"db_then_default\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\"… (+202 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:fur",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:mend",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:lactate",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:ferric iron",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:fur",
+            "entity_type": "protein",
+            "name": "Fur",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "Fur",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c479714babff0218",
+                  "preview": "{\"uniprot\": \"P0A9A9\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 123,
+                  "hash": "sha256:41c9099dc6e0757e",
+                  "preview": "[\"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 983,
+                  "hash": "sha256:163b1622ed2746bb",
+                  "preview": "[{\"accession\": \"P0A9A9\", \"protein_name\": \"Ferric uptake regulation protein\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0A9B1\", \"protein_name\": \"Fer… (+783 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2197,
+                  "hash": "sha256:c00a10acb4769bb7",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"confidence\": 0.65, \"candidates\": [{\"pathbank_protein_id\": 5917, \"name\": \"Succinate dehydrogenase iron-sulfur su… (+1997 chars elided)",
+                  "keys": 6
+                },
+                {
+                  "chars": 2565,
+                  "hash": "sha256:e8d8e01b68a3a7e8",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"Fur\\\" OR gene:\\\"Fur\\\")\", \"mapped_ids\": … (+2365 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c479714babff0218",
+                  "preview": "{\"uniprot\": \"P0A9A9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1908d90e8e9eb695",
+                  "preview": "{\"uniprot\": \"P0A9B1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cce8d96b896f1e25",
+                  "preview": "{\"uniprot\": \"P0A9B0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:25882d08198f4a45",
+                  "preview": "{\"uniprot\": \"B7L9M0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:0a7b65259ba380be",
+                  "preview": "{\"uniprot\": \"A0A0H2YX47\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:464759cfe4d4cceb",
+                  "preview": "{\"uniprot\": \"B7MFV0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ebb16c925b460198",
+                  "preview": "{\"uniprot\": \"A7ZJ68\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:cedca6553a76f4ea",
+                  "preview": "{\"uniprot\": \"A0A0H3EH26\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "Candidate P0A9A9 is the best_effort_fallback result from the protein API query for 'Fur' in 'Escherichia coli', matches the entity type (protein), has a reviewed status, and has the highest confidence score among candidates with exact organ… (+10 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 313,
+                "hash": "sha256:fb610685ab639d3e",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"Candidate P0A9A9 is the best_effort_fallback result from the protein API query for 'Fur' in 'Escherichia coli', matches the entity type (protein),… (+107 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytosol",
+                "score": 2.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:3589c5c38999a27b",
+                  "preview": "location_frequency=2"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytoplasm",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytosol",
+              "confidence": 0.8,
+              "reason": "Both candidates are compatible with E. coli. Cytosol has a higher frequency score (2 vs 1) and is biologically plausible for the Fur protein, which localizes to the cytosol of prokaryotes.",
+              "source": "llm",
+              "raw": {
+                "chars": 250,
+                "hash": "sha256:00ab3b6645683826",
+                "preview": "{ \"choice\": \"Cytosol\", \"confidence\": 0.8, \"reason\": \"Both candidates are compatible with E. coli. Cytosol has a higher frequency score (2 vs 1) and is biologically plausible for the Fur protein, which… (+44 chars elided)"
+              }
+            },
+            "chosen_location": "Cytosol",
+            "chosen_state": "AutoState_escherichia_colicytosol"
+          },
+          {
+            "issue_key": "protein:mend",
+            "entity_type": "protein",
+            "name": "MenD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "MenD",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:4838db1a7da7380f",
+                  "preview": "{\"uniprot\": \"P17109\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:d5567a83d37d66d1",
+                  "preview": "[\"(protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"MenD\\\" OR gene:\\\"MenD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1186,
+                  "hash": "sha256:758cbe12ba241963",
+                  "preview": "[{\"accession\": \"P17109\", \"protein_name\": \"2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"acc… (+986 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 9.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:e53ec64af3188177",
+                  "preview": "location_frequency=9"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytosol",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 1.0,
+              "reason": "PathBank db evidence strongly supports Cytoplasm with score 9.0 and is compatible with E. coli prokaryote context; Cytosol is a weaker alternative with score 1.0.",
+              "source": "llm",
+              "raw": {
+                "chars": 226,
+                "hash": "sha256:9ecc5dbb98d94ae0",
+                "preview": "{ \"choice\": \"Cytoplasm\", \"confidence\": 9.0, \"reason\": \"PathBank db evidence strongly supports Cytoplasm with score 9.0 and is compatible with E. coli prokaryote context; Cytosol is a weaker alternativ… (+20 chars elided)"
+              }
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "cytoplasmic state"
+          },
+          {
+            "issue_key": "compound:isochorismate",
+            "entity_type": "compound",
+            "name": "isochorismate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "isochorismate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 2,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 171,
+                  "hash": "sha256:b9855c4a3d39d029",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C18054\", \"name\": \"2-Amino-2-deoxyisochorismate\", \"score\": 0.35}]",
+                  "items": 2
+                }
+              },
+              "hmdb": {
+                "query": "isochorismate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 781,
+                  "hash": "sha256:856c0c5f9e32c155",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}, \"pathbank_compound_id\": 407… (+581 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 348,
+                  "hash": "sha256:9bd7de4d44cf80d2",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00885\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00885\", \"name\": \"Isochorismate\", \"score\": … (+148 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 94,
+                  "hash": "sha256:d53d7ac5b017f98f",
+                  "preview": "{\"kegg\": \"C00885\", \"chebi\": \"CHEBI:29780\", \"pubchem\": \"4141\", \"pathbank_compound_id\": \"40741\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:449492bdb00ba459",
+                  "preview": "{\"kegg\": \"C00885\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc48c64e22695323",
+                  "preview": "{\"kegg\": \"C18054\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 from PathBankDB exactly matches the compound 'isochorismate' (KEGG C00885, ChEBI CHEBI:29780, PubChem 4141) with high-quality mapped IDs and database provenance. Candidate 1 also maps to C00885 but with lower confidence (0.95) a… (+133 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:b5a49b3e647940c6",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 from PathBankDB exactly matches the compound 'isochorismate' (KEGG C00885, ChEBI CHEBI:29780, PubChem 4141) with high-quality mapped ID… (+194 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:23dihydro23dihydroxybenzoate",
+            "entity_type": "compound",
+            "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 583,
+                  "hash": "sha256:7f0136d67bda9ebf",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00230\", \"name\": \"3,4-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\"… (+383 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydro-2,3-dihydroxybenzoate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 647,
+                  "hash": "sha256:a16697c9b9ab744e",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}, \"pathbank_compound_id\":… (+447 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 808,
+                  "hash": "sha256:71e87596ec2b78b7",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.322, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00196\", \"name\": \"2,3-Dihydroxybenzoate\", \"score\": 0.322}, {\"database\": \"kegg\", \"id\": \"C00… (+608 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 98,
+                  "hash": "sha256:14f9c8cfe7f435ce",
+                  "preview": "{\"kegg\": \"C04171\", \"chebi\": \"CHEBI:15941\", \"pubchem\": \"23615184\", \"pathbank_compound_id\": \"40770\"}",
+                  "keys": 4
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3a2cb4d502bc3734",
+                  "preview": "{\"kegg\": \"C00196\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5e4c17c01923df66",
+                  "preview": "{\"kegg\": \"C00230\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:47f492d610d578ea",
+                  "preview": "{\"kegg\": \"C04171\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2966d747fb28a1c6",
+                  "preview": "{\"kegg\": \"C04524\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b3fa608cf2977dd3",
+                  "preview": "{\"kegg\": \"C05200\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:65888b5a46e7c2e6",
+                  "preview": "{\"kegg\": \"C21853\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "The PathBankDB candidate provides the exact match for '2,3-dihydro-2,3-dihydroxybenzoate' with KEGG C04171, ChEBI CHEBI:15941, PubChem 23615184, and PathBank compound ID 40770, and has the highest confidence score of 1.0, satisfying all sel… (+16 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 318,
+                "hash": "sha256:9391a12a7c9c559b",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"The PathBankDB candidate provides the exact match for '2,3-dihydro-2,3-dihydroxybenzoate' with KEGG C04171, ChEBI CHEBI:15941, PubChem 23615184, an… (+112 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:23dihydroxybenzoylamp",
+            "entity_type": "compound",
+            "name": "2,3-dihydroxybenzoyl-AMP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "2,3-dihydroxybenzoyl-AMP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:lactate",
+            "entity_type": "compound",
+            "name": "lactate",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "lactate",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d72e0a362af631ec",
+                  "preview": "{\"kegg\": \"C01432\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 459,
+                  "hash": "sha256:8ba05b5cb6c154bc",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C01432\", \"name\": \"Lactate\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C05568\", \"name\": \"Imidazole lactate\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C12677\", \"name\": … (+259 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "lactate",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2511,
+                  "hash": "sha256:0788a88bfaed5227",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000190\", \"kegg\": \"C00186\", \"chebi\": \"CHEBI:422\", \"pubchem\": \"107689\", \"cas\": \"79-33-4\", \"biocyc\": \"L-LACTATE… (+2311 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 969,
+                  "hash": "sha256:99c182f1432da7ad",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C01432\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C01432\", \"name\": \"Lactate\", \"score\": 0.95},… (+769 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 202,
+                  "hash": "sha256:692dcabb405874ae",
+                  "preview": "{\"hmdb\": \"HMDB0000190\", \"kegg\": \"C00186\", \"chebi\": \"CHEBI:422\", \"pubchem\": \"107689\", \"cas\": \"79-33-4\", \"biocyc\": \"L-LACTATE\", \"chemspider\": \"96860\", \"drugbank\": \"DB03066\", \"pathbank_compound_id\": \"122… (+2 chars elided)",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d72e0a362af631ec",
+                  "preview": "{\"kegg\": \"C01432\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:7e08a4d7bf4ce01e",
+                  "preview": "{\"kegg\": \"C05568\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:c14eb284846a4dbf",
+                  "preview": "{\"kegg\": \"C12677\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:42e8edcbd1ab360e",
+                  "preview": "{\"kegg\": \"C17382\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b62d57d61338b89c",
+                  "preview": "{\"kegg\": \"C17389\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:41a6e873f64a3cef",
+                  "preview": "{\"kegg\": \"C00186\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "PathBankDB candidate provides comprehensive mapped IDs (HMDB, KEGG, ChEBI, etc.) with highest confidence, directly matching the compound 'lactate' without type or organism conflicts.",
+              "source": "llm",
+              "raw": {
+                "chars": 244,
+                "hash": "sha256:a9590bfba90c25df",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"PathBankDB candidate provides comprehensive mapped IDs (HMDB, KEGG, ChEBI, etc.) with highest confidence, directly matching the compound 'lactate' … (+38 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:ferric iron",
+            "entity_type": "compound",
+            "name": "ferric iron",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "ferric iron",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 3,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 228,
+                  "hash": "sha256:3fb22a5e6cf2ea39",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C12217\", \"name\": \"Fe(CN)3\", \"score\": 0.55}, {\"database\": \"kegg\", \"id\": \"C14819\", \"name\": \"Fe3+\", \"score\": 0.55}, {\"database\": \"kegg\", \"id\": \"C19519\", \"name\": \"Saccharated … (+28 chars elided)",
+                  "items": 3
+                }
+              },
+              "hmdb": {
+                "query": "ferric iron",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 622,
+                  "hash": "sha256:ed92162978a1df4c",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0012943\", \"kegg\": \"C14819\", \"chebi\": \"CHEBI:29034\", \"pubchem\": \"29936\", \"cas\": \"20074-52-6\", \"biocyc\": \"CPD-1… (+422 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 357,
+                  "hash": "sha256:b285898766dc47e1",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.55, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C12217\", \"name\": \"Fe(CN)3\", \"score\": 0.55}, {\"database\": \"kegg\", \"id\": \"C14819\", \"name\": \"F… (+157 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 184,
+                  "hash": "sha256:6fce8f68e0796d74",
+                  "preview": "{\"hmdb\": \"HMDB0012943\", \"kegg\": \"C14819\", \"chebi\": \"CHEBI:29034\", \"pubchem\": \"29936\", \"cas\": \"20074-52-6\", \"biocyc\": \"CPD-10134\", \"chemspider\": \"27815\", \"pathbank_compound_id\": \"8133\"}",
+                  "keys": 8
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:964dac52f958bda5",
+                  "preview": "{\"kegg\": \"C12217\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:5840a9ab9723139c",
+                  "preview": "{\"kegg\": \"C14819\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:67fb71f63a57246d",
+                  "preview": "{\"kegg\": \"C19519\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 1,
+              "confidence": 0.55,
+              "reason": "Candidate 1 maps to KEGG C14819 (Fe3+), which is an exact match for 'ferric iron'. Candidate 0, despite higher confidence and more IDs, includes ChEBI:29034 (Fe3+) but also others that may not be specific. However, the task requires exact e… (+237 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 400,
+                "hash": "sha256:71153f38078eb25a",
+                "preview": "{ \"selected_index\": 1, \"confidence\": 0.55, \"reason\": \"Candidate 1 maps to KEGG C14819 (Fe3+), which is an exact match for 'ferric iron'. Candidate 0, despite higher confidence and more IDs, includes C… (+194 chars elided)"
+              }
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

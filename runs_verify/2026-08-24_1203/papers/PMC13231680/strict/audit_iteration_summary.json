@@ -1,0 +1,40 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 4500,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        3,
+        0,
+        0,
+        -3,
+        3
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 6,
+      "patch_count": 3,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "The payload is structurally coherent but lacks compartment definitions and entity-to-compartment mappings required for SBML. Adding a formal 'cell' compartment and assigning all entities to it ensures valid SBML export while preserving the … (+19 chars elided)",
+      "top_errors": [],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 5,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

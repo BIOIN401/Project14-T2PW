@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [],
+  "removed_locations": [],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "cytoplasm state",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    },
+    {
+      "bucket": "biological_states",
+      "name": "mitochondrion state",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    },
+    {
+      "bucket": "biological_states",
+      "name": "__auto_state__",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 0,
+    "locations": 0,
+    "biological_states": 3
+  }
+}

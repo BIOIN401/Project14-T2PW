@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "ATP",
+    "L-serine",
+    "NADH",
+    "pyruvate",
+    "EntC (isochorismate synthase)",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "Fur (ferric uptake regulator)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "ATP",
+      "L-serine",
+      "NADH",
+      "pyruvate"
+    ],
+    "key_proteins": [
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase/aryl carrier protein)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "Fur (ferric uptake regulator)"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "extracellular"
+    ],
+    "main_subprocesses": [
+      "biosynthesis of 2,3-DHB from chorismate via EntC, EntB, EntA",
+      "adenylation of 2,3-DHB by EntE",
+      "non-ribosomal peptide synthesis and cyclization by EntF",
+      "substrate channeling between EntC and EntB",
+      "regulation by Fur and feedback inhibition by 2,3-DHB"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "methods",
+      "results",
+      "discussion",
+      "conclusions",
+      "supplementary"
+    ],
+    "pathway_relevance_score": 1.0,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:cd637a10d6ea5563",
+      "response_hash": "sha256:3f4fbaa14db22eab",
+      "raw_chars": 1458,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1458,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "L-serine",
+    "NADH",
+    "pyruvate",
+    "EntC (isochorismate synthase)",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)"
+  ],
+  "unmatched_terms": [
+    "ATP",
+    "Fur (ferric uptake regulator)"
+  ],
+  "coverage_ratio": 0.875,
+  "core_accepted_processes": 15,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 15,
+  "quarantined_processes": 1,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

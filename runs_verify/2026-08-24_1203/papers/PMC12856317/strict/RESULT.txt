@@ -1,0 +1,59 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 972.3s (16m12s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 2 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]
+issue codes  : gate.unknown_protein_modifier_reference, gate.gate_lifecycle
+
+DETAIL / TRACEBACK
+----------------------------------------
+Quarantine could not produce a viable requested-pathway core: unexportable_entity:2
+[post_normalization_contract_report] gate.unknown_protein_modifier_reference @ /processes/reactions/0/modifiers/1: Unknown protein/modifier reference: pyridoxal 5-phosphate
+
+COUNTS
+----------------------------------------
+  blocking_issues = 2
+  compounds = 5
+  contract_errors = 1
+  entities = 17
+  gate_errors = 1
+  proteins = 5
+  reactions = 1
+  runtime_schema_findings = 6
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2500 B)
+  - contract_reports.json  (13650 B)
+  - coverage_summary.json  (2627 B)
+  - final_mapped.json  (147653 B)
+  - gap_iteration_summary.json  (38340 B)
+  - gate_fail_report.json  (16103 B)
+  - graph_closure_iterations.json  (1045 B)
+  - initial_stage3_gate_report.json  (16103 B)
+  - merged_payload.json  (66134 B)
+  - quarantine_report.json  (12023 B)
+  - rag_admission_report.json  (113594 B)
+  - removed_entity_report.json  (723 B)
+  - stage1_payload.json  (12407 B)

@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "DHB-AMP",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "enterobactin",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "EntE",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": true,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "enterobactin synthase",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Unknown",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": true,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase complex",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "DHB-AMP",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "enterobactin",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "EntA",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "EntE",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "__auto_state__",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 8,
+    "locations": 5,
+    "biological_states": 1
+  }
+}

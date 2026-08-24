@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "enterobactin",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "ATP",
+    "NADH",
+    "pyruvate",
+    "L-serine",
+    "Fe3+",
+    "EntB",
+    "EntC",
+    "EntA",
+    "EntE",
+    "EntF",
+    "EntD",
+    "MenD",
+    "Fur",
+    "LDH"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "enterobactin",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "ATP",
+      "NADH",
+      "pyruvate",
+      "L-serine",
+      "Fe3+"
+    ],
+    "key_proteins": [
+      "EntB",
+      "EntC",
+      "EntA",
+      "EntE",
+      "EntF",
+      "EntD",
+      "MenD",
+      "Fur",
+      "LDH"
+    ],
+    "likely_compartments": [
+      "cytoplasm"
+    ],
+    "main_subprocesses": [
+      "isochorismate formation from chorismate (EntC)",
+      "isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase domain)",
+      "2,3-diDHB oxidation to 2,3-DHB (EntA)",
+      "2,3-DHB adenylation and loading onto EntB ArCP domain (EntE)",
+      "NRPS condensation with L-serine and cyclization (EntF)",
+      "enterobactin secretion (TolC-dependent)",
+      "ferric-enterobactin uptake (TonB-dependent)",
+      "competitive inhibition of EntB isochorismatase by 2,3-DHB"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "results",
+      "discussion",
+      "methods",
+      "supplementary"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:cd637a10d6ea5563",
+      "response_hash": "sha256:9f5a6239b5a22107",
+      "raw_chars": 1422,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1422,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "enterobactin",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "NADH",
+    "pyruvate",
+    "L-serine",
+    "Fe3+",
+    "EntB",
+    "EntC",
+    "EntA",
+    "EntE",
+    "EntF",
+    "EntD"
+  ],
+  "unmatched_terms": [
+    "ATP",
+    "MenD",
+    "Fur",
+    "LDH"
+  ],
+  "coverage_ratio": 0.789474,
+  "core_accepted_processes": 13,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 13,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}
