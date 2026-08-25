@@ -64,12 +64,23 @@ from t2pw.pipeline.release_status import (  # noqa: E402
 
 GOLD = load_gold_set()
 
-#: Three ``core``-relevance cases; the first two are ``strict_exportable``.
+#: Three ``core``-relevance cases. **`_STRICT_A` and `_STRICT_B` are NO LONGER
+#: `strict_exportable`.** D-065 (LOCKED, 2026-08-25) reconciled PMC12421875 and
+#: PMC12657337 to ``partial_only``: both are deliberate ORGANISM TRAPS whose Stage-0
+#: conflict D-062 forbids from ever exporting strict, so the gold field that put them
+#: in the strict denominator contradicted the ruling. They remain ``core``-relevance
+#: cases and remain in the SEMANTIC denominator, which is why every test below that
+#: uses them still holds -- only the STRICT population changed.
 _CASES = {case.paper_id: case for case in GOLD}
 _STRICT_A = "PMC12657337"
 _STRICT_B = "PMC12421875"
 _STRICT_C = "PMC12096016"
 _PARTIAL = "PMC12444477"
+
+#: The two papers that ARE still ``strict_exportable`` after D-065, and therefore the
+#: only ones the STRICT denominator can contain. Used by the strict guard alone.
+_STRICT_EXPORTABLE_A = "PMC12096016"
+_STRICT_EXPORTABLE_B = "PMC12782028"
 
 
 def _confirmed_semantic(paper_id: str, mode: str, *, confirmed: bool = True) -> SemanticReport:
@@ -251,13 +262,25 @@ def test_regression_guard_the_strict_denominator_stays_affirmative_and_unmoved()
     passing = _record(SEMANTIC_PASSED, [], eligible=False)
     eligible = _record(SEMANTIC_NOT_EVALUATED, eligible=True)
     report = _scored({
-        _STRICT_A: {MODE_STRICT: _leg(_STRICT_A, MODE_STRICT, record=passing)},
-        _STRICT_B: {MODE_STRICT: _leg(_STRICT_B, MODE_STRICT, record=eligible)},
+        _STRICT_EXPORTABLE_A: {
+            MODE_STRICT: _leg(_STRICT_EXPORTABLE_A, MODE_STRICT, record=passing)},
+        _STRICT_EXPORTABLE_B: {
+            MODE_STRICT: _leg(_STRICT_EXPORTABLE_B, MODE_STRICT, record=eligible)},
     })
 
     # A runtime semantic pass is not a strict success; an affirmative flag is.
-    assert _STRICT_A not in _numerator(report, DENOM_STRICT)
-    assert _STRICT_B in _numerator(report, DENOM_STRICT)
+    assert _STRICT_EXPORTABLE_A not in _numerator(report, DENOM_STRICT)
+    assert _STRICT_EXPORTABLE_B in _numerator(report, DENOM_STRICT)
+
+    # ANTI-VACUITY, added with the D-065 repair: the guard is only meaningful if the
+    # strict population is non-empty and holds exactly the post-D-065 pair. Without
+    # this, a future gold edit that emptied the denominator would make both
+    # assertions above vacuously true rather than red.
+    strict_population = _denominator(report, DENOM_STRICT)
+    assert strict_population == [_STRICT_EXPORTABLE_A, _STRICT_EXPORTABLE_B], (
+        strict_population)
+    assert _STRICT_A not in strict_population
+    assert _STRICT_B not in strict_population
 
 
 def test_regression_guard_a_non_gating_check_still_cannot_demote() -> None:
