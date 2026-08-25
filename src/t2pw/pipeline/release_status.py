@@ -166,6 +166,34 @@ REASON_CONNECTED_CORE_BELOW_FLOOR = "connected_core_below_minimum"
 #: never read as "nothing is missing".
 REASON_REQUESTED_PATHWAY_NOT_STATED = "requested_pathway_not_stated"
 
+#: C-087 / F-123, D-068 (LOCKED). The ``stage`` label every report
+#: ``t2pw.pwml.prefreeze_resolution`` produces carries -- the one
+#: :func:`run_prefreeze_resolution` builds AND the one an entry point writes when a
+#: canonicalizer RAISED. It is named here so :func:`prefreeze_review_reasons` can
+#: tell a WHOLE REPORT from the bare ``review_required`` sub-mapping production
+#: seams publish beside it, and so it can do that WITHOUT importing ``t2pw.pwml``:
+#: this is ``t2pw.pipeline`` and a module-level import there would invert the
+#: layering for every importer of this module, exactly as the note on
+#: :data:`SEMANTIC_GATING_CHECKS` records for ``bench.semantic``.
+#:
+#: Kept in step BY TEST, not by comment: ``tests/test_c087_prefreeze_declination_
+#: demotes_release_status.py`` runs the real ``run_prefreeze_resolution`` and
+#: asserts the report it returns carries exactly this label.
+PREFREEZE_RESOLUTION_STAGE = "prefreeze_resolution"
+
+#: C-087 / F-123, D-068 (LOCKED). Pre-freeze canonicalization finished ``ok=False``
+#: AND named at least one REVIEW-REQUIRED reason: an identity the PathBank DB was
+#: never reachable to establish (D-029), or a species rename that was DECLINED
+#: rather than guessed (C-082). The offending ``<canonicalizer>:<reason>`` pairs are
+#: appended after a ``:`` so the record says WHICH, exactly as
+#: ``semantic_evaluation_failed`` names its checks and
+#: ``requested_core_anchors_unmatched`` names its anchors.
+#:
+#: NOT the whole ``ok`` flag, and the asymmetry is deliberate and ruled, not an
+#: oversight -- see :func:`prefreeze_review_reasons` for the derivation and the
+#: authority.
+REASON_PREFREEZE_REVIEW_REQUIRED = "prefreeze_resolution_review_required"
+
 #: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
 #: consumer has to re-type the string it string-matches on.
 COVERAGE_REASON_EMPTY = "no_surviving_process"
@@ -463,6 +491,94 @@ def coverage_verdict(value: Any) -> Optional[CoverageVerdict]:
     return None
 
 
+def prefreeze_review_reasons(prefreeze: Any) -> Tuple[str, ...]:
+    """The REVIEW-REQUIRED reasons a pre-freeze resolution report names, normalized.
+
+    ``()`` means "no review-required declination reached this call", and it is the
+    answer for every input that is not one -- ``None``, a path string, a report that
+    finished ``ok=True``, an empty sub-mapping. **Not recorded is not a failure**
+    (the D-038 rule), which is what keeps every caller that hands this nothing
+    byte-identical to the record it produced before this function existed.
+
+    TWO SHAPES, because production publishes both and they are not interchangeable.
+    ``t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution`` returns the WHOLE
+    report; the CLI seam (``writer.py:2732``) and both Streamlit seams
+    (``streamlit_app.py:4571``/``:4956``) additionally publish its
+    ``review_required`` SUB-MAPPING alone, under ``prefreeze_review_required``. The
+    two are told apart by ``stage``, which every report the module produces carries
+    and no canonicalizer name can be -- including the report an entry point writes
+    when a canonicalizer RAISED, which has ``ok=False`` and NO ``review_required``
+    key at all and would otherwise be read as a sub-mapping and turned into reasons
+    out of its own bookkeeping keys.
+
+    THE ``ok`` GATE, and why only the report shape can carry it. D-068 demotes on
+    ``ok=False`` **with a review-required reason**. Handed a whole report this
+    checks ``ok is False`` literally, so a report that finished ``ok=True`` returns
+    ``()`` whatever else it carries. Handed the bare sub-mapping there is no ``ok``
+    to read -- and none is needed, because ``run_prefreeze_resolution`` builds the
+    two from one dict in adjacent statements::
+
+        report["ok"] = not failures
+        report["review_required"] = {n: r for n, r in failures.items()
+                                     if r in _REVIEW_REQUIRED_REASONS}
+
+    so a NON-EMPTY ``review_required`` implies a non-empty ``failures`` implies
+    ``ok is False``, by construction. A non-empty sub-mapping IS the ``ok=False``
+    evidence; an empty one yields ``()`` and demotes nothing.
+
+    THE ASYMMETRY THIS DELIBERATELY DOES **NOT** COLLAPSE (D-068 requires it be
+    decided, documented and justified from the record rather than guessed). An
+    ``ok=False`` carrying **no** review-required reason returns ``()`` here and is
+    release-status-NEUTRAL, exactly as it is today. Three grounds, all from the
+    record:
+
+    * **D-068's grant is exactly that narrow.** It rules on ``ok=False`` *"with a
+      review-required reason"*. Extending the demotion to the whole ``ok`` flag
+      would be an improvised product decision of precisely the kind D-068 says
+      C-082 had no authority to take, and this card has no more authority than
+      C-082 did.
+    * **The record says the two are different in KIND.**
+      ``prefreeze_resolution._REVIEW_REQUIRED_REASONS`` is documented as *"Verdicts
+      that mean 'identity was not established', not 'the payload is wrong'"*, and
+      holds exactly ``resolution_report_not_ok:db_unavailable`` and
+      ``species_rename_declined:AMBIGUOUS_RENAME_TARGET``. The residue --
+      ``resolution_report_not_ok`` with the DB REACHABLE (the resolver was consulted
+      and rejected the row), a non-benign ``skipped_reason``, ``summary_not_a_
+      mapping`` -- is the opposite kind: a statement ABOUT THE PAYLOAD, or about the
+      harness. ``PRODUCT_CONTRACT`` 4 defines ``review_required`` as *"Valid, useful
+      PWML produced, but one or more important biological uncertainties"*. A payload
+      a reachable resolver actively rejected may not be merely uncertain, and
+      whether it is ``review_required`` or ``diagnostic_only`` is a question nothing
+      in the record answers.
+    * **Silence there weakens nothing.** The residue keeps byte-identically the
+      behaviour it has at base; no gate moves, nothing is admitted, and merge rule 6
+      is untouched. It is registered as an open question for the product owner
+      rather than settled here.
+
+    The returned strings are ``"<canonicalizer>:<reason>"`` -- ``compounds`` /
+    ``species`` and the reason verbatim -- SORTED, so the reason line a run records
+    does not depend on ``PREFREEZE_CANONICALIZERS`` ordering or on dict insertion
+    order. An entry whose reason is blank is dropped: a name with no reason behind it
+    is not a stated declination.
+    """
+
+    if not isinstance(prefreeze, Mapping):
+        return ()
+    if str(prefreeze.get("stage") or "") == PREFREEZE_RESOLUTION_STAGE:
+        if prefreeze.get("ok") is not False:
+            return ()
+        review: Any = prefreeze.get("review_required")
+    else:
+        review = prefreeze
+    if not isinstance(review, Mapping):
+        return ()
+    return tuple(sorted(
+        f"{name}:{str(reason).strip()}"
+        for name, reason in review.items()
+        if str(reason or "").strip()
+    ))
+
+
 def semantic_verdict(
     report: Any,
 ) -> Tuple[str, str, Tuple[str, ...], Tuple[Tuple[str, bool, str], ...]]:
@@ -566,6 +682,7 @@ def classify_release_status(
     connected_core_reactions: Optional[int] = None,
     min_connected_core_reactions: int = MIN_CONNECTED_CORE_REACTIONS,
     single_reaction_scope_requested: bool = False,
+    prefreeze_review_required: Any = None,
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
 
@@ -615,6 +732,27 @@ def classify_release_status(
     caller supplies or the coverage verdict already carries, and
     ``connected_core_reactions`` defaults to ``None`` -- not measured, so never a
     demotion -- which is what keeps every pre-C-074 caller byte-identical.
+
+    Then the PRE-FREEZE DECLINATION cap (C-087 arm, F-123 / **D-068**), a fifth cap
+    of exactly the same shape. When pre-freeze canonicalization finished ``ok=False``
+    naming a REVIEW-REQUIRED reason -- an identity the database was never reachable
+    to establish, or a species rename DECLINED rather than guessed --
+    ``release_ready`` is not available. Before D-068 this channel was
+    release-status-NEUTRAL: ``report["ok"] = False`` demoted nothing, both consuming
+    seams say so in terms, and D-035 clause 8's *"must not become a successful
+    export"* was left enforced only by the OTHER gates. An invariant that holds by
+    coincidence of gate ordering is not an invariant.
+
+    ``prefreeze_review_required`` defaults to ``None`` -- not recorded, so never a
+    demotion -- which is what keeps every pre-C-087 caller byte-identical, and it is
+    read only through :func:`prefreeze_review_reasons`, which is where the ``ok``
+    gate and the documented asymmetry live. It is a CAP on all four counts like the
+    four above: only from ``release_ready``; exactly one step, to
+    ``review_required``, never ``diagnostic_only`` -- **the payload, the graph and
+    the surviving processes are untouched here as everywhere in this function, the
+    declined rename stays declined, and nothing merges** (merge rule 7, D-068's
+    *"useful intact biology remains available"*); never applied to a status the chain
+    already lowered; and it can only ever REMOVE a strict success.
 
     Because a cap is monotone it can only ever **remove** strict successes, never
     create one -- no new strict success without measured evidence.
@@ -817,6 +955,47 @@ def classify_release_status(
     if status == RELEASE_READY and (below_connected_core_floor or request_was_never_stated):
         status = REVIEW_REQUIRED
 
+    # THE PRE-FREEZE DECLINATION (C-087 arm A, F-123, D-068 LOCKED). A FIFTH cap,
+    # same shape again, and the one no gate above can express: it is a fact about
+    # CANONICALIZATION, not about coverage, connectivity, serializability or
+    # semantics, and until D-068 nothing read it. ``report["ok"] = False`` was
+    # persisted and surfaced by three production seams and acted on by none --
+    # ``writer.py:2724`` and ``streamlit_app.py:4952`` both say so in terms, because
+    # D-029 as split by D-040 section 8 assigned acting on it to NO card and
+    # registered it as backlog ``BL-004``. D-068 assigns ``BL-004`` and this is it.
+    #
+    # WHAT IS READ, and what is deliberately not. Only the REVIEW-REQUIRED channel:
+    # a declination whose reason ``prefreeze_resolution`` classifies as "identity was
+    # not established", never the bare ``ok`` flag. :func:`prefreeze_review_reasons`
+    # holds that derivation, the ``ok`` gate, and the justification for the
+    # asymmetry; it is a single normalizer rather than an inline test so this cap and
+    # :func:`cap_release_for_prefreeze_declination` -- the seam that applies the same
+    # rule to an ALREADY-FROZEN record -- cannot drift into two readings of one
+    # ruling.
+    #
+    # WHAT IS NOT DONE, and D-068 names each one. The payload is not discarded: no
+    # branch here touches ``coverage``, ``completeness``, ``missing_anchors`` or any
+    # graph, and ``review_required`` is precisely the state PRODUCT_CONTRACT 4
+    # reserves for "valid, useful PWML produced" with an uncertainty named. The
+    # ambiguous rename REMAINS DECLINED -- this function cannot rename anything and
+    # does not try, so no unsafe merge is guessed. And nothing is dropped merely
+    # because a rename was ambiguous, which is merge rule 7 and the reason this is a
+    # cap to ``review_required`` and never a move to ``diagnostic_only``.
+    #
+    # RECORDED FROM ``release_ready`` ONLY, the same convention as the four caps
+    # above and for the same C-072 reason: a status the chain already lowered was
+    # lowered for its own reason, and appending this one to it would restate that
+    # refusal as a canonicalization one. The declination itself is never lost by
+    # that -- it is persisted to ``pwml_prefreeze_resolution_report.json`` and
+    # published under ``prefreeze_review_required`` at every seam, whatever the
+    # status.
+    prefreeze_reasons = prefreeze_review_reasons(prefreeze_review_required)
+    if status == RELEASE_READY and prefreeze_reasons:
+        status = REVIEW_REQUIRED
+        reasons.append(
+            f"{REASON_PREFREEZE_REVIEW_REQUIRED}:{','.join(prefreeze_reasons)}"
+        )
+
     return ReleaseStatus(
         status=status,
         pipeline_executed=bool(pipeline_executed),
@@ -884,6 +1063,66 @@ def describe(status: Any) -> str:
     )
 
 
+def cap_release_for_prefreeze_declination(
+    release: Any,
+    prefreeze: Any = None,
+) -> Dict[str, Any]:
+    """Apply the D-068 cap to a release record that was ALREADY FROZEN.
+
+    THE SAME RULE AS :func:`classify_release_status`'s fifth cap, reached through
+    the same :func:`prefreeze_review_reasons`, applied to the serialized record
+    instead of to classifier inputs. It exists because of an ORDERING fact that no
+    amount of parameter-passing can change: pre-freeze compound and species
+    canonicalization runs at the EXPORT seams
+    (``streamlit_app.py:4322``/``:4873``, ``writer.py:2692``), and the release
+    classification is frozen EARLIER, at the quarantine boundary
+    (``strict_quarantine.py`` -> :func:`classify_release_status`). Nothing in
+    ``src`` holds both at once at classification time, so the verdict has to reach
+    the frozen record instead of the classifier call.
+
+    THIS IS NOT A RE-CLASSIFICATION, and the distinction is the whole reason this
+    is a separate function rather than a second ``classify_release_status`` call at
+    the consuming seam. Re-deriving the classification downstream would be an
+    exporter answering a biological question after the freeze, which **merge rule 8
+    forbids outright** and which ``batch/driver.py::_frozen_release_record`` already
+    refuses by name. What happens here instead:
+
+    * it is **MONOTONE**. The only transition is ``release_ready`` ->
+      ``review_required``. No other status is reachable from any input, so it can
+      only ever REMOVE a strict success and can never manufacture one. A
+      ``diagnostic_only`` record is returned unchanged -- it is never PROMOTED to
+      ``review_required``, which would be this function inventing a PWML that the
+      chain said does not exist;
+    * it **reads no biology**. No payload, graph, entity, reaction, name or
+      identifier is read, written, added, removed, resolved or reinterpreted. The
+      only inputs are a status string and a verdict another stage already reached;
+    * it **repairs nothing**. The declined rename stays declined; nothing merges;
+      nothing is dropped (merge rule 7, D-068's *"no payload is discarded merely
+      because the rename was ambiguous"*);
+    * ``strict_acceptance_eligible`` is forced to ``False`` on the demoted record,
+      preserving the invariant ``strict_acceptance_eligible == (status ==
+      release_ready)`` that ``classify_release_status`` establishes and FINDINGS M-8
+      says must live in exactly one place. It is only ever set to ``False`` here,
+      never to ``True`` (TRAP-1 / ``PRODUCT_CONTRACT`` 13).
+
+    Returns a NEW dict; the record handed in is never mutated, so a caller holding
+    the frozen object still holds the frozen object. A record whose ``status`` is
+    absent or outside :data:`RELEASE_STATES` is returned as a plain copy: this
+    function interprets a classification, it does not invent one.
+    """
+
+    record: Dict[str, Any] = dict(release) if isinstance(release, Mapping) else {}
+    reasons = prefreeze_review_reasons(prefreeze)
+    if not reasons or str(record.get("status") or "") != RELEASE_READY:
+        return record
+    existing = [str(reason) for reason in (record.get("reasons") or ())]
+    existing.append(f"{REASON_PREFREEZE_REVIEW_REQUIRED}:{','.join(reasons)}")
+    record["status"] = REVIEW_REQUIRED
+    record["strict_acceptance_eligible"] = False
+    record["reasons"] = list(dict.fromkeys(existing))
+    return record
+
+
 __all__ = [
     "RELEASE_READY", "REVIEW_REQUIRED", "DIAGNOSTIC_ONLY", "RELEASE_STATES",
     "SEMANTIC_PASSED", "SEMANTIC_FAILED", "SEMANTIC_NOT_EVALUATED",
@@ -899,6 +1138,8 @@ __all__ = [
     "REASON_SEMANTIC_EVALUATION_FAILED",
     "MIN_CONNECTED_CORE_REACTIONS", "REASON_CONNECTED_CORE_BELOW_FLOOR",
     "REASON_REQUESTED_PATHWAY_NOT_STATED",
+    "PREFREEZE_RESOLUTION_STAGE", "REASON_PREFREEZE_REVIEW_REQUIRED",
     "CoverageVerdict", "ReleaseStatus",
     "coverage_verdict", "classify_release_status", "semantic_verdict", "describe",
+    "prefreeze_review_reasons", "cap_release_for_prefreeze_declination",
 ]
