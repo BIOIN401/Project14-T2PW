@@ -1566,12 +1566,48 @@ def _frozen_release_record(pwml_result: Dict[str, Any]) -> Dict[str, Any]:
     An unrecognised ``status`` is discarded rather than trusted: the contract
     defines exactly three states, and a fourth string is a record this code cannot
     interpret, which is the same predicament as having none.
+
+    THE ONE THING APPLIED ON TOP (C-087, F-123, **D-068** LOCKED), and it is not a
+    re-derivation. Pre-freeze canonicalization runs at the EXPORT seam, AFTER the
+    boundary froze this record, so its verdict cannot reach
+    ``classify_release_status``: measured across ``src``, no caller of that function
+    holds a prefreeze report and no holder of a prefreeze report calls it. The
+    verdict therefore reaches the FROZEN RECORD, through
+    ``release_status.cap_release_for_prefreeze_declination`` -- the classifier
+    module's own monotone cap, whose only transition is ``release_ready`` ->
+    ``review_required``. It reads a status string and a verdict another stage
+    already reached; it reads, writes and repairs no biology; it can only remove a
+    strict success. Merge rule 8 forbids an exporter REPAIRING biology after the
+    freeze, and this is the opposite operation.
+
+    WHY HERE AND NOT AT ``_finalize_pwml_export``. This function is the single
+    choke point: ``_add_strict_artifacts`` (``:1614``) derives the PWML FILENAME
+    from it and ``_finalize_pwml_export`` (``:2049``) derives the MANIFEST ROW from
+    it. Capping only the row would leave a declined leg shipping a bare
+    ``pathway.pwml``, which ``PRODUCT_CONTRACT`` 13 reads as "ship it, no review
+    needed" -- D-035 clause 8's *"must not become a successful export"* would then
+    still be enforced only by coincidence on the other channel, which is exactly
+    what D-068 forbids.
+
+    BOTH published shapes are accepted, in the order of decreasing information. The
+    whole report carries ``ok``; the ``prefreeze_review_required`` sub-mapping that
+    every seam publishes beside it does not, and does not need to (see
+    ``prefreeze_review_reasons``). The CLI returns a PATH string under the report
+    key, which ``_safe_dict`` renders ``{}``, so the fallback is what answers there.
     """
 
-    from t2pw.pipeline.release_status import RELEASE_STATES
+    from t2pw.pipeline.release_status import (
+        RELEASE_STATES,
+        cap_release_for_prefreeze_declination,
+    )
 
     release = _safe_dict(_safe_dict(pwml_result.get("quarantine_report")).get("release"))
-    return release if _text(release.get("status")) in RELEASE_STATES else {}
+    if _text(release.get("status")) not in RELEASE_STATES:
+        return {}
+    prefreeze = _safe_dict(pwml_result.get("prefreeze_resolution_report")) or _safe_dict(
+        pwml_result.get("prefreeze_review_required")
+    )
+    return cap_release_for_prefreeze_declination(release, prefreeze)
 
 
 def _pwml_artifact_name(release: Dict[str, Any]) -> str:
