@@ -4176,3 +4176,80 @@ symbol the record already holds** — not fuzzy matching.
 `requested_core_coverage_below_minimum:0.222<0.500` and would remain so. This is an
 acceptance-instrument honesty fix, and it raises no rate. **Chartered as C-090, queued behind the
 running lanes.**
+
+## D-067 readiness — the two candidate papers, measured. **Flag NOT set.**
+
+Ruling 4 names `PMC13231680` and `PMC12180156` as the starting pair and imposes five
+preconditions. Measured offline (`evidence/g11/T-107/21-d067-seedonly-probe.json`); the credit
+instruction forbids spending model credits on the review half, so nothing was dispatched.
+
+### Current gold state — both candidates
+
+```
+PMC13231680  lipid A biosynthesis   max_retained_reactions 0   supported_reactions 0   complete ABSENT
+PMC12180156  heme biosynthesis      max_retained_reactions 2   supported_reactions 0   complete ABSENT
+```
+
+**Both signature sets are already empty.** So the question is not *"write the signatures"* — it is
+*"is empty the exhaustive truth?"*
+
+### Precondition 4 — seed-only — **SATISFIED on this run, measured**
+
+`rag_admission_report.json` shows `accepted=[]` on **all four** legs of both papers. No multi-paper
+RAG synthesis contributed a row, so `goldset.py:384`'s incompatibility warning is not engaged for
+these two papers on T-106. **This does not generalise to a future run** and must be re-checked
+whenever the flag is relied on.
+
+### What the flag would actually do — `semantic.py`'s own arithmetic
+
+`unsupported_verdict_evaluated = bool(complete or not unsupported_rows)`. With `complete=True` and
+an empty signature set, **every retained row becomes a reported fabrication.** Measured retention:
+
+| leg | retained reactions | effect of setting the flag |
+|---|---|---|
+| `PMC13231680/strict` | none (no `final_mapped.json`) | priority 2 → **genuinely measured PASS** |
+| `PMC13231680/research` | none | priority 2 → **genuinely measured PASS** |
+| `PMC12180156/strict` | **1** | priority 2 → **FAIL, 1 fabrication** |
+| `PMC12180156/research` | none | measured PASS |
+
+### The two papers are NOT the same risk, and the ruling's pairing hides that
+
+**`PMC13231680` is the low-risk one and the gold already asserts the answer twice.** Its
+`relevance_note` records the full-text counts — *'lipid A' 1, 'LpxC' 9, and **UDP 0, GlcNAc 0, Kdo
+0, acyl 0, deacetyl 0***. Every lipid-A intermediate term occurs **zero** times. And
+`max_retained_reactions: 0` is the product owner's existing ruling that *"the only correct output is
+an empty one."* An empty exhaustive set is the same claim those two fields already make; setting the
+flag would only let the scorer act on it. Setting it converts a `NOT EVALUATED` into an **honestly
+earned PASS** and cannot manufacture a fabrication, because nothing is retained.
+
+**`PMC12180156` is the higher-stakes one and it exposes a tension inside the gold.**
+`max_retained_reactions: 2` tolerates up to two retained reactions, while the `relevance_note` says
+*"Zero heme-biosynthesis reactions have both sides named."* Those cannot both be the exhaustive
+truth. The strict leg retained **1**, under the ceiling and therefore currently invisible — but
+under an empty exhaustive set that row is a **fabrication and priority 2 fails**, absolutely.
+
+**That is not a reason to avoid the flag. It is the measurement the flag exists to make.** It is a
+reason not to set it without the biological review, because the honest answer changes an absolute
+priority.
+
+### Precondition status
+
+| # | precondition | `PMC13231680` | `PMC12180156` |
+|---|---|---|---|
+| 1 | complete scoped source read | **recorded in gold** (term counts) | asserted in `relevance_note`, not itemised |
+| 2 | every supported signature defined | **empty set, twice asserted** | empty set claimed; **conflicts with the ceiling of 2** |
+| 3 | **independent biological review** | **NOT DONE** | **NOT DONE** |
+| 4 | seed-only compatible | **YES, measured** | **YES, measured** |
+| 5 | who established exhaustiveness, and how | pending 3 | pending 3 |
+
+**Precondition 3 is unmet for both, and the orchestrator cannot supply it** — it does not approve
+its own work, and the credit instruction forbids spending model credits on establishing
+reaction-gold exhaustiveness where manual/source-based review is required.
+
+**Therefore the field stays ABSENT on both and priority 2 continues to report `NOT EVALUATED`**,
+exactly as D-067 directs when exhaustiveness cannot be proven. **This blocks no release candidate.**
+
+**Recommended when a reviewer is available:** take `PMC13231680` alone first. It is the one where
+the gold already contains the evidence, where the flag cannot manufacture a fabrication, and where
+the outcome is a strictly honest gain. `PMC12180156` needs its ceiling-versus-note conflict
+adjudicated before anyone sets a boolean on it.
