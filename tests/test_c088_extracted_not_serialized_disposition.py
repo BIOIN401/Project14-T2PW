@@ -806,3 +806,35 @@ def test_new_acceptance_the_whole_report_differs_only_by_the_disposition(
     assert stripped == len(EXPECTED_PLACED) * 3
 
     assert real == neutered
+
+
+def test_new_acceptance_describe_carries_a_recorded_disposition() -> None:
+    """NEW ACCEPTANCE. The record's own one-line renderer does not drop the field.
+
+    A renderer that silently dropped it would put the reader back where D-065 found
+    them: reading ``diagnostic_only`` and supplying the contract gloss that is untrue
+    of this run. Would catch that regression.
+
+    NOTHING CURRENTLY RENDERED MOVES, and the second half asserts it: a record with
+    no disposition produces the byte-identical line it always did, which is what
+    keeps ``batch/report.py`` and ``bench/render.py`` -- the two callers -- unchanged.
+    """
+
+    from t2pw.pipeline.release_status import describe
+
+    placed = describe(_scope_conflict_leg())
+    assert DISPOSITION_EXTRACTED_NOT_SERIALIZED in placed
+    assert placed.startswith(DIAGNOSTIC_ONLY)
+
+    # NON-VACUITY, and the no-movement guarantee in one assertion: the same record
+    # without the two sizes renders exactly the pre-C-088 line.
+    unplaced = classify_release_status(
+        pipeline_executed=True,
+        strict_gates_passed=False,
+        extra_reasons=(SCOPE_GUARD_STOP_REASON,),
+    )
+    assert describe(unplaced) == (
+        "diagnostic_only  [pipeline ran; strict gates failed; "
+        "semantic evaluation NOT PERFORMED]"
+    )
+    assert DISPOSITION_EXTRACTED_NOT_SERIALIZED not in describe(unplaced)

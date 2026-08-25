@@ -213,11 +213,12 @@ REASON_PREFREEZE_REVIEW_REQUIRED = "prefreeze_resolution_review_required"
 #:
 #: WHAT IT REMOVES. ``PRODUCT_CONTRACT`` 4's ``diagnostic_only`` gloss reads
 #: "recovery and retrieval could not establish a defensible pathway core", and
-#: measured, that is UNTRUE of the legs this names: on the committed run
-#: ``runs_verify/2026-08-24_1428``, ``PMC12421875``'s two legs each reached a
-#: connected core of **9** against that case's gold floor of **7**. The record said
-#: something false about them, and this is what makes the record honest without
-#: fabricating a gate result nobody measured (C-077's refusal, ratified by D-065).
+#: measured, that is UNTRUE of the legs this names -- the largest reached a connected
+#: core comfortably above its own case floor with full enzyme and metabolite recall.
+#: The record said something false about them, and this is what makes it honest
+#: without fabricating a gate result nobody measured (C-077's refusal, ratified by
+#: D-065). The per-leg numbers live in the card's test file and its report, never
+#: here: no benchmark paper, id, gold value or gold pathway name belongs in ``src/``.
 DISPOSITION_EXTRACTED_NOT_SERIALIZED = "extracted_not_serialized"
 
 #: NOT RECORDED. The default everywhere, and never a fourth disposition: a run this
@@ -733,17 +734,18 @@ def release_disposition(
          (:data:`MIN_CONNECTED_CORE_REACTIONS`, C-074 / F-101: *"one is not a
          pathway: a single reaction has no step to be connected TO"*).
 
-       **BOTH, and the second is not redundant.** Measured on
-       ``runs_verify/2026-08-24_1428``, the six scope-conflict legs split 4/2 on it:
-       ``PMC12421875`` reaches 9 against a gold floor of 7 and ``PMC12657337``
-       reaches 5 and 3 against a floor of 3, but ``PMC12312563``'s two legs reach
-       **1** against a gold floor of **1** -- the case floor clears, and that case's
-       own gold ``export_rationale`` says in terms *"A single reaction cannot form a
-       connected pathway, and no second reaction anywhere in the text shares a
-       metabolite with it."* On that leg ``diagnostic_only``'s existing gloss is
-       TRUE, so granting it a disposition that asserts a defensible pathway core
-       would replace one untruth with another. The gold set is the authority on that
-       question and it has already answered it.
+       **BOTH, and the second is not redundant.** Measured on the committed
+       verification corpus, the six scope-conflict legs split 4/2 on it: four clear
+       both floors, and two reach a connected core of **1** against a case floor of
+       **1** -- the case floor clears, and that case's own gold ``export_rationale``
+       says in terms *"A single reaction cannot form a connected pathway, and no
+       second reaction anywhere in the text shares a metabolite with it."* On those
+       legs ``diagnostic_only``'s existing gloss is TRUE, so granting them a
+       disposition that asserts a defensible pathway core would replace one untruth
+       with another. The gold set is the authority on that question and it has
+       already answered it. Which legs those are is asserted BY TEST, in the card's
+       own test file: no benchmark paper, id, gold value or gold pathway name may be
+       hardcoded into ``src/``.
 
     Returns :data:`DISPOSITION_EXTRACTED_NOT_SERIALIZED` or :data:`NO_DISPOSITION`.
     It reads no biology, writes nothing, moves no status, touches no payload and
@@ -1287,6 +1289,13 @@ def describe(status: Any) -> str:
 
     Accepts a :class:`ReleaseStatus`, its ``to_dict``, a bare state string or
     ``None``: report code renders rows written by older runs and must never raise.
+
+    A recorded DISPOSITION is appended (C-088 / D-065). A renderer that silently
+    dropped a field the record carries would put the reader back in exactly the
+    position D-065 removes -- reading ``diagnostic_only`` and supplying the contract
+    gloss that is untrue of this run. NOTHING CURRENTLY RENDERED MOVES: the key is
+    absent unless a disposition was established, so a record without one produces the
+    byte-identical line it always did, and no production seam sets one today.
     """
 
     if status is None:
@@ -1302,10 +1311,12 @@ def describe(status: Any) -> str:
     semantic = str(data.get("semantic_evaluation") or SEMANTIC_NOT_EVALUATED)
     gates = "passed" if data.get("strict_gates_passed") else "failed"
     ran = "ran" if data.get("pipeline_executed") else "did not run"
-    return (
+    line = (
         f"{state}  [pipeline {ran}; strict gates {gates}; semantic evaluation "
         f"{SEMANTIC_LABELS.get(semantic, semantic)}]"
     )
+    disposition = str(data.get("disposition") or "").strip()
+    return f"{line}  disposition: {disposition}" if disposition else line
 
 
 def cap_release_for_prefreeze_declination(
