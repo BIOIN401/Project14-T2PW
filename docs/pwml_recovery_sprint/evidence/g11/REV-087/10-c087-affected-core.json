@@ -1,0 +1,101 @@
+{
+  "label": "rev087-c087-affected-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c087/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c087",
+    "--pin-verdict",
+    "C:/t/revtmp/rev087-c087-affected-core.pin.json",
+    "-q",
+    "--tb=line",
+    "--basetemp=C:/t/revtmp/bt/c087core",
+    "C:/t/c087/tests/test_release_status_classification.py",
+    "C:/t/c087/tests/test_batch_driver_seam_golden.py",
+    "C:/t/c087/tests/test_batch_pwml_artifact_naming.py",
+    "C:/t/c087/tests/test_c077_stage0_conflict_disposition.py",
+    "C:/t/c087/tests/test_c072_incomplete_core_demotion.py",
+    "C:/t/c087/tests/test_c074_strict_core_floor.py",
+    "C:/t/c087/tests/test_c082_post_pipeline_seam.py",
+    "C:/t/c087/tests/test_c082_species_rename_declination.py",
+    "C:/t/c087/tests/test_strict_quarantine_release_seam.py",
+    "C:/t/c087/tests/test_semantic_release_gating.py",
+    "C:/t/c087/tests/test_c087_prefreeze_declination_demotes_release_status.py"
+  ],
+  "cwd": "C:/t/c087",
+  "started_at": "2026-08-25T22:50:43+00:00",
+  "finished_at": "2026-08-25T22:51:21+00:00",
+  "duration_seconds": 36.731993199999806,
+  "timeout_seconds": 1500.0,
+  "root_pid": 40400,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 42392,
+      "name": "python.exe",
+      "ppid": 40400
+    }
+  ],
+  "descendants_terminated": [
+    42392
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 40380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 45800,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-087\\10-c087-affected-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "110cffe048f2b9e9b07aabca08b6fe43bc6faebd",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-087",
+    "token": "REV-087:40380:b1fc22b4e545fced",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

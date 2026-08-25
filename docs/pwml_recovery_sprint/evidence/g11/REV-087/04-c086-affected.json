@@ -1,0 +1,103 @@
+{
+  "label": "rev087-c086-affected",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c086/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c086",
+    "--pin-verdict",
+    "C:/t/revtmp/rev087-c086-affected.pin.json",
+    "-q",
+    "--basetemp=C:/t/revtmp/bt/c086aff",
+    "C:/t/c086/tests/test_map_ids.py",
+    "C:/t/c086/tests/test_map_ids_name_gate.py",
+    "C:/t/c086/tests/test_map_ids_mapping_lineage.py",
+    "C:/t/c086/tests/test_rag_payload_gate_guardrails.py",
+    "C:/t/c086/tests/test_c073_identity_admission.py",
+    "C:/t/c086/tests/test_entity_identity_contracts.py",
+    "C:/t/c086/tests/test_reference_repair.py",
+    "C:/t/c086/tests/test_c086_superset_complex_promotion.py",
+    "C:/t/c086/tests/test_protein_export_policy.py",
+    "C:/t/c086/tests/test_pathbank_unknown_fallback.py",
+    "C:/t/c086/tests/test_adversarial_actor_entity_type.py",
+    "C:/t/c086/tests/test_transport_actor_guards.py",
+    "C:/t/c086/tests/test_canonical_biological_equivalence.py",
+    "C:/t/c086/tests/test_stage2_mapping_boundary.py"
+  ],
+  "cwd": "C:/t/c086",
+  "started_at": "2026-08-25T22:34:07+00:00",
+  "finished_at": "2026-08-25T22:34:21+00:00",
+  "duration_seconds": 12.757631800000013,
+  "timeout_seconds": 2400.0,
+  "root_pid": 34340,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 10024,
+      "name": "python.exe",
+      "ppid": 34340
+    }
+  ],
+  "descendants_terminated": [
+    10024
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 3608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 9692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-087\\04-c086-affected.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "110cffe048f2b9e9b07aabca08b6fe43bc6faebd",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-087",
+    "token": "REV-087:9692:f1f5cc428969c2c3",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
