@@ -249,35 +249,55 @@ def test_new_acceptance_the_group_leader_rule_forecloses_the_rename_map_collisio
     assert _rename_targets(summary["rename_map"]) == {_match_key(STRAIN): BINOMIAL}
 
 
-def test_new_acceptance_two_strains_of_one_species_are_refused_not_merged() -> None:
-    """Distinct organisms collapsing onto one name fail visibly (D-015 clause 6).
+def test_new_acceptance_two_strains_of_one_species_are_declined_not_merged() -> None:
+    """Distinct organisms collapsing onto one name are refused (D-015 clause 6).
 
     ``subsp.`` and ``subsp`` normalize differently -- ``_norm`` turns punctuation
     into a space and does not collapse the run -- so these are two rename
     *sources*, not one group, and they target the same binomial. Merging two
-    named organisms into one is inventing biology, so the stage refuses and
-    leaves the payload alone rather than choosing between them.
+    named organisms into one is inventing biology, so the stage refuses to apply
+    either rename and leaves both rows under the names they arrived with.
 
     **Measured behavioural delta, reported not landed silently:** at the base SHA
     this payload does not raise. ``_dedupe_named_rows`` keeps both rows, the
     exporter renames both, and the IR comes out carrying **two species rows with
     the same name** -- the import collision ``_deterministic_species_name`` exists
     to prevent. Neither shape occurs in the 152 committed payloads.
+
+    **C-082 / F-115 moved the DISPOSITION of this pin, deliberately.** It used to
+    assert ``pytest.raises(...)`` and ``payload == before``. The refusal it pins
+    is unchanged and is still asserted, in the form that matters: the two rows are
+    not merged and neither name moves. What changed is that the refusal no longer
+    terminates the leg -- on T-106 that cost a ten-reaction pathway with a passing
+    audit, which is the shape merge rule 7 exists to prevent. The payload is now
+    ``before`` plus the declination markers, and nothing else; the marker is the
+    record ``PRODUCT_CONTRACT`` §3 requires and the reason the equality is on the
+    rows rather than on the whole object.
     """
 
+    other = STRAIN.replace("subsp.", "subsp")
     payload = _payload(
         {"name": STRAIN, "taxonomy_id": "1091041"},
-        {"name": STRAIN.replace("subsp.", "subsp"), "taxonomy_id": "1091041"},
+        {"name": other, "taxonomy_id": "1091041"},
     )
     before = deepcopy(payload)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _resolve(payload)
-    assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
-    assert payload == before
+    summary = _resolve(payload)
+
+    # Refused: neither rename applied, so nothing merged.
+    assert summary["rename_map"] == {}
+    assert [row["name"] for row in payload["entities"]["species"]] == [STRAIN, other]
+    assert len({row["name"] for row in payload["entities"]["species"]}) == 2
+    for index, row in enumerate(payload["entities"]["species"]):
+        stripped = dict(row)
+        marker = stripped.pop(SPECIES_CANONICALIZATION_FIELD)
+        assert stripped == before["entities"]["species"][index]
+        assert marker["status"] == "rename_declined"
+        assert marker["declined_rename"]["code"] == "AMBIGUOUS_RENAME_TARGET"
+    assert {record["source"] for record in summary["renames_declined"]} == {STRAIN, other}
 
 
-def test_new_acceptance_a_rename_onto_an_existing_organism_is_refused() -> None:
+def test_new_acceptance_a_rename_onto_an_existing_organism_is_declined() -> None:
     """REV-045 B-1. Renaming onto a name a **different** species row keeps is a
     merge, and for species nothing else catches it.
 
@@ -290,10 +310,16 @@ def test_new_acceptance_a_rename_onto_an_existing_organism_is_refused() -> None:
     **Base delta, disclosed:** at ``0ec64d2c`` the ladder ran *after*
     ``_dedupe_named_rows``, so dedupe never saw the renamed name and **both**
     rows survived -- the IR carried taxonomy ``1091041`` and ``1358``, and the
-    preflight listed the organism twice. Unrefused at tip, dedupe collapses them
-    and taxonomy ``1358`` is **deleted**, leaving a row named ``Lactococcus
-    lactis`` carrying the strain's id ``1091041``: a wrong organism identity, not
-    a lossy one.
+    preflight listed the organism twice. Unrefused, dedupe collapses them and
+    taxonomy ``1358`` is **deleted**, leaving a row named ``Lactococcus lactis``
+    carrying the strain's id ``1091041``: a wrong organism identity, not a lossy
+    one.
+
+    **C-082 / F-115 moved the DISPOSITION of this pin, deliberately** -- see the
+    test above for the full account. The merge is still refused and is asserted
+    here all the way into the IR, which is the strongest form this pin has ever
+    had: both organisms reach the exporter, under their own names, carrying their
+    own taxonomy ids. What no longer happens is the leg ending on it.
     """
 
     payload = _payload(
@@ -302,11 +328,27 @@ def test_new_acceptance_a_rename_onto_an_existing_organism_is_refused() -> None:
     )
     before = deepcopy(payload)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _resolve(payload)
-    assert excinfo.value.code == "AMBIGUOUS_RENAME_TARGET"
-    assert excinfo.value.details["sources"] == sorted({STRAIN, BINOMIAL})
-    assert payload == before, "the payload must be untouched on a refusal"
+    summary = _resolve(payload)
+
+    (record,) = summary["renames_declined"]
+    assert record["code"] == "AMBIGUOUS_RENAME_TARGET"
+    assert record["source"] == STRAIN
+    assert record["collides_with"] == [BINOMIAL]
+    assert summary["rename_map"] == {}
+    stripped = dict(payload["entities"]["species"][0])
+    stripped.pop(SPECIES_CANONICALIZATION_FIELD)
+    assert stripped == before["entities"]["species"][0]
+    # The occupant is untouched too. Its own marker is the ladder's ordinary
+    # record of having consulted the row -- taxonomy-identified, not covered by
+    # the offline index, so ``deterministic`` -- and predates this card.
+    occupant = dict(payload["entities"]["species"][1])
+    assert occupant.pop(SPECIES_CANONICALIZATION_FIELD) == {"status": "deterministic"}
+    assert occupant == before["entities"]["species"][1]
+
+    # The merge the guard exists to prevent, refused where it would have happened.
+    ir, _ = _build(payload)
+    assert [row["name"] for row in ir["species"]] == [STRAIN, BINOMIAL]
+    assert sorted(str(row.get("taxonomy_id") or "") for row in ir["species"]) == ["1091041", "1358"]
 
 
 def test_new_acceptance_the_existing_row_guard_does_not_over_fire() -> None:
@@ -328,7 +370,7 @@ def test_new_acceptance_the_existing_row_guard_does_not_over_fire() -> None:
        there is nothing left to collide with.
     """
 
-    from t2pw.pwml.prefreeze_resolution import _alias_index, _reject_ambiguous_species_renames
+    from t2pw.pwml.prefreeze_resolution import _alias_index, _screen_ambiguous_species_renames
 
     # 1 -- the leader/follower group still succeeds, and emits one organism.
     payload = _payload(
@@ -342,11 +384,11 @@ def test_new_acceptance_the_existing_row_guard_does_not_over_fire() -> None:
 
     primary, _ = _alias_index(_payload({"name": STRAIN, "taxonomy_id": "1091041"}))
     # 2 -- target inside the source's own group: accepted.
-    _reject_ambiguous_species_renames(
+    _screen_ambiguous_species_renames(
         {STRAIN: STRAIN.upper()}, [STRAIN], [STRAIN.upper()], primary,
     )
     # 3 -- the occupant vacates the name, so nothing collides.
-    _reject_ambiguous_species_renames(
+    _screen_ambiguous_species_renames(
         {STRAIN: BINOMIAL, BINOMIAL: "Lactococcus cremoris"},
         [STRAIN, BINOMIAL],
         [BINOMIAL, "Lactococcus cremoris"],
