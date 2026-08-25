@@ -2983,3 +2983,192 @@ and T-107's real cost can be reported as a delta rather than estimated. G11
 
 Note the charter's "LM Studio" wording is stale — `.env` selects OpenRouter. Per §6 the configured
 model stands; no provider switch and no new fallback.
+
+---
+
+## CORRECTION to `03f60b0` — the ceiling is 0/4, not 1/4, and priority 5 is guaranteed to fail
+
+**Measured by REV-081 and independently confirmed by the Lead Orchestrator against source.
+`03f60b0`'s claim is FALSIFIED and is corrected here rather than quietly amended.**
+
+`03f60b0` recorded: *"That leaves PMC12096016, blocked by `actor_named_in_its_own_cited_span`
+alone. The whole T-107 go/no-go now hinges on whether that one predicate is firing correctly."*
+
+**Both halves are wrong.**
+
+### The error
+
+I read `semantic_failed_checks` having exactly one entry as *"one blocker"*. It is not. It is the
+**first cap to fire** in a chain of caps that are independent by construction, and the source says so
+in terms. `release_status.py:701` introduces the anchor cap as *"The INCOMPLETE-CORE cap (F-094,
+PRODUCT_CONTRACT 13). **A SECOND, INDEPENDENT**"* cap:
+
+```python
+release_status.py:693   if evaluation == SEMANTIC_FAILED and status == RELEASE_READY:      # cap 1
+release_status.py:730   if status == RELEASE_READY and verdict is not None \               # cap 2
+                           and verdict.declared and missing:
+```
+
+Each is guarded on `status == RELEASE_READY`, so **whichever fires first hides the others**. Cap 1
+demoted PMC12096016, so cap 2 never ran — and `semantic_failed_checks` therefore records a single
+entry on a leg that has two independent blockers. On PMC12096016 `missing_anchors` is
+`['NADH', 'ATP', 'MenD (…)', 'Fur (…)']` and `completeness` is `0.764706`, so `verdict.declared` is
+true and `missing` is non-empty: **cap 2 fires regardless of the semantic outcome.**
+
+### The proof
+
+REV-081 replayed the real `classify_release_status` over each leg's own recorded
+`coverage_summary.json`. Arm A is the control and reproduced **9 of 9** recorded statuses exactly,
+which is what makes arm B admissible. Arm B forces the semantic verdict to `passed`:
+
+| paper | recorded | arm A control | **arm B, semantics forced to `passed`** | arm B reason |
+|---|---|---|---|---|
+| PMC12096016 | `review_required` | reproduced | **`review_required`** | `requested_core_anchors_unmatched:NADH,ATP,MenD…,Fur…` |
+| PMC12782028 | `review_required` | reproduced | **`review_required`** | `requested_core_coverage_below_minimum:0.222<0.500` |
+| PMC12421875 | `diagnostic_only` | reproduced | **`diagnostic_only`** | `strict_technical_gates_blocked_export` |
+| PMC12657337 | `diagnostic_only` | reproduced | **`diagnostic_only`** | `strict_technical_gates_blocked_export` |
+
+Evidence: `evidence/g11/REV-081/07-rev081-counterfactual.json`.
+
+**Priority 5's ceiling under unchanged policy is 0/4. Not one of the four moves even if every
+semantic check passes.**
+
+### And the predicate I flagged as the hinge is a TRUE POSITIVE
+
+`actor_named_in_its_own_cited_span` is firing **correctly** on PMC12096016. It caught a real
+biological error, so "fixing" it would be weakening a gate to raise a rate — the exact inversion
+this sprint exists to correct.
+
+### Corrected disposition table
+
+| paper | class | what actually blocks it |
+|---|---|---|
+| PMC12096016 | **`correctly_blocked`**, twice over | cap 1 on a true-positive actor finding; cap 2 (`:730`) fires underneath it regardless |
+| PMC12782028 | **`correctly_blocked`** | coverage 0.222 vs a 0.500 floor `PRODUCT_CONTRACT` §7 `:199-200` pins as immovable; retrieval demonstrably ran and was exhausted — `rag_admission_report.json`: 15 typed gaps, **0 accepted, 159 rejected** |
+| PMC12421875 | **`policy_disagreement`** | D-062's open reconciliation |
+| PMC12657337 | **`policy_disagreement`** | D-062's open reconciliation, **plus** an independently gating `no_rejected_rag_reaction_reintroduced` failure |
+
+**Zero of the four are reachable by code that does not weaken a gate or manufacture bare PWML.
+Every route to 1/4 or better runs through a product ruling first.**
+
+### Two further premises of mine that REV-081 corrected
+
+* **The Stage-0 abort never replaced an annotate-only mode.** I inferred from `config.py:193`'s
+  comment that it had. `git log -S eligibility_stage0_conflict_aborts` returns exactly one
+  introducing commit — `15a7998`, 2026-07-29, before the sprint branch point — with the flag **born
+  at `True`** alongside both branches. Annotate-only is a live alternative today
+  (`driver.py:669-670`), never a removed default.
+* **`_requested_scope`'s `pinned` is a HOMONYM.** `driver.py:517` sets `pinned = not pathway`,
+  meaning *"this paper has no topic line at all"* — **not** the gold set's `[pinned_override]`.
+  `scope_conflict.json` recording `"pinned": false` is therefore **correct**. Nobody may "fix" this
+  by conflating the two senses.
+
+### What stands from `03f60b0`
+
+The F-110 non-reachability measurement, the SMOKE 473 verification, the model preflight, and the
+C-077/F-107 note all stand unchanged. Only the priority-5 ceiling claim is corrected.
+
+---
+
+## F-116 — a supported enzyme is replaced by a superset protein complex, injecting catalysts that do not perform the step
+
+- **Severity** HIGH · **Class `product_contract_violation`** (candidate — see the competing reading)
+- **Registered 2026-08-25 by the Lead Orchestrator**, measured by REV-081 from committed T-106
+  artifacts. **Distinct from F-096**: F-096 is an *unsupported* entity gaining an identifier; this is
+  a *supported* entity being *replaced* by a wrong one.
+
+`_rewrite_reaction_protein_enzymes_to_complexes` (`src/t2pw/mapping/map_ids.py:8668`) replaces
+bare-protein reaction actors with PathBank `protein_complex` wrappers. It is strict-mode-only, gated
+by `allow_complex_wrapper_creation=not research_mode`, and its in-source rationale is that *"the
+PathWhiz importer refuses a bare protein as a reaction enzyme."*
+
+On `PMC12096016/strict` it resolved **EntE** onto PathBank complex **3623**, whose components are a
+strict **superset**: `EntB P0ADI4, EntD P19925, EntF P11454, EntE` — `chosen_rule
+pathbank_protein_complex_id`, `confidence 1.0`, `source db`. Its siblings resolved to
+**one-component** wrappers that preserve identity exactly: EntC→1143, EntB→1189, EntA→1190.
+
+**The biological consequence is real.** The 2,3-DHB adenylation step (EC 6.2.1.71, EntE alone) now
+carries EntB, EntD and EntF as catalysts, none of which performs it. `reactions[4]`
+("EntF-catalyzed enterobactin synthesis") collapsed onto the **same** complex, so two chemically
+distinct steps became indistinguishable by actor — destroying the gold's own requirement of *"a
+named enzyme per step"*.
+
+This is what `actor_named_in_its_own_cited_span` caught, and why that finding is a true positive.
+
+**Corpus reach: 3 of the 6 strict legs that reached mapping.** The same generator produced
+PMC12452463's Stage-3 gate deaths
+(`gate.entity_enterobactin_synthase_complex_is_declared_as_both_a_prote`,
+`gate.generated_protein_complex_wrapper_enterobactin_synthase_complex_`). The `ALAS2 → ALAS2
+complex` shape passes; the `EntE → enterobactin synthase` and `CYP51A1 → Lanosterol 14-alpha
+demethylase` shapes fail.
+
+**The competing reading a product owner must weigh:** the enterobactin synthase assembly line
+genuinely does perform both steps *in vivo*, so the attribution may be imprecise rather than
+chemically false. That judgement is not the orchestrator's.
+
+**It does not unblock the leg.** Arm B proves `:730` fires anyway. Fixing this is contract-grounded
+work that *strengthens* biology; it is not a route to a strict export.
+
+**Attribution honesty:** the seam is bracketed by two payload snapshots, not lineage-proven. The
+actor substitution left **no lineage carrier of its own** — `reactions[3].provenance_lineage` still
+reads `origin: paper_stated`, `paper_explicit: explicit`. A per-actor rewrite record in
+`mapping_meta` (source protein → chosen complex → component delta) would make this attributable
+rather than inferred. **Unowned; no card opened** — it is out of C-081's boundary and must not be
+folded into it.
+
+---
+
+## F-117 — the actor gate cannot relate a DB canonical name to a bare gene symbol
+
+- **Severity** LOW · **Class `product_contract_violation`** · **Blocks nothing; costs nothing today.**
+- **Registered 2026-08-25**, measured by REV-081.
+
+On `PMC12782028/strict`, `actor_named_in_its_own_cited_span` fires on entity
+*"Lanosterol 14-alpha demethylase"* against the span *"CYP51A1 catalyzes the conversion of lansterol
+to …"*. The wrapper is PathBank complex **442, one component, `CYP51A1`, `Q16850`, gene `CYP51A1`` —
+**the identity is exact**. The check fires only because the normalized names share no whole token,
+aggravated by the paper's own typo `lansterol`.
+
+Proof it is the typo and not the biology: `reactions[2]` carries the **identical** actor with
+correctly-spelled `lanosterol` and **passes**. `audit_iteration_summary.json` records the audit LLM
+proposing exactly that fix, `accepted_patch_count: 1`.
+
+`semantic_production.py:371-378` documents the loose one-shared-token rule precisely to tolerate
+*"the same protein under a DB or wrapper name"* — but it cannot help when the span names **only**
+the gene symbol. A live blind spot in a **gating** check.
+
+**It changes no disposition.** PMC12782028's recorded cause is the coverage floor, and the semantic
+cap at `:693` never runs because it is guarded on `status == RELEASE_READY`. Recorded so a future
+reader does not mistake it for the EntE case, which is the opposite — a true positive.
+
+---
+
+## An observation off the release path, recorded but not classified
+
+PMC12096016/strict scored `retained_reactions_match_supported_signatures` **0/7 attribution, 0/3
+recall** while the *same paper's research leg* scored 2/6 on a near-identical payload with identical
+5/5 enzyme recall. That 0% vs 33% swing on one paper suggests a brittle signature matcher.
+
+It is **not** in `SEMANTIC_GATING_CHECKS` (`release_status.py:114-120`, a CLOSED set of five:
+`requested_pathway_anchors_present`, `organism_compatible`, `no_real_id_or_name_conflict`,
+`no_rejected_rag_reaction_reintroduced`, `actor_named_in_its_own_cited_span`), it did not demote the
+leg, and acceptance priority 2 measured **0** unsupported retained reactions. Not chased, not
+classified — flagged as an observation only.
+
+---
+
+## A live tension the product owner should see
+
+PMC12096016's cap-2 demotion cites unmatched anchor **`MenD`** — which the gold's own
+`export_rationale` for that paper says *"Export must **exclude** MenD"*. The pipeline is being
+demoted for correctly omitting something the gold forbids. `Fur` is a regulator; `ATP` and `NADH`
+are cofactors.
+
+Cap 2's input is Stage 0's `key_compounds` / `key_proteins`, **not a curated core**. The cap itself
+is a merged F-094 correction and is not reopened here — but the *quality of its input* is a real and
+separate question, and it is currently costing a leg that has 5/5 enzyme recall and 7/8 metabolite
+recall.
+
+Stage 0's draw is also non-deterministic: PMC12096016's `missing_anchors` was `[ATP, NADH, NAD+,
+EntA, Fur]` at T-104, `[ATP, EntD]` at T-105 and `[NADH, ATP, MenD, Fur]` at T-106 — coverage
+0.706 / 0.857 / 0.765 on one paper across three runs.
