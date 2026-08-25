@@ -6141,6 +6141,203 @@ def _reconcile_components_against_local_proteins(
     return reconciled
 
 
+# ── F-116: a component match must not promote one enzyme to a superset complex ──
+#
+# ``map_enzyme_protein_to_complex`` resolves an enzyme by asking PathBank which
+# complexes list that protein as a *component*
+# (``_find_complexes_by_component_protein_id``). Being a component is not being
+# the complex: on ``PMC12096016/strict`` EntE is a component of complex 3623
+# (EntB, EntD, EntF, EntE), so the 2,3-DHB adenylation step -- EC 6.2.1.71, EntE
+# alone -- was rewritten to carry three catalysts that do not perform it, and
+# the separate EntF step collapsed onto the same actor.
+#
+# The rule these three helpers implement: a component match may stand only when
+# the reaction that names the enzyme also accounts for **every other component**
+# of the matched complex. A reaction that genuinely names the whole assembly
+# keeps its DB complex; a reaction that names one subunit gets a wrapper around
+# that subunit, which is the same shape the resolver already emits when PathBank
+# has no candidate at all. The wrapper exists because the PathWhiz importer
+# refuses a bare protein as a reaction enzyme -- that rationale is untouched.
+
+
+def _enzyme_actor_identity_tokens(row: Any) -> Set[str]:
+    """Tokens by which a reaction actor and a complex component are one protein.
+
+    Identity first -- a UniProt/DrugBank accession or a PathBank protein id is
+    proof of sameness. Normalized name and gene symbol are the fallback, and are
+    the same keys :func:`_reconcile_components_against_local_proteins` already
+    matches payload rows on, so the two seams cannot disagree about who is who.
+    """
+
+    if isinstance(row, str):
+        row = {"name": row}
+    if not isinstance(row, dict):
+        return set()
+    tokens: Set[str] = set()
+    mapped_ids = _safe_dict(row.get("mapped_ids"))
+    meta = _safe_dict(row.get("mapping_meta"))
+    for container in (row, mapped_ids, _safe_dict(row.get("ids")), meta):
+        for key, kind in (
+            ("uniprot", "uniprot"),
+            ("uniprot_id", "uniprot"),
+            ("drugbank", "drugbank"),
+            ("drugbank_id", "drugbank"),
+        ):
+            value = str(container.get(key) or "").strip().casefold()
+            if value:
+                tokens.add(f"{kind}::{value}")
+    pathbank_id = _to_positive_int(
+        row.get("pathbank_protein_id")
+        or mapped_ids.get("pathbank_protein_id")
+        or meta.get("pathbank_protein_id")
+    )
+    if pathbank_id:
+        tokens.add(f"pathbank_protein_id::{pathbank_id}")
+    for name_value in (
+        row.get("name"),
+        row.get("protein"),
+        row.get("entity"),
+        row.get("component"),
+        row.get("gene_name"),
+        row.get("gene"),
+    ):
+        norm = _normalize_name(str(name_value or ""))
+        if norm:
+            tokens.add(f"name::{norm}")
+    return tokens
+
+
+def _reaction_actor_identity_scope(
+    reaction: Dict[str, Any],
+    proteins_by_norm: Dict[str, Dict[str, Any]],
+) -> Set[str]:
+    """Every protein identity this reaction names as an enzyme or modifier.
+
+    Computed ONCE per reaction, before either actor list is rewritten, so the
+    ``modifiers`` pass and the ``enzymes`` pass judge the same reaction. Reading
+    it per list would let the first pass' own rewrites change the second pass'
+    answer.
+    """
+
+    scope: Set[str] = set()
+    for key in ("enzymes", "modifiers"):
+        for actor in _safe_list(reaction.get(key)):
+            actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
+            if not isinstance(actor_dict, dict):
+                continue
+            actor_name, _actor_type, _role = _reaction_actor_name_and_type(actor_dict)
+            if not actor_name:
+                continue
+            scope |= _enzyme_actor_identity_tokens({"name": actor_name})
+            payload_row = proteins_by_norm.get(_normalize_name(actor_name))
+            if payload_row is not None:
+                scope |= _enzyme_actor_identity_tokens(payload_row)
+    return scope
+
+
+def _superset_complex_promotion_refusal(
+    result: Dict[str, Any],
+    protein_name: str,
+    protein_row: Dict[str, Any],
+    actor_scope: Set[str],
+) -> Dict[str, Any]:
+    """``{}`` when the promotion is legitimate; a refusal record when it is not.
+
+    Legitimate, and deliberately left alone:
+
+    * a one-component complex whose component IS this enzyme (EntC->1143,
+      EntB->1189, EntA->1190, ALAS2->ALAS2 complex, CYP51A1->442);
+    * a multi-component complex whose every component is named by this same
+      reaction -- the reaction really does use the whole assembly;
+    * a result carrying no components at all, which injects no catalyst and is
+      handled by the existing missing-component path.
+    """
+
+    components = [
+        component
+        for component in _safe_list(result.get("components"))
+        if isinstance(component, (dict, str))
+    ]
+    if not components:
+        return {}
+    scope = (
+        set(actor_scope)
+        | _enzyme_actor_identity_tokens(protein_row)
+        | _enzyme_actor_identity_tokens({"name": protein_name})
+    )
+    uncovered = [
+        _component_name(component) or "<unnamed>"
+        for component in components
+        if not (_enzyme_actor_identity_tokens(component) & scope)
+    ]
+    if not uncovered:
+        return {}
+    return {
+        "protein": _canonical_name(protein_name),
+        "protein_complex": _canonical_name(str(result.get("name") or "")),
+        "pathbank_protein_complex_id": _to_positive_int(
+            result.get("pathbank_protein_complex_id") or result.get("pathbank_complex_id")
+        ),
+        "component_count": len(components),
+        "uncovered_components": uncovered,
+    }
+
+
+def _single_component_wrapper_result(
+    protein_name: str,
+    protein_row: Dict[str, Any],
+    species: str,
+    refused: Dict[str, Any],
+    refusal: Dict[str, Any],
+) -> Dict[str, Any]:
+    """The wrapper a refused superset promotion falls back to.
+
+    Byte-for-byte the shape ``map_enzyme_protein_to_complex`` already returns
+    when PathBank has no candidate (``novel_enzyme_single_component_complex``),
+    so nothing downstream meets a new kind of row: same ``generated`` flag, same
+    ``generation_reason``, same single component built from the payload protein.
+    ``provider``/``source`` are carried from the refused result because the
+    database WAS consulted -- claiming otherwise would be a dishonest audit
+    trail. Only the refusal reason is new.
+    """
+
+    species_id = (
+        _to_positive_int(protein_row.get("species_id"))
+        or _to_positive_int(_species_hint_from_row(protein_row).get("pathbank_species_id"))
+        or _to_positive_int(refused.get("species_id"))
+    )
+    return _with_resolution(
+        {
+            "status": "unmapped",
+            "reason": "component_match_superset_complex_refused",
+            "provider": str(refused.get("provider") or "PathBankDB"),
+            "source": str(refused.get("source") or "db"),
+            "confidence": 0.0,
+            "chosen_rule": "novel_enzyme_single_component_complex",
+            "candidates": [],
+            "name": _wrapper_complex_name(protein_name),
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "species_id": species_id,
+            "components": [_protein_component_from_row(protein_row, protein_name)],
+            "issues": (
+                []
+                if (species_id or species)
+                else [
+                    {
+                        "issue": "protein_complex_missing_species",
+                        "reason": "component_match_superset_complex_refused",
+                    }
+                ]
+            ),
+            "refused_superset_complex": dict(refusal),
+        },
+        "novel",
+        issue="component_match_superset_complex_refused",
+        order_step="novel_enzyme_single_component_complex",
+    )
+
+
 def _rewrite_reaction_protein_enzymes_to_complexes(
     mapped: Dict[str, Any],
     *,
@@ -6148,7 +6345,14 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     cache: MappingCache,
     global_organism: str,
 ) -> Dict[str, Any]:
-    """Rewrite protein enzyme/modifier references to protein_complex references."""
+    """Rewrite protein enzyme/modifier references to protein_complex references.
+
+    The rewrite exists because the PathWhiz importer refuses a bare protein as a
+    reaction enzyme. It is **not** licence to change who catalyses the step: a
+    PathBank complex may stand in for an enzyme only when this reaction accounts
+    for every component of that complex (F-116). Anything else falls back to a
+    single-component wrapper around the enzyme the reaction actually named.
+    """
     entities = _safe_dict(mapped.setdefault("entities", {}))
     proteins = _safe_list(entities.setdefault("proteins", []))
     complexes = _safe_list(entities.setdefault("protein_complexes", []))
@@ -6165,7 +6369,16 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         for row in complexes
         if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
     }
-    cache_key_to_name: Dict[str, str] = {}
+    #: ``{(enzyme cache key, promotion was refused): wrapper display name}``.
+    #: The refusal flag is part of the key because the SAME enzyme can be a
+    #: legitimate whole-assembly match in one reaction and a refused superset
+    #: promotion in another; a key without it would let the first reaction
+    #: decide for every later one.
+    cache_key_to_name: Dict[Tuple[str, bool], str] = {}
+    #: ``{enzyme cache key: resolved row}`` -- the resolver/cache lookup memo the
+    #: old single-key ``cache_key_to_name`` used to double as. Split out so the
+    #: per-reaction refusal decision above cannot cost an extra database call.
+    resolved_enzyme_complex_rows: Dict[str, Any] = {}
     dropped_protein_norms: set = set()
     #: Display name of each dropped protein, for the repair's audit trail. A
     #: normalized key ("alas2") is not something a reviewer can paste back.
@@ -6192,14 +6405,20 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 return str(hint["name"])
         return _canonical_name(str(global_organism or reaction.get("species") or reaction.get("organism") or ""))
 
-    def _resolve_complex_name(protein_name: str, protein_row: Dict[str, Any], actor: Dict[str, Any], reaction: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    def _resolve_complex_name(
+        protein_name: str,
+        protein_row: Dict[str, Any],
+        actor: Dict[str, Any],
+        reaction: Dict[str, Any],
+        actor_scope: Set[str],
+        json_pointer: str,
+    ) -> Tuple[str, Dict[str, Any]]:
         species = _species_for(protein_row, actor, reaction)
         protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
         cache_key = f"{_normalize_name(protein_name)}::{protein_id or ''}::{_normalize_name(species)}"
-        if cache_key in cache_key_to_name:
-            return cache_key_to_name[cache_key], {}
-
-        cached = cache.get("enzyme_complexes", cache_key)
+        cached = resolved_enzyme_complex_rows.get(cache_key)
+        if cached is None:
+            cached = cache.get("enzyme_complexes", cache_key)
         if cached is not None and not _is_reusable_complex_cache_row(cached):
             cached = None  # stale/legacy malformed wrapper row -> re-resolve & self-heal
         if cached is None:
@@ -6233,12 +6452,43 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                     order_step="novel_enzyme_single_component_complex",
                 )
             cache.set("enzyme_complexes", cache_key, cached)
+        resolved_enzyme_complex_rows[cache_key] = cached
 
         result = _safe_dict(cached)
         result["components"] = _reconcile_components_against_local_proteins(
             _safe_list(result.get("components")),
             proteins,
         )
+        # F-116. Judged on the reconciled components, so a component that is this
+        # very protein under a database name (hexokinase -> "Hexokinase-3",
+        # P52790) is recognised as itself rather than counted as an injected
+        # stranger. The cache keeps the unrefused database row: the refusal is a
+        # property of THIS reaction, not of the protein.
+        refusal = _superset_complex_promotion_refusal(
+            result, protein_name, protein_row, actor_scope
+        )
+        if refusal:
+            result = _single_component_wrapper_result(
+                protein_name, protein_row, species, result, refusal
+            )
+            summary["reaction_enzyme_complex_superset_promotions_refused"] = (
+                summary.get("reaction_enzyme_complex_superset_promotions_refused", 0) + 1
+            )
+            actions.append(
+                {
+                    "type": "reaction_enzyme_complex_superset_promotion_refused",
+                    "json_pointer": json_pointer,
+                    **refusal,
+                    "protein_complex_used": _wrapper_complex_name(protein_name),
+                    "reason": (
+                        "a component match may not promote one enzyme onto a complex "
+                        "whose other components this reaction does not name"
+                    ),
+                }
+            )
+        if (cache_key, bool(refusal)) in cache_key_to_name:
+            return cache_key_to_name[(cache_key, bool(refusal))], {}
+
         complex_name = _canonical_name(str(result.get("name") or ""))
         if not complex_name:
             candidates = _safe_list(result.get("candidates"))
@@ -6258,10 +6508,15 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         if not _safe_list(result.get("components")) and not _safe_list(complex_row.get("components")):
             result["components"] = [_protein_component_from_row(protein_row, protein_name)]
         _merge_complex_resolution_into_row(complex_row, result, species_name=species)
-        cache_key_to_name[cache_key] = complex_name
+        cache_key_to_name[(cache_key, bool(refusal))] = complex_name
         return complex_name, result
 
-    def _rewrite_rows(rows: List[Any], pointer_prefix: str, reaction: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _rewrite_rows(
+        rows: List[Any],
+        pointer_prefix: str,
+        reaction: Dict[str, Any],
+        actor_scope: Set[str],
+    ) -> List[Dict[str, Any]]:
         rewritten: List[Dict[str, Any]] = []
         # Pre-scan: count how many proteins in this list have external IDs so we
         # know if it's safe to drop unresolved ones (only drop if others remain).
@@ -6382,7 +6637,14 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                     }
                 )
                 continue
-            complex_name, result = _resolve_complex_name(name, protein_row, actor_dict, reaction)
+            complex_name, result = _resolve_complex_name(
+                name,
+                protein_row,
+                actor_dict,
+                reaction,
+                actor_scope,
+                f"{pointer_prefix}/{idx}",
+            )
             updated = {
                 "entity": complex_name,
                 "entity_type": "protein_complex",
@@ -6485,12 +6747,19 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
             continue
+        # F-116. Taken before either list is rewritten: this is the set of
+        # protein identities the reaction itself puts forward as acting on the
+        # step, and it is what decides whether a PathBank complex may stand in
+        # for one of them.
+        actor_scope = _reaction_actor_identity_scope(reaction, proteins_by_norm)
         for key in ["modifiers", "enzymes"]:
             rows = _safe_list(reaction.get(key))
             if not rows:
                 continue
             pointer = f"/processes/reactions/{ridx}/{key}"
-            reaction[key] = _dedupe_actor_rows(_rewrite_rows(rows, pointer, reaction), pointer)
+            reaction[key] = _dedupe_actor_rows(
+                _rewrite_rows(rows, pointer, reaction, actor_scope), pointer
+            )
 
     # ── The references the drops above orphaned ──────────────────────────────
     #

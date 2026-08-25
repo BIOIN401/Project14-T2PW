@@ -1,0 +1,79 @@
+{
+  "label": "c086-focused-tip-final",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c086",
+    "--pin-verdict",
+    "C:/t/c086/docs/pwml_recovery_sprint/evidence/g11/pin/C-086/06-c086-focused-tip-final.pin.json",
+    "-q",
+    "--basetemp=C:/t/c086tmp/bt/06",
+    "C:/t/c086/tests/test_c086_superset_complex_promotion.py"
+  ],
+  "cwd": "C:\\t\\c086",
+  "started_at": "2026-08-25T22:15:38+00:00",
+  "finished_at": "2026-08-25T22:15:38+00:00",
+  "duration_seconds": 0.7229191999940667,
+  "timeout_seconds": 600.0,
+  "root_pid": 238576,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 230220,
+      "name": "python.exe",
+      "ppid": 238576
+    }
+  ],
+  "descendants_terminated": [
+    230220
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 163500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 235728,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c086/docs/pwml_recovery_sprint/evidence/g11/C-086/06-c086-focused-tip-final.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c086\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c086",
+    "repo_head": "91b5c505f6fd74073561c33622b516f6a220e5fb",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
