@@ -3519,3 +3519,145 @@ C-085's review.
 Every acceptance run to date inherits this blind spot, and any correction wave measured against
 priority 2 will appear to hold when it may not. **A gate that cannot produce a non-zero count is
 inert, not absolute.** This is why C-085 is chartered ahead of any further release candidate.
+
+---
+
+## C-082 — MERGED `0242810`. F-115 closed.
+
+| card | merge | closes | SMOKE | Chunk D | review |
+|---|---|---|---|---|---|
+| **C-082** | `0242810` | **F-115** | **473** (50.62 s, post-merge, pinned) | **187 = 160+4+23**, `SETS_EQUAL=True`, `qb` 23 | APPROVE, actual diff, 54 wrapper reports, 0 non-compliant |
+
+**The guard was always right; the disposition was wrong.** `_reject_ambiguous_species_renames` →
+`_screen_ambiguous_species_renames`: the two `AMBIGUOUS_RENAME_TARGET` branches (`:1153`
+occupied-target, `:1111` two-sources) now return declination records instead of raising.
+`AMBIGUOUS_REFERENCE` still raises. Classification rides the existing **D-029** channel:
+`report["ok"] = False`, `report["review_required"]["species"] =
+"species_rename_declined:AMBIGUOUS_RENAME_TARGET"`.
+
+**Authority: D-035 clause 8** — *"may convert it into a structured review-required or refusal result
+**only if** the graph remains intact and **no invalid PWML is emitted**."* Both conditions verified.
+
+It fixed the **module** rather than the unprotected call site at `streamlit_app.py:4299` — a
+forbidden file — and so repairs all three call sites at once (`:4299`, `:4850`, `writer.py:2692`).
+
+### What the reviewer proved rather than read
+
+* **Detection is unweakened, by AST set-difference.** It extracted every `If` test, comprehension
+  and `For` iteration from the base and tip functions and differenced them: **zero base expressions
+  removed, relaxed or reordered.** All four additions belong to the disposition. `by_target`, the
+  `len({_norm(source) for source in sources}) > 1` test, the `target == _norm(old): continue` guard
+  and the `occupied` comprehension are verbatim.
+* **Untouched helpers proved by function-body hashing**, not by trusting the hunk list —
+  `_reject_ambiguous_renames`, `resolve_compounds_prefreeze`, `_norm`, `_canonical`, `_alias_index`
+  and `_canonicalize_species_rows` all hash identically at base and tip.
+* **The G9 proof is tied to the measured defect.** Its own base run produced a failure string
+  compared programmatically against `runs_verify/2026-08-24_1428/manifest.jsonl` row
+  `PMC12444477`/`research`: **209 bytes, `sha256 3af32ffe628ff57c9adf3aa6d331469b` on both sides,
+  byte-identical.** Not a reconstruction.
+* **The two species rows stay distinct** — `['Escherichia coli K-12', 'Escherichia coli']`,
+  taxonomies `83333` and `562`, at the stage, in the IR, and on the canonical payload that ships
+  through the real app.
+* **The restore is byte-level complete.** Fed a row carrying a pre-existing `raw_name` and `aliases`
+  the ladder would have overwritten, the delta after declination is a single field
+  (`species_canonicalization`); `name`/`raw_name`/`aliases` move back together because the restore
+  is a wholesale `deepcopy` of the pristine row, so a partial restore is structurally impossible.
+  Rename log trimmed: `name_canonicalization == []`, `rename_map == {}`, `renamed == 0`.
+* **The marker is outside the graph projection** — `species_canonicalization` appears nowhere in
+  `canonical_hash.py`, so the biological graph hash never sees it.
+* **SMOKE 473 three times** — base, tip, and the C-081+C-082 merged tree. **Chunk D authoritative
+  split form**, `T2PW_OFFLINE_CURATOR=1`: `union=187 monolithic=187 missing=0 extra=0
+  SETS_EQUAL=True`, `executed=187/187 omissions=0 additions=0 failed=none`.
+* **Trial merge onto `0879e62` was clean** — zero conflicts, no overlap with C-081's `mapping/`
+  territory, 86 tests green across C-073 + C-081 + C-082 together. No rebase needed.
+
+### Two judgement calls that were right
+
+**The relocated seam test.** `tests/test_streamlit_quarantine_boundary.py` **is** the `qb` component,
+`ENFORCED` at 23 in `chunk_d_gate.py`; appending would have moved `qb` 23→24 and `TOTAL` 187→188 — a
+merge-rule-4 baseline move with no authorization and nothing to do with species canonicalisation. The
+implementer relocated to `tests/test_c082_post_pipeline_seam.py` instead. **No coverage was lost**:
+the new file imports the real harness (`real_streamlit` is `autouse=True` at its definition, so
+importing it arms it), and the proof it is armed rather than asserting against a `MagicMock` is that
+it **fails at base with the real crash string**, which a stubbed `AppTest` could not produce. The
+boundary file's blob is identical at both SHAs — nothing survived the relocation.
+
+**The disclosed measurement failure was handled correctly.** `g11/C-082/06-affected-tip.json`:
+`exit_reason: timeout`, `returned_code: 124`, `exit_code: None` (**no test result produced**),
+`graceful_attempted: True` then `forced: True`, `descendants_terminated: [62500, 64056]` **by PID**,
+`final_surviving_count: 0`, `cleanup_success: True`, 4 pre-existing reported and never killed. The
+report was **retained** with the sequence contiguous at `05 → 06 → 07`, so the failure is visible
+rather than erased, and the work was re-run through the sanctioned split forms.
+
+---
+
+## F-122 — one of C-082's base failures is symbol absence, not behaviour
+
+- **Severity** LOW · **Class `evidence_precision`** · **Registered 2026-08-25 by the C-082 reviewer.**
+
+`tests/test_prefreeze_species_resolution.py:373`
+`test_new_acceptance_the_existing_row_guard_does_not_over_fire` fails at base with
+`ImportError: cannot import name '_screen_ambiguous_species_renames'` — it imports the renamed
+private helper by its new name.
+
+It is an **over-fire control, not a G9 proof**, and the five failures in the new file are all genuine
+`PrefreezeResolutionError`. But the card's headline *"base 8 failed"* should be recorded as
+**7 behavioural + 1 rename artifact**. **G9 is amply discharged without it** — symbol absence is not
+proof, and none of the load-bearing arms rest on it.
+
+---
+
+## F-123 — a declination does not demote the release status, and closing that needs a ruling
+
+- **Severity** MEDIUM · **Class `policy_disagreement`** · **Registered 2026-08-25 by the C-082
+  reviewer.** Same family as **F-107**.
+
+`report["ok"] = False` does **not** structurally prevent a PWML or `release_ready`. Both consuming
+seams say so in terms:
+
+> `writer.py:2731` — *"`prefreeze_report["ok"] is False` deliberately does NOT abort. D-029 (LOCKED)
+> … Acting on it is the downstream seam's job."*
+> `streamlit_app.py:4930` — *"D-029, as split by **D-040 §8**: this seam PERSISTS and SURFACES the
+> verdict. It does not act on it — no branch here changes whether a PWML is produced."*
+
+`classify_release_status` takes no `prefreeze_review_required` parameter, so a declination is
+**release-status-neutral**.
+
+**The observable consequence is real and must be recorded honestly.** At base, a strict leg hitting
+this shape **crashed**, so it could never be `release_ready`. At the tip it proceeds and *can* reach
+`release_ready` while carrying two organism rows the ladder wanted to merge. That is permitted by
+D-035 clause 8 (graph intact, no invalid PWML) and **required** by merge rule 7 — but it means clause
+8's *"must not become a successful export"* is enforced only by the **other** gates, never by this
+channel.
+
+**The card did not stop short.** Closing this requires `release_status.py` or `streamlit_app.py`,
+both outside C-082's boundary and one of them forbidden, and would reverse or extend **D-040 §8**,
+which is LOCKED. Doing it inside C-082 would have been an improvised product decision.
+**Needs a product ruling, with F-107.**
+
+---
+
+## F-124 — the claimed `DuplicateNamedRowError` backstop does not exist for species
+
+- **Severity** LOW · **Class `product_contract_violation`** (latent; **measured non-reachable**)
+- **Registered 2026-08-25 by the C-082 reviewer.**
+
+`_screen_ambiguous_species_renames`'s docstring claims the second-order collision *"is not silently
+merged — `ir.DuplicateNamedRowError` refuses two species rows sharing an exporter name key."*
+
+**It does not, for species.** Species go through the **component** call site `ir.py:1317`, which does
+**not** pass `refuse_duplicates=True` and takes the warning branch at `ir.py:688` — commented *"the
+branch the species converger depends on (F-046)"* — which **drops the second row first-wins with only
+a warning**. `refuse_post_freeze_merges` does not cover it either: two rows already sharing a `_norm`
+before `_apply_create_defaults` yield one origin key, so `manufactured` is `False`. Only the
+**entity** call site `ir.py:1420` refuses.
+
+**Measured non-reachable**, three independent ways: the shipped `data/pathwhiz_id_db.json` contains
+**0 species entries**, so ladder rung 2 cannot rename a species offline; `_deterministic_species_name`
+is **idempotent on all 11 realistic strain forms tested**, so every rename target is a fully-stripped
+binomial while every declined row keeps a strain-qualified name — the sets cannot intersect; and a
+direct adversarial construction of three colliding strains produced **all three declined,
+`rename_map == {}`, no duplicate names**.
+
+**Safe today; the reasoning is wrong.** Registered so the docstring is corrected rather than
+inherited by a reader who relies on a guard that would not fire.
