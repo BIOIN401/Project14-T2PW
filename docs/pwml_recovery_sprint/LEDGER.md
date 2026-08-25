@@ -4822,3 +4822,89 @@ alongside them. With `test_batch_preflight.py:616` (a worktree `.venv` artefact,
 that REV-087 separated correctly), the stale-pin population is now large enough that it is costing
 every card a paragraph of classification. **Re-baselining F-112's pins is worth its own small card**
 once this wave's merges settle.
+
+---
+
+## CORRECTION to the live-run ledger — this session is NOT $0.00
+
+I reported **"incremental external-model spend: $0.00"** earlier in this session. **That is now
+false and I am correcting it rather than leaving it to stand.**
+
+### What happened
+
+C-083's implementer copied `.env` into `C:/t/c083` and `C:/t/c083base` as the F-051 golden control.
+`.env` sets `LLM_PROVIDER=openrouter`. It then ran an affected chunk that drives the real Streamlit
+app through the post-pipeline path **without** `T2PW_OFFLINE_CURATOR=1`.
+
+`TEST_MATRIX.md:277-284` is explicit about why that guard exists: without it `run_pathway_curator`
+issues **one ungated LLM call per post-pipeline app run** at temperature 0.2. It also warns that
+because `.env` is untracked, a worktree normally gets `LLM_PROVIDER=local` and the curator becomes a
+no-op **by accident** — *"so a green qb cohort obtained in a worktree does NOT certify the same
+cohort in the primary."* **Copying `.env` in removed that accidental protection and put the worktree
+on the billed path.**
+
+### Measured, not estimated — from the committed log
+
+`docs/pwml_recovery_sprint/evidence/c083_aff_c3.log`, lines 90-93:
+
+```
+WARNING t2pw.llm.client:client.py:887 LLM returned an empty completion for curator
+  (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True)
+  on attempt 1/3; retrying as a transient.        <- invocation A
+  on attempt 2/3; retrying as a transient.        <- invocation A
+  on attempt 1/3; retrying as a transient.        <- invocation B
+  on attempt 2/3; retrying as a transient.        <- invocation B
+```
+
+* **2 curator invocations**, each retried — **4 to 6 real API calls** on
+  `deepseek/deepseek-v4-flash`.
+* Wall clock corroborates: **197.67 s ungated vs 24.76 s with the guard**, same chunk.
+* Every completion came back **empty with `finish_reason=length`** — the calls consumed tokens and
+  returned nothing usable.
+
+**Cost: well under $0.01.** A handful of flash-model calls that hit the output ceiling. The **$5
+incremental ceiling is not remotely at risk**, and no further expansion is warranted or planned.
+
+**The amount is not the point.** The rule was broken, and a rule that only matters when the bill is
+large is not a rule.
+
+### The contamination path did NOT fire, and that is checkable
+
+`TEST_MATRIX` names the real hazard above the cost: accepted curator patches are *"written back into
+`audited_json` and flow through mapping into `final_mapped_db`"* — the measured root cause of
+**BL-003**. **Because every completion was empty, no patch was produced and none was accepted.**
+
+Independently confirmed from the diff: `git diff --name-only 116c8fa..card/C-083-f092-d3` contains
+**no** `audited_json`, `final_mapped*`, `runs/` or `runs_verify/` path. `.env` is gitignored
+(`.gitignore:3`) so it could not ride in. **No committed artifact is contaminated.**
+
+### A useful by-product for REV-090
+
+The ungated run failed **5**, the gated re-run failed **4**. The one that moved is
+`test_c082_post_pipeline_seam::test_an_ambiguous_species_rename_does_not_end_the_post_pipeline_leg`,
+which timed out at 120 s **because of the live calls** and passes with the guard.
+
+The other **four — all `test_prefreeze_third_export_seam` — are byte-identical across both runs**, so
+they are not curator-induced. That is evidence for, though not proof of, C-083's "pre-existing, DB
+reachability" label. REV-090 has been asked to confirm they also fail at base, because *"the database
+was unreachable"* is exactly the kind of explanation that is convenient and hard to falsify.
+
+### Process changes, effective now
+
+1. **`T2PW_OFFLINE_CURATOR=1` is exported to every lane in its charter**, not left as a
+   `TEST_MATRIX` reference. REV-090 was warned mid-flight and both C-083 worktrees still carry
+   `.env`.
+2. **Copying `.env` into a worktree is itself a cost decision** and must be declared before it is
+   done, not reported afterwards. The F-051 golden control genuinely needs it — so the guard must be
+   set in the same breath.
+3. The guard goes in the **bounded child environment**, not just the shell, exactly as
+   `TEST_MATRIX:284` says.
+
+### Two other process facts the lane surfaced, worth keeping
+
+* **`pinned_pytest.py` swallows `-m pytest`** as a pytest marker expression — `12 deselected`,
+  exit 5. Pass test paths directly.
+* **The Bash tool caps at 10 minutes**, which kills the wrapper mid-run and strands the heavy lock
+  because the `finally` never runs. The lane released it **correctly**: it read `holder.json`,
+  confirmed the holder named its own job (`C-083`) and that PID 68020 was dead, and only then
+  cleared it. That is the protocol; clearing another holder's lock stays forbidden.
