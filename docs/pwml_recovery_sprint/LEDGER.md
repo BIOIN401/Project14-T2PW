@@ -4749,3 +4749,76 @@ inference is not a finding.
 Its claim that the refusal *will* fire is **static** — read off C-086's merged source against the
 committed payload, not demonstrated by a run. It read the token construction but not
 `_normalize_name`'s body, and says so. Recorded as static analysis, not as a measured outcome.
+
+---
+
+## C-088 returned: the D-065 population is FOUR legs, not six — and my brief was the thing that was wrong
+
+**Committed `b7bec6d`, not merged. Under review as REV-090.**
+
+I briefed C-088 with the bundle's figure: *"Six legs across three papers end `scope_conflict`."* That
+is true of the **scope-conflict** count and **false** as the disposition population. The implementer
+measured it and said so rather than following the brief.
+
+| leg | core | gold floor | placed |
+|---|---|---|---|
+| `PMC12421875` research / strict | 9 / 9 | 7 | **yes** |
+| `PMC12657337` research / strict | 3 / 5 | 3 | **yes** |
+| `PMC12312563` research / strict | 1 / 1 | 1 | **NO** |
+
+`PMC12312563` clears its own gold floor of 1 and is still excluded, because
+`MIN_CONNECTED_CORE_REACTIONS = 2` (C-074 / F-101) says one reaction is not a pathway — and the
+gold's own `export_rationale` for that case says it in terms: *"A single reaction cannot form a
+connected pathway, and no second reaction anywhere in the text shares a metabolite with it."*
+
+**On that leg `diagnostic_only`'s existing gloss is TRUE.** Placing it would have replaced one
+untruth with another, which is the exact failure D-065 exists to stop. I verified the floors and the
+rationale independently before accepting the deviation
+(`evidence/g11/T-107/29-c088-population-check.json`).
+
+**The consistency check is what makes it convincing:** the four legs are exactly the two papers D-065
+named for the gold reconciliation, and exactly the 4 → 2 denominator arithmetic. Three independent
+routes to the same pair.
+
+**The two-floor rule (gold floor AND the global minimum) is a narrowing my charter did not specify**,
+so it is in front of REV-090 as the thing to scrutinise hardest. If the product owner rules for
+gold-floor-only, the implementer reports it is a one-line change.
+
+### What the card did and did not build
+
+`RELEASE_STATES` was **not** extended — there are still exactly three output states, and no
+STOP-and-report condition was hit. `release_disposition()` is a **single rule shared by the
+classifier and the scorer**, so the two cannot drift into two readings of one ruling — the same shape
+C-087 gave `prefreeze_review_reasons`. `to_dict` writes the key **only when set**, which is what
+keeps the 7-slot golden digest in `test_batch_driver_seam_golden.py` still.
+
+`classify_release_status` gains one keyword, `required_connected_reactions=None`, and **no production
+caller supplies it**, so every existing runtime record is byte-identical.
+
+### The gap I am NOT going to paper over
+
+**Production never populates the runtime field today.** `driver.py::_finalize_scope_conflict` is
+outside the card's boundary and has no access to the gold floor, so the disposition is established
+**only in the acceptance record**. D-065 says *"the release/acceptance record"*, so I read the letter
+as satisfied — but D-065 also says the emitted record must be honest and that a contract state must
+not be described as something it is not.
+
+So the implementer's proposed § 4 gloss, which reads *"the record carries an explicit `disposition`
+field beside the status"*, **overstates it for a runtime record**, where the field exists and is
+always empty. I have put that to REV-090 with a request for corrected text rather than landing the
+gloss as offered. **The gloss lands in the merge commit, and it will say where the disposition is
+actually established.**
+
+Wiring the runtime seam needs a card that owns `driver.py` and a production-side floor decision.
+Registered here as the residual rather than left to be discovered.
+
+Also out of scope and recorded: `bench/render.py` renders through `describe(leg.release_status)` —
+the frozen record, which carries no disposition — so the rendered acceptance table does not show it.
+
+### F-112 is now FOUR stale corpus pins
+
+Both C-083 and C-088 hit the same two reds, identical at base and tip, and C-089 hit a third
+alongside them. With `test_batch_preflight.py:616` (a worktree `.venv` artefact, a different class
+that REV-087 separated correctly), the stale-pin population is now large enough that it is costing
+every card a paragraph of classification. **Re-baselining F-112's pins is worth its own small card**
+once this wave's merges settle.
