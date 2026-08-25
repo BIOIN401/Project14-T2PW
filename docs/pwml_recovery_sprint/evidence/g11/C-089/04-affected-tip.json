@@ -1,0 +1,194 @@
+{
+  "label": "affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-089/04-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/c089tmp/a1",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_curation_patch_transaction.py"
+  ],
+  "cwd": "C:\\t\\c089",
+  "started_at": "2026-08-25T22:49:14+00:00",
+  "finished_at": "2026-08-25T22:50:25+00:00",
+  "duration_seconds": 70.39703059999988,
+  "timeout_seconds": 2400.0,
+  "root_pid": 44272,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 44332,
+      "name": "python.exe",
+      "ppid": 44272
+    },
+    {
+      "pid": 44620,
+      "name": "python.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 44640,
+      "name": "python.exe",
+      "ppid": 44620
+    },
+    {
+      "pid": 44672,
+      "name": "python.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 44692,
+      "name": "python.exe",
+      "ppid": 44672
+    },
+    {
+      "pid": 44988,
+      "name": "python.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 45008,
+      "name": "python.exe",
+      "ppid": 44988
+    },
+    {
+      "pid": 44268,
+      "name": "python.exe",
+      "ppid": 44360
+    },
+    {
+      "pid": 44360,
+      "name": "python.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 17640,
+      "name": "git.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 38676,
+      "name": "git.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 44080,
+      "name": "git.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 44556,
+      "name": "git.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 42136,
+      "name": "git.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 38292,
+      "name": "python.exe",
+      "ppid": 44332
+    },
+    {
+      "pid": 45656,
+      "name": "python.exe",
+      "ppid": 38292
+    }
+  ],
+  "descendants_terminated": [
+    17640,
+    38292,
+    38676,
+    42136,
+    44080,
+    44268,
+    44332,
+    44360,
+    44556,
+    44620,
+    44640,
+    44672,
+    44692,
+    44988,
+    45008,
+    45656
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 43756,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-089/04-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c089\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c089",
+    "repo_head": "e4b87da2ab55d02e1d8388b25816cb19de98560d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-089",
+    "token": "C-089:41044:9cadc77f6180e4b0",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

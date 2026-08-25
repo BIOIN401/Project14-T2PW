@@ -538,7 +538,7 @@ def test_interactions_is_not_a_participant_bucket() -> None:
     assert "interactions" not in PARTICIPANT_LEGACY_SLOTS
     assert participant_slots("interactions") == ()
     assert "interactions" not in ia.PARTICIPANT_FIELDS
-    assert "interactions" not in S._REACTION_BUCKETS
+    assert "interactions" not in S._reaction_buckets()
     for slots in list(PARTICIPANT_SLOTS.values()) + list(PARTICIPANT_LEGACY_SLOTS.values()):
         assert not ({"entity_1", "entity_2", "participants"} & set(slots))
 
@@ -572,8 +572,11 @@ def test_both_readers_are_derived_views_not_copies() -> None:
 
     assert ia._PARTICIPANT_NAME_KEYS == PARTICIPANT_NAME_KEYS
     assert ia.PARTICIPANT_FIELDS == {b: participant_slots(b) for b in PARTICIPANT_SLOTS}
-    assert S._REACTION_BUCKETS == tuple(PARTICIPANT_SLOTS)
-    assert S._ENZYME_ROLE_SLOT_SET == frozenset(ENZYME_ROLE_SLOTS)
+    assert S._reaction_buckets() == tuple(PARTICIPANT_SLOTS)
+    assert S._schema() is sys.modules["t2pw.pipeline.participant_schema"]
+    assert S._enzyme_names({"enzymes": ["A"], "modifiers": ["B"], "catalysts": ["C"]}) == [
+        "A", "B", "C"], "the enzyme-role slot list is no longer the shared one"
+    assert tuple(ENZYME_ROLE_SLOTS) == ("enzymes", "modifiers", "catalysts")
 
     # Strictly additive over what identity_admission read before C-089: a slot
     # this reader stops seeing strips a real accession.
