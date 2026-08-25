@@ -1,0 +1,141 @@
+{
+  "label": "affected-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rev081base",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/REV-081/19-affected-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/btr81/affbase",
+    "--tb=line",
+    "-rf",
+    "C:/t/rev081base/tests/test_map_ids.py",
+    "C:/t/rev081base/tests/test_map_ids_mapping_lineage.py",
+    "C:/t/rev081base/tests/test_map_ids_name_gate.py",
+    "C:/t/rev081base/tests/test_c073_identity_admission.py",
+    "C:/t/rev081base/tests/test_c075_source_support_armed.py",
+    "C:/t/rev081base/tests/test_c076_alias_holo_apo_identity.py",
+    "C:/t/rev081base/tests/test_c078_refusal_durable_through_resolution.py",
+    "C:/t/rev081base/tests/test_c079_interactive_prompt_allowlist.py",
+    "C:/t/rev081base/tests/test_c030_canonical_identity_fallback.py",
+    "C:/t/rev081base/tests/test_stage2_mapping_boundary.py",
+    "C:/t/rev081base/tests/test_interactive_curator.py",
+    "C:/t/rev081base/tests/test_compound_db_match_admission.py",
+    "C:/t/rev081base/tests/test_compound_resolution_extraction.py",
+    "C:/t/rev081base/tests/test_pathbank_unknown_fallback.py",
+    "C:/t/rev081base/tests/test_entity_identity_contracts.py",
+    "C:/t/rev081base/tests/test_protein_export_policy.py",
+    "C:/t/rev081base/tests/test_early_failure_replay.py",
+    "C:/t/rev081base/tests/test_canonical_biological_equivalence.py",
+    "C:/t/rev081base/tests/test_canonical_hash_projections.py",
+    "C:/t/rev081base/tests/test_identity_evidence_hydration.py",
+    "C:/t/rev081base/tests/test_identity_hydration_regression.py",
+    "C:/t/rev081base/tests/test_gap_resolver.py",
+    "C:/t/rev081base/tests/test_process_normalizer.py",
+    "C:/t/rev081base/tests/test_pwml_ir.py",
+    "C:/t/rev081base/tests/test_pwml_writer.py",
+    "C:/t/rev081base/tests/test_stage_contracts.py",
+    "C:/t/rev081base/tests/test_payload_models.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-25T17:16:03+00:00",
+  "finished_at": "2026-08-25T17:16:18+00:00",
+  "duration_seconds": 14.733229199999187,
+  "timeout_seconds": 1800.0,
+  "root_pid": 68028,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 68212,
+      "name": "python.exe",
+      "ppid": 68028
+    },
+    {
+      "pid": 80884,
+      "name": "git.exe",
+      "ppid": 68212
+    },
+    {
+      "pid": 68196,
+      "name": "git.exe",
+      "ppid": 68212
+    },
+    {
+      "pid": 28304,
+      "name": "git.exe",
+      "ppid": 68212
+    }
+  ],
+  "descendants_terminated": [
+    28304,
+    68196,
+    68212,
+    80884
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 36252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 62500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 62928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 79992,
+      "name": "python.exe"
+    },
+    {
+      "pid": 80540,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-081\\19-affected-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "f1db6648a3469b6a14ab835e331699456b0aa075",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

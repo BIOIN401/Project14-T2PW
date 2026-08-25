@@ -1,0 +1,101 @@
+{
+  "label": "affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c082",
+    "--pin-verdict",
+    "C:/t/c082/docs/pwml_recovery_sprint/evidence/g11/pin/C-082/06-affected-tip.pin.json",
+    "-q",
+    "--tb=line",
+    "-p",
+    "no:randomly",
+    "--basetemp=C:/t/bt82/aff",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_canonicalization_preflight_and_species.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_streamlit_quarantine_boundary.py",
+    "tests/test_streamlit_stage8_export_contract.py"
+  ],
+  "cwd": "C:/t/c082",
+  "started_at": "2026-08-25T16:51:32+00:00",
+  "finished_at": "2026-08-25T17:21:37+00:00",
+  "duration_seconds": 1804.9859359000038,
+  "timeout_seconds": 1800.0,
+  "root_pid": 36252,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "timeout",
+  "exit_code": null,
+  "returned_code": 124,
+  "descendants_observed": [
+    {
+      "pid": 62500,
+      "name": "python.exe",
+      "ppid": 36252
+    },
+    {
+      "pid": 64056,
+      "name": "git.exe",
+      "ppid": 62500
+    }
+  ],
+  "descendants_terminated": [
+    62500,
+    64056
+  ],
+  "graceful_attempted": true,
+  "forced": true,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 62928,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/C-082/06-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "03f60b05eba82ef5e7583832dfb3e24f2ee9d750",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

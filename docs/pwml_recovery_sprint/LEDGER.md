@@ -3172,3 +3172,231 @@ recall.
 Stage 0's draw is also non-deterministic: PMC12096016's `missing_anchors` was `[ATP, NADH, NAD+,
 EntA, Fur]` at T-104, `[ATP, EntD]` at T-105 and `[NADH, ATP, MenD, Fur]` at T-106 — coverage
 0.706 / 0.857 / 0.765 on one paper across three runs.
+
+---
+
+## C-081 — MERGED `b869780`. Priority 1 goes 8 → 6. **It does NOT close F-096.**
+
+| card | merge | closes | SMOKE | review |
+|---|---|---|---|---|
+| **C-081** | `b869780` | **F-096 partially — 2 of 8** | **473** (52.39 s, post-merge, pinned) | APPROVE, actual diff, 12 bounded jobs |
+
+**The rule.** A row declaring `class:"cofactor"` that no reaction or transport uses as input,
+output, enzyme, modifier, cargo or transporter may not ship real accessions. Implemented as PASS C
+inside `map_ids._admit_identities`, reusing the existing `_withhold_identity` unmodified.
+
+**It is not a rule against cofactors.** `ATP` declares the same role ten times corpus-wide, is used
+by a reaction every time, and is untouched. The sharpest evidence that this is *role consistency*
+and not molecule blacklisting: `NAD+`/`NADH` are refused on one leg of `PMC12096016` and **kept ×7
+each on other legs of the same paper**, and `Pyridoxal 5'-phosphate` is **kept ×3** on PMC12856317
+legs where a reaction does use it. Same molecule, same paper, opposite outcome, decided by the graph.
+
+**Ordering is load-bearing, and proven so by mutation.** PASS C must run **last**. The implementer's
+first draft ran it before PASS B and dropped C-073's corpus test from 1 conflict to 0 — refusing the
+compound first hides the `drugbank:DB00114` collision and leaves the **protein** `ALAS2` holding a
+compound accession. The reviewer built a reorder mutant and it went red **on C-073's own untouched
+assertion at `:597`**, which is independent confirmation that the narrowed C-073 test kept its guard.
+
+### What the reviewer measured itself, not inherited
+
+* **SMOKE 473 at base `e648287` (40.79 s) and 473 at tip `b71fe0b` (36.74 s)** — both its own runs.
+  I measured 473 post-merge at `b869780` (52.39 s, exit 0) and pinned the collect count at **473**.
+* **Blast radius reproduced with its own replay script: 18 refusals, 0 collateral.** It then ran the
+  decisive experiment the card did not: replaying with a **schema-complete** participant reader
+  (all ten `payload_models.py` name keys plus `elements_with_states` and the legacy fields) rescues
+  **0 of the 18**. That is stronger anti-collateral evidence than the card itself offers.
+* It checked all 18 against the pinned gold **paper by paper**. 15 exact/alias matches; the three
+  "alias-misses" verified molecule-by-molecule — `pyridoxal phosphate`, `thiamine diphosphate
+  (ThDP)` and `tetrahydrofolate (THF)` each ship accessions byte-identical to the exact-match row
+  for the same paper.
+* **G9 reproduced and behavioural**: the base run **collected all 25 tests** — no ImportError, no
+  collection error — and failed at `test_c081_cofactor_role_identity.py:214` on
+  `AssertionError: a cofactor-role row that no reaction uses shipped real external accessions:
+  {'drugbank': 'DB00114', 'hmdb': 'HMDB0001491', 'kegg': 'C00018', 'chebi': '18405', 'pubchem':
+  '1051'}`. Symbol absence is not what was measured.
+* **Affected sweep: 683 passed, 2 failed — identically on BOTH arms.** Both are the already-registered
+  stale corpus-size pins (F-112's class). Not C-081's doing.
+* **Chunk E real-artifact replay: 174 passed**, `FULL_STACK_BASELINE` unmoved.
+
+### The scope statement, made plainly by both implementer and reviewer
+
+Reviewer's own replay over the T-106 artifacts, re-scored with `bench.semantic`'s forbidden-identifier
+rule:
+
+```
+PMC12856317/strict   before=1 after=0   REMOVED  "Pyridoxal 5'-phosphate"
+PMC12856317/research before=1 after=0   REMOVED  "Pyridoxal 5'-phosphate"
+PMC12096016/research before=2 after=2   REMAINS  'NADH', 'NAD+'
+PMC12782028/research before=4 after=4   REMAINS  'LIPA','LBR','SREBF1','SREBF2'
+T-106 priority 1: 8 -> 6
+```
+
+The six survivors are correctly out of reach of *this* rule: `NADH`/`NAD+` **are** used by a reaction
+on that leg, so a role-consistency rule has nothing to say about them; the four proteins declare no
+cofactor role at all. **Acceptance priority 1 remains FAIL, and it is absolute.**
+
+### Decision compliance checked by the reviewer
+
+Open **O-1** (`placeholder_backed_proteins`) is **not** resolved by this card and was not improvised
+on: `_identity_admission_eligible` returns `{}` for `is_pathbank_unknown_protein` and
+`IDENTITY_PLACEHOLDER`, so PASS C never sees a placeholder row. `PRODUCT_CONTRACT` §8 is satisfied —
+`cofactor_participation` returns `not_evaluated` for no-role, no-reactions and no-evaluable-name, and
+PASS C `continue`s on all three rather than treating `not_evaluated` as `false`.
+
+---
+
+## F-119 — the participant reader is narrower than the schema it reads
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** (latent) · **Measured reach: ZERO.**
+- **Registered 2026-08-25 by the C-081 reviewer.** Did not block the merge; needs a follow-up card.
+
+`identity_admission._PARTICIPANT_NAME_KEYS` is narrower than the runtime schema **and narrower than
+the codebase's own existing definition of the same notion**:
+
+```python
+identity_admission.py:676   ("entity", "name", "ref", "id")
+canonical.py:330            ("entity", "compound", "protein", "protein_complex",
+                             "nucleic_acid", "element_collection", "name")
+```
+
+`payload_models.py` declares `ProcessParticipantModel.{compound, protein, protein_complex, element,
+element_collection, nucleic_acid}` and `ActorModel.{protein, protein_complex}` — **none readable by
+C-081**. `PARTICIPANT_FIELDS["reaction_coupled_transports"]` lists four fields that **do not exist**
+on `ReactionCoupledTransportModel` while omitting `elements_with_states`, the one that does;
+`TransportModel.elements_with_states` is omitted too.
+
+The reviewer probed seven schema-legal shapes: **six produce a false refusal of a cofactor a reaction
+genuinely uses.** e.g. `modifiers: [{"protein": "Pyridoxal 5'-phosphate", "role": "cofactor"}]` →
+`cofactor_withheld: 1`, `mapped_ids` emptied.
+
+**Why it did not block:** measured reach is zero. In all 89 committed `final_mapped.json`, reaction
+`inputs`/`outputs` are always bare strings, every `elements_with_states.element` name is redundantly
+present in `cargo`/`transporters`, and `reaction_coupled_transports` is empty in **all 235** payload
+artifacts scanned. Same precedent as F-110: measured non-reachable → register, do not block.
+
+**Why it must not be forgotten:** the failure direction is **stripping a correct identifier**, and
+`{"protein": …}` is the *dominant* actor shape in the corpus — **1,820 occurrences against 615 for
+`entity`** across 423 payload files. The margin is thinner than the card's write-up implies, and the
+module docstring presents the enumeration as deliberate and complete when it was not derived from
+`payload_models.py`. A follow-up card inside the same file should reconcile `_PARTICIPANT_NAME_KEYS`
+with `canonical.py:330` and add `elements_with_states`.
+
+---
+
+## F-120 — C-081's anti-collateral arm is weaker than the measurement that licensed it
+
+- **Severity** LOW · **Class `test_accounting_staleness`** · **Registered 2026-08-25 by the reviewer.**
+
+`tests/test_c081_cofactor_role_identity.py:568-599` pins `assert len(refused) >= 15`, not `== 18` —
+a silent drop to 15 stays green. And its `alias_of_a_forbidden_molecule` allowlist is a **paper-blind**
+set of three bare names, while the gold is **paper-relative**: `tetrahydrofolate (thf)` refused on a
+paper whose gold *permits* THF would be silently classed as non-collateral.
+
+C-073's own `test_paper_relativity_the_same_name_is_withheld_here_and_kept_there` establishes exactly
+the principle this allowlist breaks. Tighten with the follow-up card for F-119.
+
+### A census miscount in the card write-up — recorded, not load-bearing
+
+C-081 reports "91 committed `final_mapped.json`, 1,790 rows, 898 shipping". At the tip commit it is
+**89 / 1,781 / 887** — the extra two files exist only in the main working tree under `.pytest_*`
+directories, so the census was taken there rather than in the branch worktree. **The load-bearing
+figures reproduce exactly**: 50 cofactor declarations, 18 refusals, 0 collateral.
+
+### A scope note the product owner should ratify rather than inherit
+
+The rule's real class is *"cofactors the extractor never wired into a reaction"*, which is broader
+than *"hallucinations"*. Cofactor **binding** — an `interaction` — is the canonical way papers state
+cofactor relationships, and this card rules that an interaction endpoint confers **no** participant
+role. On this corpus every such row happens to be gold-forbidden, so collateral is 0. But *"an
+interaction endpoint does not license a database identity"* is a policy-adjacent judgement that
+deserves explicit ratification rather than silent inheritance from a card.
+
+---
+
+## C-084 — STOPPED at the measurement gate, and the stop is the result
+
+**Worktree `C:/t/c084`, branch `card/C-084-assay-context`, cut from C-081's tip `b71fe0b`. No
+commit. No production code. Working tree clean.** `g11_evidence.py check --task C-084` → 6
+artifacts, 0 non-compliant; every job `FINAL SURVIVING COUNT : 0` / `cleanup : success`.
+
+The card was chartered to catch `NADH`/`NAD+` with an assay-context discriminator, on the reading
+that they entered as coupled-assay reporter species. **The charter's premise was wrong, and the
+implementer proved it rather than building on it.** That is the outcome I asked for.
+
+### Three formulations measured, all fail the zero-collateral bar
+
+| formulation | rows evaluated | catches | **collateral** |
+|---|---|---|---|
+| A. assay markers **with** reaction-verb veto (windows 150/250/400/600) | 208 | **0** | 0 — **vacuous** |
+| B. readout markers alone (windows 120/200/300/450) | 208 | 4 | **4** — `pyruvate` ×4 |
+| C. participant not named in its reaction's own evidence span | 385 | 22 | **60** |
+| D. C ∧ reaction enzyme is `inferred` | 385 | 5 | **20** |
+
+* **A is vacuous** because the sentence that *proves* NADH is a reporter — *"LDH-catalyzed conversion
+  of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+"* —
+  contains reaction verbs. The readout **is** a reaction, so the veto fires on every span.
+* **B cannot be tuned out.** `pyruvate` is a genuine EntB product, quoted verbatim
+  (*"isochorismate is converted to 2,3-diDHB and pyruvate by EntB isochorismatase activity"*), and
+  sits in the **same sentence** as the readout prose — its two spans are at offsets 21914 and 21984,
+  **70 characters apart inside one clause**. Identical results at every window width from 120 to 450.
+* **B also misses the target.** `NAD+` normalizes to `nad`, which substring-matches **"Ca*nad*a"** and
+  **"bioshop ca*nad*a"** in the affiliations and reagents text, and those non-readout spans rescue it.
+  Production `contains` is substring-first by design (*"the looser test is the safe direction here"*),
+  so the very looseness that stops the rule stripping `ATP` makes it blind to `NAD+`.
+* **C and D strip the pathway's own chemistry**: `ATP`, `pyruvate`, `enterobactin`,
+  `2,3-dihydroxybenzoic acid` (**the paper's titular compound**), `L-serine`, `AMP`, `PPi`, `heme`,
+  `iron`. Narrowing on `inferred` still strips `enterobactin`, the pathway's end product.
+
+**Every non-vacuous variant hit the declared red line — `ATP` stripped by C, `pyruvate` by B — so
+nothing was implemented.** Priority 1 stays at **6**.
+
+### A boundary correction for the register
+
+`actor_named_in_its_own_cited_span` is **not** F-110. It is a *bench* check
+(`bench/semantic.py:112`, `CHECK_ACTOR_EVIDENCE`, mirrored at `release_status.py:119`). **F-110** is
+the separate production function `map_ids._enforce_shipped_identity_names` at `map_ids.py:5413`.
+There is **no** production predicate comparing participants against their reaction's evidence span —
+formulation C would be **new capability, not a repair**.
+
+---
+
+## F-118 — an inferred reaction carries inferred cosubstrates on an enzyme-name-only evidence span
+
+- **Severity** HIGH · **Class: candidate `product_contract_violation`** — *under adjudication*
+- **Registered 2026-08-25 by the Lead Orchestrator**, measured by the C-084 lane from committed
+  T-106 artifacts. **Supersedes the mechanism half of F-096's `NADH`/`NAD+` rows; not their verdict.**
+
+`runs_verify/2026-08-24_1428/papers/PMC12096016/research`:
+
+```
+reaction 5  "EntA dehydrogenase reaction"
+  inputs : ["2,3-dihydro-2,3-dihydroxybenzoate", "NAD+"]
+  outputs: ["2,3-dihydroxybenzoic acid", "NADH"]
+  enzymes: [{entity: "EntA", role: "catalyst", provenance: "inferred"}]
+  evidence: "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+```
+
+**The evidence span is the enzyme's name and EC number. It names neither `NAD+` nor `NADH`.** The
+pipeline appears to have inferred the standard redox pair that every EC 1.3.1.28 dehydrogenase uses
+and attached it to a reaction whose enzyme provenance is itself `inferred`.
+
+So the mechanism is **"inferred standard chemistry becoming paper-stated evidence"** — one of the
+classes F-096's charter enumerated — and **not** the assay-reagent leakage the gold's `reason`
+describes (*"Coupled-assay reporter species from the LDH readout"*). The gold may be **right that
+these must not carry real accessions and wrong about why**; those are separable and both may need
+recording.
+
+**The seam is upstream of mapping.** It is reaction admission — *whether an inferred participant may
+be added to a reaction whose cited span does not name it* — not identity admission. No card may be
+chartered against `mapping/` for this.
+
+**Open question with wider consequences than the identifiers:** acceptance **priority 2 (unsupported
+retained reactions) scored 0** on T-106, so the scorer did not flag this reaction. Either its
+supported-signature logic is subset-based and structurally cannot see it (the acceptance report
+annotates *"signature set is a SUBSET, so unattributed rows are not counted as fabrications"*), or
+the reaction genuinely is supported. **If the former, priority 2's PASS cannot detect fabrication,
+which is worse than a FAIL.** Adjudication dispatched (`REV-084`).
+
+**Do not charter a code change until that adjudication returns.** A rule here that strips `ATP` from
+the EntE adenylation reaction, or `pyruvate` from the EntB reaction, is disqualifying — both are
+genuine verbatim-quoted participants in this same paper.
