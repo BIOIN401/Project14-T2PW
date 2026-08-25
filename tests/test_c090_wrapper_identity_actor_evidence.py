@@ -392,10 +392,8 @@ def test_g_t106_corpus_classification_a2_b3_c4() -> None:
     assert not set(tip_pointers) - set(base_pointers)
 
     # B = 3, named explicitly: the EntE superset stays demoted.
-    survivors_b = [
-        p for p in tip_pointers
-        if p.startswith(("PMC12096016/strict", "PMC12452463/strict"))
-    ]
+    prefixes = tuple(f"{paper}/{mode}/" for paper, mode in LEGS_B)
+    survivors_b = [p for p in tip_pointers if p.startswith(prefixes)]
     assert len(survivors_b) == 3, survivors_b
 
 
