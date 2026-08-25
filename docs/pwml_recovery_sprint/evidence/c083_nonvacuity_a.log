@@ -1,0 +1,297 @@
+FFFFF.FF.FFF....F..F.                                                    [100%]
+================================== FAILURES ===================================
+________ test_g9_the_lost_t105_strict_leg_now_says_which_clock_ran_out ________
+
+    def test_g9_the_lost_t105_strict_leg_now_says_which_clock_ran_out() -> None:
+        """G9: replaying the stored T-105 strict ``detail``, the row states the reason.
+    
+        On the base the same call classifies ``operation_timeout`` onto the outcome
+        and ``to_dict()`` returns a row with no such key -- exactly what is on disk at
+        ``runs_verify/2026-08-22_2147``. Fails there with ``'termination_reason' not
+        in row``, which is a behavioural failure of the record, not a missing symbol.
+        """
+    
+        row = _inner_row(T105_STRICT_DETAIL)
+    
+>       assert "termination_reason" in row, (
+            "the INNER timeout row does not carry the stop reason it computed "
+            f"(keys: {sorted(row)})"
+        )
+E       AssertionError: the INNER timeout row does not carry the stop reason it computed (keys: ['counts', 'detail', 'failure_kind', 'files', 'issue_codes', 'message', 'mode', 'paper_id', 'seconds', 'stage', 'status', 'warnings'])
+E       assert 'termination_reason' in {'counts': {}, 'detail': 'AppTest script run timed out after 471.9942160999999(s)', 'failure_kind': 'timeout', 'files': [], ...}
+
+tests\test_c083_inner_timeout_row.py:100: AssertionError
+______ test_g9_the_other_stored_inner_timeout_is_classified_the_same_way ______
+
+    def test_g9_the_other_stored_inner_timeout_is_classified_the_same_way() -> None:
+        """G9: the research leg at ``2026-08-21_1822`` -- same defect, same repair."""
+    
+        row = _inner_row(T105_RESEARCH_DETAIL)
+>       assert row["termination_reason"] == OPERATION_TIMEOUT
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:115: KeyError
+_______ test_g9_a_spent_leg_budget_reaches_the_row_as_budget_exhausted ________
+
+    def test_g9_a_spent_leg_budget_reaches_the_row_as_budget_exhausted() -> None:
+        """G9: the OTHER inner verdict survives too, and is not collapsed into one.
+    
+        ``_run_app`` refuses to start an interaction once the whole-run clock is gone
+        and says so in ``detail``. The classifier reads that marker. Both verdicts
+        must reach the row, or the row has merely traded one undifferentiated label
+        for another.
+        """
+    
+        spent = _inner_row(f"{BUDGET_SPENT_MARKER} 3600s was already spent")
+        overran = _inner_row(T105_STRICT_DETAIL)
+    
+>       assert spent["termination_reason"] == BUDGET_EXHAUSTED
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:131: KeyError
+_________ test_g9_an_explicit_caller_supplied_reason_reaches_the_row __________
+
+    def test_g9_an_explicit_caller_supplied_reason_reaches_the_row() -> None:
+        """G9: the ``reason=`` channel C-042 will use is serialized, not just stored."""
+    
+        row = _inner_row("anything at all", reason=BUDGET_EXHAUSTED)
+>       assert row["termination_reason"] == BUDGET_EXHAUSTED
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:141: KeyError
+_ test_the_inner_row_records_that_it_has_no_budget_rather_than_inventing_one __
+
+    def test_the_inner_row_records_that_it_has_no_budget_rather_than_inventing_one() -> None:
+        """PRODUCT_CONTRACT section 9 wants the budget too; this seam cannot state it.
+    
+        ``_finalize_timeout`` is handed the message, the detail and the codes -- never
+        the ``_Budget`` -- and the ceiling it would need is ``run_one``'s ``timeout=``
+        argument, which no ``RunOutcome`` field records. Defaulting it to
+        ``LEG_TIMEOUT_SECONDS`` would write "3600s" into rows whose leg ran with a
+        different ceiling, so the gap is stated instead.
+        """
+    
+        row = _inner_row(T105_STRICT_DETAIL)
+    
+        assert "budget" not in row, (
+            "the INNER row must not publish a 'budget' key: the OUTER row's 'budget' "
+            "is a measured record and the two shapes must not collide under one name"
+        )
+>       note = row["budget_unrecorded"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'budget_unrecorded'
+
+tests\test_c083_inner_timeout_row.py:164: KeyError
+___________ test_both_timeout_paths_publish_the_same_two_key_names ____________
+
+    def test_both_timeout_paths_publish_the_same_two_key_names() -> None:
+        """A consumer must not need two names for one fact.
+    
+        ``runner._timeout_row`` and ``deadline.Admission.to_dict`` already say
+        ``termination_reason`` / ``operational_failure``. The INNER row joins them
+        rather than introducing ``termination_is_operational`` as a third spelling --
+        that stays the ATTRIBUTE name, which is what the classifier writes.
+        """
+    
+        inner = _inner_row(T105_STRICT_DETAIL)
+        outer = runner._timeout_row(slug="PMC12444477__a", mode="strict", paper=PAPER,
+                                    seconds=400.0, timeout=3600.0, tail="")
+    
+        shared = {"termination_reason", "operational_failure"}
+>       assert shared <= set(inner) and shared <= set(outer)
+E       AssertionError: assert ({'operational...ation_reason'} <= {'counts', 'd...message', ...}
+E         
+E         Extra items in the left set:
+E         'termination_reason'
+E         'operational_failure')
+
+tests\test_c083_inner_timeout_row.py:197: AssertionError
+________ test_a_stopped_clock_in_the_row_is_never_a_biological_verdict ________
+
+    def test_a_stopped_clock_in_the_row_is_never_a_biological_verdict() -> None:
+        """D-005's sharpest invariant, now enforceable from the manifest alone."""
+    
+        for detail in (T105_STRICT_DETAIL, T105_RESEARCH_DETAIL,
+                       f"{BUDGET_SPENT_MARKER} 3600s was already spent", "timed out"):
+            row = _inner_row(detail)
+>           assert row["termination_reason"] in OPERATIONAL_TERMINATION_REASONS
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:212: KeyError
+________ test_the_timeout_row_adds_exactly_three_keys_and_removes_none ________
+
+    def test_the_timeout_row_adds_exactly_three_keys_and_removes_none() -> None:
+        """The re-baselined pin, stated as a set difference so it cannot rot.
+    
+        This is what makes the golden move auditable: an unintended fourth key fails
+        here, and a key silently dropped to stabilise a digest fails here too.
+        """
+    
+        before = copy.deepcopy(driver.RunOutcome(paper_id="PMC12444477", mode="strict").to_dict())
+        row = _inner_row(T105_STRICT_DETAIL)
+    
+>       assert sorted(set(row) - set(before)) == [
+            "budget_unrecorded", "operational_failure", "termination_reason",
+        ], f"exactly three keys are added, no more and no fewer (got {sorted(row)})"
+E       AssertionError: exactly three keys are added, no more and no fewer (got ['counts', 'detail', 'failure_kind', 'files', 'issue_codes', 'message', 'mode', 'paper_id', 'seconds', 'stage', 'status', 'warnings'])
+E       assert [] == ['budget_unre...ation_reason']
+E         
+E         Right contains 3 more items, first extra item: 'budget_unrecorded'
+E         Use -v to get more diff
+
+tests\test_c083_inner_timeout_row.py:242: AssertionError
+__________________ test_the_row_survives_json_round_tripping __________________
+
+    def test_the_row_survives_json_round_tripping() -> None:
+        """A manifest row is JSON Lines: the three new values must serialize."""
+    
+        import json
+    
+        row = _inner_row(T105_STRICT_DETAIL)
+        rehydrated = json.loads(json.dumps(row))
+>       assert rehydrated["termination_reason"] == OPERATION_TIMEOUT
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:256: KeyError
+__________ test_the_manifest_row_consumers_tolerate_the_widened_row ___________
+
+    def test_the_manifest_row_consumers_tolerate_the_widened_row() -> None:
+        """``batch/report.py`` reads the row by ``.get``; three more keys change nothing.
+    
+        Charter step 3.4: confirm the row consumers are not strict about the key set.
+        ``report._to_run`` builds its leg record field by field with ``row.get(...)``
+        and ``runner._relocate_files`` rewrites ``files`` alone, so neither reads the
+        new keys and neither can be surprised by them.
+        """
+    
+        from t2pw.batch import report
+    
+        row = runner._identify(_inner_row(T105_STRICT_DETAIL), PAPER, "PMC12444477__a", "strict")
+    
+        run = report._to_run(row)
+        assert run.status == "timeout" and run.failure_kind == "timeout"
+        assert run.mode == "strict"
+        triage = report.group_papers([row])
+        assert len(triage) == 1
+    
+        relocated = runner._relocate_files(row, "pmc12444477", "strict")
+>       assert relocated["termination_reason"] == OPERATION_TIMEOUT
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_c083_inner_timeout_row.py:281: KeyError
+____ test_a_driver_timeout_row_carries_the_classification_and_nothing_else ____
+
+    def test_a_driver_timeout_row_carries_the_classification_and_nothing_else() -> None:
+        """**RE-BASELINED by C-083 under merge rule 4.** Was
+        ``test_a_driver_timeout_keeps_its_row_byte_identical``.
+    
+        **What this test used to pin, and why that was interim.** It asserted
+        ``"termination_reason" not in row``, on the reasoning in its own docstring:
+        "the classification is an attribute, never a manifest field", because "the
+        golden driver diff hashes ``RunOutcome.to_dict()``; a new key here would move
+        the pinned ``input_timeout`` leg". Both halves were accurate statements of
+        C-032's ownership boundary -- ``_finalize_timeout``'s docstring recorded the
+        same limit -- and neither was a product decision. F-092 defect 3 measured the
+        consequence: the verdict was computed and then dropped by the serializer, so
+        both INNER timeout rows on disk (``runs_verify/2026-08-21_1822`` research,
+        ``runs_verify/2026-08-22_2147`` strict) reached the manifest with
+        ``failure_kind="timeout"`` and no stop reason, against ``PRODUCT_CONTRACT.md``
+        section 9. D-004 gave the row an owner and C-083 is that card.
+    
+        **The obligation is not deleted, it is inverted and tightened.** The old
+        assertion could only catch a key being added. This one catches a key being
+        added *that was not intended*, a key being dropped to stabilise a digest, and
+        the intended keys going missing -- as a set difference against a fresh
+        ``RunOutcome``, so it cannot rot into prose.
+    
+        **The exact golden delta this authorizes**, in
+        ``tests/test_batch_driver_seam_golden.py``: slot 2 of ``input_timeout`` alone.
+        Slots 0 and 1 do not move on any leg, and the other six legs never time out, so
+        their digests do not move either. Captures are committed beside the golden.
+        """
+    
+        before = driver.RunOutcome(paper_id="PMC1", mode="strict").to_dict()
+        row = _timed_out("app.run() timed out after 45s").to_dict()
+    
+        # Unmoved: everything the aggregators rank on.
+        assert row["status"] == "timeout" and row["failure_kind"] == "timeout"
+        assert row["message"] == "did not finish"
+        assert "release_status" not in row
+    
+        # Moved, deliberately and by exactly this much.
+>       assert row["termination_reason"] == OPERATION_TIMEOUT
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'termination_reason'
+
+tests\test_deadline_leg_timeout.py:163: KeyError
+_____ test_driver_observable_behaviour_is_byte_identical_to_the_base_sha ______
+
+tmp_path = WindowsPath('C:/t/c083tmp/bt/j14/test_driver_observable_behavio0')
+
+    def test_driver_observable_behaviour_is_byte_identical_to_the_base_sha(tmp_path: Path) -> None:
+        """C-012's acceptance criterion: the golden driver-observable diff is EMPTY."""
+    
+>       assert {leg: _observe(tmp_path, leg) for leg in sorted(_legs())} == GOLDEN
+E       AssertionError: assert {'input_timeo...f9f2f4'), ...} == {'input_timeo...f9f2f4'), ...}
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Differing items:
+E         {'input_timeout': ('timeout|input|timeout', 'extraction did not finish inside the time budget', '382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5')} != {'input_timeout': ('timeout|input|timeout', 'extraction did not finish inside the time budget', 'b55b50244bef004c31861cc2a72a2799964dc5256badf1cf58cb983983d9b9c3')}
+E         Use -v to get more diff
+
+tests\test_batch_driver_seam_golden.py:285: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-08-25 17:18:43.924 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.148 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.302 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.476 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.641 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.811 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:18:48.970 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_c083_inner_timeout_row.py::test_g9_the_lost_t105_strict_leg_now_says_which_clock_ran_out
+FAILED tests/test_c083_inner_timeout_row.py::test_g9_the_other_stored_inner_timeout_is_classified_the_same_way
+FAILED tests/test_c083_inner_timeout_row.py::test_g9_a_spent_leg_budget_reaches_the_row_as_budget_exhausted
+FAILED tests/test_c083_inner_timeout_row.py::test_g9_an_explicit_caller_supplied_reason_reaches_the_row
+FAILED tests/test_c083_inner_timeout_row.py::test_the_inner_row_records_that_it_has_no_budget_rather_than_inventing_one
+FAILED tests/test_c083_inner_timeout_row.py::test_both_timeout_paths_publish_the_same_two_key_names
+FAILED tests/test_c083_inner_timeout_row.py::test_a_stopped_clock_in_the_row_is_never_a_biological_verdict
+FAILED tests/test_c083_inner_timeout_row.py::test_the_timeout_row_adds_exactly_three_keys_and_removes_none
+FAILED tests/test_c083_inner_timeout_row.py::test_the_row_survives_json_round_tripping
+FAILED tests/test_c083_inner_timeout_row.py::test_the_manifest_row_consumers_tolerate_the_widened_row
+FAILED tests/test_deadline_leg_timeout.py::test_a_driver_timeout_row_carries_the_classification_and_nothing_else
+FAILED tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha
+12 failed, 9 passed in 5.92s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2528fd466449e3c3b46382767a03cbaf3656136c  [git, worktree dirty=True]
+label                   : c083-nonvacuity-a
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_c083_inner_timeout_row.py tests/test_deadline_leg_timeout.py tests/test_batch_driver_seam_golden.py --basetemp=C:/t/c083tmp/bt/j14 -q
+cwd                     : C:\t\c083
+root PID / process group: 67236 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 6.58 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  67536:python.exe
+descendants terminated  : 1  67536
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/14-c083-nonvacuity-a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

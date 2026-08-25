@@ -1,0 +1,132 @@
+.........F......F..F.                                                    [100%]
+================================== FAILURES ===================================
+________ test_the_timeout_row_adds_exactly_three_keys_and_removes_none ________
+
+    def test_the_timeout_row_adds_exactly_three_keys_and_removes_none() -> None:
+        """The re-baselined pin, stated as a set difference so it cannot rot.
+    
+        This is what makes the golden move auditable: an unintended fourth key fails
+        here, and a key silently dropped to stabilise a digest fails here too.
+        """
+    
+        before = copy.deepcopy(driver.RunOutcome(paper_id="PMC12444477", mode="strict").to_dict())
+        row = _inner_row(T105_STRICT_DETAIL)
+    
+>       assert sorted(set(row) - set(before)) == [
+            "budget_unrecorded", "operational_failure", "termination_reason",
+        ], f"exactly three keys are added, no more and no fewer (got {sorted(row)})"
+E       AssertionError: exactly three keys are added, no more and no fewer (got ['budget_unrecorded', 'counts', 'detail', 'failure_kind', 'files', 'issue_codes', 'message', 'mode', 'operational_failure', 'paper_id', 'seconds', 'stage', 'status', 'termination_reason', 'unintended_extra_key', 'warnings'])
+E       assert ['budget_unre...ed_extra_key'] == ['budget_unre...ation_reason']
+E         
+E         Left contains one more item: 'unintended_extra_key'
+E         Use -v to get more diff
+
+tests\test_c083_inner_timeout_row.py:242: AssertionError
+____ test_a_driver_timeout_row_carries_the_classification_and_nothing_else ____
+
+    def test_a_driver_timeout_row_carries_the_classification_and_nothing_else() -> None:
+        """**RE-BASELINED by C-083 under merge rule 4.** Was
+        ``test_a_driver_timeout_keeps_its_row_byte_identical``.
+    
+        **What this test used to pin, and why that was interim.** It asserted
+        ``"termination_reason" not in row``, on the reasoning in its own docstring:
+        "the classification is an attribute, never a manifest field", because "the
+        golden driver diff hashes ``RunOutcome.to_dict()``; a new key here would move
+        the pinned ``input_timeout`` leg". Both halves were accurate statements of
+        C-032's ownership boundary -- ``_finalize_timeout``'s docstring recorded the
+        same limit -- and neither was a product decision. F-092 defect 3 measured the
+        consequence: the verdict was computed and then dropped by the serializer, so
+        both INNER timeout rows on disk (``runs_verify/2026-08-21_1822`` research,
+        ``runs_verify/2026-08-22_2147`` strict) reached the manifest with
+        ``failure_kind="timeout"`` and no stop reason, against ``PRODUCT_CONTRACT.md``
+        section 9. D-004 gave the row an owner and C-083 is that card.
+    
+        **The obligation is not deleted, it is inverted and tightened.** The old
+        assertion could only catch a key being added. This one catches a key being
+        added *that was not intended*, a key being dropped to stabilise a digest, and
+        the intended keys going missing -- as a set difference against a fresh
+        ``RunOutcome``, so it cannot rot into prose.
+    
+        **The exact golden delta this authorizes**, in
+        ``tests/test_batch_driver_seam_golden.py``: slot 2 of ``input_timeout`` alone.
+        Slots 0 and 1 do not move on any leg, and the other six legs never time out, so
+        their digests do not move either. Captures are committed beside the golden.
+        """
+    
+        before = driver.RunOutcome(paper_id="PMC1", mode="strict").to_dict()
+        row = _timed_out("app.run() timed out after 45s").to_dict()
+    
+        # Unmoved: everything the aggregators rank on.
+        assert row["status"] == "timeout" and row["failure_kind"] == "timeout"
+        assert row["message"] == "did not finish"
+        assert "release_status" not in row
+    
+        # Moved, deliberately and by exactly this much.
+        assert row["termination_reason"] == OPERATION_TIMEOUT
+        assert row["operational_failure"] is True
+>       assert sorted(set(row) - set(before)) == [
+            "budget_unrecorded", "operational_failure", "termination_reason",
+        ], f"an unintended key reached the timeout row: {sorted(set(row) - set(before))}"
+E       AssertionError: an unintended key reached the timeout row: ['budget_unrecorded', 'operational_failure', 'termination_reason', 'unintended_extra_key']
+E       assert ['budget_unre...ed_extra_key'] == ['budget_unre...ation_reason']
+E         
+E         Left contains one more item: 'unintended_extra_key'
+E         Use -v to get more diff
+
+tests\test_deadline_leg_timeout.py:165: AssertionError
+_____ test_driver_observable_behaviour_is_byte_identical_to_the_base_sha ______
+
+tmp_path = WindowsPath('C:/t/c083tmp/bt/j15/test_driver_observable_behavio0')
+
+    def test_driver_observable_behaviour_is_byte_identical_to_the_base_sha(tmp_path: Path) -> None:
+        """C-012's acceptance criterion: the golden driver-observable diff is EMPTY."""
+    
+>       assert {leg: _observe(tmp_path, leg) for leg in sorted(_legs())} == GOLDEN
+E       AssertionError: assert {'input_timeo...f9f2f4'), ...} == {'input_timeo...f9f2f4'), ...}
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Differing items:
+E         {'input_timeout': ('timeout|input|timeout', 'extraction did not finish inside the time budget', '4a24ef44e60381c8a7307f21b0ea1c71c8fcced51218c1af5433f8a85457220c')} != {'input_timeout': ('timeout|input|timeout', 'extraction did not finish inside the time budget', 'b55b50244bef004c31861cc2a72a2799964dc5256badf1cf58cb983983d9b9c3')}
+E         Use -v to get more diff
+
+tests\test_batch_driver_seam_golden.py:285: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-08-25 17:19:02.234 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:06.452 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:06.611 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:06.779 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:06.937 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:07.091 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:19:07.247 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_c083_inner_timeout_row.py::test_the_timeout_row_adds_exactly_three_keys_and_removes_none
+FAILED tests/test_deadline_leg_timeout.py::test_a_driver_timeout_row_carries_the_classification_and_nothing_else
+FAILED tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha
+3 failed, 18 passed in 5.83s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2528fd466449e3c3b46382767a03cbaf3656136c  [git, worktree dirty=True]
+label                   : c083-pinbites-b
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_c083_inner_timeout_row.py tests/test_deadline_leg_timeout.py tests/test_batch_driver_seam_golden.py --basetemp=C:/t/c083tmp/bt/j15 -q
+cwd                     : C:\t\c083
+root PID / process group: 64472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 6.35 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  66164:python.exe
+descendants terminated  : 1  66164
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/15-c083-pinbites-b.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
