@@ -3818,3 +3818,109 @@ The row called `PMC12421875` *"the first semantic confirmation of the sprint"*. 
 measurably wrong and sat in a live document. It is **retracted in place**, naming C-085/F-121, the
 leg's real numbers (11 retained, 3 attributed, 8 matching nothing) and the re-scored
 `priority 4 = 0/8`. Line count unchanged at **578** — the edit is inline, so no pinned baseline moved.
+
+---
+
+## Validation cohort — `runs_verify/2026-08-25_1216`, 4 legs, 1.96 h, **$0.177**
+
+Run at integration `7d0bc22` (C-081 + C-082 + C-085 all merged), through the bounded wrapper with the
+heavy lock: `acquired=True released=True`, `FINAL SURVIVING COUNT 0`, `cleanup success`, 11
+descendants terminated by PID, 4 pre-existing reported and never killed.
+G11 `evidence/g11/T-107/07-cohort-c081-c082.json`. Credit delta measured against the session
+baseline: usage `161.092487097 → 161.26978855`, **$0.177**, `limit_remaining` $69.26.
+
+| leg | T-106 | cohort | why |
+|---|---|---|---|
+| PMC12856317 / strict | PASS | **FAIL** `contract` @ `pwml_export` | `protein_complex_missing_components`: *"Protein complex 'LONP1' has no protein components."* |
+| PMC12856317 / research | PASS | **FAIL** `unknown` @ `stage1` | *"structurally empty payload (no entities and no processes) on all 2 attempts … stop reason: `identical_empty_response`"* |
+| PMC12444477 / strict | PASS | **FAIL** `contract` @ `post_pipeline` | 9 × `protein_X_is_missing_a_uniprot_or_drugbank_identifier` + `registry_validation_failed` |
+| PMC12444477 / research | **ERROR / crash** (F-115) | **PASS WITH WARNINGS** | completed with a citation report |
+
+### The three properties the cohort was run to settle
+
+**1. Does C-081 refuse on the LIVE path, not just in replay? — VALIDATED.**
+
+`PMC12856317/strict`, `final_mapped.json` `/entities/compounds/4`:
+
+```
+name        : 'pyridoxal 5-phosphate'      class : 'cofactor'
+mapped_ids  : {}
+rejected_mapped_ids : {hmdb HMDB0001491, kegg C00018, chebi CHEBI:18405, pubchem 1051,
+                       cas 54-47-7, biocyc PYRIDOXAL_PHOSPHATE, chemspider 1022,
+                       drugbank DB00114, pathbank_compound_id 1148}
+```
+
+Nine accessions refused, including the `drugbank:DB00114` that was T-106's false identifier. **The
+row is preserved** — still present, still named, still `class: cofactor`. Scored: PMC12856317 carried
+**2** false real identifiers at T-106 and carries **0** here.
+
+**2. Does C-082's declination work in the batch driver? — INCONCLUSIVE, and I will not claim otherwise.**
+
+`AMBIGUOUS_RENAME_TARGET`: **0 occurrences** in `batch.log`. `declined_rename` /
+`species_rename_declined`: **0 occurrences** anywhere in the run.
+
+**The triggering condition did not recur on this draw.** `PMC12444477/research` completing is
+therefore **not** evidence that C-082 works — it would have completed at base too, because no
+ambiguity arose. C-082's evidence remains its behavioural proof: the AppTest seam driving the real
+Streamlit app, failing at base with a string **byte-identical to the T-106 manifest row** (209 bytes,
+matching sha256) and passing at tip.
+
+**I did not re-run the leg to chase the condition.** Re-running until a draw exhibits the shape is
+the same move §9 forbids for F-096, and the sprint's own standing note applies: identical legs give
+materially different Stage-1 draws at temperature 0.
+
+**3. Does C-081 collateral a leg whose identifiers must survive? — VALIDATED, no collateral.**
+
+`cofactor_role_used_by_no_reaction` fired **0 times** on PMC12444477. Its strict leg's protein rows:
+**8 of 8 carry `mapped_ids`, 0 have rejected ids.**
+
+### The three PASS → FAIL legs are NOT caused by the merged cards
+
+Each was traced to its own cause before being classified:
+
+* **PMC12856317/strict** — `pwml_ir_validation.json` names one error:
+  `protein_complex_missing_components` on `LONP1`, plus the same warning on `CLPXP protease`. That is
+  **F-116's class** — the complex-wrapper generator producing a component-less complex — not C-081.
+  C-081 behaved correctly on this very leg (property 1 above).
+* **PMC12856317/research** — Stage 1 returned an empty payload twice with
+  `stop reason: identical_empty_response`. **Pure draw variance, upstream of everything merged.**
+* **PMC12444477/strict** — 9 proteins failed the UniProt/DrugBank identifier gate. C-081's rule fired
+  **0 times** on this paper and C-082's fired 0 times anywhere. T-106's draw of this leg had 10
+  protein rows all resolving; this draw extracted a different set. **Draw variance in extraction and
+  resolution.**
+
+**No leg failed for a reason attributable to C-081, C-082 or C-085.**
+
+### C-085 confirmed working on a live scoring
+
+The cohort's acceptance report renders:
+
+```
+2. [NOT EVAL] zero unsupported retained reactions
+   observed: NOT EVALUATED -- 0 counted, but the unsupported-reaction verdict was never
+   reached on 2 of 3 scored leg(s), covering 1 paper(s). This zero is the absence of a
+   measurement, not the absence of unsupported reactions.
+```
+
+The honesty change is live in production scoring, not only in the T-106 re-score.
+
+### A new F-096 member surfaced by draw variance — record it
+
+Priority 1 on the cohort is **1**, on PMC12444477/strict: **`(p)ppGpp`**, shipping
+`hmdb HMDB0060480 / pubchem 38166 / pathbank_compound_id 41212`. Gold kind **`heading_or_prose`**,
+reason *"Parenthesised shorthand denoting two compounds (ppGpp and pppGpp); the literal token
+resolves to neither."*
+
+PMC12444477 carried **0** false real identifiers at T-106. This one appeared on a fresh draw.
+
+**Consequence, and it matters for scoping the next F-096 card: the F-096 class has more members than
+the eight T-106 happened to name, and different draws surface different ones.** `(p)ppGpp` is the
+same `heading_or_prose` mechanism as `LIPA`/`LBR` and is out of C-081's reach for the same reason —
+it is not a cofactor-declaring row that no reaction uses. Counting the class by any single run's
+membership will under-scope it.
+
+### What the cohort settles for T-107
+
+It confirms C-081 works in production and costs no collateral, and it confirms C-085's reporting
+change is live. It leaves C-082's production behaviour unproven by draw. **None of that changes the
+T-107 verdict**, which rests on priority 1 being unreachable at 0 and priority 5 being 0/4 by proof.

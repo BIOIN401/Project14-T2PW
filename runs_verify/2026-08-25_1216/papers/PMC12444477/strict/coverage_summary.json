@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "LPS (lipopolysaccharide)",
+    "lipid A",
+    "Kdo-lipid A",
+    "UDP-GlcNAc",
+    "R-3-hydroxymyristoyl-ACP",
+    "lipid IV_A",
+    "(p)ppGpp",
+    "cardiolipin",
+    "palmitoyl-CoA",
+    "LpxC",
+    "FtsH",
+    "LapB (YciM)",
+    "YejM (PbgA)",
+    "LpxA",
+    "ObgE",
+    "FabZ",
+    "PldA",
+    "LpxK",
+    "MsbA"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "Lipid A biosynthesis (Raetz pathway) in Escherichia coli",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "LPS (lipopolysaccharide)",
+      "lipid A",
+      "Kdo-lipid A",
+      "UDP-GlcNAc",
+      "R-3-hydroxymyristoyl-ACP",
+      "lipid IV_A",
+      "(p)ppGpp",
+      "cardiolipin",
+      "palmitoyl-CoA"
+    ],
+    "key_proteins": [
+      "LpxC",
+      "FtsH",
+      "LapB (YciM)",
+      "YejM (PbgA)",
+      "LpxA",
+      "ObgE",
+      "FabZ",
+      "PldA",
+      "LpxK",
+      "MsbA"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "inner membrane (IM)",
+      "periplasm",
+      "outer membrane (OM)"
+    ],
+    "main_subprocesses": [
+      "Acylation of UDP-GlcNAc by LpxA (first step)",
+      "Deacetylation by LpxC (committed step)",
+      "FtsH/LapB-mediated proteolysis of LpxC",
+      "YejM-LapB partner switching (LPS sensing)",
+      "MsbA flipping and Lpt transport to OM"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "body",
+      "discussion"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 0.9,
+    "selected_example": "Lipid A biosynthesis in Escherichia coli",
+    "candidate_examples": [
+      {
+        "name": "Lipid A biosynthesis in Escherichia coli",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "LPS (lipopolysaccharide)",
+          "lipid A",
+          "Kdo-lipid A",
+          "UDP-GlcNAc",
+          "R-3-hydroxymyristoyl-ACP",
+          "lipid IV_A",
+          "(p)ppGpp",
+          "cardiolipin"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "FtsH",
+          "LapB",
+          "YejM",
+          "LpxA",
+          "ObgE",
+          "FabZ",
+          "PldA",
+          "LpxK",
+          "MsbA"
+        ],
+        "main_subprocesses": [
+          "Acylation by LpxA",
+          "Deacetylation by LpxC",
+          "FtsH/LapB-mediated degradation of LpxC",
+          "YejM-LapB partner switching",
+          "MsbA flipping and Lpt transport"
+        ],
+        "evidence": "Regulation of LpxC in E. coli (section heading) and extensive coverage of E. coli-specific regulatory mechanisms throughout the review."
+      },
+      {
+        "name": "Regulation of LpxC by MurA in Pseudomonas aeruginosa",
+        "organism": "Pseudomonas aeruginosa",
+        "key_compounds": [
+          "UDP-GlcNAc",
+          "lipid A",
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "MurA"
+        ],
+        "main_subprocesses": [
+          "Activation of LpxC by MurA binding"
+        ],
+        "evidence": "it was revealed that Pa LpxC is regulated by a wholly unique mechanism: it is activated by direct binding to the committed enzyme in the competing PG biosynthetic pathway, MurA"
+      },
+      {
+        "name": "Ght-mediated regulation of LpxC in Neisseria meningitidis",
+        "organism": "Neisseria meningitidis",
+        "key_compounds": [
+          "LPS",
+          "lipid A"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "Ght (LapB homolog)"
+        ],
+        "main_subprocesses": [
+          "Localization of LpxC to IM by Ght",
+          "Promotion of LPS biosynthesis"
+        ],
+        "evidence": "the N. meningitidis LapB homolog Ght was suggested to regulate LpxC through an FtsH-independent mechanism by localizing LpxC to the IM to promote LPS biosynthesis"
+      },
+      {
+        "name": "Lon-mediated degradation of LpxC in alphaproteobacteria",
+        "organism": "Agrobacterium tumefaciens / Rhodobacter capsulatus",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "Lon protease"
+        ],
+        "main_subprocesses": [
+          "Degradation of LpxC by Lon protease"
+        ],
+        "evidence": "turnover of LpxC was shown to be due to the Lon protease, suggesting that Lon might serve as a regulator of LpxC in these bacteria"
+      },
+      {
+        "name": "NtrYX transcriptional regulation of LpxC in Rhodobacter sphaeroides",
+        "organism": "Rhodobacter sphaeroides",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "NtrYX"
+        ],
+        "main_subprocesses": [
+          "Transcriptional inhibition of lpxC by NtrYX"
+        ],
+        "evidence": "In R. sphaeroides, an ntrYX mutant exhibited approximately nine-fold elevated lpxC transcript abundance and two-fold accumulation of LPS"
+      },
+      {
+        "name": "ChvGI and NtrYX regulation of LpxC in Caulobacter crescentus",
+        "organism": "Caulobacter crescentus",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "NtrYX",
+          "ChvGI"
+        ],
+        "main_subprocesses": [
+          "ChvGI activates lpxC transcription",
+          "NtrYX inhibits lpxC transcription"
+        ],
+        "evidence": "In C. crescentus, an additional layer of control is imposed by the ChvGI two component system, which activates lpxC transcription"
+      },
+      {
+        "name": "LabP-mediated activation of LpxA in Cronobacter sakazakii",
+        "organism": "Cronobacter sakazakii",
+        "key_compounds": [
+          "core-lipid A",
+          "GPL"
+        ],
+        "key_proteins": [
+          "LpxA",
+          "LabP"
+        ],
+        "main_subprocesses": [
+          "LabP activates LpxA activity"
+        ],
+        "evidence": "LpxA was found to interact with LabP. Consistent with LabP serving as an activator of LpxA, labP mutants had reduced core-lipid A"
+      },
+      {
+        "name": "RipA-mediated inhibition of LpxA in Francisella tularensis",
+        "organism": "Francisella tularensis",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxA",
+          "RipA"
+        ],
+        "main_subprocesses": [
+          "RipA inhibits LpxA activity"
+        ],
+        "evidence": "RipA was suggested to inhibit LpxA activity due to the ability of hypomorphic LpxA variants to suppress ripA mutant phenotypes"
+      }
+    ],
+    "excluded_examples": [
+      "Regulation of LpxC by MurA in Pseudomonas aeruginosa",
+      "Ght-mediated regulation of LpxC in Neisseria meningitidis",
+      "Lon-mediated degradation of LpxC in alphaproteobacteria",
+      "NtrYX transcriptional regulation of LpxC in Rhodobacter sphaeroides",
+      "ChvGI and NtrYX regulation of LpxC in Caulobacter crescentus",
+      "LabP-mediated activation of LpxA in Cronobacter sakazakii",
+      "RipA-mediated inhibition of LpxA in Francisella tularensis"
+    ],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:205dcb3ab7a75101",
+      "response_hash": "sha256:48cb458dc99ba71e",
+      "raw_chars": 6346,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 6346,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "LPS (lipopolysaccharide)",
+    "lipid A",
+    "Kdo-lipid A",
+    "lipid IV_A",
+    "(p)ppGpp",
+    "cardiolipin",
+    "LpxC",
+    "FtsH",
+    "FabZ",
+    "LpxK",
+    "MsbA"
+  ],
+  "unmatched_terms": [
+    "UDP-GlcNAc",
+    "R-3-hydroxymyristoyl-ACP",
+    "palmitoyl-CoA",
+    "LapB (YciM)",
+    "YejM (PbgA)",
+    "LpxA",
+    "ObgE",
+    "PldA"
+  ],
+  "coverage_ratio": 0.578947,
+  "core_accepted_processes": 13,
+  "auxiliary_accepted_processes": 1,
+  "surviving_processes": 14,
+  "quarantined_processes": 7,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

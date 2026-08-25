@@ -1,0 +1,109 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "protein_complex_missing_components",
+      "message": "Protein complex 'LONP1' has no protein components.",
+      "pointer": "/entities/protein_complexes/1/components"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/0/components/0",
+      "complex_key": "pc_1",
+      "complex_name": "CLPXP protease",
+      "component_name": "Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial"
+    },
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/0/components/1",
+      "complex_key": "pc_1",
+      "complex_name": "CLPXP protease",
+      "component_name": "ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial"
+    },
+    {
+      "code": "protein_complex_missing_components",
+      "message": "Protein complex 'CLPXP protease' has no resolved protein components.",
+      "pointer": "/entities/protein_complexes/0/components",
+      "entity_key": "pc_1",
+      "entity_name": "CLPXP protease"
+    },
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'Lon protease homolog 1, mitochondrial' in complex 'LONP1' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/1/components/0",
+      "complex_key": "pc_2",
+      "complex_name": "LONP1",
+      "component_name": "Lon protease homolog 1, mitochondrial"
+    },
+    {
+      "code": "protein_complex_missing_components",
+      "message": "Protein complex 'LONP1' has no resolved protein components.",
+      "pointer": "/entities/protein_complexes/1/components",
+      "entity_key": "pc_2",
+      "entity_name": "LONP1"
+    },
+    {
+      "code": "component_stoichiometry_unstated",
+      "message": "Component[0] in complex 'ALAS2 homodimer' has no stated stoichiometry; leaving it blank.",
+      "pointer": "/entities/protein_complexes/2/components/0",
+      "complex_key": "pc_3",
+      "complex_name": "ALAS2 homodimer",
+      "component_name": "ALAS2"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 2,
+    "compounds": 5,
+    "proteins": 2,
+    "reactions": 1,
+    "transports": 0,
+    "locations": 13,
+    "edges": 5,
+    "process_visualizations": 1
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": false,
+    "errors": [
+      {
+        "code": "protein_complex_missing_components",
+        "message": "Protein complex 'LONP1' has no protein components.",
+        "pointer": "/entities/protein_complexes/1/components"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "protein_complex_missing_components",
+        "message": "Protein complex 'CLPXP protease' has no protein components.",
+        "pointer": "/entities/protein_complexes/0/components"
+      }
+    ],
+    "counts": {
+      "entities": 11,
+      "biological_states": 2,
+      "processes": 5,
+      "process_members": 5,
+      "locations": 13,
+      "edges": 5,
+      "process_visualizations": 1
+    }
+  }
+}

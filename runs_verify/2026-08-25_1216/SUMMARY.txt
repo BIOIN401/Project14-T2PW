@@ -1,0 +1,318 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-08-25T12:16:39
+finished : 2026-08-25T14:14:25
+papers attempted : 2
+strict PWML      : 0 pass / 2 fail
+research relaxed : 1 pass / 1 fail
+timeouts         : 0
+skipped          : 0
+ineligible       : 0  (screened out, not failures)
+pass, no deliv.  : 1  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 4 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 1
+
+  PMC12856317 -- (untitled)
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 11.0s
+    failure_kind: unknown
+      message: Extraction failed: Extraction stage returned a structurally empty payload (no
+               entities and no processes) on all 2 attempts. The escalation ladder issued 2 model
+               attempt(s) of a permitted 3; stop reason: identical_empty_response.
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 1
+
+  PMC12444477 [research] -- (untitled)
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein
+      'LpxI' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein
+      'LpxG' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein
+      'LpxL' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/10: Protein
+      'LpxM' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/11: Protein
+      'FtsH' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein
+      'LapB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/13: Protein
+      'YejM' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/18: Protein
+      'ObgE' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/19: Protein
+      'LapA' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/20: Protein
+      'YhcB' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking): and 2 more gate error(s); all of
+      them are in review_flags.json and the gate report files
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            1  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC12856317
+format-blocked    1  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+    PMC12444477
+incomplete        0  (a mode is missing, skipped or unrecognised)
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] (untitled) -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12856317
+    slug   : PMC12856317
+    uri    : (none)
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=pwml_export | time=1359.2s (22m39s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : PWML export failed: PWML IR validation failed.
+        issue_codes  : (none reported)
+        counts       : reactions=1 entities=16 proteins=2 compounds=5 blocking_issues=0
+                       gate_errors=0 runtime_schema_findings=2 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=0
+        files        : 18
+            - papers/PMC12856317/strict/audit_iteration_summary.json (1.5 kB)
+            - papers/PMC12856317/strict/contract_reports.json (6.3 kB)
+            - papers/PMC12856317/strict/coverage_summary.json (2.5 kB)
+            - papers/PMC12856317/strict/final_mapped.json (170.0 kB)
+            - papers/PMC12856317/strict/final_stage3_gate_report.json (2.7 kB)
+            - papers/PMC12856317/strict/gap_iteration_summary.json (20.4 kB)
+            - papers/PMC12856317/strict/gate_fail_report.json (11.0 kB)
+            - papers/PMC12856317/strict/graph_closure_iterations.json (891 B)
+            - papers/PMC12856317/strict/initial_stage3_gate_report.json (11.0 kB)
+            - papers/PMC12856317/strict/merged_payload.json (66.2 kB)
+            - papers/PMC12856317/strict/pwml_ir.json (41.7 kB)
+            - papers/PMC12856317/strict/pwml_ir_report.json (3.6 kB)
+            - papers/PMC12856317/strict/pwml_ir_validation.json (638 B)
+            - papers/PMC12856317/strict/pwml_required_field_gate_report.json (3.5 kB)
+            - papers/PMC12856317/strict/quarantine_report.json (10.5 kB)
+            - papers/PMC12856317/strict/rag_admission_report.json (83.6 kB)
+            - papers/PMC12856317/strict/removed_entity_report.json (567 B)
+            - papers/PMC12856317/strict/stage1_payload.json (13.7 kB)
+
+    research : FAIL | stage=stage1 | time=11.0s
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        failure_kind : unknown
+        message      : Extraction failed: Extraction stage returned a structurally empty payload (no
+                       entities and no processes) on all 2 attempts. The escalation ladder issued 2
+                       model attempt(s) of a permitted 3; stop reason: identical_empty_response.
+        issue_codes  : (none reported)
+        files        : 2
+            - papers/PMC12856317/research/extraction_boundary_report.json (3.7 kB)
+            - papers/PMC12856317/research/stage0_attempts.json (826 B)
+
+----------------------------------------------------------------------------------------------------
+[2] (untitled) -> format-blocked
+    id     : PMC12444477
+    slug   : PMC12444477
+    uri    : (none)
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=2537.2s (42m17s)
+        release      : diagnostic_only [pipeline ran; strict gates failed; semantic evaluation
+                       failed]
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 10 blocking issue(s) at
+                       final_pre_export_stage3_gates
+        issue_codes  : gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lapb_ycim_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_yejm_pbga_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.registry_validation_failed
+        counts       : reactions=8 entities=44 proteins=10 compounds=16 blocking_issues=10
+                       contract_errors=10 gate_errors=0 runtime_schema_findings=2
+                       stage0_observed_organisms=1 stage0_observed_pathways=1 transports=2
+        files        : 14
+            - papers/PMC12444477/strict/audit_iteration_summary.json (1.1 kB)
+            - papers/PMC12444477/strict/contract_reports.json (98.4 kB)
+            - papers/PMC12444477/strict/coverage_summary.json (8.3 kB)
+            - papers/PMC12444477/strict/final_mapped.json (261.4 kB)
+            - papers/PMC12444477/strict/final_stage3_gate_report.json (2.9 kB)
+            - papers/PMC12444477/strict/gap_iteration_summary.json (210 B)
+            - papers/PMC12444477/strict/gate_fail_report.json (43.8 kB)
+            - papers/PMC12444477/strict/graph_closure_iterations.json (3.7 kB)
+            - papers/PMC12444477/strict/initial_stage3_gate_report.json (43.8 kB)
+            - papers/PMC12444477/strict/merged_payload.json (128.7 kB)
+            - papers/PMC12444477/strict/quarantine_report.json (49.2 kB)
+            - papers/PMC12444477/strict/rag_admission_report.json (321.3 kB)
+            - papers/PMC12444477/strict/removed_entity_report.json (3.3 kB)
+            - papers/PMC12444477/strict/stage1_payload.json (37.3 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=3156.4s (52m36s)
+        release      : not recorded -- a technical PASS is a GATE result, not a release decision;
+                       semantic evaluation is reported separately and is never implied by it
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxi_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/4: Protein 'LpxI' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxg_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/5: Protein 'LpxG' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/9: Protein 'LpxL' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/10: Protein 'LpxM' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/11: Protein 'FtsH' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/12: Protein 'LapB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/13: Protein 'YejM' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/18: Protein 'ObgE' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/19: Protein 'LapA' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/20: Protein 'YhcB' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking): and 2 more gate
+                       error(s); all of them are in review_flags.json and the gate report files
+        counts       : reactions=6 entities=42 proteins=24 compounds=13 tier.a=8 tier.b=0 tier.c=13
+                       tier.d=0 review_flags=28 skipped_format_rules=0 normalization_actions=18
+                       citations=1 blocking_issues=0 gate_errors=12 gate_errors_not_blocking=12
+                       gate_review_flags=12 runtime_schema_findings=4 stage0_observed_organisms=1
+                       stage0_observed_pathways=1 transports=1 unsourced=0
+        files        : 18
+            - papers/PMC12444477/research/audit_iteration_summary.json (1.4 kB)
+            - papers/PMC12444477/research/contract_reports.json (44.7 kB)
+            - papers/PMC12444477/research/coverage_summary.json (3.9 kB)
+            - papers/PMC12444477/research/final_mapped.json (391.3 kB)
+            - papers/PMC12444477/research/final_stage3_gate_report.json (71.0 kB)
+            - papers/PMC12444477/research/gap_iteration_summary.json (210 B)
+            - papers/PMC12444477/research/gate_fail_report.json (73.4 kB)
+            - papers/PMC12444477/research/graph_closure_iterations.json (5.2 kB)
+            - papers/PMC12444477/research/initial_stage3_gate_report.json (73.4 kB)
+            - papers/PMC12444477/research/merged_payload.json (116.5 kB)
+            - papers/PMC12444477/research/quarantine_report.json (56.6 kB)
+            - papers/PMC12444477/research/rag_admission_report.json (324.6 kB)
+            - papers/PMC12444477/research/removed_entity_report.json (241 B)
+            - papers/PMC12444477/research/research_pathway_citations.json (122.7 kB)
+            - papers/PMC12444477/research/research_pathway_elements.csv (5.9 kB)
+            - papers/PMC12444477/research/research_pathway_report.txt (68.2 kB)
+            - papers/PMC12444477/research/review_flags.json (96.5 kB)
+            - papers/PMC12444477/research/stage1_payload.json (30.6 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC12856317: stage1 -- no codes
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC12856317: contract
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     - gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lapb_ycim_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.protein_yejm_pbga_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12444477
+     - gate.registry_validation_failed (1 paper(s)): PMC12444477
+
+====================================================================================================

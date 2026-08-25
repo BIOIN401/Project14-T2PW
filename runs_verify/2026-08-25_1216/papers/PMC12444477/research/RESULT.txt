@@ -1,0 +1,71 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 3156.4s (52m36s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'LpxI' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'LpxG' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'LpxL' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/10: Protein 'LpxM' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/11: Protein 'FtsH' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein 'LapB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/13: Protein 'YejM' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/18: Protein 'ObgE' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/19: Protein 'LapA' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/20: Protein 'YhcB' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): and 2 more gate error(s); all of them are in review_flags.json and the gate report files
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 13
+  entities = 42
+  gate_errors = 12
+  gate_errors_not_blocking = 12
+  gate_review_flags = 12
+  normalization_actions = 18
+  proteins = 24
+  reactions = 6
+  review_flags = 28
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 8, 'b': 0, 'c': 13, 'd': 0}
+  transports = 1
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1401 B)
+  - contract_reports.json  (45800 B)
+  - coverage_summary.json  (3998 B)
+  - final_mapped.json  (400659 B)
+  - final_stage3_gate_report.json  (72667 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (75167 B)
+  - graph_closure_iterations.json  (5289 B)
+  - initial_stage3_gate_report.json  (75167 B)
+  - merged_payload.json  (119304 B)
+  - quarantine_report.json  (57951 B)
+  - rag_admission_report.json  (332376 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (125638 B)
+  - research_pathway_elements.csv  (6085 B)
+  - research_pathway_report.txt  (69873 B)
+  - review_flags.json  (98817 B)
+  - stage1_payload.json  (31304 B)

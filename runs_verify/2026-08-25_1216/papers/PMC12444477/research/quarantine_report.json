@@ -1,0 +1,1883 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:ec5d38bd3a706038",
+  "resulting_payload_hash": "sha256:ec5d38bd3a706038",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "acylcoa",
+      "fabz",
+      "fadd",
+      "ftsh",
+      "hydroxyacylacp",
+      "kdolipid a",
+      "kdolipid iva",
+      "lapa",
+      "lapb",
+      "lipid iva",
+      "lps",
+      "lpxa",
+      "lpxb",
+      "lpxc",
+      "lpxd",
+      "lpxg",
+      "lpxh",
+      "lpxi",
+      "lpxk",
+      "lpxl",
+      "lpxm",
+      "msba",
+      "obge",
+      "plda",
+      "r3hydroxymyristoylacp",
+      "rnha",
+      "rnhb",
+      "udp3or3hydroxydecanoylglucosamine",
+      "udp3or3hydroxymyristoylnacetylglucosamine",
+      "udpglcnac",
+      "waaa",
+      "yejm",
+      "yhcb"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:651fa7f86e58dc8b",
+  "ok": true,
+  "counts": {
+    "core_accepted": 5,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 10,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LpxA reaction",
+      "essential_participant": "ObgE",
+      "iteration": 0,
+      "core_terms": [
+        "hydroxyacylacp",
+        "lpxa",
+        "lpxa reaction",
+        "obge",
+        "rnha",
+        "rnhb",
+        "udp3or3hydroxymyristoylnacetylglucosamine",
+        "udpglcnac"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/0",
+          "inputs": [
+            "UDP-GlcNAc",
+            "β-hydroxyacyl-ACP"
+          ],
+          "outputs": [
+            "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "LpxA reaction",
+          "enzymes": [
+            {
+              "entity": "LpxA",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "126 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "126 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "ObgE",
+              "entity_type": "protein",
+              "role": "inhibitor",
+              "evidence": "35 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "RnhA",
+              "entity_type": "protein",
+              "role": "activator",
+              "evidence": "65 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "RnhB",
+              "entity_type": "protein",
+              "role": "activator",
+              "evidence": "65 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "LpxA",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "126 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "ObgE"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "LpxC reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lpxc",
+        "lpxc reaction",
+        "udp3or3hydroxydecanoylglucosamine",
+        "udp3or3hydroxymyristoylnacetylglucosamine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "WaaA reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid iva",
+        "lipid iva",
+        "waaa",
+        "waaa reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "LpxL reaction",
+      "essential_participant": "LpxL",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid a",
+        "kdolipid iva",
+        "lpxl",
+        "lpxl reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "Kdo-lipid IVA"
+          ],
+          "outputs": [
+            "Kdo-lipid A"
+          ],
+          "locked_reaction_id": "rxn_lock_007",
+          "name": "LpxL reaction",
+          "enzymes": [
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "66 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "66 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "LpxL"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "LpxM reaction",
+      "essential_participant": "LpxM",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid a",
+        "kdolipid iva",
+        "lpxl",
+        "lpxm",
+        "lpxm reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/4",
+          "inputs": [
+            "Kdo-lipid IVA"
+          ],
+          "outputs": [
+            "Kdo-lipid A"
+          ],
+          "locked_reaction_id": "rxn_lock_008",
+          "name": "LpxM reaction",
+          "enzymes": [
+            {
+              "entity": "LpxM",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "66 chars elided"
+            },
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "inferred",
+              "evidence": "66 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "66 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "LpxM",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "LpxM"
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "LpxH reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lipid iva",
+        "lpxb",
+        "lpxh",
+        "lpxh reaction",
+        "udp3or3hydroxydecanoylglucosamine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "MsbA flippase transport",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "corelipid a",
+        "msba",
+        "msba flippase transport"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "FtsH degrades LpxC",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades lpxc",
+        "lpxc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "FtsH",
+          "entity_2": "LpxC",
+          "name": "FtsH degrades LpxC",
+          "relationship": "degrades",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "38 chars elided"
+        },
+        "participant": "FtsH"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "LapB binds FtsH",
+      "essential_participant": "LapB",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "lapb",
+        "lapb binds ftsh"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "LapB",
+          "entity_2": "FtsH",
+          "name": "LapB binds FtsH",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "36 chars elided"
+        },
+        "participant": "LapB"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "LapB binds LpxC",
+      "essential_participant": "LapB",
+      "iteration": 0,
+      "core_terms": [
+        "lapb",
+        "lapb binds lpxc",
+        "lpxc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/2",
+          "entity_1": "LapB",
+          "entity_2": "LpxC",
+          "name": "LapB binds LpxC",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "61 chars elided"
+        },
+        "participant": "LapB"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "YejM binds LapB",
+      "essential_participant": "YejM",
+      "iteration": 0,
+      "core_terms": [
+        "lapb",
+        "yejm",
+        "yejm binds lapb"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/3",
+          "entity_1": "YejM",
+          "entity_2": "LapB",
+          "name": "YejM binds LapB",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "34 chars elided"
+        },
+        "participant": "YejM"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "YejM binds LPS",
+      "essential_participant": "YejM",
+      "iteration": 0,
+      "core_terms": [
+        "lipopolysaccharide",
+        "yejm",
+        "yejm binds lps"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/4",
+          "entity_1": "YejM",
+          "entity_2": "lipopolysaccharide",
+          "name": "YejM binds LPS",
+          "relationship": "binds",
+          "biological_state": "inner membrane periplasmic leaflet state",
+          "evidence": "62 chars elided"
+        },
+        "participant": "YejM"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "FtsH degrades WaaA",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades waaa",
+        "waaa"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/5",
+          "entity_1": "FtsH",
+          "entity_2": "WaaA",
+          "name": "FtsH degrades WaaA",
+          "relationship": "degrades",
+          "biological_state": "cytoplasmic state",
+          "evidence": "43 chars elided"
+        },
+        "participant": "FtsH"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 6,
+      "pointer": "/processes/interactions/6",
+      "name": "FtsH degrades LpxD",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades lpxd",
+        "lpxd"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/6",
+          "entity_1": "FtsH",
+          "entity_2": "LpxD",
+          "name": "FtsH degrades LpxD",
+          "relationship": "degrades",
+          "biological_state": "cytoplasmic state",
+          "evidence": "139 chars elided"
+        },
+        "participant": "FtsH"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 7,
+      "pointer": "/processes/interactions/7",
+      "name": "FadD activates fatty acids",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "coa",
+        "fadd",
+        "fadd activates fatty acids"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LpxA reaction",
+      "essential_participant": "ObgE",
+      "iteration": 0,
+      "core_terms": [
+        "hydroxyacylacp",
+        "lpxa",
+        "lpxa reaction",
+        "obge",
+        "rnha",
+        "rnhb",
+        "udp3or3hydroxymyristoylnacetylglucosamine",
+        "udpglcnac"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/0",
+          "inputs": [
+            "UDP-GlcNAc",
+            "β-hydroxyacyl-ACP"
+          ],
+          "outputs": [
+            "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+          ],
+          "locked_reaction_id": "rxn_lock_001",
+          "name": "LpxA reaction",
+          "enzymes": [
+            {
+              "entity": "LpxA",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "126 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "126 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "ObgE",
+              "entity_type": "protein",
+              "role": "inhibitor",
+              "evidence": "35 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "RnhA",
+              "entity_type": "protein",
+              "role": "activator",
+              "evidence": "65 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "RnhB",
+              "entity_type": "protein",
+              "role": "activator",
+              "evidence": "65 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            },
+            {
+              "entity": "LpxA",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "126 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "ObgE"
+      },
+      "original_process": {
+        "inputs": [
+          "UDP-GlcNAc",
+          "β-hydroxyacyl-ACP"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "LpxA reaction",
+        "enzymes": [
+          {
+            "entity": "LpxA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "LpxA acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxA acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "ObgE",
+            "entity_type": "protein",
+            "role": "inhibitor",
+            "evidence": "ObgE inhibits LpxA activity in vivo",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "RnhA",
+            "entity_type": "protein",
+            "role": "activator",
+            "evidence": "RnhA and RnhB have been shown to stimulate LpxA activity in vitro",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "RnhB",
+            "entity_type": "protein",
+            "role": "activator",
+            "evidence": "RnhA and RnhB have been shown to stimulate LpxA activity in vitro",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          },
+          {
+            "entity": "LpxA",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "LpxA acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier protein (ACP) substrate",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "LpxL reaction",
+      "essential_participant": "LpxL",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid a",
+        "kdolipid iva",
+        "lpxl",
+        "lpxl reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/3",
+          "inputs": [
+            "Kdo-lipid IVA"
+          ],
+          "outputs": [
+            "Kdo-lipid A"
+          ],
+          "locked_reaction_id": "rxn_lock_007",
+          "name": "LpxL reaction",
+          "enzymes": [
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "66 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "66 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        },
+        "participant": "LpxL"
+      },
+      "original_process": {
+        "inputs": [
+          "Kdo-lipid IVA"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "LpxL reaction",
+        "enzymes": [
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 4,
+      "pointer": "/processes/reactions/4",
+      "name": "LpxM reaction",
+      "essential_participant": "LpxM",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid a",
+        "kdolipid iva",
+        "lpxl",
+        "lpxm",
+        "lpxm reaction"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/reactions/4",
+          "inputs": [
+            "Kdo-lipid IVA"
+          ],
+          "outputs": [
+            "Kdo-lipid A"
+          ],
+          "locked_reaction_id": "rxn_lock_008",
+          "name": "LpxM reaction",
+          "enzymes": [
+            {
+              "entity": "LpxM",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "extracted",
+              "evidence": "66 chars elided"
+            },
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "confidence": 1.0,
+              "provenance": "inferred",
+              "evidence": "66 chars elided"
+            }
+          ],
+          "biological_state": "cytoplasmic state",
+          "evidence": "66 chars elided",
+          "scope_membership": "core",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ],
+          "spontaneous": false,
+          "modifiers": [
+            {
+              "entity": "LpxM",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            },
+            {
+              "entity": "LpxL",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "66 chars elided",
+              "confidence": 1.0,
+              "provenance": "inferred"
+            }
+          ]
+        },
+        "participant": "LpxM"
+      },
+      "original_process": {
+        "inputs": [
+          "Kdo-lipid IVA"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "LpxM reaction",
+        "enzymes": [
+          {
+            "entity": "LpxM",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+          },
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "inferred",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this reaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ],
+        "spontaneous": false,
+        "modifiers": [
+          {
+            "entity": "LpxM",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "LpxL",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+            "confidence": 1.0,
+            "provenance": "inferred"
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "FtsH degrades LpxC",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades lpxc",
+        "lpxc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "FtsH",
+          "entity_2": "LpxC",
+          "name": "FtsH degrades LpxC",
+          "relationship": "degrades",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "38 chars elided"
+        },
+        "participant": "FtsH"
+      },
+      "original_process": {
+        "entity_1": "FtsH",
+        "entity_2": "LpxC",
+        "name": "FtsH degrades LpxC",
+        "relationship": "degrades",
+        "biological_state": "inner membrane cytoplasmic leaflet state",
+        "evidence": "FtsH was able to directly degrade LpxC",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "LapB binds FtsH",
+      "essential_participant": "LapB",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "lapb",
+        "lapb binds ftsh"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "LapB",
+          "entity_2": "FtsH",
+          "name": "LapB binds FtsH",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "36 chars elided"
+        },
+        "participant": "LapB"
+      },
+      "original_process": {
+        "entity_1": "LapB",
+        "entity_2": "FtsH",
+        "name": "LapB binds FtsH",
+        "relationship": "interacts_with",
+        "biological_state": "inner membrane cytoplasmic leaflet state",
+        "evidence": "LapB was shown to copurify with FtsH",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "LapB binds LpxC",
+      "essential_participant": "LapB",
+      "iteration": 0,
+      "core_terms": [
+        "lapb",
+        "lapb binds lpxc",
+        "lpxc"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/2",
+          "entity_1": "LapB",
+          "entity_2": "LpxC",
+          "name": "LapB binds LpxC",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "61 chars elided"
+        },
+        "participant": "LapB"
+      },
+      "original_process": {
+        "entity_1": "LapB",
+        "entity_2": "LpxC",
+        "name": "LapB binds LpxC",
+        "relationship": "interacts_with",
+        "biological_state": "inner membrane cytoplasmic leaflet state",
+        "evidence": "it was shown to interact directly with both FtsH… and Ec LpxC",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "YejM binds LapB",
+      "essential_participant": "YejM",
+      "iteration": 0,
+      "core_terms": [
+        "lapb",
+        "yejm",
+        "yejm binds lapb"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/3",
+          "entity_1": "YejM",
+          "entity_2": "LapB",
+          "name": "YejM binds LapB",
+          "relationship": "interacts_with",
+          "biological_state": "inner membrane cytoplasmic leaflet state",
+          "evidence": "34 chars elided"
+        },
+        "participant": "YejM"
+      },
+      "original_process": {
+        "entity_1": "YejM",
+        "entity_2": "LapB",
+        "name": "YejM binds LapB",
+        "relationship": "interacts_with",
+        "biological_state": "inner membrane cytoplasmic leaflet state",
+        "evidence": "YejM directly interacted with LapB",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 4,
+      "pointer": "/processes/interactions/4",
+      "name": "YejM binds LPS",
+      "essential_participant": "YejM",
+      "iteration": 0,
+      "core_terms": [
+        "lipopolysaccharide",
+        "yejm",
+        "yejm binds lps"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/4",
+          "entity_1": "YejM",
+          "entity_2": "lipopolysaccharide",
+          "name": "YejM binds LPS",
+          "relationship": "binds",
+          "biological_state": "inner membrane periplasmic leaflet state",
+          "evidence": "62 chars elided"
+        },
+        "participant": "YejM"
+      },
+      "original_process": {
+        "entity_1": "YejM",
+        "entity_2": "lipopolysaccharide",
+        "name": "YejM binds LPS",
+        "relationship": "binds",
+        "biological_state": "inner membrane periplasmic leaflet state",
+        "evidence": "YejM contains an LPS binding pocket in its periplasmic surface",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 5,
+      "pointer": "/processes/interactions/5",
+      "name": "FtsH degrades WaaA",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades waaa",
+        "waaa"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/5",
+          "entity_1": "FtsH",
+          "entity_2": "WaaA",
+          "name": "FtsH degrades WaaA",
+          "relationship": "degrades",
+          "biological_state": "cytoplasmic state",
+          "evidence": "43 chars elided"
+        },
+        "participant": "FtsH"
+      },
+      "original_process": {
+        "entity_1": "FtsH",
+        "entity_2": "WaaA",
+        "name": "FtsH degrades WaaA",
+        "relationship": "degrades",
+        "biological_state": "cytoplasmic state",
+        "evidence": "FtsH was capable of directly degrading WaaA",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 6,
+      "pointer": "/processes/interactions/6",
+      "name": "FtsH degrades LpxD",
+      "essential_participant": "FtsH",
+      "iteration": 0,
+      "core_terms": [
+        "ftsh",
+        "ftsh degrades lpxd",
+        "lpxd"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/6",
+          "entity_1": "FtsH",
+          "entity_2": "LpxD",
+          "name": "FtsH degrades LpxD",
+          "relationship": "degrades",
+          "biological_state": "cytoplasmic state",
+          "evidence": "139 chars elided"
+        },
+        "participant": "FtsH"
+      },
+      "original_process": {
+        "entity_1": "FtsH",
+        "entity_2": "LpxD",
+        "name": "FtsH degrades LpxD",
+        "relationship": "degrades",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxD was recently identified as an interactor of LapB and subsequent in vivo experiments indicated that it is similarly proteolyzed by FtsH",
+        "provenance_lineage": [
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "LpxC reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lpxc",
+        "lpxc reaction",
+        "udp3or3hydroxydecanoylglucosamine",
+        "udp3or3hydroxymyristoylnacetylglucosamine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "WaaA reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "kdolipid iva",
+        "lipid iva",
+        "waaa",
+        "waaa reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 5,
+      "pointer": "/processes/reactions/5",
+      "name": "LpxH reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "lipid iva",
+        "lpxb",
+        "lpxh",
+        "lpxh reaction",
+        "udp3or3hydroxydecanoylglucosamine"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "MsbA flippase transport",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "corelipid a",
+        "msba",
+        "msba flippase transport"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 7,
+      "pointer": "/processes/interactions/7",
+      "name": "FadD activates fatty acids",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "coa",
+        "fadd",
+        "fadd activates fatty acids"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "requested_pathway_anchors_present"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.333333,
+    "missing_anchors": [
+      "UDP-GlcNAc",
+      "β-hydroxyacyl-ACP",
+      "R-3-hydroxymyristoyl-ACP",
+      "Kdo-lipid A",
+      "LPS",
+      "LpxA",
+      "LpxD",
+      "LpxI",
+      "LpxG",
+      "LpxK",
+      "LpxL",
+      "LpxM",
+      "FtsH",
+      "LapB",
+      "YejM",
+      "FabZ",
+      "PldA",
+      "ObgE",
+      "LapA",
+      "YhcB",
+      "RnhA",
+      "RnhB"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "22 requested-core anchor(s) matched no admitted process: UDP-GlcNAc, β-hydroxyacyl-ACP, R-3-hydroxymyristoyl-ACP, Kdo-lipid A, LPS, LpxA, LpxD, LpxI, LpxG, LpxK, LpxL, LpxM; candidate processes withheld by strict admission (quarantined_unmapped_entity:10); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_coverage_below_minimum:0.333<0.500"
+    ],
+    "applied": false,
+    "review_reasons": [
+      "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [
+      "rxn_lock_001",
+      "rxn_lock_007",
+      "rxn_lock_008"
+    ],
+    "locked_reactions_found": 5,
+    "exported_locked_reactions": 2,
+    "quarantined_locked_reactions": 3,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "UDP-GlcNAc",
+      "β-hydroxyacyl-ACP",
+      "R-3-hydroxymyristoyl-ACP",
+      "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+      "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine",
+      "lipid IVA",
+      "Kdo-lipid IVA",
+      "Kdo-lipid A",
+      "LPS",
+      "acyl-CoA",
+      "LpxA",
+      "LpxC",
+      "LpxD",
+      "LpxH",
+      "LpxI",
+      "LpxG",
+      "LpxB",
+      "LpxK",
+      "WaaA",
+      "LpxL",
+      "LpxM",
+      "FtsH",
+      "LapB",
+      "YejM",
+      "FabZ",
+      "MsbA",
+      "PldA",
+      "FadD",
+      "ObgE",
+      "LapA",
+      "YhcB",
+      "RnhA",
+      "RnhB"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "lipid A biosynthesis (Raetz pathway)",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "UDP-GlcNAc",
+        "β-hydroxyacyl-ACP",
+        "R-3-hydroxymyristoyl-ACP",
+        "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine",
+        "lipid IVA",
+        "Kdo-lipid IVA",
+        "Kdo-lipid A",
+        "LPS",
+        "acyl-CoA"
+      ],
+      "key_proteins": [
+        "LpxA",
+        "LpxC",
+        "LpxD",
+        "LpxH",
+        "LpxI",
+        "LpxG",
+        "LpxB",
+        "LpxK",
+        "WaaA",
+        "LpxL",
+        "LpxM",
+        "FtsH",
+        "LapB",
+        "YejM",
+        "FabZ",
+        "MsbA",
+        "PldA",
+        "FadD",
+        "ObgE",
+        "LapA",
+        "YhcB",
+        "RnhA",
+        "RnhB"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "inner membrane",
+        "periplasm",
+        "outer membrane"
+      ],
+      "main_subprocesses": [
+        "Acylation of UDP-GlcNAc by LpxA",
+        "Deacetylation by LpxC (committed step)",
+        "Second acylation by LpxD",
+        "UMP removal by LpxH/I/G",
+        "Disaccharide formation by LpxB",
+        "Phosphorylation by LpxK",
+        "Kdo addition by WaaA",
+        "Late acylations by LpxL and LpxM",
+        "Flipping by MsbA",
+        "Transport to outer membrane by Lpt system"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "body",
+        "discussion",
+        "figure legends"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "single_example_review_section",
+      "context_type": "single_pathway",
+      "scope_status": "targeted",
+      "scope_clarity_score": 0.9,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:205dcb3ab7a75101",
+        "response_hash": "sha256:8d2cb5a85b9fdb28",
+        "raw_chars": 1585,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 1585,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+      "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine",
+      "lipid IVA",
+      "Kdo-lipid IVA",
+      "acyl-CoA",
+      "LpxC",
+      "LpxH",
+      "LpxB",
+      "WaaA",
+      "MsbA",
+      "FadD"
+    ],
+    "unmatched_terms": [
+      "UDP-GlcNAc",
+      "β-hydroxyacyl-ACP",
+      "R-3-hydroxymyristoyl-ACP",
+      "Kdo-lipid A",
+      "LPS",
+      "LpxA",
+      "LpxD",
+      "LpxI",
+      "LpxG",
+      "LpxK",
+      "LpxL",
+      "LpxM",
+      "FtsH",
+      "LapB",
+      "YejM",
+      "FabZ",
+      "PldA",
+      "ObgE",
+      "LapA",
+      "YhcB",
+      "RnhA",
+      "RnhB"
+    ],
+    "coverage_ratio": 0.333333,
+    "core_accepted_processes": 5,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 5,
+    "quarantined_processes": 10,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": false,
+    "reasons": [
+      "requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:ec5d38bd3a706038.sha256:651fa7f86e58dc8b",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [
+      {
+        "pointer": "/processes/reactions/0",
+        "name": "LpxA reaction",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "ObgE",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/reactions/3",
+        "name": "LpxL reaction",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "LpxL",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/reactions/4",
+        "name": "LpxM reaction",
+        "process_kind": "reaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "LpxM",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/0",
+        "name": "FtsH degrades LpxC",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "FtsH",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/1",
+        "name": "LapB binds FtsH",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "LapB",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/2",
+        "name": "LapB binds LpxC",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "LapB",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/3",
+        "name": "YejM binds LapB",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "YejM",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/4",
+        "name": "YejM binds LPS",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "YejM",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/5",
+        "name": "FtsH degrades WaaA",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "FtsH",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/6",
+        "name": "FtsH degrades LpxD",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "FtsH",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      }
+    ],
+    "would_have_quarantined": 10,
+    "would_have_refused": [
+      "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+  }
+}

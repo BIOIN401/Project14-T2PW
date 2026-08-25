@@ -1,0 +1,67 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 2537.2s (42m17s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 10 blocking issue(s) at final_pre_export_stage3_gates
+issue codes  : gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lapb_ycim_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_yejm_pbga_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier, gate.registry_validation_failed
+
+DETAIL / TRACEBACK
+----------------------------------------
+36 QA issues need review.
+[post_normalization_contract_report] gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'LpxA' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'LpxD' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'LpxH' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'LpxL' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein 'LpxM' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/11: Protein 'FtsH' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lapb_ycim_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein 'LapB (YciM)' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_yejm_pbga_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/13: Protein 'YejM (PbgA)' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/14: Protein 'ObgE' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.registry_validation_failed @ /processes: Registry validation failed: Registry validation failed:
+/processes/interactions/6/entity_2 unknown entity: outer membrane (OM)
+/processes/interactions/10/entity_2 unknown entity: FabI
+
+COUNTS
+----------------------------------------
+  blocking_issues = 10
+  compounds = 16
+  contract_errors = 10
+  entities = 44
+  gate_errors = 0
+  proteins = 10
+  reactions = 8
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1115 B)
+  - contract_reports.json  (100800 B)
+  - coverage_summary.json  (8531 B)
+  - final_mapped.json  (267673 B)
+  - final_stage3_gate_report.json  (2978 B)
+  - gap_iteration_summary.json  (210 B)
+  - gate_fail_report.json  (44899 B)
+  - graph_closure_iterations.json  (3762 B)
+  - initial_stage3_gate_report.json  (44899 B)
+  - merged_payload.json  (131745 B)
+  - quarantine_report.json  (50402 B)
+  - rag_admission_report.json  (329062 B)
+  - removed_entity_report.json  (3402 B)
+  - stage1_payload.json  (38162 B)

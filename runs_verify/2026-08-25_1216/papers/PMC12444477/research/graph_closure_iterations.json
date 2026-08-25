@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "UDP-GlcNAc",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "β-hydroxyacyl-ACP",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "Kdo-lipid A",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "lipopolysaccharide",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "acyl-CoA",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "UMP",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "lipid A",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxD",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxI",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxG",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxK",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxL",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LpxM",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "FtsH",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LapB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "YejM",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "FabZ",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "PldA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "ObgE",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "LapA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "YhcB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "RnhA",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": true
+        },
+        {
+          "bucket": "proteins",
+          "name": "RnhB",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        },
+        {
+          "bucket": "proteins",
+          "name": "Ght",
+          "reason": "degree_zero_after_quarantine",
+          "had_external_identity": false
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "UMP",
+          "reason": "location_entity_removed",
+          "biological_state": "cytoplasmic state"
+        }
+      ],
+      "removed_biological_states": [
+        {
+          "bucket": "biological_states",
+          "name": "__auto_state__",
+          "reason": "state_unreferenced_after_quarantine"
+        }
+      ],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

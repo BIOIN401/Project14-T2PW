@@ -1,0 +1,25 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : research
+status     : fail
+stage      : stage1
+wall time  : 11.0s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : unknown
+message      : Extraction failed: Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts. The escalation ladder issued 2 model attempt(s) of a permitted 3; stop reason: identical_empty_response.
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Extraction failed: Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts. The escalation ladder issued 2 model attempt(s) of a permitted 3; stop reason: identical_empty_response.
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+
+FILES WRITTEN
+----------------------------------------
+  - extraction_boundary_report.json  (3818 B)
+  - stage0_attempts.json  (826 B)

@@ -1,0 +1,547 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 1,
+        "organisms_added": 0,
+        "locations_added": 3,
+        "location_states_filled": 0,
+        "complex_components_structured": 1,
+        "complex_components_resolved": 1,
+        "complex_stoichiometry_issues_deferred": 1,
+        "items_considered": 4,
+        "enrichment_patches_accepted": 9,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "protein_complex:clpxp protease",
+            "entity_type": "protein_complex",
+            "name": "CLPXP protease",
+            "path": "/entities/protein_complexes/0",
+            "needs_id_mapping": false,
+            "has_complex_db_id": false,
+            "complex_level_id_optional": true,
+            "needs_species": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "protein_complex_missing_components": true,
+            "component_missing_stoichiometry": false,
+            "component_protein_unresolved": false,
+            "missing_component_stoichiometry": [],
+            "unresolved_components": [],
+            "missing_fields": [
+              "components",
+              "location"
+            ],
+            "reasons": [
+              "protein_complex_missing_components",
+              "visible_entity_missing_location"
+            ],
+            "resolved_by_gap_resolver": false
+          },
+          {
+            "issue_key": "protein_complex:lonp1",
+            "entity_type": "protein_complex",
+            "name": "LONP1",
+            "path": "/entities/protein_complexes/1",
+            "needs_id_mapping": false,
+            "has_complex_db_id": false,
+            "complex_level_id_optional": true,
+            "needs_species": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "protein_complex_missing_components": true,
+            "component_missing_stoichiometry": false,
+            "component_protein_unresolved": false,
+            "missing_component_stoichiometry": [],
+            "unresolved_components": [],
+            "missing_fields": [
+              "components",
+              "location"
+            ],
+            "reasons": [
+              "protein_complex_missing_components",
+              "visible_entity_missing_location"
+            ],
+            "resolved_by_gap_resolver": false
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "entity_type": "protein_complex",
+            "name": "ALAS2 homodimer",
+            "path": "/entities/protein_complexes/2",
+            "needs_id_mapping": false,
+            "has_complex_db_id": false,
+            "complex_level_id_optional": true,
+            "needs_species": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "protein_complex_missing_components": false,
+            "component_missing_stoichiometry": true,
+            "component_protein_unresolved": false,
+            "missing_component_stoichiometry": [
+              {
+                "component_index": 0,
+                "component": "ALAS2",
+                "path": "/entities/protein_complexes/2/components/0",
+                "code": "component_missing_stoichiometry",
+                "resolution_owner": "audit"
+              }
+            ],
+            "unresolved_components": [],
+            "missing_fields": [
+              "location",
+              "components.stoichiometry"
+            ],
+            "reasons": [
+              "visible_entity_missing_location"
+            ],
+            "resolved_by_gap_resolver": false
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:c5dfec0352688181",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"compound:glycine\", \"resolve_ids\": { \"strategy\": \"db_then_api\", \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb_lookup\": true, … (+194 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "compound:glycine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "protein_complex:clpxp protease",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 3
+            },
+            "rationale": "Protein complex missing components and location. No ID mapping needed. For location, use subcellular location DB lookup first, then default. Components require protein evidence before complex resolution."
+          },
+          {
+            "issue_key": "protein_complex:lonp1",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 3
+            },
+            "rationale": "Protein complex LONP1 missing components and location. Same approach as CLPXP: location DB then default; components need prior protein resolution."
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "resolve_ids": {
+              "strategy": "skip"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 3
+            },
+            "rationale": "Protein complex ALAS2 homodimer has unresolved component (ALAS2) and missing stoichiometry. First resolve protein component (ALAS2) via protein DBs, then complex. Location can start with DB lookup then default; ID mapping not needed."
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "compound:glycine",
+            "entity_type": "compound",
+            "name": "glycine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "glycine",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 469,
+                  "hash": "sha256:2dbbd71dcca53ffd",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00719\", \"name\": \"Betaine\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C02777\", \"name\": \"2,5-Dioxo… (+269 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "glycine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2725,
+                  "hash": "sha256:fc0d3e6c51cfc22b",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", … (+2525 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 997,
+                  "hash": "sha256:074f781adae62767",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00037\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00037\", \"name\": \"Glycine\", \"score\": 0.95},… (+797 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 196,
+                  "hash": "sha256:53cfb976af6e43fd",
+                  "preview": "{\"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"chebi\": \"CHEBI:15428\", \"pubchem\": \"5257127\", \"cas\": \"56-40-6\", \"biocyc\": \"GLY\", \"chemspider\": \"730\", \"drugbank\": \"DB00145\", \"pathbank_compound_id\": \"78\"}",
+                  "keys": 9
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1427ef023d17fb09",
+                  "preview": "{\"kegg\": \"C00037\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aab0df1023583448",
+                  "preview": "{\"kegg\": \"C00719\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:aef682f96e96dee4",
+                  "preview": "{\"kegg\": \"C02777\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44fc30b2a30e0525",
+                  "preview": "{\"kegg\": \"C05197\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d9a1dcf6f06ca50d",
+                  "preview": "{\"kegg\": \"C02051\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:dc79729db094e758",
+                  "preview": "{\"kegg\": \"C02972\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.475,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0647663193b63e3c",
+                  "preview": "{\"kegg\": \"C22157\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Exact compound name 'glycine' matches the source entity; the candidate from PathBankDB provides a comprehensive set of mapped IDs including ChEBI, KEGG, HMDB, and others, with maximum confidence and no type or organism conflict.",
+              "source": "llm",
+              "raw": {
+                "chars": 290,
+                "hash": "sha256:df98e966c6a606f3",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Exact compound name 'glycine' matches the source entity; the candidate from PathBankDB provides a comprehensive set of mapped IDs including ChEBI, … (+84 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein_complex:clpxp protease",
+            "entity_type": "protein_complex",
+            "name": "CLPXP protease",
+            "status": "ok",
+            "component_resolution": {
+              "changed": false,
+              "resolved_components": [],
+              "unresolved_components": [],
+              "missing_stoichiometry": []
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "protein_complex:lonp1",
+            "entity_type": "protein_complex",
+            "name": "LONP1",
+            "status": "ok",
+            "component_resolution": {
+              "changed": false,
+              "resolved_components": [],
+              "unresolved_components": [],
+              "missing_stoichiometry": []
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "protein_complex:alas2 homodimer",
+            "entity_type": "protein_complex",
+            "name": "ALAS2 homodimer",
+            "status": "ok",
+            "component_resolution": {
+              "changed": true,
+              "resolved_components": [
+                {
+                  "chars": 98,
+                  "hash": "sha256:78306b1a12f40f89",
+                  "preview": "{\"component_index\": 0, \"component\": \"ALAS2\", \"path\": \"/entities/protein_complexes/2/components/0\"}",
+                  "keys": 3
+                }
+              ],
+              "unresolved_components": [],
+              "missing_stoichiometry": [
+                {
+                  "chars": 170,
+                  "hash": "sha256:1252ff2de55ace04",
+                  "preview": "{\"component_index\": 0, \"component\": \"ALAS2\", \"path\": \"/entities/protein_complexes/2/components/0\", \"code\": \"component_missing_stoichiometry\", \"resolution_owner\": \"audit\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "unresolved_issues": [
+              {
+                "component_index": 0,
+                "component": "ALAS2",
+                "path": "/entities/protein_complexes/2/components/0",
+                "code": "component_missing_stoichiometry",
+                "resolution_owner": "audit"
+              }
+            ],
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 92,
+                  "hash": "sha256:7eb27d1f53e10bd8",
+                  "preview": "{\"organism\": \"Homo sapiens\", \"taxonomy_id\": \"9606\", \"lineage\": \"\", \"cell_type\": \"eukaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Homo sapiens",
+              "taxonomy_id": "9606",
+              "lineage": "",
+              "cell_type": "eukaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": [
+          {
+            "component_index": 0,
+            "component": "ALAS2",
+            "path": "/entities/protein_complexes/2/components/0",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          }
+        ]
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 1
+    }
+  ]
+}

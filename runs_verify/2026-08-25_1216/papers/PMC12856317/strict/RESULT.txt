@@ -1,0 +1,265 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : (unknown)
+slug       : PMC12856317
+mode       : strict
+status     : fail
+stage      : pwml_export
+wall time  : 1359.2s (22m39s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : PWML export failed: PWML IR validation failed.
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+PWML export failed: PWML IR validation failed.
+PWML export failed: PWML IR validation failed.
+Required-field gate errors: 0; warnings: 8.
+IR errors:
+Protein complex 'LONP1' has no protein components.
+Post-normalization gate produced 2 audit issue(s); the audit loop ran before export.
+7 QA issues need review.
+IR warnings:
+Component 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.
+Component 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.
+Protein complex 'CLPXP protease' has no resolved protein components.
+Component 'Lon protease homolog 1, mitochondrial' in complex 'LONP1' does not reference an existing protein.
+Protein complex 'LONP1' has no resolved protein components.
+Component[0] in complex 'ALAS2 homodimer' has no stated stoichiometry; leaving it blank.
+pwml result read from pwml_export_result
+{
+  "ok": false,
+  "error": "PWML IR validation failed.",
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 2,
+    "compounds": 5,
+    "proteins": 2,
+    "reactions": 1,
+    "transports": 0,
+    "locations": 13,
+    "edges": 5,
+    "process_visualizations": 1
+  },
+  "issues": 1,
+  "output_path": "",
+  "qa": {},
+  "grounding_report": {},
+  "stage3_gate_report": {
+    "ok": true,
+    "normalization_stats": {
+      "complexes_created": 0,
+      "composites_rewritten": 0,
+      "reactions_rewritten": 0,
+      "scaffold_split_reactions": 0,
+      "entities_moved_out_of_compounds": 0,
+      "entities_added_as_compounds": 0,
+      "entities_added_as_proteins": 0,
+      "catalysts_promoted_to_enzymes": 0,
+      "interaction_enzymes_promoted": 0,
+      "scaffold_inputs_added": 0,
+      "scaffold_in_modifiers_count": 0,
+      "n_plus_tokens_remaining": 0,
+      "complexes_list": [
+        "ALAS2 complex",
+        "ALAS2 homodimer",
+        "CLPXP protease",
+        "LONP1"
+      ],
+      "n_autostate_created": 0,
+      "n_entities_assigned_to_autostate": 0,
+      "transporters_attached": 0,
+      "enzymes_attached_from_reaction_evidence": 0,
+      "modifier_refs_canonicalized": 0,
+      "modifier_refs_dropped": 0,
+      "forbidden_complexes_removed": 0,
+      "dedupe_removed_reactions": 0,
+      "dedupe_removed_transports": 0,
+      "dedupe_removed": 0,
+      "dedupe_removed_total": 0,
+      "no_op_removed_count": 0,
+      "no_op_quarantined_count": 0,
+      "locked_no_op_quarantined_count": 0,
+      "evidenced_no_op_quarantined_count": 0,
+      "unsupported_no_op_dropped_count": 0,
+      "duplicate_locked_reactions_quarantined_count": 0,
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "complex_named_proteins_relocated": 0,
+      "nucleic_acid_named_entities_relocated": 0,
+      "entity_type_mismatches_flagged": 0,
+      "unresolved_complex_components_dropped": 0,
+      "component_only_proteins_removed": 0,
+      "pruned_disconnected_proteins": [],
+      "pruned_disconnected_proteins_count": 0,
+      "alias_example_mappings": [],
+      "false_protein_promotions_blocked": 0,
+      "unused_proteins_quarantined": 0,
+      "unused_proteins_flagged_for_review": 0,
+      "alias_canonicalization": {
+        "n_same_as_groups": 0,
+        "n_aliases_rewritten": 0,
+        "n_entities_deduped": 0,
+        "n_single_protein_complexes_removed": 0,
+        "example_mappings": []
+      }
+    },
+    "connectivity": {
+      "n_reactions": 1,
+      "n_transports": 0,
+      "n_interactions": 4,
+      "n_reaction_coupled_transports": 0,
+      "n_nodes": 18,
+      "n_edges": 19,
+      "n_components": 1,
+      "main_component_size": 18,
+      "largest_component_pct": 100.0,
+      "n_isolated_nodes": 0,
+      "proteins_degree0": 0,
+      "proteins_attached_pct": 100.0
+    },
+    "errors": []
+  },
+  "stage3_contract_report": {
+    "ok": true,
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "feed_audit",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    }
+  },
+  "required_gate_report": {
+    "ok": true,
+    "errors": [],
+    "warnings": [
+      {
+        "code": "pathway_missing_pw_id",
+        "message": "Pathway has no pw_id / pathbank_pathway_id.",
+        "pointer": "/metadata/pw_id"
+      },
+      {
+        "code": "component_protein_unresolved",
+        "message": "Component 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.",
+        "pointer": "/entities/protein_complexes/0/components/0",
+        "complex_name": "CLPXP protease",
+        "component_name": "Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial"
+      },
+      {
+        "code": "component_protein_unresolved",
+        "message": "Component 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' in complex 'CLPXP protease' does not reference an existing protein.",
+        "pointer": "/entities/protein_complexes/0/components/1",
+        "complex_name": "CLPXP protease",
+        "component_name": "ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial"
+      },
+      {
+        "code": "component_protein_unresolved",
+        "message": "Component 'Lon protease homolog 1, mitochondrial' in complex 'LONP1' does not reference an existing protein.",
+        "pointer": "/entities/protein_complexes/1/components/0",
+        "complex_name": "LONP1",
+        "component_name": "Lon protease homolog 1, mitochondrial"
+      },
+      {
+        "code": "component_stoichiometry_unstated",
+        "message": "Component[0] in complex 'ALAS2 homodimer' has no stated stoichiometry; exporting it blank.",
+        "pointer": "/entities/protein_complexes/2/components/0",
+        "complex_name": "ALAS2 homodimer",
+        "component_name": "ALAS2"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/0/inputs/0",
+        "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/0/inputs/1",
+        "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid"
+      },
+      {
+        "code": "reaction_participant_missing_stoichiometry",
+        "message": "Reaction 'ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+        "pointer": "/processes/reactions/0/outputs/0",
+        "reaction_name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid"
+      }
+    ],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 8,
+      "error_codes": [],
+      "warning_codes": [
+        "component_protein_unresolved",
+        "component_stoichiometry_unstated",
+        "pathway_missing_pw_id",
+        "reaction_participant_missing_stoichiometry"
+      ],
+      "checked_as": "payload",
+      "strict_db": true
+    },
+    "stage": "required_field_gate",
+    "pipeline_order": [
+      "audit_norma
+
+... [detail truncated at 8000 chars; 63174 more character(s) dropped. The full reports are on disk in this folder: audit_iteration_summary.json, contract_reports.json, coverage_summary.json, final_mapped.json, final_stage3_gate_report.json, gap_iteration_summary.json, gate_fail_report.json, graph_closure_iterations.json, initial_stage3_gate_report.json, merged_payload.json, pwml_ir.json, pwml_ir_report.json, pwml_ir_validation.json, pwml_required_field_gate_report.json, quarantine_report.json, rag_admission_report.json, removed_entity_report.json, stage1_payload.json]
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 5
+  entities = 16
+  gate_errors = 0
+  proteins = 2
+  reactions = 1
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1539 B)
+  - contract_reports.json  (6415 B)
+  - coverage_summary.json  (2536 B)
+  - final_mapped.json  (174039 B)
+  - final_stage3_gate_report.json  (2812 B)
+  - gap_iteration_summary.json  (20920 B)
+  - gate_fail_report.json  (11302 B)
+  - graph_closure_iterations.json  (891 B)
+  - initial_stage3_gate_report.json  (11302 B)
+  - merged_payload.json  (67840 B)
+  - pwml_ir.json  (42692 B)
+  - pwml_ir_report.json  (3654 B)
+  - pwml_ir_validation.json  (638 B)
+  - pwml_required_field_gate_report.json  (3545 B)
+  - quarantine_report.json  (10780 B)
+  - rag_admission_report.json  (85646 B)
+  - removed_entity_report.json  (567 B)
+  - stage1_payload.json  (14023 B)

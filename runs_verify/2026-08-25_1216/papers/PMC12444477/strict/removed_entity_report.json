@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "UDP-GlcNAc",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "R-3-hydroxymyristoyl-ACP",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "palmitoyl-CoA",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "LpxA",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "ObgE",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "UDP-GlcNAc",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "R-3-hydroxymyristoyl-ACP",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "palmitoyl-CoA",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "FtsH",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli inner membrane state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "LpxA",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "LpxH",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "LapB (YciM)",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli inner membrane state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "YejM (PbgA)",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli inner membrane state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "ObgE",
+      "reason": "location_entity_removed",
+      "biological_state": "E. coli cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "E. coli periplasm state",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    },
+    {
+      "bucket": "biological_states",
+      "name": "__auto_state__",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 5,
+    "locations": 9,
+    "biological_states": 2
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "label": "cohort-c081-c082",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "scripts/batch_run.py",
+    "--topics",
+    "topics_cohort_c081_c082.txt",
+    "--modes",
+    "strict,research",
+    "--out",
+    "runs_verify",
+    "--fresh"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-25T18:16:37+00:00",
+  "finished_at": "2026-08-25T20:14:25+00:00",
+  "duration_seconds": 7067.623464899996,
+  "timeout_seconds": 7200.0,
+  "root_pid": 116800,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 117164,
+      "name": "python.exe",
+      "ppid": 116800
+    },
+    {
+      "pid": 116764,
+      "name": "python.exe",
+      "ppid": 117164
+    },
+    {
+      "pid": 117716,
+      "name": "python.exe",
+      "ppid": 116764
+    },
+    {
+      "pid": 116472,
+      "name": "python.exe",
+      "ppid": 117164
+    },
+    {
+      "pid": 117312,
+      "name": "python.exe",
+      "ppid": 116472
+    },
+    {
+      "pid": 120760,
+      "name": "python.exe",
+      "ppid": 123004
+    },
+    {
+      "pid": 123004,
+      "name": "python.exe",
+      "ppid": 117164
+    },
+    {
+      "pid": 107360,
+      "name": "python.exe",
+      "ppid": 123360
+    },
+    {
+      "pid": 123360,
+      "name": "python.exe",
+      "ppid": 117164
+    },
+    {
+      "pid": 22428,
+      "name": "python.exe",
+      "ppid": 132736
+    },
+    {
+      "pid": 132736,
+      "name": "python.exe",
+      "ppid": 117164
+    }
+  ],
+  "descendants_terminated": [
+    22428,
+    107360,
+    116472,
+    116764,
+    117164,
+    117312,
+    117716,
+    120760,
+    123004,
+    123360,
+    132736
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117588,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\T-107\\07-cohort-c081-c082.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "7d0bc22a6767b64c0d2827f77af8a8c6cfe4d722",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "cohort-c081-c082",
+    "token": "cohort-c081-c082:117588:80dc53d0a80f3c34",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

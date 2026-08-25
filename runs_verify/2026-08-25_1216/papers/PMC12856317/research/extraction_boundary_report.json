@@ -1,0 +1,127 @@
+{
+  "run_id": "sha256:c460639637f8b277",
+  "boundary_count": 3,
+  "outcomes": [
+    "valid_json_zero_processes"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:25b1f31f4b1927ff",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ],
+      "note": "structurally_empty_payload_retry"
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 2,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:596e71f3782bae29",
+      "response_hash": "sha256:44136fa355b3678a",
+      "raw_chars": 2,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 2,
+          "finish_reason": "stop"
+        }
+      ],
+      "note": "structurally_empty_payload_exhausted"
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction_ladder_termination",
+      "outcome": "valid_json_zero_processes",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 2,
+      "response_status": "",
+      "terminal_reason": "identical_empty_response",
+      "extraction_ladder": {
+        "attempt_cap": 3,
+        "attempts_issued": 2,
+        "attempts_remaining": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "rung": "normal",
+            "model": "env:OPENROUTER_EXTRACTION_MODEL",
+            "scope": "full_text",
+            "request_hash": "sha256:58599edf95bf75ee",
+            "response_hash": "sha256:44136fa355b3678a",
+            "structurally_empty": true,
+            "model_calls": 1
+          },
+          {
+            "attempt": 2,
+            "rung": "structurally_empty_repair",
+            "model": "env:OPENROUTER_EXTRACTION_MODEL",
+            "scope": "full_text",
+            "request_hash": "sha256:30a1cfc48c157c2e",
+            "response_hash": "sha256:44136fa355b3678a",
+            "structurally_empty": true,
+            "model_calls": 1
+          }
+        ],
+        "identical_empty_response_hash": "sha256:44136fa355b3678a",
+        "budget_determinable": false,
+        "checkpoints": [],
+        "last_completed_stage": "stage0_preprocess",
+        "current_structured_payload": {},
+        "budget": {
+          "budget_determinable": false
+        },
+        "skipped_next_step": {
+          "rung": "materially_different_strategy",
+          "attempt": 3,
+          "allowed": false,
+          "budget_conditional": true,
+          "skip_cause": "strategy_not_materially_different",
+          "detail": "same model as an earlier attempt and no narrower scope: a prompt tweak is not a rung"
+        },
+        "skipped_steps": [
+          {
+            "rung": "materially_different_strategy",
+            "attempt": 3,
+            "allowed": false,
+            "budget_conditional": true,
+            "skip_cause": "strategy_not_materially_different",
+            "detail": "same model as an earlier attempt and no narrower scope: a prompt tweak is not a rung"
+          }
+        ],
+        "termination_reason": "identical_empty_response"
+      }
+    }
+  ]
+}

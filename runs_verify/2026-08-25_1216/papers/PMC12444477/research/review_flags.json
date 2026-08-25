@@ -1,0 +1,2830 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'LpxA' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LpxA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 1.0,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "pathbank_protein_id:6025, uniprot:P0A722",
+            "judged_candidate": {
+              "pathbank_protein_id": 6025,
+              "name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+              "gene_name": "lpxA",
+              "uniprot": "P0A722",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              "8 key(s), 238 chars elided",
+              "8 key(s), 244 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxA",
+              "kind": "protein",
+              "resolved_name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+              "identity": "uniprot:P0A722",
+              "compared_names": "1 item(s), 74 chars elided",
+              "matched_symbol": "lpxA"
+            },
+            "competing_accessions": [
+              "a0a376yeh7"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/2",
+      "reason": "Protein 'LpxD' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LpxD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 1.0,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "pathbank_protein_id:6400, uniprot:P21645",
+            "judged_candidate": {
+              "pathbank_protein_id": 6400,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+              "gene_name": "lpxD",
+              "uniprot": "P21645",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              "8 key(s), 226 chars elided",
+              "8 key(s), 231 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxD",
+              "kind": "protein",
+              "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+              "identity": "uniprot:P21645",
+              "compared_names": "1 item(s), 62 chars elided",
+              "matched_symbol": "lpxD"
+            },
+            "competing_accessions": [
+              "a0a3l0vyj6"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/3",
+      "reason": "Protein 'LpxH' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LpxH",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 1.0,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "pathbank_protein_id:6626, uniprot:P43341",
+            "judged_candidate": {
+              "pathbank_protein_id": 6626,
+              "name": "UDP-2,3-diacylglucosamine hydrolase",
+              "gene_name": "lpxH",
+              "uniprot": "P43341",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              "8 key(s), 203 chars elided",
+              "8 key(s), 213 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxH",
+              "kind": "protein",
+              "resolved_name": "UDP-2,3-diacylglucosamine hydrolase",
+              "identity": "uniprot:P43341",
+              "compared_names": "1 item(s), 39 chars elided",
+              "matched_symbol": "lpxH"
+            },
+            "competing_accessions": [
+              "a0acc5u053"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/4",
+      "reason": "Protein 'LpxI' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxI",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "species_mismatch"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxI\" OR gene:\"LpxI\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxI\" OR gene:\"LpxI\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "species_mismatch",
+            "entity_name": "LpxI",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "mismatch"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:Q9A716",
+            "judged_candidate": {
+              "accession": "Q9A716",
+              "protein_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxI",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Caulobacter vibrioides (strain ATCC 19089 / CIP 103742 / CB 15)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "LpxI",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 282 chars elided",
+              "8 key(s), 217 chars elided",
+              "8 key(s), 248 chars elided",
+              "8 key(s), 243 chars elided",
+              "8 key(s), 244 chars elided",
+              "8 key(s), 243 chars elided",
+              "8 key(s), 246 chars elided",
+              "8 key(s), 247 chars elided"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'LpxG' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxG",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxG",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "species_mismatch"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxG\" OR gene:\"LpxG\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxG\" OR gene:\"LpxG\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "species_mismatch",
+            "entity_name": "LpxG",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "mismatch"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:O84467",
+            "judged_candidate": {
+              "accession": "O84467",
+              "protein_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxG",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Chlamydia trachomatis serovar D (strain ATCC VR-885 / DSM 19411 / UW-3/Cx)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "LpxG",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 293 chars elided",
+              "8 key(s), 259 chars elided",
+              "8 key(s), 239 chars elided",
+              "8 key(s), 251 chars elided",
+              "8 key(s), 240 chars elided",
+              "8 key(s), 253 chars elided",
+              "8 key(s), 255 chars elided",
+              "8 key(s), 245 chars elided"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/9",
+      "reason": "Protein 'LpxL' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxL",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxL",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxL\" OR gene:\"LpxL\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxL\" OR gene:\"LpxL\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LpxL",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0ACV0",
+            "judged_candidate": {
+              "accession": "P0ACV0",
+              "protein_name": "Lipid A biosynthesis lauroyltransferase",
+              "gene_names": "3 item(s), 24 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "LpxL",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 257 chars elided",
+              "8 key(s), 252 chars elided",
+              "8 key(s), 250 chars elided",
+              "8 key(s), 253 chars elided",
+              "8 key(s), 256 chars elided",
+              "8 key(s), 264 chars elided",
+              "8 key(s), 261 chars elided",
+              "8 key(s), 269 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxL",
+              "kind": "protein",
+              "resolved_name": "Lipid A biosynthesis lauroyltransferase",
+              "identity": "uniprot:P0ACV0",
+              "compared_names": "1 item(s), 43 chars elided",
+              "matched_symbol": "lpxL"
+            },
+            "competing_accessions": [
+              "a0a0h2yyf2",
+              "a0a0h3ei71",
+              "a7zkf8",
+              "b7lfg5",
+              "b7mij5",
+              "b7up68",
+              "p0acv1"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/10",
+      "reason": "Protein 'LpxM' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxM",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxM\" OR gene:\"LpxM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxM\" OR gene:\"LpxM\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LpxM",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.05<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.04999999999999993,
+            "verification_status": "rejected",
+            "identity": "uniprot:P24205",
+            "judged_candidate": {
+              "accession": "P24205",
+              "protein_name": "Lipid A biosynthesis myristoyltransferase",
+              "gene_names": "2 item(s), 16 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "LpxM",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 251 chars elided",
+              "8 key(s), 230 chars elided",
+              "8 key(s), 239 chars elided",
+              "8 key(s), 238 chars elided",
+              "8 key(s), 242 chars elided",
+              "8 key(s), 238 chars elided",
+              "8 key(s), 238 chars elided",
+              "8 key(s), 245 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxM",
+              "kind": "protein",
+              "resolved_name": "Lipid A biosynthesis myristoyltransferase",
+              "identity": "uniprot:P24205",
+              "compared_names": "1 item(s), 45 chars elided",
+              "matched_symbol": "lpxM"
+            },
+            "competing_accessions": [
+              "a0a0h3jd84",
+              "d0vey3",
+              "d2wfj0",
+              "f2w429",
+              "q2vp15",
+              "q799r6",
+              "q8xcj3"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/11",
+      "reason": "Protein 'FtsH' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "FtsH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "FtsH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"FtsH\" OR gene:\"FtsH\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"FtsH\" OR gene:\"FtsH\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "FtsH",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0AAI3",
+            "judged_candidate": {
+              "accession": "P0AAI3",
+              "protein_name": "ATP-dependent zinc metalloprotease FtsH",
+              "gene_names": "5 item(s), 39 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "FtsH",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 272 chars elided",
+              "8 key(s), 244 chars elided",
+              "8 key(s), 242 chars elided",
+              "8 key(s), 250 chars elided",
+              "8 key(s), 253 chars elided",
+              "8 key(s), 256 chars elided",
+              "8 key(s), 269 chars elided",
+              "8 key(s), 242 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "FtsH",
+              "kind": "protein",
+              "resolved_name": "ATP-dependent zinc metalloprotease FtsH",
+              "identity": "uniprot:P0AAI3",
+              "compared_names": "1 item(s), 43 chars elided"
+            },
+            "competing_accessions": [
+              "a0a0h2z3a8",
+              "a0a1w5w6s9",
+              "a7zs74",
+              "b7lhp1",
+              "b7mbu7",
+              "q8x9l0"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/12",
+      "reason": "Protein 'LapB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LapB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LapB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LapB\" OR gene:\"LapB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LapB\" OR gene:\"LapB\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LapB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0AB58",
+            "judged_candidate": {
+              "accession": "P0AB58",
+              "protein_name": "Lipopolysaccharide assembly protein B",
+              "gene_names": "2 item(s), 16 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "LapB",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 247 chars elided",
+              "8 key(s), 242 chars elided",
+              "8 key(s), 277 chars elided",
+              "8 key(s), 251 chars elided",
+              "8 key(s), 256 chars elided",
+              "8 key(s), 259 chars elided",
+              "8 key(s), 262 chars elided",
+              "8 key(s), 262 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LapB",
+              "kind": "protein",
+              "resolved_name": "Lipopolysaccharide assembly protein B",
+              "identity": "uniprot:P0AB58",
+              "compared_names": "1 item(s), 41 chars elided",
+              "matched_symbol": "lapB"
+            },
+            "competing_accessions": [
+              "a0a0h2yz25",
+              "a0a0h3egy9",
+              "a7zla0",
+              "b7l4b6",
+              "b7mlv6",
+              "p0ab59",
+              "p0ab60"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/13",
+      "reason": "Protein 'YejM' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "YejM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "YejM",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"YejM\" OR gene:\"YejM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"YejM\" OR gene:\"YejM\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "YejM",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0AD27",
+            "judged_candidate": {
+              "accession": "P0AD27",
+              "protein_name": "Inner membrane protein PbgA",
+              "gene_names": "4 item(s), 32 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "YejM",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 253 chars elided",
+              "8 key(s), 240 chars elided",
+              "8 key(s), 275 chars elided",
+              "8 key(s), 233 chars elided",
+              "8 key(s), 238 chars elided",
+              "8 key(s), 244 chars elided",
+              "8 key(s), 249 chars elided",
+              "8 key(s), 268 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "YejM",
+              "kind": "protein",
+              "resolved_name": "Inner membrane protein PbgA",
+              "identity": "uniprot:P0AD27",
+              "compared_names": "1 item(s), 31 chars elided",
+              "matched_symbol": "yejM"
+            },
+            "competing_accessions": [
+              "a0a0h2z0q2",
+              "b7lal2",
+              "b7mfa3",
+              "b7ufk5",
+              "p0ad28",
+              "p0ad29"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/17",
+      "reason": "Protein 'FadD' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "FadD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "FadD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "FadD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 1.0,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "pathbank_protein_id:6689, uniprot:P69451",
+            "judged_candidate": {
+              "pathbank_protein_id": 6689,
+              "name": "Long-chain-fatty-acid--CoA ligase",
+              "gene_name": "fadD",
+              "uniprot": "P69451",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              "8 key(s), 201 chars elided",
+              "8 key(s), 221 chars elided",
+              "8 key(s), 206 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "FadD",
+              "kind": "protein",
+              "resolved_name": "Long-chain-fatty-acid--CoA ligase",
+              "identity": "uniprot:P69451",
+              "compared_names": "1 item(s), 37 chars elided",
+              "matched_symbol": "fadD"
+            },
+            "competing_accessions": [
+              "a0a090jgl9",
+              "a0a3l0yhn2"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/18",
+      "reason": "Protein 'ObgE' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "ObgE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "ObgE",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"ObgE\" OR gene:\"ObgE\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"ObgE\" OR gene:\"ObgE\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "ObgE",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.05<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.04999999999999993,
+            "verification_status": "rejected",
+            "identity": "uniprot:P42641",
+            "judged_candidate": {
+              "accession": "P42641",
+              "protein_name": "GTPase ObgE/CgtA",
+              "gene_names": "4 item(s), 31 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "ObgE",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 241 chars elided",
+              "8 key(s), 242 chars elided",
+              "8 key(s), 226 chars elided",
+              "8 key(s), 216 chars elided",
+              "8 key(s), 209 chars elided",
+              "8 key(s), 245 chars elided",
+              "8 key(s), 261 chars elided",
+              "8 key(s), 237 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "ObgE",
+              "kind": "protein",
+              "resolved_name": "GTPase ObgE/CgtA",
+              "identity": "uniprot:P42641",
+              "compared_names": "1 item(s), 20 chars elided"
+            },
+            "competing_accessions": [
+              "a0a0h3ep66"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/19",
+      "reason": "Protein 'LapA' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LapA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LapA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"LapA\" OR gene:\"LapA\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LapA\" OR gene:\"LapA\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "LapA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.05<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.04999999999999993,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0ACV4",
+            "judged_candidate": {
+              "accession": "P0ACV4",
+              "protein_name": "Lipopolysaccharide assembly protein A",
+              "gene_names": "2 item(s), 16 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "LapA",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 247 chars elided",
+              "8 key(s), 242 chars elided",
+              "8 key(s), 251 chars elided",
+              "8 key(s), 256 chars elided",
+              "8 key(s), 259 chars elided",
+              "8 key(s), 262 chars elided",
+              "8 key(s), 262 chars elided",
+              "8 key(s), 281 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LapA",
+              "kind": "protein",
+              "resolved_name": "Lipopolysaccharide assembly protein A",
+              "identity": "uniprot:P0ACV4",
+              "compared_names": "1 item(s), 41 chars elided",
+              "matched_symbol": "lapA"
+            },
+            "competing_accessions": [
+              "a0a0h2v869",
+              "a0a0h2yyf6",
+              "a0a0h3ej69",
+              "a7zl99",
+              "b7l4b5",
+              "b7mlv5",
+              "q8x7c8"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/20",
+      "reason": "Protein 'YhcB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "YhcB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "YhcB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"YhcB\" OR gene:\"YhcB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"YhcB\" OR gene:\"YhcB\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "YhcB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P0ADW3",
+            "judged_candidate": {
+              "accession": "P0ADW3",
+              "protein_name": "Z-ring associated protein G",
+              "gene_names": "3 item(s), 24 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "YhcB",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 245 chars elided",
+              "8 key(s), 232 chars elided",
+              "8 key(s), 267 chars elided",
+              "8 key(s), 238 chars elided",
+              "8 key(s), 244 chars elided",
+              "8 key(s), 249 chars elided",
+              "8 key(s), 231 chars elided",
+              "8 key(s), 239 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "YhcB",
+              "kind": "protein",
+              "resolved_name": "Z-ring associated protein G",
+              "identity": "uniprot:P0ADW3",
+              "compared_names": "1 item(s), 31 chars elided",
+              "matched_symbol": "yhcB"
+            },
+            "competing_accessions": [
+              "b7lhu1",
+              "b7mbz4",
+              "b7ujw5",
+              "p0adw4",
+              "p0adw5"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/22",
+      "reason": "Protein 'RnhB' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "RnhB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "RnhB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "ambiguous_insufficient_margin"
+          },
+          "queries_tried": [
+            "(protein_name:\"RnhB\" OR gene:\"RnhB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"RnhB\" OR gene:\"RnhB\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "ambiguous_insufficient_margin",
+            "entity_name": "RnhB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "insufficient:0.00<0.1"
+            },
+            "score": 0.85,
+            "margin": 0.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:P10442",
+            "judged_candidate": {
+              "accession": "P10442",
+              "protein_name": "Ribonuclease HII",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "RnhB",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 218 chars elided",
+              "8 key(s), 219 chars elided",
+              "8 key(s), 213 chars elided",
+              "8 key(s), 226 chars elided",
+              "8 key(s), 227 chars elided",
+              "8 key(s), 227 chars elided",
+              "8 key(s), 223 chars elided",
+              "8 key(s), 222 chars elided"
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "RnhB",
+              "kind": "protein",
+              "resolved_name": "Ribonuclease HII",
+              "identity": "uniprot:P10442",
+              "compared_names": "1 item(s), 20 chars elided",
+              "matched_symbol": "rnhB"
+            },
+            "competing_accessions": [
+              "b1xd52",
+              "b6hzf7",
+              "b7lgp5",
+              "b7m1y6",
+              "b7mp43",
+              "q1rg06",
+              "q8x8x6"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/23",
+      "reason": "Protein 'Ght' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Ght",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Ght",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "ambiguous_unverified",
+          "confidence": 0.65,
+          "reviewed": false,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "no_candidate_passed_identity_verification",
+            "order_step": "ambiguous_identity_verification"
+          },
+          "ambiguity": {
+            "candidate_count": 3,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 6143,
+              "name": "Low molecular weight protein-tyrosine-phosphatase wzb",
+              "gene_name": "wzb",
+              "uniprot": "P0AAB2",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6215,
+              "name": "Low molecular weight protein-tyrosine-phosphatase etp",
+              "gene_name": "etp",
+              "uniprot": "P0ACZ2",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6381,
+              "name": "Ethanolamine ammonia-lyase light chain",
+              "gene_name": "eutC",
+              "uniprot": "P19636",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "identity_status": "unresolved"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/processes",
+      "reason": "Registry validation failed: Registry validation failed:\n/processes/interactions/7/entity_2 unknown entity: CoA",
+      "detail": {
+        "exception_type": "ValueError",
+        "exception_message": "Registry validation failed:\n/processes/interactions/7/entity_2 unknown entity: CoA",
+        "validator": "Registry"
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/4",
+      "reason": "Protein 'LpxI' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxI",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "species_mismatch"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxI\" OR gene:\"LpxI\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxI\" OR gene:\"LpxI\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "species_mismatch",
+            "entity_name": "LpxI",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "mismatch"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:Q9A716",
+            "judged_candidate": {
+              "accession": "Q9A716",
+              "protein_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxI",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Caulobacter vibrioides (strain ATCC 19089 / CIP 103742 / CB 15)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "LpxI",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 282 chars elided",
+              "8 key(s), 217 chars elided",
+              "8 key(s), 248 chars elided",
+              "8 key(s), 243 chars elided",
+              "8 key(s), 244 chars elided",
+              "8 key(s), 243 chars elided",
+              "8 key(s), 246 chars elided",
+              "8 key(s), 247 chars elided"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'LpxG' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "LpxG",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended novel (implausible_name_match)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxG",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "novel_protein",
+          "confidence": 0.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "novel",
+            "issue": "implausible_name_match",
+            "order_step": "name_plausibility_gate",
+            "failed_check": "species_mismatch"
+          },
+          "queries_tried": [
+            "(protein_name:\"LpxG\" OR gene:\"LpxG\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"LpxG\" OR gene:\"LpxG\")"
+          ],
+          "identity_verdict": {
+            "verified": false,
+            "reason": "species_mismatch",
+            "entity_name": "LpxG",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "mismatch"
+            },
+            "score": -1.0,
+            "margin": -1.0,
+            "verification_status": "rejected",
+            "identity": "uniprot:O84467",
+            "judged_candidate": {
+              "accession": "O84467",
+              "protein_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxG",
+              "gene_names": "1 item(s), 8 chars elided",
+              "organism": "Chlamydia trachomatis serovar D (strain ATCC VR-885 / DSM 19411 / UW-3/Cx)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "LpxG",
+              "alias_source": "primary_name"
+            },
+            "judged_candidates": [
+              "8 key(s), 293 chars elided",
+              "8 key(s), 259 chars elided",
+              "8 key(s), 239 chars elided",
+              "8 key(s), 251 chars elided",
+              "8 key(s), 240 chars elided",
+              "8 key(s), 253 chars elided",
+              "8 key(s), 255 chars elided",
+              "8 key(s), 245 chars elided"
+            ]
+          }
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/23",
+      "reason": "Protein 'Ght' is missing a UniProt or DrugBank identifier.",
+      "detail": {
+        "name": "Ght",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "identifier_mapping",
+            "origin": "unresolved",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "identifier resolution ended ambiguous (no_candidate_passed_identity_verification)",
+            "review_required": true,
+            "uncertainty": "no database record was established for this entity",
+            "sources": []
+          }
+        ],
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "species_name": "Escherichia coli",
+        "pathbank_species_id": 3,
+        "species_id": 3,
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "Ght",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "ambiguous_unverified",
+          "confidence": 0.65,
+          "reviewed": false,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "no_candidate_passed_identity_verification",
+            "order_step": "ambiguous_identity_verification"
+          },
+          "ambiguity": {
+            "candidate_count": 3,
+            "verified_count": 0,
+            "verified_accessions": [],
+            "rejections": [
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided",
+              "2 key(s), 59 chars elided"
+            ],
+            "reason": "no_candidate_passed_identity_verification"
+          },
+          "rejected_candidates": [
+            {
+              "pathbank_protein_id": 6143,
+              "name": "Low molecular weight protein-tyrosine-phosphatase wzb",
+              "gene_name": "wzb",
+              "uniprot": "P0AAB2",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6215,
+              "name": "Low molecular weight protein-tyrosine-phosphatase etp",
+              "gene_name": "etp",
+              "uniprot": "P0ACZ2",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            {
+              "pathbank_protein_id": 6381,
+              "name": "Ethanolamine ammonia-lyase light chain",
+              "gene_name": "eutC",
+              "uniprot": "P19636",
+              "species_id": 3,
+              "score": 0.65,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "identity_status": "unresolved"
+        }
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/14/name",
+      "reason": "Protein has degree 0 after normalization: FabZ",
+      "detail": {
+        "protein": "FabZ",
+        "normalized": "fabz",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/23/name",
+      "reason": "Protein has degree 0 after normalization: Ght",
+      "detail": {
+        "protein": "Ght",
+        "normalized": "ght",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/19/name",
+      "reason": "Protein has degree 0 after normalization: LapA",
+      "detail": {
+        "protein": "LapA",
+        "normalized": "lapa",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24,
+        "did_you_mean": [
+          "LpxA",
+          "LapB"
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5/name",
+      "reason": "Protein has degree 0 after normalization: LpxG",
+      "detail": {
+        "protein": "LpxG",
+        "normalized": "lpxg",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24,
+        "did_you_mean": [
+          "LpxM",
+          "LpxL",
+          "LpxH"
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/4/name",
+      "reason": "Protein has degree 0 after normalization: LpxI",
+      "detail": {
+        "protein": "LpxI",
+        "normalized": "lpxi",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24,
+        "did_you_mean": [
+          "LpxM",
+          "LpxL",
+          "LpxH"
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/7/name",
+      "reason": "Protein has degree 0 after normalization: LpxK",
+      "detail": {
+        "protein": "LpxK",
+        "normalized": "lpxk",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24,
+        "did_you_mean": [
+          "LpxM",
+          "LpxL",
+          "LpxH"
+        ]
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/16/name",
+      "reason": "Protein has degree 0 after normalization: PldA",
+      "detail": {
+        "protein": "PldA",
+        "normalized": "plda",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/20/name",
+      "reason": "Protein has degree 0 after normalization: YhcB",
+      "detail": {
+        "protein": "YhcB",
+        "normalized": "yhcb",
+        "is_complex_component": false,
+        "proteins_degree0": 8,
+        "proteins_total": 24
+      },
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LpxI",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LpxG",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LpxK",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "FabZ",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "PldA",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "LapA",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "YhcB",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_unused_protein_flagged",
+      "name": "Ght",
+      "reason": "not_referenced_by_any_surviving_process",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LpxI",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LpxG",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LpxK",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "FabZ",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "PldA",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": true
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "LapA",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "YhcB",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": false
+    },
+    {
+      "type": "research_mode_disconnected_protein_flagged",
+      "name": "Ght",
+      "reason": "degree_zero_after_normalization",
+      "had_external_identity": false
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_lpxi_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/4",
+      "message": "Protein 'LpxI' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_lpxg_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/5",
+      "message": "Protein 'LpxG' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/9",
+      "message": "Protein 'LpxL' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/10",
+      "message": "Protein 'LpxM' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/11",
+      "message": "Protein 'FtsH' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/12",
+      "message": "Protein 'LapB' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/13",
+      "message": "Protein 'YejM' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/18",
+      "message": "Protein 'ObgE' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/19",
+      "message": "Protein 'LapA' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/20",
+      "message": "Protein 'YhcB' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_rnhb_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/22",
+      "message": "Protein 'RnhB' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_ght_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/23",
+      "message": "Protein 'Ght' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}

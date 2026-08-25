@@ -1,0 +1,44 @@
+[12:16:39] STARTING a fresh run 2026-08-25_1216 (--fresh was given)
+[12:16:39]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[12:16:39] fetching papers (topics=topics_cohort_c081_c082.txt, limit=none) ...
+[12:16:39]   + PMC12856317  (54436 chars)  (untitled)
+[12:16:39]   + PMC12444477  (82306 chars)  (untitled)
+[12:16:39] planned 2 paper(s) x 2 mode(s) = 4 run(s); 0 candidate(s) skipped (see skipped.json)
+[12:16:39] acquisition funnel: requested 2, examined 2, eligible 2, ineligible 0, no_full_text 0, accepted 2
+[12:16:39] running 4 paper+mode pair(s) sequentially
+[12:16:39] whole-night deadline : 10.0h from now
+[12:16:39] [1/4] PMC12856317 / strict -> starting (timeout 3600s)
+[12:39:19] [1/4] PMC12856317 / strict -> FAIL (contract) in 1359.2s (22m39s)
+[12:39:19]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:39:19]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[12:39:19]     1/2 done | strict 0 pass 1 fail | research 0 pass
+[12:39:19] [2/4] PMC12856317 / research -> starting (timeout 3600s)
+[12:39:30] [2/4] PMC12856317 / research -> FAIL (unknown) in 11.0s
+[12:39:30]     1/2 done | strict 0 pass 1 fail | research 0 pass 1 fail | 1 RESEARCH DEFECT
+[12:39:30] [3/4] PMC12444477 / strict -> starting (timeout 3600s)
+[13:21:48] [3/4] PMC12444477 / strict -> FAIL (contract) in 2537.2s (42m17s)
+[13:21:48]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:21:48]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[13:21:48]     2/2 done | strict 0 pass 2 fail | research 0 pass 1 fail | 1 RESEARCH DEFECT
+[13:21:48] [4/4] PMC12444477 / research -> starting (timeout 3600s)
+[14:14:25] [4/4] PMC12444477 / research -> PASS WITH WARNINGS in 3156.4s (52m36s)
+[14:14:25]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:14:25]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:14:25]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:14:25]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/12/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'LpxI' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5: Protein 'LpxG' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'LpxL' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/10: Protein 'LpxM' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/11: Protein 'FtsH' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lapb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein 'LapB' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_yejm_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/13: Protein 'YejM' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/18: Protein 'ObgE' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lapa_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/19: Protein 'LapA' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): gate.protein_yhcb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/20: Protein 'YhcB' is missing a UniProt or DrugBank identifier.
+[14:14:25]     ! strict gate error (research mode: review flag, not blocking): and 2 more gate error(s); all of them are in review_flags.json and the gate report files
+[14:14:25]     2/2 done | strict 0 pass 2 fail | research 1 pass 1 fail | 1 NO DELIVERABLE | 1 RESEARCH DEFECT
+[14:14:25] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-25_1216
+[14:14:25] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-25_1216\SUMMARY.txt
+[14:14:25] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-25_1216\failures_by_code.txt
+[14:14:25] FAILURES: 3 of 4 paper+mode run(s) did not pass
