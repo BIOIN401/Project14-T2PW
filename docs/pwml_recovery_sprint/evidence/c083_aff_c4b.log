@@ -1,0 +1,169 @@
+...............F....................                                     [100%]
+================================== FAILURES ===================================
+_____ test_research_mode_keeps_the_unmapped_candidate_and_does_not_block ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024B03AD9310>
+
+    @pytest.mark.usefixtures("offline_mapping")
+    def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A research run must come out with the pathway it went in with.
+    
+        The peripheral process here is unmapped, which is the normal state of a
+        genuinely novel enzyme rather than a defect. A strict run quarantines it --
+        ``test_the_app_reaches_quarantine_and_the_valid_core_reaches_review`` pins
+        that on the identical payload -- and a research run must not, because
+        research mode's whole contract is that findings annotate rather than block.
+        """
+    
+        # Enrichment runs BETWEEN mapping and the quarantine boundary, and the shared
+        # ``offline_mapping`` stub makes it a byte-for-byte copy. That collapses the
+        # pre-enrichment artifact (``final_mapped_db``) onto the post-enrichment one
+        # (``final_mapped_enriched``), so a comparison against either looks correct
+        # and the boundary assertion below would pin nothing about quarantine -- it
+        # would silently span every stage from mapping onwards. This override is
+        # local to this test, so no other node in this file sees it, and it does what
+        # the real Stage 7 does to an already-identified protein: attach the optional
+        # UniProt annotation under ``enrichment`` (see
+        # ``enrich_entities._enrich_payload_inner``) and nothing else. Fixed content,
+        # no clock and no network, so it is deterministic; it adds no reaction,
+        # removes none, renames nothing and touches no unidentified protein, so it is
+        # biologically inert -- and the two artifacts are now genuinely different
+        # objects, which is what makes the assertion below non-vacuous.
+        import t2pw.mapping.enrich_entities as enrich_entities  # noqa: PLC0415
+    
+        def _enrichment_that_annotates(
+            input_path: Any,
+            output_path: Any,
+            report_path: Any,
+            **_kwargs: Any,
+        ) -> Dict[str, Any]:
+            enriched = json.loads(Path(input_path).read_text(encoding="utf-8"))
+            for row in (enriched.get("entities") or {}).get("proteins") or []:
+                if not isinstance(row, dict):
+                    continue
+                # Exactly the real stage's own guard: a protein with no accession is
+                # not enriched, so the unidentified modifier this payload exists to
+                # exercise is left untouched.
+                accession = str((row.get("mapped_ids") or {}).get("uniprot") or "")
+                if not accession:
+                    continue
+                row.setdefault("enrichment", {}).setdefault("protein", {})["uniprot"] = {
+                    "status": "ok",
+                    "uniprot_id": accession,
+                    "provenance": {"source": "test_fixture", "query": accession},
+                }
+            report = {"summary": {"enrichment_annotated_for_test": True}}
+            Path(output_path).write_text(
+                json.dumps(enriched, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+            Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
+            return report
+    
+        monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
+    
+        at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
+    
+        assert _app_exceptions(at) == []
+        report = at.session_state["quarantine_report"]
+        assert report["export_mode"] == "research"
+        assert report["ok"] is True
+        assert report["research_mode"]["applied"] is False
+    
+        # The candidate the boundary passed on still holds every process, including
+        # the unmapped one. This is what quarantine controls and what it must not
+        # take away.
+        artifacts = at.session_state["post_pipeline_artifacts"]
+        candidate = artifacts["final_mapped_quarantined"]
+        assert [row["name"] for row in candidate["processes"]["reactions"]] == [
+            "gamma-glutamylcysteine synthesis",
+            "glutathione synthesis",
+            "peripheral OPDA reduction",
+        ]
+        # The two artifacts really are different objects here, so the equality below
+        # is a statement about quarantine and not an accident of a no-op stage. If
+        # enrichment ever reverts to a pass-through, this fails loudly rather than
+        # letting the boundary assertion go quietly vacuous again.
+        assert artifacts["final_mapped_db"] != artifacts["final_mapped_enriched"], (
+            "enrichment produced no difference, so the boundary assertion below would "
+            "hold for the pre-enrichment artifact too and pin nothing"
+        )
+        # ...and the difference changes no biology. TWO stages now stand between the
+        # pre-enrichment artifact and the boundary -- Stage 7 enrichment above, and
+        # the pre-freeze compound resolution D-015 requires -- so stripping one
+        # stage's annotation no longer restores equality, and an allowlist of the
+        # fields either stage may add would silently widen the day a third arrives.
+        # What is asserted instead is what a pre-freeze stage may not DISTURB: the
+        # process graph, the locations, the states and the pathway context arrive
+        # whole-object identical, and on the entity rows the stages may only ADD --
+        # every key the pre-enrichment artifact already carried survives with the
+        # same value. A rename, a dropped identifier, a reordered, added or removed
+        # row, or any edit to a reaction fails this. It is deliberately NOT part of
+        # the boundary comparison, which stays whole-object below.
+        _before = artifacts["final_mapped_db"]
+        _after = artifacts["final_mapped_enriched"]
+        for _section in ("metadata", "processes", "biological_states", "element_locations"):
+>           assert _before[_section] == _after[_section], f"{_section} moved pre-freeze"
+E           AssertionError: processes moved pre-freeze
+E           assert {'interaction...ansports': []} == {'interaction...ansports': []}
+E             
+E             Omitting 2 identical items, use -vv to show
+E             Differing items:
+E             {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]} != {'reactions': [{'biological_state': 'cytosol', 'enzymes': [{'confidence': 1.0, 'entity': 'glutamate-cysteine ligase co...ymes': [], 'inputs': ['OPDA'], 'modifiers': [{'entity': 'OPR3', 'entity_type': 'protein', 'role': 'inhibitor'}], ...}]}
+E             Use -v to get more diff
+
+tests\test_streamlit_quarantine_boundary.py:1109: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\c083\\src\\t2pw\\app\\streamlit_app.py:7094 in <module>                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7091 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mkey=\x1b[33m"\x1b[0m\x1b[33mdl_completeness_audit\x1b[0m\x1b[33m"\x1b[0m,                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7092 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m)                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7093 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m7094 \x1b[2m\u2502   \x1b[0m\x1b[1;4mrender_pathwhiz_converter_section(llm_client_module)\x1b[0m                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7095 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7096 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mConnectivity snapshot\x1b[0m\x1b[33m"\x1b[0m)                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7097 \x1b[0m\x1b[2m\u2502   \x1b[0mstats = graph_summary(final_payload)                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\c083\\src\\t2pw\\tools\\pathwhiz_converter\\ui.py:26 in                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m render_pathwhiz_converter_section                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 23 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 24 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 25 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_pathwhiz_converter_section\x1b[0m(llm_client) -> \x1b[94mNone\x1b[0m:                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 26 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.subheader(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mPathWhiz Converter\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 27 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 28 \x1b[0m\x1b[2m\u2502   \x1b[0minput_sbml = st.file_uploader(                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 29 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mUpload your SBML (.xml)\x1b[0m\x1b[33m"\x1b[0m,                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\heading.py:249 in subheader                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\c083\\src\\t2pw\\app\\streamlit_app.py:7094 in <module>                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7091 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mkey=\x1b[33m"\x1b[0m\x1b[33mdl_completeness_audit\x1b[0m\x1b[33m"\x1b[0m,                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7092 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m)                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7093 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m7094 \x1b[2m\u2502   \x1b[0m\x1b[1;4mrender_pathwhiz_converter_section(llm_client_module)\x1b[0m                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7095 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7096 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mConnectivity snapshot\x1b[0m\x1b[33m"\x1b[0m)                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m7097 \x1b[0m\x1b[2m\u2502   \x1b[0mstats = graph_summary(final_payload)                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\c083\\src\\t2pw\\tools\\pathwhiz_converter\\ui.py:26 in                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m render_pathwhiz_converter_section                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 23 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 24 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 25 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_pathwhiz_converter_section\x1b[0m(llm_client) -> \x1b[94mNone\x1b[0m:                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 26 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.subheader(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mPathWhiz Converter\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 27 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 28 \x1b[0m\x1b[2m\u2502   \x1b[0minput_sbml = st.file_uploader(                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 29 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mUpload your SBML (.xml)\x1b[0m\x1b[33m"\x1b[0m,                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\heading.py:249 in subheader                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-08-25 17:51:09.411 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.983 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:51:09.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+1 failed, 35 passed in 103.52s (0:01:43)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1009c234380186558881d58ab616c237ae97e222  [git, worktree dirty=False]
+label                   : c083-aff-c4b
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_streamlit_quarantine_boundary.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py --basetemp=C:/t/c083tmp/bt/j25 -q
+cwd                     : C:\t\c083
+root PID / process group: 89400 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 480 s
+duration                : 104.85 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  89520:python.exe, 91936:git.exe
+descendants terminated  : 2  89520, 91936
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/25-c083-aff-c4b.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

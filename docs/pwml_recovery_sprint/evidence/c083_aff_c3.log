@@ -1,0 +1,240 @@
+...................................................F.................... [ 60%]
+............FFF.F..............................                          [100%]
+================================== FAILURES ===================================
+_____ test_an_ambiguous_species_rename_does_not_end_the_post_pipeline_leg _____
+
+    @pytest.mark.usefixtures("offline_mapping")
+    def test_an_ambiguous_species_rename_does_not_end_the_post_pipeline_leg() -> None:
+        """The leg finishes, keeps its payload, records the ambiguity, merges nothing.
+    
+        Four assertions because four different things were lost when it crashed:
+        the run, the artifacts, the record, and the two organisms. The last one is
+        the refusal -- unchanged -- read off the canonical payload that ships rather
+        than off a summary.
+        """
+    
+        from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
+    
+>       at = _run_post_pipeline_research(_payload_with_a_strain_and_its_species())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c082_post_pipeline_seam.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_streamlit_quarantine_boundary.py:1005: in _run_post_pipeline_research
+    at.button(key=KEY_POST_PIPELINE).click().run()
+c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py:179: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py:2531: in run
+    return self._runner._run(widget_states, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py:407: in _run
+    self._tree = script_runner.run(
+c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py:158: in run
+    require_widgets_deltas(self, timeout)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+runner = LocalScriptRunner(forward_msg_queue=<streamlit.runtime.forward_msg_queue.ForwardMsgQueue object at 0x000001DF6F629BA0>...codex"
+  installed_agents: "copilot"
+}
+}, {}, {'client_state': page_script_hash: "9a4e9081a3b9c4a384acdf5dd133e6d7"
+}])
+timeout = 120.0
+
+    def require_widgets_deltas(runner: LocalScriptRunner, timeout: float = 3) -> None:
+        """Wait for the given ScriptRunner to emit a completion event. If the timeout
+        is reached, the runner will be shutdown and an error will be thrown.
+        """
+    
+        t0 = time.time()
+        while time.time() - t0 < timeout:
+            time.sleep(0.001)
+            if runner.script_stopped():
+                return
+    
+        # If we get here, the runner hasn't yet completed before our
+        # timeout. Create an error string for debugging.
+        err_string = f"AppTest script run timed out after {timeout}(s)"
+    
+        # Shutdown the runner before throwing an error, so that the script
+        # doesn't hang forever.
+        runner.request_stop()
+        runner.join()
+    
+>       raise RuntimeError(err_string)
+E       RuntimeError: AppTest script run timed out after 120.0(s)
+
+c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py:208: RuntimeError
+---------------------------- Captured stderr call -----------------------------
+2026-08-25 17:34:04.858 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-25 17:34:05.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:887 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 1/3; retrying as a transient.
+WARNING  t2pw.llm.client:client.py:887 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 2/3; retrying as a transient.
+WARNING  t2pw.llm.client:client.py:887 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 1/3; retrying as a transient.
+WARNING  t2pw.llm.client:client.py:887 LLM returned an empty completion for curator (model deepseek/deepseek-v4-flash, finish_reason=length, tools_sent=True) on attempt 2/3; retrying as a transient.
+_ test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy] _
+
+population = 'all_legacy', reachable = False
+
+    @pytest.mark.parametrize("population", sorted(CARRIER_POPULATIONS))
+    @pytest.mark.parametrize("reachable", [True, False])
+    def test_db_reachability_reaches_the_exporter_in_both_directions(
+        population: str, reachable: bool
+    ) -> None:
+        """A3. The exporter's report equals the pre-freeze stage's own verdict.
+    
+        Fails at base in **both** directions: ``db_resolution`` carries no
+        ``available`` key at all, so the report cannot state either answer.
+        """
+    
+        payload = _shell_payload(CARRIER_POPULATIONS[population])
+        resolver = _CannedDb() if reachable else None
+        prefreeze = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+        prefreeze_available = (
+            prefreeze["compounds"]["resolution_report"]["db_resolution"]["available"]
+        )
+>       assert prefreeze_available is reachable, prefreeze
+E       AssertionError: {'canonicalizers': ['compounds', 'species'], 'compounds': {'aliases_preserved': [], 'applied': True, 'identity_project...78}, {'field': 'pathwhiz_id', 'row': 1, 'value': 91}], 'references_updated': [], ...}, 'failures': {}, 'ok': True, ...}
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:380: AssertionError
+__ test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed] __
+
+population = 'mixed', reachable = False
+
+    @pytest.mark.parametrize("population", sorted(CARRIER_POPULATIONS))
+    @pytest.mark.parametrize("reachable", [True, False])
+    def test_db_reachability_reaches_the_exporter_in_both_directions(
+        population: str, reachable: bool
+    ) -> None:
+        """A3. The exporter's report equals the pre-freeze stage's own verdict.
+    
+        Fails at base in **both** directions: ``db_resolution`` carries no
+        ``available`` key at all, so the report cannot state either answer.
+        """
+    
+        payload = _shell_payload(CARRIER_POPULATIONS[population])
+        resolver = _CannedDb() if reachable else None
+        prefreeze = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+        prefreeze_available = (
+            prefreeze["compounds"]["resolution_report"]["db_resolution"]["available"]
+        )
+>       assert prefreeze_available is reachable, prefreeze
+E       AssertionError: {'canonicalizers': ['compounds', 'species'], 'compounds': {'aliases_preserved': [{'name': 'Glycine', 'synonym': 'gly'}...d': [{'field': 'pathwhiz_id', 'row': 0, 'value': 91}], 'references_updated': [], ...}, 'failures': {}, 'ok': True, ...}
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:380: AssertionError
+___ test_an_all_legacy_population_proves_the_value_is_carried_not_inferred ____
+
+    def test_an_all_legacy_population_proves_the_value_is_carried_not_inferred() -> None:
+        """The discriminating test C-051 identified, turned into a guard.
+    
+        Every row carries a ``pathbank_compound_id``, so the resolver is never
+        consulted and the two legs' rows are **byte-identical** -- yet the exporter
+        must still report the two different answers. Only a carried value can do
+        that; anything derived from the rows is a guess.
+        """
+    
+        blobs: Dict[bool, str] = {}
+        reported: Dict[bool, Any] = {}
+        for reachable in (True, False):
+            payload = _shell_payload(CARRIER_POPULATIONS["all_legacy"])
+            run_prefreeze_resolution(
+                payload, strict_db=False, db_resolver=_CannedDb() if reachable else None
+            )
+            blobs[reachable] = json.dumps(
+                payload["entities"]["compounds"], sort_keys=True, default=str
+            )
+            _ir, ir_report = build_pwml_ir(payload, strict_db=False)
+            reported[reachable] = ir_report["db_resolution"]["available"]
+    
+        assert hashlib.sha256(blobs[True].encode()).hexdigest() == hashlib.sha256(
+            blobs[False].encode()
+        ).hexdigest(), "the population is no longer indistinguishable; this test is vacuous"
+        assert reported[True] is True
+>       assert reported[False] is False
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:420: AssertionError
+___ test_the_same_row_still_warns_and_names_the_real_reason[not_configured] ___
+
+resolver = None, reason = 'db_not_configured'
+
+    @pytest.mark.parametrize(
+        ("resolver", "reason"), [(None, "db_not_configured"), (_DownDb(), "harvest_db_down")],
+        ids=["not_configured", "configured_but_down"])
+    def test_the_same_row_still_warns_and_names_the_real_reason(resolver: Any, reason: str) -> None:
+        """The other direction, so the fix is not "never warn again".
+    
+        ``configured_but_down`` is the second half of A4: carrying ``available``
+        alone leaves the preflight defaulting the reason to ``db_not_configured``,
+        a *different* false statement in the same product-visible sentence -- the
+        DB was configured, and it was down. Both legs must name what happened.
+        """
+    
+        payload = _shell_payload([{"name": "norbelladine", "hmdb_id": "HMDB9999999"}])
+        run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+>       assert payload[PREFREEZE_DB_RESOLUTION_FIELD] == {
+            "available": False, "reason": reason}
+E       AssertionError: assert {'available': True} == {'available':...t_configured'}
+E         
+E         Differing items:
+E         {'available': True} != {'available': False}
+E         Right contains 1 more item:
+E         {'reason': 'db_not_configured'}
+E         Use -v to get more diff
+
+tests\test_prefreeze_third_export_seam.py:463: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c082_post_pipeline_seam.py::test_an_ambiguous_species_rename_does_not_end_the_post_pipeline_leg
+FAILED tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy]
+FAILED tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed]
+FAILED tests/test_prefreeze_third_export_seam.py::test_an_all_legacy_population_proves_the_value_is_carried_not_inferred
+FAILED tests/test_prefreeze_third_export_seam.py::test_the_same_row_still_warns_and_names_the_real_reason[not_configured]
+5 failed, 114 passed in 197.67s (0:03:17)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1009c234380186558881d58ab616c237ae97e222  [git, worktree dirty=False]
+label                   : c083-aff-c3
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_release_status_classification.py tests/test_c056c_semantic_evaluability.py tests/test_c056d_gate_failure_semantic_carry.py tests/test_c077_stage0_conflict_disposition.py tests/test_c082_post_pipeline_seam.py tests/test_c085_priority2_honesty.py tests/test_c087_prefreeze_declination_demotes_release_status.py tests/test_prefreeze_third_export_seam.py tests/test_stage3_gate_report_lifecycle.py --basetemp=C:/t/c083tmp/bt/j19 -q
+cwd                     : C:\t\c083
+root PID / process group: 76972 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 199.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  76984:python.exe
+descendants terminated  : 1  76984
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/19-c083-aff-c3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

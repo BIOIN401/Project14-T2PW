@@ -1,0 +1,92 @@
+{
+  "label": "c083-aff-c4",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py",
+    "tests/test_curation_patch_transaction.py",
+    "tests/test_paper_eligibility.py",
+    "tests/test_stage0_case_c_retry_clobber.py",
+    "tests/test_streamlit_quarantine_boundary.py",
+    "--basetemp=C:/t/c083tmp/bt/j20",
+    "-q"
+  ],
+  "cwd": "C:\\t\\c083",
+  "started_at": "2026-08-25T23:41:31+00:00",
+  "finished_at": "2026-08-25T23:48:36+00:00",
+  "duration_seconds": 425.12233540000034,
+  "timeout_seconds": 420.0,
+  "root_pid": 83036,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "timeout",
+  "exit_code": null,
+  "returned_code": 124,
+  "descendants_observed": [
+    {
+      "pid": 83040,
+      "name": "python.exe",
+      "ppid": 83036
+    }
+  ],
+  "descendants_terminated": [
+    83040
+  ],
+  "graceful_attempted": true,
+  "forced": true,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 75620,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/20-c083-aff-c4.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c083\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c083",
+    "repo_head": "1009c234380186558881d58ab616c237ae97e222",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-083",
+    "token": "C-083:75620:03244c914d180622",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
