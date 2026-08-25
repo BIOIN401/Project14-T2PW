@@ -4353,3 +4353,53 @@ declared, required deliverable rather than a merge-gate surprise.
 C-091 and **C-089** (F-119/F-125, Ruling 7) both edit `identity_admission.PARTICIPANT_FIELDS`.
 **They must not run concurrently.** C-089 owns the shared participant-schema constants; C-091 takes
 a read-only dependency on them.
+
+---
+
+# T-107 READINESS TABLE — 2026-08-25, post-ruling wave
+
+**Verdict: T-107 remains NO-GO.** Priority 1 is **absolute** and is **guaranteed to fail for a known
+unresolved reason**, which is the exact condition § 8 forbids running under. Two further absolute or
+scored priorities are also guaranteed to fail. Running now would buy another predictably failed score
+and teach us nothing new.
+
+| Priority | Reachable? | Remaining blocker | Expected T-107 result |
+|---|---|---|---|
+| **1** — zero false real identifiers | **NO — and it got worse** | **F-127**: the discriminating fact is never recorded. Metabolite slots have no provenance carrier (`inputs`/`outputs`/`cargo` are bare strings corpus-wide) and entity rows carry `evidence=None` with `provenance` a constant, at Stage 1 and every stage after. **F-128**: complying with D-069 would *restore* identity to 12 refused rows, which the gold's bucket-blind `forbidden_identifiers` list counts as false identifiers. **Unresolved product conflict.** | **FAIL — 6 or HIGHER** |
+| **2** — no unsupported retained reactions | **Partially, and honestly** | **D-067 precondition 3** (independent biological review) unmet on both candidate papers; the orchestrator cannot supply it and the credit rule forbids buying it. `PMC12180156` additionally carries a gold-internal conflict: a ceiling of 2 against a `relevance_note` saying zero reactions have both sides named. | **NOT EVALUATED** on 11/20 legs (6 papers); genuinely-measured PASS on the other legs |
+| **3** — zero referential-integrity violations | **YES — passes today** | None for T-107. F-125's 3 invisible orphans are real but sit in **other** artifacts; T-106 exposure is **0**. C-089 closes the blind spot without moving this run. | **PASS** |
+| **4** — requested-core coverage | **NO** | Nothing in this wave addresses coverage. The honest T-106 figure is **0/8 = 0%** after C-085 removed the blind spot that had reported 1/8. Cap 2's input is Stage 0's `key_compounds`/`key_proteins`, a non-deterministic draw, not a curated core. | **FAIL — 0/8** |
+| **5** — strict PWML export | **NO, but the metric is now honest** | Denominator reconciled **4 → 2** by the D-065 gold edit. Both survivors are `correctly_blocked` and measured so: `PMC12782028` on `requested_core_coverage_below_minimum:0.222<0.500`, `PMC12096016` twice over on `requested_core_anchors_unmatched`. C-086 strengthens the biology but **does not unblock the leg** — cap 2 fires regardless. | **FAIL — 0/2** |
+
+## Against § 8's eight gate conditions
+
+| # | condition | state |
+|---|---|---|
+| 1 | priority 1 has a safe correction **or an explicitly accepted measurement limitation** | **NOT MET.** F-127 states the limitation precisely and F-128 adds a conflict on top. **Acceptance is the product owner's to give; the orchestrator cannot accept a limitation on its own behalf.** |
+| 2 | priority 5's denominator reconciled under Ruling 1 | **MET** — gold edited with full audit trail, `--verify-plan` `OK` / ten `[pinned_override]`, SMOKE 473. The *code* half (C-088) is chartered and queued. |
+| 3 | the two remaining strict-denominator papers classified honestly | **MET** — both `correctly_blocked`, each with its measured reason. |
+| 4 | applicable F-116 / F-123 corrections merged | **NOT MET** — C-086 and C-087 in flight, neither merged. |
+| 5 | acceptance instrumentation remains honest | **MET and improving.** C-085 made priority 2 honest; F-117/C-090 removes 2 measured false positives without rescuing F-116's 3. |
+| 6 | affected-paper validation passes | **NOT MET** — nothing merged to validate. |
+| 7 | all processes closed | **MET at every checkpoint so far** — every job zero survivors, cleanup success, lock free. |
+| 8 | integration clean and pushed | **MET** — local = origin = `git ls-remote`, working tree carries only the pre-existing caches/scratch and the product-owner edit. |
+
+**Three of eight unmet. Condition 1 is the one that cannot be cleared by this session's work at all.**
+
+## What would change the verdict
+
+**Not** merging C-086, C-087, C-088, C-089 or C-090. Those are all worth merging on their own
+contract-grounded merits, and none of them moves priority 1 to zero. Merging every one of them still
+leaves priority 1 failing at 6 or higher.
+
+The verdict changes only when **one of these two happens**:
+
+1. the product owner **explicitly accepts F-127's measurement limitation** — recording that priority 1
+   cannot reach 0 until a participant-provenance carrier and an entity evidence span exist, and that
+   T-107 may run against a stated non-zero floor; **or**
+2. the **F-128 gold-mechanism conflict is ruled** and a participant-provenance representation is
+   chartered and merged, so priority 1 has a route to 0 rather than a route upward.
+
+**Until then T-107 stays blocked, and that is the correct outcome rather than a delay.** The last
+release candidate was not run for exactly this reason, and nothing measured since has made the
+answer different — it has made it better evidenced.
