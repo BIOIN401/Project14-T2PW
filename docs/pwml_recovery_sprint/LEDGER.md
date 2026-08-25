@@ -3661,3 +3661,160 @@ direct adversarial construction of three colliding strains produced **all three 
 
 **Safe today; the reasoning is wrong.** Registered so the docstring is corrected rather than
 inherited by a reader who relies on a guard that would not fire.
+
+---
+
+## C-085 — MERGED `07db68f`. F-121 closed. **The honest T-106 numbers are worse than the recorded ones.**
+
+| card | merge | closes | SMOKE | review |
+|---|---|---|---|---|
+| **C-085** | `07db68f` | **F-121** | **473** (48.69 s, post-merge, pinned) | APPROVE, actual diff, 13 wrapper reports, 0 non-compliant |
+
+### The re-scored T-106 — offline, nothing re-run, reproduced independently by the reviewer
+
+```
+=== recorded (base) ===              === honest (tip) ===
+1. [FAIL] false real identifiers     1. [FAIL]  identical
+2. [PASS] unsupported reactions      2. [NOT EVAL] unsupported reactions
+3. [PASS] referential violations     3. [PASS]  identical
+4. [PASS] coverage 1/8 = 12%         4. [FAIL]  coverage 0/8 = 0%
+5. [FAIL] strict PWML 0/4            5. [FAIL]  identical
+```
+
+Priority 2 is `NOT EVALUATED` on **11 of 20 scored legs covering 6 papers** — PMC12096016,
+PMC12421875, PMC12444477, PMC12452463, PMC12657337, PMC12782028. **It is not re-reported as FAIL:**
+nothing unsupported was ever counted there, and swapping a false PASS for a false FAIL would be the
+same lie in the other direction. All nine scientific-error totals are byte-identical between the two
+scorings, and both exit 1.
+
+**Two of the five priorities recorded as PASS were artifacts of one blind spot.**
+
+### The priority-4 flip is the pre-existing requirement finally biting — verified structurally
+
+`SemanticReport.confirmed` and the entire `CheckResult` class are **byte-identical at base and tip**.
+On `PMC12421875/strict`: `check.ok` did **not** move (True → True); only `check.applicable` moved
+(True → False). `confirmed = self.ok and all(c.applicable …)` was already written that way — the
+supported-reactions check simply never declared itself unevaluated, so the requirement had nothing to
+bite on.
+
+Corroborating: at base, `PMC12180156` and `PMC13231680` **already** carried
+`inapplicable=['retained_reactions_match_supported_signatures']` by the two other routes. C-085 added
+a **third route to a mechanism that already existed and already worked.**
+
+### The design decision was scrutinised and holds
+
+`unsupported_verdict_evaluated = complete or not unsupported_rows`.
+
+The reviewer went looking for the hole and reported it is not there. `matched_pointers` is populated
+**only inside the `quote_ok` branch** — a signature whose quote is not located in the stored paper
+text hits `continue` and can never match a row. So `not unsupported_rows` means literally *"every
+retained process row matched at least one gold signature whose quote I verified is in the paper"*.
+That is a **positive per-row measurement**, not an inference from exhaustiveness, and it is **strictly
+narrower** than `complete` because it demands 100% row attribution.
+
+Decisively, **the matcher's known brittleness runs the safe way.** Under-matching creates
+`unsupported_rows` → `uve=False` → `NOT EVALUATED`. It cannot manufacture a false PASS. The five
+T-106 legs that still PASS priority 2 hold genuinely measured zeros; marking them unevaluated would
+have been the opposite error.
+
+### The `render.py` deviation — disclosed, and ruled FORCED rather than scope creep
+
+`bench/render.py` was not in the card's May-change table. The implementer flagged it rather than
+burying it. The reviewer read `_mark` and demonstrated it:
+
+```
+_mark(True) -> 'PASS'    _mark(False) -> 'FAIL'    _mark(bool(None)) -> 'FAIL'
+```
+
+`_mark` is **binary by signature**, and the base renderer coerces `None` to `False`. **Without those
+six lines C-085 would have printed priority 2 as `[FAIL]` on T-106** — a fabricated failure, exactly
+the lie the card exists to prevent. Six lines, `_priorities` only, `_mark` itself untouched so no
+other caller changes, and the card's own G9 proof cannot pass without it. **Approved as forced.**
+
+### The negative-control ceiling still works — demonstrated
+
+Forcing `PMC12180156/strict` to 5 retained reactions against its ceiling of 2 gives
+`unsupported=3, uve=True`. The one path that ever worked is intact.
+
+**F-121's premise confirmed in full:** `supported_reactions_complete` is `False` on **all 10** gold
+cases; `max_retained_reactions` is set on exactly **two** — PMC12180156 (2) and PMC13231680 (0).
+
+### The official T-106 result is preserved
+
+`evidence/t106_acceptance_report.txt` blob `29a12994…` is **identical at base and tip**. The re-score
+is a new file, `evidence/c085_t106_rescore.txt`. `pinned_v1.json` blob `4b5c0355…` is likewise
+identical — **the gold decision was escalated, not absorbed.**
+
+---
+
+## PRIORITY 3 — ADJUDICATED: **CAPABLE, not inert.** The last unexamined absolute priority.
+
+I asked whether priority 3 shared priority 2's disease. **It does not.**
+
+`_orphaned_references(payload)` takes **only `payload`** and reads **no gold field whatsoever** — no
+completeness gate, no finding deletion, no ceiling dependency. `ERR_ORPHANED_REFERENCES:
+len(orphans)` is unconditional. Demonstrated non-zero:
+
+```
+PMC12096016/strict as committed : 0 orphans
+  + one undeclared input        : 1 orphan   -> orphaned_references = 1, evaluated = True
+  + all compound rows removed   : 13 orphans
+```
+
+It is architecturally the **opposite** of priority 2, and **its `PASS 0` on T-106 is a real
+measurement.** Recorded so nobody re-opens the question.
+
+---
+
+## F-125 — the referential-integrity gate reads roughly half the participant surface
+
+- **Severity** MEDIUM · **Class `product_contract_violation`** · **Zero exposure on T-106; live in the corpus.**
+- **Registered 2026-08-25 by the C-085 reviewer**, `semantic.py:1413-1445` `_orphaned_references`,
+  `:216-220` `_enzyme_names`.
+
+Priority 3 reads `inputs`, `outputs` and `_enzyme_names` (`enzymes` / `modifiers` / `catalysts`). It
+**never reads `cargo`, `transporters` or `elements_with_states`** — that is, **every participant slot
+a `TransportModel` or `ReactionCoupledTransportModel` actually has.**
+
+Measured over the 89 committed `final_mapped.json` (65 transport rows):
+
+```
+orphans priority 3 COUNTS        : 3
+orphans a WIDER reader would see : 6
+invisible to priority 3          : 3
+   MISSED: PMC12096016/strict  (runs/2026-08-02_2130)          transports.transporters 'EntE'  x2
+   MISSED: PMC12180156/research (runs_verify/2026-08-24_1402)  transports.transporters '/entities/proteins/0'
+```
+
+That last one is a **leaked JSON pointer sitting in a name slot** — an unambiguous
+referential-integrity violation in a committed artifact that the absolute gate for referential
+integrity cannot see.
+
+**On T-106 itself: 0 narrow and 0 wide**, so T-106's priority-3 `PASS 0` is **not** falsified. The
+gap is live in the corpus, not in that run. **Unowned.** Note the shape is the same family as
+**F-119** — a participant reader narrower than the schema it reads.
+
+---
+
+## F-126 — the new priority-2 PASS route inherits matcher precision, which has never been measured
+
+- **Severity** LOW · **Class `measurement_assumption`** · **Registered 2026-08-25 by the C-085
+  reviewer.** Not a defect in C-085; a residual that should be named rather than inherited.
+
+The `not unsupported_rows` route rests entirely on `_signature_matches`. A matcher **false positive**
+would turn a fabricated reaction into a "measured zero". The observed failure direction is
+**under**-matching, which is safe — but matcher **precision** has never been measured, and the five
+T-106 legs that now PASS priority 2 rest on that unmeasured assumption.
+
+The relevant recorded observation: PMC12096016/**strict** scored 0/7 attribution while its
+**research** leg scored 2/6 on a near-identical payload with identical 5/5 enzyme recall. That swing
+is evidence of brittleness in the safe direction, and it is the only precision datum anyone has.
+
+---
+
+## RETRACTION applied to `TEST_MATRIX.md:482`
+
+The row called `PMC12421875` *"the first semantic confirmation of the sprint"*. That claim is now
+measurably wrong and sat in a live document. It is **retracted in place**, naming C-085/F-121, the
+leg's real numbers (11 retained, 3 attributed, 8 matching nothing) and the re-scored
+`priority 4 = 0/8`. Line count unchanged at **578** — the edit is inline, so no pinned baseline moved.
