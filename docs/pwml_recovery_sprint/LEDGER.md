@@ -2773,3 +2773,92 @@ pairs.
 **Still empty at this point.** Four merges, six charters, seven findings, two amendments — all from
 current source, committed tests, or deterministic replay of committed artifacts. **Zero credits.**
 The cohort is the first live spend of the session and does not start until C-080 merges.
+
+---
+
+# T-106 — RAN 2026-08-24. `MEASURED — NOT ACCEPTED`. Never record as PASS.
+
+`runs_verify/2026-08-24_1428`, committed `efca465`. 19,294 s (5.36 h),
+`deepseek/deepseek-v4-flash`, real curator, LM Studio embeddings.
+**`COMPLETE (10/10 papers, 20/20 legs)`.** G11: `FINAL SURVIVING COUNT 0`, `cleanup success`, heavy
+lock acquired and released. `cache_snapshot` (43 MB) excluded from the commit.
+
+Preflight: stage-only staged 20 pairs, 0 skipped; `--verify-plan` → `verdict: OK`, 10 cases,
+**0 search calls**, all 10 `[pinned_override]`, three organism traps still reading
+`Bacillus subtilis`. The real run continued that plan without `--fresh`.
+
+## Acceptance, against T-105
+
+| priority | T-105 | **T-106** |
+|---|---|---|
+| 1 zero false real identifiers | FAIL 7 | **FAIL 8** |
+| 2 zero unsupported reactions | FAIL 3 | **PASS 0** |
+| 3 zero referential violations | FAIL 2 | **PASS 0** |
+| 4 requested-pathway coverage | PASS 1/8 | **PASS 1/8 = 12%** |
+| 5 strict PWML pass rate | FAIL 0/4 | **FAIL 0/4 = 0%** |
+
+**Priorities 2 and 3 moved FAIL → PASS.** Separated denominators are unchanged from T-105:
+extraction success 8/8 = 100%; semantic pathway success 1/8 = 12% (PMC12421875 again); research
+deliverable 4/8 = 50%; research confirmed 0/8.
+
+## Priority 1 is 8, and the composition is the finding — not the count
+
+`NADH`, `NAD+` (PMC12096016/research); `LIPA`, `LBR` as `heading_or_prose` and `SREBF1`, `SREBF2` as
+`regulator_as_metabolite` (PMC12782028/research); `pyridoxal 5-phosphate` as `cofactor_as_protein`
+(both PMC12856317 legs).
+
+Every one is a **Stage-1 extraction hallucination handed a real identifier downstream** — the
+pre-existing **F-096** class. **Not one is an accession-conflict case and not one is a
+restored-refused identifier**, so none is attributable to C-076, C-078 or C-080.
+
+**`holo-EntB`, which was in T-105's seven, is gone** — C-076's predicted delta realised on a fresh
+run. `SREBF1/2`, `LIPA` and `LBR` are back after vanishing from T-105 by draw variance. **7 → 8 is
+composition churn**, precisely what `T106_PREDICTION.md` was written to stop anyone reading as a
+regression.
+
+`Lpt system`, `RyhB` and `enterobactin synthase complex` all report
+`forbidden_identity_present_unmapped` — flagged by gold, carrying no identifier. Correct outcome.
+
+## What the correction wave bought, measured on a release candidate
+
+* **Zero bare `pathway.pwml` across all 20 legs.** Five strict legs emitted
+  `pathway.review_required.pwml`, each with `strict_acceptance_eligible: false`. At T-105 two legs
+  shed bare PWML as **F-100** and **F-101**; that class is closed.
+* **C-077 validated.** Six `scope_conflict` legs as predicted, and all six carry a real release
+  record where T-105 had `null`: `diagnostic_only`, `pipeline_executed: true`, `elig: false`,
+  reasons naming `stage0_scope_conflict_stopped_the_run_before_serialization`, and `requested_scope`
+  beside `observed_context`. Zero PWML on all six. D-062's disposition, working on real legs.
+* **PMC12452463/strict did not reach `release_ready`** — `fail` at `post_pipeline`,
+  `diagnostic_only`. The hard gate in `T106_PREDICTION.md` §3 held on the run as well as the cohort.
+* **Priorities 2 and 3 at zero.**
+
+## Two predictions did not hold — recorded, not explained away
+
+* **F-092's two PMC12444477 TIMEOUTs did not reproduce.** The strict leg **passed** with a
+  64,359-byte `pathway.review_required.pwml`. F-092's surviving defect 3 is **not observed on this
+  run** and remains open on the T-104/T-105 evidence rather than being re-confirmed.
+* **A new terminal outcome instead:** `PMC12444477/research` ended `error`/`crash` on
+  `AMBIGUOUS_RENAME_TARGET`. The guard is pre-existing (C-050h, `999209e`) and fired in neither
+  T-104 nor T-105; a draw emitting both `Escherichia coli K-12` and `Escherichia coli` exposed it.
+  Nothing in this wave touches species canonicalisation. Registered as **F-115** — the concern is
+  that a correct fail-closed guard *terminates the leg* instead of preserving the payload as
+  `review_required`.
+
+## Why it is NOT ACCEPTED
+
+Priorities 1 and 5 fail. Priority 1's eight are all F-096-class Stage-1 hallucination, which no card
+in this wave was chartered to fix; priority 5 is 0/4 because no strict-exportable paper produced a
+`release_ready` export — five produced `review_required` instead, which is correct behaviour and not
+strict success. **Do not rerun under the T-106 identity. Do not relabel as PASS.**
+
+## Live-run ledger — closed
+
+| # | run | legs | purpose | result |
+|---|---|---|---|---|
+| 1 | `runs_verify/2026-08-24_1203` | 8 | cohort A, affected papers both modes | clean, hard gate cleared |
+| 2 | `runs_verify/2026-08-24_1402` | 2 | cohort B, research-only | clean, source-support pass withholding |
+| 3 | `runs_verify/2026-08-24_1428` | 20 | **T-106 release candidate** | `COMPLETE`, `MEASURED — NOT ACCEPTED` |
+
+Three live runs, 30 legs, all through the bounded wrapper with zero survivors and cleanup success on
+every one. Everything before them — five merges, six charters, ten findings, two amendments — cost
+no credits at all.

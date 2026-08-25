@@ -5658,3 +5658,70 @@ with `FileNotFoundError: 'C:\t\bt\rev080e'`; re-running after creating the paren
 Both modes produce a large, plausible-looking failure count that is **infrastructure, not a test
 result**, and either could be reported as a false regression by an agent that does not recognise it.
 Worth one line in `TEST_MATRIX.md` § 0 beside the existing `PermissionError` note.
+
+---
+
+## F-115 — a fail-closed species-rename guard ends the leg as a CRASH instead of preserving the payload
+
+- **Severity** MEDIUM · **Class `product_contract_violation`**
+- **Registered 2026-08-24 from the T-106 run**, `runs_verify/2026-08-24_1428`, integration `efca465`.
+- **Not attributable to the C-076…C-080 correction wave** — see below.
+
+### The measurement
+
+`PMC12444477/research` ended `status: error`, `failure_kind: crash`, at `post_pipeline`:
+
+```
+Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: renaming
+'Escherichia coli K-12' to 'Escherichia coli' would merge it into
+['Escherichia coli'], which another species row [already occupies]
+```
+
+The guard itself is **correct and pre-existing**: `pwml/prefreeze_resolution.py:762` and `:1112`,
+introduced by **C-050h** (`999209e`, *"duplicate canonical rows refuse by name, not by diff string"*).
+Refusing to silently merge two distinct species rows is exactly right — merging
+*E. coli K-12* into *E. coli* would fuse two organisms in the exported graph.
+
+### Why it is a finding anyway
+
+**The refusal terminates the leg as a crash.** `status: error`, `failure_kind: crash`, no
+`release_status`, no payload preserved as `review_required`.
+
+That is the shape **merge rule 7** exists to prevent: *"preserves incomplete-but-correct pathways as
+`review_required` rather than dropping them."* The pathway here is incomplete-but-correct in the
+relevant sense — Stage 1 and the audit succeeded, and the only problem is that two species rows
+cannot be canonicalised into one. A correct fail-closed guard should **keep its own name**, flag the
+ambiguity for review, and let the run finish; `prefreeze_resolution.py:427`'s own comment says
+`AMBIGUOUS_RENAME_TARGET` *"must keep its own name where it"* — which reads as the intended
+behaviour, not termination.
+
+Compare the sibling leg: `PMC12444477/strict` **passed** on the same paper in the same run and
+emitted a 64,359-byte `pathway.review_required.pwml`. The research leg lost everything to a guard
+the strict leg either did not hit or handled.
+
+### Not caused by this wave
+
+Nothing in C-076, C-077, C-078, C-079 or C-080 touches species canonicalisation. C-078 is the only
+one inside `pwml/`, and it changes `_admit_db_identity` in `compound_resolution.py` — the
+**compounds** canonicaliser. `PREFREEZE_CANONICALIZERS` carries `compounds` and `species` as separate
+entries and the species path is untouched.
+
+The guard appears in **neither** `runs_verify/2026-08-21_2239` (T-104) nor
+`runs_verify/2026-08-22_2147` (T-105): `grep -rl AMBIGUOUS_RENAME_TARGET` returns nothing in either.
+A T-106 draw that emitted both `Escherichia coli K-12` and `Escherichia coli` as species rows
+exposed it for the first time.
+
+### It displaced an expected outcome
+
+`T106_PREDICTION.md` §4 predicted **2 × PMC12444477 TIMEOUT** as an expected non-finding, on F-092's
+T-104 and T-105 evidence. **Neither timeout reproduced.** The strict leg passed outright and the
+research leg ended on this crash instead. So F-092's surviving defect 3 was **not observed on this
+run** and remains open on the earlier evidence rather than being re-confirmed here.
+
+### What a fix would need
+
+Keep the refusal, change the disposition — the same shape as C-077. The ambiguous row keeps its own
+name, the ambiguity is recorded as a review flag, and the run completes with a `review_required`
+classification. Ownership would be `pwml/prefreeze_resolution.py` around `:762`/`:1112` plus whatever
+raises it into `post_pipeline`. **Card after the T-106 triage**; it is one leg of twenty and does not
+change any acceptance priority.

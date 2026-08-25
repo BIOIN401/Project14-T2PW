@@ -1,0 +1,43 @@
+pinned acceptance preflight against gold set 2026-08-01.1
+source: runs_verify\2026-08-24_1428\plan.json
+verdict: OK
+cases checked: 10   search calls: 0
+
+paper / pathway / organism triples:
+  PMC12444477 | lipid A biosynthesis | Escherichia coli   [pinned_override]
+  PMC13231680 | lipid A biosynthesis | Escherichia coli   [pinned_override]
+  PMC12657337 | menaquinone biosynthesis | Bacillus subtilis   [pinned_override]
+  PMC12421875 | menaquinone biosynthesis | Bacillus subtilis   [pinned_override]
+  PMC12312563 | menaquinone biosynthesis | Bacillus subtilis   [pinned_override]
+  PMC12856317 | heme biosynthesis | Homo sapiens   [pinned_override]
+  PMC12180156 | heme biosynthesis | Homo sapiens   [pinned_override]
+  PMC12096016 | enterobactin biosynthesis | Escherichia coli   [pinned_override]
+  PMC12452463 | enterobactin biosynthesis | Escherichia coli   [pinned_override]
+  PMC12782028 | cholesterol biosynthesis | Homo sapiens   [pinned_override]
+
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0005532a5225d468e17929a40bb24099c36c55d4  [git, worktree dirty=True]
+label                   : verify-plan
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe scripts/bench_acceptance.py --verify-plan runs_verify/2026-08-24_1428
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 449244 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.31 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  449256:python.exe
+descendants terminated  : 1  449256
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\T-106\15-verify-plan.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
