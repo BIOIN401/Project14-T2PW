@@ -1,0 +1,84 @@
+{
+  "base_capture_reproduces_committed_GOLDEN_byte_identically": true,
+  "base_sha": "116c8fabf6313cf294390ded7e7ef8e1437750b9",
+  "card": "C-083",
+  "cause": "F-092 defect 3. RunOutcome.to_dict now emits the termination classification _finalize_timeout has computed since C-032. input_timeout is the ONLY golden fixture that reaches _finalize_timeout, so it is the only leg whose row can move. The three keys are conditional on termination_reason being set, which no other leg sets.",
+  "control": "base captured in a git worktree at 116c8fa with .env copied in (F-051 parity on BOTH sides); same interpreter, same capture script",
+  "growth_only_guard_no_field_dropped": true,
+  "input_timeout_new_values": {
+    "budget_unrecorded": "not recorded on the in-process timeout path: this seam is handed the timeout detail only, never the leg budget, and the leg ceiling is run_one's timeout= argument, which no RunOutcome field carries -- so elapsed and remaining cannot be stated truthfully here and are not guessed. The parent's killed-child row (batch.runner._timeout_row) carries the full budget record.",
+    "operational_failure": true,
+    "termination_reason": "operation_timeout"
+  },
+  "input_timeout_row_keys_added": [
+    "budget_unrecorded",
+    "operational_failure",
+    "termination_reason"
+  ],
+  "input_timeout_row_keys_dropped": [],
+  "input_timeout_shared_key_value_changes": {},
+  "legs_moved": [
+    "input_timeout"
+  ],
+  "legs_total": 7,
+  "legs_unmoved": [
+    "research_pass",
+    "strict_contract_failure",
+    "strict_export_not_ok",
+    "strict_gate_failure",
+    "strict_no_pwml_button",
+    "strict_pwml_export"
+  ],
+  "measured_by": "docs/pwml_recovery_sprint/evidence/c083_golden_base.json + c083_golden_tip.json",
+  "per_leg": {
+    "input_timeout": {
+      "digest_new": "b55b50244bef004c31861cc2a72a2799964dc5256badf1cf58cb983983d9b9c3",
+      "digest_old": "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": true
+    },
+    "research_pass": {
+      "digest_new": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3",
+      "digest_old": "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_contract_failure": {
+      "digest_new": "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205",
+      "digest_old": "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_export_not_ok": {
+      "digest_new": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4",
+      "digest_old": "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_gate_failure": {
+      "digest_new": "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b",
+      "digest_old": "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_no_pwml_button": {
+      "digest_new": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14",
+      "digest_old": "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    },
+    "strict_pwml_export": {
+      "digest_new": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027",
+      "digest_old": "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027",
+      "slot0_exit_classification_moved": false,
+      "slot1_message_moved": false,
+      "slot2_digest_moved": false
+    }
+  }
+}
