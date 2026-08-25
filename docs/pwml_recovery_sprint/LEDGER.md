@@ -2862,3 +2862,124 @@ strict success. **Do not rerun under the T-106 identity. Do not relabel as PASS.
 Three live runs, 30 legs, all through the bounded wrapper with zero survivors and cleanup success on
 every one. Everything before them — five merges, six charters, ten findings, two amendments — cost
 no credits at all.
+
+---
+
+# POST-T-106 CORRECTION SESSION — opened at `e648287`
+
+Lead Orchestrator session opened 2026-08-25. Starting state verified in full: tip `e648287`,
+local = origin = `git ls-remote`, no merge in progress, 0 staged, heavy lock `C:/t/heavylock`
+**absent**, **zero** sprint-owned Python processes (only the two `ms-python.isort` `lsp_server.py`
+IDE servers, never killed), product-owner `streamlit_app.py` edit intact at **35 ins / 2 del,
+uncommitted**, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`,
+`TEST_MATRIX.md` 578 lines with line 477 byte-identical, tracked caches modified and never staged.
+
+## Cards dispatched
+
+| card | finding | branch | worktree | base | lane |
+|---|---|---|---|---|---|
+| **C-081** | **F-096** — Stage-1 hallucinations receive real identifiers (priority 1 = 8) | `card/C-081-f096` | `C:/t/c081` | `e648287` | writer A |
+| **C-082** | **F-115** — `AMBIGUOUS_RENAME_TARGET` crashes the leg instead of preserving the payload | `card/C-082-f115` | `C:/t/c082` | `e648287` | writer B |
+| **C-083** | **F-092 defect 3** — the inner deadline path discards the `operation_timeout` it computed | *charter written, not dispatched* | — | — | queued behind C-082 (`driver.py`) |
+
+`prompts/C-083.md` is committed with the card unopened, because its fix necessarily **moves a
+pinned golden baseline** (`tests/test_deadline_leg_timeout.py:125-135`
+`test_a_driver_timeout_keeps_its_row_byte_identical`, plus the golden driver diff that hashes
+`RunOutcome.to_dict()`). That is permitted only under merge rule 4 with an exact documented delta,
+and the charter says so in terms: deleting the pin instead of re-baselining it is an automatic
+reject.
+
+## Measurements taken before any card returned — offline, zero credits
+
+### SMOKE re-verified independently at the tip
+
+`473 passed in 49.68 s`, exit 0, `FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+G11 `evidence/g11/T-107/02-smoke-baseline-e648287.json`. The handoff's figure is confirmed rather
+than inherited, so every merge gate this session measures against a number this session took.
+
+### F-110 is NOT REACHABLE on T-106 — no card is justified
+
+The finding predicted that C-078 would make the name gate strip metal ions and formula-named
+compounds. **It did not fire even once.** Measured across the entire T-106 run directory including
+`batch.log`:
+
+```
+no_shared_meaningful_token          0 occurrences
+identity_refused_review_required    0 occurrences
+shipped_identity_name               0 occurrences
+```
+
+Ion- and formula-shaped names **do** occur — but every one sits in a leg that terminated before DB
+mapping ever ran, which is why the gate was never consulted:
+
+| name | leg | payload written | why mapping never ran |
+|---|---|---|---|
+| `Mg2+`, `Mg2+ cofactor of MenD` | PMC12312563/research | `merged_payload.json` only | `scope_conflict`, stops at Stage 1 |
+| `Mg2+`, `Mg2+ binding to MenD` | PMC12312563/strict | `merged_payload.json` only | `scope_conflict` |
+| `ferric iron (Fe3+)` | PMC12452463/strict | `merged_payload.json` only | failed `stage3_normalization_gate` |
+| `Zn2+` | PMC13231680/research | `merged_payload.json` only | negative control, 0 reactions |
+| `NAD+` | PMC12096016/research | `final_mapped.json` | mapping DID run — but this is an **F-096** false-identifier row, not an F-110 refusal |
+
+**Consequence:** F-110 is *precisely non-blocking* for T-107, and §15's cohort obligation ("if that
+seam affected a real T-106 case") is **not triggered**. No live leg is owed to it.
+
+**Coupling that must be carried forward:** F-110 becomes reachable the moment a ruling on F-107 /
+D-062 drives `scope_conflict` legs onward into DB mapping — `PMC12312563` carries `Mg2+` in **both**
+modes. Whoever implements that ruling inherits F-110 with it.
+
+Incidental: `ferric iron (Fe3+)` as a *name* would dodge the defect anyway, since it carries the
+token `Fe3+` that the gate looks for.
+
+### Priority 5 — the ceiling is 1/4, and three of the four are unreachable by code
+
+Measured from `runs_verify/2026-08-24_1428/manifest.jsonl`, not inferred from the report:
+
+**`PMC12096016/strict`** — `status: pass`, `strict_gates_passed: true`, `release: review_required`
+```
+semantic_evaluation    : failed
+semantic_failed_checks : ['actor_named_in_its_own_cited_span']
+completeness           : 0.764706
+reasons                : ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+```
+
+**`PMC12782028/strict`** — `status: pass`, `strict_gates_passed: true`, `release: review_required`
+```
+semantic_failed_checks : ['requested_pathway_anchors_present', 'actor_named_in_its_own_cited_span']
+completeness           : 0.222222
+reasons                : ['requested_core_coverage_below_minimum:0.222<0.500']
+```
+
+| paper | what actually blocks it | reachable by code? |
+|---|---|---|
+| PMC12421875 | **D-062, LOCKED**: the correct outcome is `review_required`, and D-062 states in terms that *"a `review_required` artifact is not a strict export"* | **no — product ruling** |
+| PMC12657337 | same | **no — product ruling** |
+| PMC12782028 | completeness **0.222 < 0.500**, 21 missing anchors including `cholesterol` itself; gold `relevance=partial`, 3 reactions at 33% attribution | **no — correctly blocked** |
+| PMC12096016 | **`actor_named_in_its_own_cited_span` alone**; completeness 0.765 is comfortably above the floor | **only if that predicate is defective** |
+
+**The strict denominator contains two papers that locked policy forbids from ever passing.** D-062's
+own closing section left the gold-versus-ruling reconciliation explicitly open — *"neither paper
+counts as a strict-export success and the strict denominator is unchanged"* — and F-107's
+"what a ruling would need to settle" names that same open question as its point 4.
+
+**So the T-107 go/no-go hinges on one predicate.** If `actor_named_in_its_own_cited_span` is firing
+correctly on PMC12096016, priority 5 is 0/4 with **no code remedy at all** and §16 forbids the run
+until the product owner rules. If it is defective, priority 5 can reach 1/4 and the run is no longer
+guaranteed to fail. The check fired on **both** remaining papers, and `T106_PREDICTION.md`'s
+amendment §C had already flagged it as one of three draw-sensitive gating production checks.
+
+### C-077 was NOT a silent divergence — recorded so it is not reopened
+
+The T-106 scope-conflict legs carry `diagnostic_only`, not D-062's literal `review_required`. That
+was **deliberate and disclosed**: the C-077 reviewer proved `review_required` unreachable at that
+seam by reading the `elif` chain and by a 196,800-combination sweep, and the gap was registered as
+**F-107** for a product ruling. It is not a defect in C-077 and must not be re-litigated as one.
+
+### T-107 preflight — the configured model is reachable
+
+`provider=openrouter`, model `deepseek/deepseek-v4-flash`, endpoint reachable.
+**Session-start usage baseline `161.092487097`; `limit_remaining` $69.44**, recorded so the cohort's
+and T-107's real cost can be reported as a delta rather than estimated. G11
+`evidence/g11/T-107/01-preflight-model-availability.json`, exit 0, zero survivors, cleanup success.
+
+Note the charter's "LM Studio" wording is stale — `.env` selects OpenRouter. Per §6 the configured
+model stands; no provider switch and no new fallback.
