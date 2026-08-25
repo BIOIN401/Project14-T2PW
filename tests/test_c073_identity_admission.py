@@ -574,6 +574,8 @@ def test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral() -> N
     stripped 92 rows here; 41 of those pairs were correct."""
     import subprocess
 
+    from t2pw.mapping import identity_admission
+
     listing = subprocess.run(
         ["git", "ls-files", "*final_mapped.json"],
         capture_output=True, text=True, cwd=str(ROOT),
@@ -596,7 +598,25 @@ def test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral() -> N
     assert conflicts[0]["namespace"] == "drugbank"
     assert conflicts[0]["accession"] == "db00114"
     assert {c["kind"] for c in conflicts[0]["claimants"]} == {"protein", "compound"}
-    assert len(withheld) == 2, f"collateral: {withheld}"
+
+    # C-081 DELTA, deliberate and documented. ``_admit_identities`` gained a
+    # third pass (``cofactor_role_used_by_no_reaction``) that refuses a declared
+    # cofactor role no reaction uses. It adds 18 refusals over this corpus, so
+    # the flat total moved 2 -> 20. THIS assertion is C-073's collateral bar and
+    # must keep measuring C-073's OWN rule, so it now counts that rule rather
+    # than every rule any pass may add -- which is also what stops the next pass
+    # from silently re-breaking it. C-073's numbers are unchanged: one conflict,
+    # two claimants, both stripped. The cofactor pass runs LAST precisely so it
+    # cannot destroy this evidence; see ``map_ids._admit_identities``'s ORDER
+    # note, and ``test_c081_cofactor_role_identity`` for the 18.
+    kind_conflict_withheld = [
+        entry for entry in withheld
+        if entry["rule"] == identity_admission.RULE_ACCESSION_KIND_CONFLICT
+    ]
+    assert len(kind_conflict_withheld) == 2, f"collateral: {kind_conflict_withheld}"
+    assert {entry["name"] for entry in kind_conflict_withheld} == {
+        "Pyridoxal 5'-phosphate", "ALAS2",
+    }, f"the cross-kind refusal changed claimants: {kind_conflict_withheld}"
 
 
 # ── 5. fail open ─────────────────────────────────────────────────────────────

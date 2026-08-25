@@ -37,6 +37,31 @@ This module owns the two PURE PREDICATES the correction needs, and nothing else:
    and every one of them legitimately owning the accession. The kind predicate
    refuses 1 and keeps all 41.
 
+3. **Does any reaction actually USE this declared cofactor?**
+   T-106 shipped ``Pyridoxal 5'-phosphate`` with five real accessions on both
+   PMC12856317 legs. Neither predicate above can refuse it: the paper says
+   "PLP-dependent", so the name IS in the source index, and no other row claims
+   its accessions. What the payload does NOT contain is any reaction using it.
+   Stage 1 filed it ``class: "cofactor"`` -- a ROLE claim -- and the only process
+   naming it is an ``interaction``, "pyridoxal 5-phosphate binds ALAS2". The gold
+   says the same thing in its own words: "the ALAS2 cofactor -- never a
+   substrate, never a product, never a protein". So the row asserts a helper role
+   and the graph gives it none, while DrugBank, HMDB, KEGG, ChEBI and PubChem
+   certify it as a pathway metabolite. That is standard biochemical knowledge
+   becoming paper-stated evidence, which PRODUCT_CONTRACT s.2 forbids under
+   "correct reactant/product roles".
+
+   **This is not a rule against cofactors.** A cofactor any reaction uses -- as
+   input, output, enzyme, modifier, cargo or transporter -- keeps every
+   accession. Measured over all 91 committed ``final_mapped.json`` artifacts (898
+   rows shipping real accessions, 50 of them declaring the cofactor role): the
+   rule refuses **18** and every single one is a molecule the pinned gold set
+   forbids by name or by alias -- ``Pyridoxal 5'-phosphate``, ``pyridoxal
+   phosphate``, ``NADH``, ``NAD+``, ``thiamine diphosphate``, ``ThDP``,
+   ``thiamine pyrophosphate``, ``tetrahydrofolate (THF)``. **Collateral: 0.**
+   ``ATP`` declares the same role nine times across the corpus and is used by a
+   reaction every time, so it is never touched; the same holds for ``AMP``.
+
 WHAT THIS MODULE MAY DO, AND THE DIRECTION OF ITS ERRORS
 --------------------------------------------------------
 It answers questions. It never edits a row: ``map_ids.map_payload`` owns the
@@ -115,6 +140,14 @@ __all__ = [
     "NOT_EVALUATED_EMPTY_INDEX",
     "NOT_EVALUATED_NO_NAME",
     "NOT_EVALUATED_OTHER_PROVENANCE",
+    "NOT_EVALUATED_OTHER_ROLE",
+    "NOT_EVALUATED_NO_REACTIONS",
+    "ROLE_COFACTOR",
+    "RULE_COFACTOR_ROLE_UNUSED",
+    "PARTICIPANT_FIELDS",
+    "declares_cofactor_role",
+    "reaction_participant_names",
+    "cofactor_participation",
     "MIN_SUPPORT_CHARS",
     "EXTERNAL_ACCESSION_KEYS",
     "PROVENANCE_ROUTE_KEYS",
@@ -172,6 +205,10 @@ STATUS_NOT_EVALUATED = "not_evaluated"
 NOT_EVALUATED_NO_INDEX = "no_source_index"
 NOT_EVALUATED_EMPTY_INDEX = "empty_source_index"
 NOT_EVALUATED_NO_NAME = "no_evaluable_name"
+
+#: C-081. The row declares no cofactor role, so the cofactor rule has nothing to
+#: say about it. Every protein, compound and complex row lands here.
+NOT_EVALUATED_OTHER_ROLE = "entity_declares_no_cofactor_role"
 
 #: C-075. The row was never claiming to come from the seed paper: it was imported
 #: through the retrieval route and NAMES the document it came from, so the seed
@@ -586,6 +623,138 @@ def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
                 "matched": "", "evaluated": evaluated, "route": route}
     return {"status": STATUS_UNSUPPORTED, "reason": RULE_NOT_SUPPORTED,
             "matched": "", "evaluated": evaluated, "route": ""}
+
+
+# ---------------------------------------------------------------------------
+# C-081 / F-096 -- a declared COFACTOR ROLE that no reaction uses.
+# ---------------------------------------------------------------------------
+#: Stage 1 writes ``class`` on every entity it extracts. Almost every value is a
+#: KIND claim -- ``protein``, ``compound``, ``protein_complex`` -- but
+#: ``cofactor`` is a ROLE claim: "this molecule assists a reaction". It says
+#: nothing about the molecule being a member of the pathway, and the extractor
+#: writes it precisely when the paper mentioned the molecule in a helper role.
+#: Measured over all 91 committed ``final_mapped.json`` artifacts: 50 rows carry
+#: it, out of 1,790.
+ROLE_COFACTOR = "cofactor"
+
+#: The refusal. Deliberately NOT "is a cofactor": a cofactor a reaction actually
+#: uses keeps every accession it has. What cannot stand is a row whose ONLY
+#: declared role is "helper", which the frozen graph then uses in no reaction and
+#: no transport at all -- so the payload asserts no reactant, product, enzyme,
+#: modifier or cargo role for it anywhere, and the accessions certify a pathway
+#: membership the pathway itself never claims.
+RULE_COFACTOR_ROLE_UNUSED = "cofactor_role_used_by_no_reaction"
+
+#: A payload with no reaction and no transport cannot answer "does a reaction use
+#: this?" at all. Every row would look unused, so the rule would strip the whole
+#: payload's identities on the strength of a question it never got to ask.
+#: ``not_evaluated`` is never ``false`` (PRODUCT_CONTRACT s.8).
+NOT_EVALUATED_NO_REACTIONS = "no_reaction_or_transport_to_evaluate"
+
+#: Where a REACTION-LIKE process names its participants. Reaction membership is
+#: the whole question, so ``interactions`` is deliberately absent: "PLP binds
+#: ALAS2" is a binding fact about an enzyme, not a claim that PLP is a substrate
+#: or a product. The gold's own words for this row are "the ALAS2 cofactor --
+#: never a substrate, never a product, never a protein", and an interaction
+#: endpoint is exactly the evidence that does NOT make it one. Enumerated per
+#: bucket rather than "every string under processes" for the same reason: a
+#: process NAME containing the word "pyridoxal" is prose, not a role.
+PARTICIPANT_FIELDS: Dict[str, Tuple[str, ...]] = {
+    "reactions": ("inputs", "outputs", "enzymes", "modifiers"),
+    "reaction_coupled_transports": (
+        "inputs", "outputs", "enzymes", "modifiers", "cargo", "transporters",
+    ),
+    "transports": ("cargo", "transporters", "modifiers"),
+}
+
+#: Keys a participant entry may carry its entity name under, when it is a mapping
+#: rather than a bare string.
+_PARTICIPANT_NAME_KEYS: Tuple[str, ...] = ("entity", "name", "ref", "id")
+
+
+def declares_cofactor_role(row: Any) -> bool:
+    """Does this row's own ``class`` declare the cofactor ROLE? Never raises."""
+
+    return str(_safe_dict(row).get("class") or "").strip().casefold() == ROLE_COFACTOR
+
+
+def _collect_participant_names(value: Any, out: set) -> None:
+    """Every entity name reachable from one participant field."""
+
+    if isinstance(value, str):
+        key = normalize_name_key(value)
+        if key:
+            out.add(key)
+    elif isinstance(value, list):
+        for item in value:
+            _collect_participant_names(item, out)
+    elif isinstance(value, dict):
+        for name_key in _PARTICIPANT_NAME_KEYS:
+            item = value.get(name_key)
+            if isinstance(item, str):
+                key = normalize_name_key(item)
+                if key:
+                    out.add(key)
+
+
+def reaction_participant_names(payload: Any) -> Optional[frozenset]:
+    """Normalized names every reaction/transport uses, or ``None`` to abstain.
+
+    ``None`` means the payload holds no reaction and no transport, so the
+    question cannot be asked -- distinct from an empty set, which would mean
+    "asked, and nothing is used". Only the fields in :data:`PARTICIPANT_FIELDS`
+    are read, so a name that appears solely in a process ``name``, ``evidence``
+    or ``description`` string does not count as a role.
+    """
+
+    processes = _safe_dict(_safe_dict(payload).get("processes"))
+    names: set = set()
+    saw_reaction = False
+    for bucket, fields in PARTICIPANT_FIELDS.items():
+        for item in _safe_list(processes.get(bucket)):
+            if not isinstance(item, dict):
+                continue
+            saw_reaction = True
+            for field in fields:
+                _collect_participant_names(item.get(field), names)
+    if not saw_reaction:
+        return None
+    return frozenset(names)
+
+
+def cofactor_participation(row: Any, participants: Optional[frozenset]) -> Dict[str, Any]:
+    """Does a reaction use this cofactor-role row? Never raises.
+
+    Returns ``{"status", "reason", "matched", "evaluated"}``. ``supported`` when
+    ANY name the row offers is used by a reaction -- the same
+    :func:`candidate_names` list pass A trusts, so an alias spelling on the
+    reaction side keeps the row exactly as it keeps it there. ``not_evaluated``
+    for a row that declares no cofactor role, for a payload with no reactions,
+    and for a row offering no evaluable name: all three are questions this
+    predicate was given no grounds to answer, and PRODUCT_CONTRACT s.8 makes
+    ``not_evaluated`` never ``false``.
+    """
+
+    if not declares_cofactor_role(row):
+        return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_OTHER_ROLE,
+                "matched": "", "evaluated": 0}
+    if participants is None:
+        return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_NO_REACTIONS,
+                "matched": "", "evaluated": 0}
+    evaluated = 0
+    for candidate in candidate_names(row):
+        key = normalize_name_key(candidate)
+        if not key:
+            continue
+        evaluated += 1
+        if key in participants:
+            return {"status": STATUS_SUPPORTED, "reason": "", "matched": candidate,
+                    "evaluated": evaluated}
+    if not evaluated:
+        return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_NO_NAME,
+                "matched": "", "evaluated": 0}
+    return {"status": STATUS_UNSUPPORTED, "reason": RULE_COFACTOR_ROLE_UNUSED,
+            "matched": "", "evaluated": evaluated}
 
 
 def accession_key(namespace: Any, value: Any) -> str:

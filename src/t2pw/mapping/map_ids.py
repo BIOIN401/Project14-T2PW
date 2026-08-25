@@ -8157,6 +8157,30 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
     Two rows with the same normalized name are one entity written twice and are
     never a conflict, whichever buckets they landed in.
 
+    PASS C -- a declared cofactor ROLE no reaction uses. C-081 / F-096. A row
+    filed ``class: "cofactor"`` is claiming a HELPER role, not pathway
+    membership. If no reaction and no transport in this payload names it as an
+    input, output, enzyme, modifier, cargo or transporter, the graph gives it no
+    role at all, and its accessions certify a membership the pathway never
+    claims. ``Pyridoxal 5'-phosphate`` on both T-106 PMC12856317 legs is the type
+    case: 22 occurrences of ``PLP`` in the source, so pass A says supported; no
+    rival claimant on that run, so pass B is silent; and the only process naming
+    it is the interaction ``"pyridoxal 5-phosphate binds ALAS2"``. A cofactor a
+    reaction DOES use keeps every accession -- ``ATP`` declares the same role
+    nine times across the committed corpus and is never touched.
+
+    ORDER: A, then B, then C, and the LAST step is load-bearing rather than
+    cosmetic. Pass C runs after pass B because withholding early would DESTROY
+    pass B's evidence: on 2026-08-21_2239 ``drugbank:DB00114`` is claimed by both
+    the protein ``ALAS2`` and the compound ``Pyridoxal 5'-phosphate``, and pass B
+    takes it off BOTH -- which is the only thing that stops the protein row
+    shipping a compound accession. Refusing the compound first makes the
+    collision invisible and leaves ``ALAS2`` holding ``DB00114``. Measured:
+    running C before B drops
+    ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+    from one conflict to zero. C last is strictly additive -- it sees only rows
+    the first two passes left shipping.
+
     Pass A runs first so that a row whose whole identity is already refused does
     not go on to contest an accession it is no longer shipping.
     """
@@ -8186,6 +8210,11 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
         "counts": {
             "rows_examined": 0, "supported": 0, "not_evaluated": 0,
             "rows_withheld": 0, "identifiers_withheld": 0, "kind_conflicts": 0,
+            "cofactor_rows_examined": 0, "cofactor_used_by_a_reaction": 0,
+            "cofactor_not_evaluated": 0, "cofactor_rows_withheld": 0,
+        },
+        "cofactor_participation": {
+            "status": "evaluated", "reason": "", "reactions_seen": True,
         },
     }
 
@@ -8277,6 +8306,50 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
             else:
                 existing["identifiers"].update(removed)
             report["counts"]["identifiers_withheld"] += len(removed)
+    # ── pass C ──────────────────────────────────────────────────
+    participants = identity_admission.reaction_participant_names(payload)
+    if participants is None:
+        report["cofactor_participation"] = {
+            "status": identity_admission.STATUS_NOT_EVALUATED,
+            "reason": identity_admission.NOT_EVALUATED_NO_REACTIONS,
+            "reactions_seen": False,
+        }
+    for bucket, row in rows:
+        if not identity_admission.declares_cofactor_role(row):
+            continue
+        shipping = _identity_admission_eligible(row)
+        if not shipping:
+            continue
+        report["counts"]["cofactor_rows_examined"] += 1
+        used = identity_admission.cofactor_participation(row, participants)
+        if used["status"] == identity_admission.STATUS_SUPPORTED:
+            report["counts"]["cofactor_used_by_a_reaction"] += 1
+            continue
+        if used["status"] == identity_admission.STATUS_NOT_EVALUATED:
+            report["counts"]["cofactor_not_evaluated"] += 1
+            continue
+        removed = _withhold_identity(
+            row, shipping, bucket=bucket,
+            rule=identity_admission.RULE_COFACTOR_ROLE_UNUSED,
+            detail=(
+                f"this row declares the cofactor ROLE, and no reaction or transport in "
+                f"this payload uses it as an input, output, enzyme, modifier, cargo or "
+                f"transporter ({used['evaluated']} name(s) looked for). A cofactor a "
+                f"reaction does use keeps its identifiers"
+            ),
+        )
+        if not removed:
+            continue
+        report["counts"]["cofactor_rows_withheld"] += 1
+        report["counts"]["rows_withheld"] += 1
+        report["counts"]["identifiers_withheld"] += len(removed)
+        report["withheld"].append({
+            "bucket": bucket, "name": str(row.get("name") or ""),
+            "rule": identity_admission.RULE_COFACTOR_ROLE_UNUSED,
+            "identifiers": dict(removed),
+            "names_evaluated": used["evaluated"],
+        })
+
     return report
 
 
