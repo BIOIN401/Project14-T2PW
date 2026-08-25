@@ -4647,3 +4647,105 @@ anti-vacuity pin is itself a new brittle pin.
 **The general lesson, recorded because it will recur:** a control-plane gold edit is a *behavioural*
 change to every test that reads the gold, and SMOKE is not a sufficient gate for one. Any future
 `expected_export` edit runs the gold-reading test files explicitly, not just SMOKE.
+
+---
+
+## R-089 — PathBank 3468 adjudicated: the refusal is correct, and the "14 slots" figure was wrong
+
+**Dispatched at C-086's merge on REV-087's MED finding. Returned 2026-08-25.** Eight bounded jobs,
+all zero survivors, `check --task R-089` → 8 artifacts, 0 non-compliant.
+
+### The verdict
+
+**Refusing the 3468 promotion on `PMC12444477` is biologically correct. No follow-up card, no
+special case.** Not a `product_contract_violation`, not a `gold_data_defect`, not a
+`policy_disagreement` — the rule is working as chartered.
+
+### The reviewer's premise was wrong, and correcting it makes the refusal MORE clearly right
+
+REV-087 suspected `Pgp phosphatases` was a family/group row. **It is not** — it is one reviewed
+accession, **P18200**, *E. coli* K12 `pgpA`, a genuine distinct polypeptide. The plural is a
+PathBank naming artifact, and `entities/proteins/17.mapping_meta.resolved_name` reads
+`"Phosphatidylglycerophosphatase A"` under `direct_id_match:uniprot_id`.
+
+**But the grouping is real one level up, in the complex rather than the component.** PathBank 3468
+pairs **PgpA (P18200)** with **PgpB (P0A924)**, and in *E. coli* PGP → PG + Pi (EC 3.1.3.27) is
+served by **three independent, mutually redundant isozymes** — PgpA, PgpB (PAP2 superfamily, broad
+specificity) and PgpC (P0AD42). Singles and doubles are viable; only the triple is lethal. The
+artifact corroborates the separateness itself: `entities/proteins/16.mapping_meta.candidates` lists
+P18200 and P0AD42 as distinct K12 entries while P0A924 sits in the complex row.
+
+So **3468 is an "any-of" isozyme set rendered in PathBank's `protein_complex` table**, and PathWhiz
+reads a `protein_complex` as an "all-of" assembly. Emitting it as the catalyst asserts *"PgpA and
+PgpB jointly catalyse this step"* — false in both directions: they do not assemble, and either alone
+suffices. Reaction 21 is a one-substrate hydrolysis, and the **pre-mapping** payload named exactly
+one intended catalyst, `Pgp phosphatases`. `Phosphatidylglycerophosphatase B` is injected purely by
+the component match.
+
+**Both readings converge on refuse.** Genuine polypeptide → PgpB is an uncatalysing stranger the
+reaction never names. Family row → an all-of complex over a family is meaningless. There is no third
+reading in which the promotion is right, so REV-087's structural point — that the rule cannot tell a
+group row from an uncatalysing subunit — is **true about the rule's discriminating power and
+irrelevant to its output here.** A special case would buy nothing and would bolt a curated
+PathBank-ID allowlist onto a rule whose entire value is being identity-driven.
+
+### The chemistry is not in the paper at all
+
+`01_source_text.txt` term counts: `phosphatidylglycerophosphat` **0**, `PgpA`/`PgpB`/`PgpC`
+**0/0/0**, `phosphatidylglycerol` **0**, `CDP-DAG` **0**, `cdsA` **0**. Every case-insensitive `pgp`
+hit is `(p)ppGpp`, which the gold independently **forbids** as `heading_or_prose`
+(`pinned_v1.json:275-278`).
+
+The whole PG/CL branch is **RAG-imported and attributable**: `rag_provenance.source_id
+PMC12898747`, *"Essential Role of LapD in the Absence of Cardiolipins"*, confidence 0.86-0.87, on
+`PgsA`, `PlsB`, `PlsC`, `cdsA` and compounds 15-40. The evidence spans use `[ 29 ]` bracket markers
+where PMC12444477 uses `( 82 )` parentheticals.
+
+### R-089-B — and the "14 slots" figure does not describe the live pipeline
+
+**This is the part that matters for the next comparison.** The 14 is **7 reactions × 2 lists**, and
+**13 of the 14 are wrong regardless of what C-086 does**: `phosphatidylglycerophosphatase` stands as
+a catalyst on reactions 15-21, and only reaction 21 is chemistry a PGP phosphatase performs.
+
+That is **actor spraying**, not a 3468 problem — every reaction from index 9 on carries 6-15
+catalysts with `enzymes` byte-identical to `modifiers`, all sharing one block-level evidence span.
+Reaction 10 (`acetyl-CoA → malonyl-CoA`) carries **12** catalysts including `KDO transferase` and
+`lipopolysaccharide ABC transporter`.
+
+**But it is confined to `runs/2026-07-28_0919`, a month-old leg predating C-081 and the RAG
+admission gate.** The current draws are clean: `runs_verify/2026-08-24_1428` has 3 reactions with
+**1 enzyme each**; `runs_verify/2026-08-25_1216` has 7 reactions with **1-2 each**. No spraying, no
+PG/CL block, no `Pgp` string, no 3468.
+
+**REV-087's 14 conflated one stale July leg with the live draw.** Counting across all 92 committed
+artifacts is the right way to bound a rule's reach and the wrong way to predict a run.
+
+The auditor **declined to open a card** on the spraying and **declined to guess** which admission
+stage let the RAG import through, because the deciding artifact — `rag_admission_report.json` — does
+not exist for a leg from before that instrumentation. Correct on both counts; a stage named by
+inference is not a finding.
+
+### What this means for the next benchmark comparison — read before comparing
+
+1. **Expect `PMC12444477` not to move at all.** Multi-component DB-matched actors on the current
+   draw: `2026-08-24_1428` → **0**; `2026-08-25_1216` → **1**, and that one is `FtsH/YciM complex`
+   with `pathbank_complex_id: None` — a generated wrapper, so C-086's rule never reaches it.
+   **C-086's realistic blast radius on this paper today is zero slots.**
+2. **If the PG/CL block reappears** (the RAG draw is non-deterministic) **and 3468 is refused, that
+   is an improvement to expect, not a regression to investigate.** Signature: the actor becomes
+   `Pgp phosphatases complex` and
+   `mapping_meta.reaction_enzyme_complex_superset_promotions_refused` increments with
+   `uncovered_components: ["Phosphatidylglycerophosphatase B"]`.
+3. **If the paper's STATUS moves, it is not C-086.** That card is Stage-2 mapping and its fallback is
+   byte-identical to the pre-existing `novel_enzyme_single_component_complex` shape, so it cannot
+   change a gate outcome on the Raetz backbone, which is entirely one-component wrappers 1616-1629.
+   The paper already oscillates on draw variance alone — **PASS with warnings** on `2026-08-24_1428`
+   against **FAIL** on `2026-08-25_1216`, one day apart, same paper.
+4. **No gold change.** The gold correctly expects no PGP phosphatase, so no metric it computes can
+   move on this.
+
+### The one caveat the auditor flagged against itself
+
+Its claim that the refusal *will* fire is **static** — read off C-086's merged source against the
+committed payload, not demonstrated by a run. It read the token construction but not
+`_normalize_name`'s body, and says so. Recorded as static analysis, not as a measured outcome.
