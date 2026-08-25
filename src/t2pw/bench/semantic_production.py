@@ -82,6 +82,19 @@ _ACTOR_SPAN_KEYS: Tuple[str, ...] = ("source_refs", "evidence")
 #: one undecidable, disarming this check on the names most likely to be fabricated.
 _MIN_IDENTIFYING_TOKEN = 3
 
+#: The fields of a ``protein_complexes`` component that state its protein IDENTITY as a
+#: name. ``uniprot`` / ``pathbank_protein_id`` are accessions, never words in a paper, so
+#: they are not read here -- a span cannot name a protein by quoting ``Q16850``.
+_COMPONENT_IDENTITY_KEYS: Tuple[str, ...] = ("name", "gene_name")
+
+#: PathBank's placeholder component literally carries ``name: "Unknown"`` (measured on the
+#: ``LpxL``/``LpxM``/``LpxD`` rows of
+#: ``runs_verify/2026-08-25_1216/papers/PMC12444477/strict``). Treating it as a symbol
+#: would corroborate a fabricated actor from any span containing the word, which is
+#: precisely S3 item 4 -- accepting an identifier because its FORMAT is valid. Compared
+#: after ``normalize_name``.
+_PLACEHOLDER_COMPONENT_NAMES: Tuple[str, ...] = ("unknown",)
+
 
 def _not_evaluated(name: str, reason: str) -> CheckResult:
     """A check that could not run. ``ok=False`` here would collapse "not evaluated" into
@@ -392,7 +405,105 @@ def _actor_named_in_span(name: str, spans: Sequence[str]) -> Optional[bool]:
     return bool(wanted & seen)
 
 
-def _check_actor_evidence(processes: Mapping[str, List[Dict[str, Any]]]) -> CheckResult:
+def _sole_component_symbols(
+    entities: Optional[Mapping[str, List[Dict[str, Any]]]],
+) -> Dict[str, Tuple[str, ...]]:
+    """``normalize_name(wrapper name)`` -> the identity strings of its ONE component.
+
+    F-117 / **D-064**. A ``protein_complexes`` row carrying exactly ONE component is a
+    DATABASE WRAPPER around a single polypeptide, and the wrapper and the component are the
+    same protein identity -- ``Lanosterol 14-alpha demethylase``
+    (``pathbank_protein_complex_id`` 442) IS ``CYP51A1``. The paper writes the gene symbol;
+    the payload writes the PathBank canonical name; :func:`_actor_named_in_span` sees two
+    strings sharing no identifying token and reports a finding that is measurably false.
+    The symbol the span uses is already ON THE RECORD, in the component list this index
+    reads, so relating the two is EXACT IDENTITY -- not fuzzy matching, not synonym
+    expansion, and not an inference this module makes on its own.
+
+    Deliberately narrow, four ways, because widening it re-admits the F-116 shape this
+    check exists to catch:
+
+    * **``protein_complexes`` only.** ``proteins`` and ``compounds`` rows are not wrappers.
+    * **Exactly one component.** ``enterobactin synthase`` (3623) has FOUR -- EntB, EntD,
+      EntF and EntE -- so ``enterobactin synthase`` is NOT EntE and the F-116 superset
+      keeps failing. Two or more components are out of scope, always.
+    * **One row per name.** A normalized name carried by two rows is dropped entirely: two
+      candidate identities for one string is not exact identity.
+    * **A real symbol only.** PathBank placeholder components are literally named
+      ``Unknown`` (measured: the ``LpxL`` / ``LpxM`` / ``LpxD`` rows of
+      ``runs_verify/2026-08-25_1216/papers/PMC12444477/strict``), and accepting one would
+      corroborate a fabricated actor from any span containing the word. That is S3 item 4
+      -- an identifier accepted because its FORMAT is valid.
+
+    Both ``name`` and ``gene_name`` are read: the corpus writes the symbol in either
+    (``CYP51A1``/``CYP51A1``, ``EntB``/``entB``), and which one a mapper filled in is not a
+    biological fact.
+    """
+
+    index: Dict[str, Tuple[str, ...]] = {}
+    ambiguous: set = set()
+    for row in (entities or {}).get("protein_complexes", ()):
+        if not isinstance(row, _AbcMapping):
+            continue
+        key = _s.normalize_name(row.get("name"))
+        if not key:
+            continue
+        if key in index or key in ambiguous:
+            # Seen twice: neither reading is THE identity, so refuse both.
+            index.pop(key, None)
+            ambiguous.add(key)
+            continue
+        components = row.get("components")
+        if not isinstance(components, (list, tuple)) or len(components) != 1:
+            index[key] = ()
+            continue
+        component = components[0]
+        if not isinstance(component, _AbcMapping):
+            # A bare string component carries no ``gene_name`` to cross-check and no
+            # identity fields at all; it is not read as a symbol.
+            index[key] = ()
+            continue
+        symbols = []
+        for field in _COMPONENT_IDENTITY_KEYS:
+            symbol = _s.normalize_name(component.get(field))
+            if not symbol or symbol in _PLACEHOLDER_COMPONENT_NAMES:
+                continue
+            if _identifying_tokens(symbol) and symbol not in symbols:
+                symbols.append(symbol)
+        index[key] = tuple(symbols)
+    return index
+
+
+def _component_named_in_span(symbols: Sequence[str], spans: Sequence[str]) -> str:
+    """The sole component's symbol that the row's OWN cited span names, or ``""``.
+
+    Whole-token boundaries after ``normalize_name``, exactly as
+    :func:`_actor_named_in_span` compares -- ``CYP51A1`` in *"CYP51A1 catalyzes the
+    conversion of lansterol ..."* matches; ``ALAS2`` in *"aminolevulinic acid synthase
+    (ALAS), a PLP-dependent homodimer ..."* does NOT, because ``alas2`` is not ``alas``.
+    The whole symbol must occur contiguously; no per-token union, no edit distance, no
+    substring. :data:`_MIN_CONTAINMENT` is deliberately NOT applied -- it is the *request
+    anchoring* floor, and applying it here would silently discard every three-character
+    gene symbol, which are real identifiers (``_MIN_IDENTIFYING_TOKEN`` is the floor that
+    governs this check, and :func:`_sole_component_symbols` already applied it).
+    """
+
+    if not symbols:
+        return ""
+    for span in spans:
+        haystack = _s.normalize_name(span)
+        if not haystack:
+            continue
+        for symbol in symbols:
+            if re.search(rf"(?<![a-z0-9]){re.escape(symbol)}(?![a-z0-9])", haystack):
+                return symbol
+    return ""
+
+
+def _check_actor_evidence(
+    processes: Mapping[str, List[Dict[str, Any]]],
+    entities: Optional[Mapping[str, List[Dict[str, Any]]]] = None,
+) -> CheckResult:
     """Does every actor a retained reaction names appear in the span that row cites?
 
     Three dispositions, and the third is the one that matters:
@@ -411,8 +522,24 @@ def _check_actor_evidence(processes: Mapping[str, List[Dict[str, Any]]]) -> Chec
     anti-vacuity property, since a detector that stopped looking and one that looked and
     found nothing agree on ``ok``, and this module's rule (``semantic.py:293-299``) is
     that not evaluated is never a pass. The census is in the summary for the same reason.
+
+    ``entities`` is the payload's entity table -- the SAME ``_s._entities(payload)`` mapping
+    the caller already computed for :func:`_audit_entities`, threaded in rather than the raw
+    payload so this check still cannot reach a span, a process or an admission record it did
+    not already hold. It answers ONE question and only for a row this function was already
+    going to report: is the actor a one-component database wrapper whose sole component's
+    symbol the row's own cited span names verbatim? (F-117 / D-064; see
+    :func:`_sole_component_symbols`.) Omitting it is legal and reproduces the pre-F-117
+    behaviour exactly, because with no entity table there are no wrappers to recognise.
+
+    **STRICTLY MONOTONE, and that is the safety property.** The wrapper arm runs only on the
+    ``verdict is False`` branch and only ever ``continue``s, so it can REMOVE a finding and
+    can never add one, never reaches the ``None`` branch, and moves neither ``examined`` nor
+    ``not_examined`` -- the census, the NOT-EVALUATED anti-vacuity path and the reported
+    ``cited_span`` of every surviving finding are byte-identical to before.
     """
 
+    wrappers = _sole_component_symbols(entities)
     findings: List[Dict[str, Any]] = []
     examined = 0
     not_examined = 0
@@ -441,6 +568,13 @@ def _check_actor_evidence(processes: Mapping[str, List[Dict[str, Any]]]) -> Chec
                         continue
                     examined += 1
                     if verdict:
+                        continue
+                    # F-117. The actor names a ONE-component wrapper and the span it cites
+                    # names that component. Same protein identity (D-064), stated by the
+                    # payload's own component list -- so the row IS corroborated and the
+                    # finding was a false positive. Multi-component wrappers never reach
+                    # here: `_sole_component_symbols` gives them no symbols.
+                    if _component_named_in_span(wrappers.get(_s.normalize_name(name), ()), spans):
                         continue
                     findings.append({
                         "pointer": f"/processes/{bucket}/{index}/{key}/{position}",
@@ -504,7 +638,7 @@ def evaluate_production_semantics(
     report.graph = _s._connected_core(processes, _s._cofactor_names())
     connected = _check_connected_core(report.graph, min_connected_reactions)
     report.identity_census = census
-    actor_evidence = _check_actor_evidence(processes)
+    actor_evidence = _check_actor_evidence(processes, entities)
     orphans = _s._orphaned_references(payload)
 
     for result in (anchors, carrier, supported, organism, conflicts, reintroduction, connected,
