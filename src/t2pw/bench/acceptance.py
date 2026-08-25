@@ -65,6 +65,7 @@ from t2pw.bench.metrics import (
     tally,
 )
 from t2pw.bench.semantic import (
+    CHECK_SUPPORTED_REACTIONS,
     ERR_FALSE_REAL_IDENTIFIERS,
     ERR_ORPHANED_REFERENCES,
     ERR_UNSUPPORTED_REACTIONS,
@@ -345,6 +346,15 @@ class AcceptanceReport:
     research_failures: Dict[str, int] = field(default_factory=dict)
     identity: Dict[str, Any] = field(default_factory=dict)
     notes: List[str] = field(default_factory=list)
+    #: ``"paper_id:mode"`` -> why the unsupported-reaction verdict was never
+    #: reached on that leg. ``ErrorLedger`` can only carry integers, so a leg the
+    #: validator declined to judge contributes a zero indistinguishable from a
+    #: measured clean result. ``semantic_production.py:21-25`` states the rule this
+    #: closes: "a zero beside a name in ``inapplicable_checks`` means 'not
+    #: measured', not 'clean' ... a consumer of the SERIALIZED map must
+    #: cross-reference ``inapplicable_checks``". Acceptance priority 2 is that
+    #: consumer, and this is the cross-reference.
+    unmeasured_unsupported: Dict[str, str] = field(default_factory=dict)
 
     # -- coverage -------------------------------------------------------
     def completion(self) -> Dict[str, Any]:
@@ -439,6 +449,15 @@ class AcceptanceReport:
         Priorities 1-3 are absolute: any non-zero count fails them, regardless of
         how good the rest of the run looks. Priority 4 is a coverage judgement and
         priority 5 is a rate to maximise, so neither is a hard gate.
+
+        An absolute priority has THREE states, not two. "Absolute" describes what
+        a non-zero count does; it does not make an unasked question answer itself.
+        Where the run never gathered the evidence, the entry carries
+        ``evaluated=False`` and ``ok=None`` -- never ``PASS``, and never ``FAIL``
+        either, because manufacturing a failure out of an unmeasured question is
+        the same lie in the other direction. ``ok=None`` is falsy, so a caller
+        gating acceptance on ``all(entry["ok"] ...)`` refuses the run, which is
+        the correct default for an unproven absolute.
         """
 
         totals = self.errors.totals
@@ -449,25 +468,58 @@ class AcceptanceReport:
         unsupported = totals.get(ERR_UNSUPPORTED_REACTIONS, 0)
         orphans = totals.get(ERR_ORPHANED_REFERENCES, 0)
 
+        # -- priority 2's third state ------------------------------------
+        # A leg whose unsupported-reaction verdict was never reached contributed a
+        # zero to `unsupported` that means "not asked", not "asked and clean". A
+        # non-zero total still FAILS -- a violation found somewhere is a violation
+        # however many other legs went unexamined -- and a clean total is only a
+        # PASS when every scored leg was actually examined.
+        unmeasured_legs = sorted(self.unmeasured_unsupported)
+        unmeasured_papers = sorted({key.split(":", 1)[0] for key in unmeasured_legs})
+        if unsupported:
+            p2_ok: Optional[bool] = False
+            p2_evaluated = True
+            p2_observed: Any = unsupported
+        elif unmeasured_legs:
+            p2_ok = None
+            p2_evaluated = False
+            p2_observed = (
+                f"NOT EVALUATED -- 0 counted, but the unsupported-reaction verdict was never "
+                f"reached on {len(unmeasured_legs)} of {self.legs_scored} scored leg(s), "
+                f"covering {len(unmeasured_papers)} paper(s). This zero is the absence of a "
+                f"measurement, not the absence of unsupported reactions."
+            )
+        else:
+            p2_ok = True
+            p2_evaluated = True
+            p2_observed = unsupported
+
         return [
             {
                 "rank": 1,
                 "name": "zero known false real identifiers",
                 "ok": false_ids == 0,
+                "evaluated": True,
                 "observed": false_ids,
                 "papers": sorted(self.errors.papers_affected.get(ERR_FALSE_REAL_IDENTIFIERS, set())),
             },
             {
                 "rank": 2,
                 "name": "zero unsupported retained reactions",
-                "ok": unsupported == 0,
-                "observed": unsupported,
+                "ok": p2_ok,
+                "evaluated": p2_evaluated,
+                "observed": p2_observed,
+                "counted": unsupported,
                 "papers": sorted(self.errors.papers_affected.get(ERR_UNSUPPORTED_REACTIONS, set())),
+                "not_evaluated_papers": unmeasured_papers,
+                "not_evaluated_legs": unmeasured_legs,
+                "not_evaluated_reasons": dict(self.unmeasured_unsupported),
             },
             {
                 "rank": 3,
                 "name": "zero referential-integrity violations",
                 "ok": orphans == 0,
+                "evaluated": True,
                 "observed": orphans,
                 "papers": sorted(self.errors.papers_affected.get(ERR_ORPHANED_REFERENCES, set())),
             },
@@ -475,6 +527,7 @@ class AcceptanceReport:
                 "rank": 4,
                 "name": "meaningful requested-pathway coverage",
                 "ok": bool(semantic and semantic.rate is not None and semantic.rate > 0),
+                "evaluated": True,
                 "observed": semantic.render() if semantic else "n/a",
                 "papers": sorted(semantic.numerator_names) if semantic else [],
             },
@@ -482,6 +535,7 @@ class AcceptanceReport:
                 "rank": 5,
                 "name": "maximize strict PWML pass rate among eligible/exportable papers",
                 "ok": bool(strict and strict.rate is not None and strict.rate > 0),
+                "evaluated": True,
                 "observed": strict.render() if strict else "n/a",
                 "papers": sorted(strict.numerator_names) if strict else [],
             },
@@ -632,6 +686,16 @@ def score_run(
             )
             if leg.semantic.evaluated:
                 report.errors.add(case.paper_id, mode, leg.semantic.scientific_errors)
+                # A leg whose unsupported-reaction verdict was never reached adds
+                # a zero to the priority-2 total. Record it, so the priority can
+                # tell that zero apart from a measured one.
+                if not leg.semantic.support.get("unsupported_verdict_evaluated", False):
+                    check = leg.semantic.checks.get(CHECK_SUPPORTED_REACTIONS)
+                    report.unmeasured_unsupported[f"{case.paper_id}:{mode}"] = (
+                        check.inapplicable_reason
+                        if check is not None and check.inapplicable_reason
+                        else "the unsupported-reaction verdict was not reached for this leg"
+                    )
 
             paper_result.legs[mode] = leg
 

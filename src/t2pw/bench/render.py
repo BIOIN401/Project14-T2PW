@@ -46,13 +46,22 @@ def _mark(ok: bool) -> str:
 def _priorities(report: AcceptanceReport) -> List[str]:
     out = _header("ACCEPTANCE PRIORITIES -- in the declared order")
     out.append("Priorities 1-3 are absolute: any non-zero count fails them however good the rest looks.")
+    out.append("NOT EVAL means the run never gathered the evidence. It is not a pass and not a failure;")
+    out.append("an absolute priority that was never measured has not been met, only left unproven.")
     out.append("")
     for entry in report.priorities():
-        status = _mark(bool(entry["ok"]))
+        # Three states, not two. A priority the run never gathered evidence for is
+        # printed as NOT EVALUATED: rendering it PASS reports an instrument that
+        # read nothing as a clean result, and rendering it FAIL invents a
+        # violation nobody measured.
+        status = "NOT EVAL" if entry.get("evaluated") is False else _mark(bool(entry["ok"]))
         out.append(f"  {entry['rank']}. [{status}] {entry['name']}")
         out.append(f"          observed: {entry['observed']}")
         if entry["papers"] and entry["rank"] <= 3:
             out.append(f"          papers  : {', '.join(entry['papers'])}")
+        unmeasured = entry.get("not_evaluated_papers") or []
+        if unmeasured and entry["rank"] <= 3:
+            out.append(f"          NOT EVALUATED on: {', '.join(unmeasured)}")
     out.append("")
     return out
 
