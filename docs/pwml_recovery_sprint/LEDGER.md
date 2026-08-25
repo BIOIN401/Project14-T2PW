@@ -4403,3 +4403,62 @@ The verdict changes only when **one of these two happens**:
 **Until then T-107 stays blocked, and that is the correct outcome rather than a delay.** The last
 release candidate was not run for exactly this reason, and nothing measured since has made the
 answer different — it has made it better evidenced.
+
+## Offline re-score of T-106 against the reconciled gold — Ruling 1 proven in the scorer
+
+`bench_acceptance.py --run-dir runs_verify/2026-08-24_1428` at `3042256`, through the bounded
+wrapper under the heavy lock (`evidence/g11/T-107/23-rescore-post-d065-gold.json`, exit 1 — the
+scorer's normal non-zero on a failing priority — lock acquired and released, **0 survivors**).
+**Nothing re-run. No live leg. No LLM call.** Stored artifacts only.
+
+```
+1. [FAIL]     zero known false real identifiers      observed: 8
+              papers: PMC12096016, PMC12782028, PMC12856317
+2. [NOT EVAL] zero unsupported retained reactions    NOT EVALUATED on 11 of 20 legs, 6 papers
+3. [PASS]     zero referential-integrity violations  observed: 0
+4. [FAIL]     meaningful requested-pathway coverage  observed: 0/8 = 0%
+5. [FAIL]     strict PWML pass rate                  observed: 0/2 = 0%
+```
+
+### Priority 5 — the denominator moved, and only the denominator
+
+```
+STRICT PWML SUCCESS
+  population : strict_exportable gold cases with an attempted strict leg
+  result     : 0/2 = 0%
+  not passing: PMC12096016, PMC12782028
+  excluded   : PMC12657337 -- expected_export=partial_only: A three-reaction connected chain...
+  excluded   : PMC12421875 -- expected_export=partial_only: A fully connected chorismate-to-DHNA...
+  (+ six pre-existing partial_only exclusions, unchanged)
+```
+
+**This is the ruling working exactly as specified and no further.** The two trap papers leave the
+strict denominator by an explicit, recorded decision; their exclusion lines quote their **original**
+`export_rationale` text, confirming in the scorer's own output that the pre-existing wording stayed
+byte-identical. The denominator is **2**, and it holds precisely the two papers the bundle measured
+as `correctly_blocked`.
+
+**The rate did not improve. It went from `0/4` to `0/2`** — the metric became honest, not better.
+That was the whole claim, and it is now measured rather than predicted.
+
+### Priority 1 reads 8 here, and that is NOT a regression — read this before quoting it
+
+The stored T-106 artifacts were produced on **2026-08-24**. **C-081 merged on 2026-08-25**
+(`b869780`). The artifacts therefore predate the fix, and scoring them reproduces the **pre-C-081**
+count of **8**, including the two `Pyridoxal 5'-phosphate` rows on `PMC12856317` that C-081 now
+refuses.
+
+**`8` is the historical T-106 figure. `6` is the post-C-081 figure**, established by replay and
+recorded against C-081's merge. Both are correct about different trees. **A fresh run is what would
+show 6**, and that is the figure the T-107 readiness table uses, because the readiness table is a
+prediction about a fresh run.
+
+Quoting the `8` from this re-score as evidence that C-081 regressed would be wrong, and it is
+written down here so nobody does.
+
+### Priority 2 confirms C-085 is live
+
+`NOT EVALUATED — 0 counted, but the unsupported-reaction verdict was never reached on 11 of 20
+scored legs, covering 6 papers. This zero is the absence of a measurement, not the absence of
+unsupported reactions.` C-085's honesty change is working on the real report, and **D-067 leaves it
+that way** deliberately.
