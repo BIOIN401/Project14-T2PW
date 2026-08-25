@@ -276,3 +276,138 @@ Recording a rule already in force. This does **not** reopen C-073, C-076 or C-08
   symbol (`Lanosterol 14-alpha demethylase` vs a span naming only `CYP51A1`), a false positive on a
   one-component wrapper with exact identity. Changes no disposition today.
 * **F-111 / F-112 / F-114** — tooling and staleness. F-114's one-line note is folded into Item 2.
+
+---
+
+# ADDENDUM — items surfaced by C-081, C-082 and C-085, added 2026-08-25
+
+The three cards merged after this bundle was first written each surfaced a question the orchestrator
+may not settle. They are collected here so all of them can be taken in one sitting.
+
+---
+
+## Item 4 — `supported_reactions_complete`: should any gold case set it?
+
+**Raised by F-121. This is the other half of C-085, and C-085 was forbidden from touching it.**
+
+### Current behaviour, after C-085
+
+`supported_reactions_complete` is **absent from all ten** pinned gold cases, so it defaults `False`
+everywhere. Before C-085 that silently produced `PASS 0` on an **absolute** priority. After C-085 it
+correctly produces **`NOT EVALUATED`** — on 11 of 20 T-106 legs covering 6 papers.
+
+**C-085 made the report honest. It did not make the measurement exist.** Priority 2 still cannot
+detect a fabricated reaction on those six papers; it now says so out loud instead of claiming a pass.
+
+Note one nuance C-085 preserved deliberately: a subset case in which **every** retained row matched a
+quote-verified signature is a genuinely measured zero, and five T-106 legs still PASS on that basis.
+The gap is only on legs with unattributed rows.
+
+### The options
+
+| | Option | What it means | Cost | Risk |
+|---|---|---|---|---|
+| **A** | **Leave it.** Priority 2 reports `NOT EVALUATED` wherever the signature set is a subset. | Honest, and already shipped. | none | The absolute gate stays unable to detect fabrication on 6 of 10 papers. We would *know* we cannot see, which is strictly better than the status quo ante — but we still cannot see. |
+| **B** | **Author exhaustive signature sets** for some or all cases and set the flag `true`. | Priority 2 becomes a real measurement on those papers. | **High and manual** — `goldset.py:384`'s own comment says *"Only set this `True` after reading the whole paper and writing a signature for every reaction in it"*, and warns it is **incompatible with multi-paper RAG synthesis unless the run is seed-only.** | Setting it `true` without genuinely exhaustive signatures would convert every unattributed row into a reported fabrication — `semantic.py:700-704` records that this would have reported **227** fabricated reactions in a run that produced far fewer. **That is the worst outcome available and it is one keystroke away.** |
+| **C** | **Set it only on the papers where an exhaustive set is tractable**, and leave the rest `NOT EVALUATED`. | Partial real coverage, honest elsewhere. | Moderate, per paper. | Needs a per-paper judgement about whether the signature set really is exhaustive. |
+
+### Recommendation: **C, starting with the two negative controls, which already have ceilings**
+
+`PMC13231680` and `PMC12180156` already carry `max_retained_reactions` and are the only two papers
+where priority 2 has ever measured anything. They are also the shortest. Extending real coverage
+outward from there is the low-risk path.
+
+**Do not take B wholesale.** The 227-fabrication figure is the measured consequence of getting this
+wrong, and the flag is a single boolean.
+
+**This does not block T-107.** Priority 2 is now honest either way. It is the difference between
+"we know we cannot see" and "we can see".
+
+---
+
+## Item 5 — F-123: a prefreeze declination does not demote the release status
+
+**Raised by the C-082 review. Same family as Item 1 (F-107) and should be ruled in the same sitting.**
+
+### Current behaviour, after C-082
+
+An ambiguous species rename now declines instead of crashing the leg — `report["ok"] = False` plus
+`report["review_required"]["species"] = "species_rename_declined:AMBIGUOUS_RENAME_TARGET"`.
+
+**But `report["ok"] = False` does not demote anything.** Both consuming seams say so in terms:
+
+> `writer.py:2731` — *"`prefreeze_report["ok"] is False` deliberately does NOT abort. D-029 (LOCKED)
+> … Acting on it is the downstream seam's job."*
+> `streamlit_app.py:4930` — *"D-029, as split by **D-040 §8**: this seam PERSISTS and SURFACES the
+> verdict. It does not act on it — no branch here changes whether a PWML is produced."*
+
+`classify_release_status` takes no `prefreeze_review_required` parameter at all.
+
+### The observable change, stated plainly
+
+**At base, a strict leg hitting this shape crashed, so it could never be `release_ready`. At the tip
+it proceeds and *can* reach `release_ready` while carrying two organism rows the ladder wanted to
+merge.**
+
+That is **required** by merge rule 7 and **permitted** by D-035 clause 8 (graph intact, no invalid
+PWML — both verified). But it means clause 8's *"must not become a successful export"* is enforced
+only by the **other** gates, never by this channel.
+
+### Why no card fixed it
+
+Closing it requires `release_status.py` or `streamlit_app.py` — outside C-082's boundary, and one of
+them is the forbidden product-owner file — and it would **reverse or extend D-040 §8, which is
+LOCKED**. The reviewer's judgement, which I accept: the card did not stop short; the residual is
+genuinely not constructible within that boundary.
+
+### The options
+
+| | Option | Effect |
+|---|---|---|
+| **A** | **Thread the prefreeze verdict into `classify_release_status`** so a declination demotes to `review_required`. | Closes it properly. Requires extending D-040 §8 and a card in `release_status.py`. |
+| **B** | **Rule that the other gates are sufficient** and record that a declination is deliberately release-status-neutral. | Cheapest; makes the current behaviour intentional rather than incidental. |
+| **C** | **Fold into Item 1's ruling** — F-107 is the same shape (a correct refusal that cannot reach the status it deserves), and one ruling could settle the general principle for both. |
+
+### Recommendation: **C**, and take it with Item 1
+
+Both are the same question wearing different clothes: *when a guard correctly refuses something, what
+release status should the run carry?* Ruling them together avoids two half-answers. If they must be
+split, **B** is a defensible interim for F-123 alone, because the biology is intact — the two
+organism rows stay distinct, which is what the guard exists to protect.
+
+---
+
+## Item 6 — a scope note to ratify rather than inherit (C-081)
+
+Not a decision that blocks anything, but it is policy-adjacent and it arrived inside a card rather
+than a ruling.
+
+C-081 refuses database identity to a row that declares `class:"cofactor"` and that **no reaction or
+transport uses**. Its real class is *"cofactors the extractor never wired into a reaction"*, which is
+broader than *"hallucinations"*.
+
+**Cofactor binding — an `interaction` — is the canonical way papers state cofactor relationships**,
+and C-081 rules that an interaction endpoint confers **no participant role**. On the committed corpus
+every such row happens to be gold-forbidden, so measured collateral is **0 over 18 refusals across 89
+artifacts**. But *"an interaction endpoint does not license a database identity"* is a judgement that
+deserves an explicit ratification rather than silent inheritance from a card.
+
+**Recommendation:** ratify as written. The measurement is strong (zero collateral, and a
+schema-complete participant reader rescues none of the 18), the direction is conservative, and
+`ATP` — which declares the same role ten times and is used every time — is untouched.
+
+---
+
+## Item 7 — two participant readers narrower than the schema they read (F-119, F-125)
+
+**Not a decision — an owner is needed.** Recorded here because the two are the same defect shape in
+two different absolute gates, and fixing them together is cheaper than twice.
+
+| finding | reader | omits | measured exposure |
+|---|---|---|---|
+| **F-119** | `identity_admission._PARTICIPANT_NAME_KEYS` = `("entity","name","ref","id")` | the six `payload_models.py` keys `canonical.py:330` already uses | **0** today, but `{"protein": …}` is the dominant actor shape corpus-wide (**1,820** vs **615** for `entity`) |
+| **F-125** | `semantic._orphaned_references` | `cargo`, `transporters`, `elements_with_states` — every slot a transport row has | **3 live invisible orphans** across 89 artifacts, including a leaked JSON pointer `/entities/proteins/0` in a name slot. **0 on T-106.** |
+
+Both fail in directions that matter: F-119 would **strip a correct identifier**; F-125 **cannot see a
+real referential-integrity violation** in a gate declared absolute. `canonical.py:330` already holds
+the correct key list — the fix is reconciliation, not invention.
