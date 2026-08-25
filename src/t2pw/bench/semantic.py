@@ -73,6 +73,18 @@ from t2pw.bench.goldset import (
     normalize_name,
 )
 
+#: C-089 / Ruling 7 -- the ONE participant-key and participant-slot source, so
+#: this scorer and ``mapping.identity_admission`` read the same schema. Import
+#: direction ``bench -> pipeline`` is already established here
+#: (``pipeline.entity_identity``, ``pipeline.export_mode``,
+#: ``pipeline.release_status``); ``participant_schema`` is a stdlib-only leaf.
+from t2pw.pipeline.participant_schema import (
+    ENZYME_ROLE_SLOTS,
+    PARTICIPANT_NAME_KEYS,
+    PARTICIPANT_SLOTS,
+    participant_slots,
+)
+
 
 # ---------------------------------------------------------------------------
 # Check identifiers. Stable strings -- they are keys in the stored report and a
@@ -160,8 +172,14 @@ ERROR_ORDER: Tuple[str, ...] = (
 #: locations and biological states are scaffolding and are not graded).
 _ENTITY_BUCKETS: Tuple[str, ...] = ("compounds", "proteins", "protein_complexes")
 
-#: Buckets on ``payload["processes"]`` that carry chemistry.
-_REACTION_BUCKETS: Tuple[str, ...] = ("reactions", "transports", "reaction_coupled_transports")
+#: Buckets on ``payload["processes"]`` that carry chemistry. C-089: a derived
+#: view of :data:`PARTICIPANT_SLOTS`, so the bucket set and the slot map cannot
+#: drift apart. Unchanged in content -- ``interactions`` is deliberately still
+#: absent, and whether it belongs is D-069 / C-091's ruling, not this card's.
+_REACTION_BUCKETS: Tuple[str, ...] = tuple(PARTICIPANT_SLOTS)
+
+#: Membership test for the slots whose orphan is reported as an ENZYME.
+_ENZYME_ROLE_SLOT_SET: FrozenSet[str] = frozenset(ENZYME_ROLE_SLOTS)
 
 
 def _cofactor_names() -> FrozenSet[str]:
@@ -188,7 +206,16 @@ def _dicts(value: Any) -> List[Dict[str, Any]]:
 
 
 def _names(value: Any) -> List[str]:
-    """Participant names from a reaction slot, which may hold strings or rows."""
+    """Participant names from a reaction slot, which may hold strings or rows.
+
+    C-089: the key list is :data:`PARTICIPANT_NAME_KEYS`, not a local tuple. The
+    five keys spelled out here before could not read ``element`` -- and 416
+    dict-shaped participant entries in the committed corpus carry ``element`` and
+    nothing else, all of them in ``transports.elements_with_states``. First key
+    present wins, exactly as before; the shared tuple's order begins ``name``,
+    ``entity``, ``compound``, ``protein``, ``protein_complex`` so no shape this
+    reader already understood changes hands.
+    """
 
     out: List[str] = []
     if isinstance(value, str):
@@ -199,13 +226,13 @@ def _names(value: Any) -> List[str]:
         if isinstance(item, str):
             text = canonical_text(item)
         elif isinstance(item, dict):
-            text = canonical_text(
-                item.get("name")
-                or item.get("entity")
-                or item.get("compound")
-                or item.get("protein")
-                or item.get("protein_complex")
-            )
+            picked: Any = None
+            for key in PARTICIPANT_NAME_KEYS:
+                candidate = item.get(key)
+                if candidate:
+                    picked = candidate
+                    break
+            text = canonical_text(picked)
         else:
             text = ""
         if text:
@@ -214,8 +241,15 @@ def _names(value: Any) -> List[str]:
 
 
 def _enzyme_names(reaction: Mapping[str, Any]) -> List[str]:
+    """Names in the slots whose occupant acts ON the process.
+
+    C-089: a derived view of :data:`ENZYME_ROLE_SLOTS`. Same three slots as
+    before -- ``catalysts`` is in no model and is carried in the shared module's
+    legacy tail rather than dropped here.
+    """
+
     out: List[str] = []
-    for key in ("enzymes", "modifiers", "catalysts"):
+    for key in ENZYME_ROLE_SLOTS:
         out.extend(_names(reaction.get(key)))
     return out
 
@@ -1417,29 +1451,43 @@ def _orphaned_references(payload: Mapping[str, Any]) -> List[Dict[str, Any]]:
     the exported graph has an edge to nothing -- the importer either drops the
     reaction or renders a dangling node, and either way the pathway shown is not
     the pathway that was validated.
+
+    C-089 / F-125: the slot list is :func:`participant_slots`, per bucket, not
+    one uniform ``inputs``/``outputs``/enzyme list applied to all three. Before
+    this, the absolute gate for referential integrity read **none** of ``cargo``,
+    ``transporters`` or ``elements_with_states`` -- that is, every participant
+    slot a ``TransportModel`` or ``ReactionCoupledTransportModel`` actually has.
+    Measured over the committed corpus it counted **3** orphans where a
+    schema-complete reader counts **6**; the three it could not see include a
+    leaked JSON pointer ``/entities/proteins/0`` sitting in a transporter name
+    slot. The reader only widened: every slot it read before it still reads, via
+    ``participant_schema``'s legacy tail.
     """
 
     declared = _declared_names(payload)
     findings: List[Dict[str, Any]] = []
     for bucket, rows in _processes(payload).items():
         for index, row in enumerate(rows):
-            for slot in ("inputs", "outputs"):
+            for slot in participant_slots(bucket):
+                acts_on = slot in _ENZYME_ROLE_SLOT_SET
                 for name in _names(row.get(slot)):
-                    if normalize_name(name) not in declared:
-                        findings.append(
-                            {
-                                "pointer": f"/processes/{bucket}/{index}/{slot}",
-                                "name": name,
-                                "reason": "participant is not declared in any entity bucket",
-                            }
-                        )
-            for name in _enzyme_names(row):
-                if normalize_name(name) not in declared:
+                    if normalize_name(name) in declared:
+                        continue
                     findings.append(
                         {
-                            "pointer": f"/processes/{bucket}/{index}/enzymes",
+                            # An enzyme-role orphan has always been reported at
+                            # the bucket's ``enzymes`` pointer whichever of the
+                            # three slots held it. Kept: correcting the pointer
+                            # would move an observable this card was not sent to
+                            # move.
+                            "pointer": "/processes/{0}/{1}/{2}".format(
+                                bucket, index, "enzymes" if acts_on else slot),
                             "name": name,
-                            "reason": "enzyme is not declared in any entity bucket",
+                            "reason": (
+                                "enzyme is not declared in any entity bucket"
+                                if acts_on
+                                else "participant is not declared in any entity bucket"
+                            ),
                         }
                     )
     return findings

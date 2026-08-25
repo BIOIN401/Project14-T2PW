@@ -124,6 +124,15 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+#: C-089 / Ruling 7 -- the ONE participant-key and participant-slot source.
+#: ``pipeline.participant_schema`` is a stdlib-only leaf that imports nothing, so
+#: reading it costs this module none of the purity its docstring promises.
+from t2pw.pipeline.participant_schema import (
+    PARTICIPANT_NAME_KEYS,
+    PARTICIPANT_SLOTS,
+    participant_slots,
+)
+
 __all__ = [
     "SCHEMA_VERSION",
     "SOURCE_INDEX_KEY",
@@ -659,17 +668,30 @@ NOT_EVALUATED_NO_REACTIONS = "no_reaction_or_transport_to_evaluate"
 #: endpoint is exactly the evidence that does NOT make it one. Enumerated per
 #: bucket rather than "every string under processes" for the same reason: a
 #: process NAME containing the word "pyridoxal" is prose, not a role.
+#:
+#: C-089: this is now a DERIVED VIEW of
+#: :data:`t2pw.pipeline.participant_schema.PARTICIPANT_SLOTS` plus that module's
+#: legacy tail, not a private tuple. The hand-written version omitted
+#: ``elements_with_states`` -- the one participant slot a ``TransportModel`` or
+#: a ``ReactionCoupledTransportModel`` actually has -- while listing five fields
+#: neither model declares (F-119). The derivation is strictly ADDITIVE over what
+#: this dict held before: nothing was removed, because a slot this reader stops
+#: seeing turns a used cofactor into an unused one and strips a real accession.
+#:
+#: ``interactions`` stays absent, and staying absent here is D-069 / C-091's
+#: question, not this derivation's. C-089 changes WHAT A SLOT IS; it does not
+#: change WHICH BUCKETS CONFER A ROLE.
 PARTICIPANT_FIELDS: Dict[str, Tuple[str, ...]] = {
-    "reactions": ("inputs", "outputs", "enzymes", "modifiers"),
-    "reaction_coupled_transports": (
-        "inputs", "outputs", "enzymes", "modifiers", "cargo", "transporters",
-    ),
-    "transports": ("cargo", "transporters", "modifiers"),
+    bucket: participant_slots(bucket) for bucket in PARTICIPANT_SLOTS
 }
 
 #: Keys a participant entry may carry its entity name under, when it is a mapping
-#: rather than a bare string.
-_PARTICIPANT_NAME_KEYS: Tuple[str, ...] = ("entity", "name", "ref", "id")
+#: rather than a bare string. C-089: a derived view of the shared union. The
+#: private tuple this replaced read ``("entity", "name", "ref", "id")`` and could
+#: not see ``compound``, ``protein``, ``protein_complex``, ``element``,
+#: ``element_collection`` or ``nucleic_acid`` -- and ``protein`` is the DOMINANT
+#: actor shape in the corpus.
+_PARTICIPANT_NAME_KEYS: Tuple[str, ...] = PARTICIPANT_NAME_KEYS
 
 
 def declares_cofactor_role(row: Any) -> bool:
