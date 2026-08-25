@@ -3924,3 +3924,142 @@ membership will under-scope it.
 It confirms C-081 works in production and costs no collateral, and it confirms C-085's reporting
 change is live. It leaves C-082's production behaviour unproven by draw. **None of that changes the
 T-107 verdict**, which rests on priority 1 being unreachable at 0 and priority 5 being 0/4 by proof.
+
+---
+
+## F-127 — priority 1's six survivors are two different defects, and BOTH are unreachable because the discriminating fact is never recorded
+
+- **Severity CRITICAL** (it is the absolute priority-1 blocker) · **Class `product_contract_violation`**
+- **Registered 2026-08-25 by the Lead Orchestrator.** Measured offline from committed T-106
+  artifacts; **nothing re-run, no live leg, no LLM-backed command.**
+- **This is the answer to the product owner's Priority A question**, taken down the branch the
+  instruction names: *"If no safe general production rule exists, record the exact missing
+  biological information and propose the smallest new representation or evidence field needed."*
+- **Supersedes nothing. Reopens nothing.** C-084's rejected formulations are not revisited; this
+  explains *why* they had to fail.
+
+### The six survivors are not one class
+
+| # | entity | leg | gold class | mechanism |
+|---|---|---|---|---|
+| 1–2 | `NAD+`, `NADH` | PMC12096016/research | reporter species | **inferred standard chemistry** (F-118) |
+| 3–4 | `LIPA`, `LBR` | PMC12782028/research | `heading_or_prose` | **entity admitted without a supporting span** |
+| 5–6 | `SREBF1`, `SREBF2` | PMC12782028/research | `regulator_as_metabolite` | same as 3–4 |
+
+They are in **different payload structures**, reached by **different seams**, and no single predicate
+can address both. That alone explains C-084's four failures: every formulation it tried was aimed at
+class 1 and was scored against a count containing class 2.
+
+### Class 1 — the metabolite slots have no provenance carrier at all
+
+Corpus census over all **10** T-106 legs that reached mapping
+(`evidence/g11/T-107/15-f096-corpus-carrier-census.json`):
+
+```
+SLOT                   SHAPES        PROVENANCE-BEARING KEYS
+inputs                 str=39        NONE
+outputs                str=34        NONE
+enzymes                dict=36       provenance=36   (extracted 29 / inferred 7)
+modifiers              dict=34       provenance=34   (extracted 26 / inferred 8)
+cargo                  str=6         NONE
+transporters           dict=4        NONE
+elements_with_states   dict=12       NONE
+```
+
+**Every metabolite participant in the corpus is a bare string.** The provenance carrier this sprint
+already built exists on the two ACTOR slots and on no metabolite slot. The offending reaction:
+
+```
+PMC12096016/research  reactions[5]
+  inputs : ["2,3-dihydro-2,3-dihydroxybenzoate", "NAD+"]      <- bare strings
+  outputs: ["2,3-dihydroxybenzoic acid", "NADH"]              <- bare strings
+  enzymes: [{entity: "EntA", ..., provenance: "inferred",
+             evidence: "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"}]
+  provenance_lineage: null
+```
+
+The pipeline **knows** it inferred EntA and writes that down. It supplied `NAD+`/`NADH` from
+EC 1.3.1.28's standard redox chemistry in the same act — and has **nowhere to write that down**.
+
+**Why every lexical reconstruction must fail, measured rather than argued**
+(`evidence/g11/T-107/14-f096-provenance-probe3.json`) — on the *same leg*:
+
+```
+rxn[5].inputs[1]  'NAD+'                      named_in_own_span=False   <- fabricated
+rxn[4].outputs[0] 'enterobactin'              named_in_own_span=False   <- LEGITIMATE, end product
+rxn[2].outputs[0] '2,3-dihydroxybenzoic acid' named_in_own_span=False   <- LEGITIMATE, titular compound
+rxn[3].inputs[0]  '2,3-dihydroxybenzoic acid' named_in_own_span=False   <- LEGITIMATE
+```
+
+The fabricated row and the pathway's own end product are **indistinguishable by span membership**.
+That is precisely the red line C-084 hit, now explained: span membership is a *proxy* for provenance,
+and the proxy is degenerate because the real signal was discarded upstream.
+
+### Class 2 — the entity rows carry no evidence, and provenance is a constant
+
+`PMC12782028/research`, all **20** protein rows
+(`evidence/g11/T-107/18-f096-entity-fields.json`, `19-f096-stage1-evidence.json`):
+
+```
+LSS CYP51A1 MSMO1 DHCR24 SQLE FDFT1 FDPS MVD HMGCR HMGCS1
+MVK IDI1 ACAT2 EBP HSD17B7 NSDHL          -> gold PERMITS   (16)
+LIPA LBR SREBF1 SREBF2                    -> gold FORBIDS   (4)
+
+every one of the 20:  provenance = "extracted"   evidence = None
+```
+
+**The four forbidden rows are byte-identical in every discriminating field to the sixteen required
+ones.** There is no field in the emitted record that separates `SREBF1` from `HMGCR`.
+
+**And a graph-role rule cannot separate them either.** The orphan census
+(`evidence/g11/T-107/17-f096-orphan-census.json`) over all 10 legs: 195 entities, 93 with real
+accessions, **102 used by no process, 50 of those carrying identifiers.** Those 50 include
+`EntA…EntF`, `LpxA…LpxK`, `WaaA`, `FabZ`, `ALAS2`, `ferrochelatase`, `HMGCR`, `CYP51A1`, `LSS` —
+essentially every enzyme of every pathway in the corpus. **Extending C-081's role-consistency rule
+from `class:"cofactor"` to proteins would strip the identifier from almost every legitimate pathway
+enzyme we produce.** It is not a near miss; it is a catastrophic false-positive rate, and it is
+recorded here so nobody proposes it a third time.
+
+### Traced to the origin: this was never captured, not captured-and-dropped
+
+`stage1_payload.json` — the first artifact out of extraction — carries protein rows with exactly
+`{name, class, confidence, provenance, provenance_lineage}`. **No `evidence` key exists at any
+stage**, and `provenance` is the constant `"extracted"` on all 20 rows at Stage 1, at
+`merged_payload.json` and at `final_mapped.json`.
+
+**Consequence for G9, and it is load-bearing for whoever gets this card:** closing either half is
+**new capability, not a correction of pre-existing observable behaviour.** It therefore carries an
+**explicitly labelled new acceptance test** and **must not** carry a fabricated base failure.
+Mislabelling it a regression fix is a reject under G9.
+
+### The smallest representation that would close each half
+
+**Class 1 — one field on one existing model.** `payload_models.py:327` `ProcessParticipantModel`
+has `name, entity, compound, protein, protein_complex, element, element_collection, nucleic_acid,
+biological_state, stoichiometry, coefficient, evidence` — and **no `provenance`**. It is the *only*
+participant-bearing model without one: `ActorModel:323`, `ElementWithStateModel:351`,
+`ReactionModel:364` and `ReactionCoupledTransportModel:377` all carry it.
+
+`ParticipantLike = str | ProcessParticipantModel` (`:342`) — **the schema already accepts the
+structured form in `inputs`/`outputs`**, so no exporter change is forced and nothing needs
+inventing. The change is: add `provenance` to `ProcessParticipantModel`, have extraction emit the
+structured form for participants it supplied rather than read, and let identity admission refuse
+real accessions to an `inferred` participant. `ATP`, `pyruvate`, `enterobactin` and
+`2,3-dihydroxybenzoic acid` are untouched because they would carry `extracted`.
+
+**Class 2 — populate the evidence span the entity row already has room for.** The requirement is a
+per-entity supporting span, so `heading_or_prose` admission is visible as what it is. This one is
+**not** free: it changes what Stage 1 must return, so it needs a prompt change and a live leg to
+validate, and it interacts with `paper_explicit` under D-059 (*an unmarked Stage-1 `paper_explicit`
+claim is RECORDED, not VERIFIED*).
+
+### What this means for T-107 — state it plainly
+
+**Priority 1 cannot reach 0 in this correction wave.** Both halves need a carrier that does not
+exist, one of them needs a Stage-1 contract change, and neither is a lexical filter that can be
+tuned. Any predicate written against the current record either misses the six or strips the
+pathway's own chemistry — both directions now measured, not predicted.
+
+**No card is chartered against this today.** The product owner's instruction is explicit: *"Do not
+force a card merely to reduce the benchmark count."* This is registered as the measured missing
+representation, for a ruling.
