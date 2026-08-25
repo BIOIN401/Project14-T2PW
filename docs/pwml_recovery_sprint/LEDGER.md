@@ -4253,3 +4253,103 @@ exactly as D-067 directs when exhaustiveness cannot be proven. **This blocks no 
 the gold already contains the evidence, where the flag cannot manufacture a fabrication, and where
 the outcome is a strictly honest gain. `PMC12180156` needs its ceiling-versus-note conflict
 adjudicated before anyone sets a boolean on it.
+
+---
+
+## F-128 — production violates D-069 on 12 of 18 refusals, and complying RAISES priority 1
+
+- **Severity HIGH** · **Class: `product_contract_violation` in production, layered over a
+  `gold_data_defect` in the acceptance mechanism**
+- **Registered 2026-08-25.** Measured by the **REV-086** measurement lane over 92 committed
+  artifacts; **the load-bearing claim independently re-verified by the Lead Orchestrator against
+  source and payload before registration** (`evidence/g11/T-107/22-verify-d069-violation.json`).
+- **D-069 § "Required follow-up" directed this measurement.** It has returned a violation.
+- **C-081 is NOT reopened.** Its implementation was correct against the rule it was given; D-069
+  changed the rule afterwards.
+
+### The seam
+
+| what | where |
+|---|---|
+| the refusal | `mapping/map_ids.py:8133` `_admit_identities`, **PASS C at `:8309-8352`** |
+| the call | `map_ids.py:8330-8339` → `_withhold_identity(..., rule=RULE_COFACTOR_ROLE_UNUSED)` |
+| the predicate | `mapping/identity_admission.py:725` `cofactor_participation` (`unsupported` at `:756`) |
+| the slot map | `identity_admission.py:662-668` `PARTICIPANT_FIELDS` |
+| **the D-069 hinge** | `identity_admission.py:653-661` — the comment that `interactions` is *deliberately absent* because *"an interaction endpoint is exactly the evidence that does NOT make it one"* |
+
+That comment is precisely the blanket rule **D-069 refused to ratify.**
+
+### The measurement
+
+Corpus reproduced: 92 artifacts, 921 rows shipping real accessions, 48 declaring `class:"cofactor"`,
+**18 refusals** (PASS C), plus 2 PASS B kind-conflict refusals, 0 PASS A.
+
+**12 of the 18 violate D-069. 6 are correctly refused. 0 undetermined.**
+By paper: `PMC12856317` ×10, `PMC12312563` ×1, `PMC12180156` ×1 (the last is weaker — its
+THF↔SHMT2 edge is assembled across two sentences and is flagged as such, not asserted).
+
+All 18 sit in `entities.compounds`, so **the entity kind is valid in every one**. The verdict
+therefore turns entirely on whether the paper explicitly supports the interaction.
+
+**The six correct refusals are correct for a reason D-069 endorses:** they are not interaction
+endpoints at all — those payloads' interactions name different entities (`DHNA inhibits MenD`,
+`2,3-DHB inhibits EntB`, `heme inhibits ALAS2`). An unused row with no interaction to lean on gets
+nothing from D-069. Three of them (`NADH`, `NAD+`, `thiamine pyrophosphate` on `PMC12096016`) are
+additionally the assay-reporter class `PRODUCT_CONTRACT` § 2 forbids by name.
+
+### Verified independently, not inherited
+
+`runs_verify/2026-08-24_1428/papers/PMC12856317/strict`:
+
+```
+entities.compounds  "Pyridoxal 5'-phosphate"  class=cofactor  ids={}        <- stripped
+processes.interactions[3]  entity_1 "Pyridoxal 5'-phosphate"  entity_2 "ALAS2"
+    evidence: "a PLP-dependent homodimer enzyme that mediates the condensation
+               of glycine and succinyl-CoA"
+01_source_text.txt: "...aminolevulinic acid synthase (ALAS) (9,10), a PLP-dependent
+                     homodimer enzyme that mediates the condensation..."   (PLP x22)
+```
+
+Source-supported interaction, valid entity kind, identity refused. **Under D-069 that row should
+have retained identity.**
+
+### Why C-081 measured 0 collateral and this measures 12 — the yardstick, not the biology
+
+C-081's zero was scored against the pinned gold's `forbidden_identifiers` list
+(`tests/test_c081_cofactor_role_identity.py:551-599`), which is matched **by name and is
+bucket-blind** (`goldset.py:428-445`, consumed at `semantic.py:1029-1046`). It condemns PLP whichever
+bucket PLP sits in.
+
+But the gold's own `kind` for these entries is **`cofactor_as_protein`**, which `goldset.py:314-316`
+defines as *"a small molecule filed under `entities.proteins`"* — **and not one of the 18 is in
+`entities.proteins`. All 18 are compounds.** The gold's stated failure mode does not obtain for a
+single one of them, and the gold's reason text for PLP — *"The ALAS2 cofactor. Never a substrate,
+never a product, never a protein."* — is a statement about **role and kind**, which is exactly what
+D-069 protects. It says nothing about identity.
+
+**So both numbers are true.** C-081's 0 is true against the gold as *matched*; D-069's 12 is true
+against the gold as *written*. A correction card that uses the gold's forbidden-name list as its
+acceptance oracle will measure 0 again and conclude nothing changed.
+
+### The consequence that needs a ruling before anything merges
+
+**Restoring identity to those 12 rows makes them count as `false_real_identifier`
+(`semantic.py:1035-1046`) — acceptance priority 1, which is ABSOLUTE. Priority 1 would rise from
+6.**
+
+So D-069 compliance and the gold's `forbidden_identifiers` mechanism now point in opposite
+directions, and the sprint cannot satisfy both. **This is not the orchestrator's to settle.** Under
+the standing classification rule the production half is a `product_contract_violation` and the gold
+half is a `gold_data_defect` in the *matching mechanism* rather than in the reason text — but which
+one yields is a product decision of exactly the shape Item 1 was, and Item 1's own ruling records
+that silently editing gold to move a rate is what this sprint exists to prevent.
+
+**Therefore: the correction is chartered as C-091 per D-069's follow-up clause, and C-091 does NOT
+merge until the gold-mechanism question is ruled.** Its charter carries the priority-1 delta as a
+declared, required deliverable rather than a merge-gate surprise.
+
+### Sequencing
+
+C-091 and **C-089** (F-119/F-125, Ruling 7) both edit `identity_admission.PARTICIPANT_FIELDS`.
+**They must not run concurrently.** C-089 owns the shared participant-schema constants; C-091 takes
+a read-only dependency on them.
