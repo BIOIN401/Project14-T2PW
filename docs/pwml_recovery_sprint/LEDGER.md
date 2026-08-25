@@ -4544,3 +4544,106 @@ base-tree-export detour. Both charters were already written before the crash.
 
 Implementers are now instructed to **commit as they go** rather than at the end. That is the one
 process change the crash actually justifies.
+
+---
+
+## C-086 and C-087 — MERGED. REV-087 APPROVED both against the actual diff.
+
+| card | merge | closes | review | SMOKE |
+|---|---|---|---|---|
+| **C-086** | `0c9705b` | **F-116** | APPROVE, actual diff, 16 bounded reports | **473** together |
+| **C-087** | `9e41a11` | **F-123**, discharges **BL-004** | APPROVE, actual diff | (`28-smoke-post-c086-c087.json`, exit 0) |
+
+**The reviewer inherited nothing.** It derived both affected sets independently, reproduced C-086's
+7 files exactly and added 7 more (**343 passed**), reproduced C-087's 154/2 exactly and added a
+second sweep of 8 more files (**313 passed, 2 failed**), rebuilt both base arms on the git worktrees
+rather than trusting the committed verdicts, and compared its pin verdicts byte-for-byte against the
+implementers'.
+
+### Two measurements neither implementer produced
+
+The crash cost us both RISK sections, so the reviewer supplied them:
+
+**C-086 blast radius**, over 92 committed `final_mapped.json`: **803** one-component complex actors,
+untouched by construction; **89** multi-component actors — the entire population this rule can move
+— confined to **3 papers / 18 artifacts**. Realistic DB-matched refusal population ≈ **60 actor
+slots** across `PMC12096016`, `PMC12452463`, `PMC12444477`. Nothing else in the corpus can move.
+
+**C-087 monotonicity**, enumerated rather than asserted: **7 status values × 19 prefreeze shapes =
+133 pairs**, and exactly **one** moving transition, `release_ready → review_required`.
+Non-`release_ready` records moved at all: **none**. Keys ever changed: `status`,
+`strict_acceptance_eligible`, `reasons` — **no entity, reaction, identifier, complex, location or
+reference is read or written**, which is what settles merge rule 8. The input dict is byte-unchanged
+after every call.
+
+### C-087's charter deviation, confirmed correct
+
+It was chartered to thread the verdict into `classify_release_status`. The reviewer independently
+reproduced the measurement that **no such seam exists**: the only call that can reach `release_ready`
+is `strict_quarantine.py:2477`, at the quarantine boundary, while pre-freeze canonicalization runs
+later inside the export seams. And `_frozen_release_record` is the **single** choke point feeding
+both consequential channels — `_add_strict_artifacts` derives the PWML **filename**,
+`_finalize_pwml_export` derives the **manifest row**. Capping only the row would have left a demoted
+leg shipping a bare `pathway.pwml`. D-068's own wording authorises the seam.
+
+### Carried forward, not buried
+
+* **PathBank 3468 `phosphatidylglycerophosphatase`** stands as an actor **14 times** in
+  `PMC12444477` and will likely now be refused. Its components read `Phosphatidylglycerophosphatase
+  B` and `Pgp phosphatases` — the second looks like a **group row**, not a subunit, and C-086's rule
+  cannot tell those apart. **Adjudication dispatched (`R-089`) before any benchmark comparison**, so
+  a status move on that paper is not misread either way.
+* **`db_unavailable` demotes on the same channel** as the rename declination — D-029 acting as
+  ruled. Measured ceiling: **3 legs** across 21 committed manifests / 117 legs, and the T-106 run has
+  **zero** `release_ready`, so its recorded statuses cannot move at all.
+* **The interactive Streamlit path stays uncapped.** Correct — `streamlit_app.py` is
+  product-owner-owned and `PRODUCT_CONTRACT` § 13 scopes the naming rule to the batch artifact set —
+  but recorded as a **known ruled gap**, not an oversight.
+* `03-base-tree-export.json` on C-086's branch is an abandoned export attempt. **No accepted proof
+  rests on it** (verified: `04`, `07`, `09` all pin `C:\t\c086base`). Recorded so a future reader
+  does not mistake it for evidence.
+
+### A fourth pre-existing failure, better classified than mine was
+
+I had classed C-087's residual failures as the F-112 stale-corpus-pin class. The reviewer found a
+**fourth** and classified it separately and correctly: `test_batch_preflight.py:616` fails with
+*"this project ships a .venv; the test assumes it"* — a **worktree environment artefact**, since the
+base worktree ships no `.venv`. Not a corpus pin. It fails identically on both trees.
+
+`FULL_STACK_BASELINE` is intact; `test_strict_quarantine_real_artifact_replay.py:416` failed in
+neither sweep.
+
+---
+
+## My own regression, found late and recorded in full
+
+**The D-065 gold reconciliation broke `test_c056b_semantic_denominators.py` and I did not catch it.**
+SMOKE does not include that file, so **473 green told me nothing about it**. Both implementer lanes
+then reported the failure as *pre-existing* — and from their base it was, because they were cut from
+`736c1a2`, which already contained my edit. Only an A/B against `91b5c50` exposed it.
+
+```
+91b5c50  (before the gold edit)   9 passed
+110cffe  (after the gold edit)    1 failed, 8 passed
+    assert 'PMC12421875' in []
+```
+
+`_STRICT_A` / `_STRICT_B` are `PMC12657337` / `PMC12421875` — exactly the two papers D-065 moved to
+`partial_only`. The file's own comment claimed *"the first two are `strict_exportable`"*, which
+stopped being true the moment I edited gold.
+
+This is **merge rule 4's second clause**: a pinned baseline moved deliberately, and the delta is now
+documented rather than discovered at a gate. Repaired in `0820f5c` with two new constants naming the
+papers that **are** still `strict_exportable`, rewiring only the one test that needs the strict
+denominator — the other eight exercise the **semantic** denominator, whose population is unchanged,
+which is why 8 of 9 passed throughout. An anti-vacuity assertion the original lacked now pins the
+strict population to exactly that pair, so a future gold edit that emptied the denominator goes
+**red instead of vacuously green** — the failure mode that hid this one.
+
+**That diff is mine and was committed unreviewed.** It is in front of `REV-089` now, with the
+question put plainly: whether the fixture rewire preserves the guard's intent, and whether my
+anti-vacuity pin is itself a new brittle pin.
+
+**The general lesson, recorded because it will recur:** a control-plane gold edit is a *behavioural*
+change to every test that reads the gold, and SMOKE is not a sufficient gate for one. Any future
+`expected_export` edit runs the gold-reading test files explicitly, not just SMOKE.
