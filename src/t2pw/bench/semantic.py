@@ -571,10 +571,12 @@ def _check_supported_reactions(
 
     Returns ``(check, metrics, unsupported_count, missing_count)``.
 
-    Inapplicable -- never a silent pass -- when the case states no signatures or
-    when the stored paper text is missing, because a quote that cannot be
-    verified is an assertion. The negative-control ceiling is handled separately
-    in :func:`_check_connected_core` and still applies.
+    Inapplicable -- never a silent pass -- on three routes: the case states no
+    signatures; the stored paper text is missing, because a quote that cannot be
+    verified is an assertion; or the signature set is a SUBSET and at least one
+    retained row matched nothing, so the unsupported-reaction verdict was never
+    reached. The negative-control ceiling is applied by the caller and can make
+    that third route measurable again.
     """
 
     if not case.supported_reactions:
@@ -678,8 +680,29 @@ def _check_supported_reactions(
         findings.append({**entry, "kind": "gold_quote_not_found_in_paper"})
 
     complete = case.supported_reactions_complete
+
+    # Was the *unsupported-reaction verdict* actually reached? It is reached in
+    # exactly two situations:
+    #
+    #   * the signature set is exhaustive, so an unmatched row is by definition
+    #     unsupported and ``false_positives`` counts it; or
+    #   * every retained row matched a quote-verified signature, so "zero
+    #     unsupported" is a measurement rather than an assumption -- a row that
+    #     matches hand-read chemistry is supported whether or not the set is
+    #     exhaustive.
+    #
+    # With a SUBSET set and at least one unmatched row it is not reached at all:
+    # those findings are deleted below and the returned count is a hard zero. That
+    # zero used to be reported as a clean result, which collapses "not evaluated"
+    # into "passed" -- forbidden by PRODUCT_CONTRACT 11 -- and is what left
+    # acceptance priority 2 structurally unable to return a non-zero count on
+    # eight of the ten pinned papers. The suppression below is correct and stays;
+    # what changes is that the check now SAYS it did not evaluate.
+    unsupported_verdict_evaluated = bool(complete or not unsupported_rows)
+
     metrics = {
         "signature_set_complete": complete,
+        "unsupported_verdict_evaluated": unsupported_verdict_evaluated,
         "signatures_declared": len(case.supported_reactions),
         "signatures_quote_verified": len(scored),
         "signatures_unverifiable": len(unverifiable),
@@ -716,8 +739,31 @@ def _check_supported_reactions(
     if unverifiable:
         summary += f"; {len(unverifiable)} GOLD QUOTE(S) NOT FOUND IN THE PAPER"
 
+    # The attribution rate and the recall above ARE measured and stay in the
+    # summary; only the unsupported-reaction verdict is withheld.
+    inapplicable_reason = ""
+    if not unsupported_verdict_evaluated:
+        summary += "; UNSUPPORTED-REACTION VERDICT NOT EVALUATED"
+        inapplicable_reason = (
+            f"the unsupported-reaction verdict was NOT EVALUATED: this gold case's signature "
+            f"set is a SUBSET (supported_reactions_complete is false), so the "
+            f"{len(unsupported_rows)} retained reaction(s) that matched no signature cannot be "
+            "judged either way -- an unmatched row may be invented, may be a step the paper "
+            "states in a form no signature was written for, or may be a legitimate cross-paper "
+            "RAG addition, and those are indistinguishable from the signature list alone. The "
+            "attribution rate and recall in the summary ARE measured. Only an exhaustive "
+            "supported_reactions list, or a max_retained_reactions ceiling, can make this "
+            "question answerable for this paper."
+        )
+
     return (
-        CheckResult(name=CHECK_SUPPORTED_REACTIONS, ok=ok, summary=summary, findings=findings),
+        CheckResult(
+            name=CHECK_SUPPORTED_REACTIONS,
+            ok=ok,
+            summary=summary,
+            findings=findings,
+            inapplicable_reason=inapplicable_reason,
+        ),
         metrics,
         false_positives if complete else 0,
         false_negatives,
@@ -1476,6 +1522,14 @@ def validate_semantic_coverage(
     if case.max_retained_reactions is not None:
         over = int(report.graph.get("n_reactions", 0)) - case.max_retained_reactions
         unsupported = max(unsupported, max(0, over))
+        # The ceiling answers the same question by a route that needs no signature
+        # set at all, so a case carrying one HAS an evaluated unsupported-reaction
+        # verdict even where the signature check could not reach one. This is what
+        # keeps the negative controls counting.
+        report.support["unsupported_verdict_evaluated"] = True
+    # The two early returns above yield empty metrics; an absent key there means
+    # the question was never asked, not that the answer was zero.
+    report.support.setdefault("unsupported_verdict_evaluated", False)
 
     for result in (
         anchors,
