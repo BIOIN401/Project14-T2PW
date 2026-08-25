@@ -4063,3 +4063,116 @@ pathway's own chemistry — both directions now measured, not predicted.
 **No card is chartered against this today.** The product owner's instruction is explicit: *"Do not
 force a card merely to reduce the benchmark count."* This is registered as the measured missing
 representation, for a ruling.
+
+---
+
+# POST-T-106 RULINGS AND CORRECTION WAVE — session opened at `91b5c50`, 2026-08-25
+
+Lead Orchestrator session. **Starting state verified in full before anything was touched:**
+tip = `origin/sprint/pwml-recovery` = `git ls-remote` = **`91b5c50`**; no merge in progress; **0
+staged**; heavy lock `C:/t/heavylock` **absent**; **zero** sprint-owned Python processes (only the
+two `ms-python.isort` `lsp_server.py` IDE servers, PIDs 26052 / 31504, never touched); product-owner
+`streamlit_app.py` edit intact at **35 ins / 2 del, uncommitted**,
+`sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632`; **no cache commit since
+the sprint base** (`af5c3d2` and `868a254` are the product owner's own pre-sprint `research-mode`
+commits of 2026-08-20, not sprint work); `g11_evidence.py check` → **3793 artifacts, 0
+non-compliant**; working tree carrying the same four topics files and nine modified files as at
+handoff.
+
+## The seven rulings, recorded
+
+| ruling | where recorded | note |
+|---|---|---|
+| 1 — `extracted_not_serialized` | **D-065** | bundle's "no production work" claim **corrected** |
+| 2 — keep `pythonpath = src` | **D-066** + `TEST_MATRIX` rule 10 | refusal superseded, not forgotten |
+| 3 — identity | **D-064** | F-113 closed; reopens nothing |
+| 4 — `supported_reactions_complete` | **D-067** | Option C; five preconditions |
+| 5 — F-123 demotion | **D-068** | Option A; **Option C refused**; extends D-040 § 8, assigns `BL-004` |
+| 6 — interaction identity | **D-069** | C-081's blanket rule **not ratified**; narrowed |
+| 7 — F-119 / F-125 | assignment, not a decision | design brief in flight (`REV-086`) |
+
+Recorded in `37b87ef`. `TEST_MATRIX.md` 578 → 597 lines (D-061 permits growth); § 0 also gains
+F-114's second infrastructure mode.
+
+## The gold reconciliation — full audit trail
+
+`src/t2pw/bench/gold/pinned_v1.json`, **PMC12421875 and PMC12657337 only**, exactly two fields each.
+
+```
+pre  sha256 f4ede3e4e7ce60fde928ae1b72dde6c65c542654688791179d1c47a7532c9166
+post sha256 4ef1f51d20aa6bdb3f608f40477a9776ad03bbf6c5e3dbf8563661f09f6cd573
+git  4 insertions / 4 deletions, CRLF line terminator preserved
+```
+
+Verified **mechanically, not by eye** — the patch script refuses to write unless every
+pre-condition holds and re-parses the result afterwards:
+
+* the other **8** cases byte-identical, key sets unchanged;
+* `forbidden_organisms` unchanged on both (**8** and **10** entries) — the traps stay exercisable;
+* `relevance_note` unchanged on both — the ORGANISM TRAP designation is preserved;
+* the pre-existing `export_rationale` text byte-identical, the D-062 sentence appended;
+* **no topics file touched.**
+
+`bench_acceptance.py --verify-plan runs_verify/2026-08-24_1428` → **`OK`, 10 cases, all ten
+`[pinned_override]`** (`evidence/g11/T-107/10-verify-plan-d065.json`, exit 0, 0 survivors).
+SMOKE **473 passed** in 50.78 s post-edit under the heavy lock
+(`11-smoke-post-d065-gold.json`). Merge rule 10 discharged.
+
+**Priority 5's denominator is now 2, and the honest reading is 0/2** — not a pass. `PMC12782028`
+is correctly blocked on coverage and `PMC12096016` twice over.
+
+## Cards dispatched
+
+| card | finding | branch | worktree | base | lane |
+|---|---|---|---|---|---|
+| **C-086** | **F-116** — a component match promotes a single enzyme to a superset complex | `card/C-086-f116` | `C:/t/c086` | `91b5c50` | writer A |
+| **C-087** | **F-123** — a prefreeze declination does not demote the release status (D-068) | `card/C-087-f123` | `C:/t/c087` | `91b5c50` | writer B |
+| **REV-086** | D-069 conformance measurement + F-119/F-125 design brief | — | primary, read-only | `91b5c50` | measurement |
+
+**Ownership collision recorded at dispatch:** C-087 has taken `src/t2pw/batch/driver.py` as its
+caller seam. **C-083 (F-092 defect 3) also owns `driver.py`** (`_finalize_timeout`, the `RunOutcome`
+dataclass and `to_dict`). The two are almost certainly disjoint by function, but they are not
+disjoint by file, so **C-083 serialises behind C-087's merge.** It is not dispatched into a
+concurrent lane.
+
+## Live-run ledger
+
+**No live paper leg and no LLM-backed command has been run this session.** Every measurement is
+current-source inspection or deterministic replay of committed T-104 / T-105 / T-106 artifacts.
+Incremental external-model spend: **$0.00**. Implementation and measurement lanes are all explicitly
+forbidden from live legs; the orchestrator remains the sole owner of live execution.
+
+## F-117 — MEASURED, and the narrow route the product owner asked for exists
+
+Priority F asked: *"Measure and charter only if a narrow exact-identity route exists. Do not create
+broad fuzzy matching."* Measured offline over the whole T-106 corpus
+(`evidence/g11/T-107/20-f117-blast-radius.json`).
+
+`_check_actor_evidence` (`bench/semantic_production.py:395`) takes only `processes`. It reads the
+actor sub-entry's `entity`/`protein`/`name` and compares it against that row's own cited span. The
+component list — which already carries the exact gene symbol — lives on the **entity** table, which
+the function is never passed:
+
+```
+entities.protein_complexes["Lanosterol 14-alpha demethylase"]
+  pathbank_protein_complex_id 442
+  components [{name: "CYP51A1", gene_name: "CYP51A1", uniprot: "Q16850", ...}]   <- 1 component
+```
+
+**Nine actor-evidence findings exist corpus-wide. Classified:**
+
+| | class | count | effect of a one-component exact-identity route |
+|---|---|---|---|
+| **A** | 1-component wrapper, component name **verbatim in the span** | **2** | flips to pass — both are the CYP51A1 false positive, `hit=['CYP51A1']` |
+| **B** | **multi-component** wrapper | **3** | **keeps firing** — all three are F-116's `enterobactin synthase` (4 components) |
+| **C** | not a wrapper / component not in span | **4** | keeps firing |
+
+**The safety property is the point: the narrow route does NOT excuse F-116.** The EntE superset
+keeps failing the gate, because 3623 has four components and the rule is one-component-only. Exactly
+2 of 9 findings move, both true false positives, and the fix is **exact string identity against a
+symbol the record already holds** — not fuzzy matching.
+
+**It changes no disposition**, as F-117 predicted: `PMC12782028/strict` is blocked on
+`requested_core_coverage_below_minimum:0.222<0.500` and would remain so. This is an
+acceptance-instrument honesty fix, and it raises no rate. **Chartered as C-090, queued behind the
+running lanes.**
