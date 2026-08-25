@@ -1,0 +1,40 @@
+# Affected-paper validation cohort -- post C-081 / C-082, both modes. 4 legs.
+#
+# SET DERIVATION (charter section 15: derive the unique affected paper/mode set
+# from the T-106 report, collapse duplicates across cards, one fresh cohort).
+# Scopes copied VERBATIM from topics_t104.txt -- the pinned gold requests are
+# never edited, per D-062.
+#
+# PMC12856317 -- C-081's two refusals. T-106 emitted "Pyridoxal 5'-phosphate"
+#   with drugbank DB00114 / hmdb HMDB0001491 / kegg C00018 / chebi 18405 /
+#   pubchem 1051 on BOTH legs, gold kind cofactor_as_protein. The offline replay
+#   of _admit_identities over the T-106 artifacts measured before=1 after=0 on
+#   each. This cohort tests the same thing through the LIVE production path
+#   rather than a replay of already-mapped data.
+#
+# PMC12444477 -- two properties on one paper, which is why it is here in both
+#   modes rather than research-only:
+#     research: C-082's crash leg. T-106 ended status=error failure_kind=crash at
+#       post_pipeline on AMBIGUOUS_RENAME_TARGET, losing a 10-reaction payload
+#       with connected_core=10 and 8/8 enzyme recall. Must now complete, keep
+#       both Escherichia coli K-12 (83333) and Escherichia coli (562) as
+#       DISTINCT rows, and publish prefreeze_review_required.
+#     strict: C-081's anti-collateral control in production. This leg reported
+#       "9 verified / 2 Unknown-backed placeholder / 3 unresolved, of 14 protein
+#       rows" at T-106 and passed with a 64,359-byte pathway.review_required.pwml.
+#       Its verified identifiers must SURVIVE. A cofactor-role refusal that
+#       reaches this leg is collateral and fails the cohort.
+#
+# NOT included, and why -- each would be a rerun of a settled result:
+#   PMC12096016 / PMC12782028 -- their four surviving false identifiers are
+#     out of C-081's reach by construction (NADH/NAD+ ARE used by a reaction;
+#     the four proteins declare no cofactor role). Nothing merged changes them.
+#   PMC12421875 / PMC12657337 / PMC12312563 -- scope_conflict, abort at Stage 0
+#     before mapping. Neither merged card can reach them.
+#   PMC12452463 / PMC12180156 / PMC13231680 -- untouched by either card.
+#   F-110 -- MEASURED non-reachable across all 20 T-106 legs (zero occurrences
+#     of no_shared_meaningful_token). Section 15's "if that seam affected a real
+#     T-106 case" is not triggered, so it is owed no leg.
+
+PMC12856317 | heme biosynthesis | Homo sapiens
+PMC12444477 | lipid A biosynthesis | Escherichia coli

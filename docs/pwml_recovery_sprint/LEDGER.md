@@ -3400,3 +3400,122 @@ which is worse than a FAIL.** Adjudication dispatched (`REV-084`).
 **Do not charter a code change until that adjudication returns.** A rule here that strips `ATP` from
 the EntE adenylation reaction, or `pyruvate` from the EntB reaction, is disqualifying — both are
 genuine verbatim-quoted participants in this same paper.
+
+---
+
+## F-121 — acceptance priority 2's PASS is an instrument reading nothing on 8 of 10 papers
+
+- **Severity CRITICAL** · **Class `product_contract_violation`** (with a scoping caveat below)
+- **Registered 2026-08-25.** Measured by the REV-084 bio-auditor, **independently verified by the
+  Lead Orchestrator against source and gold before registration.**
+- **This corrects a headline claim of the C-076…C-080 correction wave. See the correction below.**
+
+### The defect
+
+Priority 2 is declared **absolute** — `bench/acceptance.py:439-441`: *"Priorities 1-3 are absolute:
+any non-zero count fails them however good the rest looks."*
+
+`bench/semantic.py`, in `_check_supported_reactions`:
+
+```python
+:705    if not complete:
+:706        findings = [f for f in findings if f.get("kind") != "unsupported_retained_reaction"]
+:708    ok = not missing_signatures and not unverifiable and (not complete or not unsupported_rows)
+:722    false_positives if complete else 0,
+```
+
+`complete` is `case.supported_reactions_complete`, declared `bool = False` at `bench/goldset.py:384`
+and read at `:714` as `bool(raw.get("supported_reactions_complete", False))`.
+
+**Measured directly against the pinned gold:**
+
+```
+cases                             : 10
+with supported_reactions_complete : 0        <-- ABSENT FROM EVERY CASE
+with max_retained_reactions       : [('PMC13231680', 0), ('PMC12180156', 2)]
+```
+
+So on every paper `complete is False`, and therefore:
+
+* every `unsupported_retained_reaction` finding is **deleted at `:706`** before it can be counted;
+* `:722` contributes a hard **`0`**;
+* `:708`'s `(not complete or not unsupported_rows)` is **unconditionally `True`**.
+
+The only surviving route to a non-zero `ERR_UNSUPPORTED_REACTIONS` is the `max_retained_reactions`
+ceiling at `semantic.py:1473-1476`, and that field is set on exactly **two** cases —
+**both of which are the negative controls.**
+
+**Priority 2 has only ever measured negative-control ceilings.**
+
+### What it missed on a real leg
+
+Offline re-score of `PMC12096016/research` at T-106, deterministic, no LLM:
+
+```
+signature_set_complete    False
+retained_reactions        6
+true_positives            2          (EntC, EntB)
+unattributed_reactions    4          <-- EntA x2, EntE, and the interactions
+attribution_rate          0.3333
+unsupported_reactions     0          <-- priority 2's entire contribution
+```
+
+**Four of six retained reactions unattributed. Priority 2 counted zero.**
+
+### CORRECTION to the sprint record
+
+`LEDGER.md` (T-106 section) and `HANDOFF-POST-T106.md` §3 both record **"Priorities 2 and 3 moved
+FAIL → PASS"** as a measured gain of the correction wave, and `TEST_MATRIX.md:482` records T-105's
+priority 2 as `FAIL` on 3 unsupported reactions.
+
+**For priority 2 that movement is not evidence of improvement.** `FAIL 3 → PASS 0` is the reading of
+an instrument that, on 8 of the 10 papers, cannot return anything but zero. Whether the pipeline
+actually stopped retaining unsupported reactions between T-105 and T-106 is **unmeasured**.
+
+The T-105 `FAIL 3` and the T-106 `PASS 0` are both preserved as the official recorded results — they
+are what the scorer of the day said. **Neither may be quoted again as evidence that unsupported
+reactions were eliminated.**
+
+### The suppression itself is CORRECT and must not be overturned
+
+`semantic.py:700-704` explains it: the signature set is a hand-read **subset**, and a cross-paper RAG
+addition cannot match a seed-paper signature by construction. Counting unattributed rows as
+hallucinations *"would have reported 227 fabricated reactions in a run that produced far fewer."*
+
+That reasoning is sound. **The defect is not the suppression. It is that the suppressed result is
+then reported as a PASS on an absolute priority.**
+
+### Why it is a contract violation
+
+`PRODUCT_CONTRACT.md:309-317` requires the system to distinguish, *"without collapsing any into
+another"*, semantic evaluation **passed** / **failed** / **not performed**, and states that
+**`not_evaluated` is never `false`**. Priority 2 collapses *not-evaluated* into *PASS 0*.
+
+The machinery already exists and is already used for the adjacent case: `semantic.py:586` emits
+`inapplicable_reason="the gold case carries no supported_reactions to audit against"` when a case
+declares none. The subset case simply does not use it.
+
+**Scoping caveat, and it is a product-owner call.** §11's grammatical subject is *"The pipeline"*,
+not the benchmark scorer. Under a narrow reading this becomes a **`gold_data_defect`** instead, whose
+remedy is that no gold case ever sets `supported_reactions_complete` and the fix belongs in
+`pinned_v1.json`. **Under either reading the finding is real; only the remedy location moves.**
+
+### Owned
+
+**C-085** (`card/C-085-priority2-honesty`, cut from `2972c34`) is chartered for the **code half
+only**: report `not_evaluated` with an explicit reason instead of `PASS 0`, keep the subset
+suppression, keep attribution rate and recall, keep the negative-control ceiling path working. It is
+forbidden from editing `pinned_v1.json`.
+
+### OPEN — priority 3 has not been checked for the same disease
+
+Priority 3 (zero referential-integrity violations) also moved `FAIL 2 → PASS 0` in the same wave and
+is also declared absolute. **Nobody has verified that its PASS is capable of returning non-zero.**
+Until someone does, treat its `PASS 0` as unconfirmed. This is a cheap static check and belongs with
+C-085's review.
+
+### Consequence for release candidates
+
+Every acceptance run to date inherits this blind spot, and any correction wave measured against
+priority 2 will appear to hold when it may not. **A gate that cannot produce a non-zero count is
+inert, not absolute.** This is why C-085 is chartered ahead of any further release candidate.
