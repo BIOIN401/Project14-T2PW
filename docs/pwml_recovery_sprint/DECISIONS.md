@@ -3727,3 +3727,255 @@ way.
 **The blocker recorded against T-105 is now: "F-094 and F-096 corrections not yet merged."** It is no
 longer "T-104 has not run" — T-104 ran on 2026-08-21/22 into `runs_verify/2026-08-21_2239`
 (committed `2673067`).
+
+---
+
+## D-064 — a shared accession within one kind is identity, not conflict · 2026-08-23 · LOCKED
+
+**Product-owner ruling, taken 2026-08-23. Recorded retroactively 2026-08-25** to close F-113: the
+ruling was already governing merged production code and belonged in the locked-decisions file.
+Recording it changes nothing and reopens nothing. **C-073, C-076 and C-080 are NOT reopened.**
+
+The same UniProt accession may be shared by proven aliases of the same protein and by holo/apo
+states of the same underlying polypeptide. `EntE` and `enterobactin synthase` are the same protein
+identity. Holo-EntB and apo-EntB may share the underlying parent accession **while remaining
+distinct pathway states**. **Do not flag these as accession conflicts unless the entities are
+biologically unrelated or cross-kind. Update the scorer/gold classification rather than forcing the
+pipeline to invent different protein identities.**
+
+**`R196A` remains a distinct mutant polypeptide.** A point mutant is not an alias and not a state of
+the wild type; sharing the parent accession with it is a conflict, not identity.
+
+### Implemented by
+
+C-076 (`3b7a7b1`, scorer + gold) and C-080 (`89aaced`, the production release gate, reading the same
+identity predicate). C-073 was corrected against the D-035 clause 3c this ruling interprets.
+
+### A known and deliberate gap in the implementation
+
+The wording is *"biologically unrelated **or** cross-kind"*. **Both seams implement cross-kind
+only**, because neither has a corpus-wide biological-relatedness oracle. Two genuinely unrelated
+same-kind proteins fused onto one accession by a mapper bug are invisible to the scorer **and** to
+the production gate. That mirrors the pipeline's pre-existing blind spot and is what the C-076
+charter directed, so it is not a deviation — but the "unrelated within one kind" half is
+**unmeasured corpus-wide** and is recorded here as a known gap, **not** an assumed non-issue.
+
+---
+
+## D-065 — `extracted_not_serialized`: a fourth disposition for a defensible core a scope guard stopped · 2026-08-25 · LOCKED
+
+**Product-owner ruling on Decision bundle post-T-106, Item 1. Option A is ADOPTED**, with one
+correction to the bundle's own framing.
+
+### The ruling
+
+`PRODUCT_CONTRACT` § 4 has no state for *"a defensible pathway core was extracted, but a correct
+scope guard stopped the run before audit, DB mapping, freeze and PWML serialization."* D-062 assumed
+one existed. It does not, and C-077 was right to decline to fabricate a gate result to reach
+`review_required`. **That decision is not charged against C-077.**
+
+A distinct disposition, **`extracted_not_serialized`**, is adopted for exactly that shape.
+
+### For `PMC12421875` and `PMC12657337`
+
+* They **must never count as strict exports** under the deliberately wrong requested organism.
+* `forbidden_organisms` is **preserved** — the trap stays exercisable.
+* `relevance_note` is **preserved** — the ORGANISM TRAP designation is the point of the cases.
+* The topics files are **preserved** — D-062 forbids touching them in terms.
+* `expected_export` changes `strict_exportable` -> `partial_only`.
+* The prepared D-062 reconciliation sentence is appended to `export_rationale`, leaving the existing
+  text byte-identical.
+* `bench_acceptance.py --verify-plan` MUST remain `OK` with all ten `[pinned_override]`.
+
+### The bundle's "no production work" claim is CORRECTED
+
+The bundle asserted Option A *"costs no production code."* **That is not accepted.** A contract state
+that is never emitted is not a contract state; adding a disposition to the gloss while the emitted
+and scored record continues to describe the same leg as something else would be exactly the kind of
+untruth C-077 was chartered to remove.
+
+**The emitted and scored record must be honest.** Before implementation, the disposition must be
+resolved as one of:
+
+1. a **runtime release status** (a fourth member of `RELEASE_STATES`);
+2. a **benchmark disposition** layered over an unchanged runtime `diagnostic_only`;
+3. an **additional explicit field beside** the existing runtime status.
+
+**Reading 3 is the preferred implementation**, and it carries these constraints:
+
+* **preserve** the existing safe runtime refusal — the run still stops before serialization;
+* **expose** an explicit `extracted_not_serialized` disposition in the release/acceptance record;
+* **never fabricate** `strict_gates_passed`;
+* **never pretend** a PWML exists;
+* update the `PRODUCT_CONTRACT` gloss **and** the scorer consistently, so no reader has to decide
+  which of two fields to believe;
+* **create no route toward strict export.** D-062 forbids that outright and this ruling does not
+  reopen it.
+
+If extending `RELEASE_STATES` turns out to be the only coherent implementation, that change is
+**chartered and reviewed on its own merits** — it is not smuggled in as a documentation-only
+correction.
+
+### What this ruling does and does not buy
+
+It removes two structurally impossible cases from priority 5's strict denominator: **4 -> 2**. It
+does **not** make priority 5 pass. `PMC12782028` is correctly blocked on coverage and `PMC12096016`
+is correctly blocked twice over, so the honest result becomes **0/2** until the remaining
+biological and code defects are corrected. **T-107 must not be authorised on an expectation that
+priority 5 passes.**
+
+---
+
+## D-066 — `pytest.ini` keeps `pythonpath = src`; `TEST_MATRIX` rule 10's refusal is SUPERSEDED · 2026-08-25 · LOCKED
+
+**Product-owner ruling on Decision bundle post-T-106, Item 2.**
+
+The C-070 setting (`5bc600e`) **stays**. Removing it would re-break individual-file collection for 21
+of 156 test files in order to solve a problem the mandatory pin already solves.
+
+`TEST_MATRIX.md` rule 10 is amended to record its refusal as **superseded, not forgotten**. The
+hazard it names is real — pytest *prepends* `pythonpath` entries ahead of the `PYTHONPATH` pin, so
+the setting alone could make a base-tree G9 proof silently measure the tip. It is neutralised by the
+pin, **not** by the setting's absence.
+
+### Required mitigation, now mandatory rather than customary
+
+* Every base-tree measurement runs through `pinned_pytest.py`.
+* It passes `--expect-tree`.
+* It carries a committed `--pin-verdict`.
+* **An unpinned base-tree run is not evidence.**
+
+### Folded in from F-114 — a second infrastructure mode that looks like a regression
+
+* Omitting `--basetemp` can produce **false regression failures** (83 tests error with
+  `PermissionError`).
+* Specifying a `--basetemp` whose **parent directory does not exist** can *also* produce false
+  regression failures — one measured instance errored 55 tests; creating the parent gave
+  `339 passed`.
+* **Pre-create the basetemp parent before pytest.**
+
+Neither side of the contradiction was wrong on its own merits and neither author knew of the other.
+**Not chargeable to C-070 or C-079.** Accepted base proofs from this wave were all pinned and are
+**not rerun**.
+
+---
+
+## D-067 — `supported_reactions_complete` is set per paper, only where exhaustiveness is PROVEN · 2026-08-25 · LOCKED
+
+**Product-owner ruling on Decision bundle post-T-106, Item 4. Option C is ADOPTED.**
+
+`supported_reactions_complete` is **not** set `true` broadly. Option B wholesale is **refused**.
+
+Work starts only where an exhaustive signature set can genuinely be established, beginning with the
+two negative controls that already carry `max_retained_reactions`:
+
+* `PMC13231680`
+* `PMC12180156`
+
+### Before the flag is set for ANY paper, all five must hold
+
+1. The **complete scoped source** has been read.
+2. **Every** supported reaction signature is defined.
+3. The biological completeness has been **independently reviewed**.
+4. The run is **confirmed compatible with the seed-only assumption** — `goldset.py:384` warns the
+   flag is incompatible with multi-paper RAG synthesis unless the run is seed-only.
+5. **Who established exhaustiveness, and how**, is recorded.
+
+**If exhaustiveness cannot be proven, the field is left absent and priority 2 reports
+`NOT EVALUATED`.**
+
+### The prohibition
+
+**The Boolean is never set merely to make priority 2 measurable.** A false value of `true` converts
+every unattributed row into a reported fabrication; `semantic.py:700-704` records that this would
+have reported **227** fabricated reactions in a run that produced far fewer. That is the worst
+outcome available and it is one keystroke away.
+
+C-085 made the report honest; it did not make the measurement exist. **This work does not block the
+next release candidate.**
+
+---
+
+## D-068 — a prefreeze declination DEMOTES the release status; D-040 § 8's residual gets its owner · 2026-08-25 · LOCKED
+
+**Product-owner ruling on Decision bundle post-T-106, Item 5. Option A is ADOPTED. Option C —
+folding F-123 into D-065 — is REFUSED.**
+
+### Why they are not folded together
+
+F-107 and F-123 are the same *principle* at **different lifecycle positions**, and merging them
+would produce one blurred rule instead of two exact ones:
+
+* **D-065 / F-107** stops **before serialization** — no PWML exists and none may be invented.
+* **F-123** retains an **intact graph** and may still legitimately serialize.
+
+### The ruling
+
+The prefreeze verdict is **threaded into release classification**.
+
+* `prefreeze_report["ok"] = False` **with a review-required reason** demotes the result to
+  `review_required`.
+* Such a run **must never reach `release_ready`**.
+* **Useful intact biology remains available** — the payload is not discarded.
+* The ambiguous rename **remains declined**; no unsafe merge is guessed.
+* **No payload is discarded merely because the rename was ambiguous** (merge rule 7).
+
+### This extends D-040 § 8 explicitly
+
+D-040 § 8 split D-029 so that C-052 **persists and surfaces only**, and assigned *"acting on
+`review_required`"* to **no card**, registering it as backlog **`BL-004`**. **`BL-004` is now
+assigned.** The production change lands in `release_status.py` or the narrowest appropriate seam —
+**not** in the product-owner-owned `streamlit_app.py`.
+
+C-082 is **not** charged with stopping short. Closing this was outside its boundary and required a
+locked-decision extension it had no authority to take; the reviewer's judgement on that point is
+accepted.
+
+### The prohibition
+
+**Do not rely on unrelated gates to prevent a successful export.** D-035 clause 8's *"must not
+become a successful export"* is currently enforced only by other gates and never by this channel.
+An invariant that holds by coincidence of ordering is not an invariant.
+
+---
+
+## D-069 — an interaction endpoint confers no PARTICIPANT role; it may still support IDENTITY · 2026-08-25 · LOCKED
+
+**Product-owner ruling on Decision bundle post-T-106, Item 6. C-081's inherited scope note is
+ratified in a NARROWED form, not as written.**
+
+### NOT ratified
+
+> ~~An interaction endpoint does not license a database identity.~~
+
+That blanket statement is **refused**. C-081's corpus result — **zero observed collateral over 18
+refusals across 89 artifacts** — is useful evidence but does **not** prove the blanket rule safe
+outside that sample.
+
+### Ratified instead
+
+* An interaction endpoint does **not, by itself**, prove that an entity participates in a reaction
+  or transport.
+* A **source-supported** interaction may still establish that the entity **exists**, and may support
+  its **database identity**.
+* Interaction evidence **must not promote** an entity into a reaction-participant role.
+* An **interaction-only cofactor may retain identity** when the paper explicitly supports the
+  interaction and the entity kind is valid.
+* **Unsupported or merely inferred** interaction endpoints must not acquire real identifiers.
+
+Cofactor binding — an `interaction` — is the canonical way papers state cofactor relationships. The
+distinction this ruling draws is between **existence/identity** (which a supported interaction can
+carry) and **participant role** (which it cannot).
+
+### Required follow-up
+
+Whether current production violates the **narrower** ruling is **measured**, not assumed. If it
+does, a correction is chartered covering:
+
+* valid interaction-only identity cases;
+* unsupported interaction cases;
+* reaction-participant non-promotion;
+* legitimate ATP / cofactor preservation;
+* corpus-wide collateral reporting.
+
+**C-081 is not reopened unless that measurement reveals a conflict.**

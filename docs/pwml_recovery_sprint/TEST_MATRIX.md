@@ -4,6 +4,13 @@
 `PermissionError` and you will report a false regression. Never run the full suite
 unchunked — it approaches 16 GB.
 
+**Two infrastructure modes look exactly like a large regression (F-114, folded in by
+D-066).** The first is the omitted `--basetemp` above. The second: **a `--basetemp` whose
+PARENT directory does not exist errors the run outright** — pytest does not create
+intermediate directories, so every test errors in setup. One measured instance errored
+**55 tests**; creating the parent gave **339 passed** on the same tree and selection.
+**Pre-create the basetemp parent before pytest.** Neither mode is a test result.
+
 Runtimes measured on `ORIGIN_SHA`, Windows, `.venv/Scripts/python.exe` (3.13.6).
 
 ---
@@ -106,10 +113,22 @@ hung it.
     24 of the 27 smoke and Chunk D test modules — **overrides `PYTHONPATH`** in a worktree
     while being a no-op in the primary checkout. Only the **resolved** path, compared
     against the expected tree and written to a committed verdict, settles which tree was
-    measured. `pytest.ini` **must not** gain `pythonpath = src`: it was considered as a
-    remedy for F-003 and is **refused**, because pytest *prepends* those entries, so it
-    would sit ahead of the `PYTHONPATH` pin and make every base-tree G9 proof silently
-    measure the tip — the same defect class as F-003, aimed at the proofs themselves.
+    measured. **`pytest.ini` carries `pythonpath = src`** (C-070, `5bc600e`), which this
+    rule previously **refused**. Under **D-066 (LOCKED, 2026-08-25) the refusal is
+    SUPERSEDED, not forgotten.**
+
+    The hazard it named is real and unchanged: pytest *prepends* those entries, so the
+    setting sits ahead of the `PYTHONPATH` pin and could make a base-tree G9 proof
+    silently measure the tip — the same defect class as F-003, aimed at the proofs
+    themselves. It is neutralised by the **pin**, not by the setting's absence. Removing
+    the setting would re-break individual-file collection for 21 of 156 test files
+    (the real, unrelated defect C-070 fixed) to solve a problem the pin already solves.
+    Neither side of the contradiction was wrong on its own merits and neither author
+    knew of the other; **this is not chargeable to C-070 or C-079.**
+
+    **Therefore, mandatory rather than customary: every base-tree measurement MUST run
+    through `pinned_pytest.py` with `--expect-tree` and a committed `--pin-verdict`. An
+    unpinned base-tree run is NOT evidence.**
 
     **"Inside the tree" means inside the package directory, not the tree root.** `t2pw`
     must resolve under `<expected>/src/t2pw` and `scripts` under `<expected>/scripts`: every

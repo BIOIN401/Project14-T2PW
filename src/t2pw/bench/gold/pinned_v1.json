@@ -662,8 +662,8 @@
       "min_connected_reactions": 3,
       "unknown_backed_proteins_acceptable": false,
       "unknown_backed_rationale": "All three catalysts in the connected chain are named with canonical symbols (HepPPS, MenA, UbiE). No unnamed or hypothetical protein is needed, so one would indicate hallucination.",
-      "expected_export": "strict_exportable",
-      "export_rationale": "A three-reaction connected chain with named enzymes and explicit substrates and products is stated verbatim. Every exported reaction must carry organism Escherichia coli; labelling them Bacillus subtilis, the requested organism, is a failure even though two enzymes are B. subtilis-derived.",
+      "expected_export": "partial_only",
+      "export_rationale": "A three-reaction connected chain with named enzymes and explicit substrates and products is stated verbatim. Every exported reaction must carry organism Escherichia coli; labelling them Bacillus subtilis, the requested organism, is a failure even though two enzymes are B. subtilis-derived. Reconciled with D-062 (LOCKED, 2026-08-22): a Stage-0 organism conflict whose reading is correct preserves the pathway for review under the OBSERVED organism and is never a strict export. The organism-labelling requirement above remains the scored property of whatever artifact this paper does produce.",
       "notes": "The paper contains two internal inconsistencies that a faithful extraction reproduces rather than silently corrects: the figure legend calls Idi an IPP isomerase while the results text says it converts IPP to FPP, and the legend's MvaE/MvaS synthase/reductase assignment appears transposed. No UniProt accession, EC number or locus tag appears anywhere.",
       "supported_reactions": [
         {
@@ -981,8 +981,8 @@
       "min_connected_reactions": 7,
       "unknown_backed_proteins_acceptable": false,
       "unknown_backed_rationale": "All nine catalysts are named canonical Men proteins and the paper introduces no novel uncharacterised enzyme. The paper gives no locus tags, UniProt IDs or EC numbers, so a correct extraction resolves by name plus organism rather than inventing accessions.",
-      "expected_export": "strict_exportable",
-      "export_rationale": "A fully connected chorismate-to-DHNA chain is stated with named enzymes and named intermediates in one organism. Every exported reaction must carry organism Lactococcus lactis; the M. tuberculosis Ki, the E. coli kinetic constants and the B. subtilis discussion mentions must not leak in as reaction organisms.",
+      "expected_export": "partial_only",
+      "export_rationale": "A fully connected chorismate-to-DHNA chain is stated with named enzymes and named intermediates in one organism. Every exported reaction must carry organism Lactococcus lactis; the M. tuberculosis Ki, the E. coli kinetic constants and the B. subtilis discussion mentions must not leak in as reaction organisms. Reconciled with D-062 (LOCKED, 2026-08-22): a Stage-0 organism conflict whose reading is correct preserves the pathway for review under the OBSERVED organism and is never a strict export. The organism-labelling requirement above remains the scored property of whatever artifact this paper does produce.",
       "notes": "PAPER-INTERNAL ERROR: 'MenG demethylates DMK to generate MK' has the direction wrong (MenG methylates). A faithful extraction reproduces the quote; assigning a demethylase EC compounds the error, which is why MenG is excluded from the connected floor of 7. The cached text has a discontinuity in Results (the Fig 2H-J narrative is missing), so absent content there is not an extraction failure.",
       "supported_reactions": [
         {
