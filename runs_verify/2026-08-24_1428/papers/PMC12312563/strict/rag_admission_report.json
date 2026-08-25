@@ -1,0 +1,1929 @@
+{
+  "accepted": [],
+  "rejected": [
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.970981,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.970981,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.970981,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.970981,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.935714,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.935714,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.778754,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778754,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-4456e181",
+      "gap_ids": [
+        "gap-orphan_metabolite-4456e181"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.778754,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.778754,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-152b5390",
+      "gap_ids": [
+        "gap-orphan_metabolite-152b5390"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.9795,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.9795,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-152b5390",
+      "gap_ids": [
+        "gap-orphan_metabolite-152b5390"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.9795,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.9795,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-152b5390",
+      "gap_ids": [
+        "gap-orphan_metabolite-152b5390"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.935714,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.935714,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-152b5390",
+      "gap_ids": [
+        "gap-orphan_metabolite-152b5390"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.751256,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751256,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-152b5390",
+      "gap_ids": [
+        "gap-orphan_metabolite-152b5390"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.751256,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751256,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.97305,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.97305,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.97305,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.97305,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.917241,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.917241,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.782289,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.782289,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "gap_ids": [
+        "gap-unmapped_enzyme-de91fbb1"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.782289,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.782289,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them",
+        "candidate_type_cannot_fill_gap: gap gap-unmapped_enzyme-de91fbb1 asks for the identity of 'MenD'; a reaction is not an identifier resolution — recommended route: identity_resolver"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.957385,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957385,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.957385,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.957385,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.927586,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927586,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.751092,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751092,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-695eb3b5",
+      "gap_ids": [
+        "gap-orphan_metabolite-695eb3b5"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.751092,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.751092,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-1160d495",
+      "gap_ids": [
+        "gap-dangling_reaction-1160d495"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.943514,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.943514,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-1160d495",
+      "gap_ids": [
+        "gap-dangling_reaction-1160d495"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.943514,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.943514,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-1160d495",
+      "gap_ids": [
+        "gap-dangling_reaction-1160d495"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.927586,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927586,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-1160d495",
+      "gap_ids": [
+        "gap-dangling_reaction-1160d495"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.776313,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.776313,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-dangling_reaction-1160d495",
+      "gap_ids": [
+        "gap-dangling_reaction-1160d495"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.776313,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.776313,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.974643,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.974643,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.974643,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.974643,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.927586,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927586,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.769826,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.769826,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-b269b2ff",
+      "gap_ids": [
+        "gap-orphan_metabolite-b269b2ff"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.769826,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.769826,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "MenD-catalyzed decarboxylation and condensation",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "b1fdcde33d849ffe9d658e52ccc5f2b8",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "introduction",
+        "score": 0.972375,
+        "span": ""
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.972375,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "α-ketoglutarate -> SEPHCHC",
+      "inputs": [
+        "α-ketoglutarate",
+        "isochorismate"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "c874589993a17975c5350bb181330e8b",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "introduction",
+        "score": 0.972375,
+        "span": ""
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.972375,
+      "status": "rejected",
+      "reasons": [
+        "no_local_evidence_span: no span was located"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "first irreversible step in bacterial classical menaquinone biosynthesis",
+      "inputs": [
+        "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)"
+      ],
+      "outputs": [
+        "SEPHCHC"
+      ],
+      "enzymes": [
+        "MenD"
+      ],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "45e5c4d90c9a5a744846b85967188695",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "abstract",
+        "score": 0.927586,
+        "span": "The ThDP-dependent enzyme 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC) synthase (MenD) catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent ThDP-bound intermediates."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.927586,
+      "status": "rejected",
+      "reasons": [
+        "evidence_relation_roles_unassignable: the span states a relation but no implemented pattern could assign substrate/product/catalyst roles — recorded for review rather than inferred"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "seed_paper",
+        "title": "menaquinone biosynthesis (classical pathway)",
+        "uri": "",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "57b046235161ed942417c05f54014d8d",
+        "source_id": "seed_paper",
+        "source_uri": "",
+        "section": "discussion",
+        "score": 0.788742,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "Listeria monocytogenes (strain 10403s)",
+      "observed_organisms": [
+        "Listeria monocytogenes (strain 10403s)"
+      ],
+      "observed_pathways": [],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.788742,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    },
+    {
+      "gap_id": "gap-orphan_metabolite-49085564",
+      "gap_ids": [
+        "gap-orphan_metabolite-49085564"
+      ],
+      "name": "intermediate I -> intermediate II",
+      "inputs": [
+        "intermediate I",
+        "isochorismate"
+      ],
+      "outputs": [
+        "intermediate II"
+      ],
+      "enzymes": [],
+      "reversible": false,
+      "source_paper": {
+        "source_id": "PMC12312563",
+        "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+        "uri": "https://doi.org/10.1107/s2053230x25006181",
+        "source_type": "paper"
+      },
+      "evidence": {
+        "chunk_id": "111d8d078e58da8b18b539dc5f533e7e",
+        "source_id": "PMC12312563",
+        "source_uri": "https://doi.org/10.1107/s2053230x25006181",
+        "section": "discussion",
+        "score": 0.788742,
+        "span": "Intermediate I then goes on to react via C2α with the second substrate isochorismate to form intermediate II (Fig. 1 ▸ )."
+      },
+      "organism": "",
+      "observed_organisms": [
+        "Listeria monocytogenes",
+        "Mycobacterium tuberculosis"
+      ],
+      "observed_pathways": [
+        "menaquinone biosynthesis"
+      ],
+      "requested_pathway": "menaquinone biosynthesis (classical pathway)",
+      "requested_organism": "Listeria monocytogenes (strain 10403s)",
+      "requested_pathway_match": "match",
+      "organism_match": "match",
+      "scope_membership": "out_of_scope",
+      "connected_entities": [],
+      "confidence": 0.788742,
+      "status": "rejected",
+      "reasons": [
+        "evidence_states_no_reaction_relation: the span names the participants but asserts no reaction between them"
+      ],
+      "normalized": [],
+      "chain": {}
+    }
+  ],
+  "counts": {
+    "accepted": 0,
+    "rejected": 35,
+    "considered": 35
+  },
+  "reason_counts": {
+    "candidate_type_cannot_fill_gap": 5,
+    "evidence_relation_roles_unassignable": 7,
+    "evidence_states_no_reaction_relation": 14,
+    "no_local_evidence_span": 14
+  },
+  "by_gap": {
+    "gap-dangling_reaction-1160d495": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-152b5390": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-4456e181": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-49085564": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-695eb3b5": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-orphan_metabolite-b269b2ff": {
+      "accepted": 0,
+      "rejected": 5
+    },
+    "gap-unmapped_enzyme-de91fbb1": {
+      "accepted": 0,
+      "rejected": 5
+    }
+  },
+  "truncated": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "policy": {
+    "organism_policy": "allow_unknown",
+    "require_pathway_match": false,
+    "max_report_entries": 200,
+    "evidence_snippet_chars": 320,
+    "max_chain_hops": 2,
+    "max_span_chars": 600
+  },
+  "rules": [
+    {
+      "rule": "named_gap",
+      "requires": "the candidate names a gap_id that was actually detected"
+    },
+    {
+      "rule": "valid_entity_types",
+      "requires": "every participant and catalyst is a plausible species / protein token"
+    },
+    {
+      "rule": "local_evidence_span",
+      "requires": "the candidate points at ONE bounded span of its chunk, which is a single statement (one sentence, or one parsed equation line)"
+    },
+    {
+      "rule": "evidence_supports_participants",
+      "requires": "the span's own parsed substrates and products are the claim's, matched on whole-name boundaries"
+    },
+    {
+      "rule": "relation_agrees",
+      "requires": "the span STATES this reaction — its parsed substrates, products and direction agree with the claim; co-occurrence of names is not a relation and a reversed span refutes a forward claim"
+    },
+    {
+      "rule": "no_unsupported_catalyst",
+      "requires": "every catalyst claimed is the catalyst the span attaches to THIS relation, not merely a protein named nearby"
+    },
+    {
+      "rule": "organism_compatible",
+      "requires": "the organism observed in the span (else the paper's observed metadata) matches the requested one, is a related taxon, or is explicitly unknown and the configured policy allows unknown"
+    },
+    {
+      "rule": "requested_pathway",
+      "requires": "the span / observed metadata does not name a DIFFERENT pathway (strict policy additionally requires a positive pathway match)"
+    },
+    {
+      "rule": "gap_type_compatible",
+      "requires": "the candidate is the KIND of evidence the gap asks for: a reaction can fill a connectivity gap, but a missing_compartment gap needs a location assertion and an unmapped_enzyme gap needs identifier evidence"
+    },
+    {
+      "rule": "connects_to_pathway",
+      "requires": "a SUBSTRATE OR PRODUCT of the candidate is an existing pathway metabolite or the gap's expected anchor — catalysts never connect"
+    },
+    {
+      "rule": "fills_its_named_gap",
+      "requires": "a substrate or product of the candidate is the gap's target, directly or within the configured hop limit through metabolites contributed by reactions already admitted for that same gap"
+    },
+    {
+      "rule": "gap_not_already_covered",
+      "requires": "for a connectivity gap: no existing reaction already has every substrate and product of this candidate, same side, same direction"
+    },
+    {
+      "rule": "not_already_admitted_for_another_gap",
+      "requires": "one canonical claim from one span is admitted once; it carries every gap id it was retrieved for"
+    }
+  ],
+  "acceptance_breakdown": {
+    "direct": 0,
+    "chained": 0,
+    "chained_by_hop": {}
+  },
+  "resolutions": [],
+  "recommended_route": [
+    {
+      "gap_id": "gap-unmapped_enzyme-de91fbb1",
+      "label": "MenD",
+      "recommended_route": "identity_resolver"
+    }
+  ],
+  "identity_outcomes": {
+    "proposals": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "targets": {
+      "verified": 0,
+      "annotation_only": 0,
+      "rejected_scope_or_type": 0,
+      "unverified_no_resolver": 0,
+      "rejected_by_identity_resolver": 0,
+      "conflicting": 0
+    },
+    "unresolved_identity_gaps": 1,
+    "unresolved_for_unknown_fallback": 1,
+    "unknown_fallback_present": 0
+  }
+}

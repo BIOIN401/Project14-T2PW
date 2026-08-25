@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.0,
+      "max_tokens": 3600,
+      "candidate_count": 3,
+      "selected_candidate_index": 1,
+      "selected_score": [
+        0,
+        2,
+        3,
+        0,
+        -6,
+        6
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 3,
+      "warning_count": 6,
+      "patch_count": 6,
+      "accepted_patch_count": 6,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Add missing UniProt identifiers to three proteins using mapping_meta evidence, remove duplicate compound hemin that was already flagged for removal, and fix invalid self-referential component list in CLPXP complex. These changes resolve the… (+110 chars elided)",
+      "top_errors": [
+        "Protein 'ALAS2' is missing a UniProt or DrugBank identifier.",
+        "Protein 'ALAS1' is missing a UniProt or DrugBank identifier.",
+        "Protein 'LONP1' is missing a UniProt or DrugBank identifier."
+      ],
+      "gap_mapped_ids_added": 1,
+      "gap_locations_added": 1,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

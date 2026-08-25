@@ -1,0 +1,2109 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 13,
+        "organisms_added": 0,
+        "locations_added": 6,
+        "location_states_filled": 0,
+        "complex_components_structured": 3,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 4,
+        "items_considered": 22,
+        "enrichment_patches_accepted": 6,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "species:e coli",
+            "entity_type": "species",
+            "name": "E. coli",
+            "path": "/entities/species/1",
+            "needs_id_mapping": true,
+            "species_missing_db_id": true,
+            "taxonomy_id": "562",
+            "missing_fields": [
+              "pathbank_species_id"
+            ],
+            "reasons": [
+              "species_missing_db_id"
+            ]
+          },
+          {
+            "issue_key": "protein:lpxa",
+            "entity_type": "protein",
+            "name": "LpxA",
+            "path": "/entities/proteins/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:lpxd",
+            "entity_type": "protein",
+            "name": "LpxD",
+            "path": "/entities/proteins/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:lpxh",
+            "entity_type": "protein",
+            "name": "LpxH",
+            "path": "/entities/proteins/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:lpxl",
+            "entity_type": "protein",
+            "name": "LpxL",
+            "path": "/entities/proteins/7",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:lpxm",
+            "entity_type": "protein",
+            "name": "LpxM",
+            "path": "/entities/proteins/8",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:ftsh",
+            "entity_type": "protein",
+            "name": "FtsH",
+            "path": "/entities/proteins/9",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:lapb",
+            "entity_type": "protein",
+            "name": "LapB",
+            "path": "/entities/proteins/10",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein:yejm",
+            "entity_type": "protein",
+            "name": "YejM",
+            "path": "/entities/proteins/11",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "entity_type": "compound",
+            "name": "β-hydroxyacyl-ACP",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglcnac",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          "…+10 more item(s) elided"
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:a747ccde35b6b9d6",
+            "preview": "{\"operations\": [{\"issue_key\": \"species:e coli\", \"resolve_ids\": {\"strategy\": \"db_only\"}, \"resolve_location\": {\"strategy\": \"skip\"}, \"background\": {\"api_lookup\": \"none\", \"hmdb_lookup\": false, \"max_result… (+300 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "species:e coli",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lpxa",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lpxd",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lpxh",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lpxl",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lpxm",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:ftsh",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:lapb",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein:yejm",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglcnac",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          "…+10 more item(s) elided"
+        ],
+        "executions": [
+          {
+            "issue_key": "species:e coli",
+            "status": "skipped",
+            "reason": "issue_not_found"
+          },
+          {
+            "issue_key": "protein:lpxa",
+            "entity_type": "protein",
+            "name": "LpxA",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LpxA",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:4940b9c5fa207925",
+                  "preview": "{\"uniprot\": \"P0A722\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:9edb76b3bd1a4135",
+                  "preview": "[\"(protein_name:\\\"LpxA\\\" OR gene:\\\"LpxA\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LpxA\\\" OR gene:\\\"LpxA\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1172,
+                  "hash": "sha256:e0772c378d41c3c1",
+                  "preview": "[{\"accession\": \"P0A722\", \"protein_name\": \"Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"acce… (+972 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 723,
+                  "hash": "sha256:0f646b03087ca48e",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P0A722\", \"pathbank_protein_id\": \"6025\"}, \"pathbank_protein_id\": 6025, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+523 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2866,
+                  "hash": "sha256:07e12578562b34d0",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LpxA\\\" OR gene:\\\"LpxA\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LpxA\\\" OR gene:\\\"LpxA\\\")\", \"mapped_id… (+2666 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:98ec99ca9af27498",
+                  "preview": "{\"uniprot\": \"P0A722\", \"pathbank_protein_id\": \"6025\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:4940b9c5fa207925",
+                  "preview": "{\"uniprot\": \"P0A722\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:aef9a3573831e2b5",
+                  "preview": "{\"uniprot\": \"B6HZF5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e03b77e2ec6aa228",
+                  "preview": "{\"uniprot\": \"Q8X8X8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d3538f73fb66f683",
+                  "preview": "{\"uniprot\": \"B7M1Y4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cd4895db6a988c35",
+                  "preview": "{\"uniprot\": \"B7MP41\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1fe18402265257a5",
+                  "preview": "{\"uniprot\": \"B7LGP3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8075,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2689140c35fcada4",
+                  "preview": "{\"uniprot\": \"B1XD50\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "llm_selected",
+              "source": "llm",
+              "raw": {
+                "chars": 46,
+                "hash": "sha256:4d727228d5a22c4e",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0 }"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:lpxd",
+            "entity_type": "protein",
+            "name": "LpxD",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LpxD",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a54c4c741895ba55",
+                  "preview": "{\"uniprot\": \"P21645\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:eaf296d1c0610c7c",
+                  "preview": "[\"(protein_name:\\\"LpxD\\\" OR gene:\\\"LpxD\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LpxD\\\" OR gene:\\\"LpxD\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1136,
+                  "hash": "sha256:3193cbd8c8f5a78f",
+                  "preview": "[{\"accession\": \"P21645\", \"protein_name\": \"UDP-3-O-(3-hydroxymyristoyl)glucosamine N-acyltransferase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P653… (+936 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 698,
+                  "hash": "sha256:f562ed5548d1123c",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P21645\", \"pathbank_protein_id\": \"6400\"}, \"pathbank_protein_id\": 6400, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+498 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2819,
+                  "hash": "sha256:cd161329919b248c",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LpxD\\\" OR gene:\\\"LpxD\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LpxD\\\" OR gene:\\\"LpxD\\\")\", \"mapped_id… (+2619 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:cc4353e84f7c3464",
+                  "preview": "{\"uniprot\": \"P21645\", \"pathbank_protein_id\": \"6400\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a54c4c741895ba55",
+                  "preview": "{\"uniprot\": \"P21645\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:cd73d9b739d0e186",
+                  "preview": "{\"uniprot\": \"P65323\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:ef360381066f81b2",
+                  "preview": "{\"uniprot\": \"Q1RG10\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:11a867f2797d55f2",
+                  "preview": "{\"uniprot\": \"P65322\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:55dcd24ac6d04901",
+                  "preview": "{\"uniprot\": \"Q0TLF4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:9f1d6629087d88a0",
+                  "preview": "{\"uniprot\": \"A0A0H2YWR9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:54c4cdc14da78f53",
+                  "preview": "{\"uniprot\": \"B7LGP0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Database-backed candidate (PathBankDB) with exact UniProt match (P21645) to the best-effort fallback, highest confidence, and correct organism (E. coli).",
+              "source": "llm",
+              "raw": {
+                "chars": 215,
+                "hash": "sha256:6c33a5b9fce24f20",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Database-backed candidate (PathBankDB) with exact UniProt match (P21645) to the best-effort fallback, highest confidence, and correct organism (E. … (+9 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:lpxh",
+            "entity_type": "protein",
+            "name": "LpxH",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LpxH",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7c2e2cbac045d120",
+                  "preview": "{\"uniprot\": \"P43341\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:949b8df80d178d50",
+                  "preview": "[\"(protein_name:\\\"LpxH\\\" OR gene:\\\"LpxH\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LpxH\\\" OR gene:\\\"LpxH\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 961,
+                  "hash": "sha256:3a9915cfcb251e48",
+                  "preview": "[{\"accession\": \"P43341\", \"protein_name\": \"UDP-2,3-diacylglucosamine hydrolase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"Q8XCU1\", \"protein_name\": \"… (+761 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 657,
+                  "hash": "sha256:427472735030ee82",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"uniprot\": \"P43341\", \"pathbank_protein_id\": \"6626\"}, \"pathbank_protein_id\": 6626, \"confidence\": 1.0, \"chosen_rule\": \"db_to… (+457 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 2559,
+                  "hash": "sha256:9655ee539f8a116e",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LpxH\\\" OR gene:\\\"LpxH\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LpxH\\\" OR gene:\\\"LpxH\\\")\", \"mapped_id… (+2359 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 52,
+                  "hash": "sha256:294e4695da2c9520",
+                  "preview": "{\"uniprot\": \"P43341\", \"pathbank_protein_id\": \"6626\"}",
+                  "keys": 2
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7c2e2cbac045d120",
+                  "preview": "{\"uniprot\": \"P43341\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1a14787370b4b396",
+                  "preview": "{\"uniprot\": \"Q8XCU1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:bee7c92fc8923ac6",
+                  "preview": "{\"uniprot\": \"B6I0G9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:e206adc5fa57b88e",
+                  "preview": "{\"uniprot\": \"B7M4M7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:79104ebe4d04c62d",
+                  "preview": "{\"uniprot\": \"B1XGC2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:001d3f3cee395d14",
+                  "preview": "{\"uniprot\": \"B7MRI7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8075,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7cef7ebad5832664",
+                  "preview": "{\"uniprot\": \"B7L7F1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "protein:lpxl",
+            "entity_type": "protein",
+            "name": "LpxL",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LpxL",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a88d03c0c357b5ea",
+                  "preview": "{\"uniprot\": \"P0ACV0\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:78882acb5715d1c6",
+                  "preview": "[\"(protein_name:\\\"LpxL\\\" OR gene:\\\"LpxL\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LpxL\\\" OR gene:\\\"LpxL\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1018,
+                  "hash": "sha256:61d9d141c2cb00cb",
+                  "preview": "[{\"accession\": \"P0ACV0\", \"protein_name\": \"Lipid A biosynthesis lauroyltransferase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0ACV1\", \"protein_name… (+818 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2690,
+                  "hash": "sha256:ac8920eb127a902e",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LpxL\\\" OR gene:\\\"LpxL\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LpxL\\\" OR gene:\\\"LpxL\\\")\", \"mapped_id… (+2490 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:a88d03c0c357b5ea",
+                  "preview": "{\"uniprot\": \"P0ACV0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f3c7551f735ccc70",
+                  "preview": "{\"uniprot\": \"P0ACV1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:137d5fec086b56fd",
+                  "preview": "{\"uniprot\": \"B7LFG5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:8c7b5392347ae2f1",
+                  "preview": "{\"uniprot\": \"A0A0H2YYF2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:725526777fb94afe",
+                  "preview": "{\"uniprot\": \"B7MIJ5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:8bc728454479bfce",
+                  "preview": "{\"uniprot\": \"A0A0H3EI71\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:1551d602ab17b502",
+                  "preview": "{\"uniprot\": \"B7UP68\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7167742039ac7c21",
+                  "preview": "{\"uniprot\": \"A7ZKF8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "llm_selected",
+              "source": "llm",
+              "raw": {
+                "chars": 41,
+                "hash": "sha256:2b23a439dd9e1db1",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.85}"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:lpxm",
+            "entity_type": "protein",
+            "name": "LpxM",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LpxM",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3f10a55bdb4d7f0e",
+                  "preview": "{\"uniprot\": \"P24205\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:51597d1ac3d6791b",
+                  "preview": "[\"(protein_name:\\\"LpxM\\\" OR gene:\\\"LpxM\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LpxM\\\" OR gene:\\\"LpxM\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 940,
+                  "hash": "sha256:542594391943886e",
+                  "preview": "[{\"accession\": \"P24205\", \"protein_name\": \"Lipid A biosynthesis myristoyltransferase\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"F2W429\", \"protein_na… (+740 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2551,
+                  "hash": "sha256:5604dca71831f4e1",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LpxM\\\" OR gene:\\\"LpxM\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LpxM\\\" OR gene:\\\"LpxM\\\")\", \"mapped_id… (+2351 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:3f10a55bdb4d7f0e",
+                  "preview": "{\"uniprot\": \"P24205\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0fd513bdaa7b424f",
+                  "preview": "{\"uniprot\": \"F2W429\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:c243ac0bfa32233b",
+                  "preview": "{\"uniprot\": \"D0VEY3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:262881337d76952b",
+                  "preview": "{\"uniprot\": \"Q2VP15\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:aa136d60ca948e4f",
+                  "preview": "{\"uniprot\": \"A0A0H3JD84\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:378c294ec3b15789",
+                  "preview": "{\"uniprot\": \"Q799R6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:dce17a98e2395ee2",
+                  "preview": "{\"uniprot\": \"Q8XCJ3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:b1fae7c6be690d4a",
+                  "preview": "{\"uniprot\": \"D2WFJ0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "Candidate 0 (P24205) is a reviewed UniProt entry from Escherichia coli K12, matching the organism context and having the highest confidence score. It is the best_effort_fallback result from the API query and correctly maps the protein LpxM.",
+              "source": "llm",
+              "raw": {
+                "chars": 295,
+                "hash": "sha256:108eab80b6b53c98",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"Candidate 0 (P24205) is a reviewed UniProt entry from Escherichia coli K12, matching the organism context and having the highest confidence score. … (+95 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "protein:ftsh",
+            "entity_type": "protein",
+            "name": "FtsH",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "FtsH",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:96cae01d38df8395",
+                  "preview": "{\"uniprot\": \"P0AAI3\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:1b602a907aee3721",
+                  "preview": "[\"(protein_name:\\\"FtsH\\\" OR gene:\\\"FtsH\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"FtsH\\\" OR gene:\\\"FtsH\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 986,
+                  "hash": "sha256:ef245423794f820a",
+                  "preview": "[{\"accession\": \"P0AAI3\", \"protein_name\": \"ATP-dependent zinc metalloprotease FtsH\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"Q8X9L0\", \"protein_name… (+786 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2656,
+                  "hash": "sha256:44e0e49b9c752091",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"FtsH\\\" OR gene:\\\"FtsH\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"FtsH\\\" OR gene:\\\"FtsH\\\")\", \"mapped_id… (+2456 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:96cae01d38df8395",
+                  "preview": "{\"uniprot\": \"P0AAI3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:5e244006b637671a",
+                  "preview": "{\"uniprot\": \"Q8X9L0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:82a413192b3dab60",
+                  "preview": "{\"uniprot\": \"A0A1W5W6S9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:6f539f0ab18a4e3b",
+                  "preview": "{\"uniprot\": \"B7LHP1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:77bbbdfc8923be65",
+                  "preview": "{\"uniprot\": \"A0A0H2Z3A8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:eb107243227ab2db",
+                  "preview": "{\"uniprot\": \"B7MBU7\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:2332f3b77864c7f4",
+                  "preview": "{\"uniprot\": \"A7ZS74\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.532,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:710efafe3da59e5d",
+                  "preview": "{\"uniprot\": \"P37476\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "Candidate 0 (P0AAI3) is a reviewed UniProt entry for E. coli K12, matching the organism in background_context. It has the highest confidence (0.85) and is the best_effort_fallback result. No type or organism conflict.",
+              "source": "llm",
+              "raw": {
+                "chars": 280,
+                "hash": "sha256:cea5e2b532fce0da",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"Candidate 0 (P0AAI3) is a reviewed UniProt entry for E. coli K12, matching the organism in background_context. It has the highest confidence (0.85… (+74 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Inner Membrane",
+                "score": 7.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:b0e28f8e61d82589",
+                  "preview": "location_frequency=7"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              },
+              {
+                "location": "Cytoplasm",
+                "score": 6.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:10a233e23a5fac42",
+                  "preview": "location_frequency=6"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [
+              {
+                "location": "Peroxisome",
+                "score": 1.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:577a3babf92fb39d",
+                  "preview": "location_frequency=1"
+                },
+                "organism_compatibility": "incompatible_eukaryotic_organelle",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Inner Membrane",
+              "confidence": 1.0,
+              "reason": "Candidate 'Inner Membrane' has highest score (7.0) and is biologically plausible for FtsH, a membrane-bound ATP-dependent protease in E. coli.",
+              "source": "llm",
+              "raw": {
+                "chars": 211,
+                "hash": "sha256:025387484583882e",
+                "preview": "{ \"choice\": \"Inner Membrane\", \"confidence\": 6.0, \"reason\": \"Candidate 'Inner Membrane' has highest score (7.0) and is biologically plausible for FtsH, a membrane-bound ATP-dependent protease in E. col… (+5 chars elided)"
+              }
+            },
+            "chosen_location": "Inner Membrane",
+            "chosen_state": "AutoState_escherichia_coliinner_membrane"
+          },
+          {
+            "issue_key": "protein:lapb",
+            "entity_type": "protein",
+            "name": "LapB",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "LapB",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:699d0c7e44feae89",
+                  "preview": "{\"uniprot\": \"P0AB58\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:8c92405f6e14789a",
+                  "preview": "[\"(protein_name:\\\"LapB\\\" OR gene:\\\"LapB\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"LapB\\\" OR gene:\\\"LapB\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 1018,
+                  "hash": "sha256:60edf79ad974d832",
+                  "preview": "[{\"accession\": \"P0AB58\", \"protein_name\": \"Lipopolysaccharide assembly protein B\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0AB60\", \"protein_name\":… (+818 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2682,
+                  "hash": "sha256:127889f4d6916ac5",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"LapB\\\" OR gene:\\\"LapB\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"LapB\\\" OR gene:\\\"LapB\\\")\", \"mapped_id… (+2482 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:699d0c7e44feae89",
+                  "preview": "{\"uniprot\": \"P0AB58\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:06a8edc4b02eb89d",
+                  "preview": "{\"uniprot\": \"P0AB60\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:9d428fcbb03de298",
+                  "preview": "{\"uniprot\": \"P0AB59\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:99e2d9e5d7ef31c3",
+                  "preview": "{\"uniprot\": \"A0A0H2YZ25\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:4ba403017f0ee38c",
+                  "preview": "{\"uniprot\": \"B7L4B6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:da72cfab324a9e82",
+                  "preview": "{\"uniprot\": \"A7ZLA0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:44e85bb821e77ab9",
+                  "preview": "{\"uniprot\": \"A0A0H3EGY9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0745a552475847ad",
+                  "preview": "{\"uniprot\": \"B7MLV6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "The top candidate matches the exact entity type (protein), has high confidence, and matches the specified organism 'Escherichia coli' (strain K12). It is the best_effort_fallback result from the background API that successfully mapped the p… (+86 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 389,
+                "hash": "sha256:ea80a96881911db0",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"The top candidate matches the exact entity type (protein), has high confidence, and matches the specified organism 'Escherichia coli' (strain K12)… (+183 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "Cytoplasm",
+                "score": 3.0,
+                "source": "pathbank_db",
+                "evidence": {
+                  "chars": 20,
+                  "hash": "sha256:7cdf53a16fcf5fa4",
+                  "preview": "location_frequency=3"
+                },
+                "organism_compatibility": "compatible",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "Cytoplasm",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "Cytoplasm",
+            "chosen_state": "cytoplasmic state"
+          },
+          {
+            "issue_key": "protein:yejm",
+            "entity_type": "protein",
+            "name": "YejM",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "YejM",
+                "organism": "Escherichia coli",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:35873dcba98502be",
+                  "preview": "{\"uniprot\": \"P0AD27\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 127,
+                  "hash": "sha256:cc0c07e47a64522b",
+                  "preview": "[\"(protein_name:\\\"YejM\\\" OR gene:\\\"YejM\\\") AND organism_name:\\\"Escherichia coli\\\"\", \"(protein_name:\\\"YejM\\\" OR gene:\\\"YejM\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 953,
+                  "hash": "sha256:87d96de13527ab37",
+                  "preview": "[{\"accession\": \"P0AD27\", \"protein_name\": \"Inner membrane protein PbgA\", \"organism\": \"Escherichia coli (strain K12)\", \"reviewed\": true, \"score\": 0.85}, {\"accession\": \"P0AD29\", \"protein_name\": \"Inner me… (+753 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2616,
+                  "hash": "sha256:df490fe23ee0715c",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"YejM\\\" OR gene:\\\"YejM\\\") AND organism_name:\\\"Escherichia coli\\\" | (protein_name:\\\"YejM\\\" OR gene:\\\"YejM\\\")\", \"mapped_id… (+2416 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:35873dcba98502be",
+                  "preview": "{\"uniprot\": \"P0AD27\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0a29ef8497a731d0",
+                  "preview": "{\"uniprot\": \"P0AD29\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.85,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:abeabb42b937a60f",
+                  "preview": "{\"uniprot\": \"P0AD28\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:9abea3be682e1690",
+                  "preview": "{\"uniprot\": \"A0A0H2Z0Q2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:81404b57e20e600c",
+                  "preview": "{\"uniprot\": \"B7LAL2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.8,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:6af9cb5bae8e30fd",
+                  "preview": "{\"uniprot\": \"B7MFA3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.76,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:d6d2efd66593f107",
+                  "preview": "{\"uniprot\": \"B7UFK5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.532,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:9fde50b62d040712",
+                  "preview": "{\"uniprot\": \"P40709\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.85,
+              "reason": "Candidate 0 (P0AD27) is the best_effort_fallback from the background context, matching the query organism 'Escherichia coli' (strain K12), is reviewed, and has the highest confidence. Other candidates are either different strains or unrevie… (+42 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 337,
+                "hash": "sha256:03c9bf1b55eef457",
+                "preview": "{\"selected_index\": 0, \"confidence\": 0.85, \"reason\": \"Candidate 0 (P0AD27) is the best_effort_fallback from the background context, matching the query organism 'Escherichia coli' (strain K12), is revie… (+137 chars elided)"
+              }
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "entity_type": "compound",
+            "name": "β-hydroxyacyl-ACP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "β-hydroxyacyl-ACP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "β-hydroxyacyl-ACP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglcnac",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          "…+10 more item(s) elided"
+        ],
+        "unresolved_issues": [
+          {
+            "component_index": 0,
+            "component": "FtsH",
+            "path": "/entities/protein_complexes/0/components/0",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          },
+          {
+            "component_index": 1,
+            "component": "LapB",
+            "path": "/entities/protein_complexes/0/components/1",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          },
+          {
+            "component_index": 0,
+            "component": "MsbA",
+            "path": "/entities/protein_complexes/1/components/0",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          },
+          {
+            "component_index": 0,
+            "component": "Lpt system",
+            "path": "/entities/protein_complexes/2/components/0",
+            "code": "component_missing_stoichiometry",
+            "resolution_owner": "audit"
+          }
+        ]
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 5
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [
+    {
+      "bucket": "compounds",
+      "name": "enterobactin",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "compounds",
+      "name": "ferri-enterobactin",
+      "reason": "unreferenced_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "FepA",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": true,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "Fur",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "proteins",
+      "name": "enterobactin synthase complex",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": false,
+      "iteration": 1
+    },
+    {
+      "bucket": "protein_complexes",
+      "name": "enterobactin synthase complex",
+      "reason": "degree_zero_after_quarantine",
+      "had_external_identity": null,
+      "iteration": 1
+    }
+  ],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "enterobactin",
+      "reason": "location_entity_removed",
+      "biological_state": "bacterial cell state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "enterobactin",
+      "reason": "location_entity_removed",
+      "biological_state": "extracellular state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "ferri-enterobactin",
+      "reason": "location_entity_removed",
+      "biological_state": "extracellular state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "ferri-enterobactin",
+      "reason": "location_entity_removed",
+      "biological_state": "bacterial cell state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/compound_locations",
+      "name": "ferric iron (Fe3+)",
+      "reason": "location_entity_removed",
+      "biological_state": "extracellular state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "bacterial cell state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "FepA",
+      "reason": "location_entity_removed",
+      "biological_state": "outer membrane state",
+      "iteration": 1
+    },
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "enterobactin synthase complex",
+      "reason": "location_entity_removed",
+      "biological_state": "AutoState_escherichia_colicell",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "extracellular state",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    },
+    {
+      "bucket": "biological_states",
+      "name": "outer membrane state",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    },
+    {
+      "bucket": "biological_states",
+      "name": "AutoState_escherichia_colicell",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 6,
+    "locations": 8,
+    "biological_states": 3
+  }
+}

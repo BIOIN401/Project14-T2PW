@@ -1,0 +1,74 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' in complex 'CLPXP' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/0/components/0",
+      "complex_key": "pc_1",
+      "complex_name": "CLPXP",
+      "component_name": "Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial"
+    },
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' in complex 'CLPXP' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/0/components/1",
+      "complex_key": "pc_1",
+      "complex_name": "CLPXP",
+      "component_name": "ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial"
+    },
+    {
+      "code": "protein_complex_missing_components",
+      "message": "Protein complex 'CLPXP' has no resolved protein components.",
+      "pointer": "/entities/protein_complexes/0/components",
+      "entity_key": "pc_1",
+      "entity_name": "CLPXP"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 4,
+    "biological_states": 2,
+    "compounds": 5,
+    "proteins": 2,
+    "reactions": 1,
+    "transports": 0,
+    "locations": 9,
+    "edges": 4,
+    "process_visualizations": 1
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [
+      {
+        "code": "protein_complex_missing_components",
+        "message": "Protein complex 'CLPXP' has no protein components.",
+        "pointer": "/entities/protein_complexes/0/components"
+      }
+    ],
+    "counts": {
+      "entities": 9,
+      "biological_states": 2,
+      "processes": 5,
+      "process_members": 4,
+      "locations": 9,
+      "edges": 4,
+      "process_visualizations": 1
+    }
+  }
+}

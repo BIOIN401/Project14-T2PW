@@ -1,0 +1,43 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        2,
+        2,
+        3,
+        -1,
+        4
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 2,
+      "warning_count": 5,
+      "patch_count": 4,
+      "accepted_patch_count": 1,
+      "rejected_patch_count": 3,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Fix the typo 'lansterol' to 'lanosterol' in reaction 1 input, add the missing biological_state to reaction 1, then remove the now-duplicate reaction 2 and the orphaned typo compound 'lansterol'. This resolves the broken compound reference, … (+69 chars elided)",
+      "top_errors": [
+        "Reaction rxn_lock_001 uses 'lansterol' as input, which is a typo for 'lanosterol' already declared in entities.compounds. This breaks the compound reference chain.",
+        "Reaction rxn_lock_001 lacks a biological_state field, while reaction 0 and reaction 2 have it set to 'human endoplasmic reticulum state'. This is inconsistent for SBML compartment assignment."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 6,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

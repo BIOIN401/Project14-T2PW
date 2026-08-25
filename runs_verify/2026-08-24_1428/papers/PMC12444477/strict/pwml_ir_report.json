@@ -1,0 +1,97 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'lipid A disaccharide synthase' matched 2 distinct entity rows (prot_5, pc_3); payload row order bound it to 'lipid A disaccharide synthase' (pc_3).",
+      "pointer": "/processes/reactions/1/enzymes/0",
+      "name": "lipid A disaccharide synthase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_5",
+        "pc_3"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "LpxB",
+        "lipid A disaccharide synthase"
+      ],
+      "entity_pathwhiz_ids": [
+        6302,
+        1620
+      ],
+      "bound_entity_key": "pc_3",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "lipid A disaccharide synthase"
+    },
+    {
+      "code": "ambiguous_entity_row_reference",
+      "message": "Process member 'lipid A disaccharide synthase' matched 2 distinct entity rows (prot_5, pc_3); payload row order bound it to 'lipid A disaccharide synthase' (pc_3).",
+      "pointer": "/processes/reactions/1/enzymes/1",
+      "name": "lipid A disaccharide synthase",
+      "role": "enzyme",
+      "entity_keys": [
+        "prot_5",
+        "pc_3"
+      ],
+      "entity_types": [
+        "protein",
+        "protein_complex"
+      ],
+      "entity_names": [
+        "LpxB",
+        "lipid A disaccharide synthase"
+      ],
+      "entity_pathwhiz_ids": [
+        6302,
+        1620
+      ],
+      "bound_entity_key": "pc_3",
+      "bound_entity_type": "protein_complex",
+      "bound_entity_name": "lipid A disaccharide synthase"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 3,
+    "subcellular_locations": 7,
+    "biological_states": 5,
+    "compounds": 8,
+    "proteins": 10,
+    "reactions": 3,
+    "transports": 2,
+    "locations": 26,
+    "edges": 15,
+    "process_visualizations": 5
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 22,
+      "biological_states": 5,
+      "processes": 18,
+      "process_members": 14,
+      "locations": 26,
+      "edges": 15,
+      "process_visualizations": 5
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        3,
+        11,
+        6,
+        1,
+        -4,
+        5
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 6,
+      "warning_count": 13,
+      "patch_count": 5,
+      "accepted_patch_count": 4,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Fixed truncated compound reference in reaction input, added missing protein complex entity with components as per evidence, and flagged unresolved Fur mapping and undefined interaction entity for manual review.",
+      "top_errors": [
+        "Stage 3 composite validation failed: has '+' token: ferric iron (Fe3+)",
+        "Stage 3 registry reference validation failed: unknown modifier: enterobactin synthase complex",
+        "Stage 3 registry reference validation failed: unknown entity: ferric iron (Fe3"
+      ],
+      "gap_mapped_ids_added": 3,
+      "gap_locations_added": 7,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

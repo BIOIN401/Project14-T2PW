@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "NADH",
+    "pyruvate",
+    "L-serine",
+    "ATP",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntC (isochorismate synthase)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)",
+    "Fur (ferric uptake regulator)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "NADH",
+      "pyruvate",
+      "L-serine",
+      "ATP"
+    ],
+    "key_proteins": [
+      "EntB (isochorismatase/aryl carrier protein)",
+      "EntC (isochorismate synthase)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)",
+      "Fur (ferric uptake regulator)"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "extracellular space",
+      "outer membrane (TolC-dependent secretion)",
+      "inner membrane (TonB-dependent uptake)"
+    ],
+    "main_subprocesses": [
+      "isochorismate formation from chorismate (EntC)",
+      "isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)",
+      "2,3-DHB formation via dehydrogenation (EntA)",
+      "2,3-DHB activation by adenylation (EntE)",
+      "enterobactin assembly via non-ribosomal peptide synthesis and cyclization (EntF)"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "results and discussion",
+      "methods",
+      "conclusions"
+    ],
+    "pathway_relevance_score": 1.0,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:cd637a10d6ea5563",
+      "response_hash": "sha256:44e51c9650d3c808",
+      "raw_chars": 1665,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1665,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "pyruvate",
+    "L-serine",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntC (isochorismate synthase)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)"
+  ],
+  "unmatched_terms": [
+    "NADH",
+    "ATP",
+    "MenD (2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase)",
+    "Fur (ferric uptake regulator)"
+  ],
+  "coverage_ratio": 0.764706,
+  "core_accepted_processes": 10,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 10,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

@@ -1,0 +1,1261 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 4,
+        "organisms_added": 0,
+        "locations_added": 2,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 10,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 3
+      },
+      "db": {
+        "available": true,
+        "last_error": "db_query_failed:(0, '')"
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "species:e coli",
+            "entity_type": "species",
+            "name": "E. coli",
+            "path": "/entities/species/1",
+            "needs_id_mapping": true,
+            "species_missing_db_id": true,
+            "taxonomy_id": "562",
+            "missing_fields": [
+              "pathbank_species_id"
+            ],
+            "reasons": [
+              "species_missing_db_id"
+            ]
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "entity_type": "compound",
+            "name": "β-hydroxyacyl-ACP",
+            "path": "/entities/compounds/1",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:r3hydroxymyristoylacp",
+            "entity_type": "compound",
+            "name": "R-3-hydroxymyristoyl-ACP",
+            "path": "/entities/compounds/2",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:kdolipid iva",
+            "entity_type": "compound",
+            "name": "Kdo-lipid IVA",
+            "path": "/entities/compounds/5",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:kdolipid a",
+            "entity_type": "compound",
+            "name": "Kdo-lipid A",
+            "path": "/entities/compounds/6",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:lps",
+            "entity_type": "compound",
+            "name": "LPS",
+            "path": "/entities/compounds/7",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:coa",
+            "entity_type": "compound",
+            "name": "CoA",
+            "path": "/entities/compounds/9",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:corelipid a",
+            "entity_type": "compound",
+            "name": "core-lipid A",
+            "path": "/entities/compounds/13",
+            "needs_id_mapping": true,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": true,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids",
+              "class_or_type",
+              "location"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_missing_class_type",
+              "compound_unmapped_after_db_pass",
+              "visible_entity_missing_location"
+            ]
+          },
+          {
+            "issue_key": "protein_complex:lpt system",
+            "entity_type": "protein_complex",
+            "name": "Lpt system",
+            "path": "/entities/protein_complexes/0",
+            "needs_id_mapping": false,
+            "has_complex_db_id": false,
+            "complex_level_id_optional": true,
+            "needs_species": false,
+            "needs_location_link": true,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": true,
+            "protein_complex_missing_components": true,
+            "component_missing_stoichiometry": false,
+            "component_protein_unresolved": false,
+            "missing_component_stoichiometry": [],
+            "unresolved_components": [],
+            "missing_fields": [
+              "components",
+              "location"
+            ],
+            "reasons": [
+              "protein_complex_missing_components",
+              "visible_entity_missing_location"
+            ],
+            "resolved_by_gap_resolver": false
+          }
+        ],
+        "planner": {
+          "source": "llm_empty_fallback_default",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:fb665b88b4440cb8",
+            "preview": "{\"operations\": [{\"issue_key\": \"species:e coli\", \"resolve_ids\": {\"strategy\": \"db_only\"}, \"resolve_location\": {\"strategy\": \"skip\"}, \"background\": {\"api_lookup\": \"none\", \"hmdb_lookup\": false, \"max_result… (+300 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "species:e coli",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:r3hydroxymyristoylacp",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:kdolipid iva",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:kdolipid a",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:lps",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:coa",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "compound:corelipid a",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          },
+          {
+            "issue_key": "protein_complex:lpt system",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": "default_plan"
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "species:e coli",
+            "status": "skipped",
+            "reason": "issue_not_found"
+          },
+          {
+            "issue_key": "compound:hydroxyacylacp",
+            "entity_type": "compound",
+            "name": "β-hydroxyacyl-ACP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "β-hydroxyacyl-ACP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "β-hydroxyacyl-ACP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:r3hydroxymyristoylacp",
+            "entity_type": "compound",
+            "name": "R-3-hydroxymyristoyl-ACP",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "R-3-hydroxymyristoyl-ACP",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "R-3-hydroxymyristoyl-ACP",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:udp3or3hydroxymyristoylglucosamine",
+            "entity_type": "compound",
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            }
+          },
+          {
+            "issue_key": "compound:kdolipid iva",
+            "entity_type": "compound",
+            "name": "Kdo-lipid IVA",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "Kdo-lipid IVA",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 1,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9a9e948454a60a13",
+                  "preview": "{\"kegg\": \"C06024\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 104,
+                  "hash": "sha256:bc063d0ff8d16b7b",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C06024\", \"name\": \"3-Deoxy-D-manno-octulosonyl-lipid IV(A)\", \"score\": 0.95}]",
+                  "items": 1
+                }
+              },
+              "hmdb": {
+                "query": "Kdo-lipid IVA",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 281,
+                  "hash": "sha256:802dcdd0052773ac",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C06024\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C06024\", \"name\": \"3-Deoxy-D-manno-octuloson… (+81 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9a9e948454a60a13",
+                  "preview": "{\"kegg\": \"C06024\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.95,
+              "reason": "deterministic_top",
+              "source": "deterministic"
+            }
+          },
+          {
+            "issue_key": "compound:kdolipid a",
+            "entity_type": "compound",
+            "name": "Kdo-lipid A",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "Kdo-lipid A",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 572,
+                  "hash": "sha256:be809b31515aec4e",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C21998\", \"name\": \"H. pylori KDO-lipid A\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C06024\", \"name\": \"3-Deoxy-D-manno-octulosonyl-lipid IV(A)\", \"score\": 0.55}, {\"databas… (+372 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "Kdo-lipid A",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 1230,
+                  "hash": "sha256:b03ad41e4d58a417",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.65, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C21998\", \"name\": \"H. pylori KDO-lipid A\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C0602… (+1030 chars elided)",
+                  "keys": 6
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:fc0173236c939788",
+                  "preview": "{\"kegg\": \"C21998\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:9a9e948454a60a13",
+                  "preview": "{\"kegg\": \"C06024\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:38b1793ac3bb59bc",
+                  "preview": "{\"kegg\": \"C21996\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.5,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:21897f35b2762f35",
+                  "preview": "{\"kegg\": \"C21997\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.46,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:ee63b325f93f5685",
+                  "preview": "{\"kegg\": \"C06026\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.46,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:3338dbb2b7111d54",
+                  "preview": "{\"kegg\": \"C19890\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.65,
+              "reason": "Candidate 0 (KEGG C21998) has the highest confidence and its name 'H. pylori KDO-lipid A' closely matches the entity name 'Kdo-lipid A', with no type or organism conflicts.",
+              "source": "llm",
+              "raw": {
+                "chars": 235,
+                "hash": "sha256:56eb50f4b5745750",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 0.65, \"reason\": \"Candidate 0 (KEGG C21998) has the highest confidence and its name 'H. pylori KDO-lipid A' closely matches the entity name 'Kdo-lipid A', with no t… (+29 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:lps",
+            "entity_type": "compound",
+            "name": "LPS",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "LPS",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:f750fe4a746b929b",
+                  "preview": "{\"kegg\": \"C00338\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 499,
+                  "hash": "sha256:8ae78e300f2ebd73",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00338\", \"name\": \"Lipopolysaccharide\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C09314\", \"name\": \"Trioxsalen\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C12237\", \"nam… (+299 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "LPS",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 2113,
+                  "hash": "sha256:c2d6b439ee7c6405",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0013470\", \"kegg\": \"C00338\", \"chebi\": \"CHEBI:16412\", \"pubchem\": \"53481793\", \"biocyc\": \"CPD0-2294\", \"pathbank_c… (+1913 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 768,
+                  "hash": "sha256:29698c6d35288f5b",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00338\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00338\", \"name\": \"Lipopolysaccharide\", \"sco… (+568 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 143,
+                  "hash": "sha256:e5eca3d4f80d14e7",
+                  "preview": "{\"hmdb\": \"HMDB0013470\", \"kegg\": \"C00338\", \"chebi\": \"CHEBI:16412\", \"pubchem\": \"53481793\", \"biocyc\": \"CPD0-2294\", \"pathbank_compound_id\": \"8387\"}",
+                  "keys": 6
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:f750fe4a746b929b",
+                  "preview": "{\"kegg\": \"C00338\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:c587f37ce85ffc2e",
+                  "preview": "{\"kegg\": \"C09314\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:8fb6a309854eb088",
+                  "preview": "{\"kegg\": \"C12237\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:056081d4daef41fe",
+                  "preview": "{\"kegg\": \"C12453\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2e72823a08060a24",
+                  "preview": "{\"kegg\": \"C17378\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:44de37da9587dffd",
+                  "preview": "{\"kegg\": \"C17411\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 is the best match: it is a compound candidate for LPS with high-confidence database-backed identifiers including KEGG C00338 (Lipopolysaccharide), ChEBI, HMDB, PubChem, BioCyc, and PathBank, consistent with the entity type and n… (+4 chars elided)",
+              "source": "llm",
+              "raw": {
+                "chars": 298,
+                "hash": "sha256:38e5d7d2be00e392",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 is the best match: it is a compound candidate for LPS with high-confidence database-backed identifiers including KEGG C00338 (Lipopolysa… (+98 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:coa",
+            "entity_type": "compound",
+            "name": "CoA",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "CoA",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:050511b4c35598d9",
+                  "preview": "{\"kegg\": \"C00010\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 485,
+                  "hash": "sha256:53e01c4d5dd404e8",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00010\", \"name\": \"CoA\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C14118\", \"name\": \"Naphthyl-2-hydroxymethyl-succinyl CoA\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C… (+285 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "CoA",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 3019,
+                  "hash": "sha256:7138620660db56aa",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0001423\", \"kegg\": \"C00010\", \"chebi\": \"CHEBI:1146900\", \"pubchem\": \"6816\", \"cas\": \"85-61-0\", \"biocyc\": \"CO-A\", … (+2819 chars elided)",
+                  "keys": 8
+                },
+                {
+                  "chars": 972,
+                  "hash": "sha256:c78dfcbff41589a6",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00010\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00010\", \"name\": \"CoA\", \"score\": 0.95}, {\"d… (+772 chars elided)",
+                  "keys": 7
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 176,
+                  "hash": "sha256:910c93294d0f8c70",
+                  "preview": "{\"hmdb\": \"HMDB0001423\", \"kegg\": \"C00010\", \"chebi\": \"CHEBI:1146900\", \"pubchem\": \"6816\", \"cas\": \"85-61-0\", \"biocyc\": \"CO-A\", \"chemspider\": \"6557\", \"pathbank_compound_id\": \"1099\"}",
+                  "keys": 8
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:050511b4c35598d9",
+                  "preview": "{\"kegg\": \"C00010\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:38c1980d16e7bd1b",
+                  "preview": "{\"kegg\": \"C14118\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.55,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:4b2602d8ceaffe9a",
+                  "preview": "{\"kegg\": \"C16339\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:0b5cefd5837f9459",
+                  "preview": "{\"kegg\": \"C00024\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:31580dc6a71f23ad",
+                  "preview": "{\"kegg\": \"C00040\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b4020776eeb48c3b",
+                  "preview": "{\"kegg\": \"C00083\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate from PathBankDB has the highest confidence (1.0) and provides multiple high-quality mapped IDs (HMDB, KEGG, ChEBI, etc.) that match the compound 'CoA' (coenzyme A). No type or organism conflicts exist.",
+              "source": "llm",
+              "raw": {
+                "chars": 273,
+                "hash": "sha256:496a56f31a83e249",
+                "preview": "{ \"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate from PathBankDB has the highest confidence (1.0) and provides multiple high-quality mapped IDs (HMDB, KEGG, ChEBI, etc.) that match the c… (+67 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:corelipid a",
+            "entity_type": "compound",
+            "name": "core-lipid A",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "core-lipid A",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "no_match",
+                "candidate_count": 0,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              },
+              "hmdb": {
+                "query": "core-lipid A",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 110,
+                  "hash": "sha256:aeaa4295f66d2441",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_match\", \"candidates\": [], \"provider\": \"ChEBI/KEGG/HMDB\", \"source\": \"api\"}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [],
+            "id_choice": {
+              "selected_index": -1,
+              "confidence": 0.0,
+              "reason": "no_candidates",
+              "source": "none"
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          },
+          {
+            "issue_key": "protein_complex:lpt system",
+            "entity_type": "protein_complex",
+            "name": "Lpt system",
+            "status": "ok",
+            "component_resolution": {
+              "changed": false,
+              "resolved_components": [],
+              "unresolved_components": [],
+              "missing_stoichiometry": []
+            },
+            "location_candidates": [
+              {
+                "location": "cell",
+                "score": 1.0,
+                "source": "default",
+                "evidence": {
+                  "chars": 13,
+                  "hash": "sha256:6811376b6b516216",
+                  "preview": "fallback_cell"
+                },
+                "organism_compatibility": "neutral_fallback",
+                "organism_context": {
+                  "chars": 96,
+                  "hash": "sha256:a601a649b1f8c23c",
+                  "preview": "{\"organism\": \"Escherichia coli\", \"taxonomy_id\": \"562\", \"lineage\": \"\", \"cell_type\": \"prokaryote\"}",
+                  "keys": 4
+                }
+              }
+            ],
+            "rejected_location_candidates": [],
+            "organism_context": {
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562",
+              "lineage": "",
+              "cell_type": "prokaryote"
+            },
+            "location_decision": {
+              "choice": "cell",
+              "confidence": 0.95,
+              "reason": "single_candidate",
+              "source": "deterministic"
+            },
+            "chosen_location": "cell",
+            "chosen_state": "__auto_state__"
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 1
+    }
+  ]
+}

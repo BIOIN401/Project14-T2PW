@@ -1,0 +1,373 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:9fcd949325bb711e",
+  "resulting_payload_hash": "sha256:9fcd949325bb711e",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "alas1",
+      "alas2",
+      "aminolevulinic acid",
+      "clpxp",
+      "glycine",
+      "heme",
+      "lonp1",
+      "pyridoxal 5phosphate",
+      "succinylcoa"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:a8739b626c721fd6",
+  "ok": true,
+  "counts": {
+    "core_accepted": 4,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "alas2catalyzed condensation of glycine and succinylcoa",
+        "aminolevulinic acid",
+        "glycine",
+        "succinylcoa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "heme inhibits ALAS2",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "heme",
+        "heme inhibits alas2"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "pyridoxal 5-phosphate binds ALAS2",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "pyridoxal 5phosphate",
+        "pyridoxal 5phosphate binds alas2"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "heme binds ALAS1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas1",
+        "heme",
+        "heme binds alas1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "ALAS2-catalyzed condensation of glycine and succinyl-CoA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "alas2catalyzed condensation of glycine and succinylcoa",
+        "aminolevulinic acid",
+        "glycine",
+        "succinylcoa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "heme inhibits ALAS2",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "heme",
+        "heme inhibits alas2"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "pyridoxal 5-phosphate binds ALAS2",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas2",
+        "pyridoxal 5phosphate",
+        "pyridoxal 5phosphate binds alas2"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "heme binds ALAS1",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "alas1",
+        "heme",
+        "heme binds alas1"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.777778,
+    "missing_anchors": [
+      "CLPXP",
+      "LONP1"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "2 requested-core anchor(s) matched no admitted process: CLPXP, LONP1",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:CLPXP,LONP1"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "heme",
+      "aminolevulinic acid",
+      "glycine",
+      "succinyl-CoA",
+      "pyridoxal 5-phosphate",
+      "ALAS2",
+      "ALAS1",
+      "CLPXP",
+      "LONP1"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "heme biosynthesis",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "heme",
+        "aminolevulinic acid",
+        "glycine",
+        "succinyl-CoA",
+        "pyridoxal 5-phosphate"
+      ],
+      "key_proteins": [
+        "ALAS2",
+        "ALAS1",
+        "CLPXP",
+        "LONP1"
+      ],
+      "likely_compartments": [
+        "mitochondrion",
+        "mitochondrial matrix"
+      ],
+      "main_subprocesses": [
+        "condensation of glycine and succinyl-CoA",
+        "heme binding to ALAS2",
+        "allosteric inhibition of ALAS2",
+        "reversible inhibition mechanism",
+        "conformational change occluding active site"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "results",
+        "discussion",
+        "experimental procedures"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "scope_clarity_score": 1.0,
+      "selected_example": "",
+      "candidate_examples": [],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:94057044c9f9a9ee",
+        "response_hash": "sha256:e15469e9b74a14f1",
+        "raw_chars": 885,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 885,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "heme",
+      "aminolevulinic acid",
+      "glycine",
+      "succinyl-CoA",
+      "pyridoxal 5-phosphate",
+      "ALAS2",
+      "ALAS1"
+    ],
+    "unmatched_terms": [
+      "CLPXP",
+      "LONP1"
+    ],
+    "coverage_ratio": 0.777778,
+    "core_accepted_processes": 4,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 4,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:9fcd949325bb711e.sha256:a8739b626c721fd6",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

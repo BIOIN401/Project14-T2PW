@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "UDP-GlcNAc",
+    "β-hydroxyacyl-ACP",
+    "R-3-hydroxymyristoyl-ACP",
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "lipid IVA",
+    "Kdo-lipid IVA",
+    "Kdo-lipid A",
+    "LPS",
+    "acyl carrier protein (ACP)",
+    "CoA",
+    "LpxA",
+    "LpxC",
+    "LpxD",
+    "LpxH",
+    "LpxB",
+    "LpxK",
+    "WaaA",
+    "LpxL",
+    "LpxM",
+    "FtsH",
+    "LapB",
+    "YejM",
+    "FabZ",
+    "ObgE",
+    "MsbA",
+    "Lpt system"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "lipid A biosynthesis (Escherichia coli)",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "UDP-GlcNAc",
+      "β-hydroxyacyl-ACP",
+      "R-3-hydroxymyristoyl-ACP",
+      "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+      "lipid IVA",
+      "Kdo-lipid IVA",
+      "Kdo-lipid A",
+      "LPS",
+      "acyl carrier protein (ACP)",
+      "CoA"
+    ],
+    "key_proteins": [
+      "LpxA",
+      "LpxC",
+      "LpxD",
+      "LpxH",
+      "LpxB",
+      "LpxK",
+      "WaaA",
+      "LpxL",
+      "LpxM",
+      "FtsH",
+      "LapB",
+      "YejM",
+      "FabZ",
+      "ObgE",
+      "MsbA",
+      "Lpt system"
+    ],
+    "likely_compartments": [
+      "cytoplasm",
+      "inner membrane",
+      "periplasm",
+      "outer membrane",
+      "cytoplasmic leaflet of IM",
+      "periplasmic leaflet of IM"
+    ],
+    "main_subprocesses": [
+      "LpxA acylation of UDP-GlcNAc",
+      "LpxC deacetylation",
+      "LpxD acylation",
+      "LpxH dephosphorylation",
+      "LpxB disaccharide formation",
+      "LpxK phosphorylation",
+      "WaaA Kdo addition",
+      "LpxL and LpxM acylation",
+      "FtsH-mediated proteolysis of LpxC",
+      "LapB adaptor function",
+      "YejM sensing of LPS"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "Regulation of LpxC in E. coli",
+      "Effects of misregulated lipid A biosynthesis",
+      "Regulation of alternative points in lipid A biosynthesis",
+      "Outlook"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 1.0,
+    "selected_example": "lipid A biosynthesis in Escherichia coli",
+    "candidate_examples": [
+      {
+        "name": "Escherichia coli lipid A biosynthesis",
+        "organism": "Escherichia coli",
+        "key_compounds": [
+          "UDP-GlcNAc",
+          "β-hydroxyacyl-ACP",
+          "R-3-hydroxymyristoyl-ACP",
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+          "lipid IVA",
+          "Kdo-lipid IVA",
+          "Kdo-lipid A",
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxA",
+          "LpxC",
+          "LpxD",
+          "LpxH",
+          "LpxB",
+          "LpxK",
+          "WaaA",
+          "LpxL",
+          "LpxM",
+          "FtsH",
+          "LapB",
+          "YejM"
+        ],
+        "main_subprocesses": [
+          "LpxA acylation",
+          "LpxC deacetylation",
+          "LpxD acylation",
+          "LpxH dephosphorylation",
+          "LpxB disaccharide formation",
+          "LpxK phosphorylation",
+          "WaaA Kdo addition",
+          "LpxL and LpxM acylation",
+          "FtsH-mediated proteolysis of LpxC",
+          "LapB adaptor function",
+          "YejM sensing of LPS"
+        ],
+        "evidence": "The regulation of LpxC in the model organism Escherichia coli has been the subject of immense study"
+      },
+      {
+        "name": "Pseudomonas aeruginosa LpxC regulation by MurA",
+        "organism": "Pseudomonas aeruginosa",
+        "key_compounds": [
+          "UDP-GlcNAc",
+          "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine",
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "MurA"
+        ],
+        "main_subprocesses": [
+          "MurA binding activates LpxC",
+          "LpxC catalyzes deacetylation"
+        ],
+        "evidence": "Pa LpxC is regulated by a wholly unique mechanism: it is activated by direct binding to the committed enzyme in the competing PG biosynthetic pathway, MurA"
+      },
+      {
+        "name": "Neisseria meningitidis LpxC regulation by Ght",
+        "organism": "Neisseria meningitidis",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "Ght"
+        ],
+        "main_subprocesses": [
+          "Ght localizes LpxC to IM",
+          "Ght promotes LPS biosynthesis"
+        ],
+        "evidence": "the N. meningitidis LapB homolog Ght was suggested to regulate LpxC through an FtsH-independent mechanism by localizing LpxC to the IM to promote LPS biosynthesis"
+      },
+      {
+        "name": "Agrobacterium tumefaciens LpxC degradation by Lon",
+        "organism": "Agrobacterium tumefaciens",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "Lon"
+        ],
+        "main_subprocesses": [
+          "Lon protease degrades LpxC"
+        ],
+        "evidence": "LpxC was degraded... due to the Lon protease"
+      },
+      {
+        "name": "Rhodobacter capsulatus LpxC degradation by Lon",
+        "organism": "Rhodobacter capsulatus",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "Lon"
+        ],
+        "main_subprocesses": [
+          "Lon protease degrades LpxC"
+        ],
+        "evidence": "both A. tumefaciences and R. capsulatus LpxC was degraded... due to the Lon protease"
+      },
+      {
+        "name": "Rhodobacter sphaeroides LpxC regulation by NtrYX",
+        "organism": "Rhodobacter sphaeroides",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "NtrYX"
+        ],
+        "main_subprocesses": [
+          "NtrYX inhibits lpxC transcription"
+        ],
+        "evidence": "In R. sphaeroides, an ntrYX mutant exhibited approximately nine-fold elevated lpxC transcript abundance"
+      },
+      {
+        "name": "Caulobacter crescentus LpxC regulation by NtrYX and ChvGI",
+        "organism": "Caulobacter crescentus",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC",
+          "NtrYX",
+          "ChvGI"
+        ],
+        "main_subprocesses": [
+          "NtrYX inhibits lpxC transcription",
+          "ChvGI activates lpxC transcription"
+        ],
+        "evidence": "In C. crescentus, an additional layer of control is imposed by the ChvGI two component system, which activates lpxC transcription"
+      },
+      {
+        "name": "Cronobacter sakazakii LpxA regulation by LabP",
+        "organism": "Cronobacter sakazakii",
+        "key_compounds": [
+          "core-lipid A",
+          "GPL"
+        ],
+        "key_proteins": [
+          "LpxA",
+          "LabP"
+        ],
+        "main_subprocesses": [
+          "LabP stimulates LpxA activity"
+        ],
+        "evidence": "In the gammaproteobacterium Cronobacter sakazakii, LpxA was found to interact with LabP... addition of purified LabP was sufficient to stimulate LpxA activity in vitro"
+      },
+      {
+        "name": "Francisella tularensis LpxA regulation by RipA",
+        "organism": "Francisella tularensis",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxA",
+          "RipA"
+        ],
+        "main_subprocesses": [
+          "RipA inhibits LpxA activity"
+        ],
+        "evidence": "RipA was suggested to inhibit LpxA activity due to the ability of hypomorphic LpxA variants to suppress ripA mutant phenotypes"
+      },
+      {
+        "name": "Acinetobacter baumannii lack of LpxC regulation",
+        "organism": "Acinetobacter baumannii",
+        "key_compounds": [
+          "LPS"
+        ],
+        "key_proteins": [
+          "LpxC"
+        ],
+        "main_subprocesses": [
+          "lipid A not essential",
+          "no known regulation"
+        ],
+        "evidence": "the critical priority pathogen A. baumannii does not appear to control LpxC activity through any of the known regulatory mechanisms"
+      }
+    ],
+    "excluded_examples": [
+      "Pseudomonas aeruginosa LpxC regulation by MurA",
+      "Neisseria meningitidis LpxC regulation by Ght",
+      "Agrobacterium tumefaciens LpxC degradation by Lon",
+      "Rhodobacter capsulatus LpxC degradation by Lon",
+      "Rhodobacter sphaeroides LpxC regulation by NtrYX",
+      "Caulobacter crescentus LpxC regulation by NtrYX and ChvGI",
+      "Cronobacter sakazakii LpxA regulation by LabP",
+      "Francisella tularensis LpxA regulation by RipA",
+      "Acinetobacter baumannii lack of LpxC regulation"
+    ],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:205dcb3ab7a75101",
+      "response_hash": "sha256:694f52053f714a83",
+      "raw_chars": 7633,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 7633,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "UDP-GlcNAc",
+    "β-hydroxyacyl-ACP",
+    "R-3-hydroxymyristoyl-ACP",
+    "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "lipid IVA",
+    "Kdo-lipid IVA",
+    "Kdo-lipid A",
+    "LpxA",
+    "LpxC",
+    "LpxD",
+    "LpxH",
+    "LpxB",
+    "LpxK",
+    "WaaA",
+    "FabZ",
+    "MsbA",
+    "Lpt system"
+  ],
+  "unmatched_terms": [
+    "LPS",
+    "acyl carrier protein (ACP)",
+    "CoA",
+    "LpxL",
+    "LpxM",
+    "FtsH",
+    "LapB",
+    "YejM",
+    "ObgE"
+  ],
+  "coverage_ratio": 0.653846,
+  "core_accepted_processes": 18,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 18,
+  "quarantined_processes": 11,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

@@ -1,0 +1,40 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : (unknown)
+slug       : PMC12444477
+mode       : research
+status     : error
+stage      : post_pipeline
+wall time  : 2239.6s (37m19s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: renaming 'Escherichia coli K-12' to 'Escherichia coli' would merge it into ['Escherichia coli'], which another species row already answers to and keeps
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: renaming 'Escherichia coli K-12' to 'Escherichia coli' would merge it into ['Escherichia coli'], which another species row already answers to and keeps
+AMBIGUOUS_RENAME_TARGET: renaming 'Escherichia coli K-12' to 'Escherichia coli' would merge it into ['Escherichia coli'], which another species row already answers to and keeps
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+
+COUNTS
+----------------------------------------
+  compounds = 15
+  entities = 33
+  proteins = 12
+  reactions = 10
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (937 B)
+  - gap_iteration_summary.json  (81016 B)
+  - mapped_failure_snapshot.json  (590 B)
+  - merged_payload.json  (116070 B)
+  - rag_admission_report.json  (307010 B)
+  - stage1_payload.json  (29834 B)

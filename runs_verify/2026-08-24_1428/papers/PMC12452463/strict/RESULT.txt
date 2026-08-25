@@ -1,0 +1,73 @@
+RESULT: FAIL
+========================================
+paper      : PMC12452463
+title      : (unknown)
+slug       : PMC12452463
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1203.2s (20m03s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/0/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/1/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/2/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/3/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/0/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/1/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+  ! runtime-schema finding (informational, not blocking): and 2 more finding(s); all of them are in contract_reports.json
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 7 blocking issue(s) at final_pre_export_stage3_gates
+issue codes  : actor_schema_not_canonical, gate.entity_enterobactin_synthase_complex_is_declared_as_both_a_prote, gate.generated_protein_complex_wrapper_enterobactin_synthase_complex_, gate.registry_validation_failed
+
+DETAIL / TRACEBACK
+----------------------------------------
+13 QA issues need review.
+[post_normalization_contract_report] actor_schema_not_canonical @ /processes/reactions/0/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[post_normalization_contract_report] actor_schema_not_canonical @ /processes/reactions/1/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[post_normalization_contract_report] actor_schema_not_canonical @ /processes/reactions/2/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[post_normalization_contract_report] actor_schema_not_canonical @ /processes/reactions/3/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[post_normalization_contract_report] gate.entity_enterobactin_synthase_complex_is_declared_as_both_a_prote @ /entities/proteins/7/name: Entity 'enterobactin synthase complex' is declared as both a protein and a protein_complex; entity types must be disjoint (complex declaration: /entities/protein_complexes/0/name).
+[post_normalization_contract_report] gate.generated_protein_complex_wrapper_enterobactin_synthase_complex_ @ /entities/proteins/7: Generated protein complex wrapper 'enterobactin synthase complex' must be listed under protein_complexes, not proteins.
+[post_normalization_contract_report] gate.registry_validation_failed @ /processes: Registry validation failed: Registry validation failed:
+/processes/reactions/4/inputs/1 unknown entity: ferric iron (Fe3
+/processes/interactions/0/entity_2 unknown entity: ent operon
+
+COUNTS
+----------------------------------------
+  blocking_issues = 7
+  compounds = 6
+  contract_errors = 7
+  entities = 22
+  gate_errors = 0
+  proteins = 8
+  reactions = 5
+  runtime_schema_findings = 12
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1401 B)
+  - contract_reports.json  (39668 B)
+  - coverage_summary.json  (3990 B)
+  - final_mapped.json  (173570 B)
+  - final_stage3_gate_report.json  (2813 B)
+  - gap_iteration_summary.json  (65451 B)
+  - gate_fail_report.json  (263 B)
+  - graph_closure_iterations.json  (3932 B)
+  - initial_stage3_gate_report.json  (263 B)
+  - merged_payload.json  (84464 B)
+  - quarantine_report.json  (22608 B)
+  - rag_admission_report.json  (362315 B)
+  - removed_entity_report.json  (3574 B)
+  - stage1_payload.json  (17849 B)

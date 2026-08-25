@@ -1,0 +1,3059 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Escherichia coli",
+      "pathwhiz_id": 3,
+      "taxonomy_id": "562",
+      "classification": "Prokaryote"
+    },
+    {
+      "key": "sp_2",
+      "name": "E. coli",
+      "taxonomy_id": "562",
+      "classification": "Prokaryote"
+    },
+    {
+      "key": "sp_3",
+      "name": "Arabidopsis thaliana",
+      "pathwhiz_id": 4,
+      "taxonomy_id": "3702"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "cytoplasm"
+    },
+    {
+      "key": "scl_2",
+      "name": "inner membrane"
+    },
+    {
+      "key": "scl_3",
+      "name": "periplasm"
+    },
+    {
+      "key": "scl_4",
+      "name": "outer membrane"
+    },
+    {
+      "key": "scl_5",
+      "name": "cytoplasmic leaflet of the IM"
+    },
+    {
+      "key": "scl_6",
+      "name": "periplasmic leaflet of the IM"
+    },
+    {
+      "key": "scl_7",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "cytoplasmic state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "cytoplasmic leaflet of IM state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_5",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_3",
+      "name": "periplasmic leaflet of IM state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_6",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_4",
+      "name": "outer membrane state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_4",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_5",
+      "name": "__auto_state__",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_7",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "UDP-GlcNAc",
+        "pathwhiz_id": 196,
+        "pathbank_compound_id": 196,
+        "mapped_ids": {
+          "hmdb": "HMDB0000290",
+          "kegg": "C00043",
+          "chebi": "16264",
+          "pubchem": "445675",
+          "cas": "528-04-1",
+          "biocyc": "UDP-N-ACETYL-D-GLUCOSAMINE",
+          "chemspider": "393240",
+          "pathbank_compound_id": "196"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-GlcNAc"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 196,
+              "name": "Uridine diphosphate-N-acetylglucosamine",
+              "short_name": "UDP-GN",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000290",
+                "kegg": "C00043",
+                "chebi": "CHEBI:16264",
+                "pubchem": "445675",
+                "cas": "528-04-1",
+                "biocyc": "UDP-N-ACETYL-D-GLUCOSAMINE",
+                "chemspider": "393240",
+                "pathbank_compound_id": "196"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 196,
+          "resolved_name": "Uridine diphosphate-N-acetylglucosamine"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 196,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000290",
+        "kegg_id": "C00043",
+        "chebi_id": "16264",
+        "pubchem_cid": "445675",
+        "cas": "528-04-1",
+        "biocyc_id": "UDP-N-ACETYL-D-GLUCOSAMINE",
+        "chemspider_id": "393240",
+        "short_name": "UDP-GN",
+        "synonyms": [
+          "UDP-N-acetyl-alpha-D-glucosamine",
+          "UDP-N-acetyl-D-glucosamine",
+          "UDP-N-acetylglucosamine"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_2",
+        "name": "β-hydroxyacyl-ACP",
+        "mapping_meta": {
+          "query": {
+            "name": "β-hydroxyacyl-ACP"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "β-hydroxyacyl-ACP",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "β-hydroxyacyl-ACP",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_3",
+        "name": "R-3-hydroxymyristoyl-ACP",
+        "mapping_meta": {
+          "query": {
+            "name": "R-3-hydroxymyristoyl-ACP"
+          },
+          "route": "compound",
+          "route_reason": "declared_or_shaped_as_compound",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "R-3-hydroxymyristoyl-ACP",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "R-3-hydroxymyristoyl-ACP",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          },
+          {
+            "biological_state": "cytoplasmic leaflet of IM state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_4",
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "mapping_meta": {
+          "query": {
+            "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_5",
+        "name": "lipid IVA",
+        "pathwhiz_id": 40982,
+        "pathbank_compound_id": 40982,
+        "mapped_ids": {
+          "chebi": "58603",
+          "pathbank_compound_id": "40982"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "lipid IVA"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40982,
+              "name": "lipid IVA",
+              "short_name": "LLIVA",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:58603",
+                "pathbank_compound_id": "40982"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 40982,
+          "resolved_name": "lipid IVA"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40982,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "chebi_id": "58603",
+        "short_name": "LLIVA",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_6",
+        "name": "Kdo-lipid IVA",
+        "mapped_ids": {
+          "kegg": "C06024",
+          "chebi": "27439",
+          "pubchem": "8296"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "Kdo-lipid IVA"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          },
+          "provider": "ChEBI/KEGG/HMDB"
+        },
+        "raw_name": "Kdo-lipid IVA",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "Kdo-lipid IVA",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "kegg_id": "C06024",
+        "chebi_id": "27439",
+        "pubchem_cid": "8296",
+        "short_name": "3-Deoxy-D-manno-octulosonyl-lipid IV(A)",
+        "synonyms": [
+          "3-Deoxy-D-manno-octulosonyl-lipid IV(A)",
+          "KDO-lipid IV(A)",
+          "3-Deoxy-D-manno-octulosonyl-2',3',2',3'-tetrakis(beta-hydroxymyristoyl)-D-glucosaminyl-1,6-beta-D-glucosamine 1,4'-bisphosphate",
+          "alpha-Kdo-(2->6)-[lipid IVA]"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_7",
+        "name": "Kdo",
+        "pathwhiz_id": 57926,
+        "pathbank_compound_id": 57926,
+        "mapped_ids": {
+          "kegg": "C01187",
+          "chebi": "85986",
+          "pubchem": "21681234",
+          "biocyc": "KDO",
+          "chemspider": "4573934",
+          "pathbank_compound_id": "57926"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "Kdo"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 57926,
+              "name": "3-deoxy-D-manno-2-octulosonate",
+              "short_name": "3dDmanO",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C01187",
+                "chebi": "CHEBI:85986",
+                "pubchem": "21681234",
+                "biocyc": "KDO",
+                "chemspider": "4573934",
+                "pathbank_compound_id": "57926"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 57926,
+          "resolved_name": "3-deoxy-D-manno-2-octulosonate"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 57926,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "kegg_id": "C01187",
+        "chebi_id": "85986",
+        "pubchem_cid": "21681234",
+        "biocyc_id": "KDO",
+        "chemspider_id": "4573934",
+        "short_name": "3dDmanO",
+        "synonyms": [
+          "3-Deoxy-D-manno-octulosonate",
+          "Ketodeoxyoctonate",
+          "KDO",
+          "2-Dehydro-3-deoxy-D-octonate",
+          "3-Deoxy-D-manno-2-octulosonate",
+          "3-Deoxyoctulosonic acid"
+        ],
+        "type": "Compound",
+        "compound_class": "compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "cytoplasmic state"
+          }
+        ]
+      },
+      {
+        "key": "cmp_8",
+        "name": "core-lipid A",
+        "mapping_meta": {
+          "query": {
+            "name": "core-lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "core-lipid A",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "core-lipid A",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "provenance": "reconstructed_from_process_participant",
+        "synonyms": [],
+        "type": "Compound",
+        "compound_type": "Compound",
+        "element_states": [
+          {
+            "biological_state": "__auto_state__"
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "LpxA",
+        "pathwhiz_id": 6025,
+        "pathbank_protein_id": 6025,
+        "mapped_ids": {
+          "uniprot": "P0A722",
+          "pathbank_protein_id": "6025",
+          "gene_name": "lpxA"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6025,
+              "name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+              "uniprot": "P0A722",
+              "gene_name": "lpxA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6025, uniprot:P0A722",
+            "judged_candidate": {
+              "pathbank_protein_id": 6025,
+              "name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+              "uniprot": "P0A722",
+              "gene_name": "lpxA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6025,
+                "name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+                "uniprot": "P0A722",
+                "gene_name": "lpxA",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxA",
+              "kind": "protein",
+              "resolved_name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+              "identity": "uniprot:P0A722",
+              "compared_names": [
+                "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase"
+              ],
+              "matched_symbol": "lpxA"
+            }
+          },
+          "pathbank_protein_id": 6025,
+          "resolved_name": "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "lpxA",
+          "Acyl-[acyl-carrier-protein]--UDP-N-acetylglucosamine O-acyltransferase"
+        ],
+        "uniprot": "P0A722",
+        "gene_name": "lpxA",
+        "ec_number": "2.3.1.129",
+        "ec_numbers": [
+          "2.3.1.129"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "LpxC",
+        "pathwhiz_id": 6026,
+        "pathbank_protein_id": 6026,
+        "mapped_ids": {
+          "uniprot": "P0A725",
+          "pathbank_protein_id": "6026",
+          "gene_name": "lpxC"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxC",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxC",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6026, uniprot:P0A725",
+            "judged_candidate": {
+              "pathbank_protein_id": 6026,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "uniprot": "P0A725",
+              "gene_name": "lpxC",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6026,
+                "name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+                "uniprot": "P0A725",
+                "gene_name": "lpxC",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxC",
+              "kind": "protein",
+              "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+              "identity": "uniprot:P0A725",
+              "compared_names": [
+                "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase"
+              ],
+              "matched_symbol": "lpxC"
+            }
+          },
+          "pathbank_protein_id": 6026,
+          "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] N-acetylglucosamine deacetylase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Protein EnvA",
+          "UDP-3-O-[R-3-hydroxymyristoyl]-N-acetylglucosamine deacetylase",
+          "lpxC",
+          "asmB",
+          "envA",
+          "UDP-3-O-acyl-N-acetylglucosamine deacetylase"
+        ],
+        "uniprot": "P0A725",
+        "gene_name": "lpxC",
+        "ec_number": "3.5.1.108",
+        "ec_numbers": [
+          "3.5.1.108"
+        ]
+      },
+      {
+        "key": "prot_3",
+        "name": "LpxD",
+        "pathwhiz_id": 6400,
+        "pathbank_protein_id": 6400,
+        "mapped_ids": {
+          "uniprot": "P21645",
+          "pathbank_protein_id": "6400",
+          "gene_name": "lpxD"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6400,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+              "uniprot": "P21645",
+              "gene_name": "lpxD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxD",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6400, uniprot:P21645",
+            "judged_candidate": {
+              "pathbank_protein_id": 6400,
+              "name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+              "uniprot": "P21645",
+              "gene_name": "lpxD",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6400,
+                "name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+                "uniprot": "P21645",
+                "gene_name": "lpxD",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxD",
+              "kind": "protein",
+              "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+              "identity": "uniprot:P21645",
+              "compared_names": [
+                "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase"
+              ],
+              "matched_symbol": "lpxD"
+            }
+          },
+          "pathbank_protein_id": 6400,
+          "resolved_name": "UDP-3-O-[3-hydroxymyristoyl] glucosamine N-acyltransferase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Protein FirA",
+          "Rifampicin resistance protein",
+          "UDP-3-O-(3-hydroxytetradecanoyl)glucosamine N-acyltransferase",
+          "lpxD",
+          "firA",
+          "omsA",
+          "UDP-3-O-(3-hydroxymyristoyl)glucosamine N-acyltransferase"
+        ],
+        "uniprot": "P21645",
+        "gene_name": "lpxD",
+        "ec_number": "2.3.1.191",
+        "ec_numbers": [
+          "2.3.1.191"
+        ]
+      },
+      {
+        "key": "prot_4",
+        "name": "LpxH",
+        "pathwhiz_id": 6626,
+        "pathbank_protein_id": 6626,
+        "mapped_ids": {
+          "uniprot": "P43341",
+          "pathbank_protein_id": "6626",
+          "gene_name": "lpxH"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxH",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6626,
+              "name": "UDP-2,3-diacylglucosamine hydrolase",
+              "uniprot": "P43341",
+              "gene_name": "lpxH",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxH",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6626, uniprot:P43341",
+            "judged_candidate": {
+              "pathbank_protein_id": 6626,
+              "name": "UDP-2,3-diacylglucosamine hydrolase",
+              "uniprot": "P43341",
+              "gene_name": "lpxH",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6626,
+                "name": "UDP-2,3-diacylglucosamine hydrolase",
+                "uniprot": "P43341",
+                "gene_name": "lpxH",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxH",
+              "kind": "protein",
+              "resolved_name": "UDP-2,3-diacylglucosamine hydrolase",
+              "identity": "uniprot:P43341",
+              "compared_names": [
+                "UDP-2,3-diacylglucosamine hydrolase"
+              ],
+              "matched_symbol": "lpxH"
+            }
+          },
+          "pathbank_protein_id": 6626,
+          "resolved_name": "UDP-2,3-diacylglucosamine hydrolase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "UDP-2,3-diacylglucosamine diphosphatase",
+          "UDP-2,3-diacylglucosamine pyrophosphatase",
+          "lpxH",
+          "ybbF",
+          "UDP-2,3-diacylglucosamine hydrolase"
+        ],
+        "uniprot": "P43341",
+        "gene_name": "lpxH",
+        "ec_number": "3.6.1.54",
+        "ec_numbers": [
+          "3.6.1.54"
+        ]
+      },
+      {
+        "key": "prot_5",
+        "name": "LpxB",
+        "pathwhiz_id": 6302,
+        "pathbank_protein_id": 6302,
+        "mapped_ids": {
+          "uniprot": "P10441",
+          "pathbank_protein_id": "6302",
+          "gene_name": "lpxB"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxB",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6302,
+              "name": "Lipid-A-disaccharide synthase",
+              "uniprot": "P10441",
+              "gene_name": "lpxB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxB",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6302, uniprot:P10441",
+            "judged_candidate": {
+              "pathbank_protein_id": 6302,
+              "name": "Lipid-A-disaccharide synthase",
+              "uniprot": "P10441",
+              "gene_name": "lpxB",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6302,
+                "name": "Lipid-A-disaccharide synthase",
+                "uniprot": "P10441",
+                "gene_name": "lpxB",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxB",
+              "kind": "protein",
+              "resolved_name": "Lipid-A-disaccharide synthase",
+              "identity": "uniprot:P10441",
+              "compared_names": [
+                "Lipid-A-disaccharide synthase"
+              ],
+              "matched_symbol": "lpxB"
+            }
+          },
+          "pathbank_protein_id": 6302,
+          "resolved_name": "Lipid-A-disaccharide synthase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "lpxB",
+          "pgsB",
+          "Lipid-A-disaccharide synthase"
+        ],
+        "uniprot": "P10441",
+        "gene_name": "lpxB",
+        "ec_number": "2.4.1.182",
+        "ec_numbers": [
+          "2.4.1.182"
+        ]
+      },
+      {
+        "key": "prot_6",
+        "name": "LpxK",
+        "pathwhiz_id": 6465,
+        "pathbank_protein_id": 6465,
+        "mapped_ids": {
+          "uniprot": "P27300",
+          "pathbank_protein_id": "6465",
+          "gene_name": "lpxK"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LpxK",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6465,
+              "name": "Tetraacyldisaccharide 4'-kinase",
+              "uniprot": "P27300",
+              "gene_name": "lpxK",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "LpxK",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6465, uniprot:P27300",
+            "judged_candidate": {
+              "pathbank_protein_id": 6465,
+              "name": "Tetraacyldisaccharide 4'-kinase",
+              "uniprot": "P27300",
+              "gene_name": "lpxK",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6465,
+                "name": "Tetraacyldisaccharide 4'-kinase",
+                "uniprot": "P27300",
+                "gene_name": "lpxK",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "LpxK",
+              "kind": "protein",
+              "resolved_name": "Tetraacyldisaccharide 4'-kinase",
+              "identity": "uniprot:P27300",
+              "compared_names": [
+                "Tetraacyldisaccharide 4'-kinase"
+              ],
+              "matched_symbol": "lpxK"
+            }
+          },
+          "pathbank_protein_id": 6465,
+          "resolved_name": "Tetraacyldisaccharide 4'-kinase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Lipid A 4'-kinase",
+          "lpxK",
+          "ycaH",
+          "Tetraacyldisaccharide 4'-kinase"
+        ],
+        "uniprot": "P27300",
+        "gene_name": "lpxK",
+        "ec_number": "2.7.1.130",
+        "ec_numbers": [
+          "2.7.1.130"
+        ]
+      },
+      {
+        "key": "prot_7",
+        "name": "WaaA",
+        "pathwhiz_id": 6203,
+        "pathbank_protein_id": 6203,
+        "mapped_ids": {
+          "uniprot": "P0AC75",
+          "pathbank_protein_id": "6203",
+          "gene_name": "waaA"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "WaaA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6203,
+              "name": "3-deoxy-D-manno-octulosonic-acid transferase",
+              "uniprot": "P0AC75",
+              "gene_name": "waaA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "WaaA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:6203, uniprot:P0AC75",
+            "judged_candidate": {
+              "pathbank_protein_id": 6203,
+              "name": "3-deoxy-D-manno-octulosonic-acid transferase",
+              "uniprot": "P0AC75",
+              "gene_name": "waaA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 6203,
+                "name": "3-deoxy-D-manno-octulosonic-acid transferase",
+                "uniprot": "P0AC75",
+                "gene_name": "waaA",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "WaaA",
+              "kind": "protein",
+              "resolved_name": "3-deoxy-D-manno-octulosonic-acid transferase",
+              "identity": "uniprot:P0AC75",
+              "compared_names": [
+                "3-deoxy-D-manno-octulosonic-acid transferase"
+              ],
+              "matched_symbol": "waaA"
+            }
+          },
+          "pathbank_protein_id": 6203,
+          "resolved_name": "3-deoxy-D-manno-octulosonic-acid transferase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Bifunctional Kdo transferase",
+          "Kdo-lipid IV(A) 3-deoxy-D-manno-octulosonic acid transferase",
+          "Lipid IV(A) 3-deoxy-D-manno-octulosonic acid transferase",
+          "waaA",
+          "kdtA",
+          "3-deoxy-D-manno-octulosonic acid transferase"
+        ],
+        "uniprot": "P0AC75",
+        "gene_name": "waaA",
+        "ec_number": "2.4.99.12",
+        "ec_numbers": [
+          "2.4.99.12",
+          "2.4.99.13"
+        ]
+      },
+      {
+        "key": "prot_8",
+        "name": "FabZ",
+        "pathwhiz_id": 7181,
+        "pathbank_protein_id": 7181,
+        "mapped_ids": {
+          "uniprot": "P0A6Q6",
+          "pathbank_protein_id": "7181",
+          "gene_name": "fabZ"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "FabZ",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 7181,
+              "name": "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+              "uniprot": "P0A6Q6",
+              "gene_name": "fabZ",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "FabZ",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:7181, uniprot:P0A6Q6",
+            "judged_candidate": {
+              "pathbank_protein_id": 7181,
+              "name": "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+              "uniprot": "P0A6Q6",
+              "gene_name": "fabZ",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 7181,
+                "name": "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+                "uniprot": "P0A6Q6",
+                "gene_name": "fabZ",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "exact_symbol_identity",
+              "entity_name": "FabZ",
+              "kind": "protein",
+              "resolved_name": "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+              "identity": "uniprot:P0A6Q6",
+              "compared_names": [
+                "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase"
+              ],
+              "matched_symbol": "fabZ"
+            }
+          },
+          "pathbank_protein_id": 7181,
+          "resolved_name": "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
+          "17 kDa actomyosin component",
+          "Beta-hydroxyacyl-ACP dehydratase",
+          "fabZ",
+          "sefA",
+          "yaeA",
+          "3-hydroxyacyl-[acyl-carrier-protein] dehydratase FabZ"
+        ],
+        "uniprot": "P0A6Q6",
+        "gene_name": "fabZ",
+        "ec_number": "4.2.1.59",
+        "ec_numbers": [
+          "4.2.1.59"
+        ]
+      },
+      {
+        "key": "prot_9",
+        "name": "MsbA",
+        "pathwhiz_id": 7139,
+        "pathbank_protein_id": 7139,
+        "mapped_ids": {
+          "uniprot": "P60752",
+          "pathbank_protein_id": "7139",
+          "gene_name": "msbA"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MsbA",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 7139,
+              "name": "Lipid A export ATP-binding/permease protein msbA",
+              "uniprot": "P60752",
+              "gene_name": "msbA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "identity_verdict": {
+            "verified": true,
+            "reason": "verified_real_protein",
+            "entity_name": "MsbA",
+            "organism": "Escherichia coli",
+            "checks": {
+              "identifier_resolution": "ok",
+              "candidate_evidence": "ok",
+              "entity_type": "ok",
+              "species": "ok",
+              "name": "keep",
+              "score": "ok",
+              "margin": "no_competing_candidate"
+            },
+            "score": 1.0,
+            "margin": -1.0,
+            "verification_status": "verified",
+            "identity": "pathbank_protein_id:7139, uniprot:P60752",
+            "judged_candidate": {
+              "pathbank_protein_id": 7139,
+              "name": "Lipid A export ATP-binding/permease protein msbA",
+              "uniprot": "P60752",
+              "gene_name": "msbA",
+              "species_id": 3,
+              "score": 1.0,
+              "organism": "Escherichia coli",
+              "taxonomy_id": "562"
+            },
+            "judged_candidates": [
+              {
+                "pathbank_protein_id": 7139,
+                "name": "Lipid A export ATP-binding/permease protein msbA",
+                "uniprot": "P60752",
+                "gene_name": "msbA",
+                "species_id": 3,
+                "score": 1.0,
+                "organism": "Escherichia coli",
+                "taxonomy_id": "562"
+              }
+            ],
+            "species_compatibility": "ok",
+            "name_gate": {
+              "verdict": "keep",
+              "reason": "shared_meaningful_token",
+              "entity_name": "MsbA",
+              "kind": "protein",
+              "resolved_name": "Lipid A export ATP-binding/permease protein msbA",
+              "identity": "uniprot:P60752",
+              "compared_names": [
+                "Lipid A export ATP-binding/permease protein msbA"
+              ]
+            }
+          },
+          "pathbank_protein_id": 7139,
+          "resolved_name": "Lipid A export ATP-binding/permease protein msbA",
+          "identity_status": "verified"
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "synonyms": [
+          "Lipid A export ATP-binding/permease protein MsbA",
+          "Lipid flippase",
+          "msbA",
+          "ATP-dependent lipid A-core flippase"
+        ],
+        "uniprot": "P60752",
+        "gene_name": "msbA",
+        "ec_number": "7.5.2.6",
+        "ec_numbers": [
+          "7.5.2.6"
+        ]
+      },
+      {
+        "key": "prot_10",
+        "name": "Unknown",
+        "pathwhiz_id": 9659,
+        "pathbank_protein_id": 9659,
+        "mapped_ids": {
+          "uniprot": "Unknown",
+          "pathbank_protein_id": 9659
+        },
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_unknown_protein_fallback",
+          "confidence": 0.0,
+          "pathbank_protein_id": 9659,
+          "fallback_used": true,
+          "fallback_reason": "all_normal_protein_identity_strategies_failed",
+          "cross_species_placeholder": true,
+          "resolution": {
+            "status": "unresolved",
+            "issue": "mapping_result_missing",
+            "order_step": "entity_mapping"
+          }
+        },
+        "species": "Arabidopsis thaliana",
+        "taxonomy_id": "3702",
+        "organism": "Arabidopsis thaliana",
+        "species_id": 4,
+        "pathbank_species_id": 4,
+        "pw_protein_id": 9659,
+        "synonyms": [],
+        "uniprot": "UNKNOWN",
+        "uniprot_id": "Unknown"
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "Lpt system",
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "route": "complex",
+          "query": {
+            "name": "Lpt system",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_unknown_protein_fallback",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "no_components"
+          },
+          "issues": [
+            {
+              "issue": "protein_complex_missing_components",
+              "reason": "no_components_provided"
+            }
+          ],
+          "fallback_used": true,
+          "fallback_reason": "complex_has_no_resolvable_components",
+          "cross_species_placeholder": true
+        },
+        "class": "protein_complex",
+        "confidence": 0.8,
+        "provenance": "inferred",
+        "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_10",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "UDP-N-acetylglucosamine acyltransferase",
+        "pathwhiz_id": 1616,
+        "pathbank_complex_id": 1616,
+        "mapping_meta": {
+          "pathbank_complex_id": 1616,
+          "pathbank_protein_complex_id": 1616,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1616,
+              "pathbank_protein_complex_id": 1616,
+              "name": "UDP-N-acetylglucosamine acyltransferase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "UDP-N-acetylglucosamine acyltransferase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "lipid A disaccharide synthase",
+        "pathwhiz_id": 1620,
+        "pathbank_complex_id": 1620,
+        "mapping_meta": {
+          "pathbank_complex_id": 1620,
+          "pathbank_protein_complex_id": 1620,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1620,
+              "pathbank_protein_complex_id": 1620,
+              "name": "lipid A disaccharide synthase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "lipid A disaccharide synthase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_5",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_4",
+        "name": "KDO transferase",
+        "pathwhiz_id": 1627,
+        "pathbank_complex_id": 1627,
+        "mapping_meta": {
+          "pathbank_complex_id": 1627,
+          "pathbank_protein_complex_id": 1627,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 1627,
+              "pathbank_protein_complex_id": 1627,
+              "name": " KDO transferase",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "KDO transferase",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_7",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "LpxA reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_1_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "LpxB reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_4",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "WaaA reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_3_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [
+      {
+        "key": "tr_1",
+        "type": "transport",
+        "name": "MsbA-mediated core-lipid A flip",
+        "transport_elements": [
+          {
+            "key": "tr_1_el_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "left_biological_state_key": "bs_2",
+            "right_biological_state_key": "bs_3",
+            "stoichiometry": 1
+          }
+        ],
+        "transporters": [
+          {
+            "key": "tr_1_transporter_1",
+            "entity_type": "protein",
+            "entity_key": "prot_9",
+            "biological_state_key": "bs_1"
+          }
+        ]
+      },
+      {
+        "key": "tr_2",
+        "type": "transport",
+        "name": "Lpt system transport of core-lipid A to OM",
+        "transport_elements": [
+          {
+            "key": "tr_2_el_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "left_biological_state_key": "bs_3",
+            "right_biological_state_key": "bs_4",
+            "stoichiometry": 1
+          }
+        ],
+        "transporters": []
+      }
+    ],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "FabZ dehydrates β-hydroxyacyl-ACP",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_8"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_3"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "Competition between FabZ and LpxA",
+        "interaction_type": "competes_with",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_8"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        }
+      },
+      {
+        "key": "int_3",
+        "type": "interaction",
+        "name": "R-3-hydroxymyristoyl-ACP is substrate for LpxA",
+        "interaction_type": "substrate_of",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_3"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        }
+      },
+      {
+        "key": "int_4",
+        "type": "interaction",
+        "name": "WaaA modifies Kdo-lipid IVA",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_7"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_6"
+        }
+      },
+      {
+        "key": "int_5",
+        "type": "interaction",
+        "name": "LpxK phosphorylates lipid IVA",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_6"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_5"
+        }
+      },
+      {
+        "key": "int_6",
+        "type": "interaction",
+        "name": "MsbA transports core-lipid A",
+        "interaction_type": "transports",
+        "biological_state_key": "bs_2",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_9"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_8"
+        }
+      },
+      {
+        "key": "int_7",
+        "type": "interaction",
+        "name": "Lpt system transports core-lipid A to OM",
+        "interaction_type": "transports",
+        "biological_state_key": "bs_3",
+        "left": {
+          "entity_type": "protein_complex",
+          "entity_key": "pc_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_8"
+        }
+      },
+      {
+        "key": "int_8",
+        "type": "interaction",
+        "name": "FabZ catalyzes dehydration of β-hydroxyacyl-ACP",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_8"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_2"
+        }
+      },
+      {
+        "key": "int_9",
+        "type": "interaction",
+        "name": "LpxC deacetylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_2"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      },
+      {
+        "key": "int_10",
+        "type": "interaction",
+        "name": "LpxD acylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_3"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      },
+      {
+        "key": "int_11",
+        "type": "interaction",
+        "name": "LpxH dephosphorylates UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_4"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      },
+      {
+        "key": "int_12",
+        "type": "interaction",
+        "name": "LpxB catalyzes disaccharide formation",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_5"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_5"
+        }
+      },
+      {
+        "key": "int_13",
+        "type": "interaction",
+        "name": "LpxA acylates UDP-GlcNAc",
+        "interaction_type": "catalyzes",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 1620,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_2",
+      "x": 1855,
+      "y": 489,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_3",
+      "x": 2145,
+      "y": 489,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_9",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 399,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_9",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_4",
+      "x": 525,
+      "y": 729,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_10",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_11",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_2",
+      "x": 440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_12",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_5",
+      "x": 640,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_1",
+      "x": 840,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_1",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_4",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_1",
+      "x": 1240,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_5",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_4",
+      "biological_state_key": "bs_1",
+      "x": 1440,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_6",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_5",
+      "biological_state_key": "bs_1",
+      "x": 40,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_7",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_6",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_8",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_7",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_9",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_8",
+      "biological_state_key": "bs_1",
+      "x": 640,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_10",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_9",
+      "biological_state_key": "bs_2",
+      "x": 840,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_4",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_5",
+      "x": 1040,
+      "y": 1150,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_4",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_5",
+      "x": 1040,
+      "y": 1150,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_4",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 280,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 280,
+      "width": 3200,
+      "height": 280,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_3",
+      "biological_state_key": "bs_3",
+      "x": 0,
+      "y": 560,
+      "width": 3200,
+      "height": 280,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_4",
+      "biological_state_key": "bs_4",
+      "x": 0,
+      "y": 840,
+      "width": 3200,
+      "height": 280,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_5",
+      "biological_state_key": "bs_5",
+      "x": 0,
+      "y": 1120,
+      "width": 3200,
+      "height": 280,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 442 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M220 537 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M700 489 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M1240 489 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M1300 537 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M1460 489 L1620 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_11",
+      "path": "M1460 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_12",
+      "path": "M1915 509 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_13",
+      "path": "M2000 489 L2205 509",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_14",
+      "path": "M2205 509 L380 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_15",
+      "path": "M380 729 L585 749",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_3"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_4"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_7"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_3_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_6",
+          "edge_key": "edge_10"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_11"
+        }
+      ]
+    },
+    {
+      "key": "tv_1",
+      "type": "transport_visualization",
+      "process_key": "tr_1",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "tr_1_el_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_7",
+          "edge_key": "edge_12"
+        },
+        {
+          "process_member_key": "tr_1_el_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_8",
+          "edge_key": "edge_13"
+        },
+        {
+          "process_member_key": "tr_1_transporter_1",
+          "role": "transporter",
+          "member_type": "protein",
+          "location_key": "pl_1",
+          "edge_key": null
+        }
+      ]
+    },
+    {
+      "key": "tv_2",
+      "type": "transport_visualization",
+      "process_key": "tr_2",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "tr_2_el_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_8",
+          "edge_key": "edge_14"
+        },
+        {
+          "process_member_key": "tr_2_el_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_9",
+          "edge_key": "edge_15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,816 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:d9dd3433f21d0e35",
+  "resulting_payload_hash": "sha256:d9dd3433f21d0e35",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "23dihydro23dihydroxybenzoate dhb",
+      "23dihydroxybenzoate dhb",
+      "chorismate",
+      "dhbamp",
+      "entb isochorismatase",
+      "entc isochorismate synthase",
+      "entd phosphopantetheinyl transferase",
+      "ente 23dihydroxybenzoateamp ligase",
+      "enterobactin",
+      "entf nonribosomal peptide synthetase",
+      "fepa outer membrane receptor",
+      "ferric enterobactin feent",
+      "fur ferric uptake regulator",
+      "isochorismate",
+      "ryhb small regulatory rna"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:ac2656efc8e05fd0",
+  "ok": true,
+  "counts": {
+    "core_accepted": 8,
+    "auxiliary_accepted": 0,
+    "quarantined_unmapped_entity": 2,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "Chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate",
+        "entc",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "entb",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "activation of dhb to dhbamp",
+        "dhbamp",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "assembly of enterobactin",
+        "dhbamp",
+        "entd",
+        "ente",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "Ferric enterobactin import via FepA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "ferric enterobactin feent",
+        "ferric enterobactin import via fepa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "Fur represses ent operon",
+      "essential_participant": "Fur",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin biosynthesis genes entaentf",
+        "fur",
+        "fur represses ent operon"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "Fur",
+          "entity_2": "enterobactin biosynthesis genes (entA-entF)",
+          "name": "Fur represses ent operon",
+          "relationship": "represses",
+          "biological_state": "E. coli cytoplasm",
+          "evidence": "115 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "Fur"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "RyhB downregulates siderophore production",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "ent mrna",
+        "ryhb",
+        "ryhb downregulates siderophore production"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "RyhB",
+          "entity_2": "ent mRNA",
+          "name": "RyhB downregulates siderophore production",
+          "relationship": "downregulates",
+          "biological_state": "E. coli cytoplasm",
+          "evidence": "130 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "RyhB"
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 0,
+      "pointer": "/processes/interactions/0",
+      "name": "Fur represses ent operon",
+      "essential_participant": "Fur",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin biosynthesis genes entaentf",
+        "fur",
+        "fur represses ent operon"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/0",
+          "entity_1": "Fur",
+          "entity_2": "enterobactin biosynthesis genes (entA-entF)",
+          "name": "Fur represses ent operon",
+          "relationship": "represses",
+          "biological_state": "E. coli cytoplasm",
+          "evidence": "115 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "Fur"
+      },
+      "original_process": {
+        "entity_1": "Fur",
+        "entity_2": "enterobactin biosynthesis genes (entA-entF)",
+        "name": "Fur represses ent operon",
+        "relationship": "represses",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "Fur represses the transcription of enterobactin biosynthesis genes (entA-entF) by binding to their promoter regions",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 1,
+      "pointer": "/processes/interactions/1",
+      "name": "RyhB downregulates siderophore production",
+      "essential_participant": "RyhB",
+      "iteration": 0,
+      "core_terms": [
+        "ent mrna",
+        "ryhb",
+        "ryhb downregulates siderophore production"
+      ],
+      "state": "quarantined_unmapped_entity",
+      "reason": "protein_missing_external_identity",
+      "detail": {
+        "row": {
+          "pointer": "/processes/interactions/1",
+          "entity_1": "RyhB",
+          "entity_2": "ent mRNA",
+          "name": "RyhB downregulates siderophore production",
+          "relationship": "downregulates",
+          "biological_state": "E. coli cytoplasm",
+          "evidence": "130 chars elided",
+          "provenance_lineage": [
+            {
+              "stage": "paper_extraction",
+              "origin": "paper_stated",
+              "support": "unsupported",
+              "paper_explicit": "explicit",
+              "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+              "review_required": false,
+              "uncertainty": "",
+              "sources": "0 item(s), 2 chars elided"
+            }
+          ]
+        },
+        "participant": "RyhB"
+      },
+      "original_process": {
+        "entity_1": "RyhB",
+        "entity_2": "ent mRNA",
+        "name": "RyhB downregulates siderophore production",
+        "relationship": "downregulates",
+        "biological_state": "E. coli cytoplasm",
+        "evidence": "the sRNA RyhB downregulates siderophore production under certain conditions by modulating the stability or translation of ent mRNA",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          },
+          {
+            "stage": "quarantine",
+            "origin": "excluded",
+            "support": "unsupported",
+            "paper_explicit": "not_evaluated",
+            "reason": "strict quarantine excluded this interaction from the frozen graph (quarantined_unmapped_entity: protein_missing_external_identity)",
+            "review_required": true,
+            "uncertainty": "an essential participant resolved to nothing strict PWML can represent, so the biology this process described is absent from the exported pathway",
+            "sources": []
+          }
+        ]
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "Chorismate to isochorismate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "chorismate",
+        "chorismate to isochorismate",
+        "entc",
+        "isochorismate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "Isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydro23dihydroxybenzoate dhb",
+        "entb",
+        "isochorismate",
+        "isochorismate to 23dihydro23dihydroxybenzoate"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "Activation of DHB to DHB-AMP",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23dihydroxybenzoate dhb",
+        "activation of dhb to dhbamp",
+        "dhbamp",
+        "ente"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 3,
+      "pointer": "/processes/reactions/3",
+      "name": "Assembly of enterobactin",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "assembly of enterobactin",
+        "dhbamp",
+        "entd",
+        "ente",
+        "enterobactin",
+        "enterobactin synthase complex",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 0,
+      "pointer": "/processes/transports/0",
+      "name": "Enterobactin secretion",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "enterobactin",
+        "enterobactin secretion"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "transport",
+      "bucket": "transports",
+      "index": 1,
+      "pointer": "/processes/transports/1",
+      "name": "Ferric enterobactin import via FepA",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "fepa",
+        "ferric enterobactin feent",
+        "ferric enterobactin import via fepa"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 2,
+      "pointer": "/processes/interactions/2",
+      "name": "EntD modifies EntB",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entb",
+        "entd",
+        "entd modifies entb"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "interaction",
+      "bucket": "interactions",
+      "index": 3,
+      "pointer": "/processes/interactions/3",
+      "name": "EntD modifies EntF",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "entd",
+        "entd modifies entf",
+        "entf"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "passed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.866667,
+    "missing_anchors": [
+      "Fur (ferric uptake regulator)",
+      "RyhB (small regulatory RNA)"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "2 requested-core anchor(s) matched no admitted process: Fur (ferric uptake regulator), RyhB (small regulatory RNA); candidate processes withheld by strict admission (quarantined_unmapped_entity:2); admitting them would require unsupported biology",
+    "coverage_evaluated": true,
+    "reasons": [
+      "requested_core_anchors_unmatched:Fur (ferric uptake regulator),RyhB (small regulatory RNA)"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 4,
+    "exported_locked_reactions": 4,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric enterobactin (FeEnt)",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)",
+      "Fur (ferric uptake regulator)",
+      "FepA (outer membrane receptor)",
+      "RyhB (small regulatory RNA)"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "enterobactin biosynthesis",
+      "likely_organism": "Escherichia coli",
+      "key_compounds": [
+        "chorismate",
+        "isochorismate",
+        "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+        "2,3-dihydroxybenzoate (DHB)",
+        "DHB-AMP",
+        "enterobactin",
+        "ferric enterobactin (FeEnt)"
+      ],
+      "key_proteins": [
+        "EntC (isochorismate synthase)",
+        "EntB (isochorismatase)",
+        "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+        "EntD (phosphopantetheinyl transferase)",
+        "EntF (nonribosomal peptide synthetase)",
+        "Fur (ferric uptake regulator)",
+        "FepA (outer membrane receptor)",
+        "RyhB (small regulatory RNA)"
+      ],
+      "likely_compartments": [
+        "cytoplasm",
+        "outer membrane",
+        "periplasm",
+        "extracellular space"
+      ],
+      "main_subprocesses": [
+        "conversion of chorismate to isochorismate (EntC)",
+        "conversion of isochorismate to DHB (EntB)",
+        "activation of DHB to DHB-AMP (EntE)",
+        "assembly of three DHB molecules into cyclic trilactone enterobactin (EntD/EntE/EntF complex)",
+        "regulation by Fur and RyhB in response to iron availability"
+      ],
+      "relevant_sections": [
+        "abstract",
+        "introduction",
+        "body",
+        "discussion"
+      ],
+      "pathway_relevance_score": 0.9,
+      "document_type": "multi_example_review",
+      "context_type": "multi_example_review",
+      "scope_status": "targeted",
+      "scope_clarity_score": 1.0,
+      "selected_example": "enterobactin biosynthesis in Escherichia coli",
+      "candidate_examples": [
+        {
+          "name": "enterobactin biosynthesis in Escherichia coli",
+          "organism": "Escherichia coli",
+          "key_compounds": [
+            "chorismate",
+            "isochorismate",
+            "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+            "2,3-dihydroxybenzoate (DHB)",
+            "DHB-AMP",
+            "enterobactin",
+            "ferric enterobactin (FeEnt)"
+          ],
+          "key_proteins": [
+            "EntC",
+            "EntB",
+            "EntE",
+            "EntD",
+            "EntF",
+            "Fur",
+            "FepA",
+            "RyhB"
+          ],
+          "main_subprocesses": [
+            "conversion of chorismate to isochorismate (EntC)",
+            "conversion of isochorismate to DHB (EntB)",
+            "activation of DHB to DHB-AMP (EntE)",
+            "assembly of three DHB molecules into cyclic trilactone enterobactin (EntD/EntE/EntF complex)",
+            "regulation by Fur and RyhB in response to iron availability"
+          ],
+          "evidence": "The ent (enterobactin) operon in Escherichia coli comprises six genes (entA, entB, entC, entD, entE, and entF), each encoding an enzyme essential for the production of enterobactin."
+        }
+      ],
+      "excluded_examples": [],
+      "warning": "",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": false,
+        "detail": "Stage 0 returned a JSON object.",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "stop",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:294ef907fbd3911e",
+        "response_hash": "sha256:8862d5c5f63d8f67",
+        "raw_chars": 2622,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 2622,
+            "finish_reason": "stop"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydro-2,3-dihydroxybenzoate (DHB)",
+      "2,3-dihydroxybenzoate (DHB)",
+      "DHB-AMP",
+      "enterobactin",
+      "ferric enterobactin (FeEnt)",
+      "EntC (isochorismate synthase)",
+      "EntB (isochorismatase)",
+      "EntE (2,3-dihydroxybenzoate-AMP ligase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "EntF (nonribosomal peptide synthetase)",
+      "FepA (outer membrane receptor)"
+    ],
+    "unmatched_terms": [
+      "Fur (ferric uptake regulator)",
+      "RyhB (small regulatory RNA)"
+    ],
+    "coverage_ratio": 0.866667,
+    "core_accepted_processes": 8,
+    "auxiliary_accepted_processes": 0,
+    "surviving_processes": 8,
+    "quarantined_processes": 2,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:d9dd3433f21d0e35.sha256:ac2656efc8e05fd0",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [
+      {
+        "pointer": "/processes/interactions/0",
+        "name": "Fur represses ent operon",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "Fur",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      },
+      {
+        "pointer": "/processes/interactions/1",
+        "name": "RyhB downregulates siderophore production",
+        "process_kind": "interaction",
+        "state": "quarantined_unmapped_entity",
+        "reason": "protein_missing_external_identity",
+        "essential_participant": "RyhB",
+        "research_mode": "review_flag",
+        "effect": "annotate_only"
+      }
+    ],
+    "would_have_quarantined": 2,
+    "would_have_refused": []
+  }
+}

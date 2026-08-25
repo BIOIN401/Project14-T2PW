@@ -1,0 +1,288 @@
+{
+  "schema_version": 6,
+  "stage": "pre_export_strict_quarantine",
+  "strict_db": true,
+  "export_mode": "research",
+  "policy_version": "2026-07-31.1",
+  "admitted_payload_hash": "sha256:29e2bffcd3e35b67",
+  "resulting_payload_hash": "sha256:29e2bffcd3e35b67",
+  "decision_inputs": {
+    "policy_version": "2026-07-31.1",
+    "export_mode": "research",
+    "strict_db": true,
+    "requested_core": null,
+    "pathway_context_core": [
+      "cholesterol"
+    ],
+    "confidence_floor": null,
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5,
+    "max_iterations": 50
+  },
+  "decision_input_hash": "sha256:6dc81ec3ac994a00",
+  "ok": true,
+  "counts": {
+    "core_accepted": 1,
+    "auxiliary_accepted": 2,
+    "quarantined_unmapped_entity": 0,
+    "quarantined_out_of_scope": 0,
+    "quarantined_weak_evidence": 0,
+    "quarantined_broken_reference": 0,
+    "quarantined_disconnected": 0
+  },
+  "admissions": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LSS reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23oxidosqualene",
+        "lanosterol",
+        "lss",
+        "lss reaction"
+      ],
+      "state": "auxiliary_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "CYP51A1 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "44dimethylcholesta891424trien3ol",
+        "cyp51a1",
+        "cyp51a1 reaction",
+        "lanosterol"
+      ],
+      "state": "auxiliary_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "DHCR24 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "cholesterol",
+        "desmosterol",
+        "dhcr24",
+        "dhcr24 reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "quarantined": [],
+  "accepted": [
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 0,
+      "pointer": "/processes/reactions/0",
+      "name": "LSS reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "23oxidosqualene",
+        "lanosterol",
+        "lss",
+        "lss reaction"
+      ],
+      "state": "auxiliary_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 1,
+      "pointer": "/processes/reactions/1",
+      "name": "CYP51A1 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "44dimethylcholesta891424trien3ol",
+        "cyp51a1",
+        "cyp51a1 reaction",
+        "lanosterol"
+      ],
+      "state": "auxiliary_accepted",
+      "reason": "admitted",
+      "detail": {}
+    },
+    {
+      "process_kind": "reaction",
+      "bucket": "reactions",
+      "index": 2,
+      "pointer": "/processes/reactions/2",
+      "name": "DHCR24 reaction",
+      "essential_participant": "",
+      "iteration": 0,
+      "core_terms": [
+        "cholesterol",
+        "desmosterol",
+        "dhcr24",
+        "dhcr24 reaction"
+      ],
+      "state": "core_accepted",
+      "reason": "admitted",
+      "detail": {}
+    }
+  ],
+  "strict_invariants": {
+    "entity_type_overlaps": [],
+    "degree_zero_exports": [],
+    "unexportable_entities": [],
+    "unaccounted_locked_reactions": 0,
+    "closure_converged": true,
+    "ok": true
+  },
+  "refusal_reasons": [],
+  "review_reasons": [],
+  "release": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+      "actor_named_in_its_own_cited_span"
+    ],
+    "semantic_check_evaluability": [
+      {
+        "check": "requested_pathway_anchors_present",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "organism_compatible",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_real_id_or_name_conflict",
+        "applicable": true,
+        "inapplicable_reason": ""
+      },
+      {
+        "check": "no_rejected_rag_reaction_reintroduced",
+        "applicable": false,
+        "inapplicable_reason": "AdmissionReport.rejected is not written to disk by the batch driver; without it a reintroduced claim is undetectable"
+      },
+      {
+        "check": "actor_named_in_its_own_cited_span",
+        "applicable": true,
+        "inapplicable_reason": ""
+      }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 1.0,
+    "missing_anchors": [],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "no further supported content remained at the freeze seam",
+    "coverage_evaluated": true,
+    "reasons": [
+      "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+    ],
+    "applied": false,
+    "review_reasons": [],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+  },
+  "locked_reactions": {
+    "enabled": true,
+    "newly_quarantined": [],
+    "locked_reactions_found": 3,
+    "exported_locked_reactions": 3,
+    "quarantined_locked_reactions": 0,
+    "unaccounted_locked_reactions": 0
+  },
+  "coverage": {
+    "schema_version": 1,
+    "requested_core_terms": [
+      "cholesterol"
+    ],
+    "requested_core_declared": true,
+    "requested_context": {
+      "pathway_name": "cholesterol biosynthesis (mevalonate pathway)",
+      "likely_organism": "Homo sapiens",
+      "key_compounds": [
+        "cholesterol"
+      ],
+      "key_proteins": [],
+      "likely_compartments": [],
+      "main_subprocesses": [],
+      "relevant_sections": [],
+      "pathway_relevance_score": 0.0,
+      "document_type": "primary_research",
+      "context_type": "single_pathway",
+      "scope_status": "clear",
+      "preprocess_status": {
+        "status": "ok",
+        "recovered": true,
+        "detail": "The model reply (247 chars) was truncated mid-JSON and was repaired; some fields may be missing.",
+        "raw_len": 247,
+        "raw_preview": "{ \"document_type\": \"primary_research\", \"context_type\": \"single_pathway\", \"scope_status\": \"clear\", \"pathway_name\": \"cholesterol biosynthesis (mevalonate pathway)\", \"likely_organism\": \"Homo sapiens\",...",
+        "model": "deepseek/deepseek-v4-flash",
+        "stage": "preprocessor",
+        "attempts": 1,
+        "finish_reason": "error",
+        "response_status": "ok",
+        "terminal_reason": "",
+        "request_hash": "sha256:1d4c790eaba99912",
+        "response_hash": "sha256:4993b6b71f3c6d6b",
+        "raw_chars": 247,
+        "attempt_log": [
+          {
+            "attempt": 1,
+            "status": "ok",
+            "content_chars": 247,
+            "finish_reason": "error"
+          }
+        ]
+      }
+    },
+    "requested_core_source": "pathway_context",
+    "matched_terms": [
+      "cholesterol"
+    ],
+    "unmatched_terms": [],
+    "coverage_ratio": 1.0,
+    "core_accepted_processes": 1,
+    "auxiliary_accepted_processes": 2,
+    "surviving_processes": 3,
+    "quarantined_processes": 0,
+    "thresholds": {
+      "min_core_processes": 1,
+      "min_core_coverage": 0.5
+    },
+    "minimum_core_satisfied": true,
+    "reasons": []
+  },
+  "closure": {
+    "iterations": 2,
+    "converged": true,
+    "max_iterations": 50
+  },
+  "decision_id": "sha256:29e2bffcd3e35b67.sha256:6dc81ec3ac994a00",
+  "research_mode": {
+    "note": "research mode: quarantine ran diagnostically. Nothing was removed and the candidate pathway is unchanged; the decisions below are review flags.",
+    "applied": false,
+    "review_flags": [],
+    "would_have_quarantined": 0,
+    "would_have_refused": []
+  }
+}

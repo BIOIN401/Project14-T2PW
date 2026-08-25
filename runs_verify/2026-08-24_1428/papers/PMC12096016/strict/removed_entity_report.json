@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "removed_entities": [],
+  "removed_locations": [
+    {
+      "bucket": "element_locations/protein_locations",
+      "name": "Fur",
+      "reason": "location_entity_removed",
+      "biological_state": "cytoplasmic state",
+      "iteration": 1
+    }
+  ],
+  "removed_biological_states": [
+    {
+      "bucket": "biological_states",
+      "name": "__auto_state__",
+      "reason": "state_unreferenced_after_quarantine",
+      "iteration": 1
+    }
+  ],
+  "counts": {
+    "entities": 0,
+    "locations": 1,
+    "biological_states": 1
+  }
+}

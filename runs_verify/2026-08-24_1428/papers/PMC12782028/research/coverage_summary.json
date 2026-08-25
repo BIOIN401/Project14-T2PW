@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "cholesterol"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "cholesterol biosynthesis (mevalonate pathway)",
+    "likely_organism": "Homo sapiens",
+    "key_compounds": [
+      "cholesterol"
+    ],
+    "key_proteins": [],
+    "likely_compartments": [],
+    "main_subprocesses": [],
+    "relevant_sections": [],
+    "pathway_relevance_score": 0.0,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": true,
+      "detail": "The model reply (247 chars) was truncated mid-JSON and was repaired; some fields may be missing.",
+      "raw_len": 247,
+      "raw_preview": "{ \"document_type\": \"primary_research\", \"context_type\": \"single_pathway\", \"scope_status\": \"clear\", \"pathway_name\": \"cholesterol biosynthesis (mevalonate pathway)\", \"likely_organism\": \"Homo sapiens\",...",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "error",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:1d4c790eaba99912",
+      "response_hash": "sha256:4993b6b71f3c6d6b",
+      "raw_chars": 247,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 247,
+          "finish_reason": "error"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "cholesterol"
+  ],
+  "unmatched_terms": [],
+  "coverage_ratio": 1.0,
+  "core_accepted_processes": 1,
+  "auxiliary_accepted_processes": 2,
+  "surviving_processes": 3,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

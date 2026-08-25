@@ -1,0 +1,274 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Listeria monocytogenes",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "compounds": [
+      {
+        "name": "2-oxoglutarate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "ThDP",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "Mg2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "MenD homotetramer",
+        "components": [
+          "MenD"
+        ],
+        "evidence": "the enzyme has a homotetrameric quaternary structure",
+        "confidence": 0.7,
+        "provenance": "inferred",
+        "source_refs": [
+          "the enzyme has a homotetrameric quaternary structure"
+        ]
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "2-oxoglutarate",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD catalyses the first irreversible step",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I, with subsequent addition of isochorismate generating intermediate II and breakdown to release SEPHCHC",
+        "scope_membership": "core",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid",
+        "entity_2": "MenD",
+        "name": "1,4-dihydroxy-2-naphthoic acid inhibits MenD",
+        "relationship": "inhibits",
+        "evidence": "weak inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      {
+        "entity_1": "ThDP",
+        "entity_2": "MenD",
+        "name": "ThDP cofactor of MenD",
+        "relationship": "cofactor_of",
+        "evidence": "ThDP-dependent enzyme MenD"
+      },
+      {
+        "entity_1": "Mg2+",
+        "entity_2": "MenD",
+        "name": "Mg2+ cofactor of MenD",
+        "relationship": "cofactor_of",
+        "evidence": "Mg2+ and ThDP bound"
+      },
+      {
+        "entity_1": "MenD homotetramer",
+        "entity_2": "MenD",
+        "name": "MenD homotetramer contains MenD",
+        "relationship": "contains",
+        "evidence": "the enzyme has a homotetrameric quaternary structure"
+      }
+    ]
+  },
+  "biological_states": [],
+  "element_locations": {},
+  "source_text_index": {
+    "schema_version": 1,
+    "length": 47406,
+    "normalized": "pmc acta crystallogr f struct biol commun acta crystallogr f struct biol commun 2302 actaf2 acta cryst f acta crystallographica section f structural biology communications 2053 230x international union of crystallography pmc12312563 pmc12312563 1 12312563 12312563 40673487 10 1107 s2053230x25006181 us5161 s2053230x25006181 1 research communications structures of listeria monocytogenes mend in thdp bound and in crystallo captured intermediate i bound forms listeria monocytogenes mend https orcid org 0009 0005 7883 0869 bailey michelle a b https orcid org 0000 0003 4700 4458 given fiona m a b https orcid org 0000 0001 9291 8860 ho ngoc anh thu a b https orcid org 0000 0002 2683 0331 pearce f grant a c https orcid org 0000 0003 4100 6700 allison timothy m a b https orcid org 0000 0003 4895 0243 johnston jodie m a b a https ror org 03y7q9t39 biomolecular interaction centre university of canterbury christchurch new zealand b https ror org 03y7q9t39 school of physical and chemical sciences university of canterbury christchurch new zealand c https ror org 03y7q9t39 school of biological sciences university of canterbury christchurch new zealand sankaranarayanan r editor centre for cellular and molecular biology hyderabad india correspondence e mail timothy allison canterbury ac nz jodie johnston canterbury ac nz 01 8 2025 17 7 2025 81 pt 8 494174 f250800 348 357 10 6 2025 12 7 2025 17 07 2025 01 08 2025 01 08 2025 michelle bailey et al 2025 2025 https creativecommons org licenses by 4 0 this is an open access article distributed under the terms of the creative commons attribution cc by licence which permits unrestricted use distribution and reproduction in any medium provided the original authors and source are cited a full version of this article is available from crystallography journals online here we report structures of the thdp dependent enzyme mend sephchc synthase from l monocytogenes in its thdp cofactor bound and intermediate i bound forms comparisons with an apo form previously deposited in the pdb revealed that this mend adopts a typical three domain thdp dependent fold with lower levels of disorder associated with closing of the active site in the ligand bound structures menaquinones vitamin k 2 are a family of redox active small lipophilic molecules that serve as vital electron carriers in many bacterial electron transport pathways the thdp dependent enzyme 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate sephchc synthase mend catalyses the first irreversible step in bacterial classical menaquinone biosynthesis via a series of reactions involving covalent thdp bound intermediates we report structures of mend from the pathogen listeria monocytogenes lmo mend in its thdp cofactor bound and in crystallo captured intermediate i bound forms analysis of the structures revealed that lmo mend adopts the typical three domain thdp dependent fold observed for mend orthologs while a combination of structure size exclusion chromatography mass photometry and small angle x ray scattering analysis showed that the enzyme has a homotetrameric quaternary structure while both of the ligand bound structures reported here were very similar comparison with an apo form from the pdb revealed a closing down of the active site in the ligand bound forms with more complete models suggesting lower levels of disorder around key regions of the active site that interface with thdp or the captured intermediate enzyme kinetics characterization showed the enzyme was active and enabled allosteric inhibition to be measured there was weak inhibition of enzyme activity in the presence of 1 4 dihydroxy 2 naphthoic acid an allosteric regulator of mycobacterium tuber culosis mend and downstream metabolite in the menaquinone biosynthesis pathway listeria monocytogenes menaquinone biosynthesis sephchc synthase mend thiamine diphosphate dependent enzyme intermediate i capture marsden fund 10 13039 501100009193 m1208 jodie m johnston deutscher akademischer austauschdienst 10 13039 501100001655 we acknowledge funding support by the deutscher akademischer austauchdienst daad as part of michelle bailey s scholarship as well as partial funding by the marsden fund m1208 pmc status qastatus 0 pmc status live yes pmc status embargo no pmc status released yes pmc prop open access yes pmc prop olf no pmc prop manuscript no pmc prop legally suppressed no pmc prop has pdf yes pmc prop has supplement yes pmc prop pdf only no pmc prop suppress copyright no pmc prop is real version no pmc prop is scanned article no pmc prop preprint no pmc prop in epmc yes pmc license ref cc by 1 introduction menaquinones a family of related redox active molecules play vital functions in electron transport and energy generation in mycobacteria gram positive and some anaerobically respiring gram negative bacteria nowicka kruk 2010 boersch et al 2018 kurosu begari 2010 these molecules have been implicated in other roles such as in redox state monitoring influencing membrane fluidity biofilm formation and virulence johnston bulloch 2020 flegler et al 2021 mashruwala et al 2017 honaker et al 2010 upadhyay et al 2015 these roles combined with the absence of menaquinone biosynthesis pathways in humans have made the bacterial menaquinone biosynthesis enzymes of interest as potential drug targets boersch et al 2018 an important player in menaquinone production is the thiamine diphosphate thdp dependent decarboxylase mend 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate sephchc synthase johnston bulloch 2020 mend catalyses the first irreversible step of the classical menaquinone biosynthesis pathway supplementary fig s1 via two covalent thdp intermediates decarboxylation of 2 oxoglutarate produces intermediate i with subsequent addition of isochorismate generating intermediate ii and breakdown to release sephchc fig 1 jirgis et al 2016 frank et al 2007 dawson et al 2008 like other members of the thdp dependent decarboxylase superfamily mend enzymes have a common fold consisting of the catalytic aminopyrimidine binding pyr and pyrophosphate binding pp domains separated by the more divergent transhydro genase iii th3 domain vogel pleiss 2014 duggleby 2006 all mend structures reported to date have a tetrameric dimer of dimers arrangement and oligomerization appears to be catalytically important with active site formation involving the pyr and pp domains from two different monomers in each dimer dawson et al 2008 2010 jirgis et al 2016 vogel pleiss 2014 duggleby 2006 the function of the th3 domain in mend is poorly understood in mycobacterium tuberculosis mend mtb mend 1 4 dihydroxy 2 naphthoic acid dhna the last cytosolic metabolite of the pathway can bind to the th3 domain and inhibit activity bashiri et al 2020 further dhna inhibition albeit less potent and without crystallographic capturing has been reported for staphylococcus aureus and bacillus subtilis mend sau mend and bsu mend stanborough et al 2023 huang et al 2024 however due to low sequence conservation particularly for the putative allosteric sites it remains unclear how widespread feedback inhibition is amongst homologs stanborough et al 2023 bashiri et al 2020 here we report two structures of mend from the gram positive pathogen listeria monocytogenes lmo mend one with thdp bound and a second with intermediate i bound as well as their oligomeric states in solution and functional characterization an existing apo lmo mend structure in the pdb pdb entry 3lq1 new york structural genomics research consortium unpublished work is incomplete showing regions of disorder around the active site and c terminus the liganded structures from this study are more complete revealing that several of the previously disordered regions contribute to ligand interactions and or closing of the active site interestingly in l monocytogenes dhna is known to fulfil respiration independent functions in virulence and pathogenic survival chen et al 2019 smith et al 2021 but the effect of dhna on lmo mend enzyme activity had not been explored this study has enabled us to demonstrate that while dhna has some ability to inhibit the activity of lmo mend this inhibition is modest 2 materials and methods 2 1 macromolecule production the l monocytogenes strain 10403s mend gene was cloned from genomic dna bei resources into pet 30a using ncoi and hindiii restriction sites table 1 the protein was overexpressed in escherichia coli bl21 de3 cells 37 c for 2 5 h followed by 18 h at 18 c using terrific broth autoinduction medium stanborough et al 2023 the cells were lysed in buffer a 50 m m hepes ph 8 0 150 m m nacl 20 m m imidazole 5 v v glycerol 0 5 m m tcep with a complete mini edta free protease inhibitor cocktail tablet using a microfluidics m110p microfluidiser 137 mpa clarified 20 000 g 30 min 4 c filtered 0 2 μm mend was purified using a 5 ml hp histrap column cytiva eluting in a gradient of buffer b buffer a with 500 m m imidazole after rtev cleavage weight ratio 1 36 with dialysis into buffer c buffer a without imidazole the untagged protein was further purified by reverse imac and then by size exclusion chromatography sec on a hiprep 16 60 sephacryl s 300 hr column equilibrated with buffer c denaturing mass spectrometry measured the mass of the purified untagged protein to be 64 85 kda exactly matching that expected from the sequence and lmo mend was concentrated and stored at 80 c until further use 2 2 crystallization a morpheus crystal screen dispensed by a mosquito robot was used to find initial crystallization conditions 8 2 mg ml 1 mend with 5 m m mgcl 2 1 m m thdp and 1 m m tcep added final crystals were obtained via sitting drop vapour diffusion fine screens uing the conditions summarized in table 2 intermediate i complex pdb entry 9mnn crystals were soaked for a minute in their crystallization condition containing 1 m m 2 oxoglutarate prior to cooling jirgis et al 2016 further soaking of 2 oxoglutarate soaked crystals with isochorismate and various soaks and co crystallizations with dhna were undertaken but none of the resulting structures captured intermediate ii or dhna complexes 2 3 data collection and processing crystals were harvested and flash cooled in liquid nitrogen prior to diffraction data sets being collected at the australian synchrotron using the mx2 macromolecular crystallography beamline equipped with a dectris eiger 16m detector aragão et al 2018 the beam was attenuated to 0 50 and 720 of data were collected the data were processed using x ray detector software xds kabsch 2010 a b via the australian synchrotron autoprocessing pipeline reflections were then imported into the ccp 4 suite agirre et al 2023 and merged using aimless evans murshudov 2013 space group analysis using pointless evans 2011 as part of aimless suggested that the data were most consistent with the highest symmetry space group p 6 2 22 or enantiomorph p 6 4 22 with subsequent successful phasing by molecular replacement being obtained in p 6 4 22 the data collection and processing statistics are summarized in table 3 2 4 structure solution and refinement molecular replacement was performed using phaser mccoy et al 2007 and matthews coef matthews 1968 kantardjieff rupp 2003 in ccp 4 agirre et al 2023 determined one molecule to be present in the asymmetric unit the incomplete apo lmo mend structure pdb entry 3lq1 was used as a molecular replacement model to solve an initial lower resolution thdp bound lmo mend structure which served as the search model for the higher resolution structures that we report here pdb entries 9e9b and 9mnn these structures underwent iterative rounds of manual building in coot emsley cowtan 2004 emsley et al 2010 interspersed with rounds of refinement using refmac 5 murshudov et al 2011 in ccp 4 followed by cartesian annealing and further refinement using phenix afonine et al 2012 liebschner et al 2019 the final refinement data for both structures are presented in table 4 while the r free for pdb entry 9e9b is good for the resolution that for pdb entry 9mnn is a little higher due to the incorporation of weaker higher resolution data for this structure see the comparative cc 1 2 values for outer shells in table 3 however the value of incorporating these weaker data in building the model of pdb entry 9mnn was a significant advantage and the model exhibits high quality validation statistics shown in table 4 in the 99th percentiles structures were analysed for oligomeric assemblies pdbepisa krissinel henrick 2007 and compared with other structurally characterized mend enzymes pbdefold krissinel henrick 2004 2 5 saxs small angle x ray scattering saxs data were collected at the australian synchrotron on the saxs waxs beamline kirby et al 2013 ryan et al 2018 experimental and processing details and the resulting data are provided in the supporting information 2 6 mass photometry measurements were performed on a twomp mass photometer refeyn wu piszczek 2021 with further details and data provided in the supporting information 2 7 differential scanning fluorimetry dsf the thermal stability of lmo mend in its apo and thdp bound 300 m m thdp forms was determined using a quantstudio3 real time polymerase chain reaction instrument with further details and data provided in the supporting information 2 8 uv vis activity and dhna inhibition assays the uv vis based kinetic assays measuring the consumption of the second mend substrate isochorismate ɛ 278 8300 m 1 cm 1 were adapted from previously established methods bashiri et al 2020 ho et al 2025 using this method the k m values for thdp 2 oxoglutarate and isochorismate and k cat were determined and the inhibitory effect of dhna was measured complete methods and data are provided in the supporting information 3 results and discussion 3 1 lmo mend is an active sephchc synthase that can competently bind ligands to understand how cofactor binding may affect the structure of lmo mend we overexpressed and then purified recombinant n terminally his tagged lmo mend by affinity chromatography following tag removal and further purification by reverse affinity chromatography and sec the sephchc enzyme activity of lmo mend was kinetically characterized with respect to the thdp cofactor and the two substrates 2 oxoglutarate and isochorismate supplementary table s1 and fig s2 having produced active enzyme we pursued a thdp bound lmo mend structure pdb entry 9e9b figs 2 3 a and 3 c 3 f table 4 followed by attempts to capture in crystallo intermediate i formation adapting an approach that had been successful for mtb mend jirgis et al 2016 where 2 oxoglutarate was soaked into the co crystals immediately prior to cryocooling the intermediate i bound lmo mend structure pdb entry 9mnn figs 3 b 3 d table 4 was able to be captured these structures allowed us to characterize the binding interactions of the thdp and intermediate i ligands as well as the associated conformational changes in comparison to the apo structure in the pdb pdb entry 3lq1 see supplementary table s3 for comparison of crystal conditions etc with our structures 3 2 the lmo mend monomer adopts a typical three domain thdp dependent enzyme fold which has greater order in the ligand bound structures thdp bound and intermediate i bound lmo mend like apo lmo mend possess a typical thdp dependent enzyme fold comprised of a pyr domain residues 1 174 a th3 domain residues 208 371 and a pp domain residues 372 580 fig 2 a dawson et al 2008 2010 jirgis et al 2016 stanborough et al 2023 each domain contains six parallel β strands sandwiched between six pyr th3 or eight pp α helices supplementary figs s3 and s4 the pyr and th3 domains are connected by a flexible linker residues 175 207 whilst the th3 and pp domains are connected by the α13 helix supplementary figs s3 and s4 structural comparison with other mend structures affirmed significant structural conservation r m s d of 1 2 2 0 å across all c α atoms supplementary table s2 however some differences across the structures are apparent in particular lmo mend differs in its linkage between the pyr and th3 domains flexible linker and following α7 the flexible pp domain region residues 487 512 closing on the active site and an elongated final c terminal helix α21 which as in bsu mend and sau mend is longer than the equivalent in mtb mend and e coli mend eco mend comparison between the apo lmo mend pdb entry 3lq1 and our thdp bound and intermediate i bound structures r m s d of 0 34 å for thdp and intermediate i r m s d of 0 5 0 6 å for apo and thdp intermediate i across all c α atoms krissinel henrick 2004 showed a similar fold but reinforced that both of the ligand bound structures were more complete all of the disordered regions missing from the apo structure supplementary table s3 were able to be modelled in the thdp bound and intermediate i bound structures supplementary table s3 and fig s5 these regions include the linker chain a 189 200 chain b 190 200 a flexible region following the α13 helix chain a 381 383 the flexible pp domain region that closes on the active site 487 512 including 3 10 helices 5 7 as well as the c terminus 556 580 helix α21 fig 3 e in ligand bound structures the flexible 487 512 region was in a closed and ordered form making interactions with the ligands fig 3 f additionally parts of the c terminus residues 556 565 missing in the apo structure made interactions with the 487 512 region thus supporting the closing of the active site in the ligand bound structures fig 3 f whilst there are differences between the apo and ligand bound structures such as the source protein crystal conditions and space group summarized in supplementary table s3 and fig s6 which we cannot rule out as a source of differences there are precedents for increased order in ligand bound mend structures comparable levels of disorder affecting parts of the active site were observed for apo mtb mend pdb entry 5ery and eco mend pdb entry 3flm with binding of thdp associated with conformational changes assisting in active site formation and an overall decrease in disorder priyadarshi kim et al 2009 priyadarshi saleem et al 2009 jirgis et al 2016 3 3 lmo mend is a symmetrical tetramer dimer of dimers in the crystal form the apo lmo mend structure pdb entry 3lq1 space group p 4 3 2 1 2 contains two monomers one from each dimer in the asymmetric unit upon the application of crystallographic symmetry a tetramer composed of a dimer of dimers is formed similarly the thdp bound and intermediate i bound structures space group p 6 4 22 form the same dimer of dimers arrangement upon the application of crystallographic symmetry to the monomer present in the asymmetric unit fig 2 b pisa analysis krissinel henrick 2007 suggests that the dimeric unit buries 23 of its surface area primarily from interactions between the pyr and pp domains from different monomers the tetramer buries a total of 42 of the available surface area through additional interactions between the th3 domains and a protruding loop region 108 119 from the pyr domain the lmo mend structures are consistent with the tetrameric dimer of dimer arrangements observed in other mend structures stanborough et al 2023 jirgis et al 2016 dawson et al 2008 2010 and the tetrameric arrangement was detected in solution by sec and mass photometry supplementary fig s7 additionally mass photometry analysis and dsf indicate no changes in oligomerization supplementary fig s7 or thermostability supplementary fig s8 the t m values were 56 0 0 2 c for the apo form 56 1 0 1 c for mg 2 and 56 4 0 1 c for thdp respectively in the presence of thdp or under the conditions in which intermediate i may form suggesting that the binding of these ligands causes no significant changes in oligomerization consistent with these observations saxs analysis showed that the experimental scattering curve for the apo protein was well fitted by the tetrameric thdp bound crystal structure pdb entry 9e9b with a χ 2 value of 0 27 supporting the predominance of a tetrameric assembly in solution supplementary fig s9 3 4 thdp and intermediate i binding to lmo mend in thdp dependent enzymes such as mend thdp plays a vital role in catalysis due to both its substrate binding and chemical features it adopts a v shaped conformation upon enzyme binding which brings the n4 group of its aminopyrimidine ring into the proximity of the c2 atom of its thiazolium ring enabling proton abstraction and formation of the activated thdp ylide frank et al 2007 in most thdp dependent enzymes there is a conserved glutamic acid which facilitates tautomerization of the aminopyrimidine ring enabling the shuttling of a proton during catalytic cycling balakrishnan et al 2012 analysis of the thdp bound lmo mend structure suggests that the active site configuration and thdp binding interactions are similar to those observed in other mend enzymes the thdp diphosphate group tethers the cofactor to the enzyme via interactions with a divalent magnesium cation and the pp domain specifically residues ser408 met409 asp459 leu460 and ser461 as well as asn486 and ile491 from the region that closes on the active site fig 3 a the thdp aminopyrimidine ring sits between the pp and pyr domains making hydrogen bonding interactions with glu56 gln119 asn434 and ile436 fig 3 a the conserved residue glu56 is likely to be involved in tautomerization of the aminopyrimidine ring during catalysis and ile436 is likely to be responsible for the bent thdp conformation important for thdp activation and catalysis while gln119 has speculative roles in many steps including product release dawson et al 2008 2010 jirgis et al 2016 stanborough et al 2023 priyadarshi kim et al 2009 priyadarshi saleem et al 2009 the reaction cycle for thdp dependent decarboxylase enzymes such as mend is through a series of thdp linked intermediates a transient pre decarboxylation intermediate forms after the c2 atom of the thiazolium ring of the thdp ylide reacts with of the first α ketoacid substrate for mend this is 2 oxoglutarate the metastable intermediate i subsequently forms after decarboxylation and is traditionally considered to be in resonance between an enamine and a carbanion centred on c2α form fig 1 it has been observed for eco mend and mtb mend that intermediate i appears to preferentially adopt the tetrahedral form jirgis et al 2016 song et al 2016 for ec omend this strained tetrahedral form may be reversibly protonated by the aminoprymidine n4 proton which is near c2α c2α to n4 distance of 3 0 å in intermediate i captured eco mend song et al 2016 intermediate i then goes on to react via c2α with the second substrate isochorismate to form intermediate ii fig 1 proton transfer from the aminopyrimidine ring of the thdp assists with the subsequent breakdown of intermediate ii to release product in mtb mend where this second intermediate was also captured there is a noted movement of c2α oh towards the aminopyrimidine n4 from 4 5 å in intermediate i to 2 3 å in intermediate ii which is proposed to facilitate product release only when the appropriate second intermediate has formed jirgis et al 2016 the intermediate i bound lmo mend structure has clearly defined intermediate i electron density fig 3 c supporting a tetrahedral conformation at c2α similar to that observed for intermediate i bound mtb mend and eco mend and supporting the general idea that mend enzymes favour the carbanion or transiently protonated form of intermediate i jirgis et al 2016 qin et al 2018 song et al 2016 to further support the similarity of the intermediate i conformation between species in lmo mend c2α is 3 21 å from n4 a similar distance to that observed in intermediate i bound eco mend c2α oh is 4 41 å from the aminopyrimidine n4 similar to the distance observed in intermediate i bound mtb mend suggesting that in lmo mend like the other mends the captured form of intermediate i is primed for addition of the next substrate rather than in a position to support premature product release analysis of intermediate i binding reveals that the shared parts of thdp and intermediate i bind very similarly to the active site figs 3 a 3 b and 3 d with the intermediate i specific 2 oxoglutarate derived terminal carboxylate group making additional interactions with the active site residues ser408 arg412 and arg431 fig 3 b equivalents to arg412 and arg431 in other mends were identified to play a crucial role in orienting intermediate i for catalysis qin et al 2018 dawson et al 2010 in lmo mend the side chain of asn434 sits 3 6 å from the intermediate i terminal carboxylate mirroring the configuration of the bsu mend and sau mend active sites in eco mend and mtb mend a spatially equivalent intermediate i interacting asparagine originates from the pyr domain next to the conserved glutamine with bsu mend sau mend and lmo mend containing a proline lmo mend pro118 at this position figs 3 a and 3 b dawson et al 2010 jirgis et al 2016 despite the closing of the active site observed in our lmo mend thdp and intermediate i structures there appears to be a tunnel to the surface from the active site with the terminal carboxylate tail of intermediate i visible supplementary fig s10 this tunnel is lined with residues inferred by homology to interact with isochorismate the isochorismate portion of intermediate ii for example ser34 arg35 arg108 gln119 and arg301 suggesting that even in this closed form the enzyme can support access of substrate two 3 5 allosteric site and dhna inhibition to explore whether lmo mend enzyme activity is sensitive to inhibition by dhna activity assays were performed with and without this downstream metabolite supplementary fig s2 d due to the solubility challenges of dhna and limitations of the assay a saturated ic 50 curve could not be obtained however a decrease of 34 in enzymatic activity 66 residual activity was detected in the presence of 12 5 μ m dhna supplementary fig s2 d while conditions vary other enzymes with dhna inhibition characterized to date i e mtb mend and sau mend appear to be inhibited more potently both with measurable ic 50 values 53 n m for mtb mend and 2 3 3 7 μ m for sau mend two different strains stanborough et al 2023 bashiri et al 2020 from a biological perspective it is uncertain what this magnitude of inhibition of lmo mend by dhna will mean for sau mend which had a decrease of 82 87 in enzymatic activity 13 18 residual activity in the presence of 12 5 μ m dhna it was found that 50 μ m dhna impacted the growth of all four s aureus strains tested and 150 μ m abolished bacterial growth entirely but it could be rescued by the addition of menaquinone 4 stanborough et al 2023 however each bacterium is different and it is known that in l monocytogenes dhna has additional respiratory independent functions that contribute to pathogen survival chen et al 2019 smith et al 2021 thus any regulatory networks involving dhna may be more complex attempts to obtain a dhna bound lmo mend structure were unsuccessful matching the difficulties experienced for sau mend stanborough et al 2023 leaving mtb mend as the only mend for which dhna binding has been captured crystallographically bashiri et al 2020 as for sau mend stanborough et al 2023 it appears that the allosteric site conformation captured in our crystal structures of lmo mend would not be directly suitable for dhna binding superpositions of the thdp bound lmo mend pdb entry 9e9b and the thdp dhna bound mtb mend pdb entry 6o0j structures suggests that binding of dhna to the putative allosteric site may be possible fig 4 but for this to be the case there would need to be structural rearrangements of the pocket particularly lys325 which blocks the dhna binding cavity in its current conformation fig 4 c whilst the arginine cage residues are important for dhna binding in mtb mend outside mycobacteria and rhodococcus these residues are poorly conserved bashiri et al 2020 site directed mutagenesis of sau mend suggested that allosteric inhibition by dhna was possible if other residues could fulfil similar roles stanborough et al 2023 assuming that induced fit conformational changes to accommodate dhna binding take place gln98 and lys325 may be able to act as functional equivalents to arg97 and arg277 respectively of the mtb mend arginine cage fig 4 and supplementary fig s3 this would require marginal movement of gln98 but larger conformational movements of lys325 and surrounding regions including ala323 asp326 recent work with wild type mtb mend and several allosteric site mutants has shown that dhna can affect the conformation and stability of the equivalent region arg303 asp306 in mtb mend ho et al 2025 however future research including mutagenesis and attempts to capture binding crystallographically are required to test this hypothesis and until then the significance and mechanism of action of dhna on lmo mend enzyme activity will remain unclear 4 conclusion structural characterization of two ligand bound forms thdp intermediate i of lmo mend complemented by the determination of in solution oligomerization behaviour revealed the conservation of monomer fold and tetrameric quaternary structure between this mend and others characterized to date comparison with a previously deposited but unpublished apo structure of lmo mend revealed changes in key regions resulting in a more closed active site in ligand bound structures lmo mend sephchc synthase activity was detected with inhibition by the mtb mend allosteric regulator dhna observed 5 related literature the following references are cited in the supporting information for this article madeira et al 2024 manalastas cantos et al 2021 and robert gouet 2014 supplementary material pdb reference listeria monocytogenes mend with mg 2 and thdp bound 9e9b pdb reference with mg 2 and intermediate i bound 9mnn supplementary methods supplementary figures and tables doi 10 1107 s2053230x25006181 us5161sup1 pdf this research was undertaken in part using the mx2 and saxs waxs beamlines at the australian synchrotron which is part of ansto the mx2 beamline made use of the australian cancer research foundation acrf detector open access publishing facilitated by university of canterbury as part of the wiley university of canterbury agreement via the council of australian university librarians references afonine p v grosse kunstleve r w echols n headd j j moriarty n w mustyakimov m terwilliger t c urzhumtsev a zwart p h adams p d 2012 acta cryst d 68 352 367 10 1107 s0907444912001308 pmc3322595 22505256 agirre j atanasova m bagdonas h ballard c b baslé a beilsten edmands j borges r j brown d g burgos mármol j j berrisford j m bond p s caballero i catapano l chojnowski g cook a g cowtan k d croll t i debreczeni j é devenish n e dodson e j drevon t r emsley p evans g evans p r fando m foadi j fuentes montero l garman e f gerstel m gildea r j hatti k hekkelman m l heuser p hoh s w hough m a jenkins h t jiménez e joosten r p keegan r m keep n krissinel e b kolenko p kovalevskiy o lamzin v s lawson d m lebedev a a leslie a g w lohkamp b long f malý m mccoy a j mcnicholas s j medina a millán c murray j w murshudov g n nicholls r a noble m e m oeffner r pannu n s parkhurst j m pearce n pereira j perrakis a powell h r read r j rigden d j rochira w sammito m sánchez rodríguez f sheldrick g m shelley k l simkovic f simpkin a j skubak p sobolev e steiner r a stevenson k tews i thomas j m h thorn a valls j t uski v usón i vagin a velankar s vollmar m walden h waterman d wilson k s winn m d winter g wojdyr m yamashita k 2023 acta cryst d 79 449 461 aragão d aishima j cherukuvada h clarken r clift m cowieson n p ericsson d j gee c l macedo s mudie n panjikar s price j r riboldi tunnicliffe a rostan r williamson r caradoc davies t t 2018 j synchrotron rad 25 885 891 10 1107 s1600577518003120 pmc5929359 29714201 balakrishnan a gao y moorjani p nemeria n s tittmann k jordan f 2012 j am chem soc 134 3873 3885 10 1021 ja211139c pmc3295232 22300533 bashiri g nigon l v jirgis e n ho n a t stanborough t dawes s s baker e n bulloch e m johnston j m 2020 j biol chem 295 3759 3770 10 1074 jbc ra119 012158 pmc7086027 32029475 boersch m rudrawar s grant g zunk m 2018 rsc adv 8 5099 5105 10 1039 c7ra12950e pmc9078190 35542397 chen g y kao c y smith h b rust d p powers z m li a y sauer j d 2019 infect immun 88 e00366 19 10 1128 iai 00366 19 pmc6921671 31685546 dawson a chen m fyfe p k guo z hunter w n 2010 j mol biol 401 253 264 10 1016 j jmb 2010 06 025 pmc2914249 20600129 dawson a fyfe p k hunter w n 2008 j mol biol 384 1353 1368 10 1016 j jmb 2008 10 048 pmc3656419 18983854 duggleby r g 2006 acc chem res 39 550 557 10 1021 ar068022z 16906751 emsley p cowtan k 2004 acta cryst d 60 2126 2132 10 1107 s0907444904019158 15572765 emsley p lohkamp b scott w g cowtan k 2010 acta cryst d 66 486 501 10 1107 s0907444910007493 pmc2852313 20383002 evans p r 2011 acta cryst d 67 282 292 10 1107 s090744491003982x pmc3069743 21460446 evans p r murshudov g n 2013 acta cryst d 69 1204 1214 10 1107 s0907444913000061 pmc3689523 23793146 flegler a kombeitz v lipski a 2021 arch microbiol 203 3353 3360 10 1007 s00203 021 02322 6 pmc8289781 33871675 frank r leeper f luisi b 2007 cell mol life sci 64 892 905 10 1007 s00018 007 6423 5 pmc11136255 17429582 ho n a t given f m stanborough t klein m allison t m bulloch e m jiao w johnston j m 2025 chembiochem 26 e202400943 10 1002 cbic 202400943 39945237 honaker r w dhiman r k narayanasamy p crick d c voskuil m i 2010 j bacteriol 192 6447 6455 10 1128 jb 00978 10 pmc3008535 20952575 huang w li j zhu q lv j zhu r pu c zhao h fu g zhang d 2024 j agric food chem 72 22672 22681 10 1021 acs jafc 4c07385 pmc11487629 39373655 jirgis e n m bashiri g bulloch e m m johnston j m baker e n 2016 structure 24 1167 1177 10 1016 j str 2016 04 018 27291649 johnston j m bulloch e m m 2020 curr opin struct biol 65 33 41 10 1016 j sbi 2020 05 005 32634692 kabsch w 2010 a acta cryst d 66 125 132 10 1107 s0907444909047337 pmc2815665 20124692 kabsch w 2010 b acta cryst d 66 133 144 10 1107 s0907444909047374 pmc2815666 20124693 kantardjieff k a rupp b 2003 protein sci 12 1865 1871 10 1110 ps 0350503 pmc2323984 12930986 karplus p a diederichs k 2015 curr opin struct biol 34 60 68 10 1016 j sbi 2015 07 003 pmc4684713 26209821 kirby n m mudie s t hawley a m cookson d j mertens h d t cowieson n samardzic boban v 2013 j appl cryst 46 1670 1680 krissinel e henrick k 2007 j mol biol 372 774 797 10 1016 j jmb 2007 05 022 17681537 krissinel e henrick k 2004 acta cryst d 60 2256 2268 10 1107 s0907444904026460 15572779 kurosu m begari e 2010 molecules 15 1531 1553 10 3390 molecules15031531 pmc6257245 20335999 liebschner d afonine p v baker m l bunkóczi g chen v b croll t i hintze b hung l w jain s mccoy a j moriarty n w oeffner r d poon b k prisant m g read r j richardson j s richardson d c sammito m d sobolev o v stockwell d h terwilliger t c urzhumtsev a g videau l l williams c j adams p d 2019 acta cryst d 75 861 877 madeira f madhusoodanan n lee j eusebi a niewielska a tivey a r lopez r butcher s 2024 nucleic acids res 52 w521 w525 10 1093 nar gkae241 pmc11223882 38597606 manalastas cantos k konarev p v hajizadeh n r kikhney a g petoukhov m v molodenskiy d s panjkovich a mertens h d t gruzinov a borges c jeffries c m svergun d i franke d 2021 j appl cryst 54 343 355 10 1107 s1600576720013412 pmc7941305 33833657 mashruwala a a guchte a v boyd j m 2017 elife 6 e23845 10 7554 elife 23845 pmc5380435 28221135 matthews b w 1968 j mol biol 33 491 497 10 1016 0022 2836 68 90205 2 5700707 mccoy a j grosse kunstleve r w adams p d winn m d storoni l c read r j 2007 j appl cryst 40 658 674 10 1107 s0021889807021206 pmc2483472 19461840 murshudov g n skubák p lebedev a a pannu n s steiner r a nicholls r a winn m d long f vagin a a 2011 acta cryst d 67 355 367 10 1107 s0907444911001314 pmc3069751 21460454 nowicka b kruk j 2010 biochim biophys acta 1797 1587 1605 10 1016 j bbabio 2010 06 007 20599680 priyadarshi a kim e e hwang k y 2009 biochem biophys res commun 388 748 751 10 1016 j bbrc 2009 08 093 19703421 priyadarshi a saleem y nam k h kim k s park s y kim e e hwang k y 2009 biochem biophys res commun 380 797 801 10 1016 j bbrc 2009 01 168 19338755 qin m song h dai x chen y guo z 2018 biochem j 475 3651 3667 10 1042 bcj20180548 30341164 robert x gouet p 2014 nucleic acids res 42 w320 w324 10 1093 nar gku316 pmc4086106 24753421 ryan t m trewhella j murphy j m keown j r casey l pearce f g goldstone d c chen k luo z kobe b mcdevitt c a watkin s a hawley a m mudie s t samardzic boban v kirby n 2018 j appl cryst 51 97 111 smith h b li t l liao m k chen g y guo z sauer j d 2021 infect immun 89 e00792 20 10 1128 iai 00792 20 pmc8091085 33619030 song h dong c qin m chen y sun y liu j chan w guo z 2016 j am chem soc 138 7244 7247 10 1021 jacs 6b03437 27213829 stanborough t ho n a t bulloch e m bashiri g dawes s s akazong e w titterington j allison t m jiao w johnston j m 2023 philos trans r soc b 378 20220035 10 1098 rstb 2022 0035 pmc9835592 36633276 upadhyay a fontes f l gonzalez juarrero m mcneil m r crans d c jackson m crick d c 2015 acs cent sci 1 292 302 10 1021 acscentsci 5b00212 pmc4582327 26436137 vogel c pleiss j 2014 proteins 82 2523 2537 10 1002 prot 24615 24888727 wu d piszczek g 2021 eur biophys j 50 403 409 10 1007 s00249 021 01513 9 pmc8344692 33651123 figure 1 mend catalytic cycle illustrating the formation of several thdp bound covalent intermediates from sequential reaction with the substrates 2 oxo glutarate intermediate i and isochorismate intermediate ii resulting ultimately in regeneration of the thdp and release of the product sephchc note that the aminopyrimidine ring is shown in its ap 4 aminopyrimidine tautomer form in thdp and intermediate i and its ip 1 4 imino pyrimidine tautomer form in intermediate ii shuttling of tautomer states is important during the catalytic cycle figure 2 a lmo mend monomer pdb entry 9e9b with pyr green th3 orange and pp blue domains b dimer of dimers lmo mend tetramer pdb entry 9e9b dimer 1 blue and green dimer 2 orange and rose figure 3 a thdp and mg 2 yellow binding in the lmo mend pdb entry 9e9b active site b intermediate i inti rose formation in the lmo mend pdb entry 9mnn active site the residues comprising the active site originate from the pyr green and pp blue domains with the catalytic glutamate glu56 highlighted water molecules are depicted as orange spheres and polar contacts as black dashes c thdp pdb entry 9e9b yellow and intermediate i pdb entry 9mnn rose in their respective 2 mf o df c electron density maps contoured at 1σ grey d overlay of the apo pdb entry 3lq1 grey thdp bound pdb entry 9e9b green and intermediate i bound pdb entry 9mnn blue active sites with residues differing between the structures shown as sticks e overlay of the apo pdb entry 3lq1 grey and thdp bound pdb entry 9e9b green lmo mend monomers with regions becoming ordered upon cofactor binding highlighted in orange f overlay of the apo pdb entry 3lq1 grey and thdp bound pdb entry 9e9b pyr domain green pp domain blue active sites with regions becoming ordered upon cofactor binding highlighted in orange and thdp in the active site shown as yellow sticks figure 4 a overlay of the putative lmo mend pdb entry 9e9b green and mtb mend pdb entry 6o0j grey dhna orange binding sites residues hypothesized to fulfil equivalent functions to a particular m tuberculosis arginine cage constituent are in bold with lmo mend lys325 potentially able to fulfil the function of mtb mend arg277 or arg303 b surface representation of the mtb mend pdb entry 6o0j grey allosteric site showing the dhna orange binding pocket c surface representation of the lmo mend pdb entry 9mnn green putative allosteric site highlighting the requirement of induced fit conformational changes to accommodate dhna orange binding table 1 macromolecule production information source organism listeria monocytogenes strain 10403s dna source genomic dna forward primer tttcagggcg ccatgg tgacaaaccacgaacaagtgctg reverse primer gtgcggccgc aagctt ttaatttaatgccttcaacgcgtcc expression vector pet 30a expression host escherichia coli bl21 de3 complete aa sequence of the construct produced mhhhhhhssglvprgsgmketaaakferqhmdspdldlgtgsenlyfq ga mvtnheqvltdylaafieelvqagvkeaiispgsrstplalmmaehpilkiyvdvdersagffalglakaskrpvvllctsgtaaanyfpavaeanlsqiplivltadrphelrnvgapqamdqlhlygshvkdftdmalpenseemlryakwhgsravdiamktprgpvhlnfplreplvpilepspftatgkkhhhvhiyythevlddssiqkmvtectgkkgvfvvgpidkkeleqpmvdlakklgwpiladplsglrsygaldevvidqydaflkeaeildkltpevvirfgsmpvskplknwleqlsdirfyvvdpgaawkdpikavtdmihcderflldimqqnmpddakdaawlsrwtsynkvareivlaemanttileegkivaelrrllpdkaglfignsmpirdvdtyfsqidkkikmlanrgangidgvvssalgasvvfqpmflligdlsfyhdmngllmakkykmnltivivnndgggifsflpqanepkyfeslfgtsteldfrfaaafydadyheaksvdeleeaidkasyhkgldiievktnrhenkanhqalwakiadalkaln the ncoi restriction site is underlined the hindiii restriction site is underlined the part of the his tag that is removed after tev cleavage is underlined tag residues remaining after cleavage are highlighted in bold table 2 crystallization method vapour diffusion plate type sitting drop temperature k 291 protein concentration mg ml 1 8 2 buffer composition of protein solution 50 m m hepes ph 8 0 150 m m nacl 15 glycerol 5 m m mgcl 2 1 m m tcep 1 m m thdp composition of reservoir solution pdb entry 9e9b 12 5 w v peg 1000 12 5 w v peg 3350 12 5 mpd 0 02 m 1 6 hexanediol 0 02 m butan 1 ol 0 02 m rs 1 2 propanediol 0 02 m propan 2 ol 0 02 m butane 1 4 diol 0 02 m propane 1 3 diol 0 1 m mops hepes ph 7 5 pdb entry 9mnn 5 w v peg 4000 20 v v glycerol 0 03 m mgcl 2 0 03 m cacl 2 0 1 m mes imidazole ph 6 3 volume and ratio of drop pdb entry 9e9b 300 nl 1 1 ratio pdb entry 9mnn 2 μl 1 1 ratio volume of reservoir μl 30 table 3 data collection and processing values in parentheses are for the outer resolution shell structure lmo mend thdp pdb entry 9e9b lmo mend intermediate i pdb entry 9mnn diffraction source mx2 beamline australian synchrotron mx2 beamline australian synchrotron wavelength å 0 953700 0 953700 space group p 6 4 22 p 6 4 22 a b c å 176 03 176 03 100 14 175 23 175 23 100 23 α β γ 90 90 120 90 90 120 mosaicity 0 13 0 18 resolution range 47 57 2 61 2 73 2 61 47 59 2 76 2 91 2 76 no of unique reflections 28314 3395 23604 3200 no of observations 1542504 191122 737371 91801 multiplicity 54 5 56 3 31 2 28 7 r merge all i i 0 381 2 935 0 425 3 075 r p i m all i i 0 052 0 393 0 077 0 559 cc 1 2 0 994 0 760 0 996 0 384 i σ i 14 6 2 1 10 3 1 4 completeness 100 100 99 1 94 4 wilson b factor å 2 42 56 58 10 the mean i σ i in the outer shell falls below 2 0 at resolutions above 2 92 å merged cc 1 2 correlations between intensity estimates from half data sets karplus diederichs 2015 were analysed and influenced the high resolution cutoff for data processing table 4 structure refinement structure lmo mend thdp pdb entry 9e9b lmo mend intermediate i pdb entry 9mnn resolution range å 47 57 2 61 2 70 2 61 45 16 2 79 2 91 2 79 completeness 99 94 100 00 99 55 98 00 σ cutoff 1 350 1 340 no of reflections working set 26868 2630 21854 2616 test set 1410 148 1166 139 r work 0 1991 0 2714 0 1868 0 2915 r free 0 2353 0 3240 0 2502 0 3946 no of non h atoms total 4628 4606 protein 4535 4544 ligand 1 tpp 1 mg 2 1 td6 2 mg 2 solvent 66 27 r m s deviations bond lengths å 0 003 0 008 angles 0 528 1 021 average b factors å 2 protein 55 86 56 85 ligand 55 70 50 51 solvent 49 82 66 98 ramachandran plot most favoured 95 10 94 97 allowed 4 90 5 03 molprobity score 1 58 99th percentile 2 04 99th percentile molprobity clashscore 4 71 99th percentile 8 32 99th percentile"
+  },
+  "entity_admission_report": {
+    "schema_version": 1,
+    "removed": [],
+    "demoted": [],
+    "counts": {
+      "removed": 0,
+      "demoted": 0,
+      "admitted": 0
+    },
+    "review_required": false,
+    "review_reasons": [],
+    "source_index": {
+      "schema_version": 1,
+      "status": "written",
+      "length": 47406
+    }
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 1,
+    "exported_locked_reactions": 1,
+    "quarantined_locked_reactions": 0
+  }
+}

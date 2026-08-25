@@ -1,0 +1,135 @@
+[14:28:46] STARTING a fresh run 2026-08-24_1428 (--fresh was given)
+[14:28:46]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[14:28:46] fetching papers (topics=topics_t104.txt, limit=none) ...
+[14:28:46]   + PMC12444477  (82306 chars)  (untitled)
+[14:28:46]   + PMC13231680  (61997 chars)  (untitled)
+[14:28:46]   + PMC12657337  (57814 chars)  (untitled)
+[14:28:46]   + PMC12421875  (62985 chars)  (untitled)
+[14:28:46]   + PMC12312563  (47406 chars)  (untitled)
+[14:28:46]   + PMC12856317  (54436 chars)  (untitled)
+[14:28:46]   + PMC12180156  (67304 chars)  (untitled)
+[14:28:46]   + PMC12096016  (43667 chars)  (untitled)
+[14:28:46]   + PMC12452463  (68085 chars)  (untitled)
+[14:28:46]   + PMC12782028  (43679 chars)  (untitled)
+[14:28:46] planned 10 paper(s) x 2 mode(s) = 20 run(s); 0 candidate(s) skipped (see skipped.json)
+[14:28:46] acquisition funnel: requested 10, examined 10, eligible 10, ineligible 0, no_full_text 0, accepted 10
+[14:28:46] STAGE ONLY: 20 paper+mode pair(s) planned and NOT started. Acquisition, plan.json, skipped.json and the summary are written; no Streamlit/LLM leg was executed.
+[14:28:46] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1428
+[14:28:46] verify it     : python scripts/bench_acceptance.py --verify-plan C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1428
+[14:28:46] then run it   : rerun the same command WITHOUT --stage-only
+[14:29:20]   resume check     : resuming 2026-08-24_1428: the newest run, last touched 0.0h ago, with 20 pair(s) still pending
+[14:29:20] CONTINUING the incomplete run 2026-08-24_1428 (no --fresh given)
+[14:29:20]   already recorded : 0 paper+mode run(s) -- these are skipped
+[14:29:20]   still to do      : 20 paper+mode run(s)
+[14:29:20] running 20 paper+mode pair(s) sequentially
+[14:29:20] whole-night deadline : 10.0h from now
+[14:29:20] [1/20] PMC12444477 / strict -> starting (timeout 3600s)
+[15:00:25] [1/20] PMC12444477 / strict -> PASS WITH WARNINGS in 1864.5s (31m04s)
+[15:00:25]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[15:00:25]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[15:00:25]     1/10 done | strict 1 pass | research 0 pass | 1 NO DELIVERABLE
+[15:00:25] [2/20] PMC12444477 / research -> starting (timeout 3600s)
+[15:37:45] [2/20] PMC12444477 / research -> ERROR (crash) in 2239.6s (37m19s)
+[15:37:45]     1/10 done | strict 1 pass | research 0 pass 1 fail | 1 NO DELIVERABLE | 1 RESEARCH DEFECT
+[15:37:45] [3/20] PMC13231680 / strict -> starting (timeout 3600s)
+[15:46:49] [3/20] PMC13231680 / strict -> FAIL (no_reactions) in 543.3s (9m03s)
+[15:46:49]     2/10 done | strict 1 pass 1 fail | research 0 pass 1 fail | 1 NO DELIVERABLE | 1 RESEARCH DEFECT
+[15:46:49] [4/20] PMC13231680 / research -> starting (timeout 3600s)
+[15:56:00] [4/20] PMC13231680 / research -> FAIL (no_reactions) in 549.9s (9m09s)
+[15:56:00]     2/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[15:56:00] [5/20] PMC12657337 / strict -> starting (timeout 3600s)
+[16:03:28] [5/20] PMC12657337 / strict -> SCOPE_CONFLICT in 448.1s (7m28s)
+[16:03:28]     3/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:03:28] [6/20] PMC12657337 / research -> starting (timeout 3600s)
+[16:15:05] [6/20] PMC12657337 / research -> SCOPE_CONFLICT in 696.0s (11m36s)
+[16:15:05]     3/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:15:05] [7/20] PMC12421875 / strict -> starting (timeout 3600s)
+[16:31:39] [7/20] PMC12421875 / strict -> SCOPE_CONFLICT in 993.8s (16m33s)
+[16:31:39]     4/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:31:39] [8/20] PMC12421875 / research -> starting (timeout 3600s)
+[16:44:41] [8/20] PMC12421875 / research -> SCOPE_CONFLICT in 781.4s (13m01s)
+[16:44:41]     4/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:44:41] [9/20] PMC12312563 / strict -> starting (timeout 3600s)
+[16:49:50] [9/20] PMC12312563 / strict -> SCOPE_CONFLICT in 308.7s (5m08s)
+[16:49:50]     5/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:49:50] [10/20] PMC12312563 / research -> starting (timeout 3600s)
+[16:57:44] [10/20] PMC12312563 / research -> SCOPE_CONFLICT in 473.5s (7m53s)
+[16:57:44]     5/10 done | strict 1 pass 1 fail | research 0 pass 2 fail | 1 NO DELIVERABLE | 2 RESEARCH DEFECT
+[16:57:44] [11/20] PMC12856317 / strict -> starting (timeout 3600s)
+[17:12:16] [11/20] PMC12856317 / strict -> PASS WITH WARNINGS in 870.7s (14m30s)
+[17:12:16]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:12:16]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/3/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:12:16]     6/10 done | strict 2 pass 1 fail | research 0 pass 2 fail | 2 NO DELIVERABLE | 2 RESEARCH DEFECT
+[17:12:16] [12/20] PMC12856317 / research -> starting (timeout 3600s)
+[17:26:41] [12/20] PMC12856317 / research -> PASS WITH WARNINGS in 864.9s (14m24s)
+[17:26:41]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:26:41]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:26:41]     ! strict gate error (research mode: review flag, not blocking): gate.protein_clpxp_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'CLPXP' is missing a UniProt or DrugBank identifier.
+[17:26:41]     ! strict gate error (research mode: review flag, not blocking): gate.protein_lonp1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'LONP1' is missing a UniProt or DrugBank identifier.
+[17:26:41]     6/10 done | strict 2 pass 1 fail | research 1 pass 2 fail | 3 NO DELIVERABLE | 2 RESEARCH DEFECT
+[17:26:41] [13/20] PMC12180156 / strict -> starting (timeout 3600s)
+[17:42:49] [13/20] PMC12180156 / strict -> PASS WITH WARNINGS in 967.2s (16m07s)
+[17:42:49]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:42:49]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:42:49]     7/10 done | strict 3 pass 1 fail | research 1 pass 2 fail | 4 NO DELIVERABLE | 2 RESEARCH DEFECT
+[17:42:49] [14/20] PMC12180156 / research -> starting (timeout 3600s)
+[17:51:01] [14/20] PMC12180156 / research -> FAIL (no_reactions) in 491.8s (8m11s)
+[17:51:01]     7/10 done | strict 3 pass 1 fail | research 1 pass 3 fail | 4 NO DELIVERABLE | 3 RESEARCH DEFECT
+[17:51:01] [15/20] PMC12096016 / strict -> starting (timeout 3600s)
+[18:17:39] [15/20] PMC12096016 / strict -> PASS WITH WARNINGS in 1597.2s (26m37s)
+[18:17:39]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:17:39]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:17:39]     8/10 done | strict 4 pass 1 fail | research 1 pass 3 fail | 5 NO DELIVERABLE | 3 RESEARCH DEFECT
+[18:17:39] [16/20] PMC12096016 / research -> starting (timeout 3600s)
+[18:39:10] [16/20] PMC12096016 / research -> PASS WITH WARNINGS in 1290.2s (21m30s)
+[18:39:10]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:39:10]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:39:10]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+[18:39:10]     8/10 done | strict 4 pass 1 fail | research 2 pass 3 fail | 6 NO DELIVERABLE | 3 RESEARCH DEFECT
+[18:39:10] [17/20] PMC12452463 / strict -> starting (timeout 3600s)
+[18:59:14] [17/20] PMC12452463 / strict -> FAIL (contract) in 1203.2s (20m03s)
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/0/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/1/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/2/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/3/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/0/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] actor_schema_not_canonical @ /processes/reactions/1/enzymes/0: Normalized actor rows must include non-empty entity and entity_type fields.
+[18:59:14]     ! runtime-schema finding (informational, not blocking): and 2 more finding(s); all of them are in contract_reports.json
+[18:59:14]     9/10 done | strict 4 pass 2 fail | research 2 pass 3 fail | 6 NO DELIVERABLE | 3 RESEARCH DEFECT
+[18:59:14] [18/20] PMC12452463 / research -> starting (timeout 3600s)
+[19:25:02] [18/20] PMC12452463 / research -> PASS WITH WARNINGS in 1546.8s (25m46s)
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/8/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @ /entities/protein_complexes/0/generation_reason: Generated wrapper rows must use the supported generation reason.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/8/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:25:02]     ! runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are in contract_reports.json
+[19:25:02]     ! strict gate error (research mode: review flag, not blocking): gate.protein_fur_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein 'Fur' is missing a UniProt or DrugBank identifier.
+[19:25:02]     ! strict gate error (research mode: review flag, not blocking): gate.protein_ryhb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein 'RyhB' is missing a UniProt or DrugBank identifier.
+[19:25:02]     ! strict gate error (research mode: review flag, not blocking): gate.registry_validation_failed @ /processes: Registry validation failed: Registry validation failed:
+/processes/interactions/0/entity_2 unknown entity: enterobactin biosynthesis genes (entA-entF)
+/processes/interactions/1/entity_2 unknown entity: ent mRNA
+[19:25:02]     9/10 done | strict 4 pass 2 fail | research 3 pass 3 fail | 7 NO DELIVERABLE | 3 RESEARCH DEFECT
+[19:25:02] [19/20] PMC12782028 / strict -> starting (timeout 3600s)
+[19:36:33] [19/20] PMC12782028 / strict -> PASS WITH WARNINGS in 690.6s (11m30s)
+[19:36:33]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:36:33]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:36:33]     10/10 done | strict 5 pass 2 fail | research 3 pass 3 fail | 8 NO DELIVERABLE | 3 RESEARCH DEFECT
+[19:36:33] [20/20] PMC12782028 / research -> starting (timeout 3600s)
+[19:50:52] [20/20] PMC12782028 / research -> PASS WITH WARNINGS in 858.4s (14m18s)
+[19:50:52]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:50:52]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[19:50:52]     10/10 done | strict 5 pass 2 fail | research 4 pass 3 fail | 9 NO DELIVERABLE | 3 RESEARCH DEFECT
+[19:50:52] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1428
+[19:50:52] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1428\SUMMARY.txt
+[19:50:52] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-24_1428\failures_by_code.txt
+[19:50:52] FAILURES: 11 of 20 paper+mode run(s) did not pass

@@ -1,0 +1,308 @@
+================================================================================
+ENTEROBACTIN BIOSYNTHESIS
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            5
+  Entities             20
+  Distinct sources     1
+  Tiers                A=17   B=0   C=8   D=0
+  NEEDS REVIEW         8 element(s) are Tier C or D
+  Review flags         1
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 5   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  EntC isochorismate synthase reaction
+
+  IN    chorismate
+
+  OUT   isochorismate
+
+  ENZYME  EntC
+          Tier A - DB-grounded [uniprot: P0AEJ2]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] enterobactin biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 5   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  EntB isochorismatase reaction
+
+  IN    isochorismate
+
+  OUT   2,3-dihydro-2,3-dihydroxybenzoate
+      + pyruvate
+
+  ENZYME  EntB
+          Tier A - DB-grounded [uniprot: P0ADI4]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] enterobactin biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 5   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  EntA dehydrogenase reaction
+
+  IN    2,3-dihydro-2,3-dihydroxybenzoate
+
+  OUT   2,3-dihydroxybenzoic acid
+
+  ENZYME  EntA
+          Tier A - DB-grounded [uniprot: P15047]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] enterobactin biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 5   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  EntE adenylation reaction
+
+  IN    2,3-dihydroxybenzoic acid
+      + ATP
+
+  OUT   2,3-dihydroxybenzoyl-AMP
+      + PPi
+
+  ENZYME  EntE
+          Tier A - DB-grounded [uniprot: P10378]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] enterobactin biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 5 of 5   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  EntF enterobactin synthase reaction
+
+  IN    2,3-dihydroxybenzoyl-AMP
+      + L-serine
+
+  OUT   enterobactin
+
+  ENZYME  EntF
+          Tier A - DB-grounded [uniprot: P11454]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] enterobactin biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    2,3-dihydro-2,3-dihydroxybenzoate
+              stated in a single source
+  [Tier C] entity    2,3-dihydroxybenzoyl-AMP
+              stated in a single source
+  [Tier C] reaction  EntA dehydrogenase reaction
+              stated in a single source
+  [Tier C] reaction  EntB isochorismatase reaction
+              stated in a single source
+  [Tier C] reaction  EntC isochorismate synthase reaction
+              stated in a single source
+  [Tier C] reaction  EntE adenylation reaction
+              stated in a single source
+  [Tier C] reaction  EntF enterobactin synthase reaction
+              stated in a single source
+  [Tier C] entity    isochorismate
+              stated in a single source
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (12)
+  - ATP   [drugbank: DB00171]
+  - L-serine   [drugbank: DB00133]
+  - chorismate   [pathbank_compound_id: 7748]
+  - 2,3-dihydroxybenzoic acid   [pathbank_compound_id: 40792]
+  - PPi   [drugbank: DB04160]
+  - enterobactin   [pathbank_compound_id: 40793]
+  - pyruvate   [pathbank_compound_id: 108870]
+  - EntA   [uniprot: P15047]
+  - EntB   [uniprot: P0ADI4]
+  - EntC   [uniprot: P0AEJ2]
+  - EntE   [uniprot: P10378]
+  - EntF   [uniprot: P11454]
+
+Tier B — corroborated by a second paper (no identifier)   (0)
+  (none)
+
+Tier C — single-source (review)   (3)
+  - 2,3-dihydro-2,3-dihydroxybenzoate
+  - 2,3-dihydroxybenzoyl-AMP
+  - isochorismate
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  seed paper (uploaded)
+    enterobactin biosynthesis
+
+================================================================================
+WHAT THE PIPELINE DID NOT ENFORCE
+================================================================================
+
+Biology / provenance flags (1)
+  These would have STOPPED a strict run. They did not stop this one.
+  - [(no code)] /entities/proteins/6
+      {'name': 'Fur', 'class': 'protein', 'confidence': 1.0, 'provenance':
+      'extracted', 'provenance_lineage': [{'stage': 'paper_extraction',
+      'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit':
+      'explicit', 'reason': 'present in the Stage-1 extraction payload when it
+      reached the Stage-1 to Stage-2 boundary', 'review_required': False,
+      'uncertainty': '', 'sources': []}, {'stage': 'identifier_mapping',
+      'origin': 'unresolved', 'support': 'unsupported', 'paper_explicit':
+      'not_evaluated', 'reason': 'identifier resolution ended ambiguous
+      (no_candidate_passed_identity_verification)', 'review_required': True,
+      'uncertainty': 'no database record was established for this entity',
+      'sources': []}], 'organism': 'Escherichia coli', 'species': 'Escherichia
+      coli', 'species_name': 'Escherichia coli', 'pathbank_species_id': 3,
+      'species_id': 3, 'taxonomy_id': '562', 'species_ref': {'name':
+      'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'mapping_meta': {'species_resolution':
+      {'name': 'Escherichia coli', 'pathbank_species_id': 3, 'species_id': 3,
+      'taxonomy_id': '562', 'source': 'explicit_entity_species', 'status':
+      'matched', 'confidence': 1.0}, 'query': {'name': 'Fur', 'organism':
+      'Escherichia coli'}, 'provider': 'PathBankDB', 'source': 'db',
+      'candidates': [], 'chosen_rule': 'ambiguous_unverified', 'confidence':
+      0.65, 'reviewed': False, 'resolution': {'status': 'ambiguous', 'issue':
+      'no_candidate_passed_identity_verification', 'order_step':
+      'ambiguous_identity_verification'}, 'ambiguity': {'candidate_count': 10,
+      'verified_count': 0, 'verified_accessions': [], 'rejections': ['2 key(s),
+      59 chars elided', '2 key(s), 59 chars elided', '2 key(s), 59 chars
+      elided', '2 key(s), 59 chars elided', '2 key(s), 59 chars elided', '2
+      key(s), 59 chars elided', '2 key(s), 59 chars elided', '2 key(s), 59 chars
+      elided'], 'reason': 'no_candidate_passed_identity_verification'},
+      'rejected_candidates': [{'pathbank_protein_id': 5917, 'name': 'Succinate
+      dehydrogenase iron-sulfur subunit', 'gene_name': 'sdhB', 'uniprot':
+      'P07014', 'species_id': 3, 'score': 0.65, 'organism': 'Escherichia coli',
+      'taxonomy_id': '562'}, {'pathbank_protein_id': 5979, 'name': 'Cysteine
+      desulfurase', 'gene_name': 'iscS', 'uniprot': 'P0A6B7', 'species_id': 3,
+      'score': 0.65, 'organism': 'Escherichia coli', 'taxonomy_id': '562'},
+      {'pathbank_protein_id': 6015, 'name': 'Thiosulfate sulfurtransferase
+      glpE', 'gene_name': 'glpE', 'uniprot': 'P0A6V5', 'species_id': 3, 'score':
+      0.65, 'organism': 'Escherichia coli', 'taxonomy_id': '562'},
+      {'pathbank_protein_id': 6079, 'name': 'Sulfurtransferase tusA',
+      'gene_name': 'tusA', 'uniprot': 'P0A890', 'species_id': 3, 'score': 0.65,
+      'organism': 'Escherichia coli', 'taxonomy_id': '562'},
+      {'pathbank_protein_id': 6151, 'name': 'Formate dehydrogenase, nitrate-
+      inducible, iron-sulfur subunit', 'gene_name': 'fdnH', 'uniprot': 'P0AAJ3',
+      'species_id': 3, 'score': 0.65, 'organism': 'Escherichia coli',
+      'taxonomy_id': '562'}, {'pathbank_protein_id': 6152, 'name': 'Formate
+      dehydrogenase-O iron-sulfur subunit', 'gene_name': 'fdoH', 'uniprot':
+      'P0AAJ5', 'species_id': 3, 'score': 0.65, 'organism': 'Escherichia coli',
+      'taxonomy_id': '562'}, {'pathbank_protein_id': 6154, 'name':
+      'Sulfurtransferase tusE', 'gene_name': 'tusE', 'uniprot': 'P0AB18',
+      'species_id': 3, 'score': 0.65, 'organism': 'Escherichia coli',
+      'taxonomy_id': '562'}, {'pathbank_protein_id': 6201, 'name': 'Fumarate
+      reductase iron-sulfur subunit', 'gene_name': 'frdB', 'uniprot': 'P0AC47',
+      'species_id': 3, 'score': 0.65, 'organism': 'Escherichia coli',
+      'taxonomy_id': '562'}], 'identity_status': 'unresolved'}}
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

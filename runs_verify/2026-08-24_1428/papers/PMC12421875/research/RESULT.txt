@@ -1,0 +1,35 @@
+RESULT: FAIL
+========================================
+paper      : PMC12421875
+title      : (unknown)
+slug       : PMC12421875
+mode       : research
+status     : scope_conflict
+stage      : stage1
+wall time  : 781.4s (13m01s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : (unclassified)
+message      : Stage 0 read a scope that contradicts the batch request, so this paper is not the paper the topic line asked for: Stage 0 read organism 'Lactococcus lactis' but the batch requested 'Bacillus subtilis'
+issue codes  : scope_conflict
+
+DETAIL / TRACEBACK
+----------------------------------------
+Stage 0 read organism 'Lactococcus lactis' but the batch requested 'Bacillus subtilis'
+
+COUNTS
+----------------------------------------
+  scope_conflicts = 1
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+
+FILES WRITTEN
+----------------------------------------
+  - cleaning_report.json  (5129 B)
+  - extraction_boundary_report.json  (5446 B)
+  - merged_payload.json  (90346 B)
+  - rag_admission_report.json  (90616 B)
+  - scope_conflict.json  (644 B)
+  - stage0_attempts.json  (827 B)
+  - stage1_payload.json  (29479 B)

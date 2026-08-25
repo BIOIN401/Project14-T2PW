@@ -1,0 +1,54 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12782028
+title      : (unknown)
+slug       : PMC12782028
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 858.4s (14m18s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  citations = 1
+  compounds = 5
+  entities = 29
+  gate_errors = 0
+  normalization_actions = 36
+  proteins = 20
+  reactions = 3
+  review_flags = 0
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  tier = {'a': 10, 'b': 0, 'c': 4, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (941 B)
+  - contract_reports.json  (7520 B)
+  - coverage_summary.json  (1898 B)
+  - final_mapped.json  (337084 B)
+  - final_stage3_gate_report.json  (2721 B)
+  - gap_iteration_summary.json  (210 B)
+  - graph_closure_iterations.json  (3650 B)
+  - merged_payload.json  (62735 B)
+  - quarantine_report.json  (8098 B)
+  - rag_admission_report.json  (136087 B)
+  - removed_entity_report.json  (241 B)
+  - research_pathway_citations.json  (34758 B)
+  - research_pathway_elements.csv  (4106 B)
+  - research_pathway_report.txt  (6648 B)
+  - review_flags.json  (7078 B)
+  - stage1_payload.json  (19242 B)
