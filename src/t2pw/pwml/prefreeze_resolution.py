@@ -73,6 +73,9 @@ _MAX_RESOLUTION_PASSES = 4
 __all__ = [
     "PrefreezeResolutionError",
     "PREFREEZE_CANONICALIZERS",
+    "SPECIES_RENAME_DECLINED_CODE",
+    "SPECIES_RENAME_DECLINED_REASON",
+    "SPECIES_RENAME_DECLINED_STATUS",
     "resolve_compounds_prefreeze",
     "resolve_species_prefreeze",
     "run_prefreeze_resolution",
@@ -1083,12 +1086,31 @@ def _first_divergence(before: str, after: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _reject_ambiguous_species_renames(
+#: The diagnosis a declined species rename records. **Unchanged from the code the
+#: guard used to raise** -- C-082 changes the disposition, never the detection, so
+#: an operator grepping either run for ``AMBIGUOUS_RENAME_TARGET`` finds the same
+#: string on the same payload.
+SPECIES_RENAME_DECLINED_CODE = "AMBIGUOUS_RENAME_TARGET"
+
+#: :func:`_canonicalizer_verdict`'s reason for a declined species rename, and a
+#: member of :data:`_REVIEW_REQUIRED_REASONS` -- so it reaches
+#: ``report["review_required"]``, which every production seam already publishes,
+#: rather than ``report["failures"]`` alone.
+SPECIES_RENAME_DECLINED_REASON = "species_rename_declined:AMBIGUOUS_RENAME_TARGET"
+
+#: The ``ir.SPECIES_CANONICALIZATION_FIELD`` status a declined row carries. A new
+#: value, deliberately not ``deterministic``: ``build_pwml_ir`` reads that one to
+#: build ``_species_at_risk``, and a declined row was not normalized -- it kept the
+#: extraction name -- so claiming that rung decided would misreport the ladder.
+SPECIES_RENAME_DECLINED_STATUS = "rename_declined"
+
+
+def _screen_ambiguous_species_renames(
     rename_map: Dict[str, str],
     before_names: Sequence[str],
     after_names: Sequence[str],
     primary_before: Dict[str, Tuple[str, ...]],
-) -> None:
+) -> List[Dict[str, Any]]:
     """D-015 clause 6 for species, checked before anything is written.
 
     The **rule** is :func:`_reject_ambiguous_renames`'s, and the two error codes
@@ -1101,19 +1123,80 @@ def _reject_ambiguous_species_renames(
     ``AMBIGUOUS_REFERENCE`` on a rename that is not ambiguous at all. It is
     C-050's owned function and this card may not retune it, so the bucket-correct
     twin lives here. Unifying the two is a deferred finding, not this card's.
+
+    C-082 / F-115: the two ``AMBIGUOUS_RENAME_TARGET`` branches DECLINE, they do
+    not raise
+    ------------------------------------------------------------------------
+    **The detection below is unchanged, line for line.** What changed is what
+    happens after it fires. Raising ended the whole leg as a ``crash`` at
+    ``post_pipeline`` -- measured on ``runs_verify/2026-08-24_1428``,
+    ``PMC12444477/research``: ten reactions, a passing audit and a connected core
+    were discarded because two species rows could not be canonicalized into one.
+    That is the shape permanent merge rule 7 exists to prevent, and
+    ``PRODUCT_CONTRACT`` §1 lists no clause under which an ambiguous *organism
+    name* is a terminal blocker.
+
+    **The refusal itself is untouched.** The two rows are still never merged; the
+    ambiguous row still keeps its own name, which is what :func:`_rename_targets`'
+    own note at the compound stage already says ``AMBIGUOUS_RENAME_TARGET`` must
+    do (D-035 clause 8). Declining a rename is the *status quo ante* for that row:
+    the payload it produces is the payload the ladder was handed. Nothing is
+    merged, nothing is dropped, no name is guessed.
+
+    D-035 clause 8 is the authority: ``AMBIGUOUS_RENAME_TARGET`` "must not become
+    a successful export ... the card may convert it into a structured
+    review-required or refusal result **only if** the graph remains intact and no
+    invalid PWML is emitted". Both conditions hold by construction -- the graph is
+    the one that arrived, and :func:`_canonicalizer_verdict` routes the
+    declination to ``report["review_required"]`` so the run cannot be reported as
+    a clean canonicalization.
+
+    **The compound twin is NOT changed.** D-034 clause 1 ratified fail-closed for
+    compounds and D-035 clause 7 names ``PMC13278307…/strict`` under ``C_canned``
+    a case that "must keep refusing". Compounds are participants; species are not.
+
+    ``AMBIGUOUS_REFERENCE`` still raises. It is a different code and a different
+    defect -- a name a *second entity* answers to, so the reference cannot be
+    redirected at all -- and F-115 does not reach it. It is evaluated over the
+    surviving map, because a rename that was declined redirects nothing.
+
+    The **residual**, recorded rather than papered over: D-034 clause 5 already
+    notes this family of guards is structurally blind to a collision between a
+    rename target and a row that is not itself renamed. A rename that lands on a
+    name some *other* declined row went back to keeping is that shape one level
+    down. It is not silently merged -- ``ir.DuplicateNamedRowError`` refuses two
+    species rows sharing an exporter name key, after the freeze and before any IR
+    is emitted. Detecting it here would mean re-tuning the detection, which this
+    card may not do.
     """
+
+    declined: List[Dict[str, Any]] = []
+    declined_sources: set = set()
+
+    def _decline(source: str, target: str, occupied: Sequence[str], detail: str) -> None:
+        if source in declined_sources:
+            return
+        declined_sources.add(source)
+        declined.append({
+            "code": SPECIES_RENAME_DECLINED_CODE,
+            "source": source,
+            "kept_name": source,
+            "declined_target": target,
+            "collides_with": sorted(occupied),
+            "message": detail,
+        })
 
     by_target: Dict[str, List[str]] = {}
     for old, new in rename_map.items():
         by_target.setdefault(_norm(new), []).append(old)
     for target, sources in sorted(by_target.items()):
         if len({_norm(source) for source in sources}) > 1:
-            raise PrefreezeResolutionError(
-                "AMBIGUOUS_RENAME_TARGET",
+            detail = (
                 f"{len(sources)} distinct species names canonicalize to {target!r}; "
-                "applying the rename would merge them",
-                target=target, sources=sorted(sources),
+                "applying the rename would merge them"
             )
+            for source in sorted(sources):
+                _decline(source, rename_map[source], sorted(set(sources) - {source}), detail)
 
     # ...and a target some OTHER species row already answers to and keeps. The
     # loop above only compares rename sources with each other, so a rename onto
@@ -1150,18 +1233,21 @@ def _reject_ambiguous_species_renames(
             and _norm(after_names[index]) == target
         })
         if occupied:
-            raise PrefreezeResolutionError(
-                "AMBIGUOUS_RENAME_TARGET",
+            _decline(
+                old, new, occupied,
                 f"renaming {old!r} to {new!r} would merge it into {occupied}, which "
                 "another species row already answers to and keeps",
-                target=new, sources=sorted({old, *occupied}),
             )
 
+    # Over the SURVIVING map only. A declined rename redirects no reference, so
+    # asking whether its redirect is unambiguous is a question about a rename
+    # that is not going to happen.
+    surviving = {old: new for old, new in rename_map.items() if old not in declined_sources}
     compatible: Dict[str, set] = {}
     for index, before in enumerate(before_names):
         if before:
             compatible.setdefault(_norm(before), set()).add(f"species#{index}")
-    for old, new in sorted(rename_map.items()):
+    for old, new in sorted(surviving.items()):
         owners = primary_before.get(_norm(old), ())
         rogue = [
             owner for owner in owners
@@ -1175,6 +1261,60 @@ def _reject_ambiguous_species_renames(
                 f"unambiguously redirected to {new!r}",
                 name=old, target=new, conflicting_entities=sorted(rogue),
             )
+
+    return declined
+
+
+def _decline_species_renames(
+    declinations: Sequence[Dict[str, Any]],
+    rename_map: Dict[str, str],
+    staged: List[Any],
+    pristine: Sequence[Any],
+    before_names: Sequence[str],
+    fresh_entries: List[Dict[str, Any]],
+) -> Dict[str, str]:
+    """Put every declined row back the way it arrived, and return what still renames.
+
+    ``pristine`` is the deep copy taken **before** the ladder ran, so a declined
+    row is restored wholesale rather than by undoing the ladder's edits one at a
+    time: ``name``, ``raw_name`` and ``aliases`` all move together and the row is
+    byte-identical to the one the caller handed in. That is what makes "keeps its
+    own name" a property of the object and not a claim about a code path.
+
+    The row then carries the declination under
+    :data:`~t2pw.pwml.ir.SPECIES_CANONICALIZATION_FIELD`, which is **durable**: it
+    survives the freeze, the ``final_mapped.json`` round trip and ``deepcopy``, and
+    is outside ``canonical_hash.GRAPH_FIELDS``, so the biological graph hash never
+    sees it (``PRODUCT_CONTRACT`` §3 wants the uncertainty traceable; §6 wants it
+    out of the graph projection). Any marker the row already carried is kept --
+    a rename applied by an EARLIER pass is provenance this pass has no business
+    erasing, and ``build_pwml_ir`` replays its ``entry`` into
+    ``name_canonicalization``.
+
+    ``fresh_entries`` is trimmed in place for the same reason: the stage's log may
+    not claim a rename that did not happen. A declined leader's entry goes, and
+    with it the row-order entry ``build_pwml_ir`` would otherwise replay.
+    """
+
+    by_source: Dict[str, Dict[str, Any]] = {
+        str(record.get("source") or ""): record for record in declinations
+    }
+    for index, before in enumerate(before_names):
+        record = by_source.get(before)
+        if not before or record is None or index >= len(pristine):
+            continue
+        restored = deepcopy(pristine[index])
+        if isinstance(restored, dict):
+            marker = dict(_safe_dict(restored.get(SPECIES_CANONICALIZATION_FIELD)))
+            marker["status"] = SPECIES_RENAME_DECLINED_STATUS
+            marker["declined_rename"] = deepcopy(record)
+            restored[SPECIES_CANONICALIZATION_FIELD] = marker
+        staged[index] = restored
+    fresh_entries[:] = [
+        entry for entry in fresh_entries
+        if not (isinstance(entry, dict) and _canonical(entry.get("from")) in by_source)
+    ]
+    return {old: new for old, new in rename_map.items() if old not in by_source}
 
 
 def _canonicalize_species_rows(rows: List[Any], *, name_index: Any) -> List[Dict[str, Any]]:
@@ -1276,8 +1416,16 @@ def resolve_species_prefreeze(
     ``review_required`` outcome is reachable here only through the compound
     canonicalizer beside it, which is where the database actually is.
 
-    Raises :class:`PrefreezeResolutionError` on an ambiguous rename or a
-    reference the rename would break. On any raise the payload is unchanged.
+    Raises :class:`PrefreezeResolutionError` on a source name that canonicalizes
+    two ways, or a reference the rename would break. On any raise the payload is
+    unchanged.
+
+    **A rename that would merge two organisms is DECLINED, not raised** (C-082 /
+    F-115, under D-035 clause 8). The row keeps the name it arrived with, the
+    declination is recorded on the row and under ``summary["renames_declined"]``,
+    and :func:`_canonicalizer_verdict` routes it to ``report["review_required"]``.
+    See :func:`_screen_ambiguous_species_renames` for why terminating the leg was
+    the defect and the refusal was not.
     """
 
     summary: Dict[str, Any] = {
@@ -1310,6 +1458,10 @@ def resolve_species_prefreeze(
         resolved_name_index = None
 
     # ---- stage 1: canonicalize on a copy. The live rows are untouched. ----
+    # ``pristine`` is that copy taken a second time, BEFORE the ladder edits it:
+    # a declined rename is undone by restoring the row, not by reversing the
+    # edits, so nothing has to know which fields the ladder touched.
+    pristine = deepcopy(rows)
     staged = deepcopy(rows)
     before_names = [_canonical(row.get("name")) if isinstance(row, dict) else "" for row in staged]
     fresh_entries = _canonicalize_species_rows(staged, name_index=resolved_name_index)
@@ -1320,19 +1472,6 @@ def resolve_species_prefreeze(
             expected=len(rows), actual=len(staged),
         )
     after_names = [_canonical(row.get("name")) if isinstance(row, dict) else "" for row in staged]
-
-    summary["statuses"] = {
-        before_names[index]: _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status")
-        for index, row in enumerate(staged)
-        if isinstance(row, dict) and before_names[index]
-    }
-    summary["at_risk"] = [
-        after_names[index]
-        for index, row in enumerate(staged)
-        if isinstance(row, dict)
-        and _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status") == "deterministic"
-    ]
-    summary["name_canonicalization"] = fresh_entries
 
     # ---- stage 2: the explicit rename map (D-015 clause 2) -----------------
     rename_map: Dict[str, str] = {}
@@ -1352,7 +1491,43 @@ def resolve_species_prefreeze(
 
     primary_before, alias_before = _alias_index(payload)
     if rename_map:
-        _reject_ambiguous_species_renames(rename_map, before_names, after_names, primary_before)
+        # C-082 / F-115. The screen returns what it will not apply; it terminates
+        # nothing. Declining is applied to the STAGED rows, so the live payload is
+        # still untouched here and the stages below validate the graph that will
+        # actually be committed rather than one the screen already rejected.
+        declined = _screen_ambiguous_species_renames(
+            rename_map, before_names, after_names, primary_before
+        )
+        if declined:
+            rename_map = _decline_species_renames(
+                declined, rename_map, staged, pristine, before_names, fresh_entries
+            )
+            after_names = [
+                _canonical(row.get("name")) if isinstance(row, dict) else "" for row in staged
+            ]
+            summary["rename_map"] = dict(rename_map)
+            summary["renamed"] = len(rename_map)
+            # Recorded only when it happened. An always-present empty key would
+            # change the bytes of every prefreeze report ever written, for runs
+            # where nothing was declined.
+            summary["renames_declined"] = declined
+
+    # ``staged`` is final here -- declinations included -- so these three describe
+    # what will be committed. Computed after the screen for exactly that reason:
+    # a summary that logged a rename the stage then declined would be a false
+    # provenance record (``PRODUCT_CONTRACT`` §3).
+    summary["statuses"] = {
+        before_names[index]: _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status")
+        for index, row in enumerate(staged)
+        if isinstance(row, dict) and before_names[index]
+    }
+    summary["at_risk"] = [
+        after_names[index]
+        for index, row in enumerate(staged)
+        if isinstance(row, dict)
+        and _safe_dict(row.get(SPECIES_CANONICALIZATION_FIELD)).get("status") == "deterministic"
+    ]
+    summary["name_canonicalization"] = fresh_entries
 
     # ---- stage 3: propagate on a staged copy of the whole payload ----------
     # Same traversal, same match rule, same audit as the compound stage --
@@ -1422,7 +1597,16 @@ _BENIGN_SKIPS = frozenset({"no_compound_rows", "no_species_rows"})
 #: total export failure. D-015 clause 6's "fail visibly" is about **ambiguous or
 #: dangling references** -- structural defects -- and those still raise directly
 #: out of :func:`resolve_compounds_prefreeze`, untouched by this.
-_REVIEW_REQUIRED_REASONS = frozenset({"resolution_report_not_ok:db_unavailable"})
+#:
+#: C-082 adds the species declination for the same reason: a payload whose two
+#: organism rows could not be canonicalized into one is **incomplete, not wrong**
+#: -- every row it arrived with is still there, under the name it arrived with --
+#: and D-035 clause 8 permits exactly this conversion so long as nothing merges
+#: and no invalid PWML is emitted.
+_REVIEW_REQUIRED_REASONS = frozenset({
+    "resolution_report_not_ok:db_unavailable",
+    SPECIES_RENAME_DECLINED_REASON,
+})
 
 
 def _canonicalizer_verdict(summary: Any) -> Tuple[bool, str]:
@@ -1439,6 +1623,12 @@ def _canonicalizer_verdict(summary: Any) -> Tuple[bool, str]:
     skipped = str(summary.get("skipped_reason") or "")
     if skipped and skipped not in _BENIGN_SKIPS:
         return False, skipped
+    if _safe_list(summary.get("renames_declined")):
+        # A canonicalizer that declined a rename did not finish canonicalizing.
+        # ``ok`` is a verdict, not a stamp, so it says so -- and the reason is in
+        # :data:`_REVIEW_REQUIRED_REASONS`, which is what stops this being read as
+        # a defect in the payload.
+        return False, SPECIES_RENAME_DECLINED_REASON
     resolution = _safe_dict(summary.get("resolution_report"))
     if resolution.get("ok") is False:
         if _safe_dict(resolution.get("db_resolution")).get("available") is False:
@@ -1460,6 +1650,13 @@ def run_prefreeze_resolution(
     Returns the report. Propagates :class:`PrefreezeResolutionError` -- D-015
     clause 6 is a stop condition, and a canonical payload that cannot be made
     canonical must not reach the freeze wearing the name.
+
+    **One condition left that set** (C-082 / F-115): a species rename that would
+    merge two organism rows is now DECLINED rather than raised. The row keeps its
+    own name, nothing merges, and the declination arrives here as
+    ``report["ok"] is False`` plus a ``report["review_required"]`` entry -- the
+    same channel D-029's unreachable database uses, and the one every production
+    seam already publishes under ``prefreeze_review_required``.
 
     ``report["ok"]`` is a **verdict, not a stamp.** It used to be set ``True``
     before the canonicalizers ran, with nothing able to falsify it, so a nested
