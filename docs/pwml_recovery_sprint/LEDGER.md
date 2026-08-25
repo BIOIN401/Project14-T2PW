@@ -4462,3 +4462,85 @@ written down here so nobody does.
 scored legs, covering 6 papers. This zero is the absence of a measurement, not the absence of
 unsupported reactions.` C-085's honesty change is working on the real report, and **D-067 leaves it
 that way** deliberately.
+
+---
+
+## Workstation crash mid-wave — recovery record
+
+The workstation crashed with both writer lanes running and **both branches uncommitted**. Recovery
+state verified before anything was touched:
+
+| check | state |
+|---|---|
+| tip = origin = `git ls-remote` | **`7621f4c`** — every commit pushed before the crash survived |
+| merge in progress | none |
+| staged | 0 |
+| heavy lock `C:/t/heavylock` | **ABSENT** — the crash did **not** strand it |
+| sprint-owned Python | **0** (two `ms-python.isort` IDE servers on fresh post-reboot PIDs, never touched) |
+| product-owner edit | intact, **35 ins / 2 del**, `sha256:47e4fafa…` |
+| G11 `.staging` reservations | **empty in both card dirs** — no orphaned allocation to explain |
+
+**Nothing was lost.** Both worktrees still held their full working state, including G11 reports and
+pin verdicts. The lanes had done the work and simply never reached a commit.
+
+### What I did, and what I did NOT do
+
+I committed each lane's surviving worktree state **verbatim** to its own branch, and ran the one
+job C-087's lane had not reached. **No line of either production diff is mine**, and the commit
+messages say so. Merge rule 5 is untouched: an independent reviewer (`REV-087`) is reviewing the
+actual diffs, and I do not approve work I am going to merge.
+
+### Salvaged
+
+| card | tip | diff | tests | G11 |
+|---|---|---|---|---|
+| **C-086** | `fb42e62` | `map_ids.py` +280/-11, 4 new private helpers | 574 lines, 9 tests | 10 reports, 7 pin verdicts, G9 pair complete (tip exit 0 / base exit 1), affected sweep exit 0 |
+| **C-087** | `6deb55f` | `release_status.py` +241, `driver.py` +40/-2 | 762 lines, 16 tests | 4 reports, 4 pin verdicts, G9 pair complete |
+
+### C-087 deviated from its charter, deliberately and correctly
+
+It was chartered to thread the prefreeze verdict into `classify_release_status`. **It measured that
+this is not constructible** — across `src`, no caller of that function holds a prefreeze report and
+no holder of one calls it, because pre-freeze canonicalization runs at the **export** seam, after
+the boundary already froze the record.
+
+So it added a monotone `release_status.cap_release_for_prefreeze_declination` and applied it at
+`driver._frozen_release_record`, whose only transition is `release_ready` → `review_required`. Its
+merge-rule-8 argument, which the reviewer is checking rather than me: capping is the **opposite** of
+an exporter repairing biology after the freeze — it reads a verdict another stage already reached
+and can only **remove** a strict success.
+
+Its choice of `_frozen_release_record` over `_finalize_pwml_export` is argued from the code:
+`_add_strict_artifacts` derives the PWML **filename** from it while `_finalize_pwml_export` derives
+the **manifest row**, so capping only the row would leave a declined leg shipping a bare
+`pathway.pwml` — which `PRODUCT_CONTRACT` § 13 reads as *"ship it, no review needed"*, leaving
+D-035 clause 8 enforced only by coincidence on the other channel. That is exactly what D-068
+forbids.
+
+**Verified disjoint from C-083:** the `driver.py` hunk touches neither `_finalize_timeout`,
+`RunOutcome` nor `to_dict`.
+
+### The affected sweep I ran for C-087, and its classification
+
+```
+tip  C:/t/c087      154 passed, 2 failed
+base C:/t/c087base   22 passed, 2 failed    <- the SAME two
+
+FAILED test_c074_strict_core_floor.py::test_the_full_corpus_replay_moves_exactly_the_legs_that_are_named
+FAILED test_c074_strict_core_floor.py::test_exactly_one_committed_leg_declares_a_core_without_stating_a_pathway
+```
+
+Both fail at base with C-087's changes absent, so **neither is C-087's doing**. They are the
+already-registered **F-112** class — committed tests red because `runs_verify/**` grew, which
+REV-086 independently corroborated this session when the artifact count moved **89 → 92**. Merge
+rule 4 holds. Classified rather than assumed: the base arm is its own pinned run with
+`--expect-tree C:/t/c087base` and a committed verdict, per D-066.
+
+### Lanes refilled
+
+`C-089` (`C:/t/c089`) and `C-090` (`C:/t/c090`), both cut from `736c1a2`, with base worktrees
+`C:/t/c089base` and `C:/t/c090base` **created up front** so neither lane repeats C-086's
+base-tree-export detour. Both charters were already written before the crash.
+
+Implementers are now instructed to **commit as they go** rather than at the end. That is the one
+process change the crash actually justifies.
