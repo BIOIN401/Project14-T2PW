@@ -79,6 +79,16 @@ from t2pw.bench.semantic import (
 # states are deliberately not named in this module (see
 # ``ModeResult.runtime_semantic_refuted``).
 from t2pw.pipeline.release_status import SEMANTIC_FAILED as _RUNTIME_SEMANTIC_FAILED
+# C-088 / F-107, D-065 (LOCKED). The disposition vocabulary and its ONE rule, taken
+# from the same module and in the same forward direction as the constant above. The
+# rule is imported rather than restated for the reason D-065 gives in terms: the
+# runtime field and the acceptance record must not become two readings of one
+# ruling. Aliased because ``ModeResult`` exposes the answer under the plain name.
+from t2pw.pipeline.release_status import (
+    DISPOSITION_EXTRACTED_NOT_SERIALIZED,
+    NO_DISPOSITION,
+    release_disposition as _release_disposition,
+)
 
 
 MODE_STRICT = "strict"
@@ -175,6 +185,12 @@ class ModeResult:
     release_status: Optional[Dict[str, Any]] = None
     #: The PWML filename the leg wrote, as the row reported it.
     pwml_artifact: str = ""
+    #: C-088 / D-065. This CASE's own connected-core floor -- the gold set's
+    #: ``min_connected_reactions``, the number gold says the paper actually
+    #: supports. Set by :func:`score_run` from the case being scored; ``None`` on a
+    #: leg built outside that loop, and then no disposition can be established,
+    #: because "not measured" is never a fact.
+    required_connected_reactions: Optional[int] = None
 
     @property
     def passed(self) -> bool:
@@ -258,6 +274,64 @@ class ModeResult:
         return self.runtime_semantic_evaluation == _RUNTIME_SEMANTIC_FAILED
 
     @property
+    def connected_core_reactions(self) -> Optional[int]:
+        """The largest chemically connected core this leg's payload reached, or ``None``.
+
+        Read from the semantic report's own graph summary
+        (``bench.semantic._connected_core`` -> ``largest_core_size``), which is the
+        same number ``PRODUCT_CONTRACT`` 13's connectivity floor is stated in. Not
+        re-derived here and not read from any artifact name.
+
+        ``None`` when the report never evaluated -- a leg whose payload was missing
+        has no measured core, and a missing measurement is never zero.
+        """
+
+        if self.semantic is None or not self.semantic.evaluated:
+            return None
+        value = self.semantic.graph.get("largest_core_size")
+        return None if value is None else int(value)
+
+    @property
+    def release_disposition(self) -> str:
+        """The D-065 disposition this leg qualifies for, or ``""``.
+
+        ``extracted_not_serialized`` means: a defensible pathway core WAS extracted,
+        and a correct scope guard stopped the run before audit, DB mapping, freeze
+        and PWML serialization. It exists because ``PRODUCT_CONTRACT`` 4's
+        ``diagnostic_only`` gloss -- *"recovery and retrieval could not establish a
+        defensible pathway core"* -- says something untrue about exactly this shape
+        of run, which is the untruth D-065 removes.
+
+        THIS MODULE STILL DOES NOT CLASSIFY RUNS. Every input is either a fact the
+        frozen record already carried or a measurement this module already made for
+        other reasons; the rule itself is
+        :func:`t2pw.pipeline.release_status.release_disposition`, shared with the
+        runtime so the two cannot drift. Nothing here re-derives a status, and the
+        function it calls cannot return a disposition for any status but
+        ``diagnostic_only``.
+
+        THE ARTIFACT OBSERVATION IS INDEPENDENT AND ONLY EVER REFUSES. ``produced_
+        pwml`` is this module's own reading of the manifest row -- the PWML filename
+        the row reported, or any strict deliverable found on disk -- rather than the
+        record's self-description, so a record that called itself ``diagnostic_only``
+        beside a PWML that actually landed gets NO disposition.
+
+        IT MOVES NO RATE. No denominator, numerator, priority or blocker reads this
+        property; :attr:`strict_acceptance_eligible` is unchanged and still reads the
+        frozen flag, which is ``False`` on every leg that can carry a disposition
+        because the flag is ``status == release_ready`` and this is not that.
+        """
+
+        if not self.release_status:
+            return NO_DISPOSITION
+        return _release_disposition(
+            self.release_status,
+            connected_core_reactions=self.connected_core_reactions,
+            required_connected_reactions=self.required_connected_reactions,
+            produced_pwml=bool(self.pwml_artifact) or bool(self.deliverable),
+        )
+
+    @property
     def extracted(self) -> bool:
         """Produced a payload with at least one process."""
 
@@ -294,6 +368,19 @@ class ModeResult:
             data["release_status"] = dict(self.release_status)
         if self.pwml_artifact:
             data["pwml_artifact"] = self.pwml_artifact
+        # C-088 / D-065. Conditional for the same reason as the two keys above: a leg
+        # that established no disposition serializes byte-identically to before.
+        #
+        # THE TWO SIZES TRAVEL WITH IT, never without it and never alone. D-065's
+        # condition is that a defensible core was reached and NOT ASSUMED, so a
+        # record asserting the disposition without the numbers behind it would be
+        # exactly the assumption the ruling forbids. A reader can check the claim
+        # against the case's own gold floor without leaving the row.
+        disposition = self.release_disposition
+        if disposition:
+            data["release_disposition"] = disposition
+            data["connected_core_reactions"] = self.connected_core_reactions
+            data["required_connected_reactions"] = self.required_connected_reactions
         return data
 
 
@@ -442,6 +529,45 @@ class AcceptanceReport:
             if leg.semantic is not None and leg.semantic.evaluated
         )
 
+    @property
+    def release_dispositions(self) -> Dict[str, List[str]]:
+        """``disposition`` -> the ``"paper_id:mode"`` legs carrying it, sorted.
+
+        C-088 / F-107, **D-065 (LOCKED)**. The report-level view of the per-leg
+        :attr:`ModeResult.release_disposition`, so a reader can see WHICH legs the
+        run placed without walking every paper. Empty when no leg established one,
+        and then :meth:`to_dict` omits the key entirely.
+
+        A ROLL-UP, NOT A SECOND RULE. Every entry comes from the leg property, which
+        comes from :func:`t2pw.pipeline.release_status.release_disposition`. It is
+        read by nothing here: no priority, denominator, numerator or blocker
+        consults it, so it can neither add nor remove a success.
+        """
+
+        found: Dict[str, List[str]] = {}
+        for paper in self.papers:
+            for mode in MODES:
+                leg = paper.leg(mode)
+                if leg is None:
+                    continue
+                disposition = leg.release_disposition
+                if disposition:
+                    found.setdefault(disposition, []).append(f"{paper.paper_id}:{mode}")
+        return {key: sorted(value) for key, value in sorted(found.items())}
+
+    @property
+    def extracted_not_serialized_legs(self) -> List[str]:
+        """The legs D-065's disposition places, as ``"paper_id:mode"``.
+
+        Named separately because it is the population D-065 reasons about in terms:
+        a defensible pathway core that a correct scope guard stopped before
+        serialization, which *"must never count as strict exports"* and which the
+        ruling removes from priority 5's strict denominator by reconciling gold, not
+        by anything this property does.
+        """
+
+        return list(self.release_dispositions.get(DISPOSITION_EXTRACTED_NOT_SERIALIZED, ()))
+
     # -- acceptance priorities -------------------------------------------
     def priorities(self) -> List[Dict[str, Any]]:
         """The user-declared acceptance priorities, in order, as pass/fail.
@@ -542,7 +668,7 @@ class AcceptanceReport:
         ]
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        data: Dict[str, Any] = {
             "run_dir": self.run_dir,
             "gold_set": {"version": self.gold_version, "path": self.gold_path},
             "legs_attempted": self.legs_attempted,
@@ -565,6 +691,12 @@ class AcceptanceReport:
             "papers": [p.to_dict() for p in self.papers],
             "notes": self.notes,
         }
+        # C-088 / D-065. Conditional, like every optional key in this module: a run
+        # that placed no leg serializes byte-identically to before.
+        dispositions = self.release_dispositions
+        if dispositions:
+            data["release_dispositions"] = dispositions
+        return data
 
 
 # ---------------------------------------------------------------------------
@@ -634,7 +766,16 @@ def score_run(
 
         for mode in MODES:
             row = by_key.get((case.paper_id.casefold(), mode))
-            leg = ModeResult(paper_id=case.paper_id, mode=mode, attempted=row is not None)
+            leg = ModeResult(
+                paper_id=case.paper_id,
+                mode=mode,
+                attempted=row is not None,
+                # C-088 / D-065: the case's OWN floor, carried onto the leg so the
+                # disposition rule is applied against what gold says this paper
+                # supports rather than against a constant. Read straight off the
+                # gold case; this loop is the only place both halves exist at once.
+                required_connected_reactions=case.min_connected_reactions,
+            )
 
             if row is not None:
                 leg.status = canonical_text(row.get("status"))
