@@ -1,0 +1,153 @@
+{
+  "label": "smoke-post-d065-gold",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/orch/basetemp/smoke1",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-25T21:31:01+00:00",
+  "finished_at": "2026-08-25T21:31:53+00:00",
+  "duration_seconds": 52.34120809999877,
+  "timeout_seconds": 500.0,
+  "root_pid": 171640,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 171768,
+      "name": "python.exe",
+      "ppid": 171640
+    },
+    {
+      "pid": 153740,
+      "name": "python.exe",
+      "ppid": 171768
+    },
+    {
+      "pid": 171068,
+      "name": "python.exe",
+      "ppid": 153740
+    },
+    {
+      "pid": 171732,
+      "name": "python.exe",
+      "ppid": 171932
+    },
+    {
+      "pid": 171932,
+      "name": "python.exe",
+      "ppid": 171768
+    },
+    {
+      "pid": 160164,
+      "name": "python.exe",
+      "ppid": 171768
+    },
+    {
+      "pid": 167336,
+      "name": "python.exe",
+      "ppid": 160164
+    },
+    {
+      "pid": 171320,
+      "name": "python.exe",
+      "ppid": 171768
+    },
+    {
+      "pid": 171944,
+      "name": "python.exe",
+      "ppid": 171320
+    }
+  ],
+  "descendants_terminated": [
+    153740,
+    160164,
+    167336,
+    171068,
+    171320,
+    171732,
+    171768,
+    171932,
+    171944
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 170916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 171372,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\T-107\\11-smoke-post-d065-gold.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "37b87ef674c5fdeda96bd0971a661252dc2d9660",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "T-107-smoke",
+    "token": "T-107-smoke:170916:8149727a6b25d877",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
