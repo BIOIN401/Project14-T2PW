@@ -40,7 +40,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
-#: PRODUCT_CONTRACT 4 output states. There is deliberately no fourth.
+#: PRODUCT_CONTRACT 4 output states. There is deliberately no fourth, and D-065
+#: (LOCKED) did not add one: :data:`DISPOSITION_EXTRACTED_NOT_SERIALIZED` is a
+#: DISPOSITION recorded on a separate field beside the status, never a member here.
+#: Extending this tuple is a change D-065 charters and reviews on its own merits.
 RELEASE_READY = "release_ready"
 REVIEW_REQUIRED = "review_required"
 DIAGNOSTIC_ONLY = "diagnostic_only"
@@ -193,6 +196,52 @@ PREFREEZE_RESOLUTION_STAGE = "prefreeze_resolution"
 #: oversight -- see :func:`prefreeze_review_reasons` for the derivation and the
 #: authority.
 REASON_PREFREEZE_REVIEW_REQUIRED = "prefreeze_resolution_review_required"
+
+#: C-088 / F-107, **D-065 (LOCKED)**. The one release DISPOSITION this module
+#: recognizes: *a defensible pathway core was extracted, and a correct scope guard
+#: stopped the run before audit, DB mapping, freeze and PWML serialization.*
+#:
+#: A DISPOSITION IS NOT A STATUS, and the separation is the ruling's own. D-065
+#: offered three readings and preferred the third -- **an additional explicit field
+#: beside the existing runtime status** -- precisely so the safe runtime refusal is
+#: PRESERVED rather than replaced. So this name is deliberately NOT a member of
+#: :data:`RELEASE_STATES`, ``PRODUCT_CONTRACT`` 4 still has exactly three output
+#: states, and a run carrying this disposition still reports
+#: ``status == diagnostic_only``, ``strict_gates_passed == False`` and
+#: ``produced_pwml == False``. Extending ``RELEASE_STATES`` is a change D-065
+#: charters and reviews on its own merits; it is not taken here.
+#:
+#: WHAT IT REMOVES. ``PRODUCT_CONTRACT`` 4's ``diagnostic_only`` gloss reads
+#: "recovery and retrieval could not establish a defensible pathway core", and
+#: measured, that is UNTRUE of the legs this names -- the largest reached a connected
+#: core comfortably above its own case floor with full enzyme and metabolite recall.
+#: The record said something false about them, and this is what makes it honest
+#: without fabricating a gate result nobody measured (C-077's refusal, ratified by
+#: D-065). The per-leg numbers live in the card's test file and its report, never
+#: here: no benchmark paper, id, gold value or gold pathway name belongs in ``src/``.
+DISPOSITION_EXTRACTED_NOT_SERIALIZED = "extracted_not_serialized"
+
+#: NOT RECORDED. The default everywhere, and never a fourth disposition: a run this
+#: rule cannot affirmatively place carries the empty string, exactly as
+#: ``expansion_blocked_reason`` does, and a reader distinguishes "no disposition was
+#: established" from "a disposition says X" by emptiness alone (the D-038 rule).
+NO_DISPOSITION = ""
+
+#: The closed disposition vocabulary. One member, and a widening is a ratification.
+RELEASE_DISPOSITIONS: Tuple[str, ...] = (DISPOSITION_EXTRACTED_NOT_SERIALIZED,)
+
+#: LOCAL RESTATEMENT of ``batch.driver.REASON_STAGE0_SCOPE_CONFLICT``, the same
+#: house pattern the note on :data:`SEMANTIC_GATING_CHECKS` records for
+#: ``bench.semantic``: this is ``t2pw.pipeline`` and a module-level ``t2pw.batch``
+#: import here would invert the layering for every importer of this module.
+#:
+#: It is the ONLY evidence that the stop was a SCOPE GUARD rather than a gate
+#: failure or a crash, which is why the disposition below reads it and nothing
+#: else: ``strict_technical_gates_blocked_export`` is emitted by three other
+#: terminal paths and cannot tell them apart, and a status alone cannot either.
+#: Kept in step BY TEST, not by comment -- ``tests/test_c088_extracted_not_
+#: serialized_disposition.py`` asserts this equals the driver's own constant.
+SCOPE_GUARD_STOP_REASON = "stage0_scope_conflict_stopped_the_run_before_serialization"
 
 #: The coverage reason prefixes ``evaluate_core_coverage`` emits, named once so no
 #: consumer has to re-type the string it string-matches on.
@@ -436,6 +485,20 @@ class ReleaseStatus:
     expansion_blocked_reason: str = ""
     coverage_evaluated: bool = False
     reasons: Tuple[str, ...] = ()
+    #: C-088 / F-107, **D-065 (LOCKED)**: the explicit disposition BESIDE the status,
+    #: which is D-065's preferred reading 3 in one field. Either
+    #: :data:`DISPOSITION_EXTRACTED_NOT_SERIALIZED` or :data:`NO_DISPOSITION`.
+    #:
+    #: LAST, and deliberately so: every field above keeps its position, so a caller
+    #: constructing this record positionally is unaffected. It is the LOGICAL
+    #: neighbour of ``status`` and ``to_dict`` writes it there.
+    #:
+    #: IT ADDS NOTHING TO ``status`` AND CONTRADICTS NOTHING IN IT. The status is
+    #: still whatever the technical chain concluded; this says which SHAPE of that
+    #: conclusion was measured. Derived by :func:`release_disposition` from facts a
+    #: caller supplies, never asserted by the caller directly, so the two cannot be
+    #: made to disagree from outside this module.
+    disposition: str = NO_DISPOSITION
 
     @property
     def semantic_confirmed(self) -> bool:
@@ -450,7 +513,7 @@ class ReleaseStatus:
         return self.status in (RELEASE_READY, REVIEW_REQUIRED)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        record: Dict[str, Any] = {
             "status": self.status,
             "pipeline_executed": self.pipeline_executed,
             "strict_gates_passed": self.strict_gates_passed,
@@ -472,6 +535,27 @@ class ReleaseStatus:
             "coverage_evaluated": self.coverage_evaluated,
             "reasons": list(self.reasons),
         }
+        # CONDITIONAL, and for the reason ``bench.acceptance.ModeResult.to_dict``
+        # already states about its own two optional keys: a record that established
+        # no disposition serializes BYTE-IDENTICALLY to the one this method produced
+        # before the field existed, so not one committed artifact, pinned digest or
+        # golden capture moves. Absent means NOT RECORDED; an always-present empty
+        # string would be a placeholder that reads like a measurement, and the
+        # seven-slot digest in ``tests/test_batch_driver_seam_golden.py`` -- which
+        # hashes this exact dict -- would have moved on every leg for a fact none of
+        # them measured.
+        #
+        # Written NEXT TO ``status`` rather than appended, because D-065's reading 3
+        # is "an additional explicit field BESIDE the existing runtime status" and a
+        # reader of the serialized record should not have to hunt for it.
+        if self.disposition:
+            reordered: Dict[str, Any] = {}
+            for key, value in record.items():
+                reordered[key] = value
+                if key == "status":
+                    reordered["disposition"] = self.disposition
+            return reordered
+        return record
 
 
 def coverage_verdict(value: Any) -> Optional[CoverageVerdict]:
@@ -579,6 +663,127 @@ def prefreeze_review_reasons(prefreeze: Any) -> Tuple[str, ...]:
     ))
 
 
+def _as_measured_int(value: Any) -> Optional[int]:
+    """An integer that was actually MEASURED, or ``None``.
+
+    ``None``, ``""``, a bool and anything unparseable are all "not measured", and
+    not measured is never a fact (the D-038 rule). ``bool`` is excluded explicitly
+    because ``isinstance(True, int)`` is ``True`` in Python and a caller handing a
+    flag where a count belongs would otherwise be read as the count ``1``.
+    """
+
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def release_disposition(
+    release: Any,
+    *,
+    connected_core_reactions: Any = None,
+    required_connected_reactions: Any = None,
+    min_connected_core_reactions: int = MIN_CONNECTED_CORE_REACTIONS,
+    produced_pwml: Optional[bool] = None,
+) -> str:
+    """The D-065 disposition a release record qualifies for, or :data:`NO_DISPOSITION`.
+
+    **THE SINGLE RULE**, and single on purpose: :func:`classify_release_status`
+    calls it while building a record and ``bench.acceptance.ModeResult`` calls it
+    over a record another stage already froze, so the runtime field and the
+    acceptance record cannot drift into two readings of one ruling. That is the
+    same shape C-087 gave :func:`prefreeze_review_reasons`, and it is what D-065
+    means by *"so no reader has to decide which of two fields to believe"*.
+
+    **AFFIRMATIVE BY CONSTRUCTION.** Every clause below must be satisfied by a fact
+    that was measured; anything absent, unparseable or merely not recorded returns
+    :data:`NO_DISPOSITION`. There is no branch that reaches a disposition through an
+    ABSENCE, so a run whose evidence never arrived is excluded without anyone
+    enumerating the ways evidence can go missing.
+
+    The five clauses are D-065 / C-088 section 4's four conditions, and each names
+    where it is read from:
+
+    1. **The pipeline executed** -- ``pipeline_executed is True`` on the record.
+       Literal ``True``, not truthiness: this is the machine-readable refutation of
+       *"nothing was attempted"* and a string that happens to be non-empty is not it.
+    2. **The stop was a SCOPE GUARD**, not a gate failure and not a crash --
+       :data:`SCOPE_GUARD_STOP_REASON` is in ``reasons``. Nothing else in the record
+       can carry this: ``strict_technical_gates_blocked_export`` is emitted by three
+       other terminal paths, and ``status`` alone is emitted by all of them.
+       ``strict_gates_passed`` must additionally be ``False``, which is the same
+       fact from the other side -- a scope guard stops the run BEFORE the strict
+       technical gates run, so a record claiming they passed did not come from one.
+    3. **No PWML was written.** ``status`` is ``diagnostic_only``, the one state
+       :attr:`ReleaseStatus.produced_pwml` defines as having no final PWML. A caller
+       holding an INDEPENDENT observation -- the acceptance scorer reads the
+       manifest row's own artifact name -- passes ``produced_pwml`` and it is
+       believed over the status, in the refusing direction only: an explicit
+       ``True`` withdraws the disposition, and an explicit ``False`` never grants
+       one the status did not already allow.
+    4. **A defensible connected core was actually reached** -- NOT ASSUMED. Both
+       sizes must be measured integers and both floors must clear:
+
+       * ``connected_core_reactions >= required_connected_reactions``, the case's
+         OWN floor (``bench.goldset.GoldCase.min_connected_reactions``), which is
+         the number the gold set says that paper actually supports; and
+       * ``connected_core_reactions >= min_connected_core_reactions``, the sprint's
+         floor for calling anything a pathway at all
+         (:data:`MIN_CONNECTED_CORE_REACTIONS`, C-074 / F-101: *"one is not a
+         pathway: a single reaction has no step to be connected TO"*).
+
+       **BOTH, and the second is not redundant.** Measured on the committed
+       verification corpus, the six scope-conflict legs split 4/2 on it: four clear
+       both floors, and two reach a connected core of **1** against a case floor of
+       **1** -- the case floor clears, and that case's own gold ``export_rationale``
+       says in terms *"A single reaction cannot form a connected pathway, and no
+       second reaction anywhere in the text shares a metabolite with it."* On those
+       legs ``diagnostic_only``'s existing gloss is TRUE, so granting them a
+       disposition that asserts a defensible pathway core would replace one untruth
+       with another. The gold set is the authority on that question and it has
+       already answered it. Which legs those are is asserted BY TEST, in the card's
+       own test file: no benchmark paper, id, gold value or gold pathway name may be
+       hardcoded into ``src/``.
+
+    Returns :data:`DISPOSITION_EXTRACTED_NOT_SERIALIZED` or :data:`NO_DISPOSITION`.
+    It reads no biology, writes nothing, moves no status, touches no payload and
+    creates no route toward strict export -- ``strict_acceptance_eligible`` is
+    computed from ``status == release_ready`` and this function cannot reach a
+    record whose status is anything but ``diagnostic_only``.
+    """
+
+    if isinstance(release, ReleaseStatus):
+        record: Mapping[str, Any] = release.to_dict()
+    elif isinstance(release, Mapping):
+        record = release
+    else:
+        return NO_DISPOSITION
+
+    status = str(record.get("status") or "")
+    if status != DIAGNOSTIC_ONLY:
+        return NO_DISPOSITION
+    if record.get("pipeline_executed") is not True:
+        return NO_DISPOSITION
+    if record.get("strict_gates_passed") is not False:
+        return NO_DISPOSITION
+    if SCOPE_GUARD_STOP_REASON not in {str(r) for r in (record.get("reasons") or ())}:
+        return NO_DISPOSITION
+    # ``status`` already establishes this; an explicit observation may still
+    # WITHDRAW the disposition, never grant it.
+    if produced_pwml:
+        return NO_DISPOSITION
+
+    core = _as_measured_int(connected_core_reactions)
+    required = _as_measured_int(required_connected_reactions)
+    if core is None or required is None or required < 1:
+        return NO_DISPOSITION
+    if core < required or core < int(min_connected_core_reactions):
+        return NO_DISPOSITION
+    return DISPOSITION_EXTRACTED_NOT_SERIALIZED
+
+
 def semantic_verdict(
     report: Any,
 ) -> Tuple[str, str, Tuple[str, ...], Tuple[Tuple[str, bool, str], ...]]:
@@ -683,6 +888,7 @@ def classify_release_status(
     min_connected_core_reactions: int = MIN_CONNECTED_CORE_REACTIONS,
     single_reaction_scope_requested: bool = False,
     prefreeze_review_required: Any = None,
+    required_connected_reactions: Optional[int] = None,
 ) -> ReleaseStatus:
     """Classify one run from its coverage verdict and its technical outcome.
 
@@ -769,6 +975,19 @@ def classify_release_status(
     RECORDED AND NEVER READ here -- it changes no status, no cap and no
     eligibility, because a carrier that could move a verdict would be a second
     gate wearing a record's name.
+
+    Finally the D-065 DISPOSITION (C-088 arm, F-107), which is not a sixth cap and
+    not any kind of rule about the status. Every branch above has already settled
+    ``status``, and it is returned unchanged whatever the disposition evaluates to.
+    :attr:`ReleaseStatus.disposition` records WHICH SHAPE of ``diagnostic_only`` was
+    measured -- ``extracted_not_serialized`` when a defensible connected core was
+    reached and a correct scope guard stopped the run before serialization -- and
+    :func:`release_disposition` holds the whole rule, so the runtime field and the
+    acceptance record read one ruling. It needs ``required_connected_reactions``,
+    which defaults to ``None`` (not measured, so never a disposition) and which no
+    production seam supplies today, so every existing caller's record is
+    byte-identical: ``to_dict`` writes the key only when a disposition was actually
+    established.
     """
 
     verdict = coverage_verdict(coverage)
@@ -996,6 +1215,33 @@ def classify_release_status(
             f"{REASON_PREFREEZE_REVIEW_REQUIRED}:{','.join(prefreeze_reasons)}"
         )
 
+    # THE D-065 DISPOSITION (C-088 arm, F-107). NOT a cap, not a gate and not a
+    # sixth rule: every branch above has already run and the status it produced is
+    # returned UNCHANGED below, whatever this evaluates to. What it adds is the
+    # explicit field D-065's reading 3 asks for, beside a runtime refusal that is
+    # PRESERVED rather than replaced -- the run still stopped before serialization,
+    # ``strict_gates_passed`` is still whatever was measured, ``produced_pwml`` is
+    # still ``False``, and ``strict_acceptance_eligible`` below still reads
+    # ``status == RELEASE_READY``, which this can never reach.
+    #
+    # ``required_connected_reactions`` defaults to ``None`` -- not measured, so never
+    # a disposition -- and it is the ONLY new input, so every existing caller gets
+    # ``NO_DISPOSITION`` and, because ``to_dict`` writes the key only when it is set,
+    # a byte-identical record. That is deliberate: the case floor it wants is the
+    # GOLD SET's ``min_connected_reactions``, which is a benchmark fact no production
+    # seam holds, so the caller that supplies it today is the acceptance scorer.
+    disposition = release_disposition(
+        {
+            "status": status,
+            "pipeline_executed": bool(pipeline_executed),
+            "strict_gates_passed": bool(strict_gates_passed),
+            "reasons": list(reasons),
+        },
+        connected_core_reactions=connected_core_reactions,
+        required_connected_reactions=required_connected_reactions,
+        min_connected_core_reactions=min_connected_core_reactions,
+    )
+
     return ReleaseStatus(
         status=status,
         pipeline_executed=bool(pipeline_executed),
@@ -1019,6 +1265,7 @@ def classify_release_status(
         expansion_blocked_reason=str(expansion_blocked_reason or ""),
         coverage_evaluated=verdict is not None,
         reasons=tuple(dict.fromkeys(reasons)),
+        disposition=disposition,
     )
 
 
@@ -1042,6 +1289,13 @@ def describe(status: Any) -> str:
 
     Accepts a :class:`ReleaseStatus`, its ``to_dict``, a bare state string or
     ``None``: report code renders rows written by older runs and must never raise.
+
+    A recorded DISPOSITION is appended (C-088 / D-065). A renderer that silently
+    dropped a field the record carries would put the reader back in exactly the
+    position D-065 removes -- reading ``diagnostic_only`` and supplying the contract
+    gloss that is untrue of this run. NOTHING CURRENTLY RENDERED MOVES: the key is
+    absent unless a disposition was established, so a record without one produces the
+    byte-identical line it always did, and no production seam sets one today.
     """
 
     if status is None:
@@ -1057,10 +1311,12 @@ def describe(status: Any) -> str:
     semantic = str(data.get("semantic_evaluation") or SEMANTIC_NOT_EVALUATED)
     gates = "passed" if data.get("strict_gates_passed") else "failed"
     ran = "ran" if data.get("pipeline_executed") else "did not run"
-    return (
+    line = (
         f"{state}  [pipeline {ran}; strict gates {gates}; semantic evaluation "
         f"{SEMANTIC_LABELS.get(semantic, semantic)}]"
     )
+    disposition = str(data.get("disposition") or "").strip()
+    return f"{line}  disposition: {disposition}" if disposition else line
 
 
 def cap_release_for_prefreeze_declination(
@@ -1139,7 +1395,10 @@ __all__ = [
     "MIN_CONNECTED_CORE_REACTIONS", "REASON_CONNECTED_CORE_BELOW_FLOOR",
     "REASON_REQUESTED_PATHWAY_NOT_STATED",
     "PREFREEZE_RESOLUTION_STAGE", "REASON_PREFREEZE_REVIEW_REQUIRED",
+    "DISPOSITION_EXTRACTED_NOT_SERIALIZED", "NO_DISPOSITION",
+    "RELEASE_DISPOSITIONS", "SCOPE_GUARD_STOP_REASON",
     "CoverageVerdict", "ReleaseStatus",
     "coverage_verdict", "classify_release_status", "semantic_verdict", "describe",
     "prefreeze_review_reasons", "cap_release_for_prefreeze_declination",
+    "release_disposition",
 ]

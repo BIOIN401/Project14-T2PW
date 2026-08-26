@@ -1,0 +1,162 @@
+{
+  "label": "affected-tip2",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-088/09-affected-tip2.pin.json",
+    "-q",
+    "--tb=no",
+    "-rf",
+    "--basetemp=C:/t/tmp/c088/t09",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c072_incomplete_core_demotion.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_deadline_leg_timeout.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py"
+  ],
+  "cwd": "C:\\t\\c088",
+  "started_at": "2026-08-25T23:48:56+00:00",
+  "finished_at": "2026-08-25T23:49:32+00:00",
+  "duration_seconds": 35.958337400000346,
+  "timeout_seconds": 2400.0,
+  "root_pid": 88836,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 88848,
+      "name": "python.exe",
+      "ppid": 88836
+    },
+    {
+      "pid": 84224,
+      "name": "python.exe",
+      "ppid": 88228
+    },
+    {
+      "pid": 88228,
+      "name": "python.exe",
+      "ppid": 88848
+    },
+    {
+      "pid": 88408,
+      "name": "python.exe",
+      "ppid": 89080
+    },
+    {
+      "pid": 89080,
+      "name": "python.exe",
+      "ppid": 88848
+    },
+    {
+      "pid": 88628,
+      "name": "python.exe",
+      "ppid": 88664
+    },
+    {
+      "pid": 88664,
+      "name": "python.exe",
+      "ppid": 88848
+    },
+    {
+      "pid": 87844,
+      "name": "python.exe",
+      "ppid": 88848
+    },
+    {
+      "pid": 89060,
+      "name": "python.exe",
+      "ppid": 87844
+    }
+  ],
+  "descendants_terminated": [
+    84224,
+    87844,
+    88228,
+    88408,
+    88628,
+    88664,
+    88848,
+    89060,
+    89080
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 88584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 88596,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/pwml_recovery_sprint/evidence/g11/C-088/09-affected-tip2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c088\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c088",
+    "repo_head": "de352d5744dd916c4a772b377197dcc0042f1cfc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-088",
+    "token": "C-088:88596:f82c38f9b12d7a9c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

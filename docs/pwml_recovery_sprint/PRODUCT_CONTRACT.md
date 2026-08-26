@@ -118,6 +118,29 @@ Recovery and retrieval could not establish a defensible pathway core. All diagno
 artifacts, partial structured data, evidence, failure reasons and checkpoints are
 preserved.
 
+**Disposition (D-065, LOCKED).** `diagnostic_only` covers more than one shape of outcome,
+and the gloss above is not true of all of them. Where a defensible connected pathway core
+**was** extracted and a correct scope guard stopped the run before audit, DB mapping, freeze
+and PWML serialization, the disposition `extracted_not_serialized` names that shape.
+
+It is a **disposition, not a fourth output state.** There are still exactly three output
+states and `RELEASE_STATES` is unchanged. A leg carrying this disposition still reports
+`status = diagnostic_only`, `strict_gates_passed = false`, `produced_pwml = false` and
+`strict_acceptance_eligible = false`, and it is never a strict export. D-062 is not reopened.
+
+**Where it is recorded today, exactly.** The **acceptance record** carries it:
+`release_disposition` on the leg, together with the two numbers it was derived from -- the
+measured `connected_core_reactions` and that case's own gold floor
+`required_connected_reactions` -- plus a `release_dispositions` roll-up on the report. The
+**runtime release record** declares a `disposition` field but **no production seam populates
+it yet**: the rule needs the gold set's per-case connected-core floor, which is a benchmark
+fact no runtime seam holds. Until a chartered card threads that floor to
+`batch.driver._finalize_scope_conflict`, a runtime `diagnostic_only` record is emitted with
+**no** `disposition` key, and this paragraph -- not the record -- is where a reader of a
+runtime manifest row learns that the gloss above may not apply to it.
+
+Absence of the key means **not recorded**. It never means "does not apply".
+
 A no-PWML outcome is **exceptional** and must state exactly: what essential biological
 requirement could not be supported; which repair and retrieval steps were attempted;
 which evidence was searched; why a smaller valid core could not be exported; why
