@@ -1,0 +1,156 @@
+{
+  "label": "rev089-affected-c089-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c089",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/g11/pin/REV-089/affected-c089-tip.pin.json",
+    "-q",
+    "--tb=no",
+    "-rf",
+    "--basetemp=C:/t/rev089/bt/aff_c089_tip",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_rag_multi_relation_spans.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py"
+  ],
+  "cwd": "C:/t/c089",
+  "started_at": "2026-08-25T23:32:31+00:00",
+  "finished_at": "2026-08-25T23:32:55+00:00",
+  "duration_seconds": 24.702456699999857,
+  "timeout_seconds": 1800.0,
+  "root_pid": 72360,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 75476,
+      "name": "python.exe",
+      "ppid": 72360
+    },
+    {
+      "pid": 71556,
+      "name": "python.exe",
+      "ppid": 74032
+    },
+    {
+      "pid": 74032,
+      "name": "python.exe",
+      "ppid": 75476
+    },
+    {
+      "pid": 72700,
+      "name": "python.exe",
+      "ppid": 75476
+    },
+    {
+      "pid": 73820,
+      "name": "python.exe",
+      "ppid": 72700
+    },
+    {
+      "pid": 65548,
+      "name": "python.exe",
+      "ppid": 75476
+    },
+    {
+      "pid": 73140,
+      "name": "python.exe",
+      "ppid": 65548
+    },
+    {
+      "pid": 75036,
+      "name": "git.exe",
+      "ppid": 75476
+    },
+    {
+      "pid": 75136,
+      "name": "git.exe",
+      "ppid": 75476
+    }
+  ],
+  "descendants_terminated": [
+    65548,
+    71556,
+    72700,
+    73140,
+    73820,
+    74032,
+    75036,
+    75136,
+    75476
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 54064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74352,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-089\\18-affected-c089-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "861ec1c82522574f8a3f5c421c8077e2a755817a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-089",
+    "token": "REV-089:54064:d7ff572e1f812528",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

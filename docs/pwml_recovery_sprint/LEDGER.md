@@ -5033,3 +5033,146 @@ tests by making them pass against an ambient DB.
   manifest field and **removing it later is itself a baseline move**. Register the honest fix now, so
   a second card does not have to re-baseline the golden to delete this key. It needs `_drive`'s five
   call sites.
+
+---
+
+## C-089 and C-090 — MERGED. REV-089 APPROVED all three items it was given.
+
+| item | merge | closes | verdict |
+|---|---|---|---|
+| **C-089** | `3f848b4` | **F-119** + **F-125** | APPROVE |
+| **C-090** | `ef3a0d4` | **F-117** | APPROVE |
+| **the c056b repair** (mine) | `0820f5c`, corrected in `51b3bb4` | — | APPROVE, **with one correction** |
+
+SMOKE **473** after both merges, 0 curator calls, `FINAL SURVIVING COUNT : 0`. Gate 10 discharged
+for all six cards merged this wave.
+
+### The correction to my own work — my anti-vacuity assertions were vacuous
+
+I added two assertions to the c056b repair and presented them in the commit message as the D-065
+guard. **They were not.** Both trap papers had **no legs** in that fixture, so `acceptance.py:977`
+excluded them via `strict_leg is None` whatever their `expected_export` said — they would have
+passed before D-065 as well as after.
+
+REV-089 proved it rather than arguing it: it ran **my repaired file at `91b5c50`**, where both
+papers are still `strict_exportable`, and got **9 passed**.
+
+**That is the same failure mode I wrote the assertions to prevent, one level up.** An assertion that
+reads as coverage and provides none is worse than none, because it stops anyone looking again.
+
+Replaced in `51b3bb4` with a test that discriminates: both trap papers get **attempted, eligible,
+deliverable** strict legs byte-identical to the control's, so the only thing that can exclude them is
+`acceptance.py:969`'s `expected_export` check — which runs **before** the leg check at `:977`. It
+carries its own control so a rule that excluded everything would not satisfy it.
+
+```
+91b5c50 (pre-D-065 gold)   1 failed, 9 passed   <- assert _STRICT_A not in population
+116c8fa (post-D-065)       10 passed
+```
+
+Red before, green after, **on the gold edit alone**. That is the behavioural lock I claimed to have
+written the first time.
+
+The **equality** assertion REV-089 examined separately is kept, and its reasoning for keeping it is
+better than mine for writing it: a future gold edit that *adds* a third `strict_exportable` case does
+**not** break it, because that paper has no leg in the fixture. It breaks only if one of these two
+fixture papers leaves `strict_exportable` — the premise the fixture depends on, and precisely the red
+worth having.
+
+It also endorsed the sequencing call: folding this into C-088 would have left the integration branch
+knowingly red across two more merges, handed a card a repair whose cause sat outside its boundary,
+and let the next lanes keep reporting it as pre-existing — which had already happened twice.
+
+### What REV-089 measured that neither card did
+
+**C-089's gate-6 exposure.** `_names` feeds `_connected_core`, so widening it could have *inflated*
+connectivity and let payloads clear `min_connected_reactions`. Census over 92 artifacts, base vs tip:
+
+```
+CONNECTED-CORE MOVES : 0        priority 1 : 18 -> 18, refusals identical row-for-row
+DECLARED/BUCKET MOVES: 0        priority 3 : 3 -> 6, exactly the three F-125 names, none lost
+ORPHAN MOVES         : 2        bench_acceptance over T-106 : TOTAL DIFFS: 0
+```
+
+**C-090's anti-widening, from its own census** rather than the card's test: 34 legs across 5 run
+directories. On T-106, base 9 findings → tip 7, **ADDED 0**. All three `enterobactin synthase`
+findings — the F-116 four-component superset — keep firing. A = 2, B = 3, C = 4 exactly as chartered.
+
+**C-090 resisted a real temptation.** D-064 says in terms that *"`EntE` and `enterobactin synthase`
+are the same protein identity"*; read literally that would license rescuing the class-B superset.
+The card declined on the ground that a four-component wrapper is not its component, and wrote the
+reasoning into a docstring rather than acting on it.
+
+---
+
+## F-130 — C-090's blast radius outside T-106: two entities move, not one, and a semantic verdict flips
+
+- **Severity MEDIUM** · **Class: not a defect — a correctly-applied rule on an unenumerated corpus**
+- **Registered 2026-08-26** by REV-089, correcting C-090's own under-report.
+
+C-090 flagged **one** class-A-shaped finding it had not re-scored on
+`runs_verify/2026-08-25_1216/PMC12444477/strict`. There are **two**, across four pointers:
+
+| entity | complex | sole component | the row's own cited span |
+|---|---|---|---|
+| `tetraacyldisaccharide 4'-kinase` | 1621 | `LpxK` / P27300 | *"phosphorylated by **LpxK** to produce lipid IV_A"* |
+| `phospholipase A1` | 1185 | `PldA` / P0A921 | *"**PldA** activity has been shown to stabilize LpxC…"* |
+
+Both are genuine class-A shapes by the charter's definition — one component, symbol verbatim on
+whole-token boundaries in the row's own span — and both identities are biologically correct: LpxK
+**is** tetraacyldisaccharide 4′-kinase, and *E. coli* PldA **is** the outer-membrane phospholipase A.
+
+**The consequence C-090 did not measure:** on that leg `semantic_evaluation` flips **`failed` →
+`passed`** and `failed_checks` goes `['actor_named_in_its_own_cited_span'] → []`.
+
+**But the leg does not move.** A different, already-live blocker takes over:
+
+```
+base   review_required  strict_eligible False  ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+tip    review_required  strict_eligible False  ['requested_core_anchors_unmatched:UDP-GlcNAc,...,PldA']
+```
+
+Same status, same eligibility, different recorded reason. **No gate weakened, no PWML gained.** That
+leg is referenced once (`LEDGER.md:3824`, a validation cohort) and pinned by no test.
+
+**Recorded, not chartered.** A semantic verdict flipping on a committed leg belongs on the record
+rather than being discovered during a future comparison.
+
+**A neighbouring gap this exposes, and it is NOT C-090's:** the rescued `phospholipase A1` span is
+*regulatory* (*"PldA stabilizes LpxC"*), not catalytic. The actor check only asks whether the span
+names the actor, so removing the finding is correct **for that check** — but the finding was doing
+accidental double duty for `CHECK_SUPPORTED_REACTIONS`, which has no such guard of its own.
+
+---
+
+## F-131 — `ref` / `id` now reach `bench.semantic._names` for the first time
+
+- **Severity LOW** · **Registered 2026-08-26** by REV-089.
+
+C-089's charter scoped the legacy `ref`/`id` tail to `identity_admission`. Because both readers
+consume the single `PARTICIPANT_NAME_KEYS`, `bench.semantic._names` now treats `id` as an
+entity-name key, which it never did.
+
+**Corpus impact measured 0** — connected core identical on 92/92, orphan delta exactly the three
+F-125 names — and the direction is stricter. But it is a widening the charter did not authorise, and
+it is recorded rather than inherited by proximity.
+
+---
+
+## `test_c074_strict_core_floor.py` is RED ON THE INTEGRATION BRANCH, right now
+
+REV-089 flagged it and I confirmed it at `ef3a0d4`: **2 failed, 22 passed.**
+
+```
+AssertionError: the corpus is not the measured 38 legs: 60
+AssertionError: … Left contains one more item: '2026-08-24_1203/PMC13231680/strict'
+```
+
+C-074 pinned a census of **38** committed legs carrying a release record; the checkout now has
+**60**, because further `runs_verify/` directories were committed afterwards. Pure F-112
+stale-corpus-pin staleness — no behavioural regression, and correctly reported as pre-existing by
+four separate lanes this wave.
+
+**But it is live and unrepaired, and it is not in SMOKE — the same blind spot that hid my c056b
+regression.** Four lanes have now each spent a paragraph re-classifying it. **Chartered as C-092**
+so the fifth does not.
