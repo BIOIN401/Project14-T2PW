@@ -122,17 +122,50 @@ def test_the_killed_child_row_keeps_every_field_the_aggregators_rank_on() -> Non
     assert row["slug"] == "PMC1__a" and row["paper_id"] == "PMC1"
 
 
-def test_a_driver_timeout_keeps_its_row_byte_identical() -> None:
-    """Preservation: the classification is an attribute, never a manifest field.
+def test_a_driver_timeout_row_carries_the_classification_and_nothing_else() -> None:
+    """**RE-BASELINED by C-083 under merge rule 4.** Was
+    ``test_a_driver_timeout_keeps_its_row_byte_identical``.
 
-    The golden driver diff hashes ``RunOutcome.to_dict()``; a new key here would
-    move the pinned ``input_timeout`` leg.
+    **What this test used to pin, and why that was interim.** It asserted
+    ``"termination_reason" not in row``, on the reasoning in its own docstring:
+    "the classification is an attribute, never a manifest field", because "the
+    golden driver diff hashes ``RunOutcome.to_dict()``; a new key here would move
+    the pinned ``input_timeout`` leg". Both halves were accurate statements of
+    C-032's ownership boundary -- ``_finalize_timeout``'s docstring recorded the
+    same limit -- and neither was a product decision. F-092 defect 3 measured the
+    consequence: the verdict was computed and then dropped by the serializer, so
+    both INNER timeout rows on disk (``runs_verify/2026-08-21_1822`` research,
+    ``runs_verify/2026-08-22_2147`` strict) reached the manifest with
+    ``failure_kind="timeout"`` and no stop reason, against ``PRODUCT_CONTRACT.md``
+    section 9. D-004 gave the row an owner and C-083 is that card.
+
+    **The obligation is not deleted, it is inverted and tightened.** The old
+    assertion could only catch a key being added. This one catches a key being
+    added *that was not intended*, a key being dropped to stabilise a digest, and
+    the intended keys going missing -- as a set difference against a fresh
+    ``RunOutcome``, so it cannot rot into prose.
+
+    **The exact golden delta this authorizes**, in
+    ``tests/test_batch_driver_seam_golden.py``: slot 2 of ``input_timeout`` alone.
+    Slots 0 and 1 do not move on any leg, and the other six legs never time out, so
+    their digests do not move either. Captures are committed beside the golden.
     """
 
+    before = driver.RunOutcome(paper_id="PMC1", mode="strict").to_dict()
     row = _timed_out("app.run() timed out after 45s").to_dict()
+
+    # Unmoved: everything the aggregators rank on.
     assert row["status"] == "timeout" and row["failure_kind"] == "timeout"
     assert row["message"] == "did not finish"
-    assert "termination_reason" not in row and "release_status" not in row
+    assert "release_status" not in row
+
+    # Moved, deliberately and by exactly this much.
+    assert row["termination_reason"] == OPERATION_TIMEOUT
+    assert row["operational_failure"] is True
+    assert sorted(set(row) - set(before)) == [
+        "budget_unrecorded", "operational_failure", "termination_reason",
+    ], f"an unintended key reached the timeout row: {sorted(set(row) - set(before))}"
+    assert set(before) - set(row) == set(), "no key was dropped to stabilise a digest"
 
 
 def test_the_drivers_own_budget_signal_still_carries_the_marker() -> None:

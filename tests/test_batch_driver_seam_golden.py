@@ -235,8 +235,41 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 #:   committed boundary records in
 #:   ``tests/test_c056d_gate_failure_semantic_carry.py``, which is red on the base
 #:   SHA with ``assert 'not_evaluated' == 'failed'``.
+#:
+#: **RE-BASELINED AGAIN by C-083 under merge rule 4** (F-092 defect 3). The card
+#: this docstring's own ``input_timeout`` warning anticipated: C-032 classified the
+#: INNER timeout and could not put the answer in the row, and
+#: ``tests/test_deadline_leg_timeout.py`` pinned that absence *because* a new key
+#: would move this leg. ``RunOutcome.to_dict`` now emits the classification, so the
+#: leg moves -- deliberately, and by exactly this much. Derived, not asserted: base
+#: capture ``evidence/c083_golden_base.json`` (taken in a real git worktree at the
+#: base SHA ``116c8fa``, with ``.env`` copied in as an F-051 control on BOTH sides,
+#: same interpreter, same capture script ``evidence/c083_golden_capture.py``), tip
+#: capture ``c083_golden_tip.json``, slot-by-slot difference
+#: ``c083_golden_delta.json``. **The base capture reproduced all seven tuples above
+#: BYTE-IDENTICALLY before the tip was taken**, which is what makes the move
+#: attributable. The exact delta:
+#:
+#: * **slot 0** (``status|stage|failure_kind``) moves on **0 of 7** legs. The leg
+#:   still exits ``timeout|input|timeout``: nothing about the classification of the
+#:   run changed, only what the row writes down.
+#: * **slot 1** (``message``) moves on **0 of 7** legs.
+#: * **slot 2** (digest) moves on **exactly 1 of 7** -- ``input_timeout``
+#:   (``382cc778…`` -> ``b55b5024…``). It is the ONLY fixture that reaches
+#:   ``_finalize_timeout``, so the only one whose row can carry a termination
+#:   reason at all; the three new keys are conditional on ``termination_reason``
+#:   being set and no other leg sets it. The other six are byte-identical --
+#:   measured, not assumed.
+#: * on the moving leg: **three keys added -- ``termination_reason``
+#:   (``"operation_timeout"``), ``operational_failure`` (``True``) and
+#:   ``budget_unrecorded`` -- zero keys dropped, and zero value changes on any
+#:   shared key.** ``fields_added``/``fields_dropped`` and the capture's own
+#:   GROWTH-ONLY guard agree: no digest was stabilised by dropping a field.
+#: * ``operation_timeout`` is not a new verdict invented here. It is the verdict
+#:   ``classify_interaction_timeout`` returned on this fixture on the BASE SHA too;
+#:   the base row simply did not print it, which is F-092 defect 3 in one line.
 GOLDEN: dict = {
-    "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "382cc778b455d0c776c58455b2db22d6eba86740350b63edec2039350721efe5"),
+    "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "b55b50244bef004c31861cc2a72a2799964dc5256badf1cf58cb983983d9b9c3"),
     "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
     "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205"),
     "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),

@@ -1,0 +1,149 @@
+T2PW: C:\t\c083base\src\t2pw\__init__.py
+...FFFF.                                                                 [100%]
+================================== FAILURES ===================================
+_ test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy] _
+
+population = 'all_legacy', reachable = False
+
+    @pytest.mark.parametrize("population", sorted(CARRIER_POPULATIONS))
+    @pytest.mark.parametrize("reachable", [True, False])
+    def test_db_reachability_reaches_the_exporter_in_both_directions(
+        population: str, reachable: bool
+    ) -> None:
+        """A3. The exporter's report equals the pre-freeze stage's own verdict.
+    
+        Fails at base in **both** directions: ``db_resolution`` carries no
+        ``available`` key at all, so the report cannot state either answer.
+        """
+    
+        payload = _shell_payload(CARRIER_POPULATIONS[population])
+        resolver = _CannedDb() if reachable else None
+        prefreeze = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+        prefreeze_available = (
+            prefreeze["compounds"]["resolution_report"]["db_resolution"]["available"]
+        )
+>       assert prefreeze_available is reachable, prefreeze
+E       AssertionError: {'canonicalizers': ['compounds', 'species'], 'compounds': {'aliases_preserved': [], 'applied': True, 'identity_project...78}, {'field': 'pathwhiz_id', 'row': 1, 'value': 91}], 'references_updated': [], ...}, 'failures': {}, 'ok': True, ...}
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:380: AssertionError
+__ test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed] __
+
+population = 'mixed', reachable = False
+
+    @pytest.mark.parametrize("population", sorted(CARRIER_POPULATIONS))
+    @pytest.mark.parametrize("reachable", [True, False])
+    def test_db_reachability_reaches_the_exporter_in_both_directions(
+        population: str, reachable: bool
+    ) -> None:
+        """A3. The exporter's report equals the pre-freeze stage's own verdict.
+    
+        Fails at base in **both** directions: ``db_resolution`` carries no
+        ``available`` key at all, so the report cannot state either answer.
+        """
+    
+        payload = _shell_payload(CARRIER_POPULATIONS[population])
+        resolver = _CannedDb() if reachable else None
+        prefreeze = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+        prefreeze_available = (
+            prefreeze["compounds"]["resolution_report"]["db_resolution"]["available"]
+        )
+>       assert prefreeze_available is reachable, prefreeze
+E       AssertionError: {'canonicalizers': ['compounds', 'species'], 'compounds': {'aliases_preserved': [{'name': 'Glycine', 'synonym': 'gly'}...d': [{'field': 'pathwhiz_id', 'row': 0, 'value': 91}], 'references_updated': [], ...}, 'failures': {}, 'ok': True, ...}
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:380: AssertionError
+___ test_an_all_legacy_population_proves_the_value_is_carried_not_inferred ____
+
+    def test_an_all_legacy_population_proves_the_value_is_carried_not_inferred() -> None:
+        """The discriminating test C-051 identified, turned into a guard.
+    
+        Every row carries a ``pathbank_compound_id``, so the resolver is never
+        consulted and the two legs' rows are **byte-identical** -- yet the exporter
+        must still report the two different answers. Only a carried value can do
+        that; anything derived from the rows is a guess.
+        """
+    
+        blobs: Dict[bool, str] = {}
+        reported: Dict[bool, Any] = {}
+        for reachable in (True, False):
+            payload = _shell_payload(CARRIER_POPULATIONS["all_legacy"])
+            run_prefreeze_resolution(
+                payload, strict_db=False, db_resolver=_CannedDb() if reachable else None
+            )
+            blobs[reachable] = json.dumps(
+                payload["entities"]["compounds"], sort_keys=True, default=str
+            )
+            _ir, ir_report = build_pwml_ir(payload, strict_db=False)
+            reported[reachable] = ir_report["db_resolution"]["available"]
+    
+        assert hashlib.sha256(blobs[True].encode()).hexdigest() == hashlib.sha256(
+            blobs[False].encode()
+        ).hexdigest(), "the population is no longer indistinguishable; this test is vacuous"
+        assert reported[True] is True
+>       assert reported[False] is False
+E       assert True is False
+
+tests\test_prefreeze_third_export_seam.py:420: AssertionError
+___ test_the_same_row_still_warns_and_names_the_real_reason[not_configured] ___
+
+resolver = None, reason = 'db_not_configured'
+
+    @pytest.mark.parametrize(
+        ("resolver", "reason"), [(None, "db_not_configured"), (_DownDb(), "harvest_db_down")],
+        ids=["not_configured", "configured_but_down"])
+    def test_the_same_row_still_warns_and_names_the_real_reason(resolver: Any, reason: str) -> None:
+        """The other direction, so the fix is not "never warn again".
+    
+        ``configured_but_down`` is the second half of A4: carrying ``available``
+        alone leaves the preflight defaulting the reason to ``db_not_configured``,
+        a *different* false statement in the same product-visible sentence -- the
+        DB was configured, and it was down. Both legs must name what happened.
+        """
+    
+        payload = _shell_payload([{"name": "norbelladine", "hmdb_id": "HMDB9999999"}])
+        run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
+>       assert payload[PREFREEZE_DB_RESOLUTION_FIELD] == {
+            "available": False, "reason": reason}
+E       AssertionError: assert {'available': True} == {'available':...t_configured'}
+E         
+E         Differing items:
+E         {'available': True} != {'available': False}
+E         Right contains 1 more item:
+E         {'reason': 'db_not_configured'}
+E         Use -v to get more diff
+
+tests\test_prefreeze_third_export_seam.py:463: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-all_legacy]
+FAILED tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions[False-mixed]
+FAILED tests/test_prefreeze_third_export_seam.py::test_an_all_legacy_population_proves_the_value_is_carried_not_inferred
+FAILED tests/test_prefreeze_third_export_seam.py::test_the_same_row_still_warns_and_names_the_real_reason[not_configured]
+4 failed, 4 passed in 69.36s (0:01:09)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1009c234380186558881d58ab616c237ae97e222  [git, worktree dirty=False]
+label                   : c083-aff-c3-base
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/c083base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/c083base --pin-verdict C:/t/c083/docs/pwml_recovery_sprint/evidence/c083_aff_c3_base_pin.json tests/test_c082_post_pipeline_seam.py::test_an_ambiguous_species_rename_does_not_end_the_post_pipeline_leg tests/test_prefreeze_third_export_seam.py::test_db_reachability_reaches_the_exporter_in_both_directions tests/test_prefreeze_third_export_seam.py::test_an_all_legacy_population_proves_the_value_is_carried_not_inferred tests/test_prefreeze_third_export_seam.py::test_the_same_row_still_warns_and_names_the_real_reason --basetemp=C:/t/c083tmp/bt/j22 -q
+cwd                     : C:/t/c083base
+root PID / process group: 78932 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 70.52 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  80000:python.exe
+descendants terminated  : 1  80000
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/22-c083-aff-c3-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

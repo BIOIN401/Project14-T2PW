@@ -1,0 +1,51 @@
+........................................................................ [ 46%]
+...................................Fs....sss............................ [ 93%]
+..........                                                               [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 149 passed, 4 skipped in 16.97s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1009c234380186558881d58ab616c237ae97e222  [git, worktree dirty=False]
+label                   : c083-aff-c2
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_batch_report.py tests/test_batch_run.py tests/test_batch_preflight.py tests/test_batch_pwml_artifact_naming.py tests/test_batch_research_gate_fail_open.py --basetemp=C:/t/c083tmp/bt/j18 -q
+cwd                     : C:\t\c083
+root PID / process group: 76688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 17.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 33  76640:python.exe, 74044:python.exe, 75900:python.exe, 76544:python.exe, 76608:python.exe, 76724:python.exe, 76744:python.exe, 75500:python.exe, 74392:python.exe, 73704:python.exe, 75948:python.exe, 75092:python.exe, 76616:python.exe, 76584:python.exe, 76784:python.exe, 75192:python.exe, 76512:python.exe, 75704:python.exe, 76300:python.exe, 76248:python.exe, 76132:python.exe, 71324:python.exe, 75608:python.exe, 75744:python.exe, 76032:python.exe, 73700:python.exe, 76628:python.exe, 76440:python.exe, 76600:python.exe, 59464:python.exe, 70476:python.exe, 74424:python.exe, 76664:python.exe
+descendants terminated  : 33  59464, 70476, 71324, 73700, 73704, 74044, 74392, 74424, 75092, 75192, 75500, 75608, 75704, 75744, 75900, 75948, 76032, 76132, 76248, 76300, 76440, 76512, 76544, 76584, 76600, 76608, 76616, 76628, 76640, 76664, 76724, 76744, 76784
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/18-c083-aff-c2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

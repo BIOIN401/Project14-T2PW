@@ -1,0 +1,30 @@
+........................................................................ [ 60%]
+................................................                         [100%]
+120 passed in 32.88s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c083\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1009c234380186558881d58ab616c237ae97e222  [git, worktree dirty=False]
+label                   : c083-aff-c1
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest tests/test_batch_driver.py tests/test_batch_driver_quarantine_artifacts.py tests/test_batch_driver_seam_golden.py tests/test_c083_inner_timeout_row.py tests/test_deadline_leg_timeout.py tests/test_deadline_budget.py tests/test_failure_detail.py --basetemp=C:/t/c083tmp/bt/j17 -q
+cwd                     : C:\t\c083
+root PID / process group: 73872 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 34.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  73928:python.exe
+descendants terminated  : 1  73928
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/17-c083-aff-c1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-083  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

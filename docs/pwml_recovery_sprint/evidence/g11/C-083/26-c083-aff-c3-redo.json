@@ -1,0 +1,94 @@
+{
+  "label": "c083-aff-c3-redo",
+  "command": [
+    "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_release_status_classification.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "--basetemp=C:/t/c083tmp/bt/j26",
+    "-q"
+  ],
+  "cwd": "C:\\t\\c083",
+  "started_at": "2026-08-25T23:53:32+00:00",
+  "finished_at": "2026-08-25T23:53:58+00:00",
+  "duration_seconds": 26.042864699999882,
+  "timeout_seconds": 480.0,
+  "root_pid": 93600,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 88556,
+      "name": "python.exe",
+      "ppid": 93600
+    }
+  ],
+  "descendants_terminated": [
+    88556
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 86704,
+      "name": "python.exe"
+    },
+    {
+      "pid": 91560,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c083/docs/pwml_recovery_sprint/evidence/g11/C-083/26-c083-aff-c3-redo.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c083\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c083",
+    "repo_head": "1009c234380186558881d58ab616c237ae97e222",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "C-083",
+    "token": "C-083:86704:47e3da4e31bb3312",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -755,6 +755,36 @@ def _release_status_row(status: Any) -> Optional[Dict[str, Any]]:
     return dict(status) if isinstance(status, dict) and status else None
 
 
+#: Why an INNER (in-process) timeout row carries no ``budget`` record, stated IN
+#: the row instead of left as a hole a reader has to notice.
+#:
+#: PRODUCT_CONTRACT section 9 asks a terminal record for the elapsed and remaining
+#: budget as well as the stop reason. The OUTER path can answer: ``runner._timeout_row``
+#: is handed both ``seconds`` and the kill ``timeout``, so it publishes a full
+#: ``budget`` block. The INNER path cannot. ``_finalize_timeout`` receives the
+#: message, the detail and the codes -- never the ``_Budget`` -- and the leg ceiling
+#: it would need is ``run_one``'s ``timeout=`` argument, which no field of
+#: ``RunOutcome`` records. ``seconds`` is not a substitute: it is stamped in
+#: ``run_one`` AFTER ``_drive`` returns, and elapsed without a ceiling is not a
+#: budget.
+#:
+#: So the absence is recorded rather than filled in. Defaulting the ceiling to
+#: ``deadline.LEG_TIMEOUT_SECONDS`` would put "3600s" into rows whose leg ran with a
+#: different ``timeout=`` -- an invented number in the one field a reader would trust
+#: to be measured. Threading the ``_Budget`` down to this seam is the honest fix and
+#: it belongs to whoever owns ``_drive``'s five call sites, not to this card.
+#:
+#: The key is deliberately NOT named ``budget``: a consumer that finds ``budget`` on
+#: an OUTER row must never find a different shape under the same name here.
+INNER_BUDGET_UNRECORDED = (
+    "not recorded on the in-process timeout path: this seam is handed the timeout "
+    "detail only, never the leg budget, and the leg ceiling is run_one's timeout= "
+    "argument, which no RunOutcome field carries -- so elapsed and remaining cannot "
+    "be stated truthfully here and are not guessed. The parent's killed-child row "
+    "(batch.runner._timeout_row) carries the full budget record."
+)
+
+
 @dataclass
 class RunOutcome:
     """Everything the batch runner needs to write one paper+mode to disk.
@@ -803,6 +833,17 @@ class RunOutcome:
     #: name a function of :attr:`release_status`, so the two travel together and a
     #: reader never has to reconstruct one from the other.
     pwml_artifact: str = ""
+    #: Which D-005 clock ran out, written by :func:`_finalize_timeout` on the
+    #: INNER (in-process) timeout path. One of the seven termination reasons, or
+    #: ``""`` when this run has no timeout classification at all. Never inferred
+    #: from :attr:`status`: ``status="timeout"`` says the clock was involved,
+    #: this says WHICH clock, and F-092 defect 3 is precisely what happens when
+    #: only the first of those two facts survives to disk.
+    termination_reason: str = ""
+    #: Whether :attr:`termination_reason` is one of D-005's two OPERATIONAL
+    #: outcomes. ``False`` when there is no reason at all -- absence of a
+    #: classification is not a claim that the leg failed semantically.
+    termination_is_operational: bool = False
 
     @property
     def passed(self) -> bool:
@@ -881,6 +922,27 @@ class RunOutcome:
             row["release_status"] = release
         if self.pwml_artifact:
             row["pwml_artifact"] = self.pwml_artifact
+        # F-092 defect 3. ``_finalize_timeout`` has classified the INNER timeout
+        # correctly since C-032, and this row then threw the answer away: neither
+        # name was declared on the dataclass nor emitted here, so ``grep -ric
+        # operation_timeout`` over runs_verify/2026-08-21_2239 and
+        # runs_verify/2026-08-22_2147 returns nothing on six real timeout legs.
+        # PRODUCT_CONTRACT section 9 requires the terminal record to preserve "the
+        # exact stop reason"; a bare ``failure_kind="timeout"`` is not it.
+        #
+        # ``operational_failure`` and not ``termination_is_operational`` is the ROW
+        # key on purpose: ``runner._timeout_row`` (the OUTER path) and
+        # ``deadline.Admission.to_dict`` already publish this fact under that name,
+        # and a manifest consumer must not need two names for one fact depending on
+        # which side of the process boundary the kill came from. The ATTRIBUTE keeps
+        # the name the classifier writes.
+        #
+        # Conditional, like the four keys above, so every row that did not time out
+        # is byte-identical to what it was before this card.
+        if self.termination_reason:
+            row["termination_reason"] = self.termination_reason
+            row["operational_failure"] = bool(self.termination_is_operational)
+            row["budget_unrecorded"] = INNER_BUDGET_UNRECORDED
         return row
 
 
@@ -1848,10 +1910,27 @@ def _finalize_timeout(
     biological verdict.**
 
     ``reason`` lets a caller that already knows say so outright, which is how the
-    escalation ladder (C-042) will report a rung it could not afford. Nothing is
-    added to :meth:`RunOutcome.to_dict` -- that would edit ``RunOutcome``, outside
-    this card's boundary -- so the manifest row is byte-identical and the golden
-    driver diff stays empty.
+    escalation ladder (C-042) will report a rung it could not afford.
+
+    **C-083 / F-092 defect 3.** C-032 wrote the two answers onto ``outcome`` and
+    stopped there, recording in this docstring that adding them to
+    :meth:`RunOutcome.to_dict` "would edit ``RunOutcome``, outside this card's
+    boundary". That was an accurate statement of C-032's boundary and an interim
+    state of the record: the classification was computed correctly and then
+    dropped by the serializer, so six real timeout legs across
+    ``runs_verify/2026-08-21_2239`` and ``runs_verify/2026-08-22_2147`` reached disk
+    with ``failure_kind="timeout"`` and no trace of ``operation_timeout`` anywhere.
+    D-004 gave the row an owner; this card is the one that owns it. Both names are
+    now declared on :class:`RunOutcome` and emitted CONDITIONALLY by
+    :meth:`RunOutcome.to_dict` (as ``termination_reason`` /
+    ``operational_failure``, the OUTER path's key names), so a run that never timed
+    out still writes exactly the row it wrote before and the classification this
+    function computes now survives to the manifest.
+
+    **Nothing about the classification itself moves here.** The verdict, its
+    inputs, and the closed vocabulary are unchanged; only its persistence is
+    corrected. This function still does not know the leg budget --
+    :data:`INNER_BUDGET_UNRECORDED` says so in the row rather than inventing one.
     """
 
     from t2pw.pipeline import deadline as leg_deadline
