@@ -279,8 +279,44 @@ def test_regression_guard_the_strict_denominator_stays_affirmative_and_unmoved()
     strict_population = _denominator(report, DENOM_STRICT)
     assert strict_population == [_STRICT_EXPORTABLE_A, _STRICT_EXPORTABLE_B], (
         strict_population)
-    assert _STRICT_A not in strict_population
-    assert _STRICT_B not in strict_population
+
+
+def test_the_d065_trap_papers_are_excluded_by_expected_export_not_by_absence() -> None:
+    """D-065 (LOCKED) behavioural pin. **Red at `91b5c50`, green at `116c8fa`.**
+
+    Replaces two assertions that looked like this guard and were VACUOUS. They
+    asserted the trap papers were absent from the strict population while giving them
+    no legs -- so ``acceptance.py:977`` excluded them via ``strict_leg is None``
+    whatever their ``expected_export`` said, and they passed before D-065 as well as
+    after. REV-089 proved that by running the repaired file at ``91b5c50``.
+
+    Here both trap papers get ATTEMPTED, ELIGIBLE strict legs -- identical in every
+    respect to the control's -- so the ONLY thing that can exclude them is
+    ``acceptance.py:969``'s ``expected_export != EXPORT_STRICT``. Before D-065 both
+    were ``strict_exportable`` and this is red; after, both are ``partial_only``.
+
+    D-062 forbids a Stage-0 organism conflict from ever exporting strict, and D-065
+    reconciled the gold to match. This is the behavioural lock on that reconciliation.
+    """
+
+    eligible = _record(SEMANTIC_NOT_EVALUATED, eligible=True)
+    report = _scored({
+        _STRICT_A: {MODE_STRICT: _leg(_STRICT_A, MODE_STRICT, record=eligible)},
+        _STRICT_B: {MODE_STRICT: _leg(_STRICT_B, MODE_STRICT, record=eligible)},
+        _STRICT_EXPORTABLE_A: {
+            MODE_STRICT: _leg(_STRICT_EXPORTABLE_A, MODE_STRICT, record=eligible)},
+    })
+    population = _denominator(report, DENOM_STRICT)
+
+    # Attempted, eligible, deliverable -- and still excluded. Only expected_export
+    # can do that, which is exactly what D-065 changed.
+    assert _STRICT_A not in population, population
+    assert _STRICT_B not in population, population
+
+    # THE CONTROL that makes the two above non-vacuous: a paper that IS still
+    # strict_exportable, given a byte-identical leg, IS in the population. Without
+    # this, a rule that excluded everything would satisfy the assertions above.
+    assert _STRICT_EXPORTABLE_A in population, population
 
 
 def test_regression_guard_a_non_gating_check_still_cannot_demote() -> None:
