@@ -1,0 +1,199 @@
+{
+  "label": "c083-extra-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/c083base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c083base",
+    "--pin-verdict",
+    "C:/t/rev090tmp/c083_extra_base_pin.json",
+    "tests/test_batch_preflight.py",
+    "tests/test_streamlit_quarantine_boundary.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "-q",
+    "--basetemp=C:/t/rev090tmp/bt/s8"
+  ],
+  "cwd": "C:/t/c083base",
+  "started_at": "2026-08-26T00:11:05+00:00",
+  "finished_at": "2026-08-26T00:12:20+00:00",
+  "duration_seconds": 74.85501719999957,
+  "timeout_seconds": 500.0,
+  "root_pid": 106096,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 105936,
+      "name": "python.exe",
+      "ppid": 106096
+    },
+    {
+      "pid": 105072,
+      "name": "python.exe",
+      "ppid": 105900
+    },
+    {
+      "pid": 105900,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 105028,
+      "name": "python.exe",
+      "ppid": 106404
+    },
+    {
+      "pid": 106404,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 105508,
+      "name": "python.exe",
+      "ppid": 105632
+    },
+    {
+      "pid": 105632,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 106000,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 106056,
+      "name": "python.exe",
+      "ppid": 106000
+    },
+    {
+      "pid": 103816,
+      "name": "python.exe",
+      "ppid": 106456
+    },
+    {
+      "pid": 106456,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 103636,
+      "name": "python.exe",
+      "ppid": 104824
+    },
+    {
+      "pid": 104824,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 106208,
+      "name": "python.exe",
+      "ppid": 106492
+    },
+    {
+      "pid": 106492,
+      "name": "python.exe",
+      "ppid": 103636
+    },
+    {
+      "pid": 104596,
+      "name": "python.exe",
+      "ppid": 105224
+    },
+    {
+      "pid": 105224,
+      "name": "python.exe",
+      "ppid": 105936
+    },
+    {
+      "pid": 99004,
+      "name": "python.exe",
+      "ppid": 105308
+    },
+    {
+      "pid": 105308,
+      "name": "python.exe",
+      "ppid": 104596
+    }
+  ],
+  "descendants_terminated": [
+    99004,
+    103636,
+    103816,
+    104596,
+    104824,
+    105028,
+    105072,
+    105224,
+    105308,
+    105508,
+    105632,
+    105900,
+    105936,
+    106000,
+    106056,
+    106208,
+    106404,
+    106456,
+    106492
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 91516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 103184,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-090\\21-c083-extra-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "41e621cf6258fbee54976c5ffbda7e7f2269a682",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-090",
+    "token": "REV-090:91516:d7d0855639480407",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

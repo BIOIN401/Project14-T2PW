@@ -4908,3 +4908,128 @@ was unreachable"* is exactly the kind of explanation that is convenient and hard
   because the `finally` never runs. The lane released it **correctly**: it read `holder.json`,
   confirmed the holder named its own job (`C-083`) and that PID 68020 was dead, and only then
   cleared it. That is the protocol; clearing another holder's lock stays forbidden.
+
+---
+
+## C-083 and C-088 — MERGED. REV-090 APPROVED both; C-088's approval was conditional and the condition was met.
+
+| card | merge | closes | review | SMOKE |
+|---|---|---|---|---|
+| **C-083** | `bf3fa77` | **F-092 defect 3** | APPROVE, actual diff, 21 bounded reports | **473** together |
+| **C-088** | `d3fb884` | **D-065**'s scored half | APPROVE *conditional on the § 4 gloss* | (`30-smoke-post-c083-c088.json`, 0 curator calls) |
+
+**The condition was not waived.** REV-090's corrected `PRODUCT_CONTRACT` § 4 gloss is staged **into
+C-088's own merge commit**, so the contract and the emitted record land together — the coupling
+D-065's correction to the bundle exists to force.
+
+**The implementer's proposed gloss was rejected.** It read *"the record carries an explicit
+`disposition` field beside the status"*, which is true only of the benchmark artifact. The runtime
+record declares the field and nothing populates it, so that sentence would have stated as fact the
+exact class of untruth D-065 exists to remove.
+
+### The four-legs question, settled by an argument neither the implementer nor I made
+
+I briefed "six legs across three papers" from the bundle. The implementer measured **four** and
+excluded `PMC12312563` on `MIN_CONNECTED_CORE_REACTIONS = 2` plus gold's own rationale. I accepted
+that as a well-grounded deviation. **REV-090 showed it is not a deviation at all:**
+
+> D-065's ruling section is headed **"For `PMC12421875` and `PMC12657337`"**, and those are the only
+> two papers whose `expected_export` it moves. `PMC12312563` appears nowhere in the disposition
+> ruling.
+
+So four legs across two papers **is** the chartered population. My "six" was the **scope-conflict**
+population — a different set that I carried across without checking. The implementer reached the
+right answer by measuring against a locked constant rather than by reading D-065's headings, which
+is the stronger route precisely because the two agree.
+
+`_as_measured_int` excluding `bool` is a real catch: `isinstance(True, int)` is `True`, so a flag
+passed where a count belongs reads as `1` — exactly the value that would have wrongly placed
+`PMC12312563`.
+
+### What REV-090 measured rather than accepted
+
+**C-088's "moves no rate", end to end.** It scored the committed run at base and tip in separate
+worktrees and diffed the full report: **13 keys added** (12 leg keys plus the top-level roll-up the
+implementer did not count), **zero dropped, zero values changed.** The only residual differences are
+`payload_path` worktree prefixes — an artifact of the measurement.
+
+**C-083's golden confinement, proved better than the captures did.** Rather than re-capturing, it
+observed that the **six unchanged `GOLDEN` lines still pass at the tip** — so any other leg's
+observable moving would have reddened its own untouched pin. One entry moved: `input_timeout` slot 2,
+`382cc778…` → `b55b5024…`.
+
+**F-112 confirmed with the actual number:** C-074 pinned a census of **38** committed legs carrying a
+release record; the checkout now has **60**.
+
+REV-090 also recorded an infrastructure error of its own rather than letting it read as a finding:
+its first SMOKE showed 3 spurious `FileNotFoundError` failures from a scratchpad `--basetemp`
+exceeding MAX_PATH. Re-run short → 473.
+
+---
+
+## F-129 — an explicit `db_resolver=None` is silently replaced by the ambient live database
+
+- **Severity MEDIUM** · **Class `product_contract_violation`** (a caller cannot express "no DB")
+- **Registered 2026-08-25.** Surfaced by REV-090 while classifying C-083's residual failures;
+  **independently re-verified by the Lead Orchestrator before registration**
+  (`evidence/g11/T-107/32-f129-db-probe2.json`).
+- **Not C-083's doing** — the four failures are identical at base and tip. C-083's *classification*
+  of them was wrong, and that is what this records.
+
+### The seam
+
+`src/t2pw/pwml/compound_resolution.py:594-601`:
+
+```python
+if db_resolver is None:
+    try:
+        from t2pw.mapping.map_ids import PathBankDbResolver
+        db_resolver = PathBankDbResolver.from_env()      # <- ambient DB substituted
+    except Exception as exc:
+        db_reason = f"db_resolver_unavailable:{exc}"
+        db_resolver = None
+```
+
+**Measured in this environment:** `PathBankDbResolver.from_env()` returns a live resolver and
+`available()` is **`True`**.
+
+### Why it matters
+
+`None` is the only way a caller can say *"resolve no compounds against a database."* This seam reads
+`None` as *"I didn't specify one, go find one"* and conflates the two. A caller that deliberately
+disables DB resolution gets the ambient database instead, and nothing in the report says so.
+
+The immediate consequence is in the tests: the four
+`test_prefreeze_third_export_seam` failures expect the unreachable arm
+(`db_resolver=None` → `{"available": False, "reason": "db_not_configured"}`) and **cannot reach it
+while a real PathBank DB is up.** So those four are **green or red depending on whether a
+developer's PathBank service happens to be running** — which is why they have been drifting through
+this wave being labelled "DB reachability".
+
+**C-083's label was inverted.** *"The database was unreachable"* is exactly the kind of explanation
+that is convenient and hard to falsify; the truth is that the database was **reachable and was
+substituted**. The conclusion (pre-existing, not C-083's) stands; the reason does not.
+
+**No card is chartered.** Fixing it means distinguishing "unspecified" from "explicitly none" — a
+sentinel or a separate flag — which touches a production seam and a test contract at once. Recorded
+with the measurement so the next reader does not re-derive it, and so nobody "fixes" those four
+tests by making them pass against an ambient DB.
+
+---
+
+## Two follow-ups registered now, before they cost a re-baseline
+
+* **BL-005 — thread the connected-core floor to `batch.driver._finalize_scope_conflict`.** C-088's
+  runtime disposition is **structurally unreachable**, not merely unpopulated:
+  `bench/acceptance.py:777` is the only supplier of `required_connected_reactions`. Until this lands,
+  D-065's *"emitted and scored record must be honest"* is satisfied on the scored half only — which
+  the § 4 gloss now says out loud. REV-090's stronger suggestion, which I endorse: pin the
+  disposition **at write time** in the runtime record and have the scorer *read* it rather than
+  re-derive it, so the benchmark cannot assert a disposition about a run whose code no longer exists.
+  Note also that `ReleaseStatus.to_dict` **inserts** `disposition` after `status` rather than
+  appending, which will surprise an insertion-order digest the moment anything sets it.
+* **BL-006 — thread `_Budget` into `driver._finalize_timeout`.** C-083 recorded the budget's absence
+  honestly rather than inventing `LEG_TIMEOUT_SECONDS`, but `budget_unrecorded` is now a permanent
+  manifest field and **removing it later is itself a baseline move**. Register the honest fix now, so
+  a second card does not have to re-baseline the golden to delete this key. It needs `_drive`'s five
+  call sites.

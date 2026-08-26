@@ -1,0 +1,184 @@
+{
+  "label": "c083-extra",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/rev090tmp/bt/s7",
+    "tests/test_batch_preflight.py",
+    "tests/test_streamlit_quarantine_boundary.py",
+    "tests/test_c082_post_pipeline_seam.py"
+  ],
+  "cwd": "C:/t/c083",
+  "started_at": "2026-08-26T00:09:27+00:00",
+  "finished_at": "2026-08-26T00:10:54+00:00",
+  "duration_seconds": 87.13821740000003,
+  "timeout_seconds": 500.0,
+  "root_pid": 104900,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 105056,
+      "name": "python.exe",
+      "ppid": 104900
+    },
+    {
+      "pid": 55068,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 89268,
+      "name": "python.exe",
+      "ppid": 55068
+    },
+    {
+      "pid": 103848,
+      "name": "python.exe",
+      "ppid": 105380
+    },
+    {
+      "pid": 105380,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 82156,
+      "name": "python.exe",
+      "ppid": 103376
+    },
+    {
+      "pid": 103376,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 103692,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 104804,
+      "name": "python.exe",
+      "ppid": 103692
+    },
+    {
+      "pid": 101668,
+      "name": "python.exe",
+      "ppid": 105340
+    },
+    {
+      "pid": 105340,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 78464,
+      "name": "python.exe",
+      "ppid": 101668
+    },
+    {
+      "pid": 97632,
+      "name": "python.exe",
+      "ppid": 78464
+    },
+    {
+      "pid": 96296,
+      "name": "python.exe",
+      "ppid": 104520
+    },
+    {
+      "pid": 104520,
+      "name": "python.exe",
+      "ppid": 105056
+    },
+    {
+      "pid": 52268,
+      "name": "python.exe",
+      "ppid": 104744
+    },
+    {
+      "pid": 104744,
+      "name": "python.exe",
+      "ppid": 96296
+    }
+  ],
+  "descendants_terminated": [
+    52268,
+    55068,
+    78464,
+    82156,
+    89268,
+    96296,
+    97632,
+    101668,
+    103376,
+    103692,
+    103848,
+    104520,
+    104744,
+    104804,
+    105056,
+    105340,
+    105380
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 104016,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-090\\20-c083-extra.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "41e621cf6258fbee54976c5ffbda7e7f2269a682",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "REV-090",
+    "token": "REV-090:102048:24e3d350a2f6d3ca",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
