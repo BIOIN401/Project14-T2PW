@@ -1,0 +1,100 @@
+{
+  "label": "affected-tip-b-detail",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c090/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c090",
+    "--pin-verdict",
+    "C:/t/c090/docs/pwml_recovery_sprint/evidence/g11/pin/C-090/14-affected-tip-b-detail.pin.json",
+    "-q",
+    "--tb=line",
+    "--basetemp=C:/t/bt90/aff4",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_release_status_classification.py"
+  ],
+  "cwd": "C:\\t\\c090",
+  "started_at": "2026-08-25T22:57:46+00:00",
+  "finished_at": "2026-08-25T22:58:07+00:00",
+  "duration_seconds": 21.57796150000013,
+  "timeout_seconds": 1200.0,
+  "root_pid": 50468,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 50388,
+      "name": "python.exe",
+      "ppid": 50468
+    }
+  ],
+  "descendants_terminated": [
+    50388
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 8856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48248,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 50844,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c090\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-090\\14-affected-tip-b-detail.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c090\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c090",
+    "repo_head": "88011ac4981a9b3192338b2db502354ab866b4b6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
