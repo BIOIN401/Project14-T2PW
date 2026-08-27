@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "stage": "pre_export_strict_quarantine",
+  "converged": true,
+  "stable_after": 2,
+  "iteration_count": 2,
+  "max_iterations": 50,
+  "iterations": [
+    {
+      "iteration": 1,
+      "changed": true,
+      "removed_entities": [
+        {
+          "bucket": "compounds",
+          "name": "4,4-dimethylsterols",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        },
+        {
+          "bucket": "compounds",
+          "name": "4alpha-methylsterols",
+          "reason": "unreferenced_after_quarantine",
+          "had_external_identity": null
+        }
+      ],
+      "removed_locations": [
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "4,4-dimethylsterols",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        },
+        {
+          "bucket": "element_locations/compound_locations",
+          "name": "4alpha-methylsterols",
+          "reason": "location_entity_removed",
+          "biological_state": "__auto_state__"
+        }
+      ],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    },
+    {
+      "iteration": 2,
+      "changed": false,
+      "removed_entities": [],
+      "removed_locations": [],
+      "removed_biological_states": [],
+      "quarantined_processes": []
+    }
+  ]
+}

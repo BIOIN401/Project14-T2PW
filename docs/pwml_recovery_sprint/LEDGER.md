@@ -5699,3 +5699,140 @@ Unchanged in kind from 2026-08-25, enlarged in content. Either:
 **Merging more cards will not do it.** C-092 and C-093 were both worth merging and neither moves
 Priority 1. **Until one of the two above happens, T-107 stays NO-GO, and that remains the correct
 outcome rather than a delay.**
+
+# AFFECTED-PAPER COHORT — RESULT, scored against the ledger written before the run
+
+**Run:** `runs_verify/2026-08-27_1341` · **2026-08-27** · 2 strict legs · **2298.54 s (38.3 min)**,
+against a 38-minute estimate · G11 `ORCH-703/01`–`04`, every job `FINAL SURVIVING COUNT : 0`,
+`cleanup : success`, heavy lock acquired and released. Ran **once**. No leg repeated.
+
+**This is not a benchmark and is not scored as one.** Per the pre-run ledger, Priority 1 is
+**`not evaluated on this cohort`** — all six survivors are on research legs and this cohort is
+strict-only.
+
+| Paper | Mode | batch status | release status | eligible | seconds |
+|---|---|---|---|---|---|
+| `PMC12096016` | strict | fail (`contract`) | `review_required` | False | 1388.3 |
+| `PMC12782028` | strict | pass (technical) | `review_required` | False | 907.5 |
+
+## Priority 5 did NOT move — and that is the correct outcome
+
+**Still 0/2.** `PMC12782028/strict` passed its technical gates and wrote
+**`pathway.review_required.pwml`, not a bare `pathway.pwml`.** That is exactly right: the leg is
+`review_required` with `strict_acceptance_eligible=False`, so it must not ship a bare deliverable.
+**F-094's closure and merge rule 7 both held live on a fresh payload** — the pathway was preserved as
+`review_required` rather than dropped or shipped.
+
+The peer session predicted this leg was the draw-luck risk. It drew **0.3214**, **inside** the prior
+range 0.2222–0.6923, and stayed blocked. **No favourable-draw headline occurred.**
+
+## The two-factor decomposition (`ORCH-703/02`) — control arm reproduces on both legs
+
+| leg | control replay | FACTOR 1 (C-090 semantic) | FACTOR 2 (draw / cap) |
+|---|---|---|---|
+| `PMC12096016/strict` | **REPRODUCES** | nothing to clear — `semantic_evaluation: passed`, `failed_checks: []` | `requested_core_anchors_unmatched:ATP,phosphopantetheine,EntD,Fur`; `coverage_ratio` **0.7778**, INSIDE prior 0.7059–0.8571 |
+| `PMC12782028/strict` | **REPRODUCES** | nothing to clear — same | `requested_core_coverage_below_minimum:0.321<0.500`; **0.3214**, INSIDE prior 0.2222–0.6923 |
+
+`actor_named_in_its_own_cited_span` was **not among the failed checks on either leg**, so the
+counterfactual was correctly reported `n/a` rather than fabricated. At T-106 that check was the
+controlling blocker on `PMC12096016/strict`; it is absent now. **That is consistent with C-090 working
+and is NOT claimed as proof** — the draw also changed, and one run cannot separate those.
+
+## F-132 observed live, and it behaves exactly as predicted
+
+* `PMC12782028/strict` — **4 of 19** unmatched terms are gold-forbidden: `LIPA`, `LBR`, `SREBF1`,
+  `SREBF2`, kinds `heading_or_prose` and `regulator_as_metabolite`. **The double bind, live**: the
+  same four rows are the Priority-1 survivors on this paper's research leg and the coverage penalty
+  on its strict leg, in the same run.
+* `PMC12096016/strict` — **0** gold-forbidden terms this draw. No `MenD`, no `LDH`, no `NADH` in the
+  anchor set, where T-106 drew `NADH` and `MenD`. **F-132's exposure is itself draw-dependent**, which
+  is why the pre-run distribution mattered.
+
+## F-116: C-086 measurably improved this leg, and my own pass-criterion still FAILED
+
+The run ledger's property 1 for this leg was *"no reaction actor resolves to complex 3623"*.
+**It failed.** Measured (`ORCH-703/04-reaction-actors`, with `03-wrapper-compare`):
+
+**T-106, pre-C-086** — `rx[3]` and `rx[4]` both carry the *identical* actor `enterobactin synthase`
+→ **3623**. That is F-116 exactly: one enzyme promoted to a 4-component superset, two reactions
+collapsed onto one row.
+
+**This run, post-C-086** — `rx[3]` is `EntE complex`, `complex_id=None`; `rx[4]` is `EntF complex`
+plus a distinct `enterobactin synthase complex`. **Property 2 (distinct actors) HOLDS and is a real
+improvement over T-106.** `EntC→1143`, `EntB→1189`, `EntA→1190` all preserved — **property 3 HOLDS**,
+no collateral.
+
+**But `EntF complex` and `EntD complex` are `single_protein_pathwhiz_wrapper` rows that still carry
+`pathbank_protein_complex_id=3623` with all four superset components (EntB, EntD, EntF, EntE).**
+C-086 stopped the component-match promotion; **the same superset attachment survives on the
+wrapper-generation path.** F-116's shape is narrowed, not closed.
+
+**Reported as a partial result, not a pass.** This is the honest reading of a criterion I wrote before
+the run and which the run did not meet.
+
+---
+
+## F-133 — a generated single-protein wrapper still inherits a superset complex id
+
+**Severity MEDIUM · Class: `product_contract_violation` · Registered 2026-08-27 from the cohort.**
+
+`EntF complex` and `EntD complex` are generated wrappers (`generation_reason:
+single_protein_pathwhiz_wrapper`) each carrying `pathbank_protein_complex_id=3623` and the four
+components of the enterobactin synthase superset. A wrapper that exists to represent **one** protein
+must not carry a **four-protein** complex identity.
+
+C-086 is **not** reopened: its charter was the component-match promotion and its own tests pin that
+behaviour, which this run shows working. This is a **different code path with the same outcome**, and
+it needs its own card with `src/` ownership over the wrapper-generation seam. **A fix must preserve
+the `EntC/EntB/EntA` one-component wrappers measured intact here.**
+
+## F-134 — an Unknown-backed generated wrapper is assigned an unrelated organism
+
+**Severity HIGH · Class: `product_contract_violation` · Registered 2026-08-27 from the cohort.**
+
+On an *Escherichia coli* paper, three rows carry **`species = organism = "Arabidopsis thaliana"`**:
+`proteins:Unknown`, `protein_complexes:enterobactin synthase complex`, and
+`protein_complexes:porcine lactate dehydrogenase`. All three are `Unknown`-backed
+(`components=[{"name": "Unknown"}]`). The remaining 12 rows are correctly `Escherichia coli`.
+
+**Arabidopsis thaliana is a plant.** Nothing in this paper is a plant. The T-106 payload for the same
+leg carries **no** Arabidopsis rows, so this is newly observed rather than long-standing — though one
+run cannot establish whether it is new *behaviour* or a newly-drawn shape.
+
+Two aggravating details: `porcine lactate dehydrogenase` is a **gold-forbidden identity** on this case
+(the coupled-assay reporter), so a forbidden entity is being given an organism as well as a wrapper;
+and the Stage-3 gate simultaneously reported these complexes as *"missing species/organism"* at
+`post_normalization` while the final payload carries Arabidopsis — so the species is being attached
+**after** the gate that checks for it.
+
+**Cross-organism assignment is an acceptance-counted category.** This did not reach export only
+because Stage 3 blocked the leg for other reasons. **Needs its own card with `src/` ownership.**
+Do not fix by defaulting the species to the requested organism — that would launder an unknown into a
+confident answer, which is the F-127 failure mode in a new place.
+
+## The Stage-3 block on `PMC12096016/strict`, classified
+
+`final_pre_export_stage3_gates`, 4 blocking issues. **One of them is the pipeline behaving
+correctly:** `gate.protein_porcine_lactate_dehydrogenase_is_missing_a_uniprot_or_dr` refuses the
+gold-forbidden LDH for lacking an identifier — the pipeline did **not** forge one, which is
+Priority-1-correct. The other three are the species/organism gaps of F-134.
+
+**Not a regression attributable to a merged card.** The same Stage-3 `enterobactin synthase complex`
+gate family blocked `PMC12452463/strict` at T-106, so the failure mode pre-dates this wave; it has
+appeared on a new paper because the draw produced a bare `enterobactin synthase` enzyme here.
+
+## What was NOT observed, reported honestly
+
+**C-087 / F-123 — `AMBIGUOUS_RENAME_TARGET` did not occur.** The cohort does not contain
+`PMC12444477`, where it fired. **Not observed, and not chased.** F-123 rests on C-087's own
+behavioural proof — the byte-identical 209-byte base failure and the exhaustive 7 × 19 = 133-pair
+enumeration with one moving transition — **not on this run.**
+
+**C-089 / F-125, C-088 / D-065, C-083 / F-092** — no live observation was sought and none is claimed.
+
+## Rerun judgement
+
+**No leg is rerun.** F-133 and F-134 are measured production defects, not stochastic conditions, and
+both need cards with `src/` ownership this cohort does not have. Rerunning would re-measure a known
+result. Both cohort legs' failures are explained; neither is a repair this session may make without a
+charter and an independent review.

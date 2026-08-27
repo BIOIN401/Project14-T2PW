@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "L-serine",
+    "pyruvate",
+    "NADH",
+    "ATP",
+    "phosphopantetheine",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntC (isochorismate synthase)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "EntD (phosphopantetheinyl transferase)",
+    "MenD (competing isochorismate-utilizing enzyme)",
+    "Fur (Ferric Uptake Regulator)"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "enterobactin biosynthesis",
+    "likely_organism": "Escherichia coli",
+    "key_compounds": [
+      "chorismate",
+      "isochorismate",
+      "2,3-dihydroxybenzoic acid (2,3-DHB)",
+      "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+      "enterobactin",
+      "L-serine",
+      "pyruvate",
+      "NADH",
+      "ATP",
+      "phosphopantetheine"
+    ],
+    "key_proteins": [
+      "EntB (isochorismatase/aryl carrier protein)",
+      "EntC (isochorismate synthase)",
+      "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+      "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+      "EntF (enterobactin synthase)",
+      "EntD (phosphopantetheinyl transferase)",
+      "MenD (competing isochorismate-utilizing enzyme)",
+      "Fur (Ferric Uptake Regulator)"
+    ],
+    "likely_compartments": [
+      "cytoplasm"
+    ],
+    "main_subprocesses": [
+      "Chorismate isomerization to isochorismate (EntC)",
+      "Isochorismate hydrolysis to 2,3-diDHB and pyruvate (EntB isochorismatase)",
+      "Reduction of 2,3-diDHB to 2,3-DHB (EntA)",
+      "Adenylation of 2,3-DHB by EntE",
+      "Phosphopantetheinylation of EntB ArCP domain by EntD",
+      "Loading of 2,3-DHB onto holo-EntB and transfer to EntF",
+      "Three cycles of condensation with L-serine and cyclization to form enterobactin (EntF)"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "materials and methods",
+      "results and discussion",
+      "conclusions"
+    ],
+    "pathway_relevance_score": 0.9,
+    "document_type": "primary_research",
+    "context_type": "single_pathway",
+    "scope_status": "clear",
+    "scope_clarity_score": 1.0,
+    "selected_example": "",
+    "candidate_examples": [],
+    "excluded_examples": [],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:cd637a10d6ea5563",
+      "response_hash": "sha256:378861f302f904f3",
+      "raw_chars": 1668,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 1668,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "chorismate",
+    "isochorismate",
+    "2,3-dihydroxybenzoic acid (2,3-DHB)",
+    "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+    "enterobactin",
+    "L-serine",
+    "pyruvate",
+    "NADH",
+    "EntB (isochorismatase/aryl carrier protein)",
+    "EntC (isochorismate synthase)",
+    "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)",
+    "EntE (2,3-dihydroxybenzoyl-AMP ligase)",
+    "EntF (enterobactin synthase)",
+    "MenD (competing isochorismate-utilizing enzyme)"
+  ],
+  "unmatched_terms": [
+    "ATP",
+    "phosphopantetheine",
+    "EntD (phosphopantetheinyl transferase)",
+    "Fur (Ferric Uptake Regulator)"
+  ],
+  "coverage_ratio": 0.777778,
+  "core_accepted_processes": 9,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 9,
+  "quarantined_processes": 0,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": true,
+  "reasons": []
+}

@@ -1,0 +1,40 @@
+{
+  "run_id": "",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 4100,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        4,
+        0,
+        0,
+        -3,
+        3
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 0,
+      "warning_count": 8,
+      "patch_count": 3,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 0,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Three reactions lacked a biological_state field required for SBML compartment mapping. Assigned them to the default '__auto_state__' (cell) compartment as no specific location evidence was provided. No other structural or type errors found;… (+71 chars elided)",
+      "top_errors": [],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 10,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": false,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}
