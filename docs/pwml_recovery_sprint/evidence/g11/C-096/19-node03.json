@@ -1,0 +1,91 @@
+{
+  "label": "chunkd-node03",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/tc096/d/node03",
+    "tests/test_streamlit_stage8_export_contract.py::test_stage8_validation_preserves_stage6_actor_collections_and_ir_succeeds"
+  ],
+  "cwd": "C:\\t\\c096",
+  "started_at": "2026-08-27T21:30:35+00:00",
+  "finished_at": "2026-08-27T21:30:36+00:00",
+  "duration_seconds": 0.8999922000075458,
+  "timeout_seconds": 240.0,
+  "root_pid": 189984,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 184628,
+      "name": "python.exe",
+      "ppid": 189984
+    }
+  ],
+  "descendants_terminated": [
+    184628
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 126884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 188024,
+      "name": "python.exe"
+    },
+    {
+      "pid": 188044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 190020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 191228,
+      "name": "python.exe"
+    },
+    {
+      "pid": 191248,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-096\\19-node03.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c096",
+    "repo_head": "7862fccdbd438fffb4c93aa27fd7ff939e5d6447",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

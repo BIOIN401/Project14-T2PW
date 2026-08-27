@@ -576,6 +576,81 @@ def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, 
     return decision
 
 
+# ---------------------------------------------------------------------------
+# Resolver selection -- the third state (F-129).
+# ---------------------------------------------------------------------------
+
+#: The ``db_resolution.reason`` recorded when the caller passed
+#: :data:`NO_DB_RESOLVER`. Deliberately **not** one of the reasons already in
+#: this vocabulary: ``db_not_configured`` means no ambient PathBank settings were
+#: found, ``harvest_db_down`` / ``db_unavailable`` mean a configured resolver
+#: answered ``available() is False``, and ``db_resolver_unavailable:<exc>`` means
+#: constructing one raised. All three say *a lookup was attempted and did not
+#: succeed*. This one says the caller **asked for no lookup at all**, which is
+#: not a failure, and a report that spelled it as one would be untrue about the
+#: run. It is added in the same spirit as the existing distinction between
+#: ``db_not_configured`` and ``harvest_db_down``.
+DB_RESOLUTION_DISABLED_REASON = "db_resolution_disabled_by_caller"
+
+
+class _NoDbResolver:
+    """The type of :data:`NO_DB_RESOLVER`; recognised by identity, never by shape.
+
+    It deliberately implements **no** resolver protocol -- no ``available``, no
+    ``resolve``, no ``last_error``. :func:`_resolve_compound_rows` matches it with
+    ``is`` before any duck-typing runs, so giving it a shape would only create a
+    second, quieter way of meaning the same thing, which is the defect this
+    closes. Anything that receives it and does not know what it is must fail
+    visibly rather than resolve against it.
+
+    Copying returns the singleton itself. ``resolve_compounds_prefreeze``
+    deep-copies the rows it resolves, and a future caller could as easily
+    deep-copy a kwargs dict; an identity sentinel that survived one copy and not
+    another would fail **open**, back onto the ambient database, which is exactly
+    the silent substitution this exists to stop.
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return "NO_DB_RESOLVER"
+
+    def __copy__(self) -> "_NoDbResolver":
+        return self
+
+    def __deepcopy__(self, _memo: Any) -> "_NoDbResolver":
+        return self
+
+    def __reduce__(self) -> Any:
+        return (_no_db_resolver, ())
+
+
+def _no_db_resolver() -> "_NoDbResolver":
+    """Pickle/copy hook for :data:`NO_DB_RESOLVER`. Returns the singleton."""
+    return NO_DB_RESOLVER
+
+
+#: **Resolve nothing against a database** -- the third resolver selection, and
+#: the only one that says what it means. The full vocabulary is now:
+#:
+#: ``db_resolver=<resolver>``
+#:     use exactly this resolver, unchanged.
+#: ``db_resolver=None``
+#:     *unspecified* -- open the ambient PathBank connection. **Unchanged, and
+#:     load-bearing:** ``PRODUCT_CONTRACT`` §8 forbids an exporter opening one, so
+#:     the pre-freeze call is the one that must (D-015, D-032 clause 6, and
+#:     ``prefreeze_resolution.resolve_compounds_prefreeze``'s docstring).
+#: ``db_resolver=NO_DB_RESOLVER``
+#:     resolve against no database; record it as the caller's decision.
+#:
+#: Before this existed ``None`` carried both the first and third meanings, so the
+#: third was unreachable: a caller that deliberately disabled DB resolution was
+#: handed the ambient live database instead and nothing in the report said so
+#: (F-129). Adding a value fixes that without redefining ``None``, which could
+#: not be redefined without pushing the connection into the exporter.
+NO_DB_RESOLVER = _NoDbResolver()
+
+
 def _resolve_compound_rows(
     rows: List[Dict[str, Any]],
     *,
@@ -591,7 +666,16 @@ def _resolve_compound_rows(
     resolver: Optional[PathWhizCompoundResolver] = None
     db_reason = ""
 
-    if db_resolver is None:
+    if db_resolver is NO_DB_RESOLVER:
+        # The caller said "resolve nothing against a database". Matched by
+        # identity BEFORE the ambient substitution below, so a live PathBank
+        # cannot change what an explicitly offline caller gets, and recorded
+        # under its own reason so the report never claims a lookup failed.
+        # ``db_reason`` is non-empty from here on, which is what stops either
+        # arm of the availability ladder below overwriting it.
+        db_resolver = None
+        db_reason = DB_RESOLUTION_DISABLED_REASON
+    elif db_resolver is None:
         try:
             from t2pw.mapping.map_ids import PathBankDbResolver
 
