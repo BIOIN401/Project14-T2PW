@@ -5176,3 +5176,66 @@ four separate lanes this wave.
 **But it is live and unrepaired, and it is not in SMOKE — the same blind spot that hid my c056b
 regression.** Four lanes have now each spent a paragraph re-classifying it. **Chartered as C-092**
 so the fifth does not.
+
+---
+
+## F-130 — RECONCILED 2026-08-27. All four claims confirmed; narration only, no code moves
+
+Reconciled offline by the Lead Orchestrator at integration tip `79faf93`. No live paper run, no
+LLM-backed command, no historical artifact rewritten. Measurement: G11 `ORCH-130/01-f130-replay.json`,
+exit 0, `FINAL SURVIVING COUNT : 0`, `cleanup : success`.
+
+**This entry is appended, not substituted.** The F-130 registration above stands as REV-089 wrote it.
+
+### The four claims, each with what settles it
+
+| # | Claim | Verdict | What settles it |
+|---|---|---|---|
+| 1 | **Two** entities move, not one, across four pointers | **CONFIRMED** | Committed: `runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json` carries two one-component `protein_complexes` rows — `tetraacyldisaccharide 4'-kinase` (pathbank complex `1621`, component `LpxK` / `P27300`) and `phospholipase A1` (complex `1185`, component `PldA` / `P0A921`). Four firing pointers: reaction 0 `enzymes/0` + `modifiers/0`, reaction 3 `enzymes/1` + `modifiers/1`. A *third* `tetraacyldisaccharide 4'-kinase` reference (reaction 4, span *"…lipid A 4'-kinase"*) never fired — `normalize_name` reduces punctuation to spaces, so both sides share the token `kinase` and the base check already passed. **Six references, four findings.** |
+| 2 | `semantic_evaluation` flips `failed` → `passed` | **CONFIRMED** | Base is committed: `quarantine_report.json` `release.semantic_evaluation = "failed"`, `release.semantic_failed_checks = ["actor_named_in_its_own_cited_span"]`. Tip follows from `semantic_production.py :: _sole_component_symbols` + `_component_named_in_span`, which match on whole-token boundaries, and was measured by REV-089 (`evidence/g11/REV-089/25-actorcensus-tip.json`). |
+| 3 | The leg's final disposition does **not** change | **CONFIRMED — now measured, not inferred** | Deterministic replay of the committed base record through the *production* classifier, twice, everything but the semantic verdict read off the report. Both runs: `review_required`, `strict_acceptance_eligible = False`. |
+| 4 | A **different live blocker** becomes controlling | **CONFIRMED — with the exact reason string** | Same replay. Reason removed: `semantic_evaluation_failed:actor_named_in_its_own_cited_span`. Reason surfaced: `requested_core_anchors_unmatched:UDP-GlcNAc,R-3-hydroxymyristoyl-ACP,palmitoyl-CoA,LapB (YciM),YejM (PbgA),LpxA,ObgE,PldA`. |
+
+### The controlling blocker, named
+
+`REASON_REQUESTED_CORE_ANCHORS_UNMATCHED` — `src/t2pw/pipeline/release_status.py:142`, applied at
+`:1088-1092`. **Semantic verdict and leg disposition are separate fields and this leg is the proof.**
+The verdict feeds one of five *caps*; a cap can only remove `release_ready` and can never deepen an
+existing `review_required`. C-090 removes the semantic reason and thereby *surfaces* a cap that was
+always satisfied and merely unrecorded — the C-072 convention records the anchor cap from
+`release_ready` only. Nothing about the leg's biology, eligibility or export changed. **Do not read
+"semantic verdict passed" as "the leg improved".**
+
+### Under-reporting: narration, not production or scoring
+
+The counting code is correct and per-pointer: `_check_actor_evidence`
+(`bench/semantic_production.py:578-599`) appends one finding per actor pointer and reported `4` on
+this leg at base, `0` at tip. **Nothing in `src/` counts "entities moved"** — that figure came from an
+uncommitted probe, and C-090's committed census
+(`tests/test_c090_wrapper_identity_actor_evidence.py:53`, `test_g`) is scoped by `CORPUS` to
+`runs_verify/2026-08-24_1428`, which does not contain the 1216 leg. C-090's own gates commit
+`cb10134` says *"C-090 moves two pointers and both are on PMC12782028/strict"* — true **inside
+T-106**, false as a global statement, and the merge commit `ef3a0d4` already carried the correction
+forward.
+
+**Therefore no production or scoring change is justified, and none is made.** F-130's class as
+registered — *"not a defect — a correctly-applied rule on an unenumerated corpus"* — is upheld. A
+card that altered production to match a narrower historical summary would be changing behaviour to
+fit a report, which the sprint forbids.
+
+**Recorded as available, not dispatched:** a `test_h`-shaped regression over the 1216 leg (assert
+`_check_without_entities` yields exactly the four pointers, `_check` yields none, and
+`classify_release_status` returns `review_required` / `strict_acceptance_eligible False` with the
+anchors reason). No merge gate requires it, because no production logic under-reported. **Minor,
+labelled observation, unowned:** `_check_actor_evidence`'s summary string calls pointers `"actor(s)"`,
+which is what makes an entity-versus-pointer miscount easy to write in the first place.
+
+### Protected — never regenerate
+
+All 15 committed files under `runs_verify/2026-08-25_1216/papers/PMC12444477/strict/`, and in
+particular **`quarantine_report.json`, which is the only copy of the base release record**. Re-running
+that paper would destroy it. Also protected: `…/PMC12444477/research/*`, `…/PMC12856317/**`, the
+run-level `SUMMARY.txt` / `manifest.jsonl` / `batch.log` / `failures_by_code.txt`, all of
+`runs_verify/2026-08-24_1428/**` (which `test_g` pins), and `evidence/g11/REV-089/24…27-*.json`.
+
+**F-130 is CLOSED as a reconciliation.** No branch, no card, no code.
