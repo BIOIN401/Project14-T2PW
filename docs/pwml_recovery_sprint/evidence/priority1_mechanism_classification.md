@@ -2,7 +2,10 @@
 
 **Author:** Lead Orchestrator · **Date:** 2026-08-27 · **Integration tip at measurement:** `ea1d51e`
 **Corpus:** the T-106 run `runs_verify/2026-08-24_1428` (10 papers / 20 legs) for the itemization;
-**all 78 committed `final_mapped.json` artifacts (1160 entity rows)** for every corpus-wide claim.
+**all 92 committed `final_mapped.json` artifacts (1487 entity rows)** for every corpus-wide claim.
+**Denominator corrected 2026-08-27:** an earlier revision said 78, which was the `runs_verify/`
+subtree only and omitted the 14 legs under `runs/`. Every corpus-wide measurement below was re-run
+over all 92; **no conclusion changed.**
 **Gold set:** `src/t2pw/bench/gold/pinned_v1.json`, version `2026-08-01.1`
 
 Every number below was produced offline from committed artifacts, through `bounded_run.py`, with no
@@ -120,22 +123,23 @@ they are steps of the requested pathway.** The discriminator is not presence —
 
 PASS C is gated by `identity_admission.declares_cofactor_role(row)`
 (`identity_admission.py:697-700`), which is exactly `row["class"] == "cofactor"`. That label is a
-Stage-1 draw, and **it is not stable for the same molecule** (`ORCH-092/11-p1-drawvariance.json`,
-78 artifacts):
+Stage-1 draw, and **it is not stable for the same molecule** (`ORCH-092/17-all92-drawvar.json`,
+92 artifacts):
 
 | molecule | `class='cofactor'` | `class='compound'` |
 |---|---|---|
-| `NADH` | 8 | **3** |
-| `NAD+` | 8 | **2** |
-| `ATP` | 5 | 1 |
+| `NADH` | 9 | **3** |
+| `NAD+` | 8 | **3** |
+| `ATP` | 6 | 2 |
 | `Adenosine triphosphate` | 4 | **6** |
 | `Pyridoxal 5'-phosphate` | 10 | 0 |
+| `PPi` | 11 | 2 |
 
 **A product-endorsed refusal silently does not run about a quarter of the time, on the identity of a
 label rather than on biology.** That is a defect in the gate, not a policy choice.
 
 **The rule itself is sound and discriminating** — not a blanket cofactor ban. Corpus-wide, on
-id-carrying declared cofactors, `cofactor_participation` returns **supported 28, unsupported 16**.
+id-carrying declared cofactors, `cofactor_participation` returns **supported 30, unsupported 18**.
 
 ### The measured candidate
 
@@ -146,13 +150,13 @@ Eligibility widens; the rule does not move.
 
 | | rows withheld | newly withheld | legitimate rows lost |
 |---|---|---|---|
-| Reach A (today) | 16 | — | — |
-| **Reach B** | **17** | **1** | **0** |
+| Reach A (today) | 18 | — | — |
+| **Reach B** | **19** | **1** | **0** |
 
 The single newly withheld row is `2026-08-22_2147/PMC12096016/research :: NADH`, **gold-forbidden,
-kind `placeholder_product`** — a true positive. Reach B **keeps** `ATP` ×10, `NAD+` ×9, `NADH` ×9,
-`Pyridoxal 5'-phosphate` ×4, `CoA-SH` ×2, `PPi`, `AMP` — every one because the predicate says a
-reaction uses it. **ATP is never withheld anywhere in the corpus.** (`ORCH-092/13-p1-reach-corrected.json`)
+kind `placeholder_product`** — a true positive. Reach B **keeps** `NADH` ×10, `NAD+` ×10, `ATP` ×8
+(plus `Adenosine triphosphate` ×4), `Pyridoxal 5'-phosphate` ×4, `AMP` ×2, `PPi` ×2, `CoA-SH` ×2 —
+every one because the predicate says a reaction uses it. **ATP is never withheld anywhere in the corpus.** (`ORCH-092/18-all92-reach.json`)
 
 ### Why I am not chartering it
 

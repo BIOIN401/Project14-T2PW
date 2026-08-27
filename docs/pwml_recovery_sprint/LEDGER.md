@@ -5522,3 +5522,79 @@ on which instrument is authoritative — the gold's exclusion list or the drawn 
 **Immediate consequence for this cohort:** if `PMC12096016/strict` shows a higher `coverage_ratio` this
 run, check first whether `MenD`/`LDH` were simply not drawn. That would be F-132 resolving by accident,
 not a merged card working.
+
+### F-132 — RECLASSIFIED the same day: `gold_data_defect` → **`product_contract_violation`**
+
+**Superseding correction, appended rather than rewritten in place.** The registration above stands as
+written; **its `Class:` line is wrong and this entry replaces it.** Challenged by the peer sprint
+session within the hour, accepted, and then quantified corpus-wide before adopting.
+
+#### Why the original label was wrong, and why it was dangerous
+
+`CLAUDE.md` makes classification pick the remedy. **`gold_data_defect` points a future card at the
+gold** — where the natural "fix" is to drop `MenD` from `forbidden_identifiers` or soften *"Export must
+exclude MenD, LDH and the transport mentions."* **That would weaken a correct biological constraint to
+make a coverage number move.** Merge rule 6 forbids exactly that, and it is the failure mode this
+sprint exists to prevent.
+
+**The gold is the instrument that is right here.** Every exclusion on that case is specific and
+biologically sound: `MenD` a competing menaquinone-branch isochorismate sink; `lactate dehydrogenase`
+(alias `LDH`) a porcine coupled-assay reporter, not an *E. coli* pathway member; `NADH` (aliases
+`NAD+`, `lactate`) coupled-assay reporter species from the LDH readout. **Nothing in the gold needs
+changing.**
+
+**My own entry contradicted its own label.** The remedy sentence already said the fix *"would touch
+Stage-0 anchor selection or the coverage denominator, both production seams"* — that is the
+`product_contract_violation` remedy, not the gold one. The peer caught the label and the remedy
+disagreeing; they were right and I have taken it.
+
+#### The corrected shape
+
+Cap 2's input is Stage 0's `key_compounds`/`key_proteins` — **not a curated core**, and
+`release_status.py` carries `requested_core_source` for exactly that provenance distinction. So:
+**the pipeline's own Stage-0 draw pulls in terms the case's `forbidden_identifiers` prohibits, and the
+scorer then penalises the pipeline for obeying the gold.** Anchor selection and the forbidden list are
+unaware of each other. That is a production-side contract violation.
+
+#### Quantified corpus-wide before adopting (`ORCH-702/03-f132-forbidden-anchors.json`)
+
+Over every committed `quarantine_report.json`:
+
+| | |
+|---|---|
+| legs carrying unmatched terms | **52** |
+| unmatched terms in total | **281** |
+| of those, **gold-forbidden identifiers** | **62 (22%)** |
+| legs affected | **32** |
+| papers affected | **6** — `PMC12096016`, `PMC12312563`, `PMC12444477`, `PMC12452463`, `PMC12782028`, `PMC12856317` |
+
+**This is systemic, not a `MenD` quirk.** Roughly **one coverage penalty in five, corpus-wide, is
+levied for failing to match a term the gold forbids exporting.** It spans four of the gold's own
+mechanism kinds — `placeholder_product`, `heading_or_prose`, `regulator_as_metabolite`,
+`cofactor_as_protein`.
+
+The peer's sharper reading of the T-106 draw is confirmed: `[NADH, ATP, MenD, Fur]` contains **two**
+gold-forbidden terms, not one — `NADH` as an LDH-readout species and `MenD` as a competing-branch sink.
+
+#### The double bind, which is the part worth keeping
+
+On `PMC12782028/strict` the gold-forbidden unmatched terms are `LIPA`, `LBR`, `SREBF1`, `SREBF2` —
+**the exact four Priority-1 survivors.** The same four entities are simultaneously:
+
+* a **Priority-1 failure** when the pipeline *does* export them with real identifiers, and
+* a **Priority-4/5 coverage penalty** when it *does not* match them.
+
+**The pipeline is penalised either way, by two different instruments, for the same four rows.** No
+behaviour available to it scores well on both. That is a stronger argument than F-132 alone: it says
+the anchor set and the forbidden list must be reconciled before either Priority 1 or Priority 4 can be
+read as a measurement of pipeline quality.
+
+#### Remedy, unchanged in substance and now correctly aimed
+
+Still **no code change proposed and none justified from this alone.** The fix touches Stage-0 anchor
+selection or the coverage denominator; both are production seams outside any current card's ownership,
+and either could move Priorities 4 and 5 at once. It needs its own card and a product-owner ruling on
+which instrument is authoritative.
+
+**Explicit instruction to whoever charters it: the gold is not the thing to change.** Removing a
+forbidden identifier to raise coverage is a merge-rule-6 rejection, not a fix.
