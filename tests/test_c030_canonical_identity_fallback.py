@@ -32,12 +32,22 @@ Labels, each verified by running THIS file against base e4eeef4's sources
                     ``test_the_seam_resolves_its_hash_schema_import_when_exec_d_alone``
                     on a missing statement. Neither is offered as a G9 proof:
                     a symbol that is absent is not behaviour.
+
+C-093 re-based the census onto a frozen cohort plus an attributed admission
+register and added four tests. **None of them is offered as a G9 regression
+proof and none was written to fail on the base SHA**: production behaviour does
+not move -- ``git diff <base> HEAD -- src/`` is empty -- and the census's five
+values are byte-identical over C-068's own 35 legs. Three of the four are
+explicitly labelled NON-VACUITY: they exist to show the re-based assertions can
+still go red, because a pin that cannot go red is the defect reproduced.
 """
 
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
+import re
 import subprocess
 import sys
 from copy import deepcopy
@@ -168,56 +178,361 @@ def _edit(edit) -> tuple[dict, dict, dict]:
 
 # ── the census ──────────────────────────────────────────────────────────────
 
+#: The commit whose corpus C-068's five census equalities were measured over.
+#: ``git ls-tree`` at this SHA IS the frozen cohort -- see
+#: :func:`_frozen_cohort`. Recorded as a SHA rather than as 35 pasted paths so
+#: the manifest cannot drift from the history it claims to quote.
+FROZEN_CENSUS_COHORT_SHA = "50fb4b6762d4993b4d17d63cd01e1292c61b2ca9"
 
-def test_the_census_reproduces_over_the_committed_corpus() -> None:
-    """NEW ACCEPTANCE. Pins the measurement A0-C1's acceptance is scoped to.
-    The ledger's "60" does not reproduce; 49 was what the corpus held at 32 legs.
+#: ``sha256("\n".join(sorted(cohort)))``. The cohort is DERIVED from git, so this
+#: pins the derivation: a rewritten history, a wrong SHA or a truncated
+#: ``ls-tree`` changes it and the test says so instead of quietly measuring a
+#: different cohort.
+FROZEN_CENSUS_COHORT_DIGEST = \
+    "3de665440f046f61fbe2be3ade3b6ecb6779974a2e3409209cb1f36b01359a7b"
 
-    **MOVED by C-068 on 2026-08-21 under permanent merge rule 4, five assertions
-    at once, deliberately and never absorbed.** This test iterates
-    :func:`_corpus`, which is ``git ls-files "*final_mapped.json"`` -- **not**
-    ``GOLDEN`` -- so it moved the moment T-100 committed three legs, and it has
-    been red unconditionally (**not** ``.env``-conditionally) ever since. F-069.
+#: C-068's five values, re-measured by C-093 at ``b36f3c5`` over the SAME 35 legs
+#: and **byte-identical**. See :func:`test_the_census_reproduces_over_the_committed_corpus`.
+FROZEN_CENSUS: dict[str, Any] = {
+    "legs": 35,
+    "gap_rows": 55,
+    "files_carrying_a_gap": 21,
+    "buckets": {"compounds": 43, "protein_complexes": 12},
+    "keys": {"pathbank_compound_id": 43, "pathbank_complex_id": 12},
+}
 
-    The exact delta, every value re-measured under pytest at ``5414cda`` before
-    it was moved -- ``len(_corpus())`` 32 -> 35 · ``len(gaps)`` 49 -> 55 ·
-    distinct files carrying a gap 19 -> 21 · ``buckets``
-    ``{compounds: 38, protein_complexes: 11}`` ->
-    ``{compounds: 43, protein_complexes: 12}`` · ``keys``
-    ``{pathbank_compound_id: 38, pathbank_complex_id: 11}`` ->
-    ``{pathbank_compound_id: 43, pathbank_complex_id: 12}``.
 
-    **The interpretation, and it is the whole point of moving these by hand:
-    the census grew because two REFUSED legs were committed, not because
-    identity resolution regressed.** Per-leg contribution, measured: the third
-    new leg ``runs_verify/2026-08-18_1328/…/PMC12096016/research`` contributes
-    **0** rows; ``…/PMC12096016/strict`` contributes **1**; and
-    ``…/PMC12452463/strict`` contributes **5**. All 6 of the 6 new gap rows come
-    off the two strict legs, whose ``quarantine_report.json -> ok`` is ``false``,
-    so their ``final_mapped.json`` is the **pre-quarantine fallback**: 5 are
-    duplicate-compound rows (``2,3-dihydro-2,3-dihydroxybenzoate (DHB)`` on both
-    legs -- the RAG duplicate -- plus ``isochorismate``,
-    ``2,3-dihydro-2,3-dihydroxybenzoate`` and ``2,3-dihydroxybenzoate``) and the
-    6th is ``enterobactin synthase complex``, an entity the gold set forbids
-    outright (``src/t2pw/bench/gold/pinned_v1.json:2037``).
+class CensusAdmissionUnattributed(ValueError):
+    """A census bucket or identity key appeared with no card and no merge SHA."""
 
-    **The only way to hold the old numbers is to un-commit those legs, which
-    would destroy the evidence base of D-055 and F-055…F-064. Do not propose
-    it.** These two strict legs are excluded from the export golden on the
-    record instead -- see ``EXCLUDED`` in
-    ``tests/test_compound_resolution_extraction.py``.
+
+def _admitted(*entries: tuple[str, str, str]) -> dict[str, dict[str, str]]:
+    """Build :data:`CENSUS_ADMISSIONS` so a bucket CANNOT enter it unattributed.
+
+    **Structural, not conventional**, in the shape ``_excluded`` uses in
+    ``tests/test_compound_resolution_extraction.py``. There is no dict literal
+    below for a later editor to append a bare key to: the register is built from
+    ``(bucket_or_key, merge_sha, attribution)`` triples, and a bare string, a
+    wrong arity, a non-string field, an empty or whitespace attribution, an
+    attribution shorter than :data:`MIN_ADMISSION_CHARS`, a merge SHA that is not
+    a 7-to-40 character hex abbreviation, or a duplicated entry raises
+    :exc:`CensusAdmissionUnattributed` **at import time** -- so the module fails
+    to collect rather than one test failing somewhere downstream.
+
+    Proved by :func:`test_the_admission_register_cannot_absorb_a_bucket_silently`.
     """
-    gaps = _gap_rows()
-    assert len(_corpus()) == 35
-    assert len(gaps) == 55
-    assert len({relative for relative, *_ in gaps}) == 21
+    register: dict[str, dict[str, str]] = {}
+    for entry in entries:
+        if not isinstance(entry, tuple) or len(entry) != 3:
+            raise CensusAdmissionUnattributed(
+                f"an admission is a (name, merge_sha, attribution) triple; got {entry!r}")
+        name, sha, attribution = entry
+        if not isinstance(name, str) or not name.strip():
+            raise CensusAdmissionUnattributed(f"unnamed admission: {entry!r}")
+        if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{7,40}", sha or ""):
+            raise CensusAdmissionUnattributed(
+                f"{name}: {sha!r} is not a merge SHA. An identity-fallback census "
+                f"bucket that cannot be traced to a commit is a FINDING, not a "
+                f"baseline move (C-093 § 2a).")
+        if not isinstance(attribution, str) or \
+                len(attribution.strip()) < MIN_ADMISSION_CHARS:
+            raise CensusAdmissionUnattributed(
+                f"{name}: admitted with no usable attribution ({attribution!r}). "
+                f"State the leg it came off and what it means.")
+        if name in register:
+            raise CensusAdmissionUnattributed(f"{name}: admitted twice")
+        register[name] = {"merge_sha": sha,
+                          "attribution": " ".join(attribution.split())}
+    return register
+
+
+#: Minimum length, in stripped characters, of an admission's attribution. Not a
+#: style rule: it exists to make ``""``, ``" "`` and ``"corpus growth"``
+#: structurally impossible, which is the whole difference between a baseline move
+#: and a silenced one.
+MIN_ADMISSION_CHARS = 120
+
+#: Census buckets and identity keys present over TODAY's corpus but absent from
+#: :data:`FROZEN_CENSUS`, each traced to the commit that committed the leg it
+#: comes off.
+#:
+#: **C-093, and the point of the whole card.** ``_corpus()`` is
+#: ``git ls-files "*final_mapped.json"``, so this census grows every time a
+#: milestone run commits its legs; between C-068's 35 legs and C-093's base the
+#: corpus reached 92. C-068 moved five equalities by hand and they went stale
+#: again within a fortnight, which is the decay :func:`_admitted` exists to stop.
+#:
+#: An entry here is **not** a claim the row is correct. It is a claim that the
+#: row was TRACED. ``proteins`` in particular is admitted with a defect named.
+CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
+    ("protein_complexes", "266aba6",
+     "NOT a new bucket -- the frozen cohort already carries 12; the count rose to "
+     "22 because ten further legs were committed carrying one gap row each. "
+     "Measured, every one of the ten: 8 x 'enterobactin synthase complex' -> "
+     "pathbank_complex_id 3623 on PMC12452463 legs and 2 x 'ferrochelatase "
+     "complex' -> 912 on PMC12180156 legs, each read from mapping_meta."
+     "candidates[0] with no record-level or mapped_ids value. First committed by "
+     "266aba6 (T-103, 2026-08-21); the rest by 2673067 (T-104), bb125d0 "
+     "(C-072/C-073 paper validation), 9cb491c (T-105) and efca465 (T-106). "
+     "UNLIKE C-068's re-baseline, all ten legs have quarantine_report.json -> ok "
+     "TRUE with refusal_reasons []: these are ACCEPTED legs, so 'the census grew "
+     "because two REFUSED legs were committed' no longer explains it and is not "
+     "restated here. Nine of the ten carry resolution.status 'ambiguous' "
+     "(issue ambiguous_complex_name_species) and one 'fallback' "
+     "(pathbank_unknown_sentinel_component, confidence 0.0) -- that a top-ranked "
+     "AMBIGUOUS candidate supplies an exported identity is a standing property of "
+     "this pipeline, not something these legs introduced: it is present in the "
+     "frozen cohort too, on legs already pinned in GOLDEN."),
+    ("pathbank_complex_id", "266aba6",
+     "The key behind the ten protein_complexes rows above -- eight on PMC12452463 "
+     "legs and two on PMC12180156 legs; same legs, same commits, same "
+     "measurement. It is already in FROZEN_CENSUS at 12 and is listed here only "
+     "because the count moved to 22, so a reader of the whole-corpus census can "
+     "find its attribution in one place rather than inferring it from the bucket "
+     "entry."),
+    ("proteins", "aee228c",
+     "A GENUINELY NEW BUCKET, and it comes off exactly ONE leg: "
+     "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json, "
+     "committed by aee228c (2026-08-24, affected-paper cohort A). Two rows, CLPX "
+     "and CLPP: 'ATP-dependent Clp protease ATP-binding subunit clpX-like, "
+     "mitochondrial' (pathbank_protein_id 8580 from mapping_meta, uniprot O76031 "
+     "from candidates[0]) and 'Putative ATP-dependent Clp protease proteolytic "
+     "subunit, mitochondrial' (3923 from mapping_meta, Q16740 from "
+     "candidates[0]). Both resolutions are status 'matched' at confidence 1.0 and "
+     "both accessions are the correct human proteins, so the IDENTITIES are not "
+     "the defect. THE DEFECT IS THAT THE GATE CANNOT SEE THEM: that leg's "
+     "quarantine_report.json is ok FALSE with refusal_reasons "
+     "['unexportable_entity:2'], and the two unexportable entities are these same "
+     "two rows, each with reason 'protein_missing_external_identity'. "
+     "entity_identity.protein_external_identity scans row, mapped_ids, ids and "
+     "mapping_meta and STOPS THERE, while ir._first_nonempty also reaches "
+     "mapping_meta.candidates[0] -- so the exporter would have exported an "
+     "accession the quarantine gate reports as absent. Registered by C-093 as a "
+     "finding and NOT fixed here (C-093 may not touch src/). The divergence runs "
+     "in the SAFE direction -- the gate refuses where the exporter would have "
+     "exported -- so no gate is weakened, and the leg is EXCLUDED from the export "
+     "golden on that record rather than pinned."),
+    ("pathbank_protein_id", "aee228c",
+     "The mapping_meta half of the two proteins rows above -- 8580 and 3923, on "
+     "the one PMC12856317 strict leg of 2026-08-24_1203, same commit. Separately "
+     "named because a key can appear in a bucket that is already admitted, and an "
+     "unattributed KEY is as much a finding as an unattributed bucket."),
+    ("uniprot", "aee228c",
+     "The candidates[0] half of the two proteins rows above -- O76031 and Q16740, "
+     "on the same one PMC12856317 strict leg, same commit. This is the exact tier "
+     "entity_identity.protein_external_identity does not scan, which is why these "
+     "two accessions are simultaneously exportable by ir.py and reported missing "
+     "by the strict quarantine gate."),
+)
+
+
+@lru_cache(maxsize=None)
+def _frozen_cohort() -> tuple[str, ...]:
+    """The 35 legs committed at :data:`FROZEN_CENSUS_COHORT_SHA`, from git."""
+    listed = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", FROZEN_CENSUS_COHORT_SHA],
+        cwd=ROOT, capture_output=True, text=True)
+    assert listed.returncode == 0, (
+        f"cannot read the frozen census cohort at {FROZEN_CENSUS_COHORT_SHA}: "
+        f"{listed.stderr.strip()}. The cohort is the evidence base of these "
+        f"equalities; without it they cannot be checked at all.")
+    return tuple(sorted(p for p in listed.stdout.split()
+                        if p.endswith("final_mapped.json")))
+
+
+def _census(rows: tuple[tuple[str, str, int, str], ...]) -> dict[str, Any]:
+    """``rows`` summarised the way :data:`FROZEN_CENSUS` records it."""
     buckets: dict[str, int] = {}
     keys: dict[str, int] = {}
-    for _relative, bucket, _index, key in gaps:
+    for _relative, bucket, _index, key in rows:
         buckets[bucket] = buckets.get(bucket, 0) + 1
         keys[key] = keys.get(key, 0) + 1
-    assert buckets == {"compounds": 43, "protein_complexes": 12}
-    assert keys == {"pathbank_compound_id": 43, "pathbank_complex_id": 12}
+    return {"gap_rows": len(rows),
+            "files_carrying_a_gap": len({r[0] for r in rows}),
+            "buckets": buckets, "keys": keys}
+
+
+def test_the_census_reproduces_over_the_committed_corpus() -> None:
+    """The measurement A0-C1's acceptance is scoped to, in TWO halves.
+
+    **RE-BASED BY C-093 under permanent merge rule 4** -- the second deliberate
+    move of this pin, and the last one that should ever be needed. C-068 moved
+    five equalities by hand (32 -> 35 legs, 49 -> 55 rows, and so on) and
+    recorded the reason honestly, but it left them keyed to
+    ``git ls-files "*final_mapped.json"``. That set grows whenever a milestone
+    run commits its legs, so the pin went stale again the moment T-103 landed and
+    was still red at C-093's base with the corpus at **92**. A pin that a
+    routine, correct, unrelated commit turns red is camouflage: it is exactly the
+    neighbourhood D-065's regression walked through.
+
+    So the equality is not re-typed with bigger numbers. It is **re-based onto a
+    frozen cohort**, the way H-001 froze the strict-replay gate's cohort to an
+    explicit manifest (TRAP-2):
+
+    **Half one, the equality.** Over the 35 legs committed at
+    :data:`FROZEN_CENSUS_COHORT_SHA` -- C-068's own corpus, derived from git and
+    digest-pinned -- the census must still be C-068's five values EXACTLY. That
+    set cannot grow, so this half can only move if identity RESOLUTION moves,
+    which is the event the pin was written to hear about. Re-measured at C-093's
+    base ``b36f3c5``: 55 rows, 21 files, ``{compounds: 43, protein_complexes: 12}``,
+    ``{pathbank_compound_id: 43, pathbank_complex_id: 12}`` -- **byte-identical to
+    C-068**. Nothing regressed; only the corpus grew.
+
+    **Half two, the property.** Over today's whole corpus the census may hold only
+    buckets and keys that are in :data:`FROZEN_CENSUS` or in
+    :data:`CENSUS_ADMISSIONS`, where an entry cannot exist without a merge SHA and
+    an attribution. A genuinely new bucket therefore still fails here -- which is
+    the property that matters -- while another benchmark run committing more legs
+    does not. The whole-corpus counts are deliberately NOT pinned: they are a
+    function of how many times the sprint ran the pipeline, and pinning that
+    measures nothing about identity resolution.
+
+    Measured delta at ``b36f3c5``, whole corpus: 92 legs, 69 gap rows, 32 files,
+    ``{compounds: 43, protein_complexes: 22, proteins: 4}``,
+    ``{pathbank_compound_id: 43, pathbank_complex_id: 22, pathbank_protein_id: 2,
+    uniprot: 2}``. Every one of the 14 rows the frozen cohort does not carry is
+    attributed in :data:`CENSUS_ADMISSIONS`, and the ``proteins`` bucket carries a
+    registered production finding rather than a reassurance.
+    """
+    cohort = _frozen_cohort()
+    assert len(cohort) == FROZEN_CENSUS["legs"]
+    assert hashlib.sha256("\n".join(cohort).encode()).hexdigest() == \
+        FROZEN_CENSUS_COHORT_DIGEST
+
+    committed = set(_corpus())
+    missing = sorted(set(cohort) - committed)
+    assert not missing, (
+        f"the frozen census cohort is no longer committed: {missing}. "
+        f"runs/ and runs_verify/ are read-only evidence (D-055, F-055...F-064); "
+        f"un-committing a leg to hold a number is forbidden.")
+
+    frozen = _census(tuple(g for g in _gap_rows() if g[0] in set(cohort)))
+    assert frozen["gap_rows"] == FROZEN_CENSUS["gap_rows"]
+    assert frozen["files_carrying_a_gap"] == FROZEN_CENSUS["files_carrying_a_gap"]
+    assert frozen["buckets"] == FROZEN_CENSUS["buckets"]
+    assert frozen["keys"] == FROZEN_CENSUS["keys"]
+
+    whole = _census(_gap_rows())
+    accounted = set(FROZEN_CENSUS["buckets"]) | set(FROZEN_CENSUS["keys"]) | \
+        set(CENSUS_ADMISSIONS)
+    unattributed = sorted((set(whole["buckets"]) | set(whole["keys"])) - accounted)
+    assert not unattributed, (
+        f"unattributed in the identity-fallback census: {unattributed}. Trace each "
+        f"to the card and merge SHA that committed the leg it comes off and add it "
+        f"to CENSUS_ADMISSIONS -- or, if it cannot be traced, STOP: an "
+        f"unattributed bucket is a finding, not a baseline move.")
+
+
+def test_every_census_key_is_one_ir_consumes_for_that_bucket() -> None:
+    """NEW ACCEPTANCE (C-093). The census's non-vacuity floor.
+
+    Half two of the census test admits a bucket by NAME, so on its own it would
+    pass just as happily if ``_slot`` started reporting a key ``ir.py`` never
+    reads for that bucket -- an admission register can only be as honest as the
+    measurement feeding it. This closes that: every ``(bucket, key)`` the census
+    reports must appear together in :data:`BUCKET_KEYS`, which is the ordered
+    ladder ``ir.py`` itself resolves.
+    """
+    for relative, bucket, _index, key in _gap_rows():
+        assert bucket in BUCKET_KEYS, f"{relative}: unknown bucket {bucket}"
+        assert any(key in keys for keys in BUCKET_KEYS[bucket]), \
+            f"{relative}: ir.py never resolves {key!r} for {bucket}"
+
+
+def test_the_frozen_cohort_equality_still_bites() -> None:
+    """NON-VACUITY (C-093), permanent. The re-based equality can go RED.
+
+    A frozen cohort is the right fix only if freezing it did not also freeze the
+    assertion into something that cannot fail. Three perturbations, each the
+    shape of a real regression, each shown to move a value the test compares:
+
+    1. a gap row that stops being a gap -- identity resolution starts publishing
+       the value at the record level, so the census SHRINKS;
+    2. a gap row that changes which key it resolves through;
+    3. a leg dropped from the cohort -- the shape ``_corpus()``'s growth used to
+       produce, now caught as a file-count and row-count move rather than
+       silently absorbed.
+    """
+    cohort = set(_frozen_cohort())
+    rows = tuple(g for g in _gap_rows() if g[0] in cohort)
+    assert _census(rows)["buckets"] == FROZEN_CENSUS["buckets"]
+
+    dropped = _census(rows[1:])
+    assert dropped["gap_rows"] != FROZEN_CENSUS["gap_rows"]
+    assert dropped["buckets"] != FROZEN_CENSUS["buckets"]
+
+    relative, bucket, index, key = rows[0]
+    rekeyed = ((relative, bucket, index, "pathwhiz_id"),) + rows[1:]
+    assert _census(rekeyed)["keys"] != FROZEN_CENSUS["keys"]
+
+    one_leg = {r[0] for r in rows[:1]}
+    without = _census(tuple(r for r in rows if r[0] not in one_leg))
+    assert without["files_carrying_a_gap"] != FROZEN_CENSUS["files_carrying_a_gap"]
+
+
+def test_an_unattributed_bucket_or_key_is_reported_not_absorbed() -> None:
+    """NON-VACUITY (C-093), permanent. Half two of the census test is not vacuous.
+
+    ``set(...) - accounted == []`` would look green forever if the accounting set
+    absorbed whatever it was given. It does not: a bucket or a key in neither
+    :data:`FROZEN_CENSUS` nor :data:`CENSUS_ADMISSIONS` is reported. Exercised on
+    a SYNTHESIZED census row -- nothing is written under ``runs/`` or
+    ``runs_verify/``, which are read-only evidence.
+    """
+    accounted = set(FROZEN_CENSUS["buckets"]) | set(FROZEN_CENSUS["keys"]) | \
+        set(CENSUS_ADMISSIONS)
+    whole = _census(_gap_rows())
+    assert not (set(whole["buckets"]) | set(whole["keys"])) - accounted
+
+    for synthetic in ("nucleic_acids", "pw_nucleic_acid_id", "drugbank"):
+        assert synthetic not in accounted, synthetic
+        invented = _gap_rows() + (
+            ("runs_verify/9999-99-99_9999/papers/PMCNONVACUITY/strict/"
+             "final_mapped.json", synthetic, 0, synthetic),)
+        summary = _census(invented)
+        assert (set(summary["buckets"]) | set(summary["keys"])) - accounted == \
+            {synthetic}
+
+
+def test_the_admission_register_cannot_absorb_a_bucket_silently() -> None:
+    """NON-VACUITY (C-093), permanent. A bucket cannot enter the register bare.
+
+    :data:`CENSUS_ADMISSIONS` is a constructor, not a literal, so there is no bare
+    key to append: every unattributed shape raises, and it raises at IMPORT time,
+    so the module fails to collect rather than one assertion failing downstream.
+    Also asserts the committed entries carry what C-093 section 4.2 demands -- a merge
+    SHA that is really in this history, and the leg the rows come off.
+    """
+    for entry in ("proteins", ("proteins",), ("proteins", "aee228c"),
+                  ("proteins", "aee228c", ""), ("proteins", "aee228c", "   "),
+                  ("proteins", "aee228c", "corpus growth"),
+                  ("proteins", "aee228c", None), ("proteins", "aee228c", 0),
+                  ("", "aee228c", "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "", "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "not-hex", "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "aee228c", "z" * (MIN_ADMISSION_CHARS - 1))):
+        with pytest.raises(CensusAdmissionUnattributed):
+            _admitted(entry)  # type: ignore[arg-type]
+
+    good = ("proteins", "aee228c", "z" * MIN_ADMISSION_CHARS)
+    assert _admitted(good) == {"proteins": {"merge_sha": "aee228c",
+                                            "attribution": good[2]}}
+    with pytest.raises(CensusAdmissionUnattributed):
+        _admitted(good, good)
+
+    for name, record in CENSUS_ADMISSIONS.items():
+        added = subprocess.run(
+            ["git", "show", "--diff-filter=A", "--name-only", "--format=",
+             record["merge_sha"]], cwd=ROOT, capture_output=True, text=True)
+        assert added.returncode == 0, (
+            f"{name}: merge SHA {record['merge_sha']} is not a commit in this "
+            f"history, so the attribution cannot be checked")
+        assert any(p.endswith("final_mapped.json") for p in added.stdout.split()), (
+            f"{name}: {record['merge_sha']} committed no leg fixture, so it cannot "
+            f"be what put this bucket in the census")
+        assert re.search(r"PMC\d+", record["attribution"]), (
+            f"{name}: the attribution names no paper, so the rows it admits "
+            f"cannot be found again")
 
 
 def test_the_allowlist_names_every_identity_key_ir_consumes() -> None:
