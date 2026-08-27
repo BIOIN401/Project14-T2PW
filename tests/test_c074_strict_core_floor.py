@@ -903,12 +903,24 @@ CORPUS_UNTOUCHED_BY_C074: Dict[str, int] = {
 # ``pytest.skip`` rather than failing. A TOTAL discovery failure is therefore
 # silent. That is pre-existing at the base SHA, but C-092 raised the number of
 # tests it silences from 4 to 12, so it is written down here rather than left
-# implied. It is NOT separable from the genuine-empty case without production
-# changes: ``git ls-files`` exits 0 with empty output for a pathspec matching
-# nothing, so "git worked and the corpus is empty" and "the pathspec silently
-# stopped matching" are the same observation from inside this module. The skip is
-# also the module's standing convention -- the run directory is a working
-# directory, not a committed fixture obligation -- so it is documented and left.
+# implied.
+#
+# Precisely: ``git ls-files`` exits 0 with empty output for a pathspec that
+# matches nothing, so FROM INSIDE ``_committed_legs()`` "git worked and the corpus
+# is empty" and "the pathspec silently stopped matching" are the same observation.
+# That is a limit of the discovery function, NOT a limit of this module -- a
+# filesystem cross-check would separate the two cases without touching production,
+# e.g. ``if (ROOT / "runs_verify").is_dir(): assert legs``. It is deliberately not
+# done here: skip-on-empty is a module-wide convention -- the run directory is a
+# working directory, not a committed fixture obligation -- and changing it would
+# re-arm 12 tests in one step, which is a scope call for a card that owns the
+# convention rather than for C-092. Documented and declined, not impossible.
+#
+# ONE MORE KNOWN RED, so it is not mistaken for a regression: a floor pinned at
+# the current census will fail this module if it is run against an OLDER tree --
+# a ``pinned_pytest --expect-tree`` at a pre-growth SHA, say. The corpus there is
+# genuinely smaller than the floor. That is the floor working as designed on a
+# tree it was not measured against, not a defect to absorb.
 
 #: The census measured on 2026-08-27: committed legs carrying BOTH a release
 #: record and a ``final_mapped.json`` -- the number this test computes, which is
@@ -1075,6 +1087,14 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
         # A leg that carried NO context at all is C-074's UNDECLARED REGIME, which
         # this card deliberately leaves alone; assertion 5 must not judge it for
         # not naming a pathway it was never asked about.
+        #
+        # KNOWN RESIDUE, narrow and accepted: the test is ``isinstance(..., dict)``,
+        # so a leg recording an EMPTY mapping (``requested_context: {}``) is judged
+        # by assertion 5 although it is undeclared in every sense that matters. No
+        # committed leg has that shape today. Tightening it to "a mapping carrying
+        # terms" would duplicate ``_raw_declared_core_without_a_stated_pathway``'s
+        # notion of declared-ness in a second place, which is how the two drift
+        # apart; if it ever fires, share that predicate rather than adding a third.
         has_context[label] = isinstance(declared_context, dict)
         context = declared_context or {}
         pathway_named[label] = str(context.get("pathway_name") or "").strip()
@@ -1330,16 +1350,42 @@ def _serve_perturbed_corpus(
     drop: Tuple[str, ...] = (),
     replace: Optional[Dict[str, Path]] = None,
     add: Tuple[Tuple[str, Path], ...] = (),
-    keep: Optional[int] = None,
 ) -> None:
+    """Serve a perturbed corpus to every corpus test in this module.
+
+    **THE CENSUS-COUPLING RULE, for anyone adding a perturbation here.** Assertion
+    2 of the main test compares the served census against ``C074_CENSUS_FLOOR``,
+    a module-level literal that is raised as the real corpus grows. A perturbation
+    whose firing depends on the LIVE census equalling the floor is satisfiable only
+    until the next run directory lands, at which point it dies with
+    ``Failed: DID NOT RAISE`` -- F-112 rebuilt inside the module written to remove
+    it. Correction round 2 caught one such perturbation.
+
+    So a new perturbation must do ONE of these, and say which:
+
+    * hold the census CONSTANT -- ``drop`` a leg and ``add`` an identical copy
+      under a new label, or ``replace`` a leg in place. The floor cannot fire;
+    * only GROW it -- ``add`` alone. The floor cannot fire, since a floor that the
+      unperturbed corpus clears is cleared a fortiori by a larger one;
+    * SHRINK it, in which case it must monkeypatch ``C074_CENSUS_FLOOR`` to the
+      census it measures on the real corpus first, so the demonstration is
+      independent of what that census happens to be. See
+      ``test_nonvacuity_c092_a_shrinking_corpus_turns_the_census_floor_red``.
+
+    Audited at correction round 2, all eight perturbations: #1 shrinks and pins the
+    floor; #2 and #3 hold it constant by relabelling; #4 replaces in place; #5, #6
+    and #7 only add; #8 in the replay module reads no corpus at all. #5 and #7 do
+    rely on assertion 2 staying quiet, which needs the floor not to be STALE-HIGH
+    -- but a stale-high floor already reds the main test loudly for the same
+    reason, so it is not a silent failure mode and is left as is.
+    """
+
     real = _committed_legs()
     swap = replace or {}
     perturbed = [
         (label, swap.get(label, path)) for label, path in real if label not in set(drop)
     ]
     perturbed.extend(add)
-    if keep is not None:
-        perturbed = perturbed[:keep]
     monkeypatch.setattr(
         sys.modules[__name__], "_committed_legs", lambda: sorted(perturbed)
     )
@@ -1357,12 +1403,54 @@ def test_nonvacuity_c092_a_shrinking_corpus_turns_the_census_floor_red(
     the comment beside it claimed every deletion went red. Pinned at the measured
     census, exactly one leg removed is enough.
 
-    ``keep=len(corpus) - 1`` rather than a literal, so this stays true the next
-    time the floor is legitimately raised.
+    **THIS PERTURBATION MUST REMAIN INDEPENDENT OF CORPUS SIZE. Do not reintroduce
+    a size-coupled one.** Correction round 2 caught exactly that: this test served
+    ``keep=len(corpus) - 1`` legs against the module-level floor, which fires only
+    while the live census EQUALS the floor. One committed run directory later --
+    corpus 61, floor 60 -- the perturbation serves 60, ``60 >= 60`` holds, no
+    assertion fires and the test dies with ``Failed: DID NOT RAISE``. That is
+    F-112 rebuilt inside the very module written to remove it, with a worse
+    symptom: a stale census that reads like a broken test.
+
+    What makes it size-independent is pinning the FLOOR to the census this corpus
+    actually measures -- the invariant the maintenance contract above guarantees --
+    and then removing exactly one leg. ``census - 1 < census`` at any corpus size,
+    so this fires on a corpus of 60, 61 or 600 with no edit. The floor is
+    monkeypatched rather than read, so the real constant is never consulted here
+    and a legitimately raised floor cannot break the demonstration.
+
+    The removed leg is chosen, not hardcoded: unnamed (so assertion 3 cannot fire
+    first) and not recorded ``release_ready`` (so the release_ready floor and
+    assertions 4 and 5 cannot either). Assertion 2 is therefore the ONLY thing that
+    can raise, which is what the ``match`` proves.
     """
 
-    corpus = _real_corpus()
-    _serve_perturbed_corpus(monkeypatch, keep=len(corpus) - 1)
+    corpus = _committed_legs()
+    if not corpus:
+        pytest.skip("no committed runs_verify legs in this checkout")
+
+    # Mirrors the ``order`` mapping in the test under perturbation: these are the
+    # three statuses its ``with_release`` counter recognises.
+    census_statuses = (RELEASE_READY, REVIEW_REQUIRED, DIAGNOSTIC_ONLY)
+    named = set(CORPUS_DEMOTED) | set(CORPUS_UNTOUCHED_BY_C074)
+    census = 0
+    victims: List[str] = []
+    for label, leg in corpus:
+        report, payload = _load(leg)
+        if payload is None:
+            continue
+        recorded = str((report.get("release") or {}).get("status") or "")
+        if recorded not in census_statuses:
+            continue
+        census += 1
+        if label not in named and recorded != RELEASE_READY:
+            victims.append(label)
+
+    if not victims:
+        pytest.skip("no unnamed non-release_ready leg available to remove")
+
+    monkeypatch.setattr(sys.modules[__name__], "C074_CENSUS_FLOOR", census)
+    _serve_perturbed_corpus(monkeypatch, drop=(victims[0],))
     with pytest.raises(AssertionError, match="SHRUNK below C-074's measured census"):
         test_the_full_corpus_replay_demotes_nothing_it_cannot_justify()
 
