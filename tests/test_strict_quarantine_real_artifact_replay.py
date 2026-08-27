@@ -1207,6 +1207,79 @@ def _p01_observables(payload: Dict[str, Any]) -> Tuple[List[str], bool, List[str
     return sorted(row["name"] for row in degree_zero), result.ok, list(result.refusal_reasons)
 
 
+def _move_is_c010_shaped(row: Tuple[Any, ...]) -> List[str]:
+    """Why an UNLISTED moved leg is C-010's work rather than collateral (C-092).
+
+    ``EXPECTED_P01_DELTAS`` names the legs whose verdicts C-010 moved when the
+    allowlist was measured. It was asserted by set equality, which made it a
+    corpus census pin: ``runs/`` and ``runs_verify/`` are append-only, so the
+    first later run directory holding a leg with a pre-prune degree-zero false
+    positive turned this red for a reason that is not a defect. One did --
+    ``runs_verify/2026-08-25_1216/papers/PMC12444477/research`` -- and this module
+    stayed red beside ``test_c074_strict_core_floor.py`` for a whole correction
+    wave.
+
+    The claim the equality was standing in for is *"nothing moved in a way C-010
+    does not account for"*. That is a property of the MOVE, and it is checked here
+    per leg instead of by membership, so a new run only goes red when it moves in
+    a shape C-010 cannot produce:
+
+    * the fix only ever REMOVES a false degree-zero entity, never adds one, and
+      never removes them all without there having been one to remove;
+    * ``ok`` may only improve. A leg that stops being exportable is a lost gate;
+    * refusals may only be withdrawn, never added, and the only refusals that may
+      be withdrawn are ``degree_zero_export`` ones -- the fix's own reason. A leg
+      that quietly stops refusing for some OTHER reason is exactly the weakening
+      merge rule 6 forbids.
+
+    Returns the list of violations, empty when the move is C-010-shaped.
+    """
+
+    dz_before, dz_after, ok_before, ok_after, ref_before, ref_after = row
+    violations: List[str] = []
+    if dz_after:
+        violations.append(f"gains/keeps degree-zero entities: {dz_after}")
+    if not dz_before:
+        violations.append("moved without a pre-prune degree-zero entity to remove")
+    if ok_before and not ok_after:
+        violations.append("ok regressed True -> False")
+    added = sorted(set(ref_after) - set(ref_before))
+    if added:
+        violations.append(f"gained refusals: {added}")
+    withdrawn = sorted(set(ref_before) - set(ref_after))
+    foreign = [r for r in withdrawn if str(r).split(":", 1)[0] != "degree_zero_export"]
+    if foreign:
+        violations.append(f"withdrew refusals C-010 has no business withdrawing: {foreign}")
+    return violations
+
+
+def test_nonvacuity_c092_the_c010_move_shape_rejects_a_weakening_move() -> None:
+    """**NON-VACUITY (C-092).** ``_move_is_c010_shaped`` replaced an exact-set
+    pin; a predicate that accepted everything would be the rot it replaced.
+
+    Each row below is a move the equality would have caught and the predicate
+    must also catch, stated as a shape rather than as a name.
+    """
+
+    ok_row = (["EntA"], [], False, True, ["degree_zero_export:1"], [])
+    assert _move_is_c010_shaped(ok_row) == []
+
+    gains = (["EntA"], ["EntB"], False, True, ["degree_zero_export:1"], [])
+    assert any("gains/keeps" in v for v in _move_is_c010_shaped(gains))
+
+    from_nothing = ([], [], False, True, ["unexportable_entity:1"], [])
+    assert any("without a pre-prune" in v for v in _move_is_c010_shaped(from_nothing))
+
+    regressed = (["EntA"], [], True, False, [], [])
+    assert any("ok regressed" in v for v in _move_is_c010_shaped(regressed))
+
+    gained_refusal = (["EntA"], [], False, False, [], ["unexportable_entity:1"])
+    assert any("gained refusals" in v for v in _move_is_c010_shaped(gained_refusal))
+
+    laundered = (["EntA"], [], False, True, ["unexportable_entity:1"], [])
+    assert any("no business withdrawing" in v for v in _move_is_c010_shaped(laundered))
+
+
 def test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -1216,6 +1289,11 @@ def test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs(
     on ``runs/`` absence: ``runs_verify/2026-08-04_1754/`` is committed
     separately and its absence is a checkout difference, not a disagreement.
     What is never skipped is a present leg that moves in an unrecorded way.
+
+    **C-092 re-based claim 2.** It used to read ``sorted(moved) == sorted(expected)``,
+    which is a census pin over an append-only corpus; see ``_move_is_c010_shaped``.
+    It now reads: every leg that moves and is not tabulated moved in a shape C-010
+    accounts for. Claims 1 and 3 are untouched.
     """
 
     expected = {rel: row for rel, row in EXPECTED_P01_DELTAS.items() if (ROOT / rel).is_dir()}
@@ -1240,7 +1318,12 @@ def test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs(
     # 1. every allowlisted leg transitions exactly as tabulated.
     for rel, tabulated in sorted(expected.items()):
         assert moved.get(rel) == tabulated, rel
-    # 2. nothing else moved, in ANY of the three observables.
-    assert sorted(moved) == sorted(expected)
+    # 2. nothing else moved in a way C-010 does not account for (C-092).
+    unaccounted = {
+        rel: violations
+        for rel, row in sorted(moved.items())
+        if rel not in expected and (violations := _move_is_c010_shaped(row))
+    }
+    assert not unaccounted, f"unaccounted pre-prune move(s): {unaccounted}"
     # 3. no leg GAINS a degree-zero entity: the fix only ever removes a false one.
     assert [rel for rel, row in sorted(moved.items()) if row[1]] == []
