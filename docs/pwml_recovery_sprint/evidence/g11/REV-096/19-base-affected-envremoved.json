@@ -1,0 +1,192 @@
+{
+  "label": "base-affected-envremoved",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev096base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/pin/REV-096/19-base-affected-envremoved.pin.json",
+    "--expect-tree",
+    "C:/t/rev096base",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/trev096b/t19",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_canonicalization_preflight_and_species.py",
+    "tests/test_prefreeze_third_export_seam.py"
+  ],
+  "cwd": "C:/t/rev096base",
+  "started_at": "2026-08-27T21:50:28+00:00",
+  "finished_at": "2026-08-27T21:50:49+00:00",
+  "duration_seconds": 20.968014000012772,
+  "timeout_seconds": 1500.0,
+  "root_pid": 203912,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 199416,
+      "name": "python.exe",
+      "ppid": 203912
+    },
+    {
+      "pid": 169244,
+      "name": "git.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 169468,
+      "name": "git.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 186888,
+      "name": "git.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 198400,
+      "name": "git.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 198884,
+      "name": "python.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 199152,
+      "name": "python.exe",
+      "ppid": 198884
+    },
+    {
+      "pid": 180172,
+      "name": "python.exe",
+      "ppid": 200368
+    },
+    {
+      "pid": 200368,
+      "name": "python.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 203468,
+      "name": "git.exe",
+      "ppid": 180172
+    },
+    {
+      "pid": 200672,
+      "name": "git.exe",
+      "ppid": 180172
+    },
+    {
+      "pid": 200880,
+      "name": "python.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 185364,
+      "name": "python.exe",
+      "ppid": 200880
+    },
+    {
+      "pid": 203028,
+      "name": "python.exe",
+      "ppid": 204252
+    },
+    {
+      "pid": 204252,
+      "name": "python.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 197732,
+      "name": "python.exe",
+      "ppid": 199416
+    },
+    {
+      "pid": 198984,
+      "name": "python.exe",
+      "ppid": 197732
+    },
+    {
+      "pid": 194856,
+      "name": "python.exe",
+      "ppid": 203364
+    },
+    {
+      "pid": 203364,
+      "name": "python.exe",
+      "ppid": 199416
+    }
+  ],
+  "descendants_terminated": [
+    169244,
+    169468,
+    180172,
+    185364,
+    186888,
+    194856,
+    197732,
+    198400,
+    198884,
+    198984,
+    199152,
+    199416,
+    200368,
+    200672,
+    200880,
+    203028,
+    203364,
+    203468,
+    204252
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 188536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202848,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/REV-096/19-base-affected-envremoved.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c096",
+    "repo_head": "19875cc8125507b067a06262293c4259685d7571",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

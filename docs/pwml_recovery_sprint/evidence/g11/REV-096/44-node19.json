@@ -1,0 +1,91 @@
+{
+  "label": "chunkd-node19",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/trev096/d/node19",
+    "tests/test_streamlit_quarantine_boundary.py::test_the_boundary_is_the_only_unguarded_quarantine_call_in_the_app"
+  ],
+  "cwd": "C:\\t\\c096",
+  "started_at": "2026-08-27T21:58:43+00:00",
+  "finished_at": "2026-08-27T21:58:44+00:00",
+  "duration_seconds": 1.024085600001854,
+  "timeout_seconds": 240.0,
+  "root_pid": 209680,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 209692,
+      "name": "python.exe",
+      "ppid": 209680
+    }
+  ],
+  "descendants_terminated": [
+    209692
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202804,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209416,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209428,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\g11\\REV-096\\44-node19.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c096",
+    "repo_head": "19875cc8125507b067a06262293c4259685d7571",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

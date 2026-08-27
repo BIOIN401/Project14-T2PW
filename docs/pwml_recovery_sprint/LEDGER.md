@@ -5960,3 +5960,175 @@ because the draw also changed. That restraint is the correct reading.
 
 **C-087's `AMBIGUOUS_RENAME_TARGET` did not occur** — the cohort carries no `PMC12444477`. Recorded as
 **not observed**, not chased. F-123 rests on C-087's own behavioural proof, not on this run.
+
+---
+
+# WAVE RECORD — C-094 / C-095 / C-096 / C-097 / C-098, and a machine crash
+
+Written by the Lead Orchestrator at integration tip `fc3dd24`. **Nothing merged yet, and that is
+deliberate.** Every card below is complete or in progress on its own branch; the integration branch
+carries charters, findings and evidence only.
+
+## Branch register for this wave
+
+| Branch | Tip | State |
+|---|---|---|
+| `card/C-094-f134` | `53eaf24` | **complete**, reviewed, blocked on its companion C-098 |
+| `card/C-096-f129` | `19875cc` | **complete**, reviewed → APPROVE WITH CORRECTIONS, one round outstanding |
+| `card/C-095-f133` | `0128fa6` | uncommitted partial: `map_ids.py` +187, 801-line test file, 10 G11 jobs |
+| `card/C-098-f135` | `5475ebc` | uncommitted partial: `process_normalizer.py` +203, `release_status.py` +112 |
+
+Worktrees `C:/t/c094`, `C:/t/c095`, `C:/t/c096`, `C:/t/c098`, plus the reviewer's base tree
+`C:/t/rev096base` (detached @ `7862fcc`). None may be pruned while work is outstanding.
+
+## The machine crashed mid-wave. Nothing was lost.
+
+Three agents were in flight. The host crashed; all three processes died. Verified after restart, not
+assumed: integration at `f3ad3d2` with local = origin = `git ls-remote`, no merge in progress,
+nothing staged, **heavy lock ABSENT** (not stranded), zero sprint-owned Python, product-owner
+`streamlit_app.py` intact at 35/2 `sha256:47e4fafa…`, every card branch and every uncommitted partial
+present on disk.
+
+**The peer session `project14-t2pw-60` did not survive.** It had been this wave's independent
+adversarial reviewer and its catches changed the work three times — the three-branch component
+overwrite in C-095's charter, the `EntE` abstention trap, and the release-classifier measurement that
+established F-135. Its evidence is committed under `ORCH-704`, `ORCH-705` and `ORCH-707`.
+
+**Standing instruction for a post-crash resume:** a G11 report whose job was killed is **not
+evidence**, even though the file exists. Every resumed agent was told to re-validate each report it
+intends to cite for a real `exit_reason`, exit code, `FINAL SURVIVING COUNT : 0` and
+`cleanup : success`, and to discard and re-run any that fails that check.
+
+---
+
+## REV-096 — independent adversarial review of C-096. Verdict: **APPROVE WITH CORRECTIONS**
+
+50 G11 reports, 15 pin verdicts, all `0 non-compliant`. The reviewer reproduced every load-bearing
+number itself rather than taking the author's: the `4 failed / 8 passed` base failure with the exact
+four node ids against a live PathBank, `12 passed` at tip, SMOKE **473**, the affected sweep
+`2 failed / 78 passed` identically at base and tip, and `92 passed` / `102 passed` with `.env`
+physically removed.
+
+**Three pieces of work went well beyond the brief and are worth keeping.**
+
+**A mutation matrix** (`REV-096/55`) that loads mutated copies of `compound_resolution.py` under the
+real module name and replays the load-bearing assertions:
+
+```
+M0 unmutated        -> SURVIVES (control)
+M1 elif -> if       -> KILLED   available True while reason still claims the caller disabled it
+M2 arms swapped     -> SURVIVES
+M3 db_reason reset  -> KILLED   reason degrades to db_not_configured
+M4 no __deepcopy__  -> SURVIVES
+```
+
+**M2 corrects the author and the source comment.** Both claim the mechanism rests on matching the
+sentinel *before* the ambient substitution. It does not — the two conditions are identity tests on
+distinct objects and are mutually exclusive, so arm order is irrelevant. **The invariant is the
+`elif`, not the order.** M1 shows the `elif` is genuinely load-bearing; M4 shows `__deepcopy__` is
+redundant because `__reduce__` already routes `deepcopy` through the singleton.
+
+**A 45-scenario `None` differential** (`REV-096/13`, `14`) — 5 populations × 3 resolver selections ×
+`strict_db` both ways, through `run_prefreeze_resolution` and `build_pwml_ir`, capturing the full
+report, payload marker, compounds, preflight and sorted warning/error codes. Base vs tip:
+**byte-identical, sha256 `e750f970b04126…`**. That is a far stronger preservation proof than the
+author's single base-form re-run, and it settles PRODUCT_CONTRACT § 8.
+
+**A retraction of its own method.** Jobs `10` and `17` hid the database by exporting empty
+`PATHBANK_DB_*`. That is **defeated in-process** by `src/t2pw/llm/client.py:22`
+`load_dotenv(dotenv_path=ENV_PATH, override=True)`, which re-applies `.env` over the exported values
+for any test that transitively imports the LLM client. The reviewer caught it from a contradictory
+assertion, voided both jobs as no-DB evidence, and replaced them with `19`/`20`, which physically
+rename `.env` away.
+
+> **Sprint-wide, and it will bite the next agent: exported `PATHBANK_DB_*` variables cannot hide the
+> database. Only moving `.env` works.**
+
+### Findings, and their disposition
+
+| # | Sev | Finding | Disposition |
+|---|---|---|---|
+| 1 | MED | `test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block` is a **third** instance of F-129's ambient-dependence class — FAIL with the DB live at base *and* tip, PASS with `.env` removed at both | **Registered as F-136.** Pre-existing, not chargeable to C-096 |
+| 2 | MED | `NO_DB_RESOLVER` is absorbed by `_REVIEW_REQUIRED_REASONS` and demotes release status under the string `resolution_report_not_ok:db_unavailable` — false, since nothing was unavailable | **Registered as F-137.** Out of C-096's boundary |
+| 3 | LOW | The class docstring claims a non-singleton would "fail **open**, back onto the ambient database". It would not: it is not `None`, so `compound_resolution.py:687` defaults a missing `available` to **True** and produces `available: True` with **no reason at all** — worse than claimed | **Correction required before merge** |
+| 4 | LOW | The stated invariant ("matched BEFORE the ambient substitution") is the wrong one; it is the `elif` | **Correction required before merge** |
+| 5 | MED | Unused re-export at `prefreeze_resolution.py:54-60` and `:80-85`, at module scope, outside the four authorized function bodies | **Boundary extension granted — see below** |
+| 6 | INFO | `__deepcopy__` is dead beside a working `__reduce__` | Recorded, not changed |
+| 7 | INFO | A test cites an evidence path not an ancestor of this branch; resolves after merge | Benign |
+| 8 | INFO | Every C-096 report records `repo_head 7862fcc` because jobs ran uncommitted | Normal |
+
+### Ruling on FINDING 5 — extension GRANTED, recorded rather than waived silently
+
+The charter narrowed `prefreeze_resolution.py` to "the `db_resolver` parameter threading on the
+signatures at `:340`, `:606`, `:1393`, `:1644`". The import and the two `__all__` entries sit at
+module scope, outside all four, and I verified the reviewer's claim myself: both test files import
+the names from `t2pw.pwml.compound_resolution` directly, and no `from … prefreeze_resolution import *`
+exists anywhere in `src/` or `tests/`. **The re-export is genuinely unused.**
+
+I am granting the extension rather than requiring removal, for reasons that should be checkable:
+
+1. The two hunks add **public API surface for the capability this card exists to add**, on the module
+   that is the public entry point — `run_prefreeze_resolution` is what callers call, and requiring
+   them to import the sentinel from a different module than the function it parameterises is a wart,
+   not a safeguard.
+2. The boundary's **stated reason** was that C-011's golden fixture pins the freeze-seam logic. These
+   hunks touch no freeze-seam logic, and the reviewer ran
+   `tests/test_c011_freeze_seam_golden_equivalence.py` **green at tip**.
+3. The change is strictly additive and behaviour-free — proved, not asserted, by the 45-scenario
+   byte-identical differential.
+
+**Not waived: FINDINGS 3 and 4.** A comment stating the wrong invariant is precisely what misleads a
+later reader, and this sprint has paid for that failure twice. C-096 does **not** merge until both
+docstring claims are corrected.
+
+**Also settled by the review, honestly:** no signature actually changed, because all four were
+already `db_resolver: Any` at base. "Threading" was a no-op by construction. And the author's own
+coverage gap was real and contained FINDING 1 — the `s8` partition it ran does not cover the seam,
+and the 23 `qb` nodes it skipped are exactly where the residual defect sits. *"`s8` was enough" was
+not a safe inference.*
+
+---
+
+## F-136 — a third ambient-dependent test, and F-129's class is narrowed rather than closed
+
+**Severity MEDIUM · pre-existing · registered 2026-08-27 from REV-096.**
+
+`tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`
+fails `assert _before[_section] == _after[_section]` — *"processes moved pre-freeze"* — with a live
+PathBank at **both** `7862fcc` and `19875cc`, and passes at both with `.env` removed.
+
+Together with the two the C-096 author found
+(`test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance` and
+`test_canonicalization_preflight_and_species.py::test_preflight_warns_when_no_db_and_no_covering_index`),
+**at least three tests outside C-096's ownership remain green-or-red on whether a developer's PathBank
+happens to be running.**
+
+**Consequence for gating:** the Chunk D gate **cannot go green in this environment**, at base or tip,
+with the database up — `core` carries the `test_pwml_writer` failure and `qb` carries this one.
+Anyone reading a red Chunk D this wave must classify it against this entry before calling it a
+regression.
+
+**F-129 is narrowed, not closed.** C-096 fixes the seam it owns and the four tests it was chartered
+to repair. The class survives elsewhere.
+
+## F-137 — the sentinel's honest reason is collapsed one layer up
+
+**Severity MEDIUM · registered 2026-08-27 from REV-096 · outside C-096's boundary.**
+
+Measured at tip (`REV-096/21`):
+
+```
+reachable_no_match  strict=True  ok=False  failures={'compounds': 'resolution_report_not_ok'}
+NO_DB_RESOLVER      strict=True  ok=False  failures={'compounds': 'resolution_report_not_ok:db_unavailable'}
+                                           review_required={'compounds': 'resolution_report_not_ok:db_unavailable'}
+```
+
+`prefreeze_resolution.py:1673` classifies on `db_resolution.available is False` alone, so
+`_REVIEW_REQUIRED_REASONS` absorbs the sentinel and — via D-068 and `release_status.py:605-660` —
+demotes the release status, emitting `db_unavailable` for a run in which **nothing was unavailable**.
+
+C-096 spends `compound_resolution.py:584-592` arguing that reporting the caller's decision as a
+failure "would be untrue about the run", and then the distinction is collapsed one layer up. The
+direction is **conservative** (a demotion, never a loosening) and **no production caller can reach it
+today**, since all three omit `db_resolver`. Disclosed and chartered rather than fixed inside C-096.
+

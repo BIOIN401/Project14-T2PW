@@ -1,0 +1,180 @@
+{
+  "label": "base-affected-nodb",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev096base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/pin/REV-096/17-base-affected-nodb.pin.json",
+    "--expect-tree",
+    "C:/t/rev096base",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/trev096b/t17",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_canonicalization_preflight_and_species.py",
+    "tests/test_prefreeze_third_export_seam.py"
+  ],
+  "cwd": "C:/t/rev096base",
+  "started_at": "2026-08-27T21:48:38+00:00",
+  "finished_at": "2026-08-27T21:49:11+00:00",
+  "duration_seconds": 32.14690249999694,
+  "timeout_seconds": 1500.0,
+  "root_pid": 200108,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 203688,
+      "name": "python.exe",
+      "ppid": 200108
+    },
+    {
+      "pid": 203680,
+      "name": "git.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 204384,
+      "name": "git.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 204368,
+      "name": "git.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 203892,
+      "name": "git.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 203116,
+      "name": "python.exe",
+      "ppid": 204724
+    },
+    {
+      "pid": 204724,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 203640,
+      "name": "python.exe",
+      "ppid": 204128
+    },
+    {
+      "pid": 204128,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 133340,
+      "name": "python.exe",
+      "ppid": 204448
+    },
+    {
+      "pid": 204448,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 202992,
+      "name": "python.exe",
+      "ppid": 204644
+    },
+    {
+      "pid": 204644,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 197788,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 204700,
+      "name": "python.exe",
+      "ppid": 197788
+    },
+    {
+      "pid": 200620,
+      "name": "python.exe",
+      "ppid": 203688
+    },
+    {
+      "pid": 204164,
+      "name": "python.exe",
+      "ppid": 200620
+    }
+  ],
+  "descendants_terminated": [
+    133340,
+    197788,
+    200620,
+    202992,
+    203116,
+    203640,
+    203680,
+    203688,
+    203892,
+    204128,
+    204164,
+    204368,
+    204384,
+    204448,
+    204644,
+    204700,
+    204724
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203988,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/REV-096/17-base-affected-nodb.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c096",
+    "repo_head": "19875cc8125507b067a06262293c4259685d7571",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

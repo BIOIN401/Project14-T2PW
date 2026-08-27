@@ -1,0 +1,155 @@
+{
+  "label": "tip-affected-livedb",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c096/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/pin/REV-096/15-tip-affected-livedb.pin.json",
+    "--expect-tree",
+    "C:/t/c096",
+    "-q",
+    "-rf",
+    "--basetemp=C:/t/trev096/t15",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_canonicalization_preflight_and_species.py"
+  ],
+  "cwd": "C:/t/c096",
+  "started_at": "2026-08-27T21:47:16+00:00",
+  "finished_at": "2026-08-27T21:47:47+00:00",
+  "duration_seconds": 30.148393600000418,
+  "timeout_seconds": 1500.0,
+  "root_pid": 196784,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 200540,
+      "name": "python.exe",
+      "ppid": 196784
+    },
+    {
+      "pid": 202828,
+      "name": "python.exe",
+      "ppid": 200540
+    },
+    {
+      "pid": 202840,
+      "name": "python.exe",
+      "ppid": 202828
+    },
+    {
+      "pid": 202940,
+      "name": "python.exe",
+      "ppid": 200540
+    },
+    {
+      "pid": 202972,
+      "name": "python.exe",
+      "ppid": 202940
+    },
+    {
+      "pid": 203696,
+      "name": "python.exe",
+      "ppid": 200540
+    },
+    {
+      "pid": 203720,
+      "name": "python.exe",
+      "ppid": 203696
+    },
+    {
+      "pid": 203544,
+      "name": "python.exe",
+      "ppid": 200540
+    },
+    {
+      "pid": 203572,
+      "name": "python.exe",
+      "ppid": 203544
+    },
+    {
+      "pid": 202000,
+      "name": "python.exe",
+      "ppid": 203484
+    },
+    {
+      "pid": 203484,
+      "name": "python.exe",
+      "ppid": 200540
+    },
+    {
+      "pid": 202532,
+      "name": "python.exe",
+      "ppid": 203748
+    },
+    {
+      "pid": 203748,
+      "name": "python.exe",
+      "ppid": 200540
+    }
+  ],
+  "descendants_terminated": [
+    200540,
+    202000,
+    202532,
+    202828,
+    202840,
+    202940,
+    202972,
+    203484,
+    203544,
+    203572,
+    203696,
+    203720,
+    203748
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 198360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202444,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c096/docs/pwml_recovery_sprint/evidence/g11/REV-096/15-tip-affected-livedb.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c096\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c096",
+    "repo_head": "19875cc8125507b067a06262293c4259685d7571",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
