@@ -18,6 +18,13 @@ delta: by C-045a (D-016 put species canonicalization before the freeze) and by
 C-051b (C-051 made ``build_pwml_ir`` refuse unresolved compound rows, so the
 sweep must route through ``run_prefreeze_resolution``). Both deltas are recorded
 above ``GOLDEN``. It must never be moved to make an accidental drift go green.
+
+That count was already stale when C-093 read it -- C-050g, C-050h, C-050i and
+C-050k each moved it afterwards, and C-068 admitted a leg. **Do not read a move
+count from this paragraph; every move is recorded, in order, in the comment block
+above ``GOLDEN``, which is the authority.** C-093's is the sixth: 56 committed
+legs admitted and one excluded, with **no existing digest moved** -- 0 of the 34
+already pinned changed under the sweep that measured the new ones.
 """
 
 from __future__ import annotations
