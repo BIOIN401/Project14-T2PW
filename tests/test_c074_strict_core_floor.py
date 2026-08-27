@@ -860,14 +860,14 @@ CORPUS_UNTOUCHED_BY_C074: Dict[str, int] = {
 # actually chartered to protect -- **no demotion is unaccounted for** -- restated
 # so that the account can be settled per leg rather than by set equality:
 #
-#   * the census is a FLOOR, because a committed corpus cannot legitimately
-#     SHRINK. A leg deleted, a leg silently dropped by ``_committed_legs()``
-#     discovery, or reports corrupted so they stop carrying a release record all
-#     drive the count DOWN and still go red;
+#   * the census is a FLOOR pinned AT THE CURRENT MEASUREMENT, so it hears the
+#     loss of a SINGLE leg while staying silent for growth;
 #   * the historically measured legs must still be PRESENT and still fire exactly
 #     the arms they were measured firing;
-#   * every other demotion must be INDEPENDENTLY JUSTIFIED, and every other
-#     preservation independently defensible.
+#   * every demotion must be JUSTIFIED and every preservation defensible -- with
+#     the sharp caveat on arm A's justification recorded at
+#     ``_independently_justified_arms``, which is a self-consistency pin and NOT
+#     a second opinion.
 #
 # C-073 was rejected this sprint for chartering a rule on ten legs that stripped
 # 41 legitimate rows over the corpus. That is the failure this measurement exists
@@ -875,10 +875,47 @@ CORPUS_UNTOUCHED_BY_C074: Dict[str, int] = {
 # demotion set is this literal list", because the literal list stopped being
 # checkable the moment the corpus grew.
 
-#: C-074's measured census, kept as a FLOOR and never as an equality.
-C074_CENSUS_FLOOR = 38
-#: C-074's measured ``release_ready`` count. FLOOR, for the same reason.
-C074_RECORDED_RELEASE_READY_FLOOR = 9
+# -- The census floors, and why they are set where they are -----------------
+#
+# RE-BASED TO THE MEASURED CENSUS ON 2026-08-27 (C-092, correction round 1).
+#
+# These were first written as C-074's own numbers, 38 and 9. That was WRONG in a
+# way worth recording, because it is the exact failure this card exists to
+# remove: with the corpus at 60 a floor of 38 carries ~22 legs of slack, so
+# losing, corrupting or silently excluding any single unnamed leg was NOT heard.
+# A floor that cannot detect the loss it advertises is a weakened gate wearing a
+# comment that says otherwise.
+#
+# Pinned at the measured census instead, the arithmetic works: the committed
+# corpus is APPEND-ONLY, so a run landing only ever pushes these numbers UP and
+# never false-reds, while the loss of ONE leg drops the count below the floor and
+# goes red immediately.
+#
+# MAINTENANCE CONTRACT. These may be RAISED when a legitimate run lands -- that
+# is the whole point of a floor and it costs one line. They must NEVER be
+# LOWERED: a lowering is either a leg that left the corpus (report it, do not
+# absorb it) or a discovery/parsing regression in ``_committed_legs()`` /
+# ``_load()`` (fix that, do not absorb it either).
+#
+# WHAT THE FLOOR STILL CANNOT SEE, stated because a gate's blind spot belongs
+# next to the gate: ``_committed_legs()`` returns ``[]`` when ``git`` is
+# unavailable or exits non-zero, and every corpus test here then calls
+# ``pytest.skip`` rather than failing. A TOTAL discovery failure is therefore
+# silent. That is pre-existing at the base SHA, but C-092 raised the number of
+# tests it silences from 4 to 12, so it is written down here rather than left
+# implied. It is NOT separable from the genuine-empty case without production
+# changes: ``git ls-files`` exits 0 with empty output for a pathspec matching
+# nothing, so "git worked and the corpus is empty" and "the pathspec silently
+# stopped matching" are the same observation from inside this module. The skip is
+# also the module's standing convention -- the run directory is a working
+# directory, not a committed fixture obligation -- so it is documented and left.
+
+#: The census measured on 2026-08-27: committed legs carrying BOTH a release
+#: record and a ``final_mapped.json`` -- the number this test computes, which is
+#: NOT ``git ls-files | wc -l``. FLOOR, never an equality. Raise, never lower.
+C074_CENSUS_FLOOR = 60
+#: Of those, the count recorded ``release_ready``. Same contract.
+C074_RECORDED_RELEASE_READY_FLOOR = 10
 
 
 def _raw_declared_core_without_a_stated_pathway(report: Dict[str, Any]) -> bool:
@@ -912,14 +949,44 @@ def _raw_declared_core_without_a_stated_pathway(report: Dict[str, Any]) -> bool:
 
 
 def _independently_justified_arms(report: Dict[str, Any], payload: Dict[str, Any]) -> List[str]:
-    """Which arms this leg DESERVES, derived without asking the cap that fired.
+    """Which arms this leg deserves. **The two arms are NOT equally independent.**
 
-    Arm A is measured with this module's ``_connected_core_size()``, which reads
-    ``t2pw.bench.semantic`` -- a different module from the one production consults
-    (``strict_quarantine.largest_connected_core_reactions``) -- and the request-side
-    exemption is applied on top, so a leg whose request asks for exactly one step
-    is NOT justified in being demoted for having one step. Arm B comes from the raw
-    JSON above.
+    Read this before trusting the word "justified" anywhere in this module.
+
+    **ARM B: a genuine second opinion.** Production asks
+    ``CoverageVerdict.declares_core_without_stating_a_pathway``, which infers a
+    declared core from the ``requested_core_declared`` FLAG.
+    ``_raw_declared_core_without_a_stated_pathway`` above instead reads the
+    committed mapping's own keys and additionally requires the context to CARRY
+    TERMS. The two can disagree, and
+    ``test_nonvacuity_c092_an_unjustified_arm_b_demotion_turns_the_corpus_red``
+    exhibits a leg on which they do. For arm B, "justified" means what it says.
+
+    **ARM A: EXACTLY TAUTOLOGICAL inside this harness. It is not a second
+    opinion and must never be read as one.** It is true that this module measures
+    the connected core with ``t2pw.bench.semantic`` while production consults
+    ``strict_quarantine.largest_connected_core_reactions`` -- but the replay
+    harness DESTROYS that independence rather than preserving it. ``_replay()``
+    passes ``connected_core_reactions=_connected_core_size(report, payload)`` and
+    ``single_reaction_scope_requested=requested_scope_is_a_single_reaction(...)``
+    INTO the classifier; production then evaluates the same expression over the
+    same two values (``release_status.py:1141-1145``), and the check below
+    recomputes those same two calls on the same inputs. It cannot disagree -- the
+    exemption clause included, because that is fed the identical value. What it
+    pins is the CLASSIFIER'S CONDITION against itself: that
+    ``classify_release_status`` appends ``REASON_CONNECTED_CORE_BELOW_FLOOR``
+    when, and only when, its own inputs say it should. Worth something; evidence
+    about the leg it is not.
+
+    **THE CONSEQUENCE, stated so nobody has to rediscover it.** A NEW arm-A-only
+    demotion is accepted here without independent vetting, so the C-073-class
+    failure -- a rule that strips legitimate rows corpus-wide -- would pass
+    silently through this check for arm A. What still bounds arm A is not this
+    function: it is the cap property (assertion 1), the named-leg pins
+    (assertion 3), and assertion 5, which requires every leg still
+    ``release_ready`` after the arms run to be defensible on its own graph.
+    Genuinely vetting arm A needs a core measurement that does not pass through
+    ``_replay()`` -- production-free, but non-trivial, and not C-092's.
     """
 
     justified: List[str] = []
@@ -950,16 +1017,22 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
        named demotion still fires exactly the arms it was measured firing, and
        each named preservation still measures the connected core it was measured
        at.
-    4. **No demotion is unjustified.** Every demotion -- named or not -- is
-       independently justified by ``_independently_justified_arms()``, and its
-       control status really was ``release_ready``, so the demotion is attributable
-       to this card rather than to something else. That last per-leg statement is
-       what C-074's ``control_release_ready == len(CORPUS_DEMOTED)`` count was
-       reaching for; said per leg it survives a corpus that grows.
-    5. **No preservation is indefensible.** A preserved ``release_ready`` leg that
-       is NOT one of the six C-074 measured must clear the connected-core floor on
-       its own graph AND name the pathway it was judged against. A silent
-       preservation of a genuinely defective leg still goes red.
+    4. **No demotion is unjustified** -- with the arm-A caveat. Every demotion is
+       checked against ``_independently_justified_arms()``. Read that function's
+       docstring before relying on this: arm B is a real second opinion; arm A is
+       a self-consistency pin on the classifier's own condition and vets nothing
+       about the leg.
+    5. **EVERY LEG STILL ``release_ready`` AFTER THE ARMS RUN IS ACCOUNTED FOR.**
+       This is what C-074's ``control_release_ready == len(CORPUS_DEMOTED)`` was
+       reaching for, and it is asserted here rather than dropped. The old count
+       said the stronger thing -- that NO leg survives C-074 as ``release_ready``
+       -- and that is now FALSE, legitimately: ``2026-08-24_1203/PMC12856317/
+       research`` landed with a two-reaction connected core and a named pathway,
+       is correctly not demoted, and correctly still ships. So the surviving
+       content is the accounting: a leg whose CONTROL is ``release_ready`` and
+       which C-074 does not demote must clear the connected-core floor on its own
+       graph, and -- where it carries a declared context at all -- must name the
+       pathway it was judged against.
     """
 
     legs = _committed_legs()
@@ -974,6 +1047,7 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
     justified: Dict[str, List[str]] = {}
     control_of: Dict[str, str] = {}
     pathway_named: Dict[str, str] = {}
+    has_context: Dict[str, bool] = {}
 
     for label, leg in legs:
         report, payload = _load(leg)
@@ -997,7 +1071,12 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
             continue
         recorded_release_ready += 1
         control_of[label] = control.status
-        context = (report.get("coverage") or {}).get("requested_context") or {}
+        declared_context = (report.get("coverage") or {}).get("requested_context")
+        # A leg that carried NO context at all is C-074's UNDECLARED REGIME, which
+        # this card deliberately leaves alone; assertion 5 must not judge it for
+        # not naming a pathway it was never asked about.
+        has_context[label] = isinstance(declared_context, dict)
+        context = declared_context or {}
         pathway_named[label] = str(context.get("pathway_name") or "").strip()
         arms = _arms_that_fired(applied)
         if arms:
@@ -1037,7 +1116,19 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
             f"{label}: connected core measured at {size}, now {untouched[label]}"
         )
 
-    # 4. No demotion is unjustified -- the property that replaces set equality.
+    # 4. No demotion is unjustified -- for arm B genuinely, for arm A only as a
+    #    self-consistency pin. See _independently_justified_arms.
+    #
+    #    C-092 correction round 1 REMOVED an assertion that stood here:
+    #    ``assert control_of[label] == RELEASE_READY``. It was UNFALSIFIABLE.
+    #    Both arms append their reason only inside ``if status == RELEASE_READY``
+    #    (release_status.py:1149 and :1170), and control and applied are identical
+    #    up to that block, so any leg reaching ``demoted`` necessarily had a
+    #    control of ``release_ready``. It could not fail, and it was advertised as
+    #    the successor to C-074's ``control_release_ready == len(CORPUS_DEMOTED)``
+    #    when it carried none of that count's content. The content -- the
+    #    CONVERSE, about legs that are still release_ready -- is asserted in
+    #    section 5 instead, where it can actually fail.
     for label, fired in sorted(demoted.items()):
         unjustified = sorted(set(fired.split(" + ")) - set(justified[label]))
         assert not unjustified, (
@@ -1045,23 +1136,40 @@ def test_the_full_corpus_replay_demotes_nothing_it_cannot_justify() -> None:
             f"committed artifact justifies only "
             f"{justified[label] or 'no arm at all'} -- {unjustified} is collateral"
         )
-        assert control_of[label] == RELEASE_READY, (
-            f"{label}: an arm of this card fired on a leg the tip already demoted "
-            f"for another reason ({control_of[label]}); the demotion is not C-074's"
-        )
 
-    # 5. No preservation is indefensible.
+    # 5. Every leg STILL release_ready after the arms run is accounted for.
+    #
+    #    THE GATE ON THIS LOOP IS LOAD-BEARING, and getting it wrong was a defect
+    #    in C-092's first pass. ``untouched`` collects every recorded-release_ready
+    #    leg on which neither arm fired -- and the arms abstain on a
+    #    non-release_ready status BY DESIGN, so ``untouched`` also holds legs that
+    #    C-072's unmatched-anchor cap already demoted. Judging those by C-074's
+    #    floor is simply wrong: a future leg recorded release_ready, C-072-capped,
+    #    with a one-reaction core would have red-flagged "arm A failed to fire on
+    #    a leg it exists for" when arm A was never reached. Restricting the loop to
+    #    legs whose CONTROL is release_ready is what makes the claim true: those
+    #    are exactly the legs C-074 had the opportunity to demote and did not.
+    #
+    #    The declared-context gate is the second half. A leg carrying no context at
+    #    all is the UNDECLARED REGIME -- see
+    #    ``test_a_payload_with_no_context_at_all_is_untouched_by_arm_b`` -- which
+    #    C-074 deliberately does not touch, so it must not be failed here for not
+    #    naming a pathway.
     for label in sorted(set(untouched) - set(CORPUS_UNTOUCHED_BY_C074)):
+        if control_of[label] != RELEASE_READY:
+            continue
         assert untouched[label] >= MIN_CONNECTED_CORE_REACTIONS, (
-            f"{label} was preserved as release_ready with a connected core of "
+            f"{label} survives C-074 as release_ready with a connected core of "
             f"{untouched[label]}, below the floor: arm A failed to fire on a leg "
             f"it exists for"
         )
+        if not has_context[label]:
+            continue
         assert pathway_named[label], (
-            f"{label} was preserved as release_ready while naming no pathway. Over "
-            f"the COMMITTED corpus every real run carries a Stage-0 context, so a "
-            f"shipped leg with a blank pathway_name is F-100's shape reaching "
-            f"release_ready by a route arm B did not see"
+            f"{label} survives C-074 as release_ready, carries a declared context, "
+            f"and names no pathway. That is F-100's shape reaching release_ready by "
+            f"a route arm B did not see -- most likely a requested_core_source that "
+            f"is not 'pathway_context'"
         )
 
 
@@ -1187,6 +1295,13 @@ def test_every_committed_arm_b_hit_declares_a_core_and_names_no_pathway() -> Non
 _F101_LEG = "2026-08-22_2147/PMC12856317/strict"
 _F100_LEG = "2026-08-22_2147/PMC13231680/strict"
 _PRESERVED_LEG = "2026-08-21_2239/PMC12452463/strict"
+#: A leg whose CONTROL is release_ready and which C-074 correctly does NOT demote:
+#: a two-reaction connected core against a request that names "heme biosynthesis".
+#: It is the only shape that reaches assertion 5, which is gated on a control of
+#: release_ready, so the silent-preservation non-vacuity test must fabricate from
+#: THIS leg. Fabricating from a C-072-capped leg would land in ``untouched`` but be
+#: skipped by the gate, quietly disarming the guard.
+_CONTROL_READY_PRESERVED_LEG = "2026-08-24_1203/PMC12856317/research"
 
 
 def _synthetic_leg(tmp_path: Path, source: Path, name: str, mutate: Any) -> Path:
@@ -1233,43 +1348,78 @@ def _serve_perturbed_corpus(
 def test_nonvacuity_c092_a_shrinking_corpus_turns_the_census_floor_red(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """**NON-VACUITY.** The floor replaced ``== 38``. It must still hear LOSS.
+    """**NON-VACUITY.** The floor replaced ``== 38``, and it must hear the loss of
+    ONE leg -- not merely of a wholesale collapse.
 
-    Serve three legs where the corpus holds sixty and the census floor fires.
-    This is the event the equality was there for; growth, which it also fired on,
-    was never one.
+    This test is the direct evidence for C-092 correction round 1. The floor was
+    first pinned at C-074's own census of 38 against a corpus of 60, which left
+    ~22 legs of slack: dropping a single unnamed leg was silently absorbed, while
+    the comment beside it claimed every deletion went red. Pinned at the measured
+    census, exactly one leg removed is enough.
+
+    ``keep=len(corpus) - 1`` rather than a literal, so this stays true the next
+    time the floor is legitimately raised.
     """
 
-    _real_corpus()
-    _serve_perturbed_corpus(monkeypatch, keep=3)
+    corpus = _real_corpus()
+    _serve_perturbed_corpus(monkeypatch, keep=len(corpus) - 1)
     with pytest.raises(AssertionError, match="SHRUNK below C-074's measured census"):
         test_the_full_corpus_replay_demotes_nothing_it_cannot_justify()
 
 
+def _unchanged(_report: Dict[str, Any], _payload: Dict[str, Any]) -> None:
+    """A no-op mutation: ``_synthetic_leg`` used purely to RELABEL a real leg."""
+
+
 def test_nonvacuity_c092_losing_a_named_demotion_turns_the_corpus_test_red(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """**NON-VACUITY.** A historically measured demotion vanishing from the
-    committed corpus still goes red, which is what the old set equality bought."""
+    committed corpus still goes red -- which is what the old set equality bought
+    and what assertion 3 has to keep buying.
+
+    The leg is dropped and an IDENTICAL COPY re-added under a different label, so
+    ``with_release`` and ``recorded_release_ready`` are unchanged and the census
+    floor does not fire. That isolation is the point: without it the floor (which
+    since correction round 1 is sensitive to a single leg) would raise first and
+    this test would pass on the wrong assertion, proving nothing about assertion 3.
+    """
 
     legs = _real_corpus()
     if _F101_LEG not in legs:
         pytest.skip(f"{_F101_LEG} is not in this checkout")
-    _serve_perturbed_corpus(monkeypatch, drop=(_F101_LEG,))
+    relabelled = _synthetic_leg(tmp_path, legs[_F101_LEG], "relabelled_demotion", _unchanged)
+    _serve_perturbed_corpus(
+        monkeypatch,
+        drop=(_F101_LEG,),
+        add=(("2099-01-01_0000/PMCRELABEL/strict", relabelled),),
+    )
     with pytest.raises(AssertionError, match="demoted these legs and no longer does"):
         test_the_full_corpus_replay_demotes_nothing_it_cannot_justify()
 
 
 def test_nonvacuity_c092_losing_a_named_preservation_turns_the_corpus_test_red(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """**NON-VACUITY.** The preservation side of the same property: one of the six
-    legs C-074 measured itself NOT touching disappearing is still a red."""
+    legs C-074 measured itself NOT touching disappearing is still a red.
+
+    Census held constant by the same relabelling device as the demotion case
+    above, and for the same reason. The copy is C-072-capped, so assertion 5 skips
+    it and the only thing left to fire is assertion 3.
+    """
 
     legs = _real_corpus()
     if _PRESERVED_LEG not in legs:
         pytest.skip(f"{_PRESERVED_LEG} is not in this checkout")
-    _serve_perturbed_corpus(monkeypatch, drop=(_PRESERVED_LEG,))
+    relabelled = _synthetic_leg(
+        tmp_path, legs[_PRESERVED_LEG], "relabelled_preservation", _unchanged
+    )
+    _serve_perturbed_corpus(
+        monkeypatch,
+        drop=(_PRESERVED_LEG,),
+        add=(("2099-01-01_0000/PMCRELABEL/research", relabelled),),
+    )
     with pytest.raises(AssertionError, match="preserved these release_ready legs"):
         test_the_full_corpus_replay_demotes_nothing_it_cannot_justify()
 
@@ -1354,14 +1504,24 @@ def test_nonvacuity_c092_an_unjustified_arm_b_hit_turns_the_blast_radius_red(
 def test_nonvacuity_c092_a_defective_silent_preservation_turns_the_corpus_red(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """**NON-VACUITY** for the preservation side. A leg that ships ``release_ready``
-    naming NO pathway, by a route arm B does not see, must not be absorbed as
-    "just another legitimate addition". The old equality would have caught it, for
-    the wrong reason -- it caught every addition. This catches only this one."""
+    """**NON-VACUITY** for the preservation side, and the guard on assertion 5.
+
+    A leg that survives C-074 as ``release_ready`` while naming NO pathway, by a
+    route arm B does not see, must not be absorbed as "just another legitimate
+    addition". The old equality would have caught it, for the wrong reason -- it
+    caught every addition. This catches only this one.
+
+    **Fabricated from ``_CONTROL_READY_PRESERVED_LEG``, and that matters.**
+    Assertion 5 is gated on a control of ``release_ready`` (correction round 1),
+    because ``untouched`` also holds legs C-072 already capped. Fabricating from a
+    C-072-capped leg -- as this test first did -- would still land in ``untouched``
+    but be skipped by the gate, so the test would pass while proving nothing. This
+    source leg is one C-074 genuinely had the opportunity to demote and did not.
+    """
 
     legs = _real_corpus()
-    if _PRESERVED_LEG not in legs:
-        pytest.skip(f"{_PRESERVED_LEG} is not in this checkout")
+    if _CONTROL_READY_PRESERVED_LEG not in legs:
+        pytest.skip(f"{_CONTROL_READY_PRESERVED_LEG} is not in this checkout")
 
     def _blank_the_pathway(report: Dict[str, Any], _payload: Dict[str, Any]) -> None:
         coverage = report.setdefault("coverage", {})
@@ -1369,11 +1529,13 @@ def test_nonvacuity_c092_a_defective_silent_preservation_turns_the_corpus_red(
         coverage["requested_core_source"] = "explicit_argument"
         coverage.setdefault("requested_context", {})["pathway_name"] = ""
 
-    fabricated = _synthetic_leg(tmp_path, legs[_PRESERVED_LEG], "no_pathway", _blank_the_pathway)
+    fabricated = _synthetic_leg(
+        tmp_path, legs[_CONTROL_READY_PRESERVED_LEG], "no_pathway", _blank_the_pathway
+    )
     _serve_perturbed_corpus(
         monkeypatch, add=(("2099-01-01_0000/PMCQUIET/strict", fabricated),)
     )
-    with pytest.raises(AssertionError, match="while naming no pathway"):
+    with pytest.raises(AssertionError, match="names no pathway"):
         test_the_full_corpus_replay_demotes_nothing_it_cannot_justify()
 
 

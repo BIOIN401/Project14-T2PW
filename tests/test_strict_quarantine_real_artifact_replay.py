@@ -1232,6 +1232,21 @@ def _move_is_c010_shaped(row: Tuple[Any, ...]) -> List[str]:
       that quietly stops refusing for some OTHER reason is exactly the weakening
       merge rule 6 forbids.
 
+    **THE LOOSENING THIS ACCEPTS, named rather than implied.** A shape test cannot
+    tell the removal of a FALSE degree-zero positive from the removal of a TRUE
+    orphan. Both look identical here: a degree-zero entity disappears, the leg
+    gains exportability, and a ``degree_zero_export`` refusal is withdrawn. Under
+    the old set equality a leg making that move had to be looked at by a human and
+    tabulated before the suite went green; now an unlisted leg making it is
+    accepted on shape alone. What bounds that is claim 1 -- the five allowlisted
+    legs still transition EXACTLY as recorded, so C-010 has not changed for the
+    legs whose correctness was actually established -- and claim 3, which holds
+    over every moved leg listed or not. The trade is deliberate: a pin that went
+    red on every committed run taught nobody anything, and claims 1 and 3 are the
+    ones that bound the fix. If a future card needs per-leg vetting of new moves,
+    it needs a chemistry-aware oracle for "was that orphan real", which this
+    module does not have and cannot fabricate.
+
     Returns the list of violations, empty when the move is C-010-shaped.
     """
 
