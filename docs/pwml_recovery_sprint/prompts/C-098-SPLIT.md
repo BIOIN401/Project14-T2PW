@@ -121,7 +121,9 @@ Recorded because it is the merge-rule-6 evidence and a reviewer will ask for it.
 
 ## 6. Process
 
-`C-098.md` § 8 still binds, per arm: `--task C-098A` / `--task C-098B`, `--expect-tree` matching the
+`C-098.md` § 8 still binds, per arm: `--task C-098a` / `--task C-098b` — **lowercase suffix,
+corrected 2026-08-27: the allocator rejects `C-098A`, and the implementer's guard caught the
+`ValueError` before its text could become a `--json` path**; `--expect-tree` matching the
 worktree, `PYTHONPATH=<tree>/src`, `T2PW_OFFLINE_CURATOR=1`, `--basetemp` under a pre-created parent,
 `--pin-verdict` on every pytest run, G11 allocator output guarded against anything containing `rror`,
 `FINAL SURVIVING COUNT : 0` and `cleanup : success` confirmed after every job, wrapper stdout saved
