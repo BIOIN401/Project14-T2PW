@@ -5598,3 +5598,104 @@ which instrument is authoritative.
 
 **Explicit instruction to whoever charters it: the gold is not the thing to change.** Removing a
 forbidden identifier to raise coverage is a merge-rule-6 rejection, not a fix.
+
+# T-107 READINESS — 2026-08-27 REVISION
+
+**This EXTENDS the table at `LEDGER.md:4359` ("T-107 READINESS TABLE — 2026-08-25, post-ruling
+wave"). It does not replace it and there is not a second table.** The 2026-08-25 rows stand as
+written except where a row is explicitly revised below; unrevised rows carry forward unchanged.
+Handover from the peer sprint session, which authored the original and is holding the branch.
+
+**Verdict unchanged: T-107 remains NO-GO.** What changed is *why*, and the reason is now larger.
+
+---
+
+## A GOVERNING CAVEAT, which must be read BEFORE the per-priority table
+
+**On the affected papers, Priorities 1 and 4/5 score the same rows in opposite directions, so
+neither is currently a measurement of pipeline quality.**
+
+On `PMC12782028/strict`, `LIPA`, `LBR`, `SREBF1` and `SREBF2` are simultaneously:
+
+* the **Priority-1 false real identifiers** when the pipeline exports them carrying accessions, and
+* a **Priority-4/5 coverage penalty** when it does not match them.
+
+**No behaviour available to the pipeline scores well on both.** Corpus-wide the pattern is not
+isolated: **62 of 281 unmatched terms across 32 legs and 6 papers are gold-forbidden identifiers**
+(F-132, `ORCH-702/03`) — roughly one coverage penalty in five is levied for failing to match a term
+the gold forbids exporting.
+
+**This is a statement about the instrument, not about the code**, and it governs how rows 1, 4 and 5
+below are read. It is deliberately placed above the table rather than added as a sixth row, because a
+sixth row would compete with the priorities instead of qualifying them.
+
+---
+
+## REVISED ROWS
+
+| Priority | Reachable? | Revision |
+|---|---|---|
+| **1** — zero false real identifiers | **NO** | The 2026-08-25 row cited F-127 (no entity provenance carrier) and F-128 (D-069 compliance pushes the count *up*). **Both still stand.** Two corrections: the live count is **6, not 8** — the two PLP rows are already withheld by C-081 (`b869780`), which merged one day after T-106 was committed, now confirmed by replay through the shipped predicate rather than inferred. And the row read as a pure extraction problem; **four of the six survivors are simultaneously a coverage penalty**, per the caveat above. Expected T-107 result: **FAIL at 6 or higher.** |
+| **4** — requested-core coverage | **NO** | The 2026-08-25 row attributed the failure entirely to Stage 0's non-curated `key_compounds`/`key_proteins` draw and quoted 0/8. Still true as far as it goes. **A different and larger cause is now measured:** 62 of 281 unmatched terms corpus-wide are gold-forbidden (F-132). The draw is not merely uncurated; it pulls in entities the same gold case prohibits exporting, and the metric then penalises the pipeline for obeying the gold. |
+| **5** — strict PWML export | **NO** | The 2026-08-25 row said both survivors are *"`correctly_blocked` and measured so"*. **The word "correctly" is withdrawn for `PMC12782028`.** Its `requested_core_coverage_below_minimum:0.222<0.500` penalty is levied partly for not matching `LIPA`/`LBR`/`SREBF1`/`SREBF2`, which the gold forbids exporting. **The block is real; calling it *correct* asserts the instrument is sound, and F-132 says it is not.** The leg is `blocked`, and whether that block is correct is exactly what F-132 puts in question. |
+
+Rows **2** (NOT EVALUATED on 11/20 legs) and **3** (PASS) carry forward unrevised.
+
+## REVISED GATE CONDITION 1
+
+The 2026-08-25 text: *"priority 1 has a safe correction **or an explicitly accepted measurement
+limitation**"*, with the note that only the product owner can grant the acceptance. **Still NOT MET,
+and the size of what is being asked has grown.**
+
+* **As written 2026-08-25**, the limitation to accept was: *priority 1 cannot reach 0 until a
+  participant-provenance carrier and an entity evidence span exist.*
+* **As it now stands**, it is: *priority 1 and priority 4/5 are scoring the same rows in opposite
+  directions, so neither is currently a measurement of pipeline quality on the affected papers.*
+
+**That is a materially larger thing to ask a product owner to accept, and it must be put as the
+larger thing rather than as a footnote to the smaller one.**
+
+## GATE CONDITIONS — status at `65cc96a`
+
+| # | condition | state |
+|---|---|---|
+| 1 | priority 1 has a safe correction or an accepted limitation | **NOT MET** — and enlarged, above. Acceptance is the product owner's alone. |
+| 2 | priority 5 denominator reconciled | **MET** — carried forward; C-088 merged. |
+| 3 | the two strict-denominator papers classified honestly | **PARTIALLY WITHDRAWN** — see row 5. `PMC12096016` stands; `PMC12782028` is `blocked`, not `correctly_blocked`. |
+| 4 | applicable F-116 / F-123 corrections merged | **MET** — C-086 and C-087 both merged and independently reviewed. |
+| 5 | acceptance instrumentation remains honest | **MET, and improved** — C-085 made priority 2 honest; F-132 now names a contradiction the instrumentation could not previously see. |
+| 6 | affected-paper validation passes | **IN FLIGHT** — cohort running, `runs_verify/2026-08-27_1341`, 2 strict legs. **Cannot observe Priority 1: all six survivors are on research legs. A `0` there is `not evaluated on this cohort`, never improvement.** |
+| 7 | all processes closed | **MET at every checkpoint** — every job zero survivors, cleanup success. |
+| 8 | integration clean and pushed | **MET** — `65cc96a`, local = origin = `ls-remote`. |
+| 9 | **deterministic suite genuinely green** | **MET — newly, and for the first time this wave.** C-092 and C-093 merged; 5 failed/252 → 2 failed/263 → **0 failed/273, 0 warnings** on a forced fresh compile; SMOKE **473**. |
+| 10 | F-130 reconciled | **MET** — all four claims confirmed, claims 3 and 4 measured through the production classifier. Narration only; no production change justified or made. |
+
+**Two conditions unmet, one partially withdrawn, one in flight. Condition 1 remains the one this
+session's work cannot clear at all**, and it has grown rather than shrunk.
+
+## A CAUTION ABOUT THE GREEN SUITE, recorded because it has already bitten this sprint
+
+**273 passed / 0 warnings certifies the four modules it ran, not the tree.** The D-065 gold edit broke
+`test_c056b_semantic_denominators.py` while SMOKE stayed 473 throughout, because that module is not in
+SMOKE — and two lanes then reported the red as pre-existing because their base already contained the
+edit. **If the cohort produces anything gold-adjacent, A/B it against a pre-change SHA rather than
+trusting the suite.**
+
+Related near-miss, kept visible: C-093 **excluded** the identity-ladder leg rather than pinning its
+digest. Pinning would have written the defect into the golden as expected behaviour — the same class
+of error as "fixing" F-129's four tests by making them pass against an ambient live database. **Two
+near-misses this sprint with that shape.**
+
+## WHAT WOULD CHANGE THE VERDICT
+
+Unchanged in kind from 2026-08-25, enlarged in content. Either:
+
+1. the product owner **explicitly accepts the enlarged limitation** in gate condition 1 — including
+   that Priorities 1 and 4/5 currently contradict each other on the affected papers — and states a
+   non-zero Priority-1 floor T-107 may run against; **or**
+2. the **F-128 / D-069 conflict is ruled** *and* **F-132's instrument contradiction is ruled**, so
+   that a participant-provenance representation and a reconciled anchor set can be chartered.
+
+**Merging more cards will not do it.** C-092 and C-093 were both worth merging and neither moves
+Priority 1. **Until one of the two above happens, T-107 stays NO-GO, and that remains the correct
+outcome rather than a delay.**
