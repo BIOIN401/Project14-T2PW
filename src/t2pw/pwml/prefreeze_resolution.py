@@ -51,7 +51,13 @@ import re
 from copy import deepcopy
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Tuple
 
-from t2pw.pwml.compound_resolution import _db_id, _resolve_compound_rows, ensure_resolution_report
+from t2pw.pwml.compound_resolution import (
+    DB_RESOLUTION_DISABLED_REASON,
+    NO_DB_RESOLVER,
+    _db_id,
+    _resolve_compound_rows,
+    ensure_resolution_report,
+)
 from t2pw.pwml.ir import (
     PREFREEZE_DB_RESOLUTION_FIELD,
     SPECIES_CANONICALIZATION_FIELD,
@@ -71,6 +77,12 @@ COMPOUND_DB_FIELD = "pathbank_compound_id"
 _MAX_RESOLUTION_PASSES = 4
 
 __all__ = [
+    # Re-exported so the module that owns the public ``db_resolver`` signatures
+    # is also where a caller finds the value that turns DB resolution off. The
+    # definition stays in ``compound_resolution``, which is the only place that
+    # reads it.
+    "DB_RESOLUTION_DISABLED_REASON",
+    "NO_DB_RESOLVER",
     "PrefreezeResolutionError",
     "PREFREEZE_CANONICALIZERS",
     "SPECIES_RENAME_DECLINED_CODE",
@@ -358,6 +370,19 @@ def resolve_compounds_prefreeze(
     actually chose it (:func:`_resolve_to_fixed_point`). Anything else would be
     this module inventing a decision the resolver never made.
 
+    ``db_resolver`` therefore has **three** states, and only the third is new
+    (F-129). A resolver is used as given; ``None`` is *unspecified* and opens the
+    ambient connection, as above and unchanged; and
+    :data:`~t2pw.pwml.compound_resolution.NO_DB_RESOLVER` means *resolve nothing
+    against a database*, recorded as ``db_resolution.reason =``
+    :data:`~t2pw.pwml.compound_resolution.DB_RESOLUTION_DISABLED_REASON` so the
+    report says the caller disabled it rather than that a lookup failed. Passing
+    it opens no connection, which is why it cannot be spelled ``None``: ``None``
+    must keep opening one here or the exporter would have to, and §8 forbids
+    that. The value is passed straight through to
+    :func:`~t2pw.pwml.compound_resolution._resolve_compound_rows`, which is the
+    only function that interprets it.
+
     Raises :class:`PrefreezeResolutionError` on an ambiguous rename or a
     reference the rename would break. On any raise the payload is unchanged.
     """
@@ -633,6 +658,13 @@ def _resolve_to_fixed_point(
     carried a ``db_status`` -- keeps the **account of the decision**. The per-pass
     log entries truncate back for the same reason: a repeat observation is not a
     second consultation.
+
+    ``db_resolver`` is passed through untouched on every pass, all three states of
+    it -- a resolver, ``None`` (ambient), or
+    :data:`~t2pw.pwml.compound_resolution.NO_DB_RESOLVER` (none at all). This
+    function must never substitute one for another: the selection is the caller's,
+    and re-deciding it between passes would make the fixed point depend on which
+    pass asked.
     """
 
     incoming = _snapshot_provenance(rows)
@@ -1416,6 +1448,13 @@ def resolve_species_prefreeze(
     ``review_required`` outcome is reachable here only through the compound
     canonicalizer beside it, which is where the database actually is.
 
+    That is also why all three ``db_resolver`` states -- a resolver, ``None``, and
+    :data:`~t2pw.pwml.compound_resolution.NO_DB_RESOLVER` -- are equally ignored
+    here and none of them is recorded: a stage that consults no database has no
+    honest verdict to publish about one, and inventing an ``available`` here would
+    trip :func:`run_prefreeze_resolution`'s "more than one canonicalizer recorded
+    db_resolution" assertion by design.
+
     Raises :class:`PrefreezeResolutionError` on a source name that canonicalizes
     two ways, or a reference the rename would break. On any raise the payload is
     unchanged.
@@ -1680,6 +1719,20 @@ def run_prefreeze_resolution(
     The report is the whole output: nothing here mutates the payload beyond what
     the canonicalizers did, and every canonicalizer runs even if an earlier one
     reported a failure, so the verdict describes the payload as it stands.
+
+    ``db_resolver`` is handed to every canonicalizer exactly as received, in all
+    three of its states. ``None`` -- the default, and what every production caller
+    passes today -- still means *unspecified*, so the compound stage opens the
+    ambient PathBank connection and the exporter never has to
+    (``PRODUCT_CONTRACT`` §8). :data:`~t2pw.pwml.compound_resolution.NO_DB_RESOLVER`
+    is the caller saying *no database*; the DB-reachability carrier below then
+    writes ``{"available": False, "reason":``
+    :data:`~t2pw.pwml.compound_resolution.DB_RESOLUTION_DISABLED_REASON` ``}`` onto
+    the payload, so the preflight the exporter emits states the caller's decision
+    instead of a lookup failure. Nothing about that path is special-cased here: it
+    is the same carrier, reading the same verdict, which is why an explicitly
+    offline run and an unreachable one stay distinguishable all the way into the
+    product-visible export content D-032 clause 6 governs.
     """
 
     report: Dict[str, Any] = {

@@ -62,6 +62,10 @@ if "streamlit" not in sys.modules:
     _st.session_state.__contains__ = lambda _s, _k: False
     sys.modules["streamlit"] = _st
 
+from t2pw.pwml.compound_resolution import (  # noqa: E402
+    DB_RESOLUTION_DISABLED_REASON,
+    NO_DB_RESOLVER,
+)
 from t2pw.pwml.ir import (  # noqa: E402
     COMPOUND_RESOLUTION_VERDICT_FIELD,
     PREFREEZE_DB_RESOLUTION_FIELD,
@@ -372,7 +376,7 @@ def test_db_reachability_reaches_the_exporter_in_both_directions(
     """
 
     payload = _shell_payload(CARRIER_POPULATIONS[population])
-    resolver = _CannedDb() if reachable else None
+    resolver = _CannedDb() if reachable else NO_DB_RESOLVER
     prefreeze = run_prefreeze_resolution(payload, strict_db=False, db_resolver=resolver)
     prefreeze_available = (
         prefreeze["compounds"]["resolution_report"]["db_resolution"]["available"]
@@ -388,7 +392,7 @@ def test_db_reachability_reaches_the_exporter_in_both_directions(
     # binds to. A stray key here is a moved decision hash, not a cosmetic.
     assert payload[PREFREEZE_DB_RESOLUTION_FIELD] == (
         {"available": True} if reachable
-        else {"available": False, "reason": "db_not_configured"})
+        else {"available": False, "reason": DB_RESOLUTION_DISABLED_REASON})
 
 
 def test_an_all_legacy_population_proves_the_value_is_carried_not_inferred() -> None:
@@ -405,7 +409,8 @@ def test_an_all_legacy_population_proves_the_value_is_carried_not_inferred() -> 
     for reachable in (True, False):
         payload = _shell_payload(CARRIER_POPULATIONS["all_legacy"])
         run_prefreeze_resolution(
-            payload, strict_db=False, db_resolver=_CannedDb() if reachable else None
+            payload, strict_db=False,
+            db_resolver=_CannedDb() if reachable else NO_DB_RESOLVER,
         )
         blobs[reachable] = json.dumps(
             payload["entities"]["compounds"], sort_keys=True, default=str
@@ -447,8 +452,9 @@ def test_a_reachable_db_with_no_matching_row_does_not_claim_it_was_unavailable()
 
 
 @pytest.mark.parametrize(
-    ("resolver", "reason"), [(None, "db_not_configured"), (_DownDb(), "harvest_db_down")],
-    ids=["not_configured", "configured_but_down"])
+    ("resolver", "reason"),
+    [(NO_DB_RESOLVER, DB_RESOLUTION_DISABLED_REASON), (_DownDb(), "harvest_db_down")],
+    ids=["disabled_by_caller", "configured_but_down"])
 def test_the_same_row_still_warns_and_names_the_real_reason(resolver: Any, reason: str) -> None:
     """The other direction, so the fix is not "never warn again".
 

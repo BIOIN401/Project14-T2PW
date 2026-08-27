@@ -576,6 +576,103 @@ def _admit_db_identity(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, 
     return decision
 
 
+# ---------------------------------------------------------------------------
+# Resolver selection -- the third state (F-129).
+# ---------------------------------------------------------------------------
+
+#: The ``db_resolution.reason`` recorded when the caller passed
+#: :data:`NO_DB_RESOLVER`. Deliberately **not** one of the reasons already in
+#: this vocabulary: ``db_not_configured`` means no ambient PathBank settings were
+#: found, ``harvest_db_down`` / ``db_unavailable`` mean a configured resolver
+#: answered ``available() is False``, and ``db_resolver_unavailable:<exc>`` means
+#: constructing one raised. All three say *a lookup was attempted and did not
+#: succeed*. This one says the caller **asked for no lookup at all**, which is
+#: not a failure, and a report that spelled it as one would be untrue about the
+#: run. It is added in the same spirit as the existing distinction between
+#: ``db_not_configured`` and ``harvest_db_down``.
+DB_RESOLUTION_DISABLED_REASON = "db_resolution_disabled_by_caller"
+
+
+class _NoDbResolver:
+    """The type of :data:`NO_DB_RESOLVER`; recognised by identity, never by shape.
+
+    It deliberately implements **no** resolver protocol -- no ``available``, no
+    ``resolve``, no ``last_error``. :func:`_resolve_compound_rows` recognises the
+    **singleton**, by ``is``, and never a shape: giving this class a shape would
+    only create a second, quieter way of meaning the same thing, which is the
+    defect being closed rather than the fix.
+
+    **What a non-singleton instance actually does -- measured, because the first
+    draft of this paragraph guessed and guessed wrong.** It claimed such an
+    instance would "fail open, back onto the ambient database", and that anything
+    receiving it "must fail visibly". Neither is true, and the truth is worse. A
+    fresh ``_NoDbResolver()`` is not the singleton and is not ``None``, so it
+    reaches **neither** arm of the selection in :func:`_resolve_compound_rows`;
+    the availability ladder below those arms then defaults its missing
+    ``available`` to ``True`` -- ``getattr(db_resolver, "available",
+    lambda: True)()`` -- wraps the impostor in :class:`PathWhizCompoundResolver`
+    and reports (``evidence/c096_impostor_probe.py``, G11 ``C-096/20``, with the
+    ambient database stubbed out so nothing else can contribute)::
+
+        singleton       available=False reason='db_resolution_disabled_by_caller'
+        fresh impostor  available=True  reason=<ABSENT>
+        None            available=False reason='db_not_configured'
+
+    ``available: True`` carrying **no reason at all**: a silent false
+    availability, on a population that resolved nothing, which suppresses the
+    preflight warning D-032 clause 6 rules product-visible export content. So the
+    failure is neither open nor visible -- it is an unresolved population reported
+    as though a database had answered it.
+
+    That ``getattr`` default is pre-existing and is not this card's to change,
+    which is exactly why identity is defended here instead: copying returns the
+    singleton itself, because ``resolve_compounds_prefreeze`` deep-copies the rows
+    it resolves and a future caller could as easily deep-copy a kwargs dict.
+    ``tests/test_c096_explicit_no_resolver.py`` pins that under ``copy``,
+    ``deepcopy`` and ``pickle``.
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return "NO_DB_RESOLVER"
+
+    def __copy__(self) -> "_NoDbResolver":
+        return self
+
+    def __deepcopy__(self, _memo: Any) -> "_NoDbResolver":
+        return self
+
+    def __reduce__(self) -> Any:
+        return (_no_db_resolver, ())
+
+
+def _no_db_resolver() -> "_NoDbResolver":
+    """Pickle/copy hook for :data:`NO_DB_RESOLVER`. Returns the singleton."""
+    return NO_DB_RESOLVER
+
+
+#: **Resolve nothing against a database** -- the third resolver selection, and
+#: the only one that says what it means. The full vocabulary is now:
+#:
+#: ``db_resolver=<resolver>``
+#:     use exactly this resolver, unchanged.
+#: ``db_resolver=None``
+#:     *unspecified* -- open the ambient PathBank connection. **Unchanged, and
+#:     load-bearing:** ``PRODUCT_CONTRACT`` §8 forbids an exporter opening one, so
+#:     the pre-freeze call is the one that must (D-015, D-032 clause 6, and
+#:     ``prefreeze_resolution.resolve_compounds_prefreeze``'s docstring).
+#: ``db_resolver=NO_DB_RESOLVER``
+#:     resolve against no database; record it as the caller's decision.
+#:
+#: Before this existed ``None`` carried both the first and third meanings, so the
+#: third was unreachable: a caller that deliberately disabled DB resolution was
+#: handed the ambient live database instead and nothing in the report said so
+#: (F-129). Adding a value fixes that without redefining ``None``, which could
+#: not be redefined without pushing the connection into the exporter.
+NO_DB_RESOLVER = _NoDbResolver()
+
+
 def _resolve_compound_rows(
     rows: List[Dict[str, Any]],
     *,
@@ -591,7 +688,29 @@ def _resolve_compound_rows(
     resolver: Optional[PathWhizCompoundResolver] = None
     db_reason = ""
 
-    if db_resolver is None:
+    if db_resolver is NO_DB_RESOLVER:
+        # The caller said "resolve nothing against a database". Recorded under
+        # its own reason so the report never claims a lookup failed, and
+        # ``db_reason`` is non-empty from here on, which is what stops either arm
+        # of the availability ladder below overwriting it.
+        #
+        # **The ``elif`` is the load-bearing part, not the order of the arms.**
+        # An earlier comment here said the sentinel had to be matched "BEFORE the
+        # ambient substitution"; that is not the invariant. Both conditions are
+        # identity tests against distinct objects, so they are mutually exclusive
+        # and swapping the two arms is a measured no-op. What must never happen is
+        # the two becoming independent ``if``s: this arm sets ``db_resolver =
+        # None`` deliberately, to rejoin the same downstream ladder an
+        # unconfigured ambient reaches, so a second ``if db_resolver is None``
+        # would immediately substitute ``PathBankDbResolver.from_env()`` and
+        # resolve the explicitly offline caller against the live database after
+        # all. Mutation-probed both ways, on this tree: swapping the arms leaves
+        # both test files green (22 passed, G11 ``C-096/21``), while splitting the
+        # ``elif`` into two ``if``s is killed by 9 tests across them, the four
+        # F-129 repairs included (9 failed / 13 passed, G11 ``C-096/22``).
+        db_resolver = None
+        db_reason = DB_RESOLUTION_DISABLED_REASON
+    elif db_resolver is None:
         try:
             from t2pw.mapping.map_ids import PathBankDbResolver
 
