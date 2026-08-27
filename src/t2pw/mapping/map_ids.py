@@ -6338,6 +6338,174 @@ def _single_component_wrapper_result(
     )
 
 
+# ── F-133: a GENERATED wrapper must not be re-resolved onto a superset complex ──
+#
+# C-086 closed the component-match path inside
+# ``_rewrite_reaction_protein_enzymes_to_complexes``. The same attachment
+# survived one stage later: the generic complex-mapping loop in ``map_payload``
+# re-resolves EVERY protein_complex row, the generated wrappers included, and
+# ``map_protein_complex_row``'s ``resolved_component_species`` rule accepts a
+# single component candidate as ``matched`` without checking that the candidate's
+# membership matches the row's. On ``PMC12096016/strict`` that gave ``EntF
+# complex`` and ``EntD complex`` -- one-protein technical wrappers -- PathBank
+# complex 3623 and all four of its components (F-133).
+#
+# A generated wrapper exists because the PathWhiz importer refuses a bare protein
+# as a reaction enzyme. It represents ONE protein; it is not a biological claim
+# about an assembly, so it has no standing to inherit an assembly's identity. A
+# DECLARED complex row is a different object: it may still be enriched from
+# partial components to the full database complex, which is correct grounding and
+# is deliberately left alone.
+
+
+def _declared_membership_identity_scope(
+    complex_row: Dict[str, Any],
+    local_proteins: List[Dict[str, Any]],
+) -> Set[str]:
+    """Every protein identity the complex row itself declares as a member.
+
+    A row's own component list is the only membership claim it makes, so it is
+    the scope a database candidate has to be covered by. Payload protein rows are
+    folded in for the reason :func:`_reaction_actor_identity_scope` folds them in
+    there: a component carrying only a name is still the protein the payload
+    resolved under that name, accessions included -- which is also what
+    :func:`_reconcile_components_against_local_proteins` matches on, so the two
+    seams cannot disagree about who is who.
+    """
+
+    by_norm: Dict[str, Dict[str, Any]] = {}
+    for protein in local_proteins:
+        if not isinstance(protein, dict):
+            continue
+        norm = _normalize_name(str(protein.get("name") or ""))
+        if norm:
+            by_norm.setdefault(norm, protein)
+
+    scope: Set[str] = set()
+    for component in _safe_list(complex_row.get("components")):
+        scope |= _enzyme_actor_identity_tokens(component)
+        payload_row = by_norm.get(_normalize_name(_component_name(component)))
+        if payload_row is not None:
+            scope |= _enzyme_actor_identity_tokens(payload_row)
+    return scope
+
+
+def _generated_wrapper_superset_identity_refusal(
+    complex_row: Dict[str, Any],
+    result: Dict[str, Any],
+    local_proteins: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """``{}`` when this row may take this result's identity; a refusal when not.
+
+    The judgement is C-086's :func:`_superset_complex_promotion_refusal`, reused
+    rather than restated so one definition of "superset" governs both seams: a
+    match stands only when every component the candidate carries is already an
+    identity the row claims. What differs is only WHOSE claim is the yardstick --
+    there the reaction that named the enzyme, here the wrapper's own declared
+    membership.
+
+    Deliberately left alone, and each is measured on ``PMC12096016/strict``:
+
+    * any row that is not a generated wrapper (``Isochorismate synthase`` -> 1143,
+      ``isochorismatase`` -> 1189, ``oxidoreductase (entA)`` -> 1190);
+    * a wrapper whose candidate membership matches it exactly -- one component,
+      that component being this very protein;
+    * a result carrying no components, which injects no catalyst and is left to
+      the existing missing-component path.
+    """
+
+    if not is_generated_complex_wrapper(complex_row):
+        return {}
+
+    declared = _safe_list(complex_row.get("components"))
+    anchor = declared[0] if len(declared) == 1 else None
+    refusal = _superset_complex_promotion_refusal(
+        result,
+        _component_name(anchor) if anchor is not None else "",
+        anchor if isinstance(anchor, dict) else {},
+        _declared_membership_identity_scope(complex_row, local_proteins),
+    )
+    if not refusal:
+        return {}
+
+    refusal = dict(refusal)
+    refusal["protein_complex_row"] = _canonical_name(str(complex_row.get("name") or ""))
+    if not refusal.get("protein_complex"):
+        # ``_complex_result_from_row`` carries the matched name on its candidate
+        # rather than at the top level, so the record would otherwise name the
+        # complex it refused as "".
+        candidates = _safe_list(result.get("candidates"))
+        head = candidates[0] if candidates and isinstance(candidates[0], dict) else {}
+        refusal["protein_complex"] = _canonical_name(str(head.get("name") or ""))
+    refusal["declared_component_count"] = len(declared)
+    return refusal
+
+
+def _wrapper_identity_refused_result(
+    complex_row: Dict[str, Any],
+    refused: Dict[str, Any],
+    refusal: Dict[str, Any],
+    local_proteins: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """The result a refused wrapper row falls back to: its OWN declared membership.
+
+    The same shape :func:`_single_component_wrapper_result` already returns, so
+    nothing downstream meets a new kind of row -- ``novel`` resolution, the
+    ``novel_enzyme_single_component_complex`` rule
+    :func:`is_generated_complex_wrapper` already recognises, no complex id, and
+    the refusal recorded rather than hidden. It differs in one respect and for one
+    reason: the components are the row's own instead of being rebuilt from a
+    protein row, because at this seam the wrapper already carries them. A row that
+    declares nothing therefore gains nothing -- inventing an unnamed component
+    would be worse than leaving the list as found.
+
+    ``provider``/``source`` are carried from the refused result because the
+    database WAS consulted; claiming otherwise would be a dishonest audit trail.
+    """
+
+    species_id = _to_positive_int(complex_row.get("species_id")) or _to_positive_int(
+        refused.get("species_id")
+    )
+    species = _canonical_name(
+        str(complex_row.get("species") or complex_row.get("organism") or "")
+    )
+    issues = [
+        issue
+        for issue in _safe_list(refused.get("issues"))
+        if _safe_dict(issue).get("issue") != "protein_complex_missing_components"
+    ]
+    if not species_id and not species:
+        issues.append(
+            {
+                "issue": "protein_complex_missing_species",
+                "reason": "generated_wrapper_superset_complex_identity_refused",
+            }
+        )
+    return _with_resolution(
+        {
+            "status": "unmapped",
+            "reason": "generated_wrapper_superset_complex_identity_refused",
+            "provider": str(refused.get("provider") or "PathBankDB"),
+            "source": str(refused.get("source") or "db"),
+            "confidence": 0.0,
+            "chosen_rule": "novel_enzyme_single_component_complex",
+            "candidates": [],
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "species_id": species_id,
+            "components": _reconcile_components_against_local_proteins(
+                _safe_list(complex_row.get("components")),
+                local_proteins,
+            ),
+            "issues": issues,
+            "refused_superset_complex": dict(refusal),
+        },
+        "novel",
+        issue="generated_wrapper_superset_complex_identity_refused",
+        order_step="novel_enzyme_single_component_complex",
+    )
+
+
 def _rewrite_reaction_protein_enzymes_to_complexes(
     mapped: Dict[str, Any],
     *,
@@ -9233,6 +9401,21 @@ def map_payload(
             _safe_list(result.get("components")),
             proteins,
         )
+        # F-133. Decided ONCE, for the ROW, before the result is consumed --
+        # the same shape as the ``is_unknown_fallback_complex`` short-circuit
+        # above. A generated wrapper stands for one protein, so it may not take
+        # the identity of a complex whose membership it does not claim. Guarding
+        # any single assignment below would leave the other two component
+        # branches and both id writes free to attach the same superset; swapping
+        # the result makes one decision govern all five, and the mapping_meta
+        # written from it then describes what actually happened.
+        wrapper_identity_refusal = _generated_wrapper_superset_identity_refusal(
+            complex_row, result, proteins
+        )
+        if wrapper_identity_refusal:
+            result = _wrapper_identity_refused_result(
+                complex_row, result, wrapper_identity_refusal, proteins
+            )
         complex_row.setdefault("mapping_meta", {})
         complex_row["mapping_meta"]["route"] = "complex"
         complex_row["mapping_meta"]["query"] = {"name": name, "organism": organism}
@@ -9243,6 +9426,10 @@ def map_payload(
         complex_row["mapping_meta"]["candidates"] = result.get("candidates", [])
         complex_row["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
         complex_row["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
+        if _safe_dict(result.get("refused_superset_complex")):
+            complex_row["mapping_meta"]["refused_superset_complex"] = _safe_dict(
+                result.get("refused_superset_complex")
+            )
         if _safe_list(result.get("issues")):
             protein_complexes_gap_issues += len(_safe_list(result.get("issues")))
         if result.get("species_id"):
