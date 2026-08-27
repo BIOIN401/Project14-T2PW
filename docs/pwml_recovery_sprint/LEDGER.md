@@ -5239,3 +5239,80 @@ run-level `SUMMARY.txt` / `manifest.jsonl` / `batch.log` / `failures_by_code.txt
 `runs_verify/2026-08-24_1428/**` (which `test_g` pins), and `evidence/g11/REV-089/24…27-*.json`.
 
 **F-130 is CLOSED as a reconciliation.** No branch, no card, no code.
+
+---
+
+# AFFECTED-PAPER VALIDATION COHORT — run ledger, written BEFORE launch
+
+**Derived 2026-08-27** by the Lead Orchestrator from the six merged cards' charters, their own test
+modules, T-106 artifacts and the prior cohort records. **Two strict legs. One `batch_run.py`
+invocation.** Topics file: `topics_wave_cohort.txt` (untracked, like every other topics file).
+
+**THIS IS NOT A BENCHMARK AND MUST NEVER BE SCORED AS ONE.** A two-paper denominator makes
+acceptance priorities 1, 4 and 5 read misleadingly. The only artifact to produce is a **leg-level
+comparison against T-106**.
+
+## Why any live run at all
+
+C-086, C-089 and C-090 were each measured by replay over the **same pre-C-086 committed payloads**.
+C-086's own preserve arm was proved by a *constructed fixture*, not by a live mapping pass. **The
+composition of the three on a freshly mapped payload has never been observed once.** That is an
+integration risk in the direction merge rule 6 cares about, and it is the one property no stored
+artifact can carry.
+
+## The ledger
+
+| Paper | Mode | Cards validated | Exact property | Run directory | Status | Result | Rerun justified? |
+|---|---|---|---|---|---|---|---|
+| `PMC12096016` | strict | C-086 (F-116 defect case), C-090 (F-117 class B anti-widening), C-089 (F-125 orphan slot) | on a freshly-mapped `final_mapped.json`: (1) no reaction actor resolves to complex **3623**; (2) `reactions[3]` and `reactions[4]` carry **distinct** actors; (3) `EntC→1143`, `EntB→1189`, `EntA→1190` still present; (4) `actor_named_in_its_own_cited_span` still fires on any surviving multi-component wrapper; (5) `transports.transporters` orphans counted by priority 3 | *(new, `--fresh`)* | PENDING | — | only on a measured production defect |
+| `PMC12782028` | strict | C-086 (preserve arm / control), C-090 (F-117 class A) | wrapper **442** regenerated with exactly one component `CYP51A1`/`Q16850`; the two `reactions/1` pointers raise **no** actor-evidence finding; leg stays blocked on `requested_core_coverage_below_minimum`, `strict_acceptance_eligible=False` | *(same run dir)* | PENDING | — | only on a measured production defect |
+
+**Why stored evidence is insufficient, per leg.** `PMC12096016/strict`: every committed artifact for
+this paper was produced *with* the promotion applied; no stored payload exists in which C-086's
+output is the input to C-090's check and C-089's reader. `PMC12782028/strict`: the corpus cannot show
+that C-086 leaves wrapper 442 intact when the database is queried live, and C-090's class-A flip was
+measured on a payload C-086 never touched.
+
+**What would require a narrow repair.** `PMC12096016/strict`: payload lost at Stage 3 or
+`pwml_export` **and** traced to a bare-protein enzyme actor → repair confined to
+`_rewrite_reaction_protein_enzymes_to_complexes`. A *new* actor-evidence finding (`ADDED > 0`) →
+C-090 widening, revert-scope. `PMC12782028/strict`: 442 disappears or gains components → C-086
+over-fires on its own control set, which its charter § 3 forbids.
+
+**Why neither is duplicated.** `PMC12096016/strict` is the only leg carrying the 3623 superset **and**
+the F-125 `transports.transporters` slot **and** a class-B population in one mapping pass.
+`PMC12782028/strict` is the only class-A leg in the corpus and the only place C-086's preserve arm
+and C-090's rescue arm meet live.
+
+## The drop list — every leg considered and excluded
+
+| Excluded | Card | Why stored evidence settles it |
+|---|---|---|
+| `PMC12452463/strict` | C-086, C-090 B | second sample of the same rule on the same complex 3623; not among the 4 `strict_exportable` papers, so a status move there moves no rate. **First leg to add if `PMC12096016/strict` is inconclusive.** |
+| `PMC12444477/strict` | C-086, C-090 / F-130 | R-089 adjudicated the 3468 refusal correct offline; F-130's claims 3 and 4 are now CONFIRMED by deterministic replay through the production classifier. Most expensive strict leg (1864 s). |
+| `PMC12856317/strict` | C-086 ALAS2 control | the one-component preserve arm is already covered by 442 on `PMC12782028/strict`. |
+| `PMC12444477/research` | **C-087** | `AMBIGUOUS_RENAME_TARGET` **did not recur** on the 2026-08-25 draw — 0 occurrences anywhere in that run. A live leg cannot be relied on to reproduce the ambiguity, and re-running until it does is the move § 9 forbids. C-087's proof is an AppTest seam failing at base on a **byte-identical 209-byte string** matching the T-106 manifest row's sha256, plus an exhaustive **7 statuses × 19 prefreeze shapes = 133 pairs** with exactly one moving transition. Exhaustive enumeration cannot be improved by one sample. |
+| all C-083 timeout legs | **C-083** | historically 30–60 min and forbidden by charter § 6. Pinned by `tests/test_c083_inner_timeout_row.py`, which replays the two stored `detail` strings verbatim through the production seam, plus the re-baselined golden. |
+| `PMC12421875` ×2, `PMC12657337` ×2 | **C-088** | the disposition is established **only in the acceptance record**, never at runtime, so `bench_acceptance.py` over any committed run dir reproduces it at zero credit cost. The legs stop at Stage 0 on a deterministic gold organism trap; a live draw could only *un*-establish it and would prove nothing about the code. |
+| `PMC12312563` ×2 | C-088 | outside the chartered population — `MIN_CONNECTED_CORE_REACTIONS=2` excludes it. |
+| `PMC12180156/research` | C-089 (F-125 orphan 3) | draw-dependent leaked pointer on a `context_only` paper whose T-106 research leg died `no_reactions`; pinned as a committed fixture. |
+| any leg for F-119 | C-089 | corpus exposure **0** across 92 artifacts; anti-widening measured base-vs-tip row-for-row. Nothing live can exhibit a shape the corpus never produces. |
+| all research legs | all six | C-086 is strict-only by construction (`allow_complex_wrapper_creation=not research_mode`); all 9 T-106 actor-evidence findings are on strict legs; C-088/C-089 settled offline; C-087's trigger is unreproducible. |
+
+## Standing rules for this run
+
+1. **`--fresh` into a NEW run directory.** F-130 protects `runs_verify/2026-08-25_1216/**` and
+   C-090's pin protects `runs_verify/2026-08-24_1428/**`. `batch_run.py` also silently skips
+   finished pairs without `--fresh`.
+2. **Run it ONCE.** No leg is repeated because a draw is unfavourable. If C-087's ambiguity does not
+   recur, that is reported as **"not observed"** and never chased.
+3. A live run executes the **uncommitted** product-owner `streamlit_app.py` edit (35 ins / 2 del,
+   `sha256:47e4fafa…`). The result therefore measures *tip + that edit*, not the committed tree, and
+   the record must say so.
+4. If one leg fails: classify it first as causally related to a merged card, versus stochastic
+   Stage-1 variation, versus an unrelated existing blocker. Repair only a **measured production
+   defect**, and rerun only the affected leg unless the repair changes a shared upstream seam.
+5. Budget: per-leg T-106 durations are 1597.17 s and 690.57 s = **2287.7 s ≈ 38 min**. Draw variance
+   was +36% on the one observed case, so **budget 55 min, `--timeout 5400`**. Estimated credit spend
+   **≈ $0.06**, scaled from the 1216 cohort's measured $0.177 / 7067 s — order of magnitude only,
+   since spend tracks tokens rather than seconds.
