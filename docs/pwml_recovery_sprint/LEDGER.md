@@ -6132,3 +6132,92 @@ failure "would be untrue about the run", and then the distinction is collapsed o
 direction is **conservative** (a demotion, never a loosening) and **no production caller can reach it
 today**, since all three omit `db_resolver`. Disclosed and chartered rather than fixed inside C-096.
 
+
+---
+
+# T-107 READINESS — 2026-08-27 revision 2, extending the table at `LEDGER.md:4359` and its 2026-08-27 revision
+
+**This extends the existing table. It does not replace it and there is no competing table.** Rows
+not mentioned here stand as previously written and revised.
+
+**Verdict: T-107 remains NO-GO.** The blocker is unchanged and none of this wave's engineering
+touches it.
+
+## What this wave changed, and what it did not
+
+Five cards were chartered and four implemented. **None of them moves a T-107 priority**, and that was
+predictable before they were written — they are correctness repairs in the mapping and resolution
+seams, not coverage or identity-provenance work.
+
+| Card | Finding | Moves a T-107 priority? |
+|---|---|---|
+| C-094 | F-134, placeholder-derived false organism | **No.** Cross-organism assignment is acceptance-counted, but the affected rows never reached export |
+| C-095 | F-133 / F-116's open path, superset complex identity | **No.** Priority 2 is `NOT EVALUATED` on the affected legs for an unrelated reason |
+| C-096 | F-129, `db_resolver=None` overloaded | **No.** Test-infrastructure honesty; no scored artifact changes |
+| C-098a/b | F-135, unresolved placeholder species must not drop the pathway | **No**, but see below — it prevents a *regression* in priority 5 |
+| C-097 | F-131, `ref`/`id` in `bench.semantic._names` | **No.** Corpus impact measured 0 |
+
+**C-098 is the one worth stating precisely.** It does not improve priority 5; it prevents C-094 from
+*damaging* it. Without the companion, C-094 alone would convert the majority Unknown-backed wrapper
+shape — **25 of 31 wrappers, measured** — from a leg that produces a PWML into one that produces
+none. Merging C-094 alone would have moved priority 5 in the wrong direction while appearing to fix a
+correctness defect.
+
+## Gate condition 1 — unchanged, and unchanged for the same reason
+
+The § 8 gate condition that cannot be cleared by engineering is still condition 1: *"priority 1 has a
+safe correction **or an explicitly accepted measurement limitation**."*
+
+The limitation to be accepted remains the larger one recorded in the 2026-08-27 revision:
+
+> **On the affected papers, Priorities 1 and 4/5 score the same rows in opposite directions, so
+> neither is currently a measurement of pipeline quality.**
+
+`DECISION-BUNDLE-F132-PRIORITY1.md` (committed `7862fcc`) puts that to the product owner with the
+corpus figures — **62 of 281 unmatched terms across 32 legs and 6 papers are gold-forbidden**, and on
+`PMC12782028/strict` the four gold-forbidden unmatched terms are **exactly** the four Priority-1
+survivors. It asks for two rulings: adopt or amend option A (separate the measurements), and accept
+or decline option B (a stated Priority-1 floor of 6). **Neither has been given, and an orchestrator
+may not give either.**
+
+## Against § 8's eight conditions, revised
+
+| # | condition | state at `c49562c` |
+|---|---|---|
+| 1 | priority 1 has a safe correction or an accepted limitation | **NOT MET.** Unchanged. The decision packet is written and waiting; nothing in this wave could clear it |
+| 2 | priority 5's denominator reconciled | **MET** — unchanged |
+| 3 | the two strict-denominator papers classified honestly | **MET**, with the 2026-08-27 withdrawal of the word *"correctly"* for `PMC12782028` still standing |
+| 4 | applicable F-116 / F-123 corrections merged | **STILL NOT MET, and now more precisely.** C-086 narrowed F-116; C-095 addresses its remaining wrapper-generation path but is **committed, not merged** — under independent review at `194d6cd` |
+| 5 | acceptance instrumentation remains honest | **MET and improved.** F-132's contradiction is named; F-136 records that at least three tests are green-or-red on ambient infrastructure, so a red Chunk D is now classifiable rather than mysterious |
+| 6 | affected-paper validation passes | **NOT MET — and deliberately not attempted.** No live leg was run this wave. Nothing was merged, so there was nothing to validate; running one would have measured the unmerged tip |
+| 7 | all processes closed | **MET at every checkpoint**, including across a host crash: heavy lock absent, zero sprint-owned Python, every completed job `FINAL SURVIVING COUNT : 0` / `cleanup : success` |
+| 8 | integration clean and pushed | **MET** — local = origin = `git ls-remote`, working tree carries only the pre-existing caches, scratch files and the product-owner edit |
+
+**Three of eight unmet, the same three as before, and condition 1 is still the one no amount of
+engineering clears.**
+
+## What would change the verdict — unchanged, restated so it is not softened
+
+Merging C-094, C-095, C-096, C-097 and both C-098 arms **will not** change it. All six are worth
+merging on their own contract-grounded merits and **none moves priority 1 toward zero.**
+
+The verdict changes only when the product owner rules on `DECISION-BUNDLE-F132-PRIORITY1.md`:
+
+* **Option A alone** makes priorities 4 and 5 readable for the first time, but leaves condition 1
+  unmet — A does not touch priority 1.
+* **Option B alone** clears condition 1 by explicit acceptance, but leaves 4 and 5 measuring the
+  instrument rather than the pipeline.
+* **A and B together** make T-107 a *partial but honest* measurement. Priority 2 would remain
+  `NOT EVALUATED` on more than half the legs for an unrelated reason — D-067 precondition 3, an
+  independent biological review the orchestrator cannot supply and the credit rule forbids buying.
+
+**Until then T-107 stays NO-GO, and that remains the correct outcome rather than a delay.** No
+predicted post-ruling values are given here; predicting them is the class of claim this sprint has
+repeatedly had to withdraw.
+
+## One thing that must not be repeated
+
+**The affected-paper cohort at `runs_verify/2026-08-27_1341` was not rerun**, no new cohort was run,
+no T-107 leg was run, and no live model credit was spent this wave. The cohort's result is unchanged
+and re-running it would re-measure a known answer.
+
