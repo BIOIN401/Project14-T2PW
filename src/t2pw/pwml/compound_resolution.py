@@ -597,17 +597,39 @@ class _NoDbResolver:
     """The type of :data:`NO_DB_RESOLVER`; recognised by identity, never by shape.
 
     It deliberately implements **no** resolver protocol -- no ``available``, no
-    ``resolve``, no ``last_error``. :func:`_resolve_compound_rows` matches it with
-    ``is`` before any duck-typing runs, so giving it a shape would only create a
-    second, quieter way of meaning the same thing, which is the defect this
-    closes. Anything that receives it and does not know what it is must fail
-    visibly rather than resolve against it.
+    ``resolve``, no ``last_error``. :func:`_resolve_compound_rows` recognises the
+    **singleton**, by ``is``, and never a shape: giving this class a shape would
+    only create a second, quieter way of meaning the same thing, which is the
+    defect being closed rather than the fix.
 
-    Copying returns the singleton itself. ``resolve_compounds_prefreeze``
-    deep-copies the rows it resolves, and a future caller could as easily
-    deep-copy a kwargs dict; an identity sentinel that survived one copy and not
-    another would fail **open**, back onto the ambient database, which is exactly
-    the silent substitution this exists to stop.
+    **What a non-singleton instance actually does -- measured, because the first
+    draft of this paragraph guessed and guessed wrong.** It claimed such an
+    instance would "fail open, back onto the ambient database", and that anything
+    receiving it "must fail visibly". Neither is true, and the truth is worse. A
+    fresh ``_NoDbResolver()`` is not the singleton and is not ``None``, so it
+    reaches **neither** arm of the selection in :func:`_resolve_compound_rows`;
+    the availability ladder below those arms then defaults its missing
+    ``available`` to ``True`` -- ``getattr(db_resolver, "available",
+    lambda: True)()`` -- wraps the impostor in :class:`PathWhizCompoundResolver`
+    and reports (``evidence/c096_impostor_probe.py``, G11 ``C-096/20``, with the
+    ambient database stubbed out so nothing else can contribute)::
+
+        singleton       available=False reason='db_resolution_disabled_by_caller'
+        fresh impostor  available=True  reason=<ABSENT>
+        None            available=False reason='db_not_configured'
+
+    ``available: True`` carrying **no reason at all**: a silent false
+    availability, on a population that resolved nothing, which suppresses the
+    preflight warning D-032 clause 6 rules product-visible export content. So the
+    failure is neither open nor visible -- it is an unresolved population reported
+    as though a database had answered it.
+
+    That ``getattr`` default is pre-existing and is not this card's to change,
+    which is exactly why identity is defended here instead: copying returns the
+    singleton itself, because ``resolve_compounds_prefreeze`` deep-copies the rows
+    it resolves and a future caller could as easily deep-copy a kwargs dict.
+    ``tests/test_c096_explicit_no_resolver.py`` pins that under ``copy``,
+    ``deepcopy`` and ``pickle``.
     """
 
     __slots__ = ()
@@ -667,12 +689,25 @@ def _resolve_compound_rows(
     db_reason = ""
 
     if db_resolver is NO_DB_RESOLVER:
-        # The caller said "resolve nothing against a database". Matched by
-        # identity BEFORE the ambient substitution below, so a live PathBank
-        # cannot change what an explicitly offline caller gets, and recorded
-        # under its own reason so the report never claims a lookup failed.
-        # ``db_reason`` is non-empty from here on, which is what stops either
-        # arm of the availability ladder below overwriting it.
+        # The caller said "resolve nothing against a database". Recorded under
+        # its own reason so the report never claims a lookup failed, and
+        # ``db_reason`` is non-empty from here on, which is what stops either arm
+        # of the availability ladder below overwriting it.
+        #
+        # **The ``elif`` is the load-bearing part, not the order of the arms.**
+        # An earlier comment here said the sentinel had to be matched "BEFORE the
+        # ambient substitution"; that is not the invariant. Both conditions are
+        # identity tests against distinct objects, so they are mutually exclusive
+        # and swapping the two arms is a measured no-op. What must never happen is
+        # the two becoming independent ``if``s: this arm sets ``db_resolver =
+        # None`` deliberately, to rejoin the same downstream ladder an
+        # unconfigured ambient reaches, so a second ``if db_resolver is None``
+        # would immediately substitute ``PathBankDbResolver.from_env()`` and
+        # resolve the explicitly offline caller against the live database after
+        # all. Mutation-probed both ways, on this tree: swapping the arms leaves
+        # both test files green (22 passed, G11 ``C-096/21``), while splitting the
+        # ``elif`` into two ``if``s is killed by 9 tests across them, the four
+        # F-129 repairs included (9 failed / 13 passed, G11 ``C-096/22``).
         db_resolver = None
         db_reason = DB_RESOLUTION_DISABLED_REASON
     elif db_resolver is None:
