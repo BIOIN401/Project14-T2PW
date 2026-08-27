@@ -5836,3 +5836,127 @@ enumeration with one moving transition — **not on this run.**
 both need cards with `src/` ownership this cohort does not have. Rerunning would re-measure a known
 result. Both cohort legs' failures are explained; neither is a repair this session may make without a
 charter and an independent review.
+
+---
+
+# SUPERSEDING CORRECTION — C-086 does NOT close F-116. My merge record overstates it.
+
+**Branch handed back at `0beda95`**, verified: local = origin = `git ls-remote`, no merge in progress,
+0 staged, heavy lock **absent**, only the two `ms-python.isort` IDE processes, product-owner edit
+intact at 35/2 `sha256:47e4fafa…`, whole-tree G11 4056 artifacts / 0 non-compliant.
+
+At `LEDGER.md:4554` I recorded C-086 in a table whose column is **`closes`**, against **F-116**.
+**That is wrong, and this supersedes it.** C-086 **narrows** F-116. The finding stays **OPEN**.
+
+### Verified myself on the cohort artifact, not taken from the handover
+
+`runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json`:
+
+```
+enterobactin synthase complex   id=None   1 comp ['Unknown']                      generated
+Isochorismate synthase          id=1143   1 comp ['EntC']
+isochorismatase                 id=1189   1 comp ['EntB']
+oxidoreductase (entA)           id=1190   1 comp ['EntA']
+EntE complex                    id=None   1 comp ['EntE']                         generated
+EntF complex                    id=3623   4 comp ['EntB','EntD','EntF','EntE']    generated  <-- SUPERSET
+EntD complex                    id=3623   4 comp ['EntB','EntD','EntF','EntE']    generated  <-- SUPERSET
+porcine lactate dehydrogenase   id=None   1 comp ['Unknown']                      generated
+```
+
+**What C-086 did, and it is real:** `EntE` no longer resolves onto 3623; the two reactions that
+carried the *identical* `enterobactin synthase` actor at T-106 now carry distinct actors; and
+`EntC`→1143, `EntB`→1189, `EntA`→1190 are untouched, so the one-component controls hold live on a
+fresh payload exactly as its tests predicted.
+
+**What it did not do.** F-116's own words are *"a supported enzyme is replaced by a superset protein
+complex, injecting catalysts that do not perform the step."* `EntF complex` and `EntD complex` do
+exactly that, on the same paper, after the merge — each a **generated single-protein wrapper**
+carrying 3623 and all four components. C-086 closed the **component-match** path; the same attachment
+survives on the **wrapper-generation** path.
+
+**C-086 is NOT reopened.** Its charter was the component-match path, its tests pin that path working,
+and the reviewer verified the boundary hunk-by-hunk. The card is fine. **The register was wrong to
+mark the finding closed on the strength of it**, and that was my entry, not the card's claim.
+
+### The lesson, and it is the second time this wave
+
+**A card's charter and a finding's scope are different objects.** "The card passed its gates" does not
+license "the finding is closed", and a `closes` column invites exactly that elision. I made the same
+class of error on the c056b repair, where two assertions read as coverage and provided none. **Both
+were caught by someone re-measuring rather than re-reading** — REV-089 ran my own file against a
+pre-change SHA; this one needed a live leg. Neither would have been caught by reading the diff again.
+
+**Register `closes` only against a finding whose scope has been re-measured, not against the card that
+was chartered at it.**
+
+### F-133 and F-134 — verified independently before accepting them
+
+**F-133** confirmed exactly as above: two generated wrappers inherit a superset complex id. The
+handover's framing is right — a fix must preserve the one-component wrappers, which this run measured
+intact.
+
+**F-134** confirmed, and the correlation is cleaner than a count. On the same artifact, requested
+organism *Escherichia coli*:
+
+```
+enterobactin synthase complex   organism = species = "Arabidopsis thaliana"   Unknown-backed
+porcine lactate dehydrogenase   organism = species = "Arabidopsis thaliana"   Unknown-backed
+every other protein_complex     organism = None, species = "Escherichia coli"  not Unknown-backed
+```
+
+**Every Unknown-backed wrapper gets Arabidopsis; every non-Unknown-backed one gets *E. coli*.** The
+organism is coming from whatever the placeholder record carries, not from the requested or observed
+organism. One of the two is the **gold-forbidden porcine lactate dehydrogenase** — a forbidden entity
+handed both a wrapper and a confident foreign organism.
+
+*Scope note on my own check:* I measured **two** rows in `entities.protein_complexes` only; the
+handover reports **three** across buckets. No contradiction — I did not look at the other buckets.
+
+The handover's instruction not to "fix" this by defaulting species to the requested organism is
+correct and worth restating: that would launder an unknown into a confident answer, which is F-127's
+failure mode in a new place.
+
+---
+
+# T-107 READINESS TABLE — CORRECTIONS, superseding the 2026-08-25 table at `LEDGER.md:4359`
+
+The table stands except for these rows, which F-132 has invalidated.
+
+**A caveat that governs rows 1, 4 and 5, and should be read before them.** On the affected papers,
+**Priority 1 and Priority 4/5 score the same rows in opposite directions.** `LIPA`, `LBR`, `SREBF1`
+and `SREBF2` are a Priority-1 failure when exported with real identifiers and a Priority-4/5 coverage
+penalty when not matched — measured live on the cohort, 4 of 19 unmatched terms on
+`PMC12782028/strict`. Corpus-wide, **62 of 281 unmatched terms (22%) across 32 legs and 6 papers are
+gold-forbidden identifiers.** **Neither priority is currently a measurement of pipeline quality on
+those papers.** That is a statement about the instrument, not the code.
+
+| row | correction |
+|---|---|
+| **1** | Stands (`NO — and it got worse`), but the cited cause is incomplete. It reads as a pure extraction problem; **four of the six survivors are simultaneously a coverage penalty** under F-132. |
+| **4** | I attributed 0/8 entirely to Stage-0's non-curated draw. **F-132 is a second and larger cause** and my row does not mention it. |
+| **5** | **"Both survivors are `correctly_blocked` and measured so" is withdrawn.** For `PMC12782028/strict` the coverage penalty is levied partly for not matching gold-forbidden terms, so "correctly" asserts the instrument is sound and F-132 says it is not. The block is real; the word **correct** is not defensible and is removed. |
+
+**Gate condition 1 is now a larger ask than I wrote.** I framed it as *"priority 1 has a safe
+correction **or an explicitly accepted measurement limitation**"*. The limitation to be accepted is no
+longer *"priority 1 cannot reach 0 because a carrier is missing"* but **"two priorities score the same
+rows in opposite directions, so neither measures pipeline quality on the affected papers."** It should
+be put to the product owner as that larger thing, not as a footnote to the smaller one.
+
+**T-107 remains NO-GO**, and the cohort did not change it. F-133 and F-134 add two more `src/`-owning
+cards to the queue.
+
+### What the cohort did establish, recorded so it is not lost
+
+**Priority 5 held at 0/2 and the draw-luck risk did not materialise.** `PMC12782028/strict` drew
+**0.3214** — inside the prior observed range — and stayed blocked, so there is no favourable-draw
+headline to explain away. It passed technical gates and wrote **`pathway.review_required.pwml`, not a
+bare `pathway.pwml`**: F-094's closure and merge rule 7 both holding live on a fresh payload.
+
+**The decomposition probe's control arm did its job.** It reproduced both legs' recorded status, and
+`actor_named_in_its_own_cited_span` was absent from the failed checks on both, so the counterfactual
+was reported **`n/a` rather than fabricated**. That check *was* the controlling blocker on
+`PMC12096016/strict` at T-106 and is gone — consistent with C-090 working and **not claimed as proof**,
+because the draw also changed. That restraint is the correct reading.
+
+**C-087's `AMBIGUOUS_RENAME_TARGET` did not occur** — the cohort carries no `PMC12444477`. Recorded as
+**not observed**, not chased. F-123 rests on C-087's own behavioural proof, not on this run.
