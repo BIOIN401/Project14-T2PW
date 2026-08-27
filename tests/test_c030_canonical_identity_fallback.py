@@ -206,34 +206,53 @@ class CensusAdmissionUnattributed(ValueError):
     """A census bucket or identity key appeared with no card and no merge SHA."""
 
 
-def _admitted(*entries: tuple[str, str, str]) -> dict[str, dict[str, str]]:
+def _admitted(*entries: tuple[str, str, str, str]) -> dict[str, dict[str, str]]:
     """Build :data:`CENSUS_ADMISSIONS` so a bucket CANNOT enter it unattributed.
 
     **Structural, not conventional**, in the shape ``_excluded`` uses in
     ``tests/test_compound_resolution_extraction.py``. There is no dict literal
     below for a later editor to append a bare key to: the register is built from
-    ``(bucket_or_key, merge_sha, attribution)`` triples, and a bare string, a
-    wrong arity, a non-string field, an empty or whitespace attribution, an
-    attribution shorter than :data:`MIN_ADMISSION_CHARS`, a merge SHA that is not
-    a 7-to-40 character hex abbreviation, or a duplicated entry raises
+    ``(bucket_or_key, merge_sha, witness_leg, attribution)`` quadruples, and a
+    bare string, a wrong arity, a non-string field, an empty or whitespace
+    attribution, an attribution shorter than :data:`MIN_ADMISSION_CHARS`, a merge
+    SHA that is not a 7-to-40 character hex abbreviation, a witness leg that is
+    not a ``final_mapped.json`` path, or a duplicated entry raises
     :exc:`CensusAdmissionUnattributed` **at import time** -- so the module fails
     to collect rather than one test failing somewhere downstream.
+
+    **``witness_leg`` was added by C-093 correction round 1.** REV-093 was right
+    that the first form was "a rubber stamp with a bouncer at the door": every
+    check was on the SHAPE of the citation -- real-looking SHA, 120 characters, a
+    ``PMC\d+`` somewhere -- and **nothing tied the citation to an artifact**. Any
+    plausible prose plus any leg-committing SHA was accepted. The witness closes
+    that: it names one committed leg that must still exist AND must still
+    contribute at least one census row under this exact bucket-or-key, so an
+    admission cannot be written for rows that do not exist, cannot survive the
+    rows disappearing, and cannot be pre-registered before the commit that
+    produces it. Checked by
+    :func:`test_the_admission_register_cannot_absorb_a_bucket_silently`.
 
     Proved by :func:`test_the_admission_register_cannot_absorb_a_bucket_silently`.
     """
     register: dict[str, dict[str, str]] = {}
     for entry in entries:
-        if not isinstance(entry, tuple) or len(entry) != 3:
+        if not isinstance(entry, tuple) or len(entry) != 4:
             raise CensusAdmissionUnattributed(
-                f"an admission is a (name, merge_sha, attribution) triple; got {entry!r}")
-        name, sha, attribution = entry
+                f"an admission is a (name, merge_sha, witness_leg, attribution) "
+                f"quadruple; got {entry!r}")
+        name, sha, witness, attribution = entry
         if not isinstance(name, str) or not name.strip():
             raise CensusAdmissionUnattributed(f"unnamed admission: {entry!r}")
         if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{7,40}", sha or ""):
             raise CensusAdmissionUnattributed(
                 f"{name}: {sha!r} is not a merge SHA. An identity-fallback census "
                 f"bucket that cannot be traced to a commit is a FINDING, not a "
-                f"baseline move (C-093 § 2a).")
+                f"baseline move (C-093 section 2a).")
+        if not isinstance(witness, str) or not witness.endswith("final_mapped.json"):
+            raise CensusAdmissionUnattributed(
+                f"{name}: {witness!r} is not a committed leg. Name ONE leg whose "
+                f"rows this admission traces, so the citation can be checked "
+                f"against the artifact instead of taken on trust.")
         if not isinstance(attribution, str) or \
                 len(attribution.strip()) < MIN_ADMISSION_CHARS:
             raise CensusAdmissionUnattributed(
@@ -241,7 +260,7 @@ def _admitted(*entries: tuple[str, str, str]) -> dict[str, dict[str, str]]:
                 f"State the leg it came off and what it means.")
         if name in register:
             raise CensusAdmissionUnattributed(f"{name}: admitted twice")
-        register[name] = {"merge_sha": sha,
+        register[name] = {"merge_sha": sha, "witness_leg": witness,
                           "attribution": " ".join(attribution.split())}
     return register
 
@@ -266,6 +285,7 @@ MIN_ADMISSION_CHARS = 120
 #: row was TRACED. ``proteins`` in particular is admitted with a defect named.
 CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
     ("protein_complexes", "266aba6",
+     "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json",
      "NOT a new bucket -- the frozen cohort already carries 12; the count rose to "
      "22 because ten further legs were committed carrying one gap row each. "
      "Measured, every one of the ten: 8 x 'enterobactin synthase complex' -> "
@@ -284,6 +304,7 @@ CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
      "this pipeline, not something these legs introduced: it is present in the "
      "frozen cohort too, on legs already pinned in GOLDEN."),
     ("pathbank_complex_id", "266aba6",
+     "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json",
      "The key behind the ten protein_complexes rows above -- eight on PMC12452463 "
      "legs and two on PMC12180156 legs; same legs, same commits, same "
      "measurement. It is already in FROZEN_CENSUS at 12 and is listed here only "
@@ -291,6 +312,7 @@ CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
      "find its attribution in one place rather than inferring it from the bucket "
      "entry."),
     ("proteins", "aee228c",
+     "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json",
      "A GENUINELY NEW BUCKET, and it comes off exactly ONE leg: "
      "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json, "
      "committed by aee228c (2026-08-24, affected-paper cohort A). Two rows, CLPX "
@@ -308,16 +330,28 @@ CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
      "mapping_meta and STOPS THERE, while ir._first_nonempty also reaches "
      "mapping_meta.candidates[0] -- so the exporter would have exported an "
      "accession the quarantine gate reports as absent. Registered by C-093 as a "
-     "finding and NOT fixed here (C-093 may not touch src/). The divergence runs "
-     "in the SAFE direction -- the gate refuses where the exporter would have "
-     "exported -- so no gate is weakened, and the leg is EXCLUDED from the export "
-     "golden on that record rather than pinned."),
+     "finding and NOT fixed here (C-093 may not touch src/). THE ASYMMETRY RUNS "
+     "BOTH WAYS AND ONLY ONE DIRECTION HAS FIRED. On the candidates[0] tier the "
+     "gate is stricter than the exporter, which is the safe direction: it refuses "
+     "where the exporter would have exported. But ir._first_nonempty never reads "
+     "row['ids'] while protein_external_identity does, so a uniprot or drugbank "
+     "value present ONLY under 'ids' passes the gate and leaves the exporter with "
+     "no identity -- the UNSAFE direction, latent with zero exposure today. "
+     "Measured by REV-093 over all 78 committed final_mapped.json, 804 protein "
+     "and protein_complex rows including components (g11/ORCH-093/"
+     "01-ladder-asymmetry.json at 46df1e7): unsafe 0, safe 2 -- exactly O76031 "
+     "and Q16740. So 'no gate is weakened' is TRUE AS A MEASUREMENT OVER THIS "
+     "CORPUS, NOT AS A PROPERTY OF THE CODE; the follow-up card must close both "
+     "tiers, not only the one that happened to fire. The leg is EXCLUDED from the "
+     "export golden on that record rather than pinned."),
     ("pathbank_protein_id", "aee228c",
+     "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json",
      "The mapping_meta half of the two proteins rows above -- 8580 and 3923, on "
      "the one PMC12856317 strict leg of 2026-08-24_1203, same commit. Separately "
      "named because a key can appear in a bucket that is already admitted, and an "
      "unattributed KEY is as much a finding as an unattributed bucket."),
     ("uniprot", "aee228c",
+     "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json",
      "The candidates[0] half of the two proteins rows above -- O76031 and Q16740, "
      "on the same one PMC12856317 strict leg, same commit. This is the exact tier "
      "entity_identity.protein_external_identity does not scan, which is why these "
@@ -413,14 +447,28 @@ def test_the_census_reproduces_over_the_committed_corpus() -> None:
     assert frozen["keys"] == FROZEN_CENSUS["keys"]
 
     whole = _census(_gap_rows())
+    present = set(whole["buckets"]) | set(whole["keys"])
     accounted = set(FROZEN_CENSUS["buckets"]) | set(FROZEN_CENSUS["keys"]) | \
         set(CENSUS_ADMISSIONS)
-    unattributed = sorted((set(whole["buckets"]) | set(whole["keys"])) - accounted)
+    unattributed = sorted(present - accounted)
     assert not unattributed, (
         f"unattributed in the identity-fallback census: {unattributed}. Trace each "
         f"to the card and merge SHA that committed the leg it comes off and add it "
         f"to CENSUS_ADMISSIONS -- or, if it cannot be traced, STOP: an "
         f"unattributed bucket is a finding, not a baseline move.")
+
+    # ...and the other direction, which C-093 first omitted and REV-093 caught.
+    # Without this the complete DISAPPEARANCE of proteins / uniprot /
+    # pathbank_protein_id passes silently -- and those rows are the only census
+    # evidence outside the frozen cohort and the exact bucket carrying C-093's
+    # registered finding. A one-sided check also lets a future author admit a name
+    # BEFORE the commit that produces it, with nothing ever noticing it went live.
+    stale = sorted(set(CENSUS_ADMISSIONS) - present)
+    assert not stale, (
+        f"admitted but no longer in the census: {stale}. Either a leg was "
+        f"un-committed -- forbidden, runs/ and runs_verify/ are read-only evidence "
+        f"(D-055) -- or the rows this admission traced have disappeared, which is a "
+        f"resolution change and must be measured, not deleted from the register.")
 
 
 def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None:
@@ -428,7 +476,7 @@ def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None
 
     The perturbation tests below exercise :func:`_census`, the helper. This one
     drives **the repaired test function itself** -- the thing a reviewer actually
-    trusts -- and asserts it RAISES. Four perturbations, one per assertion the
+    trusts -- and asserts it RAISES. Five perturbations, one per assertion the
     re-based pin makes:
 
     1. the frozen cohort's census SHRINKS (a gap row stops being a gap);
@@ -436,7 +484,9 @@ def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None
     3. a bucket appears over the whole corpus that nothing admits;
     4. an admitted bucket's attribution is withdrawn -- so the register cannot be
        emptied without the pin noticing, which is what stops a later card
-       "simplifying" it into an unconditional pass.
+       "simplifying" it into an unconditional pass;
+    5. an admitted bucket VANISHES from the census -- the direction C-093's first
+       form missed and REV-093 caught.
     """
     real = _gap_rows()
     cohort = set(_frozen_cohort())
@@ -461,6 +511,14 @@ def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None
         with pytest.raises(AssertionError):
             test_the_census_reproduces_over_the_committed_corpus()
 
+    # 5. an ADMITTED bucket disappears from the census entirely. C-093's first
+    #    form passed this silently -- REV-093's F2, and the reason the staleness
+    #    half exists: a regression confined to ir.py's proteins ladder would have
+    #    been invisible everywhere in this module.
+    _pin(tuple(r for r in real if r[1] != "proteins"))
+    with pytest.raises(AssertionError, match="no longer in the census"):
+        test_the_census_reproduces_over_the_committed_corpus()
+
     _pin(real)
     test_the_census_reproduces_over_the_committed_corpus()  # control: still green
     monkeypatch.setitem(globals(), "CENSUS_ADMISSIONS", {})
@@ -468,20 +526,109 @@ def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None
         test_the_census_reproduces_over_the_committed_corpus()
 
 
-def test_every_census_key_is_one_ir_consumes_for_that_bucket() -> None:
-    """NEW ACCEPTANCE (C-093). The census's non-vacuity floor.
+def _ir_declared_ladders() -> dict[str, tuple[str, ...]]:
+    """The PRIMARY identity ladder ``ir.py`` declares per bucket, from its SOURCE.
 
-    Half two of the census test admits a bucket by NAME, so on its own it would
-    pass just as happily if ``_slot`` started reporting a key ``ir.py`` never
-    reads for that bucket -- an admission register can only be as honest as the
-    measurement feeding it. This closes that: every ``(bucket, key)`` the census
-    reports must appear together in :data:`BUCKET_KEYS`, which is the ordered
-    ladder ``ir.py`` itself resolves.
+    ``build_pwml_ir`` drives every entity and component bucket from two literal
+    tables, ``component_specs`` (``ir.py``, four component buckets) and
+    ``entity_specs`` (five entity buckets). Each row is
+    ``(source_key, ..., prefix, [db_keys...], ...)`` and that ``db_keys`` list is
+    the ordered ladder handed to ``_db_id`` / ``_entity_record`` at ``:1324`` and
+    ``:1451``. Parsing them is what makes
+    :func:`test_bucket_keys_still_matches_the_ladders_ir_declares` a real gate
+    rather than a restatement of :data:`BUCKET_KEYS`.
+
+    Read by AST, not imported: the tables are local to ``build_pwml_ir`` and are
+    not reachable as module attributes.
     """
-    for relative, bucket, _index, key in _gap_rows():
-        assert bucket in BUCKET_KEYS, f"{relative}: unknown bucket {bucket}"
-        assert any(key in keys for keys in BUCKET_KEYS[bucket]), \
-            f"{relative}: ir.py never resolves {key!r} for {bucket}"
+    source = (ROOT / "src/t2pw/pwml/ir.py").read_text(encoding="utf-8")
+    ladders: dict[str, tuple[str, ...]] = {}
+    for node in ast.walk(ast.parse(source)):
+        if not isinstance(node, ast.Assign) or not isinstance(node.value, ast.List):
+            continue
+        names = {t.id for t in node.targets if isinstance(t, ast.Name)}
+        if not names & {"entity_specs", "component_specs"}:
+            continue
+        for row in node.value.elts:
+            if not isinstance(row, ast.Tuple) or len(row.elts) < 4:
+                continue
+            bucket, keys = row.elts[0], row.elts[3]
+            if not isinstance(bucket, ast.Constant) or not isinstance(keys, ast.List):
+                continue
+            if not all(isinstance(k, ast.Constant) and isinstance(k.value, str)
+                       for k in keys.elts):
+                continue
+            ladders[str(bucket.value)] = tuple(k.value for k in keys.elts)
+    return ladders
+
+
+def test_bucket_keys_still_matches_the_ladders_ir_declares() -> None:
+    """NEW ACCEPTANCE (C-093). :data:`BUCKET_KEYS` is checked against ir.py itself.
+
+    **This test replaces one C-093 wrote and REV-093 correctly rejected as
+    tautological.** That version asserted every ``(bucket, key)`` the census
+    reports appears in ``BUCKET_KEYS`` -- true by construction for any data and
+    any change to ``ir.py``, because :func:`_gap_rows` takes its bucket from
+    ``BUCKET_KEYS.items()`` and its key from the very tuple :func:`_slot` was
+    handed. It claimed to close a hole ``_slot`` structurally cannot open, which
+    is worse than no test: a guard that does not detect the loss it advertises.
+
+    The real risk it was reaching for is DRIFT: ``BUCKET_KEYS`` is a hand-copy of
+    ladders that live in ``ir.py``, and the census, ``_blind`` and every
+    ``CENSUS_ADMISSIONS`` attribution are only as true as that copy. So the copy
+    is now compared against :func:`_ir_declared_ladders`, which reads ``ir.py``'s
+    own ``entity_specs`` and ``component_specs`` tables. A bucket added, renamed,
+    dropped or re-ordered in ``ir.py`` fails here.
+
+    **Scope, stated so the next reader does not over-trust it.** This gates the
+    PRIMARY ladder of the nine buckets ``ir.py`` declares in those two tables. It
+    does NOT gate the secondary ladders in :data:`BUCKET_KEYS` -- the compound
+    external ids, which are built in ``compound_resolution.py``, or the
+    ``uniprot`` / ``drugbank`` lists spelled inline at ``ir.py:1506``, ``:1546``,
+    ``:2464``. Those are covered only by
+    :func:`test_the_allowlist_names_every_identity_key_ir_consumes`, which proves
+    each is hashed, not that the list is complete. Closing that gap needs the
+    inline lists lifted into a table and is a separate card.
+    """
+    declared = _ir_declared_ladders()
+    assert len(declared) == 9, sorted(declared)
+    unknown = sorted(set(declared) - set(BUCKET_KEYS))
+    assert not unknown, (
+        f"ir.py drives buckets BUCKET_KEYS does not name: {unknown}. The census, "
+        f"_blind and every CENSUS_ADMISSIONS attribution are measured through "
+        f"BUCKET_KEYS, so a bucket missing from it is invisible to all of them.")
+    for bucket, ladder in sorted(declared.items()):
+        assert BUCKET_KEYS[bucket][0] == ladder, (
+            f"{bucket}: ir.py resolves {list(ladder)}, BUCKET_KEYS copies "
+            f"{list(BUCKET_KEYS[bucket][0])}")
+
+
+def test_the_ir_ladder_comparison_is_not_vacuous() -> None:
+    """NON-VACUITY (C-093), permanent, for the test immediately above.
+
+    An AST reader that silently found nothing would make that comparison pass
+    over an empty map, which is the failure mode of every source-parsing gate. So:
+    the reader must find all nine buckets and their real contents, and each of the
+    three drifts it claims to catch -- a dropped bucket, a renamed key, a
+    re-ordered ladder -- is shown to break the comparison.
+    """
+    declared = _ir_declared_ladders()
+    assert declared["compounds"] == ("pathbank_compound_id", "pw_compound_id",
+                                     "pathwhiz_id")
+    assert declared["proteins"] == ("pathbank_protein_id", "pw_protein_id",
+                                    "pathwhiz_id")
+    assert set(declared) == set(BUCKET_KEYS) - {"components"}
+
+    def _matches(candidate: dict[str, tuple[str, ...]]) -> bool:
+        return not (set(candidate) - set(BUCKET_KEYS)) and all(
+            BUCKET_KEYS[b][0] == ladder for b, ladder in candidate.items())
+
+    assert _matches(declared)
+    assert not _matches({**declared, "proteins": ("uniprot", "pw_protein_id",
+                                                  "pathwhiz_id")})
+    assert not _matches({**declared, "compounds": tuple(
+        reversed(declared["compounds"]))})
+    assert not _matches({**declared, "a_bucket_bucket_keys_does_not_name": ("x",)})
 
 
 def test_the_frozen_cohort_equality_still_bites() -> None:
@@ -529,6 +676,14 @@ def test_an_unattributed_bucket_or_key_is_reported_not_absorbed() -> None:
     whole = _census(_gap_rows())
     assert not (set(whole["buckets"]) | set(whole["keys"])) - accounted
 
+    # SOFT COUPLING, recorded rather than engineered away (REV-093). These three
+    # names are chosen because nothing admits them TODAY. If a later card
+    # legitimately admits ``nucleic_acids`` or ``drugbank``, the ``assert
+    # synthetic not in accounted`` below fails with that name in the message --
+    # loudly, and pointing straight at the fix, which is to pick a name that is
+    # still unadmitted. It is a maintenance cost, not a false alarm, and it is
+    # cheaper than a synthetic name so exotic that it stops resembling the thing
+    # the test is about.
     for synthetic in ("nucleic_acids", "pw_nucleic_acid_id", "drugbank"):
         assert synthetic not in accounted, synthetic
         invented = _gap_rows() + (
@@ -545,36 +700,76 @@ def test_the_admission_register_cannot_absorb_a_bucket_silently() -> None:
     :data:`CENSUS_ADMISSIONS` is a constructor, not a literal, so there is no bare
     key to append: every unattributed shape raises, and it raises at IMPORT time,
     so the module fails to collect rather than one assertion failing downstream.
-    Also asserts the committed entries carry what C-093 section 4.2 demands -- a merge
-    SHA that is really in this history, and the leg the rows come off.
+
+    **REV-093 round 1: the shape checks alone were theatre.** A real-looking SHA,
+    120 characters and a ``PMC`` number anywhere in the prose were the whole bar,
+    and nothing tied any of it to an artifact. The witness leg is what makes this
+    a gate, and it is checked three ways -- each closing a different way a
+    citation can be false:
+
+    a. the witness is a **committed** leg (``git ls-files``), so an admission
+       cannot cite a file that does not exist;
+    b. the witness **actually contributes** at least one census row under this
+       exact bucket-or-key, so an admission cannot be written for rows that are
+       not there, and cannot be pre-registered ahead of the commit that produces
+       them;
+    c. the cited SHA is the commit that **ADDED that witness** -- REV-093's
+       optional (c), taken because it is one ``git log`` per admission and it is
+       the last gap between the citation and the artifact. Without it the SHA had
+       only to be *some* leg-adding commit, which any of the ten would satisfy.
     """
+    leg = "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json"
     for entry in ("proteins", ("proteins",), ("proteins", "aee228c"),
-                  ("proteins", "aee228c", ""), ("proteins", "aee228c", "   "),
-                  ("proteins", "aee228c", "corpus growth"),
-                  ("proteins", "aee228c", None), ("proteins", "aee228c", 0),
-                  ("", "aee228c", "z" * MIN_ADMISSION_CHARS),
-                  ("proteins", "", "z" * MIN_ADMISSION_CHARS),
-                  ("proteins", "not-hex", "z" * MIN_ADMISSION_CHARS),
-                  ("proteins", "aee228c", "z" * (MIN_ADMISSION_CHARS - 1))):
+                  ("proteins", "aee228c", leg),
+                  ("proteins", "aee228c", leg, ""),
+                  ("proteins", "aee228c", leg, "   "),
+                  ("proteins", "aee228c", leg, "corpus growth"),
+                  ("proteins", "aee228c", leg, None),
+                  ("proteins", "aee228c", leg, 0),
+                  ("", "aee228c", leg, "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "", leg, "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "not-hex", leg, "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "aee228c", "", "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "aee228c", "notaleg.json", "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "aee228c", None, "z" * MIN_ADMISSION_CHARS),
+                  ("proteins", "aee228c", leg,
+                   "z" * (MIN_ADMISSION_CHARS - 1))):
         with pytest.raises(CensusAdmissionUnattributed):
             _admitted(entry)  # type: ignore[arg-type]
 
-    good = ("proteins", "aee228c", "z" * MIN_ADMISSION_CHARS)
+    good = ("proteins", "aee228c", leg, "z" * MIN_ADMISSION_CHARS)
     assert _admitted(good) == {"proteins": {"merge_sha": "aee228c",
-                                            "attribution": good[2]}}
+                                            "witness_leg": leg,
+                                            "attribution": good[3]}}
     with pytest.raises(CensusAdmissionUnattributed):
         _admitted(good, good)
 
+    committed = set(_corpus())
+    rows = _gap_rows()
     for name, record in CENSUS_ADMISSIONS.items():
+        witness = record["witness_leg"]
+        assert witness in committed, (
+            f"{name}: witness leg {witness} is not committed, so the admission "
+            f"cites an artifact that cannot be read")
+
+        # (b) the witness really carries rows under THIS bucket or key
+        contributed = [g for g in rows
+                       if g[0] == witness and name in (g[1], g[3])]
+        assert contributed, (
+            f"{name}: {witness} contributes no census row under this name. An "
+            f"admission for rows that do not exist is exactly the pre-registration "
+            f"REV-093 flagged.")
+
+        # (c) the cited SHA is the commit that ADDED that witness
         added = subprocess.run(
-            ["git", "show", "--diff-filter=A", "--name-only", "--format=",
-             record["merge_sha"]], cwd=ROOT, capture_output=True, text=True)
-        assert added.returncode == 0, (
-            f"{name}: merge SHA {record['merge_sha']} is not a commit in this "
-            f"history, so the attribution cannot be checked")
-        assert any(p.endswith("final_mapped.json") for p in added.stdout.split()), (
-            f"{name}: {record['merge_sha']} committed no leg fixture, so it cannot "
-            f"be what put this bucket in the census")
+            ["git", "log", "--diff-filter=A", "--format=%H", "--", witness],
+            cwd=ROOT, capture_output=True, text=True)
+        assert added.returncode == 0, f"{name}: cannot read the history of {witness}"
+        shas = added.stdout.split()
+        assert any(s.startswith(record["merge_sha"]) for s in shas), (
+            f"{name}: {record['merge_sha']} did not add {witness} (added by "
+            f"{[s[:7] for s in shas]}), so the citation names the wrong commit")
+
         assert re.search(r"PMC\d+", record["attribution"]), (
             f"{name}: the attribution names no paper, so the rows it admits "
             f"cannot be found again")

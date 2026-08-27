@@ -794,13 +794,23 @@ EXCLUDED: Dict[str, str] = _excluded(
      "entity_identity.protein_external_identity scans row, mapped_ids, ids and "
      "mapping_meta and stops there, while ir._first_nonempty also reaches "
      "mapping_meta.candidates[0] -- so the gate reports as absent exactly the "
-     "identifier the exporter would have exported. The divergence runs in the "
-     "SAFE direction (the gate refuses where the exporter would have exported), "
-     "so no biological gate is weakened by leaving it, but pinning this digest "
-     "would record that defect as the expected result. It is the same census the "
-     "'proteins' bucket in tests/test_c030_canonical_identity_fallback.py's "
-     "CENSUS_ADMISSIONS is admitted under, and it needs its own card and its own "
-     "current-source measurement; C-093 may not touch src/."),
+     "identifier the exporter would have exported. ON THIS TIER the gate is "
+     "stricter than the exporter, which is the safe direction -- but that is a "
+     "MEASUREMENT OVER THIS CORPUS, NOT A PROPERTY OF THE CODE. The asymmetry "
+     "runs both ways: ir._first_nonempty never reads row['ids'] while "
+     "protein_external_identity does, so a uniprot or drugbank value present ONLY "
+     "under 'ids' would pass the gate and leave the exporter with no identity, "
+     "which is the UNSAFE direction. REV-093 measured both over all 78 committed "
+     "final_mapped.json, 804 protein and protein_complex rows including "
+     "components (g11/ORCH-093/01-ladder-asymmetry.json at 46df1e7): unsafe 0, "
+     "safe 2 -- exactly O76031 and Q16740. So no biological gate is weakened "
+     "TODAY, the 'ids' tier is latent with zero exposure, and the follow-up card "
+     "must close both tiers rather than only the one that fired. Pinning this "
+     "digest would record the defect as the expected result. It is the same "
+     "census the 'proteins' bucket in "
+     "tests/test_c030_canonical_identity_fallback.py's CENSUS_ADMISSIONS is "
+     "admitted under, and it needs its own card and its own current-source "
+     "measurement; C-093 may not touch src/."),
 )
 
 #: The (leg, configuration) pairs whose pre-freeze stage STOPS, by code.
@@ -1255,6 +1265,12 @@ def test_an_exclusion_reason_that_names_the_wrong_refusal_is_caught() -> None:
     assert all(triggers.values()), "an excluded leg records no refusal at all"
 
     distinct = {t for values in triggers.values() for t in values}
+    # SOFT COUPLING, recorded rather than engineered away (REV-093). This needs
+    # TWO different triggers in the register to be able to forge a wrong reason at
+    # all -- today 'degree_zero_export:1' and 'unexportable_entity:2'. If the
+    # register ever collapses to one trigger it fails with the message below
+    # rather than silently going vacuous, and the fix is to build the forged
+    # reason from a literal instead of from a sibling entry.
     assert len(distinct) > 1, (
         "the register no longer holds two different refusal triggers, so this "
         "test can no longer distinguish the property from the old literal")
