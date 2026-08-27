@@ -5316,3 +5316,65 @@ and C-090's rescue arm meet live.
    was +36% on the one observed case, so **budget 55 min, `--timeout 5400`**. Estimated credit spend
    **≈ $0.06**, scaled from the 1216 cohort's measured $0.177 / 7067 s — order of magnitude only,
    since spend tracks tokens rather than seconds.
+
+## Cohort preflight — staged, verified, and one G11 process incident recorded
+
+**2026-08-27, integration `46df1e7`.** Staged directory: `runs_verify/2026-08-27_1341`, **untracked**
+until the run completes.
+
+```
+scripts/batch_run.py --topics topics_wave_cohort.txt --modes strict --out runs_verify --fresh --stage-only
+```
+
+`--stage-only` executes **zero Streamlit/LLM legs by construction** — it returns before the run loop,
+so no manifest row and no leg directory can be created however warm the paper cache is. Both papers
+came from cache. Acquisition funnel: requested 2, examined 2, eligible 2, ineligible 0,
+`no_full_text` 0, accepted 2. Planned 2 papers × 1 mode = **2 runs, 0 skipped**.
+
+### The plan verification, and why REFUSED is the right answer
+
+```
+scripts/bench_acceptance.py --verify-plan runs_verify/2026-08-27_1341
+verdict: REFUSED     cases checked: 2     search calls: 0
+  PMC12096016 | enterobactin biosynthesis | Escherichia coli   [pinned_override]
+  PMC12782028 | cholesterol biosynthesis  | Homo sapiens       [pinned_override]
+  MISSING  PMC12444477, PMC13231680, PMC12657337, PMC12421875,
+           PMC12312563, PMC12856317, PMC12180156, PMC12452463
+```
+
+**`--verify-plan` is the *acceptance-run* preflight and requires all ten pinned gold cases.** This
+cohort is a deliberate two-paper subset, so REFUSED is the correct and expected verdict — the tool
+independently refusing to treat this run as acceptance is corroboration of the ledger's own standing
+rule that it must never be scored as one.
+
+**What the check did validate, which is what I needed:** both triples resolve `[pinned_override]`
+against gold `2026-08-01.1` — the requested pathway and organism match the pinned gold exactly, so
+the legs will be scored against the same gold cases T-106 used — and **`search calls: 0`**, so no
+accidental live search was staged.
+
+**Therefore `--verify-plan` is NOT the gate for this run.** The gate is: two cases, both
+`[pinned_override]`, zero search calls. All three hold. Recorded so nobody later reads REFUSED as a
+blocked cohort.
+
+### G11 PROCESS INCIDENT — a job that produced no report
+
+The staging job was allocated under `--task ORCH-COHORT`, which is **not a valid G11 task id** (the
+allocator requires the `H-004` / `C-056a` / `INIT-001` shape). `g11_evidence.py next` printed a
+`ValueError` instead of a path, and that error string was passed to `--json`. `bounded_run.py`
+detected it and reported `BOUNDED_RUN_JSON_REPORT_UNWRITABLE` rather than failing silently, which is
+the wrapper behaving exactly as designed.
+
+**Consequence, stated plainly: the staging job has no G11 report and is uncertifiable under G11.** It
+is not claimed as certified evidence. What certifies the staged plan is the `--verify-plan` job under
+`ORCH-701/01`, which read the staged `plan.json` off disk and reproduced its contents — so the
+artifact is verified even though the job that produced it is not.
+
+The staging was **not** re-run. Re-staging with `--fresh` would create a second run directory for a
+paperwork defect, and the plan it produced is independently verified above.
+
+Both jobs reported `FINAL SURVIVING COUNT : 0` and `cleanup : success`; the heavy lock was acquired
+and released by each.
+
+**Standing correction, third time this trap has been hit in the sprint:** always validate that
+`g11_evidence.py next` returned a real path before passing it to `--json`. A malformed `--task`
+returns an error message, not a failure, and the message becomes the path.
