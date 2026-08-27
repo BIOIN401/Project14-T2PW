@@ -223,7 +223,7 @@ def _admitted(*entries: tuple[str, str, str, str]) -> dict[str, dict[str, str]]:
     **``witness_leg`` was added by C-093 correction round 1.** REV-093 was right
     that the first form was "a rubber stamp with a bouncer at the door": every
     check was on the SHAPE of the citation -- real-looking SHA, 120 characters, a
-    ``PMC\d+`` somewhere -- and **nothing tied the citation to an artifact**. Any
+    ``PMC`` number somewhere -- and **nothing tied the citation to an artifact**. Any
     plausible prose plus any leg-committing SHA was accepted. The witness closes
     that: it names one committed leg that must still exist AND must still
     contribute at least one census row under this exact bucket-or-key, so an
@@ -337,13 +337,20 @@ CENSUS_ADMISSIONS: dict[str, dict[str, str]] = _admitted(
      "row['ids'] while protein_external_identity does, so a uniprot or drugbank "
      "value present ONLY under 'ids' passes the gate and leaves the exporter with "
      "no identity -- the UNSAFE direction, latent with zero exposure today. "
-     "Measured by REV-093 over all 78 committed final_mapped.json, 804 protein "
-     "and protein_complex rows including components (g11/ORCH-093/"
-     "01-ladder-asymmetry.json at 46df1e7): unsafe 0, safe 2 -- exactly O76031 "
-     "and Q16740. So 'no gate is weakened' is TRUE AS A MEASUREMENT OVER THIS "
-     "CORPUS, NOT AS A PROPERTY OF THE CODE; the follow-up card must close both "
-     "tiers, not only the one that happened to fire. The leg is EXCLUDED from the "
-     "export golden on that record rather than pinned."),
+     "Measured by REV-093 over ALL 92 committed final_mapped.json -- the whole "
+     "corpus, 14 under runs/ and 78 under runs_verify/ -- 1011 protein and "
+     "protein_complex rows including components: unsafe 0, safe 2, exactly O76031 "
+     "and Q16740. (An earlier draft of this entry said 78, which is the "
+     "runs_verify/ subtree and not the corpus; REV-093 re-ran it corpus-wide "
+     "rather than relabel it, and independently confirmed that git grep for "
+     "'\"ids\"' across all 92 legs returns zero, so the unsafe tier has no "
+     "exposure at all today.) The measurement is an INTEGRATION-BRANCH artifact, "
+     "task ORCH-093 label ladder-all92, at e9aa5c8; it is not in this branch's "
+     "tree, so look for it under g11/ORCH-093/ after merge. So 'no gate is "
+     "weakened' is TRUE AS A MEASUREMENT OVER THIS CORPUS, NOT AS A PROPERTY OF "
+     "THE CODE; the follow-up card must close both tiers, not only the one that "
+     "happened to fire. The leg is EXCLUDED from the export golden on that record "
+     "rather than pinned."),
     ("pathbank_protein_id", "aee228c",
      "runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json",
      "The mapping_meta half of the two proteins rows above -- 8580 and 3923, on "
@@ -609,8 +616,15 @@ def test_the_ir_ladder_comparison_is_not_vacuous() -> None:
     An AST reader that silently found nothing would make that comparison pass
     over an empty map, which is the failure mode of every source-parsing gate. So:
     the reader must find all nine buckets and their real contents, and each of the
-    three drifts it claims to catch -- a dropped bucket, a renamed key, a
-    re-ordered ladder -- is shown to break the comparison.
+    FOUR drifts the real test catches -- a dropped bucket, a renamed key, a
+    re-ordered ladder, an unknown bucket -- is shown here to break it.
+
+    **The surrogate models all THREE assertions the real test makes**, including
+    its ``len(declared) == 9`` cardinality check. REV-093 round 2 caught that the
+    first version omitted that line, so a DROPPED bucket did not break
+    ``_matches`` and the "dropped bucket" in this docstring was a demonstration
+    that was not there -- F1's own defect, one level up. The real gate always
+    caught a drop; the proof did not.
     """
     declared = _ir_declared_ladders()
     assert declared["compounds"] == ("pathbank_compound_id", "pw_compound_id",
@@ -620,10 +634,17 @@ def test_the_ir_ladder_comparison_is_not_vacuous() -> None:
     assert set(declared) == set(BUCKET_KEYS) - {"components"}
 
     def _matches(candidate: dict[str, tuple[str, ...]]) -> bool:
-        return not (set(candidate) - set(BUCKET_KEYS)) and all(
-            BUCKET_KEYS[b][0] == ladder for b, ladder in candidate.items())
+        """The real test's three assertions, in the order it makes them."""
+        return (len(candidate) == 9
+                and not (set(candidate) - set(BUCKET_KEYS))
+                and all(BUCKET_KEYS[b][0] == ladder
+                        for b, ladder in candidate.items()))
 
     assert _matches(declared)
+    # a DROPPED bucket -- caught by cardinality, which is why cardinality is in
+    # the surrogate. ir.py silently ceasing to drive a bucket is the drift this
+    # whole gate exists for, and it is the one the first surrogate could not see.
+    assert not _matches({k: v for k, v in declared.items() if k != "compounds"})
     assert not _matches({**declared, "proteins": ("uniprot", "pw_protein_id",
                                                   "pathwhiz_id")})
     assert not _matches({**declared, "compounds": tuple(
