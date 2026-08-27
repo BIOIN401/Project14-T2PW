@@ -1,0 +1,125 @@
+{
+  "label": "postmerge-ab",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/btab92",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_compound_resolution_extraction.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-27T19:26:15+00:00",
+  "finished_at": "2026-08-27T19:28:03+00:00",
+  "duration_seconds": 107.6174791000085,
+  "timeout_seconds": 900.0,
+  "root_pid": 79064,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 80340,
+      "name": "python.exe",
+      "ppid": 79064
+    },
+    {
+      "pid": 80460,
+      "name": "git.exe",
+      "ppid": 80340
+    },
+    {
+      "pid": 80268,
+      "name": "git.exe",
+      "ppid": 80340
+    },
+    {
+      "pid": 80248,
+      "name": "git.exe",
+      "ppid": 80340
+    },
+    {
+      "pid": 79252,
+      "name": "git.exe",
+      "ppid": 80340
+    },
+    {
+      "pid": 79024,
+      "name": "git.exe",
+      "ppid": 80340
+    },
+    {
+      "pid": 72788,
+      "name": "git.exe",
+      "ppid": 80340
+    }
+  ],
+  "descendants_terminated": [
+    72788,
+    79024,
+    79252,
+    80248,
+    80268,
+    80340,
+    80460
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 45996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 75468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 79684,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\MERGE-092\\02-postmerge-ab.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "c2cdb82337e2d20d6839836990e6a1b9402d732d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "MERGE-092-ab",
+    "token": "MERGE-092-ab:75468:41e85de02f02412c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
