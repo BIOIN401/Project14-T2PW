@@ -18,6 +18,13 @@ delta: by C-045a (D-016 put species canonicalization before the freeze) and by
 C-051b (C-051 made ``build_pwml_ir`` refuse unresolved compound rows, so the
 sweep must route through ``run_prefreeze_resolution``). Both deltas are recorded
 above ``GOLDEN``. It must never be moved to make an accidental drift go green.
+
+That count was already stale when C-093 read it -- C-050g, C-050h, C-050i and
+C-050k each moved it afterwards, and C-068 admitted a leg. **Do not read a move
+count from this paragraph; every move is recorded, in order, in the comment block
+above ``GOLDEN``, which is the authority.** C-093's is the sixth: 56 committed
+legs admitted and one excluded, with **no existing digest moved** -- 0 of the 34
+already pinned changed under the sweep that measured the new ones.
 """
 
 from __future__ import annotations
@@ -545,6 +552,113 @@ GOLDEN = {
     # own current-source measurement. Pinning this digest freezes the defect so
     # that card can prove its fix moved something.
     "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": "609950f179ebf871d27f9ee0cae9bcddf1272a21bc437b7699a85fb1ad37548b",
+    # ── C-093, 2026-08-27: 56 legs admitted, one excluded, on the record ──
+    #
+    # **MOVED A SIXTH TIME, and this is the largest move this golden has taken.**
+    # Between C-068 (35 committed legs) and C-093's base the corpus reached **92**:
+    # T-101, T-103, T-104, T-105 and T-106 each committed their legs, as did the
+    # C-072/C-073 paper validation, the two affected-paper cohorts and the C-081 /
+    # C-082 validation cohort. 57 legs arrived; the coverage tripwire had been red
+    # ever since the first of them, which is precisely the decay F-069 diagnosed.
+    #
+    # **Every one of the 57 was decided individually, and both decisions rest on the
+    # SAME criterion C-068 used** -- ``quarantine_report.json -> ok``, corroborated by
+    # accession occurrence counts and ``prefreeze_db_resolution``. Measured, per leg,
+    # from the committed artifacts (``evidence/g11/C-093/05-compound-audit.json`` and
+    # ``06-baseline-audit-control.json``):
+    #
+    #   * **56 legs: report PRESENT, ``ok`` TRUE, ``refusal_reasons: []``,
+    #     ``prefreeze_db_resolution: {"available": true}``, ``"enrichment"`` present
+    #     (2-23 occurrences).** These are the canonical payloads of completed runs --
+    #     exactly the shape of the ONE leg C-068 admitted -- so each is PINNED here.
+    #   * **1 leg: report PRESENT, ``ok`` FALSE.** Excluded, in ``EXCLUDED`` below,
+    #     with its own refusal named. See that entry: it carries a registered
+    #     production finding, and pinning it would have recorded that defect as
+    #     expected.
+    #
+    # There is no blanket rule and no pattern-widening here: the criterion is applied
+    # to each leg's own measured verdict, and it happens to separate them 56 / 1.
+    #
+    # **Nothing was re-baselined to make this green.** Measured under pytest over the
+    # whole 92-leg corpus (``evidence/c093_leg_digest_sweep.py``,
+    # ``evidence/g11/C-093/03-digest-sweep.json``): **0 of the 34 pre-existing GOLDEN
+    # digests moved** -- byte-identical, which is also the control proving the
+    # instrument that produced the 56 new digests agrees with the committed ones.
+    # **0 of the 57 new legs stops pre-freeze or refuses post-freeze**, so
+    # ``GOLDEN_PREFREEZE_STOPS`` and ``GOLDEN_IR_REFUSALS`` did not have to move
+    # either: the only two legs in this corpus that stop are the same two as before.
+    # Also measured across all 57: **no compound row lacks a resolution verdict** and
+    # **no leg carries a ``_norm`` collision among its compound names**, so neither of
+    # the two refusal shapes this golden records is latent in them.
+    #
+    # **THE DIGESTS ARE PINS, NOT ENDORSEMENTS** -- as C-068 wrote of the leg it
+    # admitted, and it is worth repeating at this scale. One standing observation,
+    # recorded so no later reader mistakes silence for approval: 18 of these 56 legs
+    # export a compound identity drawn from a resolution whose own
+    # ``mapping_meta.resolution.status`` is ``ambiguous`` or ``fallback`` (e.g.
+    # ``isochorismate`` -> 40741, ``2,3-dihydro-2,3-dihydroxybenzoate`` -> 40770).
+    # **These legs did not introduce that**: the same shape is present in the frozen
+    # 35-leg cohort, on legs already pinned above -- including ``intermediate I`` and
+    # ``intermediate II`` on ``PMC12312563__structures-...``, the first entry in this
+    # dict. It is a standing property of the pipeline, out of C-093's scope, and it is
+    # NOT a per-leg exclusion criterion; treating it as one here would have been the
+    # blanket rule this card is forbidden to write.
+    "runs_verify/2026-08-21_1822/papers/PMC12782028/research/final_mapped.json": "a43a711197c5b943a23563cda5df709b7e4b79a27713021f9c472f8447171e31",
+    "runs_verify/2026-08-21_1822/papers/PMC12782028/strict/final_mapped.json": "e2c0857d7255cc66d5bff5065604f6243da720fb283d8875b414dd24b332b0ec",
+    "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": "71bc9d5e9368b45f8d3034a2b95fb8bab8c822ea8a3c9c40317596c9aca0b94b",
+    "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": "3be39fe74538c37e38500ade0cc5c12e7c6018617b4891e8e667cd00419ad4d7",
+    "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": "1e45ed1b23c0a4298faba78435355421f40eece0bbe5bf14470e51f3b274d13e",
+    "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": "70d34774247630e9ea19bbdb04fcfdc9803bf56687a066098114ff464467cd7e",
+    "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": "67eb13a00e4f2d14fa72e5bf656c3b027bf7835bcbcab6cea1e100ab2fd24fa3",
+    "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": "a3b09f3085a9b2274b7bd8368258f6837948daaf7299f3a5cfa6e8b115bbbdf7",
+    "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": "60123829f5f51edb8f125788c77464b32c2d895668c58472515fd01e54f8f33d",
+    "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": "029b70f4b76a5db41be08b491b0eb6e26531feaaaf372f47f867fca7eab1baa3",
+    "runs_verify/2026-08-21_2239/papers/PMC12180156/research/final_mapped.json": "5139cd5226b3cd351cc91b764878753ca2717ba8be586cf996a5c72ab4501342",
+    "runs_verify/2026-08-21_2239/papers/PMC12180156/strict/final_mapped.json": "b62b4d50a9db4bd2c3525774bab405e271cc8189f581a45d2a2f52c07565c28b",
+    "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": "878e021f1b7a8b5c87fe861592f40b92ac16bef9cd238460a27ddd8fee3737ef",
+    "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": "951ac755bd82598cef2b652174327898f70c6c745d9d44a8ab40c3c1b61800fd",
+    "runs_verify/2026-08-21_2239/papers/PMC12782028/research/final_mapped.json": "0025be2cc106f8507f9701c1a89a7395824b8b69c95980c374e2715e7656c1df",
+    "runs_verify/2026-08-21_2239/papers/PMC12782028/strict/final_mapped.json": "c0afe61de14749159cac438919a811509e248ebdab90c0f399d8ad08d082d75e",
+    "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": "aae7eb779d7f26ca87dd4148806ebc83bf95498822cd709e6bdbcd446347367d",
+    "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": "395995f0f69da755e8ba9fb8a3fe88a4e877a453837ef89ce10cc5e8e381f2ac",
+    "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": "efd128188af44cb4a517fe07be588ce95017cad68574ff2fa717a65e4acda408",
+    "runs_verify/2026-08-22_2017/papers/PMC12452463/research/final_mapped.json": "a0cd4aceed9e54766df9f26e96398635fb1913a8ba21955b700d8ed7888449c6",
+    "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": "c43b0b056d84c5b429999412e97dadb243b8ea6cb4312223ad84e8bb619b1814",
+    "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": "dc0a15672a8aab73dc9cb6714031088198ce1555dd172a356e513ab2bfdd1ce3",
+    "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": "3299ce93d35eaf109628b5c272b605bc90fe88c32690db970e6cceb31c34e526",
+    "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": "4e0596baab68a6f9d942e4686c06f4f9245f0aee11392e7dff930e41ea80a1cc",
+    "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": "f445a53fb71d0252997b818060a6748d3c45507ecbf80290383031fa5878212d",
+    "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": "50f7aa4a5c7bba4e9713787a01195f07c7c4bb62d2242f84df36bee36b3869e8",
+    "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": "75d1245ff90b74239b0e86bae4fad0e9ca168a246e27549a37369d83b9c149dc",
+    "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": "ad0fbe4b196c1aaf3bfb974460ffdcfa6bec7256bb751e8be86753fc5f890174",
+    "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": "4b2c33f643d935b6b7c0aa6784a9c6d13ff7f716cc267a4d48479b7e3ed74c8f",
+    "runs_verify/2026-08-22_2147/papers/PMC12782028/research/final_mapped.json": "53a81d401c8d63cb70011cb0fb01fd30f1409e4c07e9bd3bf4390bbf80c82bf0",
+    "runs_verify/2026-08-22_2147/papers/PMC12782028/strict/final_mapped.json": "086bade2ddeb3c55561e279115d5cae0d790fef89ad2bf5aa6e9b218120d709e",
+    "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": "36c0e2c01d18386886e08a847e972075244971aa253acd23ef33c3cf7399f2fc",
+    "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": "345dc80e9374dce8fd290079339c25e6b6cf9efd5d6b89ac8c84eb4c554d4bbb",
+    "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": "7715ba49c368e61be05164ef3856ba786759607e4b3b8e9631e34c32197d6689",
+    "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": "b3d9da9e0d6b5c219c9c8a1d5a57aaf381ac9b28d4a8f7c0e07ef09a1c0372bf",
+    "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": "f7e1a0b9e9a9066205313af6319d9806fcadb11fc7de3795f26b65b66f4c6eed",
+    "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": "81dc2cf5f3229040d09020d1e890ac01cbd232f19ca170dcdbbf94628b6d81a3",
+    "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": "ff6b8f9b92fdd5ae5d8dad60c89a126558644502ee64c962d488c32a740fa794",
+    "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": "4b19fdd07e8e51c51ab3018b0b3deb1b54654f2e816ce8c7b24ff87903630566",
+    "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": "ff6f1947cfcbff2c08041e06b3ebb3b1c546b62315a3e6c20579129ae94befbe",
+    "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": "c51803e1d5928bdc2de8faf3066b00eace115dbba9c85266e35789b560f58b52",
+    "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": "5e6718b4749853eef551d0ded46f177f45828a7a4a377aa8d0937569cd996b80",
+    "runs_verify/2026-08-24_1402/papers/PMC12782028/research/final_mapped.json": "837983ac4c7725b2583bbe1ce8529099334840964217f9d1ee8986fd8ad0812f",
+    "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": "0d8cf2ed7980574aeb29a4a7532e026ec6b423d956b92a243828f7840b4b17ae",
+    "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": "80620981d89a05b04f41fbb176e0651fa9a1bbe4d97dc2d959c75f279c6300b1",
+    "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": "2ed75b933c52ed21740e8ae4a7b35842037cb057df86192a3c7556b5a1e143b0",
+    "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": "09c58861af9522266f77b206e2b61a838389681a89687b41cc8b5163b85b9d67",
+    "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": "e27a2b50c25a663f8ab10a51f9ac9630d22d6fab1dc70234dd17bdb9eabdd7e0",
+    "runs_verify/2026-08-24_1428/papers/PMC12452463/strict/final_mapped.json": "70af28aa537d2c846e02272bd5177cfb780339032593cb2968929b67ca6f4ac4",
+    "runs_verify/2026-08-24_1428/papers/PMC12782028/research/final_mapped.json": "b2b111229e3dc06e06747c8a8ff5b06d05cff1d67e324ad8444dda6156d90412",
+    "runs_verify/2026-08-24_1428/papers/PMC12782028/strict/final_mapped.json": "907f26ff79348d31b80058b2304f83b28e37e48a92a7c4bcfafd81dfd81009eb",
+    "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": "8612727b134f061dd06cc8f8ee0e761cd5fa5d8ead44795d538e030e14dac458",
+    "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": "9b0b8fbd8ddd14ccdb7b408bf3ef181bbe32fd15df390641c44f4f71193220ce",
+    "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": "2cfdfc73eb1fb56062d84222e643dc11d6f85217e18551fdd967e764132ca09c",
+    "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": "88472874b97d8818147b23cfcf7f1bf72e091df45345b9a4ada6ce3af6625d5f",
+    "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": "a4f6649884b1b566ae2b455758f13a1189c27c133c8575506dd7bdd8e64850fd",
 }
 
 #: Minimum length, in stripped characters, of an ``EXCLUDED`` reason.
@@ -590,6 +704,31 @@ def _excluded(*entries: Tuple[str, str]) -> Dict[str, str]:
     return register
 
 
+def _recorded_refusal(leg: str) -> Dict[str, Any]:
+    """The quarantine verdict a leg's OWN ``quarantine_report.json`` records.
+
+    C-093. The exclusion register says why a leg is not an export fixture; this
+    is what the artifact says, so the two can be compared instead of the reason
+    being taken on trust. Missing or unreadable reports come back as
+    ``ok=None`` with no triggers, which
+    :func:`test_excluded_cannot_silence_a_leg_without_a_reason` treats as a
+    failure rather than a pass -- an exclusion whose evidence is gone is not
+    justified.
+    """
+    report = ROOT / leg
+    report = report.parent / "quarantine_report.json"
+    if not report.is_file():
+        return {"ok": None, "refusal_reasons": []}
+    try:
+        data = json.loads(report.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"ok": None, "refusal_reasons": []}
+    reasons = data.get("refusal_reasons")
+    return {"ok": data.get("ok"),
+            "refusal_reasons": [str(r) for r in reasons]
+            if isinstance(reasons, list) else []}
+
+
 #: Committed leg fixtures deliberately kept OUT of ``GOLDEN``, each with its reason.
 #:
 #: C-068, closing F-069. Two of T-100's three survivors are not payloads the
@@ -633,6 +772,50 @@ EXCLUDED: Dict[str, str] = _excluded(
      "C-059's REASON_ALREADY_COVERED was written to reject (F-075) -- so this "
      "artifact may no longer reflect pipeline behaviour and must not be pinned as "
      "though it did."),
+    # C-093. The ONE of 2026-08-24 cohort A's legs that is not an export fixture,
+    # and the only one of the 57 legs committed since C-068 that is excluded.
+    ("runs_verify/2026-08-24_1203/papers/PMC12856317/strict/final_mapped.json",
+     "quarantine_report.json -> ok is FALSE with refusal_reasons "
+     "['unexportable_entity:2'], so this final_mapped.json is the PRE-QUARANTINE "
+     "FALLBACK and not the canonical payload; corroborated by 0 occurrences each "
+     "of 'enrichment' and 'ec_number' and a null prefreeze_db_resolution, against "
+     "7, 1 and {'available': true} on the same paper's research leg of the same "
+     "run. It is therefore never a payload build_pwml_ir is handed on a completed "
+     "run. Its ONLY structural refusal is "
+     "strict_invariants.unexportable_entities == the two proteins rows "
+     "'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' "
+     "and 'Putative ATP-dependent Clp protease proteolytic subunit, "
+     "mitochondrial', each with reason 'protein_missing_external_identity' -- and "
+     "THAT REFUSAL IS A REGISTERED FINDING, which is why this leg is excluded "
+     "rather than pinned. Both rows carry a correct human accession: CLPX has "
+     "pathbank_protein_id 8580 in mapping_meta and uniprot O76031 in "
+     "mapping_meta.candidates[0]; CLPP has 3923 and Q16740 in the same two "
+     "places; both resolutions are status 'matched' at confidence 1.0. "
+     "entity_identity.protein_external_identity scans row, mapped_ids, ids and "
+     "mapping_meta and stops there, while ir._first_nonempty also reaches "
+     "mapping_meta.candidates[0] -- so the gate reports as absent exactly the "
+     "identifier the exporter would have exported. ON THIS TIER the gate is "
+     "stricter than the exporter, which is the safe direction -- but that is a "
+     "MEASUREMENT OVER THIS CORPUS, NOT A PROPERTY OF THE CODE. The asymmetry "
+     "runs both ways: ir._first_nonempty never reads row['ids'] while "
+     "protein_external_identity does, so a uniprot or drugbank value present ONLY "
+     "under 'ids' would pass the gate and leave the exporter with no identity, "
+     "which is the UNSAFE direction. REV-093 measured both over ALL 92 committed "
+     "final_mapped.json -- the whole corpus, 14 under runs/ and 78 under "
+     "runs_verify/ -- 1011 protein and protein_complex rows including components: "
+     "unsafe 0, safe 2, exactly O76031 and Q16740. (An earlier draft said 78, "
+     "which is the runs_verify/ subtree and not the corpus; it was re-measured "
+     "corpus-wide rather than relabelled, and a git grep for '\"ids\"' across all "
+     "92 legs returns zero, so the unsafe tier has no exposure today.) The "
+     "measurement is an INTEGRATION-BRANCH artifact, task ORCH-093 label "
+     "ladder-all92, at e9aa5c8; it is not in this branch's tree, so look for it "
+     "under g11/ORCH-093/ after merge. So no biological gate is weakened TODAY, "
+     "the 'ids' tier is latent, and the follow-up card must close both tiers "
+     "rather than only the one that fired. Pinning this digest would record the "
+     "defect as the expected result. It is the same census the 'proteins' bucket "
+     "in tests/test_c030_canonical_identity_fallback.py's CENSUS_ADMISSIONS is "
+     "admitted under, and it needs its own card and its own current-source "
+     "measurement; C-093 may not touch src/."),
 )
 
 #: The (leg, configuration) pairs whose pre-freeze stage STOPS, by code.
@@ -984,13 +1167,69 @@ def test_the_coverage_tripwire_fires_on_an_unaccounted_leg() -> None:
     assert _leg_coverage_gap(real - {dropped}) == ([], [dropped])
 
 
+def test_the_repaired_coverage_and_digest_pins_themselves_go_red(
+        monkeypatch: Any) -> None:
+    """NON-VACUITY (C-093), permanent, and the strongest form of it.
+
+    :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg` exercises
+    :func:`_leg_coverage_gap`, the predicate. This drives **the two repaired test
+    functions themselves** and asserts they RAISE, which is the only thing that
+    answers "did admitting 56 legs turn the pin into a rubber stamp?":
+
+    1. drop one leg from ``GOLDEN`` -- the corpus scan must report it unaccounted,
+       so the tripwire has not been widened into an unconditional pass;
+    2. corrupt one digest -- ``build_pwml_ir``'s output pin must still bite, so
+       the 56 admitted digests are load-bearing values and not decoration;
+    3. blank ``EXCLUDED`` -- the excluded leg must come back as unaccounted, so
+       exclusion is a record and not a deletion.
+
+    (2) is run over a ONE-leg ``GOLDEN`` on purpose: the assertion under test is
+    per-leg, and sweeping all 90 to prove it would cost seconds for no more proof.
+    """
+    real_golden, real_excluded = dict(GOLDEN), dict(EXCLUDED)
+    test_the_golden_covers_every_committed_leg_fixture()  # control: green
+
+    dropped = sorted(real_golden)[0]
+    monkeypatch.setitem(globals(), "GOLDEN",
+                        {k: v for k, v in real_golden.items() if k != dropped})
+    with pytest.raises(AssertionError, match="unaccounted"):
+        test_the_golden_covers_every_committed_leg_fixture()
+
+    monkeypatch.setitem(globals(), "GOLDEN", real_golden)
+    monkeypatch.setitem(globals(), "EXCLUDED", {})
+    with pytest.raises(AssertionError, match="unaccounted"):
+        test_the_golden_covers_every_committed_leg_fixture()
+
+    monkeypatch.setitem(globals(), "EXCLUDED", real_excluded)
+    admitted = "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json"
+    assert admitted in real_golden, "the C-093 admission this proves is load-bearing"
+    monkeypatch.setitem(globals(), "GOLDEN", {admitted: "0" * 64})
+    with pytest.raises(AssertionError, match="drifted"):
+        test_build_pwml_ir_matches_the_pre_extraction_golden()
+
+    monkeypatch.setitem(globals(), "GOLDEN", {admitted: real_golden[admitted]})
+    test_build_pwml_ir_matches_the_pre_extraction_golden()  # and green again
+
+
 def test_excluded_cannot_silence_a_leg_without_a_reason() -> None:
     """NEW ACCEPTANCE (C-068 § 6). A leg cannot enter EXCLUDED reason-free.
 
     The register is a constructor, not a literal, so there is no bare key to
-    append: every reason-free shape raises, and it raises at import time. Also
-    asserts that both committed reasons carry the two facts § 3b requires -- the
-    quarantine refusal and the ``degree_zero_export`` trigger C-059 rejects.
+    append: every reason-free shape raises, and it raises at import time.
+
+    **RE-BASED BY C-093, from three literals to the property they were standing
+    in for.** C-068 asserted that every reason contains the strings
+    ``degree_zero_export`` and ``C-059``, which was true of the two legs it
+    excluded because both were refused by the same trigger. That is an accident of
+    a two-element register, not a rule: the third exclusion is refused with
+    ``unexportable_entity:2``, and under the old assertion an accurate reason for
+    it would have FAILED while a copy-pasted inaccurate one would have passed --
+    the exact inversion a silencing test must not have. The property those
+    literals approximate is that a reason must be checkable against the artifact,
+    so it is now asserted directly: **every reason must name the quarantine
+    verdict AND quote that leg's OWN recorded ``refusal_reasons``, read from its
+    ``quarantine_report.json`` on disk.** A reason describing the wrong refusal
+    now fails, which the literal form could not detect.
     """
     leg = "runs/2026-01-01_0000/papers/PMCFAKE/strict/final_mapped.json"
     for entry in (leg, (leg,), (leg, ""), (leg, "   "), (leg, "n/a"),
@@ -1007,5 +1246,46 @@ def test_excluded_cannot_silence_a_leg_without_a_reason() -> None:
     for path, reason in EXCLUDED.items():
         assert len(reason) >= MIN_EXCLUSION_REASON_CHARS, path
         assert "quarantine_report.json -> ok is FALSE" in reason, path
-        assert "degree_zero_export" in reason, path
-        assert "C-059" in reason, path
+        recorded = _recorded_refusal(path)
+        assert recorded["ok"] is False, (
+            f"{path} is excluded as a pre-quarantine fallback, but its "
+            f"quarantine_report.json does not say ok is false")
+        assert recorded["refusal_reasons"], path
+        for trigger in recorded["refusal_reasons"]:
+            assert trigger in reason, (
+                f"{path}: excluded without naming its own refusal {trigger!r}. "
+                f"A reason that does not match the artifact is a silencing.")
+
+
+def test_an_exclusion_reason_that_names_the_wrong_refusal_is_caught() -> None:
+    """NON-VACUITY (C-093), permanent. The re-based reason check can go RED.
+
+    The predicate above reads each leg's ``refusal_reasons`` off disk, so it would
+    be vacuous if every reason trivially contained every trigger. It does not: a
+    reason carrying a DIFFERENT leg's trigger is rejected, and so is one that
+    names none. Exercised against the committed register without writing anything
+    under ``runs/`` or ``runs_verify/``, which are read-only evidence.
+    """
+    triggers = {leg: _recorded_refusal(leg)["refusal_reasons"] for leg in EXCLUDED}
+    assert all(triggers.values()), "an excluded leg records no refusal at all"
+
+    distinct = {t for values in triggers.values() for t in values}
+    # SOFT COUPLING, recorded rather than engineered away (REV-093). This needs
+    # TWO different triggers in the register to be able to forge a wrong reason at
+    # all -- today 'degree_zero_export:1' and 'unexportable_entity:2'. If the
+    # register ever collapses to one trigger it fails with the message below
+    # rather than silently going vacuous, and the fix is to build the forged
+    # reason from a literal instead of from a sibling entry.
+    assert len(distinct) > 1, (
+        "the register no longer holds two different refusal triggers, so this "
+        "test can no longer distinguish the property from the old literal")
+
+    for leg, reason in EXCLUDED.items():
+        mine = set(triggers[leg])
+        others = distinct - mine
+        assert others, leg
+        # the real reason names its own trigger ...
+        assert all(t in reason for t in mine), leg
+        # ... and a reason built from someone else's would be caught
+        forged = " ".join(sorted(others)) + " " + "z" * MIN_EXCLUSION_REASON_CHARS
+        assert not all(t in forged for t in mine), leg
