@@ -5435,3 +5435,90 @@ is independent of that probe.
 
 **Correction adopted from the peer:** C-081's merge is **`b869780`** (2026-08-25 11:23), not `2972c34`,
 which is the record commit three minutes later. Pinned in the Priority-1 document.
+
+### COHORT REFERENCE DISTRIBUTION — recorded BEFORE the run, so a draw cannot present as a fix
+
+Raised by the peer sprint session; **measured independently here** over every committed leg of the two
+cohort papers (`ORCH-702/02-anchor-draw-variance-2.json`). Cap 2's input is Stage 0's
+`key_compounds`/`key_proteins`, a **non-deterministic draw**, not a curated core — so the prior
+distribution belongs on the page before scoring, not in an argument afterwards. `CLAUDE.md` already
+requires re-running a leg before calling a single-leg change a regression; **the same discipline
+applies in the improvement direction.**
+
+#### `PMC12096016/strict` — six committed draws
+
+| run | `coverage_ratio` | `unmatched_terms` | recorded reason |
+|---|---|---|---|
+| `2026-08-18_1328` | 0.8235 | ATP, EntD, Fur | `strict_technical_gates_blocked_export` |
+| `2026-08-21_2057` | 0.8333 | ATP, Fur, **MenD** | `semantic_evaluation_failed:actor_named_in_its_own_cited_span` |
+| `2026-08-21_2239` | 0.7059 | ATP, NADH, NAD+, EntA, Fur | same |
+| `2026-08-22_2147` | **0.8571** | ATP, EntD | same |
+| `2026-08-24_1203` | 0.7895 | ATP, **MenD**, Fur, **LDH** | same |
+| `2026-08-24_1428` (T-106) | 0.7647 | NADH, ATP, **MenD**, Fur | same |
+
+**Range 0.7059 – 0.8571, spread 0.151, a different anchor set every single time.** `ATP` is unmatched
+in all six; `Fur` in five; `MenD` in three. `minimum_core_satisfied` is **True** in all six, so cap 2
+never fires here — the recorded blocker is the *semantic* one.
+
+**That is the confound, and it is sharper than a coverage wobble.** C-090 / F-117 removes exactly the
+`actor_named_in_its_own_cited_span` failure — F-130 proved on `PMC12444477` that when it does, the
+verdict flips and *a different blocker becomes controlling*. So on this leg a Priority-5 move would
+need **two** things: C-090 legitimately clearing the semantic blocker, **and** the anchor cap not
+surfacing behind it. Only the first is attributable to merged code. **Both must be reported
+separately or draw luck will read as a fix.**
+
+#### `PMC12782028/strict` — four committed draws, and the peer's risk read is wrong here
+
+| run | `coverage_ratio` | `minimum_core_satisfied` | recorded reason |
+|---|---|---|---|
+| `2026-08-21_1822` | 0.280 | False | `requested_core_coverage_below_minimum:0.280<0.500` |
+| `2026-08-21_2239` | **0.6923** | **True** | `semantic_evaluation_failed:…` |
+| `2026-08-22_2147` | 0.2963 | False | `requested_core_coverage_below_minimum:0.296<0.500` |
+| `2026-08-24_1428` (T-106) | 0.2222 | False | `requested_core_coverage_below_minimum:0.222<0.500` |
+
+The peer judged this leg "safer — 0.278 is a long way to travel on variance". **It is not.** There is a
+committed counterexample: on `2026-08-21_2239` this leg drew **0.6923**, comfortably above the 0.500
+threshold, with `minimum_core_satisfied=True`. **Range 0.222 – 0.692, spread 0.470.** This leg has
+already cleared cap 2 once on draw alone. It is the *more* variance-exposed of the two, not the less.
+
+**Consequence: neither cohort leg's Priority-5 outcome is attributable without comparing its draw to
+the table above.** Scoring rule for this run: state the new `coverage_ratio` and `unmatched_terms`, say
+whether each sits inside or outside the observed range, and only then discuss attribution.
+
+---
+
+## F-132 — Stage 0 draws requested-core terms the gold set forbids exporting, and coverage penalises the correct omission
+
+**Severity MEDIUM · Class: `gold_data_defect` / instrument tension, NOT a pipeline defect ·
+Registered 2026-08-27** by the Lead Orchestrator, from the measurement above. Prompted by the peer
+sprint session.
+
+`PMC12096016`'s gold `export_rationale` states verbatim:
+
+> *"A fully connected metabolite chain … **Export must exclude MenD, LDH and the transport mentions.**"*
+
+`MenD` additionally appears in that case's `forbidden_identifiers` with kind `heading_or_prose`:
+*"deliberately a COMPETING isochorismate sink for the menaquinone branch. It must never be exported as
+an enterobactin biosynthetic step."*
+
+Yet **`MenD` is drawn as a requested-core term in three of six committed draws, and `LDH` in one** —
+and each then counts as an **unmatched** term, lowering `coverage_ratio` and feeding cap 2.
+
+**The pipeline is being scored down for correctly omitting exactly what the gold forbids it to
+export.** Two instruments on the same case disagree: Stage 0's anchor draw treats `MenD`/`LDH` as
+requested biology, while the gold's `export_rationale` and `forbidden_identifiers` treat them as
+things whose export is a defect.
+
+**Classification matters here.** Under `CLAUDE.md`'s rule, a benchmark failure must be classified
+before it justifies code. This is **not** `product_contract_violation` — production behaved correctly.
+It is a **`gold_data_defect`** in the sense the sprint uses: the measuring apparatus contradicts
+itself. **No code change is justified and none is proposed.**
+
+**Not fixed here, and deliberately so.** The fix would touch either Stage 0's anchor selection or the
+coverage denominator, both of which are production seams outside any current card's ownership, and
+either could move Priority 4 and Priority 5 at once. It needs its own card and a product-owner ruling
+on which instrument is authoritative — the gold's exclusion list or the drawn anchor set.
+
+**Immediate consequence for this cohort:** if `PMC12096016/strict` shows a higher `coverage_ratio` this
+run, check first whether `MenD`/`LDH` were simply not drawn. That would be F-132 resolving by accident,
+not a merged card working.
