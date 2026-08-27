@@ -30,7 +30,7 @@ parallel one.
 
 T-106 measured **8**. Two of those eight are **already fixed**: `Pyridoxal 5'-phosphate` on
 PMC12856317, both modes. C-081's PASS C (`map_ids.py:8578-8620`,
-`RULE_COFACTOR_ROLE_UNUSED`) withholds exactly that class, and **C-081 merged on 2026-08-25, one day
+`RULE_COFACTOR_ROLE_UNUSED`) withholds exactly that class, and **C-081 merged as `b869780` on 2026-08-25 11:23, one day
 after the T-106 run was committed (`efca465`, 2026-08-24)**. Replaying the committed payloads
 through the shipped predicate confirms it: `cofactor_participation` returns
 `status="unsupported", reason="cofactor_role_used_by_no_reaction", evaluated=4` on both PLP rows

@@ -5378,3 +5378,60 @@ and released by each.
 **Standing correction, third time this trap has been hit in the sprint:** always validate that
 `g11_evidence.py next` returned a real path before passing it to `--json`. A malformed `--task`
 returns an error message, not a failure, and the message becomes the path.
+
+### WHAT THIS COHORT CANNOT MEASURE — read before scoring it
+
+Raised by the peer sprint session and **confirmed against my own itemization**
+(`ORCH-092/01-p1-itemize.json`). It is a correction to how the run must be *reported*, not to the
+cohort's design.
+
+**The cohort is two STRICT legs. All six Priority-1 survivors live on RESEARCH legs.**
+
+| Paper | strict | research |
+|---|---|---|
+| `PMC12096016` | **0 false real identifiers** | `NADH`, `NAD+` |
+| `PMC12782028` | **0 false real identifiers** | `LIPA`, `LBR`, `SREBF1`, `SREBF2` |
+
+Those six names do not appear on the strict legs of either paper at all. My own Priority-1 document
+already said *"all six on research legs"* and *"after C-081 there is no strict-leg false identifier in
+the T-106 corpus at all"* — I had the fact and failed to connect it to a strict-only cohort. The peer
+connected it.
+
+**Therefore: if this cohort scores Priority 1 as `0`, that is NOT evidence of improvement. It is
+evidence the legs the survivors live on were not run.** The only honest label is
+**`not evaluated on this cohort`**. Anyone scoring this run must write that, not a zero.
+
+**The research legs are still deliberately NOT added.** No merged card in this wave touches any of the
+six mechanisms — Priority 1's remaining cases need an entity-level role/scope carrier that does not
+exist, and the one available correction reaches none of them and is blocked on the D-069 ruling.
+Running two research legs would re-observe a known failure at extra cost and prove nothing about the
+merged code. Excluded on value, not on convenience.
+
+**Also mute: C-087 / F-123.** The ambiguous-rename declination fired on `PMC12444477`, which is not in
+this cohort. F-123 is validated by C-087's own behavioural proof — an AppTest seam failing at base on
+a byte-identical 209-byte string, plus an exhaustive 7 × 19 = 133-pair enumeration with exactly one
+moving transition — and **not** by this run. The record must not leave F-123 looking cohort-validated.
+
+### What the cohort legitimately does measure
+
+* **Priority 5** — after the D-065 reconciliation these two papers *are* the entire strict
+  denominator, so this is precisely the right cohort for it.
+* **C-086 / F-116** — the EntE → superset complex 3623 promotion, on `PMC12096016/strict`.
+* **C-090 / F-117** — the CYP51A1 one-component wrapper rescue, on `PMC12782028/strict`.
+* **C-089 / F-125** — the `transports.transporters` orphan slot, on `PMC12096016/strict`.
+* And the property no stored artifact can carry: the **composition** of C-086, C-089 and C-090 on a
+  freshly mapped payload, which has never been observed because each was measured by replay over the
+  same pre-C-086 payloads.
+
+### One inherited-error warning, declined
+
+The peer's own probe reported `Pyridoxal 5'-phosphate` carrying no identifiers on both `PMC12856317`
+legs, and **explicitly warned me not to treat that as corroboration** of the C-081 finding: it read
+only top-level accession keys and does not follow `mapped_ids` / `external_ids`. C-081's reviewer
+replay recorded `before=1` on both legs, which contradicts it. **Not used.** My own finding rests on
+the shipped predicate `cofactor_participation` returning
+`status="unsupported", reason="cofactor_role_used_by_no_reaction"` (`ORCH-092/10-p1-passc.json`), which
+is independent of that probe.
+
+**Correction adopted from the peer:** C-081's merge is **`b869780`** (2026-08-25 11:23), not `2972c34`,
+which is the record commit three minutes later. Pinned in the Priority-1 document.
