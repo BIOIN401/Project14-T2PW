@@ -1,0 +1,110 @@
+{
+  "label": "corpus-reading-sweep",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/C-092/08-corpus-reading-sweep.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt924",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c072_incomplete_core_demotion.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c077_stage0_conflict_disposition.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c083_inner_timeout_row.py",
+    "tests/test_c086_superset_complex_promotion.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_canonical_biological_equivalence.py",
+    "tests/test_canonical_hash_projections.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_deadline_leg_timeout.py",
+    "tests/test_identity_hydration_regression.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_rag_already_covered_gap.py",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\t\\c092",
+  "started_at": "2026-08-27T18:50:46+00:00",
+  "finished_at": "2026-08-27T18:51:15+00:00",
+  "duration_seconds": 29.01249619999726,
+  "timeout_seconds": 2400.0,
+  "root_pid": 57056,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 54872,
+      "name": "python.exe",
+      "ppid": 57056
+    },
+    {
+      "pid": 57908,
+      "name": "git.exe",
+      "ppid": 54872
+    }
+  ],
+  "descendants_terminated": [
+    54872,
+    57908
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 45628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 45996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 55792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 56192,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c092\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-092\\08-corpus-reading-sweep.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c092\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c092",
+    "repo_head": "d4f208daa56ab153d10616a79677ad175e689c30",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
