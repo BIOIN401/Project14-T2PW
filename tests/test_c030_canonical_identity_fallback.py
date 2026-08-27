@@ -423,6 +423,51 @@ def test_the_census_reproduces_over_the_committed_corpus() -> None:
         f"unattributed bucket is a finding, not a baseline move.")
 
 
+def test_the_repaired_census_assertion_itself_goes_red(monkeypatch: Any) -> None:
+    """NON-VACUITY (C-093), permanent, and the strongest form of it.
+
+    The perturbation tests below exercise :func:`_census`, the helper. This one
+    drives **the repaired test function itself** -- the thing a reviewer actually
+    trusts -- and asserts it RAISES. Four perturbations, one per assertion the
+    re-based pin makes:
+
+    1. the frozen cohort's census SHRINKS (a gap row stops being a gap);
+    2. the frozen cohort's census GROWS in a bucket it already has;
+    3. a bucket appears over the whole corpus that nothing admits;
+    4. an admitted bucket's attribution is withdrawn -- so the register cannot be
+       emptied without the pin noticing, which is what stops a later card
+       "simplifying" it into an unconditional pass.
+    """
+    real = _gap_rows()
+    cohort = set(_frozen_cohort())
+    from_cohort = tuple(g for g in real if g[0] in cohort)
+    assert from_cohort, "the frozen cohort carries no census rows to perturb"
+    synthetic = ("runs_verify/9999-99-99_9999/papers/PMCNONVACUITY/strict/"
+                 "final_mapped.json", "nucleic_acids", 0, "pw_nucleic_acid_id")
+
+    def _pin(rows: tuple[tuple[str, str, int, str], ...]) -> None:
+        """Replace the census the test under perturbation reads.
+
+        The module global is what the test function resolves at call time, so
+        rebinding it here is what the test sees; ``_gap_rows``'s own
+        ``lru_cache`` is left untouched and pytest restores the binding.
+        """
+        monkeypatch.setitem(globals(), "_gap_rows", lambda: rows)
+
+    for perturbed in (tuple(r for r in real if r != from_cohort[0]),
+                      real + (from_cohort[0],),
+                      real + (synthetic,)):
+        _pin(perturbed)
+        with pytest.raises(AssertionError):
+            test_the_census_reproduces_over_the_committed_corpus()
+
+    _pin(real)
+    test_the_census_reproduces_over_the_committed_corpus()  # control: still green
+    monkeypatch.setitem(globals(), "CENSUS_ADMISSIONS", {})
+    with pytest.raises(AssertionError):
+        test_the_census_reproduces_over_the_committed_corpus()
+
+
 def test_every_census_key_is_one_ir_consumes_for_that_bucket() -> None:
     """NEW ACCEPTANCE (C-093). The census's non-vacuity floor.
 
