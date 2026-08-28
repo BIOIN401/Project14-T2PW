@@ -1,7 +1,7 @@
 # PWML RECOVERY SPRINT — HANDOFF PROMPT
 
-Written 2026-08-27 at integration tip `ed82240`. Paste the whole of this file as the next
-session's opening prompt.
+Written 2026-08-27 at integration tip `df79a28`. Paste the whole of this file as the next session's
+opening prompt. **It replaces the previous handoff, which was written at `ed82240`.**
 
 ---
 
@@ -9,14 +9,13 @@ You are the Lead Orchestrator and Integration Authority for:
 
 `C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW`
 
-Integration branch: `sprint/pwml-recovery` · Expected starting tip: **`ed82240`**
+Integration branch: `sprint/pwml-recovery` · Expected starting tip: **`df79a28`**
 
 Work autonomously. Do not ask the product owner about routine implementation, testing, review or
-merge decisions. Conserve usage credits aggressively. **Do not merge to `main`.**
+merge decisions. Conserve usage aggressively. **Do not merge to `main`.**
 
-Read `CLAUDE.md` first, then `docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md`, `MASTER_PLAN.md`,
-`LEDGER.md`, `DECISIONS.md`, `TEST_MATRIX.md`. The permanent merge rules G1–G11 in `CLAUDE.md` are
-binding and are not restated here.
+Read `CLAUDE.md` first, then `PRODUCT_CONTRACT.md`, `MASTER_PLAN.md`, `LEDGER.md`, `DECISIONS.md`,
+`TEST_MATRIX.md`. The permanent merge rules **G1–G11** are binding and are not restated here.
 
 ---
 
@@ -24,166 +23,162 @@ binding and are not restated here.
 
 | Check | Expected |
 |---|---|
-| local tip = origin = `git ls-remote` | `ed82240` |
-| merge in progress / staged files | none / none |
+| local tip = origin = `git ls-remote` | `df79a28` |
+| merge in progress / staged | none / none |
 | heavy lock `C:/t/heavylock` | absent |
-| sprint-owned Python processes | zero |
-| allowed IDE processes | two `ms-python.isort` `lsp_server.py` only — **never cleanup targets** |
-| whole-tree G11 | 4056 artifacts, 0 non-compliant |
+| sprint-owned Python | zero |
+| allowed IDE processes | two `ms-python.isort` `lsp_server.py` — **never cleanup targets** |
+| whole-tree G11 | **4214 artifacts, 0 non-compliant** |
 | product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d8526642cd8e70bf968196a46cd8b02d069c6d76a3c5bb632` |
-| caches + `topics_*.txt` | uncommitted, exactly as found |
+| caches + `topics_*.txt` | uncommitted, as found |
 
-If the branch has legitimately advanced, inspect ancestry and the new commits. **Do not reset,
-rebase, amend, or discard anything.**
-
-**A peer Claude session `project14-t2pw-d2` shares this working tree** (not a separate checkout — one
-tree, two sessions). It merged the six-card wave and is currently holding: no commits, pushes or
-heavy jobs. **Coordinate before any live run or push.** `ListAgents` shows it; `SendMessage` reaches
-it. It has been a genuinely useful reviewer — three of its catches changed this session's record.
+**Re-read `git rev-parse` on every branch immediately before you act on it, including SHAs written in
+this file.** A tip SHA is not a fact you can hold across messages — that cost this session a wasted
+correction round when a working-tree read was mistaken for a committed state.
 
 ---
 
-## 2. WHAT IS DONE — do not rediscover any of it
+## 2. WHAT IS DONE — do not rediscover
 
-**Merged and gated this session** (SMOKE **473** after each; A/B on the four affected modules went
-`5 failed/252 passed → 2 failed/263 → 0 failed/273, 0 warnings` on a forced fresh compile):
+**Merged, each with SMOKE 473 and zero survivors:**
 
-* **C-092** (`c2cdb82`) — F-112 stale corpus pins re-based from equalities to properties. Two
-  adversarial review rounds; round 2 caught the fix *rebuilding F-112 inside the module written to
-  remove it*.
-* **C-093** (`1fbad72`) — the last two corpus reds. Its excluded leg surfaced a real production
-  defect (identity-ladder divergence) which it correctly refused to pin into the golden.
+* **C-096** (`cee45f1`) — F-129. `db_resolver=None` meant both *"unspecified, open the ambient
+  PathBank"* and, unreachably, *"resolve nothing"*. `NO_DB_RESOLVER` adds the third state; `None` is
+  untouched, because `PRODUCT_CONTRACT` § 8 forbids the exporter opening the connection.
+* **C-095** (`13b5696`) — F-133, the remaining open path of **F-116**. A generated one-protein wrapper
+  no longer inherits a superset complex id. Affected set re-run on the **combined** tree: **196
+  passed** (182 + 14).
 
-**The deterministic suite is genuinely green for the first time this wave.** That was the gate
-everything was blocked on.
+**Held, all correct, all blocked on one ruling — see § 3:**
 
-**Settled, with committed evidence — do not re-derive:**
+| Branch | Tip | State |
+|---|---|---|
+| `card/C-094-f134` | `53eaf24` | REV-094 **APPROVE WITH CORRECTIONS**; blocked on O-1 |
+| `card/C-098a-cap` | `8cfa33e` | inert cap arm; held with C-098b |
+| `card/C-098b-gate` | `b589821` | gate arm; **not merged**, see § 3 |
+| `card/C-097-f131` | `23cf079` | F-131; **under review at handoff time — check REV-097 before acting** |
 
-* **F-130 — reconciled and CLOSED.** All four claims confirmed; 3 and 4 *measured* through the
-  production classifier. Narration only, no production change justified or made.
-* **Priority 1 is SIX, not eight.** The two PLP rows are already withheld by C-081 (`b869780`), which
-  merged one day after T-106 was committed. Confirmed by replay through the shipped predicate.
-  Full mechanism classification in `evidence/priority1_mechanism_classification.md`.
-* **Four candidate Priority-1 predicates measured and all four rejected** — non-participant (48
-  legitimate rows lost), admission-flagged (strips ATP and PPi once name-matched correctly),
-  conjunction (vacuous), source-mention (7 of 8 false identities *are* printed in the paper).
-* **F-116 is OPEN, not closed.** The peer's register listed C-086 under a `closes` column against
-  F-116; it corrected that at `ed82240` after re-measuring on the cohort artifact. **C-086 is not
-  reopened** — its charter was the component-match path and its tests pin that path working. The
-  general form, now in the ledger: *a card's charter and a finding's scope are different objects, and
-  "the card passed its gates" does not license "the finding is closed."*
-* **The affected-paper cohort ran ONCE** (`runs_verify/2026-08-27_1341`, 2 strict legs, 38.3 min).
-  Result in `LEDGER.md`. **Do not rerun it.**
+Worktrees on disk, none to be pruned: `C:/t/c094`, `c094base`, `c095`, `c096`, `c097`, `c098`,
+`c098a`, `c098b`, `rev095base`, `rev095m`, `rev096base`, plus the older `c092`/`c093`.
+
+**Settled — do not re-derive:** the F-132 corpus figures (62 of 281 unmatched terms, 32 legs, 6
+papers); Priority 1 is **six**, not eight; the affected-paper cohort ran once at
+`runs_verify/2026-08-27_1341` and **must not be rerun**; C-086 narrowed F-116 and is not reopened.
 
 ---
 
-## 3. THE STATE OF THE ARGUMENT
+## 3. THE ONE THING THAT MATTERS — rule **O-1**, or nothing else moves
 
-**T-107 is NO-GO, and more merges will not change that.** The readiness table at `LEDGER.md:4359`
-plus its **2026-08-27 revision** is current — *extend that, never write a competing one.*
+`DECISION-BUNDLE-F132-PRIORITY1.md` now carries **two** independent asks. The second is the blocker
+for everything held above.
 
-The blocker is **gate condition 1**, and it has grown. What a product owner is being asked to accept
-is no longer *"Priority 1 cannot reach 0 until a provenance carrier exists"* but:
+**O-1** (`DECISIONS.md:938`), verbatim: *`placeholder_backed_proteins`: gold-set error class, or
+legitimate biology preservation? · Blocks: **any branch that touches protein export policy** · "a
+genuine disagreement between two intentional designs, not a defect. **TRAP-3 forbids agents from
+resolving it.**"*
 
-> **On the affected papers, Priorities 1 and 4/5 score the same rows in opposite directions, so
-> neither is currently a measurement of pipeline quality.**
+**C-094 inverts a pinned product statement on that exact surface — by consequence, not in prose**,
+which is worse, because nothing in the diff announces it.
+`tests/test_protein_export_policy.py::test_strict_gates_accept_a_correctly_formed_unknown_backed_complex`
+asserts today, and passes at `14121d5`, that an `Unknown`-backed complex passes **all three gates
+including `validate_required_pwml_contract`**. C-094 makes it fail.
 
-On `PMC12782028`, `LIPA`/`LBR`/`SREBF1`/`SREBF2` are the Priority-1 false identifiers when exported
-with accessions **and** the Priority-4/5 coverage penalty when not matched. Corpus-wide, **62 of 281
-unmatched terms across 32 legs and 6 papers are gold-forbidden** (F-132). **No behaviour available to
-the pipeline scores well on both.** That is a statement about the instrument, not the code, and it is
-the product owner's to rule on. **The orchestrator cannot accept a limitation on its own behalf.**
+**Do not merge C-094, C-098a or C-098b until O-1 is ruled.** Four baseline moves are unauthorized and
+none has been edited.
 
----
+**A trap I fell into, recorded so you do not.** I first framed this as *"C-094 stops fabricating the
+field that made unexportable entities look exportable."* That states one side of O-1 as fact. Under
+the preservation reading the sentinel's species is **not** a fabrication — it is part of a coherent
+*"this row is the PathBank Unknown record"* marker. What survives without a ruling is narrower: the
+measured row is **internally contradictory** (`species: "Arabidopsis thaliana"` beside
+`species_name: "Escherichia coli"`, `taxonomy_id: "562"` and an *E. coli* `species_ref` at confidence
+1.0), and a **released** payload carried it — `runs_verify/2026-08-04_1754/papers/PMC12856317/strict`
+shipped `pathway.pwml` with *Arabidopsis* on a **human** ALAS2 wrapper.
 
-## 4. OPEN FINDINGS — the actual work queue
-
-| ID | Sev | What | Owner needed |
-|---|---|---|---|
-| **F-134** | **HIGH** | An Unknown-backed generated wrapper is assigned an **unrelated organism**. The sharpest form, from the peer's independent check: **every Unknown-backed wrapper carries `organism = species = "Arabidopsis thaliana"`; every non-Unknown-backed one carries *E. coli*.** The organism comes from the **placeholder record**, not from the requested or observed organism. 3 rows across buckets on an *E. coli* paper, one the gold-forbidden porcine LDH. Species is attached **after** the Stage-3 gate that checks for it. | `src/` card |
-| **F-133** | MED | A generated `single_protein_pathwhiz_wrapper` still inherits a **superset complex id** (3623 with four components). C-086 closed the component-match path; this is the wrapper-generation path. | `src/` card |
-| **F-132** | MED | Stage 0 draws requested-core terms the same gold case **forbids exporting**; coverage then penalises the pipeline for obeying the gold. **`product_contract_violation`, reclassified from `gold_data_defect`.** | `src/` card + ruling |
-| F-127 / F-128 | HIGH | Priority 1's representation gap, and D-069 compliance *raising* the count. C-091 chartered, **explicitly not to merge**. | product-owner ruling |
-| F-129 | — | `db_resolver=None` silently replaced by the ambient live database. Four `test_prefreeze_third_export_seam.py` failures. **Leave them; do not make them pass against a running PathBank.** | `src/` card |
-| F-131 | LOW | `ref`/`id` reaching `bench.semantic._names`. Corpus impact measured 0. | — |
-
-**Hard constraints on F-133 and F-134.** F-133's fix must preserve the one-component `EntC`/`EntB`/
-`EntA` wrappers measured intact in the cohort. **F-134 must NOT be fixed by defaulting species to the
-requested organism** — that launders an unknown into a confident answer, which is F-127's failure
-mode in a new place. **C-086 is not reopened by either**; its charter was a different path and its
-tests pin that path working.
-
-**Do not repeat C-084's rejected Priority-1 formulations or lexical variations of them.**
+**Why the chain stopped at three cards.** `validate_required_pwml_contract` calls itself the
+PWML-ready contract and raises `protein_complex_missing_species` as an **error**; and
+`writer.py:1137-1165` ends its species chain at **`return default_species_id`**. A fourth card
+punching through that gate would swap a false *Arabidopsis* at mapping time for a false default at
+**export** time — merge rule 8, and the defect recreated one stage later. **C-098c is refused. Do not
+charter it.**
 
 ---
 
-## 5. WHAT I WOULD DO NEXT, in order
+## 4. OPEN FINDINGS
 
-1. **Put the § 3 statement in front of the product owner on its own.** It is the only thing that
-   unblocks T-107, and it is bigger than any card. Everything below is secondary.
-2. **Charter F-134** — highest severity, clear seam, and a cross-organism assignment is an
-   acceptance-counted category.
-3. **Charter F-133** — narrow, with a stated preservation obligation.
-4. Only then consider F-132's seam, which needs the ruling from (1) first.
-
-**Do not run T-107.** Do not run another cohort. Neither will change gate condition 1.
-
----
-
-## 6. PROCESS — non-negotiable, and this session paid for each of these
-
-* **Every** pytest, probe, benchmark, scorer, paper run and pipeline command goes through
-  `docs/pwml_recovery_sprint/evidence/bounded_run.py` with a real `--timeout`, a fresh G11 path, and
-  `--basetemp` under `C:/t/` with the parent pre-created. `PYTHONPATH=<tree>/src` and
-  `export T2PW_OFFLINE_CURATOR=1` in every shell.
-* **G11 task ids are LETTERS-DIGITS.** `ORCH-092` passes; **`ORCH-COHORT` does not** — the allocator
-  prints a `ValueError` that silently becomes your `--json` path. **Guard every allocation:**
-  ```
-  P=$(... g11_evidence.py next --task <id> --label <l> 2>&1 | tail -1)
-  case "$P" in *rror*) echo INVALID; exit 1;; esac
-  [ -d "$(dirname "$P")" ] || exit 1
-  ```
-  A job with no report is **uncertifiable**. Do not re-run a successful job to fix paperwork —
-  certify its artifact with a separate verification job and record the incident.
-* **Any job over ~10 minutes MUST be backgrounded.** The Bash tool's cap kills the wrapper, skips its
-  `finally`, and strands the heavy lock. The cohort was backgrounded for exactly this reason.
-* After every job confirm `FINAL SURVIVING COUNT : 0` and `cleanup : success`, and **save wrapper
-  stdout immediately** — the JSON report contains no stdout, so pytest counts must be grepped from
-  the piped output.
-* **Never** `taskkill /IM python.exe`, `pkill python`, kill by name, `pytest -n auto`, or run the full
-  suite unchunked. Never delete a lock you did not create.
-* `git commit -F <file>`, never `-m` with a here-doc — long here-doc commits silently no-op on this
-  machine. Verify with `git log --oneline -1` after every commit. Stage explicit paths only and
-  inspect `git diff --cached` first.
-
-**Two lessons this session paid for, worth more than the rules:**
-
-* **A green suite certifies the modules it ran, not the tree.** The D-065 gold edit broke
-  `test_c056b_semantic_denominators.py` while SMOKE stayed 473 throughout, because that module is not
-  in SMOKE — and two lanes then reported the red as pre-existing. **A/B anything gold-adjacent against
-  a pre-change SHA.**
-* **Cite denominators you have actually measured.** "78 committed artifacts" was the `runs_verify/`
-  subtree; the corpus is 92. A reviewer caught it inside a register whose whole premise is that
-  citations can be checked.
+| ID | Sev | What |
+|---|---|---|
+| **F-135** | HIGH | The placeholder-species question. **= O-1.** Escalated, packet written |
+| **F-132** | MED | Priorities 1 and 4/5 score the same rows in opposite directions. Packet written |
+| F-127 / F-128 | HIGH | Priority 1's representation gap. C-091 **explicitly not to merge** |
+| **F-136** | MED | A **third** ambient-dependent test — `test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`. **F-129's class is narrowed, not closed.** Consequence: **Chunk D cannot go green in this environment at base or tip with the DB up** |
+| **F-137** | MED | `NO_DB_RESOLVER` is absorbed by `_REVIEW_REQUIRED_REASONS` and demotes release status under a false `db_unavailable`. Outside C-096's boundary |
+| **F-138** | LOW | `map_ids.py:6169` (C-086's function) carries the same false "the two seams cannot disagree" sentence C-095 removed. Comment-only |
+| **F-139** | LOW | C-095's carve-out comment justifies only the legacy marker, not `generated: True` with no reason. Malformed-input only |
 
 ---
 
-## 7. REVIEW DISCIPLINE THAT WORKED — keep it
+## 5. WHAT I WOULD DO NEXT
 
-Every card this session went through an independent, adversarial, non-author review of the **actual
-diff**, and **every round found something real**:
+1. **Put O-1 in front of the product owner and stop.** Everything in § 2's held table waits on it.
+2. Land **C-097** if REV-097 approves — it is one line and independent of O-1.
+3. **F-137** and the `writer.py` `default_species_id` seam are both chartered-able **without** a
+   ruling. They are the only genuine engineering left.
+4. **Do not run T-107.** Do not run another cohort. Neither changes gate condition 1.
 
-* a floor that did not detect the loss its own comment advertised;
-* an assertion that could not fail, advertised as replacing one whose content was the converse;
-* a **fix that rebuilt the original defect** one level up;
-* a test that was tautological by construction while claiming to catch drift;
-* a register that only checked for unexpected names, never that admitted ones were still present.
+---
 
-**Assume there is something and go find it.** The technique that worked: run the author's own file
-against a pre-change SHA rather than arguing about it, and perturb the thing the guard claims to
-catch. Two correction rounds are permitted before escalating; both were used on both cards, and both
-lanes gave at least one *reasoned refusal* that was correct — including one that caught an error in
-the orchestrator's own instruction.
+## 6. PROCESS — what this wave paid for
+
+Everything in the previous handoff's § 6 still holds. **New, and each cost real time:**
+
+* **Exported `PATHBANK_DB_*` cannot hide the database.** `src/t2pw/llm/client.py:22` calls
+  `load_dotenv(dotenv_path=ENV_PATH, override=True)` and re-applies `.env` over your exported values
+  for anything importing the LLM client. **Only physically renaming `.env` works**, with a
+  `trap … EXIT`. A reviewer voided two of its own jobs discovering this.
+* **An agent worktree may have no `.env` at all** — the opposite hazard. A card's four target tests
+  were green at base in a worktree purely because `from_env()` returned `None`, which would have made
+  the delta meaningless. **State which state your tree is in.**
+* **A `git archive` base export has no `.git`**, so anything shelling out to `git ls-files`
+  degenerates silently — four corpus tests skip. Use a **real git worktree** or an in-tree A/B with
+  the restore verified by `git diff --stat`.
+* **G11 task-id suffixes must be lowercase.** `C-098A` is rejected; `C-098a` passes.
+* **Pin verdicts go in `evidence/g11/pin/<TASK>/`.** Putting them elsewhere left ten reports with
+  dangling `--pin-verdict` pointers. Not re-run — `TEST_MATRIX` § 0 forbids re-running a green job to
+  repair paperwork — but avoid it.
+* **`cmd | tee log | head -N` truncates the log via SIGPIPE.** Redirect, then grep.
+* **`git checkout -- <file>` in a restore trap silently un-does your own fix when base == HEAD.**
+* **A gate-invisible baseline is a statement that can be inverted silently.**
+  `tests/test_protein_export_policy.py` is in **neither SMOKE nor Chunk D**; three of its tests moved
+  and only a reviewer selecting the file by hand caught it. **Second time this wave a gate-invisible
+  file hid a real move.**
+
+---
+
+## 7. THE REVIEW RECORD — every round found something real
+
+Six review rounds, six findings that changed the work. Keep the discipline.
+
+* **REV-096** built a **mutation matrix** and *corrected both the author and the source comment*: arm
+  order is irrelevant, the **`elif`** is the invariant. It also ran a 45-scenario differential proving
+  `None` byte-identical, and **retracted its own method** on discovering the `load_dotenv` problem.
+* **REV-094** found **three moved baselines nobody had run**, in a gate-invisible file — one of them
+  the O-1 statement itself.
+* **REV-095** found a guard that **fired on results conferring no identity**, recording a refusal of a
+  complex the row never matched — `candidates[0]` of a ten-way *ambiguous* lookup. Its delta review
+  then verified the fix by **tabulating all eleven returns** in the loop from source.
+* **C-098b** measured a **second refusal point** and reported its § 7.1 target unmet rather than
+  claiming success — after **correcting its own earlier measurement**, which I had already acted on.
+* **C-095's author proved REV-095's unproven F2 against its own card**, and caught its own **vacuous
+  fixture**, committing the vacuous run's report rather than replacing it.
+
+**Two authors committed their own wrong measurement beside the right one. That is the behaviour to
+want** — a quietly corrected probe leaves the record un-auditable, and in both cases the error was one
+I had already built on.
+
+**The pattern worth stating plainly:** *a refusal record is a claim, and a claim needs the same proof
+as the behaviour it describes.* Four separate times this wave a guard was demonstrated against a case
+that could not exercise it, or fired on one it should not have.
 
 ---
 
@@ -191,9 +186,9 @@ the orchestrator's own instruction.
 
 Confirm and report: no merge in progress; nothing staged; local = origin = `ls-remote`; all accepted
 work pushed; product-owner `streamlit_app.py` intact at 35/2 and the expected hash; caches and
-`topics_*.txt` uncommitted; G11 0 non-compliant; heavy lock absent; zero sprint-owned Python; only
-the two IDE `isort` processes; and every completed job recorded `FINAL SURVIVING COUNT : 0` and
-`cleanup : success`.
+`topics_*.txt` uncommitted; G11 0 non-compliant; heavy lock absent; zero sprint-owned Python; only the
+two IDE `isort` processes; and every completed job `FINAL SURVIVING COUNT : 0` / `cleanup : success`.
 
-Worktrees `C:/t/c092` and `C:/t/c093` remain on disk with their merged branches. Leave them unless
-disk pressure requires otherwise; **do not prune worktrees or branches carrying accepted work.**
+**T-107 is NO-GO.** Three of eight § 8 conditions unmet, and condition 1 cannot be cleared by any
+engineering — only by the ruling in § 3. **No live paper leg, no cohort and no T-107 run happened this
+wave, and none was needed.**
