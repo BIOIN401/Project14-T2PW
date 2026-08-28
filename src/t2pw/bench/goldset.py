@@ -241,6 +241,82 @@ class GoldTerm:
 
 
 @dataclass(frozen=True)
+class GoldSentinelTolerance:
+    """A tolerance predicated on the WHOLE ROW, never on the row's name (D-074).
+
+    Name-keying is right for the seven entities the paper discusses and exactly
+    wrong for the bare PathBank ``Unknown`` sentinel: an eighth name-keyed entry
+    would excuse **any** row named ``Unknown`` on that paper. So this is a
+    SEPARATE FIELD with a SEPARATE MATCHER that requires a row, and the separation
+    is structural rather than disciplinary:
+
+    * the name-only matcher iterates ``unknown_backed_tolerated_entities`` and
+      never sees this object, so no name-keyed read can reach it;
+    * :meth:`matches` returns ``False`` for ``row=None``, the value every
+      pre-D-074 caller supplies;
+    * the licence needs the authoritative ``is_pathbank_unknown_protein(row)`` AND
+      the identity this entry DECLARES, so a later widening of the shared
+      predicate cannot silently widen this licence.
+
+    Every clause is required; no aliases, no containment. A licence for one record.
+    """
+
+    #: Matched EXACTLY (normalized). No aliases: that is how an entry grows a leak.
+    name: str
+    #: The PathBank record this licence is for, stated by the gold rather than
+    #: deferred wholesale to a predicate the gold does not control.
+    pathbank_protein_id: int = 0
+    #: The sentinel UniProt state, casefolded. A real accession is a different row.
+    uniprot: str = ""
+    quote: str = ""
+    role: str = ""
+
+    def matches(self, candidate: Any, row: Any) -> bool:
+        """Whether this licence covers ``row``, presented as ``candidate``."""
+
+        if not isinstance(row, dict):
+            return False
+        norm = normalize_name(candidate)
+        if not norm or norm != normalize_name(self.name):
+            return False
+
+        # The authoritative predicate, consulted and neither reimplemented nor
+        # modified. Lazy: `bench.goldset` stays importable without `t2pw.pipeline`.
+        from t2pw.pipeline.entity_identity import is_pathbank_unknown_protein
+
+        if not is_pathbank_unknown_protein(row):
+            return False
+
+        # D-074 conditions 4 and 5: the identity the GOLD declares, independently.
+        mapped = row.get("mapped_ids") if isinstance(row.get("mapped_ids"), dict) else {}
+        meta = row.get("mapping_meta") if isinstance(row.get("mapping_meta"), dict) else {}
+        try:
+            declared_id = int(
+                row.get("pathbank_protein_id")
+                or mapped.get("pathbank_protein_id")
+                or meta.get("pathbank_protein_id")
+                or 0
+            )
+        except (TypeError, ValueError):
+            return False
+        if declared_id != int(self.pathbank_protein_id or 0):
+            return False
+        found = canonical_text(
+            row.get("uniprot") or row.get("uniprot_id") or mapped.get("uniprot")
+        )
+        return found.casefold() == canonical_text(self.uniprot).casefold()
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "pathbank_protein_id": self.pathbank_protein_id,
+            "uniprot": self.uniprot,
+            "quote": self.quote,
+            "role": self.role,
+        }
+
+
+@dataclass(frozen=True)
 class SupportedReaction:
     """One reaction the paper actually states, as a matchable signature.
 
@@ -413,6 +489,9 @@ class GoldCase:
     #: a ``GoldCase`` by splatting a dict, and a field without a default would raise
     #: ``TypeError`` at COLLECTION time in files that never touch this surface.
     unknown_backed_tolerated_entities: Tuple[GoldTerm, ...] = ()
+    #: The ONE row-predicated tolerance (D-074), kept in its own field so that no
+    #: name-keyed read can reach it. See :class:`GoldSentinelTolerance`.
+    unknown_backed_tolerated_sentinel: Optional["GoldSentinelTolerance"] = None
     expected_export: str = EXPORT_PARTIAL
     export_rationale: str = ""
     notes: str = ""
@@ -486,8 +565,27 @@ class GoldCase:
                 return entry
         return None
 
-    def tolerates_unknown_backed(self, candidate: Any) -> bool:
+    def sentinel_tolerance_match(
+        self, candidate: Any, row: Any = None
+    ) -> Optional[GoldSentinelTolerance]:
+        """The row-predicated sentinel licence covering ``row``, if any.
+
+        Kept separate from :meth:`unknown_backed_tolerance_match` on purpose: that
+        one answers a question about a NAME and must never answer this one.
+        """
+
+        entry = self.unknown_backed_tolerated_sentinel
+        if entry is None or row is None:
+            return None
+        return entry if entry.matches(candidate, row) else None
+
+    def tolerates_unknown_backed(self, candidate: Any, row: Any = None) -> bool:
         """Whether this case excuses an Unknown-backed row named ``candidate``.
+
+        ``row`` is OPTIONAL and defaults to ``None``, which is what every caller
+        written before D-074 supplies; with no row the sentinel licence cannot
+        match, so those callers get identical answers. That is the whole
+        backward-compatibility guarantee for the widened signature.
 
         **What a row inherits when nothing names it is the case-wide Boolean, read
         explicitly** -- never a literal ``True``, and never the truthiness of a
@@ -513,14 +611,22 @@ class GoldCase:
 
         The Boolean therefore only ever NARROWS through a scope and never widens:
         a case that does not accept Unknown-backed proteins excuses nothing,
-        whatever its scope says.
+        whatever its scope says. **The sentinel licence does not change that**: it
+        is checked strictly INSIDE the ``inherited`` guard, and `_validate_case`
+        refuses the combination at load time too.
         """
 
         inherited = self.unknown_backed_proteins_acceptable
-        if not self.unknown_backed_tolerated_entities:
-            return inherited
+        # Hoisted above the no-scope branch: a REWRITE, NOT A CHANGE. With no scope
+        # the old code returned `inherited`, which is `False` in exactly this
+        # branch. Hoisting makes "a false case is never widened" true for the
+        # sentinel licence too, in one place instead of two.
         if not inherited:
             return False
+        if self.sentinel_tolerance_match(candidate, row) is not None:
+            return True
+        if not self.unknown_backed_tolerated_entities:
+            return inherited
         return self.unknown_backed_tolerance_match(candidate) is not None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -550,6 +656,11 @@ class GoldCase:
             "unknown_backed_tolerated_entities": [
                 t.to_dict() for t in self.unknown_backed_tolerated_entities
             ],
+            "unknown_backed_tolerated_sentinel": (
+                self.unknown_backed_tolerated_sentinel.to_dict()
+                if self.unknown_backed_tolerated_sentinel is not None
+                else None
+            ),
             "expected_export": self.expected_export,
             "export_rationale": self.export_rationale,
             "notes": self.notes,
@@ -660,6 +771,40 @@ def _terms(raw: Any, *, where: str) -> Tuple[GoldTerm, ...]:
             )
         )
     return tuple(out)
+
+
+def _sentinel_tolerance(raw: Any, *, where: str) -> Optional[GoldSentinelTolerance]:
+    """Parse the row-predicated sentinel licence, refusing an under-specified one.
+
+    Every identifying field is REQUIRED: an entry carrying only a name would be
+    the name-only allowlist D-074 forbids, wearing a different field's name.
+    """
+
+    if raw in (None, ""):
+        return None
+    if not isinstance(raw, dict):
+        raise GoldSetError(f"{where}: expected an object, found {type(raw).__name__}")
+    name = canonical_text(raw.get("name"))
+    if not name:
+        raise GoldSetError(f"{where}: missing 'name'")
+    try:
+        pathbank_protein_id = int(raw.get("pathbank_protein_id") or 0)
+    except (TypeError, ValueError):
+        raise GoldSetError(f"{where}: 'pathbank_protein_id' must be an integer") from None
+    uniprot = canonical_text(raw.get("uniprot"))
+    if not pathbank_protein_id or not uniprot:
+        raise GoldSetError(
+            f"{where}: a sentinel tolerance must declare BOTH 'pathbank_protein_id' and "
+            "'uniprot'; a name alone would excuse every row carrying that name, which is "
+            "the allowlist D-074 forbids"
+        )
+    return GoldSentinelTolerance(
+        name=name,
+        pathbank_protein_id=pathbank_protein_id,
+        uniprot=uniprot,
+        quote=str(raw.get("quote") or ""),
+        role=canonical_text(raw.get("role")),
+    )
 
 
 def _supported_reactions(raw: Any, *, where: str) -> Tuple[SupportedReaction, ...]:
@@ -803,6 +948,10 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
         max_retained_reactions=max_retained,
         unknown_backed_proteins_acceptable=bool(raw.get("unknown_backed_proteins_acceptable", False)),
         unknown_backed_rationale=str(raw.get("unknown_backed_rationale") or ""),
+        unknown_backed_tolerated_sentinel=_sentinel_tolerance(
+            raw.get("unknown_backed_tolerated_sentinel"),
+            where=f"{where}.unknown_backed_tolerated_sentinel",
+        ),
         unknown_backed_tolerated_entities=_terms(
             raw.get("unknown_backed_tolerated_entities"),
             where=f"{where}.unknown_backed_tolerated_entities",
@@ -835,6 +984,13 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
             f"{where}: unknown_backed_tolerated_entities is declared but "
             "unknown_backed_proteins_acceptable is false, so the scope can never be "
             "reached; set the Boolean or drop the list"
+        )
+    # Same rule, same reason, for the row-predicated licence one field over.
+    if case.unknown_backed_tolerated_sentinel and not case.unknown_backed_proteins_acceptable:
+        raise GoldSetError(
+            f"{where}: unknown_backed_tolerated_sentinel is declared but "
+            "unknown_backed_proteins_acceptable is false, so the licence can never be "
+            "reached; set the Boolean or drop the sentinel"
         )
     if case.is_negative_control and case.mechanistic_relevance != RELEVANCE_CONTEXT_ONLY:
         raise GoldSetError(
@@ -897,6 +1053,7 @@ __all__ = [
     "ForbiddenIdentifier",
     "GoldCase",
     "GoldSet",
+    "GoldSentinelTolerance",
     "GoldSetError",
     "GoldTerm",
     "MATCH_ALIAS",

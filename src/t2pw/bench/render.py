@@ -10,7 +10,15 @@ from __future__ import annotations
 
 from typing import Any, List
 
-from t2pw.bench.acceptance import MODE_RESEARCH, MODE_STRICT, AcceptanceReport, PaperResult
+from t2pw.bench.acceptance import (
+    MODE_RESEARCH,
+    MODE_STRICT,
+    PRIORITY1_FAIL as _P1_FAIL,
+    PRIORITY1_PASS as _P1_PASS,
+    PRIORITY1_PASS_WITHIN_VARIANCE as _P1_VARIANCE,
+    AcceptanceReport,
+    PaperResult,
+)
 from t2pw.bench.metrics import (
     BLOCKER_SCOPES,
     BLOCKER_SCOPE_LABELS,
@@ -59,6 +67,30 @@ def _priorities(report: AcceptanceReport) -> List[str]:
         out.append(f"          observed: {entry['observed']}")
         if entry["papers"] and entry["rank"] <= 3:
             out.append(f"          papers  : {', '.join(entry['papers'])}")
+        if entry["rank"] == 1 and "accepted_status" in entry:
+            # D-073. The status is spelled out in full because
+            # PASS_WITHIN_VARIANCE is not a synonym for PASS and has to be
+            # readable as itself by someone who sees only this block.
+            adjusted = entry.get("contract_adjusted_rows") or []
+            out.append(f"          raw     : {entry['raw']}  (preserved, unchanged in meaning)")
+            out.append(
+                f"          accepted: {entry['accepted']}  -> {entry['accepted_status']}"
+                f"   (target {entry['target']}; 0-{entry['target']} {_P1_PASS}, "
+                f"{entry['target'] + 1} {_P1_VARIANCE}, {entry['target'] + 2}+ {_P1_FAIL})"
+            )
+            out.append(
+                f"          contract-adjusted out of accepted: {len(adjusted)}"
+                + ("" if adjusted else "  (none -- measured, not assumed)")
+            )
+            for row in entry.get("raw_rows") or []:
+                out.append(
+                    f"            - {row['paper_id']}:{row['mode']} {row['pointer']} "
+                    f"{row['name']} [{row['kind']}]"
+                    + ("" if row["accepted"] else f"  EXCUSED by {row['contract_tolerance']}")
+                )
+            if entry["accepted_status"] == _P1_VARIANCE:
+                for line in _wrap(entry.get("variance_note", ""), 88):
+                    out.append(f"          ! {line}")
         unmeasured = entry.get("not_evaluated_papers") or []
         if unmeasured and entry["rank"] <= 3:
             out.append(f"          NOT EVALUATED on: {', '.join(unmeasured)}")
@@ -121,6 +153,26 @@ def _identity(report: AcceptanceReport) -> List[str]:
     out.append(f"  placeholder (Unknown-backed)       : {totals.get('placeholder', 0)}")
     out.append(f"  unresolved (no identity at all)    : {totals.get('unresolved', 0)}")
     out.append(f"  PathBank Unknown sentinel (id 9659): {totals.get('pathbank_unknown_sentinel', 0)}")
+    out.append("")
+    # D-070's split. Two populations with OPPOSITE dispositions, shown apart and
+    # never summed. `other` prints even at zero: hiding the remainder would hide
+    # the first row that does not fit. F-141 is a DIFFERENT seam and is never
+    # reported as placeholder_backed_proteins.
+    out.append("  Unknown-backed placeholders, split (D-070) -- these three partition the count above.")
+    out.append("  Neither class is a gold error and none sets placeholder_claims_real_identity:")
+    out.append(f"    PathBank sentinel rows, record 9659 (O-1a): {totals.get('placeholder_sentinel_rows', 0)}")
+    out.append(f"    generated functional wrappers      (O-1b): {totals.get('placeholder_generated_wrappers', 0)}")
+    out.append(f"    other placeholder rows                   : {totals.get('placeholder_other_rows', 0)}")
+    out.append("")
+    out.append("  Candidate identities NOT shipped (F-141) -- a DIFFERENT seam, never the count above:")
+    if totals.get("withheld_identity_evaluated") is False:
+        out.append("    NOT EVALUATED -- no leg reached the identity verdict. The absence of a")
+        out.append("    measurement, not the absence of withheld identities.")
+    else:
+        out.append(f"    correctly withheld (species unresolved): {totals.get('withheld_identity_correct', 0)}")
+        out.append(f"    lost despite sufficient support       : {totals.get('withheld_identity_recoverable', 0)}")
+        out.append("    MEASURED counts, including when they read 0. Withholding a species-specific")
+        out.append("    identifier with no species evidence is CORRECT and is not an error elsewhere.")
     out.append("")
     sources = report.identity.get("payload_sources", {})
     if sources:

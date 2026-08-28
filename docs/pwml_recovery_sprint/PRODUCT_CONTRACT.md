@@ -376,3 +376,45 @@ Before proposing a code change justified by a benchmark failure, classify it:
 - `policy_disagreement`
 
 cite the gold `relevance_note` / `export_rationale`.
+
+---
+
+## 15. The O-1 acceptance instrument (D-070, D-073, D-074)
+
+**`placeholder_backed_proteins` keeps its value and its meaning.** C-101 splits it
+beside itself; it never renames, repurposes or recounts it. Section 13's standing
+disagreement stands: none of these rows is a forged identity.
+
+**The split is a partition, not an assumption.** `placeholder_backed ==
+placeholder_sentinel_rows + placeholder_generated_wrappers + placeholder_other_rows`.
+`other` is REPORTED, never assumed zero. It is 0 on the pinned run and the partition is
+exactly 16/5 — a *measured fact about that run*, not a structural guarantee. An
+instrument that asserted the invariant by dropping the remainder would hide the first row
+that does not fit. Assignment is mutually exclusive and ordered: sentinel, then wrapper,
+then other, because `is_pathbank_unknown_protein` names one database record and is the
+narrower statement.
+
+**F-141 is a different seam and is never reported under the O-1 name.**
+`withheld_identity_correct` and `withheld_identity_recoverable` count candidate identities
+that survived the identity verdict and were not shipped. Both are measurements even at
+zero — see § 8's `not_evaluated`-is-never-`false` rule, which
+`withheld_identity_evaluated` implements. **A row that correctly withholds a
+species-specific identifier is not an error anywhere else**: do not penalise the pipeline
+twice for obeying the contract.
+
+**Priority 1 reports a raw count and an accepted count.** Raw is preserved and unchanged
+in meaning. Accepted is the contract-adjusted result after authorized, case-scoped
+tolerances, and its status is `PASS` (0–6), `PASS_WITHIN_VARIANCE` (7) or `FAIL` (8+).
+**Six remains the target**; seven is a one-finding stochastic band and never evidence that
+a defect is fixed. `PASS_WITHIN_VARIANCE` stays visibly distinct from `PASS` and must not
+collapse into any summary, badge or Boolean — which is why the absolute `ok` is left
+computing zero-tolerance on the raw count. Do not rerun to chase a favourable draw.
+
+**A tolerance is a licence and has to be spelled out.** PMC12444477's `Unknown` tolerance
+is **row-predicated**, declared in `unknown_backed_tolerated_sentinel` and kept out of the
+name-keyed list on purpose: a name-keyed `Unknown` would excuse any row on that paper
+carrying the string. The scorer passes the whole row, the authoritative
+`is_pathbank_unknown_protein(row)` predicate must agree, and the gold's own declared
+record identity is checked independently of it. **`LpxH` is not covered and remains a
+Priority-1 finding** — PMC12444477 goes 9 → 8, never 9 → 7. Widening it is the
+merge-rule-6 direction and is a reject.

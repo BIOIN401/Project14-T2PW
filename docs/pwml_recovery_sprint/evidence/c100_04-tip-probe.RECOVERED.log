@@ -1,0 +1,89 @@
+TREE: C:\t\c100
+GOLD SOURCE: C:\t\c100\src\t2pw\bench\gold\pinned_v1.json
+GOLD CASES: 10
+BOOLEAN TRUE  (n=1): PMC12444477
+BOOLEAN FALSE (n=9): PMC13231680, PMC12657337, PMC12421875, PMC12312563, PMC12856317, PMC12180156, PMC12096016, PMC12452463, PMC12782028
+SCOPE FIELD PRESENT ON GoldCase: True
+SCOPE ENTRIES: ['LapA', 'LapB', 'Ght', 'LabP', 'LpxG', 'YhcB', 'lipoprotein']
+EXPECTED ENZYMES: ['LpxA', 'LpxC', 'LpxD', 'LpxB', 'LpxK', 'WaaA', 'LpxL', 'LpxM']
+ACCEPTABLE ENZYMES: [('LpxH', ['LpxI', 'LpxG']), ('FtsH', []), ('LapB', ['YciM']), ('YejM', ['PbgA']), ('FabZ', []), ('MsbA', []), ('ObgE', [])]
+LEGS FOUND: 6
+LEG runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json : 0 placeholder row(s)
+LEG runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json : 0 placeholder row(s)
+LEG runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json : 9 placeholder row(s)
+    proteins           [4] name='Unknown'      sentinel=True  claim=-
+    protein_complexes  [1] name='LpxA'         sentinel=False claim=-
+    protein_complexes  [2] name='LpxD'         sentinel=False claim=-
+    protein_complexes  [3] name='LpxH'         sentinel=False claim=-
+    protein_complexes  [4] name='LpxB'         sentinel=False claim=-
+    protein_complexes  [5] name='LpxK'         sentinel=False claim=-
+    protein_complexes  [6] name='WaaA'         sentinel=False claim=-
+    protein_complexes  [7] name='LpxL'         sentinel=False claim=-
+    protein_complexes  [8] name='LpxM'         sentinel=False claim=-
+LEG runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json : 2 placeholder row(s)
+    proteins           [9] name='Unknown'      sentinel=True  claim=-
+    protein_complexes  [0] name='Lpt system'   sentinel=False claim=-
+LEG runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json : 0 placeholder row(s)
+LEG runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json : 4 placeholder row(s)
+    proteins           [7] name='Unknown'      sentinel=True  claim=-
+    protein_complexes  [6] name='LpxL'         sentinel=False claim=-
+    protein_complexes  [7] name='LpxM'         sentinel=False claim=-
+    protein_complexes  [8] name='LpxD'         sentinel=False claim=-
+PLACEHOLDER NAME CENSUS (all legs):
+    'Unknown'        x3
+    'LpxD'           x2
+    'LpxL'           x2
+    'LpxM'           x2
+    'Lpt system'     x1
+    'LpxA'           x1
+    'LpxB'           x1
+    'LpxH'           x1
+    'LpxK'           x1
+    'WaaA'           x1
+EXCUSED? (tip semantics)
+    'LpxA'           -> False
+    'LpxD'           -> False
+    'LpxB'           -> False
+    'LpxK'           -> False
+    'WaaA'           -> False
+    'LpxL'           -> False
+    'LpxM'           -> False
+    'LpxC'           -> False
+    'LapA'           -> True
+    'YciS'           -> True
+    'LapB'           -> True
+    'YciM'           -> True
+    'Ght'            -> True
+    'LabP'           -> True
+    'LpxG'           -> True
+    'YhcB'           -> True
+    'lipoprotein'    -> True
+    'Unknown'        -> False
+    'LpxA product'   -> False
+PROBE OK
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c100\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f7dc223235e535f5f6aca5a7de7d58c269e8db00  [git, worktree dirty=True]
+label                   : tip-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/29355bf3-10de-4998-935b-e7f453bcc71c/scratchpad/probe_c100.py C:/t/c100
+cwd                     : C:\t\c100
+root PID / process group: 203744 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.20 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  201924:python.exe
+descendants terminated  : 1  201924
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/c100/docs/pwml_recovery_sprint/evidence/g11/C-100/04-tip-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 12
+================================================

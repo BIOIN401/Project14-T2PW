@@ -65,6 +65,7 @@ from t2pw.bench.metrics import (
     tally,
 )
 from t2pw.bench.semantic import (
+    CHECK_ID_CONFLICT,
     CHECK_SUPPORTED_REACTIONS,
     ERR_FALSE_REAL_IDENTIFIERS,
     ERR_ORPHANED_REFERENCES,
@@ -419,6 +420,60 @@ class PaperResult:
 # ---------------------------------------------------------------------------
 # The report.
 # ---------------------------------------------------------------------------
+#: D-073, Ruling B. Six remains the TARGET; seven is a one-finding stochastic
+#: band, not evidence of a fix. A third VALUE rather than a widened "<= 7"
+#: threshold, so the status says WHY seven passes and survives being read alone.
+#: It must never collapse into a Boolean -- hence the untouched absolute `ok`.
+PRIORITY1_PASS = "PASS"
+PRIORITY1_PASS_WITHIN_VARIANCE = "PASS_WITHIN_VARIANCE"
+PRIORITY1_FAIL = "FAIL"
+#: The target. Not a threshold that moved.
+PRIORITY1_TARGET = 6
+#: The top of the one-finding variance band. Eight or more is an actual
+#: acceptance failure and is reported as one.
+PRIORITY1_VARIANCE_CEILING = 7
+
+#: The Priority-1 finding kinds. `accession_claimed_by_multiple_entities` is
+#: deliberately absent: it has never incremented `false_real` and still does not.
+_PRIORITY1_KINDS = ("false_real_identifier", "placeholder_claims_real_identity")
+
+
+def priority1_status(accepted: int) -> str:
+    """D-073's status for an ACCEPTED Priority-1 count. Never for a raw one."""
+
+    if accepted <= PRIORITY1_TARGET:
+        return PRIORITY1_PASS
+    if accepted <= PRIORITY1_VARIANCE_CEILING:
+        return PRIORITY1_PASS_WITHIN_VARIANCE
+    return PRIORITY1_FAIL
+
+
+def _priority1_rows(paper_id: str, mode: str, semantic: Any) -> List[Dict[str, Any]]:
+    """One record per Priority-1 finding, carrying its contract adjustment."""
+
+    check = semantic.checks.get(CHECK_ID_CONFLICT)
+    if check is None:
+        return []
+    out: List[Dict[str, Any]] = []
+    for finding in check.findings:
+        if finding.get("kind") not in _PRIORITY1_KINDS:
+            continue
+        tolerance = str(finding.get("contract_tolerance") or "")
+        out.append(
+            {
+                "paper_id": paper_id,
+                "mode": mode,
+                "pointer": finding.get("pointer", ""),
+                "name": finding.get("name", ""),
+                "kind": finding.get("kind", ""),
+                "identifiers": finding.get("identifiers", {}),
+                "contract_tolerance": tolerance,
+                "accepted": not tolerance,
+            }
+        )
+    return out
+
+
 @dataclass
 class AcceptanceReport:
     run_dir: str
@@ -442,6 +497,10 @@ class AcceptanceReport:
     #: cross-reference ``inapplicable_checks``". Acceptance priority 2 is that
     #: consumer, and this is the cross-reference.
     unmeasured_unsupported: Dict[str, str] = field(default_factory=dict)
+    #: Every Priority-1 row with the tolerance (if any) adjusting it out of the
+    #: ACCEPTED count. D-073 wants the composition of BOTH results, so the rows
+    #: are carried rather than recomputed from a total that discarded them.
+    priority1_rows: List[Dict[str, Any]] = field(default_factory=list)
 
     # -- coverage -------------------------------------------------------
     def completion(self) -> Dict[str, Any]:
@@ -591,6 +650,17 @@ class AcceptanceReport:
         strict = self.denominators.get(DENOM_STRICT)
 
         false_ids = totals.get(ERR_FALSE_REAL_IDENTIFIERS, 0)
+        # RAW is the error total, unchanged. ACCEPTED is computed from the ROWS
+        # over a different predicate, so the two cannot agree by construction; on
+        # the pinned corpus their agreement is a MEASUREMENT (no authorized
+        # tolerance currently covers a Priority-1 row), not an identity.
+        raw_p1 = false_ids
+        accepted_p1 = sum(1 for row in self.priority1_rows if row["accepted"])
+        if not self.priority1_rows and raw_p1:
+            # Row composition unavailable (a report assembled without legs).
+            # Reporting accepted=0 there would understate the count, so fall back
+            # to raw and say nothing stronger than the evidence supports.
+            accepted_p1 = raw_p1
         unsupported = totals.get(ERR_UNSUPPORTED_REACTIONS, 0)
         orphans = totals.get(ERR_ORPHANED_REFERENCES, 0)
 
@@ -624,9 +694,32 @@ class AcceptanceReport:
             {
                 "rank": 1,
                 "name": "zero known false real identifiers",
+                # UNCHANGED, deliberately. D-073 forbids PASS_WITHIN_VARIANCE
+                # collapsing into any summary, badge or BOOLEAN, and folding the
+                # band into `ok` would also turn an absolute gate permissive at
+                # six -- the merge-rule-6 direction. `ok` stays the absolute
+                # zero-tolerance answer on RAW; the band lives in
+                # `accepted_status`, a three-valued string.
                 "ok": false_ids == 0,
                 "evaluated": True,
                 "observed": false_ids,
+                # -- D-073, Ruling B ------------------------------------------
+                "raw": raw_p1,
+                "accepted": accepted_p1,
+                "accepted_status": priority1_status(accepted_p1),
+                "target": PRIORITY1_TARGET,
+                "raw_rows": self.priority1_rows,
+                "accepted_rows": [r for r in self.priority1_rows if r["accepted"]],
+                "contract_adjusted_rows": [r for r in self.priority1_rows if not r["accepted"]],
+                "variance_note": (
+                    f"Six remains the target. Seven is a one-finding stochastic band "
+                    f"({PRIORITY1_PASS_WITHIN_VARIANCE}), not evidence that the pipeline "
+                    "defect is fixed: T-105's seven was composed of almost entirely "
+                    "different rows than T-104's seven. The band absorbs variance, not "
+                    "regressions -- a changed composition is inspected on its merits, and "
+                    "eight or more is an actual acceptance failure. Do not rerun to move "
+                    "from seven to six."
+                ),
                 "papers": sorted(self.errors.papers_affected.get(ERR_FALSE_REAL_IDENTIFIERS, set())),
             },
             {
@@ -827,6 +920,9 @@ def score_run(
             )
             if leg.semantic.evaluated:
                 report.errors.add(case.paper_id, mode, leg.semantic.scientific_errors)
+                report.priority1_rows.extend(
+                    _priority1_rows(case.paper_id, mode, leg.semantic)
+                )
                 # A leg whose unsupported-reaction verdict was never reached adds
                 # a zero to the priority-2 total. Record it, so the priority can
                 # tell that zero apart from a measured one.
@@ -1108,15 +1204,32 @@ def _build_boundaries(report: AcceptanceReport) -> None:
 def _build_identity(report: AcceptanceReport) -> None:
     """Real IDs versus Unknown fallbacks, with the payload each number came from."""
 
-    totals = {"verified": 0, "placeholder": 0, "unresolved": 0, "pathbank_unknown_sentinel": 0}
+    totals = {
+        "verified": 0,
+        "placeholder": 0,
+        "unresolved": 0,
+        "pathbank_unknown_sentinel": 0,
+        # D-070's split, summed like every other census key so the invariant
+        # survives aggregation and holds for the whole run, not only per leg.
+        "placeholder_sentinel_rows": 0,
+        "placeholder_generated_wrappers": 0,
+        "placeholder_other_rows": 0,
+        # F-141's seam, carried separately and never merged into the above.
+        "withheld_identity_correct": 0,
+        "withheld_identity_recoverable": 0,
+    }
     per_paper: Dict[str, Dict[str, Any]] = {}
     sources = []
+    # PRODUCT_CONTRACT 8: False until a scored leg proves the question was asked,
+    # so a run that reached no identity verdict reports NOT EVALUATED, not a zero.
+    evaluated = False
 
     for paper in report.papers:
         for mode, leg in paper.legs.items():
             if leg.semantic is None or not leg.semantic.evaluated:
                 continue
             census = leg.semantic.identity_census
+            evaluated = evaluated or bool(census.get("withheld_identity_evaluated"))
             for key in totals:
                 totals[key] += int(census.get(key, 0) or 0)
             per_paper[f"{paper.paper_id}:{mode}"] = {
@@ -1127,6 +1240,7 @@ def _build_identity(report: AcceptanceReport) -> None:
             }
             sources.append(leg.payload_source)
 
+    totals["withheld_identity_evaluated"] = evaluated
     report.identity = {
         "totals": totals,
         "by_paper_mode": per_paper,
