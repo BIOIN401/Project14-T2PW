@@ -396,6 +396,23 @@ class GoldCase:
     max_retained_reactions: Optional[int] = None
     unknown_backed_proteins_acceptable: bool = False
     unknown_backed_rationale: str = ""
+    #: The entities this case tolerates as Unknown-backed, named one by one.
+    #:
+    #: The Boolean above is case-WIDE, so on its own it excuses every placeholder
+    #: row in the payload -- including the ones the case's prose rationale names,
+    #: in the same sentence, as the class the tolerance must NOT cover. That prose
+    #: was parsed, round-tripped and never enforced. This field is the machine-
+    #: readable statement; the prose field stays prose and is never read for
+    #: meaning, because "prose that is now parsed" would be the same defect in
+    #: better clothes.
+    #:
+    #: Empty does NOT mean "tolerate nothing". A case that declares no scope keeps
+    #: the Boolean's original case-wide meaning, so every case written before this
+    #: field existed grades exactly as it did; only a case that declares a scope is
+    #: narrowed by it. The default is ``()`` on purpose: several test helpers build
+    #: a ``GoldCase`` by splatting a dict, and a field without a default would raise
+    #: ``TypeError`` at COLLECTION time in files that never touch this surface.
+    unknown_backed_tolerated_entities: Tuple[GoldTerm, ...] = ()
     expected_export: str = EXPORT_PARTIAL
     export_rationale: str = ""
     notes: str = ""
@@ -443,6 +460,69 @@ class GoldCase:
                 return entry
         return None
 
+    def unknown_backed_tolerance_match(self, candidate: Any) -> Optional[GoldTerm]:
+        """The tolerated entity ``candidate`` names, if any.
+
+        Exact and alias matches only, on the same rule and for the same reason as
+        :meth:`forbidden_match`. Containment is deliberately refused in **both**
+        directions: outward, ``LpxG`` must never excuse a longer token that merely
+        contains it; inward, ``LpxA product`` -- a forbidden placeholder name -- must
+        never be excused by the enzyme it is named after, and ``LapB`` must never
+        excuse an unrelated ``LapB-like`` token. A tolerance is a licence to leave a
+        row unresolved, so it has to be spelled out rather than inferred.
+
+        Aliases carry the synonymy that containment would be a bad proxy for:
+        ``LapA``/``YciS`` and ``LapB``/``YciM`` are one protein under its old and new
+        names and are declared as aliases, not matched fuzzily.
+        """
+
+        norm = normalize_name(candidate)
+        if not norm:
+            return None
+        for entry in self.unknown_backed_tolerated_entities:
+            if norm == normalize_name(entry.name):
+                return entry
+            if any(norm == normalize_name(alias) for alias in entry.aliases):
+                return entry
+        return None
+
+    def tolerates_unknown_backed(self, candidate: Any) -> bool:
+        """Whether this case excuses an Unknown-backed row named ``candidate``.
+
+        **What a row inherits when nothing names it is the case-wide Boolean, read
+        explicitly** -- never a literal ``True``, and never the truthiness of a
+        missing key. ``inherited`` below is that value, named so the decision is a
+        decision and not a lookup default. A bare ``candidate in scope`` would be
+        untolerant only by luck; worse, any form that consulted the scope *before*
+        the Boolean could hand a permissive answer to one of the nine pinned cases
+        that set the Boolean explicitly ``false``, overriding an explicit value
+        rather than filling an absent one.
+
+        Three states, and only the middle one is new:
+
+        * **no scope declared** (the default ``()``, and every case that predates
+          this field) -- ``inherited`` governs, unchanged. This is the whole of the
+          backward-compatibility guarantee.
+        * **a scope declared, and ``candidate`` in it** -- tolerated.
+        * **a scope declared, and ``candidate`` absent from it** -- refused. A
+          declared scope is an exhaustive enumeration: a name it does not list has
+          been left out deliberately, which is a different fact from no scope
+          existing. Reading an absent name as ``inherited`` here would make every
+          scope decoration, since a scope can only exist on a case whose Boolean is
+          already ``True``.
+
+        The Boolean therefore only ever NARROWS through a scope and never widens:
+        a case that does not accept Unknown-backed proteins excuses nothing,
+        whatever its scope says.
+        """
+
+        inherited = self.unknown_backed_proteins_acceptable
+        if not self.unknown_backed_tolerated_entities:
+            return inherited
+        if not inherited:
+            return False
+        return self.unknown_backed_tolerance_match(candidate) is not None
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "paper_id": self.paper_id,
@@ -467,6 +547,9 @@ class GoldCase:
             "is_negative_control": self.is_negative_control,
             "unknown_backed_proteins_acceptable": self.unknown_backed_proteins_acceptable,
             "unknown_backed_rationale": self.unknown_backed_rationale,
+            "unknown_backed_tolerated_entities": [
+                t.to_dict() for t in self.unknown_backed_tolerated_entities
+            ],
             "expected_export": self.expected_export,
             "export_rationale": self.export_rationale,
             "notes": self.notes,
@@ -720,6 +803,10 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
         max_retained_reactions=max_retained,
         unknown_backed_proteins_acceptable=bool(raw.get("unknown_backed_proteins_acceptable", False)),
         unknown_backed_rationale=str(raw.get("unknown_backed_rationale") or ""),
+        unknown_backed_tolerated_entities=_terms(
+            raw.get("unknown_backed_tolerated_entities"),
+            where=f"{where}.unknown_backed_tolerated_entities",
+        ),
         expected_export=export,
         export_rationale=str(raw.get("export_rationale") or ""),
         notes=str(raw.get("notes") or ""),
@@ -737,6 +824,17 @@ def _case(raw: Mapping[str, Any], *, index: int) -> GoldCase:
         raise GoldSetError(
             f"{where}: at least one expected_pathway_anchor is required, "
             "unless the case is a negative control (max_retained_reactions: 0)"
+        )
+    # A tolerance scope on a case that does not accept Unknown-backed proteins at
+    # all is unreachable: the Boolean refuses every placeholder row before the
+    # scope is ever consulted. Refuse it at load time rather than let an author
+    # believe a list that can never be read is protecting something -- the same
+    # failure mode, one field over, that made the rationale unenforceable.
+    if case.unknown_backed_tolerated_entities and not case.unknown_backed_proteins_acceptable:
+        raise GoldSetError(
+            f"{where}: unknown_backed_tolerated_entities is declared but "
+            "unknown_backed_proteins_acceptable is false, so the scope can never be "
+            "reached; set the Boolean or drop the list"
         )
     if case.is_negative_control and case.mechanistic_relevance != RELEVANCE_CONTEXT_ONLY:
         raise GoldSetError(
