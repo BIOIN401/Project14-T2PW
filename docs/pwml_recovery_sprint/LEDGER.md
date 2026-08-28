@@ -7420,3 +7420,70 @@ reviewer on a card after it has already been approved once.
 mattered were each made by someone other than the author of the claim, and in three cases the author
 had already disclosed the weakness themselves and been measured anyway. That is the process working,
 not failing.
+
+---
+
+## C-099 MERGED — `9e4a28a` · integration `233b26a`
+
+**F-134's production correction, narrowed by D-070 and merged after eight review rounds.**
+
+**Gate:** SMOKE **473** + `test_protein_export_policy.py` **63** + the card's own **34**, run together
+on the integration tip = **570 passed**, zero survivors, heavy lock acquired and released
+(`evidence/g11/MERGE-099/01`). The export-policy file went into the same selection rather than being
+trusted from the card — it is in **neither SMOKE nor Chunk D** and carries the O-1 statement C-094
+inverted.
+
+**G9:** base **16 failed / 320 passed**, tip **336 passed**, failing on an observed value
+(`assert 'Arabidopsis thaliana' == 'Escherichia coli'`), not a missing symbol. Counts moved from the
+first round's 20/316 exactly as predicted when `single_pathway_species` came out of the set; the four
+tests that stopped failing at base became **reversal guards** rather than G9 proofs — re-add the
+string and they fail.
+
+**Boundary:** three hunks throughout, in `_apply_pathbank_unknown_enzyme_fallback` only. The two
+sentinel-protein builders (O-1a) and `_apply_pathbank_unknown_complex_fallback`'s preserving
+`setdefault` (which C-094 broke) are untouched. 114 hand-authored lines of a 120 ceiling; 18 generated
+artifacts of 25; 9 G11 artifacts, 0 non-compliant.
+
+**Measured effect, through the shipped constant rather than source labels:** 71 generated
+single-protein wrappers corpus-wide, 6 with a resolved species ref, **4 preserved** — both pinned
+examples (enterobactin synthase complex, ALAS2 homodimer) among them — and 2 returned to today's
+behaviour by the Finding-1 ruling. **Nothing regresses**: every row that is not preserved keeps the
+sentinel species exactly as at base.
+
+### The round that mattered most was about the probe, not the code
+
+REV-099's delta review found that the preservation census **agreed with itself by construction**: it
+rebuilt each row as `{"name": …}` stamped from its own ref, so every field the consistency check reads
+either came from that ref or was absent. **The `disagree` branch could not fire**, which made
+"4 preserved" a ceiling shaped like a measurement — and the path it could not exercise was exactly the
+exception the card had just finished documenting.
+
+Rebuilt to deep-copy the committed row and reset **only** the four clobber-written fields, leaving
+`species_name` and `taxonomy_id` as committed. That surfaces a second trap the reviewer named before
+it could bite: **an absent field produces no disagreement for the same reason a blind probe does**, so
+"reachable and did not fire" is only a measurement if the fields were *present*. Reported per row,
+presence and match separately: **6 of 6 live, 0 contradictions, 4 preserved.** Six named
+"could have fired, did not" rows rather than a zero from absence.
+
+The author then added what neither the orchestrator nor the reviewer asked for: **a positive control.**
+A real corpus row with `species_name` perturbed to *Xanthomonas campestris* **does** raise
+`row_species_fields_disagree_with_resolution`, and the probe **exits 1 and refuses to report a number**
+if that control ever fails. The zero is a demonstrated negative, not a quiet path. **That is the
+vacuity question asked of the measuring instrument rather than of the code**, and it is the standard
+this sprint should hold probes to from here.
+
+The reviewer's stop-condition is **encoded rather than checked**: if either pinned example clears the
+source gate and fails the contradiction gate, the probe prints `*** STOP CONDITION MET ***`, states
+the failure is against **REV-099 Finding 1's premise rather than the code**, forbids adjusting
+`map_ids.py`, and exits 2. It did not fire. That condition existed because the orchestrator's original
+stop-rule covered *"contradicts production code"* and left *"contradicts the ruling"* open — and round
+two was the change that made the contradiction gate reachable for the first time.
+
+**The two 4s are different numbers that coincide** — the charter's **4/2 census split** (refs by
+source, read off committed data) is not the **preserved-row count**. Recorded as a do-not-reconcile
+note so a later reader does not "correct" a figure that was never wrong.
+
+**Disclosed-unmeasured:** Chunk D. `test_streamlit_stage8_export_contract.py`,
+`test_streamlit_stage2_orchestration.py`, `test_streamlit_quarantine_boundary.py` are uncovered by
+this card; F-136 already records that Chunk D cannot go green in this environment with the DB up.
+Not held on it, but not implied as covered either.
