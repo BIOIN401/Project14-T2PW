@@ -595,3 +595,42 @@ A base sweep reporting 22 rather than 21 is this, and only this.
 
 **Pinned line count after this entry: 578** (was 541). D-061 requires the new value be
 recorded here so the tripwire keeps working at its new value rather than being abandoned.
+
+
+---
+
+## C-102 / D-072 — the authorized Priority-4/5 baseline move, with its A/B
+
+**Nothing in this move is a threshold change.** `min_core_coverage` stays `0.5` everywhere. What
+moves is the **denominator** the acceptance instrument reports beside the raw one.
+
+**The A/B ran offline, against committed `quarantine_report.json` artifacts.** Re-running the corpus
+was forbidden this wave and no leg, cohort or paper leg was run.
+`evidence/c102_f132_coverage_ab.py` measures the population;
+`evidence/c102_g9_denominator_proof.py` is the base-vs-tip behavioural proof;
+`evidence/c102_base_gate.py` measures the gates on `bcf9a23` by restoring the two changed modules to
+their base blobs and setting the new test aside, then verifying `git diff` against base is empty for
+`src` and `tests` while the base leg runs. That is used **instead of `c045b_base_tree.py`**, whose
+pathspec excludes `runs_verify` — an exported base tree would have failed for want of data rather
+than for want of code, and that is not a base result.
+
+| Gate | base `bcf9a23` | tip | verdict |
+|---|---|---|---|
+| gold-readers (22 files) | **2 failed, 453 passed, 8 skipped** (exit 1) | **2 failed, 453 passed, 8 skipped** (exit 1) | identical; both reds are F-142 `[only_unrelated_reactions_survive]`, chartered as C-103. **No third failure.** |
+| SMOKE (20 files) | — | **473 passed** | merge rule 10 |
+| focused `test_c102_coverage_denominator.py` | fails — the behaviour is absent | **11 passed** | G9 |
+
+**Corpus delta**, 62 legs with a coverage block, 860 requested-core terms drawn: **92 gold-forbidden
+terms withheld across 47 legs**; **32 legs rise, 7 fall, 8 unchanged**; **zero legs clear** the
+unchanged 0.500 minimum, and the six that were below it stay below it. `PMC12782028/strict` moves
+`0.222 -> 0.261` and does **not** clear. **Priority 4 stays `0/8` and Priority 5 stays `0/2`** on
+`runs_verify/2026-08-24_1428` — measured, not predicted, and reported as it fell.
+
+**A leg that falls is the instrument working.** The exclusion is symmetric: a forbidden term the
+pipeline matched is withheld from the numerator as well as the denominator, so it no longer earns
+coverage credit. 26 of the 92 withheld terms are of that kind, and they are invisible to the
+ORCH-702 probe, which counted forbidden terms only among the unmatched.
+
+**Serialization note for anyone diffing reports.** `coverage_reconciliation` is conditional on both
+the leg and the report, so a run that stored no `quarantine_report.json` serializes byte-identically
+to before. Priorities 1-3 carry no `requested_core_coverage` key; only 4 and 5 do.

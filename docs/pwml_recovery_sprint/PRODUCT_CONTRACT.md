@@ -222,6 +222,25 @@ After bounded retrieval is exhausted:
 The coverage threshold blocks release-ready status, not PWML production. **The threshold
 value itself does not move.**
 
+**The denominator rule (D-072).** Coverage is measured over the terms the case
+**permits exporting**. An identifier on a case's own `forbidden_identifiers` is
+not simultaneously a required positive coverage anchor for that same case: it is
+withheld from the accepted numerator and the accepted denominator alike, exactly
+and case-locally, by name or declared alias and never by resemblance. This
+changes **what goes into the denominator, never the bar** -- the threshold value
+still does not move, and the raw unreconciled measurement is preserved and
+reported beside the accepted one.
+
+Three things the rule does not license. Withholding a term from the denominator
+never removes it from the record; it never makes exporting that term acceptable,
+which Priority 1 still scores; and it never extends to a term that is merely
+hard, absent or unmatched. Where **every** drawn term is forbidden the accepted
+rate is **undefined** -- not 1.0, not 0.0, and not a coverage success.
+
+**This is an acceptance-instrument reconciliation, not a claim that the pipeline
+defect is fixed.** The Stage-0 draw that supplies the runtime term list is
+unchanged, and production keeps reporting the raw ratio.
+
 ---
 
 ## 8. Identity verification
