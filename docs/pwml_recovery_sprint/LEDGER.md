@@ -7922,7 +7922,7 @@ being recorded separately; this card's diff is not an improvised product decisio
 totals, **zero per-file shift**, both reds isolated to `test_strict_failure_replay.py` · SMOKE
 **473 passed** · base `bcf9a23` re-measured: the same **2 / 453 / 8**, no third failure at either
 end. All seven mutations RED, tree clean after each. Every job through `c045_pinned_pytest.py`,
-which printed `T2PW: C:	\c102\src	2pw\__init__.py` on each; `FINAL SURVIVING COUNT : 0` and
+which printed the resolved `T2PW` path as this worktree own src on each; `FINAL SURVIVING COUNT : 0` and
 `cleanup : success` throughout.
 
 **Two runs kept because they failed.** The split gate's first run had no `--basetemp` parent, so
