@@ -7416,6 +7416,23 @@ The last two are the same defect one level apart, found ten minutes apart, and t
 **only** because the first had just been named. That is the argument for keeping an adversarial
 reviewer on a card after it has already been approved once.
 
+### The operational form of it, and the standard that follows
+
+**An aggregate is not evidence until the instrument that produced it has been shown capable of
+producing a different one.**
+
+Every round of this wave applied the vacuity question to the **code** — does the guard fire, can it
+fire, would it fire on a case that actually reaches it. C-099's author turned it on the
+**instrument**: a probe that reports zero must first demonstrate it can report non-zero. Its
+`CONTROL_SPECIES = "Xanthomonas campestris"` perturbs a real corpus row, proves
+`row_species_fields_disagree_with_resolution` does raise, and makes the probe **exit 1 and refuse to
+report any number** if that control ever fails.
+
+That is the same question one level up, and it answers as a class what this sprint had been catching
+one instance at a time. **A committed probe that reports a zero, an absence, or a "no occurrences"
+carries a positive control, or its number is a ceiling and must be labelled one.** Four of the eight
+rows in the table above would have been caught at birth by that rule.
+
 **Nobody in this wave got it right first time, including the orchestrator.** The corrections that
 mattered were each made by someone other than the author of the claim, and in three cases the author
 had already disclosed the weakness themselves and been measured anyway. That is the process working,
