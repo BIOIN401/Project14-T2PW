@@ -1,0 +1,39 @@
+run dir      : C:\t\c102\runs_verify\2026-08-24_1428
+leg          : PMC12782028/strict   found=True
+frozen reason: ['requested_core_coverage_below_minimum:0.222<0.500']
+requested-core denominators the instrument reports for this leg: [23, 27]
+terms it names as withheld-but-recorded                        : ['LBR', 'LIPA', 'SREBF1', 'SREBF2']
+priority 4 : ok=False  observed='0/8 = 0%'  reconciliation=present
+             legs_with_forbidden_terms=7/10  terms_withheld=19  cleared=[]  still_below=['PMC12782028:strict']
+priority 5 : ok=False  observed='0/2 = 0%'  reconciliation=present
+             legs_with_forbidden_terms=7/10  terms_withheld=19  cleared=[]  still_below=['PMC12782028:strict']
+
+POST-CHANGE BEHAVIOUR: raw 27 preserved, accepted 23 reported beside it,
+and all four withheld terms still named: ['LBR', 'LIPA', 'SREBF1', 'SREBF2']
+{"accepted_denominator": 23, "raw_denominator": 27}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bcf9a23d293c90195cedd96725807599fb670000  [git, worktree dirty=True]
+label                   : c102-g9-denominator-tip
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c102_g9_denominator_proof.py C:/t/c102
+cwd                     : C:\t\c102
+root PID / process group: 490504 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.31 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  492492:python.exe
+descendants terminated  : 1  492492
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\03-g9-denominator-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

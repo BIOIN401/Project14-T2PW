@@ -102,6 +102,33 @@ def _priorities(report: AcceptanceReport) -> List[str]:
             if entry["accepted_status"] == _P1_VARIANCE:
                 for line in _wrap(entry.get("variance_note", ""), 88):
                     out.append(f"          ! {line}")
+        # D-072. Raw beside contract-accepted on the two priorities the ruling
+        # names, never merged into one number, and only where a gold-forbidden
+        # term was actually drawn -- a leg with none prints nothing and reads
+        # exactly as it did before. Every withheld term is named on its own row,
+        # which is guard rail 3: out of the denominator is not out of the record.
+        recon = entry.get("requested_core_coverage") if entry["rank"] in (4, 5) else None
+        if recon and recon["legs_with_forbidden_terms"]:
+            out.append(
+                f"          D-072 requested-core reconciliation: "
+                f"{recon['forbidden_terms_excluded']} gold-forbidden term(s) withheld from "
+                f"{recon['legs_with_forbidden_terms']} of {recon['legs_with_coverage']} scored leg(s)"
+            )
+            for row in recon["legs"]:
+                if not row["excluded_count"]:
+                    continue
+                raw = "n/a" if row["raw_ratio"] is None else f"{row['raw_ratio']:.3f}"
+                acc = "UNDEFINED" if row["accepted_ratio"] is None else f"{row['accepted_ratio']:.3f}"
+                out.append(
+                    f"            - {row['paper_id']}:{row['mode']}"
+                    f"  raw {row['raw_matched']}/{row['raw_denominator']}={raw}"
+                    f"  accepted {row['accepted_matched']}/{row['accepted_denominator']}={acc}"
+                    + ("  -> CLEARS the unchanged minimum" if row["cleared_by_reconciliation"] else "")
+                )
+                out.append(
+                    "              withheld (still forbidden to export, still recorded): "
+                    + ", ".join(f"{e['term']} [{e['forbidden_kind']}]" for e in row["excluded_terms"])
+                )
         unmeasured = entry.get("not_evaluated_papers") or []
         if unmeasured and entry["rank"] <= 3:
             out.append(f"          NOT EVALUATED on: {', '.join(unmeasured)}")
