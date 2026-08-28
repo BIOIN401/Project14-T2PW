@@ -7433,6 +7433,31 @@ one instance at a time. **A committed probe that reports a zero, an absence, or 
 carries a positive control, or its number is a ceiling and must be labelled one.** Four of the eight
 rows in the table above would have been caught at birth by that rule.
 
+### The same move in the other direction: how a requirement is written
+
+**A design instruction is satisfied by intent. A test case is satisfied by behaviour.**
+
+Item 2 of the C-100 pre-checks was first put to the author as a design instruction — *"an absent
+per-entity scope must inherit the case Boolean, not default permissive"*. That form is satisfied by
+an author who agrees with it, and it would have sailed past the one construction most likely to
+break it:
+
+```python
+scope.get(name, True)        # a permissive default: OVERRIDES nine explicit False values
+name in scope                # permissive by OMISSION -- and it has no default to inspect
+scope.get(name, case.unknown_backed_proteins_acceptable)   # the safe one
+```
+
+The middle form reads as obviously correct, is the natural way to write a membership test, and
+**contains no default for a reviewer to examine**. The instruction cannot catch it. What catches it is
+one test: **an entity deliberately left OUT of the scope, on a case whose Boolean is `False`,
+asserting it stays strict.** A scope exercised only with entities that are *in* it never reaches the
+absent branch at all — the same shape that has now cost this sprint four rounds.
+
+**This and the positive-control standard are one move**: refusing to accept a claim in a form that
+cannot fail. Together they are the whole of what this wave learned about evidence — an instrument
+must be able to report the other answer, and a requirement must be able to fail.
+
 **Nobody in this wave got it right first time, including the orchestrator.** The corrections that
 mattered were each made by someone other than the author of the claim, and in three cases the author
 had already disclosed the weakness themselves and been measured anyway. That is the process working,
