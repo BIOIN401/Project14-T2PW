@@ -7917,6 +7917,20 @@ forbidden match exactly **neutral**, which is the property test 12 pins.
 "denominator".** D-072 outranks it. **That reconciliation is the product owner's, not mine**, and is
 being recorded separately; this card's diff is not an improvised product decision.
 
+**Re-gated on the corrected tree.** Focused **14 passed** · gold-readers **2 failed / 453 passed /
+8 skipped combined** and **453 / 2 / 8 split one file per process across all 22** — identical
+totals, **zero per-file shift**, both reds isolated to `test_strict_failure_replay.py` · SMOKE
+**473 passed** · base `bcf9a23` re-measured: the same **2 / 453 / 8**, no third failure at either
+end. All seven mutations RED, tree clean after each. Every job through `c045_pinned_pytest.py`,
+which printed `T2PW: C:	\c102\src	2pw\__init__.py` on each; `FINAL SURVIVING COUNT : 0` and
+`cleanup : success` throughout.
+
+**Two runs kept because they failed.** The split gate's first run had no `--basetemp` parent, so
+every test errored in setup and files reported `0 passed` with exit 1 — an infrastructure failure
+wearing the costume of a wiped test file, and the driver now aborts on exactly that shape rather
+than folding it into a total. The mutation attack's first run would not parse, because a shell
+heredoc collapsed an escape in the M7 substitution. Neither is a test result and neither is deleted.
+
 **Also corrected in this round.** The serialization note (the report-level key is unconditional —
 a run with zero coverage blocks still grows) · the G9 row, which described an `ImportError` as if it
 were the proof · the aggregate/per-leg key-name collision, now `coverage_reconciliation_corpus` ·
