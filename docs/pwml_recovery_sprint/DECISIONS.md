@@ -4805,3 +4805,82 @@ strengthened — a ratio of 1.125 is no more a rate than 1.2 is.
 **This is the second time this wave a card has corrected a number I wrote into a decision record**,
 after C-101 corrected A4's premise. Both times the card re-derived instead of copying. That is
 exactly what a number in a charter is for.
+
+---
+
+## D-080 AMENDMENT 1 — the count is NINE, not eight · 2026-08-28 · LOCKED
+
+**D-080 states that eight committed legs report a coverage ratio above 1 under D-072's literal
+denominator-only reading. The correct figure is nine.** Corrected here rather than edited in place.
+
+C-102 re-derived instead of copying and found a ninth; REV-102 then re-enumerated exhaustively with
+exact `Fraction` arithmetic, so nothing rounds into or out of the set:
+
+| run | paper | mode | num/den | value |
+|---|---|---|---|---|
+| 2026-08-21_2239 | PMC12856317 | research | 6/5 | 1.2000 |
+| 2026-08-21_2239 | PMC12856317 | strict | 6/5 | 1.2000 |
+| 2026-08-22_2017 | PMC12856317 | strict | 6/5 | 1.2000 |
+| 2026-08-22_2147 | PMC12856317 | strict | 6/5 | 1.2000 |
+| 2026-08-22_2147 | PMC13231680 | research | 6/5 | 1.2000 |
+| 2026-08-22_2147 | PMC13231680 | strict | 6/5 | 1.2000 |
+| 2026-08-24_1203 | PMC12856317 | research | 6/5 | 1.2000 |
+| 2026-08-25_1216 | PMC12856317 | strict | 6/5 | 1.2000 |
+| **2026-08-24_1203** | **PMC12856317** | **strict** | **9/8** | **1.1250** |
+
+**Why the original number was wrong, stated precisely because the mechanism generalises.** REV-102's
+round-1 claim — *"eight real legs report a coverage ratio of 1.2000"* — **was true**. But the claim
+D-080 needs is *"legs on which the literal reading produces something that is not a rate"*, and that
+set is nine. In its own words: **it scanned visually for the string `1.2000` instead of testing
+`> 1`.**
+
+**The argument is unchanged and slightly strengthened.** A ratio of 1.125 is no more a rate than 1.2
+is; there is simply one more leg demonstrating it.
+
+**The lesson is the sprint's own, applied to a decision record.** A number quoted from a scan of
+formatted output is not the same fact as a number computed from the predicate the claim is about.
+This is the same class as F-144 — an assertion satisfied by something adjacent to what it names — and
+it appeared here in prose rather than in a test.
+
+**Second time this wave a card corrected a number I wrote into a decision record**, after C-101
+corrected `AMENDMENT 1` § A4's premise. Both times by re-deriving rather than copying. **The
+reviewer's own count was corrected by the author, and then re-confirmed by the reviewer.** That
+three-way loop is the process working.
+
+---
+
+## D-083 — two C-102 follow-ons, deferred deliberately and not silently · 2026-08-28 · REGISTERED
+
+Both raised by REV-102 in its final sign-off, both explicitly **not** a fourth correction round, both
+approved for merge with these carried forward.
+
+**1. `F7`'s deep copy has no test.** `ModeResult.to_dict` now deep-copies `excluded_terms`, and
+REV-102 verified the aliasing is genuinely broken by identity — but its mutation **R5** (reverting
+`deepcopy(dict(...))` to `dict(...)`) is **GREEN**. Same class as F1: a fix with no proof. **Far
+lower stakes** — a shallow copy cannot produce a wrong number, only let a caller corrupt in-memory
+state, and nothing in the tree mutates `to_dict()` output. Fix: add the identity assertion to test 4
+and R5 to the attack set.
+
+**2. The split-gate driver should abort on `errors > 0`.** REV-102 attacked the new abort guard two
+ways. On an unexpected exit code (planted bad import) it **fires** correctly. On **the original
+F-114 condition** — a missing `--basetemp` parent — it **does not**, because the guard was specified
+as *"nonzero exit with nothing failed **and nothing errored**"* and errors are present. **That is
+faithful to the specification; the specification is what is incomplete.** A run that loses 402 tests
+to setup errors still exits 0. The error counting makes the loss visible but not fatal. **A setup
+error is never a legitimate outcome of this gate.**
+
+Evidence tooling only — the committed split log shows `errors=0` on every file, so the shipped
+evidence is sound.
+
+**Routed to C-103 or a housekeeping card.** Recorded here so neither is rediscovered as a defect by
+a later reader who does not know it was seen, weighed and deferred.
+
+### One measurement artefact worth recording so nobody chases it
+
+REV-102's and C-102's byte counts for the same reports differed by 18 and 132 bytes. **Fully
+explained:** acceptance reports embed the **absolute run-directory path** — 22 occurrences on the
+large run, 3 on the small — so byte sizes are **worktree-path-dependent**. Normalising REV-102's
+counts to the author's path length reproduces their figures exactly, four for four. A residual 7
+bytes is the F6 rename: `coverage_reconciliation_corpus` is exactly 7 characters longer than
+`coverage_reconciliation`. **Report byte sizes are not portable between worktrees**; quote the tree
+they were measured in.
