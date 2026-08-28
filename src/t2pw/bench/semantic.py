@@ -217,12 +217,24 @@ def _dicts(value: Any) -> List[Dict[str, Any]]:
 def _names(value: Any) -> List[str]:
     """Participant names from a reaction slot, which may hold strings or rows.
 
-    C-089: the key list is ``participant_schema.PARTICIPANT_NAME_KEYS``, not a
-    local tuple. The
-    five keys spelled out here before could not read ``element`` -- and 416
-    dict-shaped participant entries in the committed corpus carry ``element`` and
-    nothing else, all of them in ``transports.elements_with_states``. First key
-    present wins, exactly as before; the shared tuple's order begins ``name``,
+    C-089 replaced the five keys spelled out here with the shared list, which was
+    the right move for ``element``: 416 dict-shaped participant entries in the
+    committed corpus carry ``element`` and nothing else, all of them in
+    ``transports.elements_with_states``.
+
+    C-097 / F-131: the key list is
+    ``participant_schema.PARTICIPANT_SCHEMA_NAME_KEYS`` -- the eight keys
+    ``payload_models.py`` actually declares as carrying an ENTITY NAME -- and not
+    the full ``PARTICIPANT_NAME_KEYS`` union. The union appends
+    ``PARTICIPANT_LEGACY_NAME_KEYS`` (``ref``, ``id``), which appear in no
+    participant model and exist for ``identity_admission``, where a reader that
+    stops seeing them can only start stripping identities. This reader has the
+    opposite need: it wants entity *names*, and an ``id`` is not one. Reading the
+    union here was a widening C-089's charter did not authorise; corpus impact
+    measured 0 (REV-089).
+
+    ``identity_admission`` keeps consuming the full union, unchanged. First key
+    present wins, exactly as before; the schema tuple's order begins ``name``,
     ``entity``, ``compound``, ``protein``, ``protein_complex`` so no shape this
     reader already understood changes hands.
     """
@@ -232,7 +244,7 @@ def _names(value: Any) -> List[str]:
         value = [value]
     if not isinstance(value, list):
         return out
-    keys = _schema().PARTICIPANT_NAME_KEYS
+    keys = _schema().PARTICIPANT_SCHEMA_NAME_KEYS
     for item in value:
         if isinstance(item, str):
             text = canonical_text(item)
