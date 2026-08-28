@@ -17,7 +17,8 @@ PMC13231680 /strict    pb= 0  sentinel=0 wrappers= 0 other=0  invariant=OK   F14
 
 PINNED TOTALS: placeholder_backed=21  sentinel=5  wrappers=16  other=0
 INVARIANT placeholder_backed == sentinel + wrappers + other : True | broken legs: []
-F-141 pinned: correct=24 recoverable=0
+F-141 pinned: correct=24 recoverable=0 other=0
+PATHBANK_UNKNOWN_SENTINEL (separate pass) total: 5
 
 PMC12444477/strict tolerance findings, row by row:
     /entities/protein_complexes/1 LpxA           unknown_backed_protein_not_acceptable
@@ -38,24 +39,24 @@ PROBE OK
 report schema version   : 1
 wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
 wrapper path (executed) : C:\t\c101\docs\pwml_recovery_sprint\evidence\bounded_run.py
-wrapper vs HEAD         : clean  @ d7cf4a4d38b49d66f5f5d8394a9be74d457d8c0e  [git, worktree dirty=True]
-label                   : split-probe-v2
+wrapper vs HEAD         : clean  @ 06a03a72e4d4f51bc5c0f1c85cff94ef83da7b10  [git, worktree dirty=True]
+label                   : r1-invariants
 command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/probe_c101_split.py C:/t/c101
 cwd                     : C:\t\c101
-root PID / process group: 427592 / None
+root PID / process group: 459728 / None
 isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
-timeout                 : 300 s
-duration                : 1.47 s
+timeout                 : 600 s
+duration                : 1.48 s
 exit reason             : completed
 exit code (real)        : 0
 returned code           : 0
-descendants observed    : 1  432272:python.exe
-descendants terminated  : 1  432272
+descendants observed    : 1  458356:python.exe
+descendants terminated  : 1  458356
 graceful attempted      : False
 forced                  : False
 FINAL SURVIVING COUNT   : 0
 cleanup                 : success
-json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\03-split-probe-v2.json
+json report             : C:\t\c101\docs\pwml_recovery_sprint\evidence\g11\C-101\19-r1-invariants.json
 json report written     : True
 pre-existing (reported, NEVER killed): 4
 ================================================

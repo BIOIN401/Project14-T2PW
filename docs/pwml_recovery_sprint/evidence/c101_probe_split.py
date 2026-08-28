@@ -46,8 +46,10 @@ for fp in sorted(glob.glob("runs/2026-08-02_2130/papers/*/*/final_mapped.json"))
     tot["sent"] += s
     tot["wrap"] += w
     tot["other"] += o
+    tot["sentcensus"] = tot.get("sentcensus", 0) + c["pathbank_unknown_sentinel"]
     tot["ok"] += c["withheld_identity_correct"]
     tot["recov"] += c["withheld_identity_recoverable"]
+    tot["other141"] = tot.get("other141", 0) + c["withheld_identity_other"]
     if pb != s + w + o:
         broken.append(p)
     if pb or c["withheld_identity_correct"] or c["withheld_identity_recoverable"]:
@@ -62,7 +64,9 @@ print("PINNED TOTALS: placeholder_backed=%d  sentinel=%d  wrappers=%d  other=%d"
       % (tot["pb"], tot["sent"], tot["wrap"], tot["other"]))
 print("INVARIANT placeholder_backed == sentinel + wrappers + other :",
       tot["pb"] == tot["sent"] + tot["wrap"] + tot["other"], "| broken legs:", broken)
-print("F-141 pinned: correct=%d recoverable=%d" % (tot["ok"], tot["recov"]))
+print("F-141 pinned: correct=%d recoverable=%d other=%d"
+      % (tot["ok"], tot["recov"], tot.get("other141", 0)))
+print("PATHBANK_UNKNOWN_SENTINEL (separate pass) total:", tot.get("sentcensus", 0))
 print()
 
 print("PMC12444477/strict tolerance findings, row by row:")

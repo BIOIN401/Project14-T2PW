@@ -1217,6 +1217,7 @@ def _build_identity(report: AcceptanceReport) -> None:
         # F-141's seam, carried separately and never merged into the above.
         "withheld_identity_correct": 0,
         "withheld_identity_recoverable": 0,
+        "withheld_identity_other": 0,
     }
     per_paper: Dict[str, Dict[str, Any]] = {}
     sources = []

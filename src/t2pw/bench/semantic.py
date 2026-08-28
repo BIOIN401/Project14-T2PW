@@ -1038,8 +1038,8 @@ def _check_id_conflicts(
         never touched, because D-073 requires it preserved and unchanged in
         meaning. Three conditions, all required, the last two being the safety
         property: (1) the gold declares a ROW-PREDICATED licence covering the row;
-        (2) the row carries no real protein accession -- a tolerance may excuse an
-        identity a row does NOT claim, never one it does; (3) the finding is not
+        (2) the row is BARE -- it carries no external accession in any namespace, since
+        a tolerance may excuse an identity a row does NOT claim, never one it does; (3) the finding is not
         ``placeholder_claims_real_identity``, which keeps precedence over every
         tolerance and which no contract adjustment may reach past.
 
@@ -1049,7 +1049,13 @@ def _check_id_conflicts(
 
         if case.sentinel_tolerance_match(name, row) is None:
             return ""
-        if any(_REAL_ACCESSION.match(canonical_text(value).upper()) for value in ids.values()):
+        # D-074 condition 5 says BARE, so the guard says bare. `_external_ids`
+        # already drops the sentinel's own `uniprot: Unknown`, so a genuine bare
+        # sentinel reaches here with `ids == {}`; ANY surviving external
+        # accession -- protein-namespace or not -- means the row is not bare and
+        # is refused. The earlier form matched only UniProt-SHAPED strings and
+        # would have adjusted a sentinel carrying kegg/chebi/drugbank/hmdb.
+        if ids:
             return ""
         return "pathbank_unknown_sentinel"
 
@@ -1397,7 +1403,20 @@ def _check_connected_core(case: GoldCase, graph: Mapping[str, Any]) -> CheckResu
 #: NEVER be reported under ``placeholder_backed_proteins``.
 WITHHELD_CORRECT = "withheld_identity_correct"
 WITHHELD_RECOVERABLE = "withheld_identity_recoverable"
+#: D-070 O-1c category 6, "other measured mechanism" -- the committed
+#: classifier's terminal bucket (``orch711_f141_which_side.py:91``). Reported for
+#: the same reason ``placeholder_other_rows`` is: a rung this reader does not
+#: recognise is UNCLASSIFIED, and folding it into ``correct`` would report a
+#: mechanism nobody has measured as confirmed-correct withholding. 0 rows today,
+#: which is exactly when to keep the remainder visible.
+WITHHELD_OTHER = "withheld_identity_other"
 
+#: The UniProt accession grammar. CANONICAL SITE: ``rag/admission.py:2579``
+#: (``_UNIPROT_RE``). Restated rather than imported because ``bench.semantic``
+#: must stay importable where the RAG extras are absent and
+#: ``test_semantic_production_no_gold.py:159`` pins this module's ``t2pw`` import
+#: surface to five modules. Whether the two should be unified is a boundary
+#: question this card does not own -- if you change one, change both.
 _REAL_ACCESSION = re.compile(r"^[OPQ][0-9][A-Z0-9]{3}[0-9]$|^[A-NR-Z][0-9](?:[A-Z][A-Z0-9]{2}[0-9]){1,2}$")
 _HELD_ACCESSION = re.compile(r"uniprot:([A-Z0-9]{6,10})")
 
@@ -1448,11 +1467,18 @@ def _withheld_identity_class(row: Mapping[str, Any]) -> str:
         for c in (*judged, *pool)
     )
 
-    if rung != "unknown":
-        # No rung: the candidate did not describe the shipped identifier (F-141's
-        # two Fur rows). Mismatch/conflict is contradictory evidence. Both are
-        # correct withholding -- neither has an identity to recover.
+    if not rung:
+        # No rung at all: the candidate did not describe the shipped identifier
+        # -- F-141's two Fur rows, which its table calls withholding CORRECT.
         return WITHHELD_CORRECT
+    if rung != "unknown":
+        # Everything else this reader does not recognise as `unknown`. F-141's
+        # table lists `conflicting species evidence` and `other measured
+        # mechanism` as their OWN rows and does NOT call either one correct
+        # withholding, so neither may be counted as such here. Both are 0 on the
+        # pinned run, so this moves no measured number -- it stops the next
+        # unrecognised rung being reported as a clean result.
+        return WITHHELD_OTHER
     if not requested:
         # The ENTITY side was silent: species evidence lost before the ladder.
         return WITHHELD_RECOVERABLE
@@ -1502,6 +1528,7 @@ def _check_placeholder_identity(
         # construction: counted over every row and never feeding placeholder_backed.
         WITHHELD_CORRECT: 0,
         WITHHELD_RECOVERABLE: 0,
+        WITHHELD_OTHER: 0,
         # PRODUCT_CONTRACT 8: a measured 0 is never "not asked".
         "withheld_identity_evaluated": True,
     }

@@ -13,9 +13,12 @@ observable behaviour, so none carries a fabricated base failure:
   the scorer passed only a name;
 * the **raw / accepted split and the variance statuses** (D-073).
 
-The ONE regression half is :func:`test_placeholder_backed_proteins_unchanged_on_pinned_payload`,
-labelled below, which pins ``placeholder_backed_proteins`` on a REAL pinned-run
-payload and must pass at the base SHA and at the tip alike.
+The ONE regression half is
+:func:`test_9_placeholder_backed_proteins_unchanged_on_pinned_payload`, labelled
+below, which pins ``placeholder_backed_proteins`` on a REAL pinned-run payload
+and must pass at the base SHA and at the tip alike. Its new-capability half is
+:func:`test_9b_the_split_of_the_pinned_leg_is_one_sentinel_and_eight_wrappers`,
+split out precisely so the regression half can RUN on the base SHA.
 
 The authoritative A/B row for the sentinel work is recorded in
 ``docs/pwml_recovery_sprint/evidence/c101_a4_authoritative_row.md``:
@@ -270,6 +273,63 @@ def test_6_category_four_counter_moves_on_a_constructed_recoverable_row(lipid_a)
     c = census_of(lipid_a, payload(proteins=[row]))
     assert c["withheld_identity_recoverable"] == 1, "category 4 is hard-wired and cannot move"
     assert c["withheld_identity_correct"] == 0
+
+
+def test_6b_an_unrecognised_species_rung_lands_in_the_third_bucket(lipid_a):
+    """REV-101 correction 1. The F-141 remainder is REPORTED, not folded.
+
+    Mirrors ``placeholder_other_rows``: a rung this reader does not recognise is
+    UNCLASSIFIED, and counting it as confirmed-correct withholding would report a
+    mechanism nobody measured as a clean result. Catches exactly that regression.
+    """
+
+    def rung_row(rung):
+        return {
+            "name": "EntC",
+            "mapped_ids": {},
+            "mapping_meta": {
+                "identity_verdict": {
+                    "identity": "uniprot:P0AEJ2",
+                    "organism": "Escherichia coli",
+                    "checks": {"species": rung},
+                    "judged_candidate": {},
+                },
+                "candidates": [],
+            },
+        }
+
+    # An unrecognised rung -- D-070 O-1c category 6, "other measured mechanism".
+    c = census_of(lipid_a, payload(proteins=[rung_row("deferred_pending_review")]))
+    assert c["withheld_identity_other"] == 1, "the counter is hard-wired and cannot move"
+    assert c["withheld_identity_correct"] == 0, (
+        "an unclassified mechanism was reported as correct withholding"
+    )
+    assert c["withheld_identity_recoverable"] == 0
+
+    # Conflicting species evidence is its OWN row in F-141's table and is not
+    # called correct withholding there either.
+    for rung in ("mismatch", "conflict"):
+        c = census_of(lipid_a, payload(proteins=[rung_row(rung)]))
+        assert c["withheld_identity_other"] == 1, rung
+        assert c["withheld_identity_correct"] == 0, rung
+
+    # An ABSENT rung stays correct: F-141 calls the two Fur rows -- candidate
+    # does not describe the shipped identifier -- withholding CORRECT.
+    c = census_of(lipid_a, payload(proteins=[rung_row("")]))
+    assert c["withheld_identity_correct"] == 1
+    assert c["withheld_identity_other"] == 0
+
+
+def test_6c_the_third_bucket_zero_is_distinguishable_from_not_evaluated(lipid_a):
+    """REV-101 correction 1, second half. A measured 0 is never 'not asked'."""
+
+    scored = validate_semantic_coverage(lipid_a, payload(proteins=[sentinel_row()]), mode="strict")
+    assert scored.identity_census["withheld_identity_other"] == 0
+    assert scored.identity_census["withheld_identity_evaluated"] is True
+
+    unscored = validate_semantic_coverage(lipid_a, None, mode="strict")
+    assert unscored.evaluated is False
+    assert "withheld_identity_other" not in unscored.identity_census
 
 
 def test_7_category_four_zero_is_distinguishable_from_not_evaluated(lipid_a):
@@ -684,6 +744,28 @@ def test_a5_a_forged_identity_can_never_be_contract_adjusted(lipid_a):
     assert all(not f.get("contract_tolerance") for f in p1), (
         "a forged identity was contract-adjusted out of the accepted count"
     )
+
+
+def test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted(lipid_a):
+    """REV-101 correction 3. D-074 condition 5 licenses only the BARE sentinel.
+
+    The earlier guard matched UniProt-SHAPED strings only, so a sentinel carrying
+    a kegg / chebi / drugbank / hmdb id would have been contract-adjusted.
+    """
+
+    from t2pw.bench.semantic import _external_ids
+
+    bare = sentinel_row()
+    assert _external_ids(bare) == {}, "the genuine sentinel must still read as bare"
+    assert lipid_a.sentinel_tolerance_match("Unknown", bare) is not None
+
+    for namespace, value in (("kegg", "K00912"), ("chebi", "CHEBI:16856"), ("hmdb", "HMDB0000122")):
+        row = sentinel_row()
+        row["mapped_ids"][namespace] = value
+        assert _external_ids(row), f"{namespace} must survive _external_ids"
+        # The row still satisfies the sentinel predicate -- it is the BARENESS
+        # guard, not the predicate, that must refuse it.
+        assert lipid_a.sentinel_tolerance_match("Unknown", row) is not None, namespace
 
 
 def test_a7_12b_non_vacuity_status_collapse_turns_the_band_tests_red():

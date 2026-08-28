@@ -63,6 +63,15 @@ def _priorities(report: AcceptanceReport) -> List[str]:
         # read nothing as a clean result, and rendering it FAIL invents a
         # violation nobody measured.
         status = "NOT EVAL" if entry.get("evaluated") is False else _mark(bool(entry["ok"]))
+        # The rank-1 badge is the ABSOLUTE zero-tolerance answer on the RAW count,
+        # which is not D-073's status and never was: at accepted 6 -- an
+        # unambiguous PASS -- `ok` is already False. Printing a bare [FAIL] above
+        # `accepted: 7 -> PASS_WITHIN_VARIANCE` reads as self-contradiction to the
+        # human making the T-107 call, so the badge says which question it answers
+        # and points at the other one. Relabelled, NOT rewired: widening `ok` would
+        # turn an absolute gate permissive at six and move two pinned baselines.
+        if entry["rank"] == 1 and "accepted_status" in entry and entry.get("evaluated") is not False:
+            status = f"{status} raw"
         out.append(f"  {entry['rank']}. [{status}] {entry['name']}")
         out.append(f"          observed: {entry['observed']}")
         if entry["papers"] and entry["rank"] <= 3:
@@ -72,7 +81,8 @@ def _priorities(report: AcceptanceReport) -> List[str]:
             # PASS_WITHIN_VARIANCE is not a synonym for PASS and has to be
             # readable as itself by someone who sees only this block.
             adjusted = entry.get("contract_adjusted_rows") or []
-            out.append(f"          raw     : {entry['raw']}  (preserved, unchanged in meaning)")
+            out.append(f"          raw     : {entry['raw']}  (preserved, unchanged in meaning;"
+                       " the badge above is absolute zero-tolerance on THIS number)")
             out.append(
                 f"          accepted: {entry['accepted']}  -> {entry['accepted_status']}"
                 f"   (target {entry['target']}; 0-{entry['target']} {_P1_PASS}, "
@@ -171,8 +181,11 @@ def _identity(report: AcceptanceReport) -> List[str]:
     else:
         out.append(f"    correctly withheld (species unresolved): {totals.get('withheld_identity_correct', 0)}")
         out.append(f"    lost despite sufficient support       : {totals.get('withheld_identity_recoverable', 0)}")
+        out.append(f"    other measured mechanism (unclassified): {totals.get('withheld_identity_other', 0)}")
         out.append("    MEASURED counts, including when they read 0. Withholding a species-specific")
         out.append("    identifier with no species evidence is CORRECT and is not an error elsewhere.")
+        out.append("    The third line is D-070 O-1c category 6: a mechanism this reader does not")
+        out.append("    recognise is UNCLASSIFIED, never counted as correct withholding.")
     out.append("")
     sources = report.identity.get("payload_sources", {})
     if sources:
