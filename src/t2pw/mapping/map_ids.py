@@ -7074,6 +7074,87 @@ _PATHBANK_UNKNOWN_SPECIES_ID = 4
 _PATHBANK_UNKNOWN_TAXONOMY_ID = "3702"
 _PATHBANK_UNKNOWN_FALLBACK_RULE = PATHBANK_UNKNOWN_FALLBACK_RULE
 
+# Species sources that are EVIDENCE. ``gap_resolver_llm`` is deliberately absent:
+# it is an LLM inference, and preserving it would launder a guess into a
+# confident answer. ``novel_species`` is absent because it records the ABSENCE of
+# a source ("Unknown species", confidence 0.0) -- the TRAP-3 population.
+_SOURCE_SUPPORTED_SPECIES_SOURCES = frozenset(
+    {"explicit_entity_species", "single_pathway_species", "biological_state_species"}
+)
+_PATHBANK_UNKNOWN_SPECIES_FIELDS: Dict[str, Any] = {
+    "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
+    "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
+    "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+    "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+}
+
+
+def _wrapper_species_fields(complex_row: Dict[str, Any]) -> Dict[str, Any]:
+    """Species fields the PathBank ``Unknown`` wrapper build may write.
+
+    ``hydrate_species_references`` resolves species per row long before this
+    fallback builds its one-protein functional wrapper. Where that resolution
+    was source-supported, ``{}`` is returned so it stands untouched: a later
+    stage may not undo a valid earlier resolution (D-070 § O-1). Otherwise the
+    sentinel record's own species applies exactly as before, so wrappers with
+    nothing resolved keep TRAP-3 protection (D-070 § O-1b).
+
+    The decision and any contradiction are recorded under
+    ``mapping_meta.species_preservation``. Contradictions are surfaced, never
+    resolved -- picking a winner silently is how this defect was born.
+    """
+
+    ref = _safe_dict(complex_row.get("species_ref")) or _safe_dict(
+        _safe_dict(complex_row.get("mapping_meta")).get("species_resolution"))
+    resolved = _canonical_name(str(ref.get("name") or ""))
+    source = _canonical_name(str(ref.get("source") or ""))
+    note: Dict[str, Any] = {
+        "resolution_source": source,
+        "resolved_species": resolved,
+        "placeholder_record": {
+            "name": _PATHBANK_UNKNOWN_SPECIES_NAME,
+            "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+        },
+        "contradictions": [],
+    }
+    if ref:
+        complex_row.setdefault("mapping_meta", {})["species_preservation"] = note
+
+    def _placeholder(reason: str) -> Dict[str, Any]:
+        note["decision"] = "placeholder_species_applied"
+        note["reason"] = reason
+        return dict(_PATHBANK_UNKNOWN_SPECIES_FIELDS)
+
+    if not resolved or _normalize_name(resolved) == _normalize_name("Unknown species"):
+        return _placeholder("no_resolved_species")
+    if source not in _SOURCE_SUPPORTED_SPECIES_SOURCES:
+        return _placeholder("species_source_is_inference_not_evidence")
+
+    ref_sid = _to_positive_int(ref.get("pathbank_species_id") or ref.get("species_id"))
+    ref_tax = _canonical_name(str(ref.get("taxonomy_id") or ""))
+    disagree: Dict[str, Any] = {}
+    for key in ("species", "species_name", "organism"):
+        value = _canonical_name(str(complex_row.get(key) or ""))
+        if value and _normalize_name(value) != _normalize_name(resolved):
+            disagree[key] = value
+    for key in ("species_id", "pathbank_species_id"):
+        sid = _to_positive_int(complex_row.get(key))
+        if ref_sid is not None and sid is not None and sid != ref_sid:
+            disagree[key] = sid
+    row_tax = _canonical_name(str(complex_row.get("taxonomy_id") or ""))
+    if row_tax and ref_tax and row_tax != ref_tax:
+        disagree["taxonomy_id"] = row_tax
+    if disagree:
+        note["contradictions"].append(
+            {"kind": "row_species_fields_disagree_with_resolution", "fields": disagree})
+        return _placeholder("row_species_fields_disagree_with_resolution")
+
+    if _normalize_name(resolved) != _normalize_name(_PATHBANK_UNKNOWN_SPECIES_NAME):
+        note["contradictions"].append(
+            {"kind": "preserved_species_differs_from_placeholder_record", "entity_species": resolved})
+    note["decision"] = "resolved_species_preserved"
+    return {}
+
 
 def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str, Any]:
     """Use PathBank's Unknown protein only for still-unresolved reaction enzymes.
@@ -7621,10 +7702,9 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
             complex_row.update(
                 {
                     "name": name,
-                    "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
-                    "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
-                    "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
-                    "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    # D-070 § O-1: the sentinel record's own species applies
+                    # only where no source-supported species was resolved here.
+                    **_wrapper_species_fields(complex_row),
                     "generated": True,
                     "generation_reason": "single_protein_pathwhiz_wrapper",
                     "components": [component],
@@ -7854,10 +7934,9 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
             complex_row.update(
                 {
                     "name": name,
-                    "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
-                    "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
-                    "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
-                    "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    # D-070 § O-1: the sentinel record's own species applies
+                    # only where no source-supported species was resolved here.
+                    **_wrapper_species_fields(complex_row),
                     "generated": True,
                     "generation_reason": "single_protein_pathwhiz_wrapper",
                     "components": [component],
