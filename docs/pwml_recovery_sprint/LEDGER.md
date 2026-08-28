@@ -7000,3 +7000,84 @@ are the only part of the 82 that could still hide something. A future card may c
 chartered now, because nothing measured says one is needed.
 
 **F-141 is not, and must never be reported as, `placeholder_backed_proteins`.**
+
+---
+
+# C-098a and C-098b RECONCILED against D-070 — both INVALIDATED, nothing salvaged
+
+Required by the O-1 ruling: inspect the held C-098 work, identify the O-1 premise each assumed, and
+decide whether the 16/5 split authorises, narrows or invalidates it. **It invalidates both.** Neither
+merges, and no hunk of either is independently justified today.
+
+## They are not standalone branches
+
+Both are **stacked on C-094**, which does not merge:
+
+| Branch | Base | Carries | Its own incremental work |
+|---|---|---|---|
+| `card/C-098a-cap` | `14121d5` | all of C-094 (`map_ids.py` +97, its 755-line test file) | `release_status.py` +129, `driver.py` +30, `test_c098a_gate_review_cap.py` +365 |
+| `card/C-098b-gate` | `14121d5` | all of C-094 **and** all of C-098a | `process_normalizer.py` +204, `test_c098b_...py` +823 |
+
+So neither could merge on its own terms even before the ruling: the merge rule 1 dependency is a
+branch that is refused.
+
+## The premise, in the authors' own words
+
+C-098a's docstring states it plainly (`release_status.py`,
+`cap_release_for_unresolved_placeholder_species`):
+
+> *"WHY A CAP EXISTS AT ALL, when the gate could simply have kept blocking. **C-094 stops the
+> PathBank `Unknown` sentinel lending its own *Arabidopsis thaliana* to the wrapper built around it.
+> On the majority wrapper shape nothing else resolved a species, so the wrapper now carries none**,
+> and the strict gate's 'Generated protein complex is missing species/organism' rule — which has only
+> a blocking channel — would turn a leg that produced a PWML into one that produces none."*
+
+C-098b is the other half of the same mechanism: it defines
+`PLACEHOLDER_SPECIES_UNRESOLVED_ISSUE = "protein_complex_missing_species"`, adds a `review_findings`
+channel at `REVIEW_SEVERITY = "review_required"`, and grades exactly that one finding review-grade
+instead of blocking — so that C-098a's cap has an input.
+
+**Both exist to absorb damage C-094 causes.**
+
+## Why the ruling invalidates them
+
+**C-099 causes no such damage.** It never removes a species; it only declines to *overwrite* one that
+is already resolved and source-supported. A wrapper with nothing resolved underneath — the 25 of 31,
+and 14 of the pinned 16 — keeps the sentinel species **exactly as today**. The set of wrappers
+carrying no species is therefore **unchanged**, and `protein_complex_missing_species` **cannot newly
+fire on this population**.
+
+Consequences, in order:
+
+1. C-098b's review-grade channel has **nothing to grade**;
+2. C-098a's cap has **no input**, and is inert by its own acceptance criterion;
+3. what remains of C-098b is a mechanism whose only effect is to convert a **blocking** biological
+   gate finding into a non-blocking one.
+
+Point 3 is why nothing is salvaged. Merge rule 6 forbids weakening a biological gate to increase PWML
+production, and the only defence C-098b offered was merge rule 7 — that the demotion is required to
+preserve an incomplete-but-correct pathway. **With C-094 gone that necessity is gone**, and a gate
+demotion with no pathway to preserve is merge rule 6 with nothing on the other side of the scale.
+
+Landing C-098a alone would be dead code: an inert cap, a forward-declared severity constant with no
+producer, and a conditional test that skips until a branch that will not merge introduces the string
+it waits for.
+
+## Disposition
+
+* **`card/C-094-f134` — NOT merged, NOT relabelled.** Diagnostic evidence of the clobber and of the
+  three sites that carry it. Superseded for production purposes by **C-099**.
+* **`card/C-098a-cap` — NOT merged. Invalidated by D-070.** No hunk salvaged.
+* **`card/C-098b-gate` — NOT merged. Invalidated by D-070.** No hunk salvaged.
+* **C-098c — remains REFUSED** and is not chartered. An export-time `default_species_id` fallback
+  replaces a false *Arabidopsis* at mapping time with a false default species at export time: merge
+  rule 8, and the defect recreated one stage later.
+
+Branches and worktrees `C:/t/c094`, `C:/t/c098`, `C:/t/c098a`, `C:/t/c098b` stay on disk. They carry
+real measurement work and are not pruned for tidiness.
+
+**Card completion is not finding closure.** F-134 is addressed in production only to the extent
+C-099 addresses it — the clobber where a resolved species exists. The 25 wrappers with no resolved
+species keep the sentinel's *Arabidopsis*, which D-070 § O-1b rules is **not** a forged identity and
+**not** to be resolved by deleting wrappers or blocking their serialization. Whether that
+representation should change at all is a PathBank-representation question, not an agent's.
