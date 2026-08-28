@@ -35,6 +35,7 @@ from pathlib import Path
 import pytest
 
 from t2pw.bench.goldset import (
+    ForbiddenIdentifier,
     GoldSetError,
     GoldTerm,
     load_gold_set,
@@ -752,62 +753,122 @@ def test_a5_a_forged_identity_can_never_be_contract_adjusted(lipid_a):
     )
 
 
+def _seam_reachable_case(lipid_a):
+    """The ONLY configuration in which `_contract_adjustment` is ever CALLED.
+
+    Round 2's tests scored rows that structurally cannot reach the seam, so their
+    assertions were vacuous and both survived a maximal mutation of the guard.
+    The cause: `_contract_adjustment`'s single call site
+    (``semantic.py`` `false_real_identifier` branch) is entered only for a row
+    whose name the gold FORBIDS **and** which carries at least one external id.
+    `Unknown` is not in PMC12444477's `forbidden_identifiers`, so no sentinel row
+    ever got there and the scorer emitted nothing to assert on.
+
+    This synthetic case adds `Unknown` to `forbidden_identifiers` and changes
+    nothing else, so a sentinel-shaped row carrying an accession reaches the
+    branch and the seam is genuinely exercised. Same `dataclasses.replace` idiom
+    the file already uses in `test_a3_*` and `test_a7_5`.
+
+    SYNTHETIC AND TEST-ONLY. The shipped gold is untouched; this exists so the
+    bareness guard is attacked rather than described.
+    """
+
+    import dataclasses
+
+    return dataclasses.replace(
+        lipid_a,
+        forbidden_identifiers=lipid_a.forbidden_identifiers
+        + (
+            ForbiddenIdentifier(
+                name="Unknown",
+                kind="heading_or_prose",
+                reason="SYNTHETIC, test-only: routes a sentinel row into the "
+                "false_real_identifier branch so the bareness guard is exercised.",
+            ),
+        ),
+    )
+
+
+def _p1_findings(case, row):
+    report = validate_semantic_coverage(case, payload(proteins=[row]), mode="strict")
+    return [
+        f
+        for f in report.checks[CHECK_ID_CONFLICT].findings
+        if f["kind"] in ("false_real_identifier", "placeholder_claims_real_identity")
+    ]
+
+
 def test_a5_bare_means_bare_a_sentinel_with_any_accession_is_not_adjusted(lipid_a):
     """REV-101 correction 3. D-074 condition 5 licenses only the BARE sentinel.
 
-    The earlier guard matched UniProt-SHAPED strings only, so a sentinel carrying
-    a kegg / chebi / drugbank / hmdb id would have been contract-adjusted.
-    REV-101 round 2: this test used to assert the predicate matched and that
-    `_external_ids` survived, then INFER the conjunction -- it never called the
-    production path, so it did not prove its own name and did not catch that the
-    guard had made the seam unreachable. It now runs end-to-end.
+    Round 0's guard matched UniProt-SHAPED strings only, so a sentinel carrying a
+    kegg / chebi / drugbank / hmdb / pubchem id WAS contract-adjusted. This test
+    is what stops that coming back.
+
+    Round 3: it now scores through `_seam_reachable_case`, so the seam is
+    actually entered. Its two previous forms asserted the predicate and inferred
+    the rest (round 1), then called the scorer on rows that produced no finding
+    at all so `all([])` passed vacuously (round 2). Both survived deleting the
+    guard outright. This form goes red under that mutation.
     """
 
     from t2pw.bench.semantic import _external_ids
 
+    case = _seam_reachable_case(lipid_a)
     bare = sentinel_row()
     assert _external_ids(bare) == {}, "the genuine sentinel must still read as bare"
-    assert lipid_a.sentinel_tolerance_match("Unknown", bare) is not None
+    assert case.sentinel_tolerance_match("Unknown", bare) is not None
 
-    def tolerances(row):
-        """Every contract_tolerance the PRODUCTION scorer emits for `row`."""
-
-        report = validate_semantic_coverage(lipid_a, payload(proteins=[row]), mode="strict")
-        return [
-            f.get("contract_tolerance", "")
-            for f in report.checks[CHECK_ID_CONFLICT].findings
-            if f["kind"] in ("false_real_identifier", "placeholder_claims_real_identity")
-        ]
-
-    for namespace, value in (("kegg", "K00912"), ("chebi", "CHEBI:16856"), ("hmdb", "HMDB0000122")):
+    for namespace, value in (
+        ("kegg", "K00912"),
+        ("chebi", "CHEBI:16856"),
+        ("hmdb", "HMDB0000122"),
+        ("drugbank", "DB00114"),
+        ("pubchem", "5793"),
+    ):
         row = sentinel_row()
         row["mapped_ids"][namespace] = value
         assert _external_ids(row), f"{namespace} must survive _external_ids"
         # The row still satisfies the sentinel predicate -- it is the BARENESS
         # guard, not the predicate, that must refuse it.
-        assert lipid_a.sentinel_tolerance_match("Unknown", row) is not None, namespace
-        assert all(t == "" for t in tolerances(row)), f"{namespace} was contract-adjusted"
+        assert case.sentinel_tolerance_match("Unknown", row) is not None, namespace
+
+        findings = _p1_findings(case, row)
+        forged = [f for f in findings if f["kind"] == "false_real_identifier"]
+        # NON-VACUITY: the seam's only call site must actually have been reached.
+        assert forged, (
+            f"{namespace} produced no false_real_identifier finding, so "
+            "_contract_adjustment was never called and this assertion proves nothing"
+        )
+        assert all(f.get("contract_tolerance", "") == "" for f in forged), (
+            f"a sentinel carrying a {namespace} id was contract-adjusted; "
+            "D-074 condition 5 licenses only the BARE sentinel"
+        )
 
 
 def test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold(lipid_a):
-    """REV-101 round 2. The seam is UNREACHABLE, and that is pinned deliberately.
+    """REV-101 round 2/3. The seam is UNREACHABLE, and that is pinned deliberately.
 
     `_contract_adjustment`'s only call site sits inside `if ids:`, and its
     bareness guard refuses any row with `ids`. D-074 licenses only the bare
     sentinel, which therefore can never BE a Priority-1 row. So accepted == raw
     today by CONSTRUCTION, not by measurement.
 
-    Pinned rather than left implicit so that whoever widens the licence later
-    must come here and change this assertion on purpose.
+    Scored through `_seam_reachable_case` so the seam is entered: under the
+    SHIPPED gold no sentinel row reaches it at all, which made round 2's version
+    of this test count a `placeholder_claims_real_identity` finding -- whose
+    `contract_tolerance` is a hard-coded `""` literal that never consults the
+    seam -- as evidence of exercise. It was not.
     """
 
+    case = _seam_reachable_case(lipid_a)
     forged = sentinel_row()
     forged["mapped_ids"] = {"uniprot": "P0A6T1", "pathbank_protein_id": 9659}
     forged["uniprot_id"] = "P0A6T1"
     shapes = [
         sentinel_row(),                                   # bare: no finding at all
         forged,                                           # forged accession
-        sentinel_row(name="LpxA product"),                # a forbidden name
+        sentinel_row(name="LpxA product"),                # a differently forbidden name
         {"name": "Unknown", "identity_status": "placeholder",
          "mapping_meta": {"identity_status": "placeholder", "fallback_used": True}},
         wrapper_row("LpxH"),
@@ -817,17 +878,29 @@ def test_a5_no_row_shape_can_be_contract_adjusted_under_the_current_gold(lipid_a
         row["mapped_ids"][namespace] = value
         shapes.append(row)
 
-    seen = 0
+    exercised = 0
     for row in shapes:
-        report = validate_semantic_coverage(lipid_a, payload(proteins=[row]), mode="strict")
-        for f in report.checks[CHECK_ID_CONFLICT].findings:
-            if f["kind"] in ("false_real_identifier", "placeholder_claims_real_identity"):
-                seen += 1
-                assert f.get("contract_tolerance", "") == "", (
-                    f"{f['name']} was contract-adjusted; the seam is meant to be "
-                    "unreachable under D-074 as ruled"
-                )
-    assert seen, "no shape produced a Priority-1 finding -- the probe proves nothing"
+        for f in _p1_findings(case, row):
+            # ONLY this kind calls the seam. `placeholder_claims_real_identity`
+            # carries a hard-coded "" and can never exercise it, so counting it
+            # as evidence of exercise is the substitution that made the previous
+            # guard pass while the seam went untouched.
+            if f["kind"] == "false_real_identifier":
+                exercised += 1
+            assert f.get("contract_tolerance", "") == "", (
+                f"{f['name']} was contract-adjusted; the seam is meant to be "
+                "unreachable under D-074 as ruled"
+            )
+    # Exactly three of the shapes carry BOTH a forbidden name and an external id,
+    # which is what the branch requires: the forged-uniprot row, sentinel+kegg and
+    # sentinel+chebi. The bare sentinel, the impostor and the LpxH wrapper carry no
+    # id, and `LpxA product` carries none either once `_external_ids` drops the
+    # sentinel's own `uniprot: Unknown`. Pinned as an equality, not a floor, so
+    # adding or removing a shape has to be noticed here.
+    assert exercised == 3, (
+        f"{exercised} false_real_identifier finding(s) reached the seam, expected 3; "
+        "this test proves nothing about the guard unless it is actually called"
+    )
 
 
 def test_a7_12b_non_vacuity_status_collapse_turns_the_band_tests_red():
