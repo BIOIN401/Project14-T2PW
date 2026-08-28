@@ -6972,7 +6972,7 @@ if not declared:  return "unknown"      # the CANDIDATE side
 
 The entity carrying a species therefore proves nothing on its own. The decisive measurement is
 `identity_verdict.organism`, which is what the ladder actually received: on **all 24 rows it is
-non-empty** — `Escherichia coli` on 19, `Homo sapiens` on 5. `requested` was never silent, so
+non-empty** — `Escherichia coli` on **18**, `Homo sapiens` on **6**. `requested` was never silent, so
 `unknown` **can only have come from the candidate side**. The entity's species reached the ladder
 intact; there was no candidate record carrying a species to compare it against.
 
@@ -7000,6 +7000,90 @@ are the only part of the 82 that could still hide something. A future card may c
 chartered now, because nothing measured says one is needed.
 
 **F-141 is not, and must never be reported as, `placeholder_backed_proteins`.**
+
+## F-141 addendum — three challenges from peer review, all answered from evidence
+
+Raised after the classification landed, by the two other sessions on this tree. **None overturns
+"no card follows"; two sharpen what it rests on and one caught an arithmetic error of mine.**
+
+### Correction: the organism split is 18 / 6, not 19 / 5
+
+The entry above originally read *"`Escherichia coli` on 19, `Homo sapiens` on 5"*. **It is 18 and 6**
+— PMC12096016/research 9 + PMC12452463/research 8 + PMC13231680/strict 1 = **18** *E. coli*;
+PMC12180156/research 5 + PMC12856317/research 1 = **6** *H. sapiens*. Counted from
+`orch711_f141_which_side.log`, corrected in place. The total, the conclusion and every other figure
+are unaffected — but a measurement claim that is wrong is wrong, and I had eyeballed it instead of
+counting it.
+
+### Challenge 1 — "are all 24 `unknown`, or are some `mismatch`?"
+
+A fair challenge: `mismatch` is a **different** correct reason — two species that both spoke and
+disagreed — and the recorded mechanism covers `unknown` only. If any of the 24 were `mismatch`, the
+conclusion would survive but the stated reasoning would not cover it.
+
+Counted from the committed `orch710_probeD_stripped_identity.log`:
+
+| species rung | rows |
+|---|---:|
+| `unknown` | **22** |
+| `mismatch` | **0** |
+| `ok` / `genus_level` | **0** |
+| rung never reached — `candidate_evidence` returned `no_candidate_describes_the_shipped_identifier` | **2** |
+
+**The mechanism is uniform.** No row is `mismatch`. The two Fur rows never reach the species rung at
+all, which is why they classify separately. *"All 24 are correct withholding **for the reason
+stated**"* — the load-bearing form of the claim — holds.
+
+### Challenge 2 — "is the requested organism itself missing on any leg?"
+
+Sharper than it looks. `_candidate_species_verdict`'s **first** `unknown` path tests the *requested*
+argument, not the candidate:
+
+```python
+if not requested: return "unknown"
+```
+
+A leg reaching that with an empty requested organism would withhold **every** identity on the leg,
+each row classifying as "correct withholding" while the real cause is a missing organism upstream —
+a materially different finding wearing the same label.
+
+Measured: `requested=(SILENT)` occurs on **0 of 24**. All 24 carry a requested organism (18 + 6
+above). **The first path is not in play**, so the silence is the candidate's on every row.
+
+### Challenge 3 — "`PRODUCT_CONTRACT` § 8 has a preservation half; is it implemented?"
+
+§ 8's `unavailable` row requires **two** things, not one: *"accession preserved as `unverified_claim`;
+not promoted; **not erased**"*. The report was that `grep unverified_claim src/` returns nothing, so
+the carrier does not exist.
+
+**The carrier exists.** The grep looked for the contract's prose token; the implementation names it
+`unverified_identity_claim` — `entity_identity.py:147`, written at `map_ids.py:5555` into
+`mapping_meta.unverified_identity_claim`, read at `map_ids.py:8468`, cited to **D-003**, and pinned by
+`tests/test_identity_evidence_hydration.py`. Its docstring states the contract obligation verbatim:
+*"not in `mapped_ids` (that would be promotion) and not only in `rejected_mapped_ids` (that would read
+as a refutation)"*.
+
+Measured behaviour under **current** code, `runs_verify/2026-08-24_1428`, 5 withheld rows:
+
+| `verification_status` | rows | carrier | correct? |
+|---|---:|---|---|
+| `not_evaluated` | 2 | **present** | yes — preserved, not promoted, not erased |
+| `rejected` | 3 | **absent** | yes — § 8 makes `rejected` *"the only case where identifiers may be stripped"* |
+
+**Both halves of § 8 are honoured, including the half that must NOT fire.**
+
+On the pinned 24 the carrier is absent and `verification_status` is **absent entirely** — the field
+does not exist on those rows. `runs/2026-08-02_2130` **predates D-003's implementation**, so that
+absence is the age of the artifact, not a defect in the code. It is also a standing caution about the
+pinned set: **it is a 2026-08-02 artifact tree, and a property measured on it is a property of code
+as it was then.** The 24/82 population figures are unaffected — the withholding criterion reads only
+fields that existed — but any *behavioural* claim drawn from that run needs re-measuring against a
+current one before it is acted on.
+
+**Disposition unchanged: no card.** The challenges strengthen the conclusion rather than weakening
+it — the promotion half is correct, the preservation half is implemented and fires exactly where the
+contract says, and the mechanism behind all 24 is uniform and measured.
+
 
 ---
 
