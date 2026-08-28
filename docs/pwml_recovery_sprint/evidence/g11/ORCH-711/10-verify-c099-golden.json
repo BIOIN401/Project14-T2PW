@@ -1,0 +1,195 @@
+{
+  "label": "verify-c099-golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "--basetemp=C:/t/bt/vc99g",
+    "C:/t/c099/tests/test_batch_driver_seam_golden.py",
+    "C:/t/c099/tests/test_c011_freeze_seam_golden_equivalence.py",
+    "C:/t/c099/tests/test_baseline_regression_2026_07_28.py",
+    "C:/t/c099/tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "C:/t/c099/tests/test_c073_identity_admission.py",
+    "C:/t/c099/tests/test_c030_canonical_identity_fallback.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-08-28T04:02:34+00:00",
+  "finished_at": "2026-08-28T04:03:03+00:00",
+  "duration_seconds": 28.1707032000013,
+  "timeout_seconds": 900.0,
+  "root_pid": 214272,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 213764,
+      "name": "python.exe",
+      "ppid": 214272
+    },
+    {
+      "pid": 212064,
+      "name": "git.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216084,
+      "name": "git.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216276,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216296,
+      "name": "python.exe",
+      "ppid": 216276
+    },
+    {
+      "pid": 216316,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216336,
+      "name": "python.exe",
+      "ppid": 216316
+    },
+    {
+      "pid": 216384,
+      "name": "git.exe",
+      "ppid": 216336
+    },
+    {
+      "pid": 216660,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216680,
+      "name": "python.exe",
+      "ppid": 216660
+    },
+    {
+      "pid": 216700,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216720,
+      "name": "python.exe",
+      "ppid": 216700
+    },
+    {
+      "pid": 216740,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216760,
+      "name": "python.exe",
+      "ppid": 216740
+    },
+    {
+      "pid": 216852,
+      "name": "python.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216872,
+      "name": "python.exe",
+      "ppid": 216852
+    },
+    {
+      "pid": 216224,
+      "name": "git.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216424,
+      "name": "git.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216460,
+      "name": "git.exe",
+      "ppid": 213764
+    },
+    {
+      "pid": 216552,
+      "name": "git.exe",
+      "ppid": 213764
+    }
+  ],
+  "descendants_terminated": [
+    212064,
+    213764,
+    216084,
+    216224,
+    216276,
+    216296,
+    216316,
+    216336,
+    216384,
+    216424,
+    216460,
+    216552,
+    216660,
+    216680,
+    216700,
+    216720,
+    216740,
+    216760,
+    216852,
+    216872
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 124156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 130040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 215028,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-711\\10-verify-c099-golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "2d77cefdbaca6746589ce41101acd45868d163fc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
