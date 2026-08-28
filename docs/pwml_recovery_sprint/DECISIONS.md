@@ -4754,3 +4754,54 @@ led to expect a different outcome, and the honest record is that the prediction 
 measurement.
 
 ---
+
+---
+
+## D-082 — C-102 round-1 ceilings ratified, and ceiling 2 stops being charged for review-mandated re-gates · 2026-08-28 · LOCKED
+
+### The two ratifications
+
+**Correction-round allowance `120 → 140`. Ratified.** C-102 round 1 measures **134**; it was at
+exactly 120 after the fixes, and the overage is the LEDGER gate-record paragraph plus two repair
+commits. Cumulative ceiling 1 reads **499** — both rounds together, and *less* than 391 + 134,
+because round 1 rewrote doc lines round 0 added.
+
+**Ceiling 2 `40 → 55`. Ratified.** C-102 measures **53**: 24 G11 reports + 6 pin verdicts + 23 logs.
+
+### Ceiling 2 was structurally wrong, and D-048 already said why
+
+**Every bounded job produces two artifacts, not one** — a report *and*, where pinned, a verdict. I
+mandated a re-gate of roughly ten jobs (focused, SMOKE, gold-readers combined **and** split, the
+seven-mutation attack, the byte-size probe, the numerator verification). Three of the logs are
+**kept failures**, which this sprint requires rather than permits.
+
+**D-048 recorded this exact coupling** — *"a ceiling-2 derivation must count one report **and** one
+pin verdict per measured job"* — and I set 40 without applying it. The card was therefore over the
+moment I wrote the correction round, before it did anything.
+
+**The card flagged rather than assumed**, correctly noting that ceiling 2 *"was not re-stated for the
+round"*. That is the right reading of an ambiguous instruction and it is the behaviour to want.
+
+### The rule, extended
+
+**D-076 Amendment 1 now covers ceiling 2 as well.** Review-mandated work is not the author's scope
+choice, and that applies to the **artifacts a mandated re-gate necessarily emits** exactly as it
+applies to the lines a mandated fix necessarily costs. A card must never face a choice between
+running the gate I required and staying inside a ceiling I set before requiring it.
+
+**Concretely:** artifacts produced by a re-gate a reviewer or the orchestrator demanded are reported
+separately and are **not** charged to ceiling 2. Artifacts a card generates for its own purposes
+still are. **Kept failed runs are never charged** — retaining them is mandatory, and charging for a
+mandatory artifact is a tax on honesty.
+
+### One number of mine, corrected by the card
+
+D-080 states that **eight** committed legs report a coverage ratio above 1 under D-072's literal
+denominator-only reading. C-102 re-derived rather than copying and reports **nine**: the eight at
+exactly `1.2000` (all `6/5`) **plus a ninth at `1.125` (`9/8`)**. Under independent verification by
+REV-102; **D-080 is corrected below once that confirms.** The argument is unchanged and slightly
+strengthened — a ratio of 1.125 is no more a rate than 1.2 is.
+
+**This is the second time this wave a card has corrected a number I wrote into a decision record**,
+after C-101 corrected A4's premise. Both times the card re-derived instead of copying. That is
+exactly what a number in a charter is for.
