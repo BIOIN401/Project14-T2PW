@@ -7261,3 +7261,129 @@ implementing this ruling* — and not a routine question.
 > on A, and accept or decline the Priority-1 floor of 6.
 
 Everything else in this wave proceeds without it.
+
+---
+
+# REV-099 — the seventh consecutive review round to find something real
+
+**C-099**, `f7dc223..c932ea0`, reviewed by an independent peer session that did not write the code and
+holds no edit tools on the branch. **APPROVE WITH REQUIRED CORRECTIONS** — three findings, all
+accepted, one of which needed an orchestrator ruling rather than a code fix.
+
+## What the review confirmed behaviourally, not by inspection
+
+* **`tests/test_protein_export_policy.py` = 63 passed at the tip.** The O-1 statement
+  `test_strict_gates_accept_a_correctly_formed_unknown_backed_complex` is green. This is the baseline
+  C-094 inverted, and it is in **neither SMOKE nor Chunk D**. Run twice, in two different trees, by
+  reviewer and orchestrator independently — the same number from two trees is a stronger statement
+  than one run.
+* **The boundary holds.** Three hunks: the helper, and the two owned `update()` sites. **Nothing at
+  ~7419, ~8140 or ~8191** — the two sentinel-protein builders and
+  `_apply_pathbank_unknown_complex_fallback` are untouched, so O-1a's five rows are unchanged and the
+  `setdefault` C-094 broke is intact.
+* **The non-vacuity case is genuine.** It monkeypatches `_wrapper_species_fields` to return the four
+  sentinel fields unconditionally; because the call site is `**_wrapper_species_fields(complex_row)`
+  *inside* the same `update()`, that reproduces the pre-C-099 statement **exactly** — the actual
+  overwrite, not a neighbour. It then asserts the shipped contradiction reappears. **It exercises the
+  guarded path**, which four earlier rounds of this sprint could not say of their guards.
+* **The G9 base tree is real.** `pinned_pytest` refused `C:/t/c099base` with
+  `SELECTION_OUTSIDE_EXPECTED_TREE` (the new test file does not exist there), so the author
+  materialised `C:/t/c099g9` at `f7dc223` via `evidence/c045b_base_tree.py` — 5399 blobs exported,
+  5399 re-hash-verified. The reviewer confirmed `map_ids.py` there hashes to blob `c21f7ae`,
+  byte-identical to `git ls-tree f7dc223` **and** to the diff's own `index c21f7ae..` pre-image, and
+  that the pin verdict records `expected_tree = C:\t\c099g9`, `refused=False`. `c099base` was never
+  modified.
+
+## Finding 1 — a ruling, not a defect: `single_pathway_species` is not evidence
+
+The author's `_SOURCE_SUPPORTED_SPECIES_SOURCES` justified itself **by exclusion** — `gap_resolver_llm`
+is an LLM inference, `novel_species` records absence. The reviewer applied the same reasoning to the
+remaining member and it holds. `_single_pathway_species_hint` (`map_ids.py:3236`) returns a hint only
+when the payload declares **exactly one** species, then applies it to a row that never stated its own.
+That is **payload-scoped inference** — deterministic rather than an LLM's, but inference. The other
+two members are **entity-scoped**.
+
+**Ruled: removed.** The counter-argument is recorded in the charter amendment rather than discarded —
+C-099 does not *apply* species, `hydrate_species_references` already did, so declining an overwrite is
+arguably not "defaulting to the pathway organism". Ruled against because the charter forbids pathway-
+dominant defaulting and this card must not become the precedent cited for it; because **both pinned
+examples O-1 names carry `explicit_entity_species`**, so the narrower set loses nothing the ruling
+asked for; and because § 4 says to leave uncovered wrappers *"unchanged pending their own evidence
+classification"*, which is exactly this population.
+
+**The denominator was confirmed independently before the ruling, not taken from the review.** 24
+roots, **71** generated single-protein wrappers, **6** with a resolved species ref, **4**
+`explicit_entity_species` / **2** `single_pathway_species`
+(`evidence/orch711_wrapper_species_census.{py,log}`). Reviewer and orchestrator agree exactly. The
+change moves **2 rows** back to today's behaviour; nothing regresses.
+
+**The reviewer disclosed a prior** — it had proposed promoting `species_ref` into `species` earlier in
+the sprint and been refused on this same ground — and flagged that it might be over-fitting the
+correction. It was not: it argued from the function's construction rather than from the memory, and
+supplied the measured split so the ruling could be weighed. **A previous refusal of the same class of
+reasoning on the same ground is evidence, not bias.**
+
+## Finding 2 — the reviewer corrected the author's disclosure *in the author's favour*, then required the change anyway
+
+The author disclosed that `mapping_meta.species_preservation` is written *"on every wrapper row
+carrying a species resolution record — including the 25 that have nothing resolved"*. **Measured, that
+is not what the code does**: a row with nothing resolved has no `species_ref` and no
+`species_resolution`, so the `if ref:` guard is false and no note is attached. Actual reach is **6 of
+71**, and **0 of them are the TRAP-3 shape**. The orchestrator's boundary worry was accordingly
+overblown.
+
+Required anyway, and correctly: a row with a ref that proves unusable gets `decision:
+placeholder_species_applied` with `contradictions: []` — **a note that surfaces nothing**, in gold-
+and IR-visible serialized output. § 4 authorises surfacing contradictions; it does not authorise empty
+ones. One line moved.
+
+**This is the behaviour to want**: an author disclosing something against itself, and a reviewer
+measuring the disclosure rather than accepting it — in the direction that made the author look
+*better*, and then requiring the fix on its own merits.
+
+## Finding 3 — an unstated exception to the card's own headline
+
+`if disagree: return _placeholder(...)` means a wrapper **with** source-supported species can still
+end up carrying *Arabidopsis*, when its own visible fields disagree with its resolution record.
+Refusing to arbitrate there is right and is unchanged from base. But the card's headline is *"a
+wrapper that already carries source-supported species keeps it"*, and the next reader will cite the
+headline as covering a case it does not. **Documented, not changed.**
+
+## Two charter amendments, because the spec was what moved
+
+After Finding 1 the implementation would have been **deliberately narrower than its own charter**,
+which still listed `single_pathway_species` — the shape a later session "fixes" back by comparing code
+to spec. So `C-099.md` § 4 is amended in place (`e45bfdb`) with the ruling, its date, its reasoning
+and its reversal condition; and the constant's comment names the charter line it departs from. **The
+spec explains the code and the code names the spec.**
+
+The same pass amended § 4's preservation paragraph, which was **outcome-correct and
+mechanism-misleading**: only four keys were ever in the clobber's path, preservation is **by
+omission**, and there is no code preserving `species_ref`/`taxonomy_id`/`species_name` — *and there
+should not be*. Without that note the next reviewer spends a round looking for code that should not
+exist.
+
+## Orchestrator verification, independent of both author and reviewer
+
+| Check | Result |
+|---|---|
+| `test_protein_export_policy.py` + the new file at the C-099 tip | **97 passed** |
+| golden / freeze-seam surface — the new `mapping_meta` key lands in serialized payloads | **128 passed** across `test_batch_driver_seam_golden.py`, `test_c011_freeze_seam_golden_equivalence.py`, `test_baseline_regression_2026_07_28.py`, `test_c030a_object_sharing_at_the_freeze_seam.py`, `test_c073_identity_admission.py`, `test_c030_canonical_identity_fallback.py` |
+| `git merge-tree` dry run against integration | clean, **0 conflicts** |
+
+Checking the serialization surface **before** the note question was settled turned out to be the
+right order: it meant Finding 2 only shrinks an already-safe footprint rather than being load-bearing
+for safety.
+
+## Disclosed-unmeasured
+
+**Chunk D was not run** — it is not on the charter's gate list — so
+`test_streamlit_stage8_export_contract.py`, `test_streamlit_stage2_orchestration.py` and
+`test_streamlit_quarantine_boundary.py` are uncovered by this card. **F-136 already records that
+Chunk D cannot go green in this environment with the DB up**, so the card is not held on it. Recorded
+as disclosed-unmeasured rather than left for a reader to infer coverage.
+
+**Environment:** `C:/t/c099` has no `.env` and no `.venv`; the author *probed* rather than assumed and
+ran base and tip in the identical resolver-`None` state. Green there means **"no regression with the
+resolver hidden"**. The orchestrator's own verification ran from the integration tree, which does have
+`.env`, so the two together cover both states.
