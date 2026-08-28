@@ -4379,3 +4379,57 @@ Priority 1, and if so whether that is intended (Priority 1 is meant to be untouc
 and the accepted count exists only to carry the variance band) or an under-specification to be filled
 later. **Routed to REV-101 as P15 for a recommendation; the ruling is the product owner's.**
 **No code depends on the answer** — the seam is built, guarded and exercised either way.
+
+---
+
+## D-076 AMENDMENT 1 — review-mandated corrections do not count against ceiling 1 · 2026-08-28 · LOCKED
+
+**A ceiling budgets the author's scope choices. A finding raised by an independent reviewer is not
+one.**
+
+Making a card pay for a reviewer's correction out of its authored ceiling creates exactly the wrong
+incentive: it prices honest review findings against the author's remaining headroom, and the cheapest
+way to absorb one is to trim a docstring or drop a test. C-101 landed at **541 of 560** after
+ratification — **19 lines of headroom** against five review findings, one of which needs a new
+reported bucket and its non-vacuity test.
+
+**Rule, sprint-wide from now on:** ceiling 1 covers authored scope. **Corrections required by an
+independent reviewer are budgeted separately**, as a stated correction allowance per round. The
+allowance is recorded with the round so the total remains auditable, and it is **not** a licence to
+add unrelated work — anything outside the reviewer's enumerated findings still counts against
+ceiling 1.
+
+**C-101 correction round 1 allowance: +60 hand-authored lines**, for the five REV-101 findings and
+their tests. No test or docstring is to be cut to fit.
+
+---
+
+## F-143 — `bounded_run.py` resolves a bare `python` from the CHILD's PATH, not the venv
+
+**Registered 2026-08-28** by REV-101, which **caught it in its own jobs, disclosed it, discarded the
+affected legs and re-ran them.** Recorded because it silently produces a large, plausible, entirely
+false regression.
+
+**What happens.** A bounded command whose executable is the bare string `python` resolves against the
+child process's `PATH`. On this machine that is `C:\Python313\python.exe`, **not**
+`…/Project14-T2PW/.venv/Scripts/python.exe`. The system interpreter lacks `streamlit` and the
+project's other dependencies, so collection errors on every module that imports them.
+
+**Measured instance:** **35 spurious errors** across REV-101's first three legs. Nothing about the
+failure names the interpreter — it presents as a large block of import errors, which is exactly what
+a genuine dependency regression looks like.
+
+**Why the existing guards do not catch it.** `pinned_pytest.py`'s exit-98 measurement-tree check
+verifies which **tree** `t2pw` resolves inside; it does not verify which **interpreter** is running.
+A job can be measuring the correct tree with the wrong Python and pass every tree check.
+
+**The rule.** **Always pass the explicit interpreter path** —
+`c:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe` — as the bounded
+command's executable. Never a bare `python`. This is the same class as the sprint's standing
+`--basetemp` and basetemp-parent traps, both of which also present as mass errors that are not test
+results, and it joins them: **an infrastructure failure, never a regression.**
+
+**Related, and now three of a kind.** `PATHBANK_DB_*` cannot be hidden by export because
+`load_dotenv(..., override=True)` re-applies `.env`; an agent worktree may have **no** `.env` at all;
+and now the interpreter itself may not be the one the tree was built for. **State the interpreter,
+the tree and the DB state of every measurement**, or the numbers are unattributable.
