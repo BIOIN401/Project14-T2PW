@@ -1,0 +1,45 @@
+==========================================================================
+L1. The paper body -- Lpp vs the generic, with a control
+==========================================================================
+
+   files scanned      : 37
+   Lpp   total        : 0
+   lipoprotein total  : 0
+   CONTROL LpxC total : 1726   <- non-zero proves the grep and the corpus are live
+
+==========================================================================
+L2. Do the payloads carry Lpp, the generic, or only one of them?
+==========================================================================
+
+   payload files with entities : 20
+   files carrying an Lpp row   : 0
+   files carrying a generic row: 0
+
+   VERDICT: no generic row in any payload -- the gold entry is defensive
+            rather than describing a measured occurrence.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5f1f6e02223e8ce41c6152b6a5483018038dcec6  [git, worktree dirty=True]
+label                   : lpp-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/29355bf3-10de-4998-935b-e7f453bcc71c/scratchpad/probe_lpp.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 405124 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 0.38 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  404688:python.exe
+descendants terminated  : 1  404688
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\g11\ORCH-712\11-lpp-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

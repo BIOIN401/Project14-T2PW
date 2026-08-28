@@ -7529,3 +7529,177 @@ note so a later reader does not "correct" a figure that was never wrong.
 `test_streamlit_stage2_orchestration.py`, `test_streamlit_quarantine_boundary.py` are uncovered by
 this card; F-136 already records that Chunk D cannot go green in this environment with the DB up.
 Not held on it, but not implied as covered either.
+
+---
+
+# REV-100 — C-100 reviewed, APPROVED, and two registrations required before merge
+
+**C-100**, `f7dc223..9d2c587`, reviewed by the same independent peer session. **APPROVE**, with two
+registrations and one boundary note — none of them a code change.
+
+## The three pre-agreed pass/fail items, verified at the branch tip
+
+| Item | Result |
+|---|---|
+| `unknown_backed_rationale` gains no new readers | **PASS** — exactly 3 hits, all `goldset.py` (`398`, `549`, `805`); **0** in `semantic.py`. The remaining hits are inside `pinned_v1.json`, which is data, not a reader. **The invariant caught two regressions the author had introduced and removed before committing** — it earned its place rather than passing vacuously |
+| an absent scope inherits, never defaults permissive | **PASS**, and in a better form than any of the three named in advance |
+| `:1417` and `:1453` move together | **PASS** — and the summary is *re-derived*, not re-keyed |
+
+The tolerance decision, which is the whole card in five lines:
+
+```python
+inherited = self.unknown_backed_proteins_acceptable
+if not self.unknown_backed_tolerated_entities:  return inherited   # no scope -> Boolean governs
+if not inherited:                               return False       # a False case can NEVER be widened
+return self.unknown_backed_tolerance_match(candidate) is not None  # a declared scope is exhaustive
+```
+
+The summary arm now reads a `tolerated` counter incremented in the loop and discloses
+*"(each one named by the case)"*, so it reports **what happened** rather than re-reading the Boolean.
+That closes the under-disclosure the review predicted: without it, a scoped case would have stopped
+saying anything had been tolerated, silently, for exactly the cases this card exists to create.
+
+## The implementer was right against its instruction, and said so
+
+The orchestrator wrote that an entity **absent from a non-empty scope** must *"inherit the case
+Boolean"*. Taken literally that returns `True` for every absent name — a scope can only exist on a
+case whose Boolean is already `True` — which would make **every scope decorative** and excuse the
+seven core enzymes, the exact opposite of the card. The implementer implemented the coherent reading
+(**absent scope inherits; a declared scope is exhaustive**), preserved the property the rule actually
+protects (`if not inherited: return False`, so none of the nine explicit `false` cases can be
+widened), and **named the divergence in its report and its docstring.**
+
+**Second time this wave an implementer was right against its instruction.** Both times it said so
+rather than silently complying or silently diverging.
+
+## The A/B — zero movers, run twice by two parties
+
+| Node set | Base | Tip | Delta |
+|---|---|---|---|
+| SMOKE, 20 files | 473 passed | 473 passed | **0** |
+| gold-readers, 22 files | 2 failed / 453 passed / 8 skipped | 2 failed / 453 passed / 8 skipped | **0** |
+
+Run by the author, and **re-run independently by the orchestrator** in separate jobs against the same
+two worktrees (`evidence/g11/ORCH-712/06`, `08`, `09`). Identical failing node IDs on every leg. The
+author predicted **zero movers in writing before the tip run**, with a reason per named file, and
+compared per-file progress lines without `-q` rather than totals.
+
+The 22-file selection covers all 14 charter-named files **plus eight further `goldset` /
+`bench.semantic` importers found by grep** — including `test_semantic_release_gating.py` and
+`test_c056b_semantic_denominators.py`, the two the review had flagged as highest-risk.
+
+**G9:** 19 of 32 base failures behavioural, not symbol absence — the author reordered its tests after
+the first G9 run so scorer behaviour asserts *before* schema symbols, raising the behavioural count
+from 7. Base text: `AssertionError: LpxA is an expected core Raetz enzyme … assert 0 == 1`. Tip: 39
+passed.
+
+### An open red, registered rather than absorbed
+
+`test_strict_failure_replay.py::{test_every_stored_strict_failure_replays_to_its_recorded_verdict,
+test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed}[only_unrelated_reactions_survive]`
+fails **on both legs** and is **pre-existing on `f7dc223`**. A Glutathione biosynthesis payload: no
+gold case, no PMC12444477, no `unknown_backed` surface. The fixture records `recovers: false` while
+`quarantine_and_close` now returns `ok=True`. **Not C-100's**, and not to be carried as background
+noise.
+
+## REGISTRATION 1 — the bare `Unknown` sentinel is an F-132-class instrument tension
+
+Scoping makes the bare PathBank `Unknown` sentinel a finding on PMC12444477 — 3 sentinel rows across
+archived legs. It is **not** one of the seven the rationale names, and refusing it is defensible: the
+tolerance list is about *named entities the paper discusses that will not cleanly resolve*, and a bare
+`Unknown` is not a named entity, it is the absence of one.
+
+**But the test that matters is whether the pipeline can clear the finding by doing something
+correct — and here it largely cannot.** D-070 § O-1a rules the sentinel is PathBank's own legitimate
+representation, so the only way to clear it is to stop emitting it, which may be the wrong behaviour.
+
+> **When a finding cannot be cleared by correct behaviour, it is measuring the representation rather
+> than the pipeline.**
+
+That is **F-132's shape exactly**, and this count is to be read as instrument tension, not pipeline
+defect. Merge rule 6 is **not** in play — the change makes the scorer *stricter*, never more
+permissive. Excusing the sentinel would be an eighth gold entry and needs **D-071 amended**; it is a
+product-owner call and no agent may make it.
+
+## REGISTRATION 2 — `lipoprotein`, and the three-way correction that resolved it
+
+The gold tolerates a generic `lipoprotein`. Three readers produced three different accounts and **all
+three were wrong in part**. Resolved by reading the source text:
+
+* **The author** reported the token occurs **0 times** in the paper and is an extractor output found
+  once in `runs/2026-07-28_2122/.../merged_payload.json`. The zero is right; **the provenance is
+  not** — that file does not contain it.
+* **The reviewer** found the body contains **`Lpp`** once — *E. coli* murein lipoprotein, specific and
+  resolvable — and inferred the tolerance excuses degrading a resolvable name into a generic one.
+* **The orchestrator's first probe** found `Lpp` **0** times with a passing control (`LpxC` = 1726),
+  contradicting the reviewer. **That probe was wrong**: the pattern was case-sensitive `\bLpp\b`.
+
+**Ground truth.** The token is lowercase **`lpp`** — the *gene*, not the protein — and it occurs
+**once**, in `01_source_text.txt` of every archived copy:
+
+> *"…can be suppressed by deleting a protein that tethers the OM to the cell wall, **lpp**, thereby
+> elevating OM vesiculation…"*
+
+So the reviewer was right that the paper names a specific lipoprotein, and right that it is
+resolvable. **But its inference does not hold.** `lipoprotein` appears in **no** protein or
+protein-complex row in **any** payload — 0 across 20 payload files carrying entities. Where it does
+appear it is a **reaction participant**: an *input* to `Lnt acyl transfer` (`GPL donor` +
+`lipoprotein` → `LPL`, enzyme `Lnt`) inside `rag_admission_report.json`. **Lnt is lipoprotein
+N-acyltransferase — a different pathway from Raetz**, and the row is a gap-admission candidate, not a
+degraded `lpp`.
+
+**Therefore the `lipoprotein` tolerance entry is INERT.** The scorer applies tolerance to
+protein/protein_complex rows; no such row is ever named `lipoprotein`. It can never fire. It is
+defensive, and it is not excusing a lost identity.
+
+**Kept, not removed** — removing a gold entry needs its own source evidence, and an inert entry
+harms nothing. The `quote: ""` stands: the author **refused to fabricate a span** for a token the
+paper does not contain, which is exactly right and is the one thing the quote field exists to
+guarantee.
+
+**Residual observation, not a card:** the paper names `lpp` once and the pipeline never emits it as an
+entity. It is not in `expected_enzymes` or `acceptable_enzymes`, it is not a Raetz enzyme, and it is
+mentioned in passing about OM tethering — so not emitting it is correct. Recorded only so a future
+reader does not rediscover the token and mistake it for a miss.
+
+## Boundary note — scope creep, allowed and named
+
+The author added an **unrequested load-time refusal** for a scope declared under a `false` Boolean
+(unreachable data). It guards a gold-authoring error that would otherwise be silent, and it matches
+the file's existing *"refuse it at load rather than let it quietly mislead"* style. **Allowed, and
+recorded here as beyond the charter** so the boundary record stays honest.
+
+## Disclosed, not found
+
+* **The stall.** The agent went idle ~12 hours with everything uncommitted and both tip legs unrun. A
+  status check woke it; it committed, ran them, certified. Reports 01–08 are dated 03:44–03:57 and
+  09–12 16:25–16:28 — **that gap is a stall, not a long job.**
+* **An escaped heredoc.** One `python - <<EOF` ran outside the bounded wrapper, hung on stdin and was
+  killed by the shell's 2-minute clock. The author verified **zero survivors** immediately by full
+  command line and used no named or global kill; the orchestrator independently observed the two
+  `python.exe -` processes from outside and watched them clear. **Reported rather than omitted.**
+* **`LpxH` is now a finding** and the list was deliberately **not** widened. `LpxH` is the *E. coli*
+  enzyme for the organism-dependent ninth step; `LpxG` is the variant in other organisms. An
+  Unknown-backed `LpxH` means a resolvable *E. coli* enzyme failed to resolve — a genuine finding.
+  **Widening would be the merge-rule-6 direction**: weakening a gate to reduce a count. Declining to
+  widen needs no positive evidence; widening would.
+
+**Net effect on measured legs**, static re-scores of archived artifacts, no benchmark run:
+`runs/2026-08-02_2130/.../strict` **0 → 9** tolerance findings (7 core enzymes + `LpxH` + `Unknown`);
+`runs_verify/2026-08-24_1428` **0 → 2**.
+
+## And one operational rule this card paid for
+
+**A heavy lock is not stranded until it has been sampled over time.** Diagnosing the stall, the
+orchestrator found the lock held by a PID that was not running, with **zero** Python processes — the
+textbook stranded signature — and was one step from clearing it as exact-owner cleanup. Re-reading the
+holder file first showed it had **changed between reads** (`tip-smoke`/392540 → `tip-goldreaders`/394680).
+The agent was alive and cycling through short jobs, and every instantaneous sample landed in a gap.
+Sampling every 15 s for two minutes showed it release cleanly.
+
+**Clearing it would have put two heavy jobs on the same trees.** The signatures of *dead* and *cycling
+fast* are identical at an instant. The rule against deleting an unfamiliar lock is really a rule
+against deleting a lock you have looked at **once**.
+
+The lock also earned its keep in the other direction the same hour: an orchestrator job that would
+have duplicated the agent's in-flight leg **refused with exit 95** rather than run.
