@@ -1,14 +1,14 @@
 # RESUME — next session handoff
 
-**Rewritten by the Lead Orchestrator, 2026-08-27, the O-1 ruling wave.** Everything below this
-heading supersedes the PACK 11 record that used to be here; that content is in git history and in
-`LEDGER.md`, which remains the single source of truth for task state.
+**Rewritten by the Lead Orchestrator, 2026-08-28, the acceptance-instrument reconciliation wave.**
+Supersedes the O-1 ruling wave record, which is in git history and in `LEDGER.md`. **`LEDGER.md`
+remains the single source of truth for task state.**
 
-> **⚠ Why this file is in the repo and not in a scratchpad.** A prior session wrote its handoff to a
-> *session-local* scratchpad and the next session could not find it. **Keep this file in the repo and
-> update it in place.** This wave proved the point twice over: the ORCH-710 probe scripts lived in a
-> temp directory and were one cleanup away from being lost, taking the only record of what the O-1
-> numbers measured with them.
+> **⚠ Keep this file in the repo and update it in place.** A prior session wrote its handoff to a
+> session-local scratchpad and the next session could not find it. This wave proved the point a third
+> time, in the worst way: the **only** record of what the F-132 measurement found was a probe in a
+> dead session's temp directory, and the same was true of C-100's `03`/`04` probe stdout. Both were
+> recovered this wave. **One of the two probe sources is gone for good.**
 
 ---
 
@@ -17,116 +17,123 @@ heading supersedes the PACK 11 record that used to be here; that content is in g
 | | |
 |---|---|
 | Branch | `sprint/pwml-recovery` |
-| Session start tip | `7bd8a86` |
-| **Do not pin a tip SHA here** | the invariant is **local = `origin/` = `git ls-remote`**, verified after every push. Read it, do not recall it |
+| **Do not pin a tip SHA here** | the invariant is **local = `origin/` = `git ls-remote`**. Read it, do not recall it |
 | Merges to `main` | **none, and none permitted** |
-| Product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d…` — verified intact |
-| Caches, `topics_*.txt` | uncommitted, untouched. `topics_wave_cohort.txt` belongs to a peer session |
+| `main` | **local `7531692`, remote `03f1af5`.** `main` advanced **outside this sprint**; `7531692` is an ancestor of `03f1af5`. Verified: the sprint tip is **not** an ancestor of remote `main` — no sprint work has leaked. **Touch neither ref.** A previous handoff reported "main untouched" having checked only the local ref |
+| Product-owner `streamlit_app.py` | uncommitted, **35 ins / 2 del**, `sha256:47e4fafa789d359d…` — verified intact repeatedly |
+| Caches, `topics_*.txt` | uncommitted, untouched |
+| Whole-tree G11 | **0 non-compliant.** The count is self-referential — a whole-tree check's own report is committed after it runs, so the recorded number is always one less than the tree that contains it. Reconcile, do not panic |
 
 ## 2. What this wave settled
 
-**O-1 is CLOSED** — `DECISIONS.md` **D-070**. The question was rejected as posed. The pinned 21 is
-**16 generated functional wrappers + 5 PathBank `Unknown` sentinel rows**, overlap 0, and **none of
-the 21 sets `placeholder_claims_real_identity`** — so none is a forged identity and no report may
-call them one. TRAP-3 stands on the sixteen. The sentinels' *Arabidopsis* is a true fact about
-PathBank record 9659 and is not a false mapping.
+**All four product rulings are recorded: D-072 (A), D-073 (B), D-074 (C), D-075 (D).**
 
-**D-071** rules PMC12444477: **scope the tolerance per entity, do not flip the Boolean.** Flipping
-would newly penalise the seven entities the rationale legitimately excuses. The nine-versus-eight
-prose mismatch is *resolved*, not picked: the Raetz pathway has nine steps, the ninth enzyme is
-organism-dependent (`LpxH`/`LpxI`/`LpxG`), so the gold is right to list eight expected and file LpxH
-under acceptable. **Neither list moves.**
+**The T-107 blocker changed character.** The previous wave recorded gate condition 9 as *"not met and
+not reachable by any engineering in this sprint"*, because only ask B could clear it and B was
+unanswered. **B is now answered by D-073** and condition 2 by D-075. T-107 is still NO-GO, but it is
+blocked on **mergeable cards**, not on an unanswerable product question.
 
-**F-141** registers and classifies the 24 pinned / 82 corpus-wide withheld-identity population that
-was hiding inside the O-1 metric. **All 24 are correct withholding and no card follows.** It is not,
-and must never be reported as, `placeholder_backed_proteins`.
+**F-142 — the Glutathione red is diagnosed.** Four cards carried it on *"fails at base"*. It is a
+**stale expectation, not a production defect**. The coverage gate is entirely correct; C-041a
+(`4177fe5`, D-002) deliberately moved a `minimum_core:*` shortfall to `review_reasons`, so `ok`
+stopped answering the question the fixture asks it. The protection moved and is richer —
+`review_required`, `strict_acceptance_eligible false`, `completeness 0.0`, all three anchors named.
+Merge rule 7 and `has_surviving_core`'s own docstring require the current behaviour verbatim.
+**Not a T-107 blocker.**
 
-**C-098a and C-098b are both invalidated** and nothing is salvaged. **C-098c stays refused.**
-**C-094 is not merged and not relabelled**; C-099 supersedes it for production purposes.
-
-**T-107 is NO-GO** and no card in this wave could have changed that. See § 5.
+**D-076 ratifies C-101's ceiling 420 → 560** and corrects two errors in my own charter — see § 6.
+**D-077 registers, unanswered, whether D-073's "authorized, case-scoped tolerances" is currently
+vacuous for Priority 1.** No code depends on the answer.
 
 ## 3. Cards
 
-| Card | Branch | State |
+| Card | Branch / worktree | State |
 |---|---|---|
-| **C-099** — preserve resolved species on Unknown-backed wrappers | `card/C-099-species-preservation` | **MERGED** `9e4a28a`. Gate 570 passed |
-| **C-100** — per-entity tolerance scope for PMC12444477 | `card/C-100-tolerance-scope` | **MERGED** `8e5d549`. A/B zero movers on 42 files; gate 898 passed |
-| **C-101** — the 16/5 metric split | *(not dispatched)* | chartered, and its dependency is now **satisfied** — C-100 is in. **This is the next card to dispatch.** |
+| **C-101** — 16/5 split · row-aware sentinel seam · raw/accepted Priority 1 | `card/C-101-o1-metric-split` @ `06a03a7` · `C:/t/c101` | **COMPLETE, UNDER REVIEW.** REV-101 dispatched. Gates: SMOKE 473=473, gold-readers identical, 34 new tests pass, G9 regression passes at base and tip. **Not merged** |
+| **C-102** — coverage denominator vs `forbidden_identifiers` (Ruling A) | *(not dispatched)* | **CHARTERED.** Blocked on C-101 merging — serial `bench/` ownership |
+| **C-103** — re-point the F-142 replay expectation | *(not dispatched)* | **CHARTERED.** Sequenced last. Not a T-107 blocker |
 
-**Two reds that are NOT ours and must not be absorbed as noise.**
-`test_strict_failure_replay.py::{test_every_stored_strict_failure_replays_to_its_recorded_verdict,
-test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed}[only_unrelated_reactions_survive]`
-fail on `f7dc223` **before either card existed**, and were confirmed unmoved three separate times. A
-Glutathione payload: no gold case, no `unknown_backed` surface. The fixture records `recovers: false`
-while `quarantine_and_close` returns `ok=True`. **Unowned — worth a card.**
+**C-101 and C-102 are NOT parallel work.** Serial ownership of `src/t2pw/bench/` is a hard
+requirement even though they touch different functions.
 
-**Registered with C-100, both needing the product owner rather than an agent.** Scoping makes the bare
-PathBank `Unknown` sentinel a finding on PMC12444477, and D-070 § O-1a rules that sentinel is
-PathBank's own legitimate representation — so the pipeline largely cannot clear the finding by doing
-anything correct. Recorded as **F-132-class instrument tension**, not a defect; excusing it is an
-eighth gold entry and needs **D-071 amended**. And the `lipoprotein` tolerance entry is **inert** —
-the token appears in no protein row in any payload; it is kept with an empty quote because fabricating
-a span for a token the paper does not contain is the one thing that field forbids.
+**I deliberately did not dispatch C-103 in parallel with REV-101.** Its files are disjoint, but both
+would want the heavy lock, and "one heavy job at a time" is a hard rule. The cycle saved is not worth
+a job dying on `EXIT_HEAVY_LOCK_UNAVAILABLE` (95).
 
-Charters are `docs/pwml_recovery_sprint/prompts/C-099.md`, `C-100.md`, `C-101.md`.
+### The gold-readers baseline every card in this wave must be told
 
-Worktrees created this wave: `C:/t/c099`, `C:/t/c100`, `C:/t/c099base`, `C:/t/c100base`, plus
-`C:/t/c099g9` (a hash-verified `f7dc223` export made by C-099's author because `pinned_pytest`
-refuses a selection outside its expected tree). **Prune none of them**, nor the older ones a peer
-session listed: `C:/t/c094`, `c094base`, `c095`, `c096`, `c097`, `c098`, `c098a`, `c098b`,
-`rev095base`, `rev095m`, `rev096base`, `c092`, `c093`.
+The 22-file gold-readers selection **exits 1 at base, correctly** — it contains
+`test_strict_failure_replay.py` and its two F-142 reds. **Expect exactly two; a third is the card's.**
+**C-103 changes this** and is required to hand back the corrected baseline (expected `0 failed`,
+exit 0) so every later charter is updated.
 
-## 4. Baselines pinned this wave — use these to attribute movement
+## 4. Evidence rescued this wave — and the standing lesson
 
-| Selection | Result | Where |
+| What | Where it is now |
+|---|---|
+| The F-132 probe + its full output (62/281, 32 legs, 6 papers) | `evidence/orch702_f132_forbidden_anchors.py` / `.log` |
+| C-100's `03`/`04` probe stdout | `evidence/c100_0{3,4}-*.RECOVERED.log`, `c100_probe_stdout.RECOVERED.md` |
+| C-100's probe **source** | **GONE. Unrecoverable.** Recorded so nobody hunts for it |
+
+**A G11 report certifies that a job was clean and preserves nothing about what it found.** Commit the
+probe *and* its log, every time.
+
+**The recovered F-132 log also corrects the bundle's prose:** the population spans **five** mechanism
+kinds, not four — `placeholder_product` 19, `heading_or_prose` 19, `regulator_as_metabolite` 16,
+`cofactor_as_protein` 6, **`modification_state` 2** (omitted there). 62 total.
+
+**Independently measured and committed:** `evidence/orch713_gold_selfconsistency.py` / `.log` — **zero
+overlap** between any gold case's declared positive fields and its own `forbidden_identifiers`, all
+ten cases. **This is a right answer to a narrower question than Ruling A asks.** It establishes the
+contradiction is introduced **at runtime by the Stage-0 draw**, not authored into the gold — which is
+why the bundle's *"Gold: None"* holds and the fix belongs in the scorer. **It is not evidence F-132 is
+absent**, and C-102's charter says so explicitly.
+
+## 5. T-107 readiness — live blocker list
+
+| # | Condition | State |
 |---|---|---|
-| SMOKE | **473 passed**, 47.3 s | `evidence/g11/ORCH-711/07` |
-| `test_protein_export_policy.py` (in **neither** SMOKE nor Chunk D) | **63 passed** | `evidence/g11/ORCH-711/08` |
-| whole-tree G11 | **4246 artifacts, 0 non-compliant** | `evidence/g11/ORCH-711/06` |
+| 1 | Priority 1 not guaranteed to fail | **CLEARED** by D-073 |
+| 2 | Priority 2 not guaranteed to fail | **CLEARED** by D-075 |
+| 3 | C-101 merged + independently approved | **OPEN** — under review |
+| 4 | Ruling-A card merged + independently approved | **OPEN** — chartered |
+| 5 | Rulings A–D recorded | **DONE** |
+| 6 | Glutathione classified, not a guaranteed failure | **DONE** — F-142 |
+| 7 | deterministic gates green; integration pushed + remotely verified | rolling |
+| 8 | lock free · zero sprint Python · no peer owning an overlapping job | **DONE**, re-verified |
+| 9 | LM Studio + pinned model; run monitorable; spend ≤ $5 | **not assessed** — assess only when 3 and 4 close |
 
-## 5. T-107 — NO-GO, and the one question that goes to the product owner
+**No live model run, no cohort, no benchmark, no paper leg this wave. External spend $0.00 of $5.**
 
-Gate condition 9 (*no absolute acceptance priority guaranteed to fail*) is **not met and is not
-reachable by any engineering in this sprint**. `DECISION-BUNDLE-F132-PRIORITY1.md` § 9 already said
-so: *"A does not clear it; only B does, because B is the acceptance."*
+## 6. Traps this wave paid for — additional to the standing list
 
-The bundle asks **two** things. The product owner ruled its **addendum** — O-1, now D-070 — and
-PMC12444477, now D-071. **Asks A and B remain open:**
+* **A charter can send a card looking for an object that does not exist.** `AMENDMENT 1` § A4 named
+  *"the row used by C-100's accepted A/B"*. **That A/B is a test-node A/B** — 20 SMOKE + 22
+  gold-readers = the "42 files" — and contains **no payload row**. The card found the right row by a
+  better route (`orch710_pinned21.json` + the LEDGER's "which run is the pinned run" correction) and
+  **recorded the discrepancy instead of smoothing it**. Corrected in D-076.
+* **Committing an amendment moves the tip out from under the base SHA the amendment names.**
+  `AMENDMENT 1` says base `b30193f`; the dispatched worktree carries `d7cf4a4`. **Re-read
+  `git rev-parse HEAD` in the worktree; never trust a SHA written in a charter.**
+* **A ceiling raised by estimate for tripled scope will be wrong.** Sixth under-set ceiling of this
+  sprint. Derive from deliverables, not by feel. And **a ceiling breach with a clean boundary and a
+  documented trim is a mis-set ceiling, not scope creep** — check the boundary before deciding which
+  it is.
+* **`is_pathbank_unknown_protein` requires four clauses.** A "not a sentinel" control that fails all
+  four at once cannot tell you which clause is load-bearing. Perturb them **one at a time**.
+* **A three-valued status degrades silently into a Boolean at the render site.** Grep every render
+  site for `PASS_WITHIN_VARIANCE`; distinct in the model and identical in the output is a fail.
+* **Agent liveness is tracked separately from job liveness.** A subagent sat at `running` for twelve
+  hours this sprint. 15 min without observable progress → status request; 30 min with no response, no
+  process, no artifact and no commit → stalled.
 
-* **A** — reconcile the anchor set against `forbidden_identifiers`, so Priorities 1 and 4/5 stop
-  scoring the same rows in opposite directions (**F-132**);
-* **B** — accept or decline a **Priority-1 floor of 6** for T-107 purposes.
+## 7. Peer sessions
 
-**Only B clears the gate.** Until it is answered T-107 cannot be scheduled, and that is the correct
-outcome rather than a delay. Merging does not move it: C-092 and C-093 did not, and C-099 corrects a
-false *species*, not a false *identifier*, so it cannot move Priority 1 in either direction.
+`project14-t2pw-14` **stood down explicitly** this wave — owns nothing, holds no lock, runs nothing,
+will message before touching the tree. Its worktrees (`c099`, `c100`, `c099base`, `c100base`,
+`c099g9`) and the older set are recorded; **prune none of them**, nor `C:/t/c101` / `c101base`.
+**`project14-t2pw-51`, the C-099/C-100 reviewer, is gone** and its context with it. Its method is
+preserved in `prompts/REV-101.md` § 4 — that is the only place it now exists.
 
-## 6. Traps this wave paid for — in addition to the handoff's standing list
-
-* **The pinned run is safe as a POPULATION and unsafe as a BEHAVIOUR.** `runs/2026-08-02_2130`
-  predates D-003; `verification_status` and `unverified_identity_claim` are absent from every row.
-  Counts taken from it stand; behavioural claims need re-measuring against a current run.
-* **`runs/` and `runs_verify/` are both live.** "The pinned run" meant `runs/2026-08-02_2130`. The
-  same criterion against `runs_verify/2026-08-24_1428` yields **5**, not 24. Nothing in the packet
-  said which. **Always name the tree.**
-* **A zero-hit grep on a document's vocabulary proves nothing.** `PRODUCT_CONTRACT` says
-  `unverified_claim`; the code says `unverified_identity_claim`. Ask what the *code* calls it.
-* **A two-sided obligation needs the side that must NOT fire tested.** § 8's carrier is correctly
-  absent on `rejected` rows; a presence-only probe would have missed a carrier firing there.
-* **`bounded_run.py`'s report carries no child stdout.** Commit the probe *and* its log, or the
-  certificate proves a job was clean while preserving nothing about what it found.
-* **`iter_reports` selects every non-dot file in a task folder** — a `README.md` inside
-  `evidence/g11/<TASK>/` comes back `unexpected_artifact` and reddens the gate. Index files go in
-  `docs/pwml_recovery_sprint/`.
-* **Agent worktrees have no `.env` and no `.venv`.** The DB is hidden, so a green base leg can be
-  green for the wrong reason. Make every agent *probe* and *state* which state its tree is in.
-
-## 7. Peer sessions share this working tree
-
-Two other Claude sessions were live during this wave and both were contacted and confirmed clean —
-not pushing, no Python, not holding the lock. One was the previous Lead Orchestrator (author of the
-ORCH-710 evidence), standing down; the other acted as independent adversarial reviewer.
-**Session identities are not stable** — a peer was renamed mid-conversation. **Run `ListAgents` and
-contact every peer before treating the branch, the lock or the worktrees as exclusively yours.** A
-peer caught a branch moving under a session that believed it was untouched earlier in this sprint.
+**Run `ListAgents` and contact every peer before treating the branch, the lock or the worktrees as
+exclusively yours.** Session identities are not stable.
