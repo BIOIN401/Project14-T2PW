@@ -1,0 +1,162 @@
+{
+  "label": "smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c095",
+    "--pin-verdict",
+    "C:/t/c095/docs/pwml_recovery_sprint/evidence/g11/C-095/09-smoke.pin.json",
+    "-q",
+    "--basetemp=C:/t/tc095/smoke1",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py"
+  ],
+  "cwd": "C:\\t\\c095",
+  "started_at": "2026-08-27T22:00:46+00:00",
+  "finished_at": "2026-08-27T22:01:23+00:00",
+  "duration_seconds": 36.95730939999339,
+  "timeout_seconds": 1800.0,
+  "root_pid": 210984,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 212196,
+      "name": "python.exe",
+      "ppid": 210984
+    },
+    {
+      "pid": 211108,
+      "name": "python.exe",
+      "ppid": 212196
+    },
+    {
+      "pid": 212668,
+      "name": "python.exe",
+      "ppid": 211108
+    },
+    {
+      "pid": 209152,
+      "name": "python.exe",
+      "ppid": 212392
+    },
+    {
+      "pid": 212392,
+      "name": "python.exe",
+      "ppid": 212196
+    },
+    {
+      "pid": 212028,
+      "name": "python.exe",
+      "ppid": 212196
+    },
+    {
+      "pid": 212516,
+      "name": "python.exe",
+      "ppid": 212028
+    },
+    {
+      "pid": 212596,
+      "name": "python.exe",
+      "ppid": 212720
+    },
+    {
+      "pid": 212720,
+      "name": "python.exe",
+      "ppid": 212196
+    }
+  ],
+  "descendants_terminated": [
+    209152,
+    211108,
+    212028,
+    212196,
+    212392,
+    212516,
+    212596,
+    212668,
+    212720
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 120152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 131588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 207612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 211268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212400,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212496,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c095\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-095\\09-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c095\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c095",
+    "repo_head": "0128fa653ea0f3a0ec60f937a2e0bc10b2d31959",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

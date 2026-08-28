@@ -1,0 +1,81 @@
+{
+  "label": "c075-corpus-ab-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/c095",
+    "--pin-verdict",
+    "C:/t/c095/docs/pwml_recovery_sprint/evidence/c095_13-c075-corpus-ab-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/tc095/c075ab",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_compound_resolution_extraction.py",
+    "tests/test_rag_seed_entity_reimport.py"
+  ],
+  "cwd": "C:\\t\\c095",
+  "started_at": "2026-08-27T23:36:42+00:00",
+  "finished_at": "2026-08-27T23:36:53+00:00",
+  "duration_seconds": 10.729235699999663,
+  "timeout_seconds": 300.0,
+  "root_pid": 45440,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 50872,
+      "name": "python.exe",
+      "ppid": 45440
+    }
+  ],
+  "descendants_terminated": [
+    50872
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 44016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 51104,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\c095\\docs\\pwml_recovery_sprint\\evidence\\g11\\C-095\\13-c075-corpus-ab-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c095\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c095",
+    "repo_head": "0128fa653ea0f3a0ec60f937a2e0bc10b2d31959",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
