@@ -1,0 +1,61 @@
+base                : bcf9a23d293c90195cedd96725807599fb670000
+tip                 : d0a3204afc190fa533bc3373a66f3de6f24e9e7e
+src/tests changed   : ['src/t2pw/bench/acceptance.py', 'src/t2pw/bench/render.py', 'tests/test_c102_coverage_denominator.py']
+residual diff vs base while the base leg runs: ''  (must be empty)
+
+--- GOLD-READERS at base --- exit=1
+    FAILED tests/test_strict_failure_replay.py::test_every_stored_strict_failure_replays_to_its_recorded_verdict[only_unrelated_reactions_survive]
+    FAILED tests/test_strict_failure_replay.py::test_recovered_cases_are_smaller_and_refused_cases_are_not_claimed[only_unrelated_reactions_survive]
+    2 failed, 453 passed, 8 skipped in 29.23s
+
+--- G9 behavioural proof at base --- exit=1
+    run dir      : C:\t\c102\runs_verify\2026-08-24_1428
+    leg          : PMC12782028/strict   found=True
+    frozen reason: ['requested_core_coverage_below_minimum:0.222<0.500']
+    requested-core denominators the instrument reports for this leg: []
+    terms it names as withheld-but-recorded                        : []
+    priority 4 : ok=False  observed='0/8 = 0%'  reconciliation=ABSENT
+    priority 5 : ok=False  observed='0/2 = 0%'  reconciliation=ABSENT
+    
+    PRE-CHANGE BEHAVIOUR -- the denominator is contradictory and unreconciled:
+      - the RAW denominator of 27 drawn terms is not preserved in the report
+      - the instrument reports NO requested-core denominator that excludes this case's own forbidden identifiers: every coverage figure it states is computed over a term list that includes LIPA, LBR, SREBF1, SREBF2
+      - withheld terms are not named in the record (guard rail 3): ['LIPA', 'LBR', 'SREBF1', 'SREBF2']
+
+--- A/B probe at base --- exit=3
+
+--- G9-REPORT-SIZE at base --- exit=0
+    2026-08-04_1207    bytes=  48773  legs_with_coverage_block= 0  corpus_key= ABSENT  corpus_bytes=     0  priority_copies=[]
+    2026-08-24_1428    bytes= 199706  legs_with_coverage_block= 0  corpus_key= ABSENT  corpus_bytes=     0  priority_copies=[]
+
+tree after restore  : ''  (must be empty)
+gold-readers at base: exit=1   (1 is CORRECT -- the two F-142 reds)
+G9 proof at base    : exit=1     (MUST be nonzero: the behaviour is absent at base)
+A/B probe at base   : exit=3     (3 = post-change half unavailable, the pre-change leg)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d0a3204afc190fa533bc3373a66f3de6f24e9e7e  [git, worktree dirty=False]
+label                   : c102-base-gate-r1
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/c102_base_gate.py C:/t/c102 bcf9a23
+cwd                     : C:\t\c102
+root PID / process group: 513680 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 33.83 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  511136:python.exe, 516964:git.exe, 515468:python.exe, 515472:python.exe, 516440:git.exe, 516500:git.exe, 516752:git.exe, 516860:git.exe, 517092:git.exe, 514324:git.exe, 515240:python.exe, 516344:python.exe, 514796:python.exe, 510204:python.exe, 511624:python.exe, 516708:python.exe, 516980:python.exe, 517068:git.exe
+descendants terminated  : 18  510204, 511136, 511624, 514324, 514796, 515240, 515468, 515472, 516344, 516440, 516500, 516708, 516752, 516860, 516964, 516980, 517068, 517092
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\21-base-gate-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=C-102  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -17,9 +17,18 @@ import sys
 from pathlib import Path
 
 ROOT = Path(sys.argv[1]).resolve()
-NAMES = sys.argv[2:] or ["2026-08-04_1207", "2026-08-24_1428"]
+NAMES = [a for a in sys.argv[2:] if not a.startswith("--")] or ["2026-08-04_1207", "2026-08-24_1428"]
 
-from t2pw.bench.acceptance import score_run  # noqa: E402
+from t2pw.bench.acceptance import AcceptanceReport, score_run  # noqa: E402
+
+# F5 was a size decision, so the size it avoided is measured here rather than
+# quoted. Restoring the pre-F5 shape -- the priority entries carrying the corpus
+# record WHOLE -- is a property swap, not a file edit, so nothing on disk moves.
+if "--as-if-uncompacted" in sys.argv:
+    AcceptanceReport.coverage_reconciliation_summary = (
+        AcceptanceReport.coverage_reconciliation_corpus
+    )
+    print("MEASURING THE PRE-F5 SHAPE: priority entries carry the corpus record whole")
 
 for name in NAMES:
     run = ROOT / "runs_verify" / name

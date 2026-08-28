@@ -638,7 +638,7 @@ the leg stored no coverage block. The **report-level** key is not. `AcceptanceRe
 writes `coverage_reconciliation_corpus`, and priorities 4 and 5 always carry
 `requested_core_coverage`, so **no report serializes byte-identically to before** — including one
 with no coverage block anywhere. Measured (`evidence/c102_report_size.py` / `.log`):
-`runs_verify/2026-08-04_1207` has **zero** such legs and still grows **48,791 → 49,681 bytes**.
+`runs_verify/2026-08-04_1207` has **zero** such legs and still grows **48,773 → 49,681 bytes**.
 Priorities 1-3 carry no `requested_core_coverage` key; only 4 and 5 do.
 
 **Two names, because they are two different records (REV-102 F6).**
@@ -647,10 +647,21 @@ array; `coverage_reconciliation` inside a leg is that leg's own row. Their key s
 they briefly shared a name, which invited a reader who found one to assume the shape of the other.
 
 **Size, and the choice behind it (REV-102 F5).** The corpus record is ~12 KB on a full run and
-priorities 4 and 5 both referenced it, so it was serialized three times: `runs_verify/2026-08-24_1428`
-grew **199,838 → 248,528 bytes, +24%**, about two thirds of it duplication. The priority entries now
+priorities 4 and 5 both referenced it, so it was serialized three times. The priority entries now
 carry the **counts only** — how many legs, how many terms, which legs cleared, which are still below
 the minimum, which have no defined rate — plus `legs_at`, naming the one key that holds the rows.
 A priority read alone still states the size and outcome of the reconciliation; only the row-by-row
-detail moved, one key away in the same document. Measured after the change: **224,607 bytes, +12.4%**,
-and the two priority copies fall from 12,288 bytes each to 379.
+detail moved, one key away in the same document.
+
+Every figure below is measured by one probe across all three shapes
+(`evidence/c102_report_size.py`, whose `--as-if-uncompacted` swaps the summary property back to the
+pre-F5 shape without editing a file), so the deltas are self-consistent:
+
+| run | base `bcf9a23` | tip, pre-F5 | tip, shipped |
+|---|---|---|---|
+| `2026-08-24_1428` (10 legs with a coverage block) | 199,706 | 248,425 · **+24.4%** | **224,607 · +12.5%** |
+| `2026-08-04_1207` (**zero** such legs) | 48,773 | 49,605 | **49,681 · +908 B** |
+
+F5 removes **23,818 bytes, 49% of the growth**, on the full run: the two priority copies fall from
+12,288 bytes each to 379. **It makes the small report 76 bytes larger**, because the summary adds
+`legs_at` where the whole record had an empty `legs` array — stated rather than rounded away.
