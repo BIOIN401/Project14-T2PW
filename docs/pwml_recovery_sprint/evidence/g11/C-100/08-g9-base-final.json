@@ -1,0 +1,81 @@
+{
+  "label": "g9-base-final",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/c100base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/t/c100/docs/pwml_recovery_sprint/evidence/g11/pin/C-100/08-g9-base-final.pin.json",
+    "--expect-tree",
+    "C:/t/c100base",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt/c100b8",
+    "--tb=line",
+    "tests/test_c100_tolerance_scope.py"
+  ],
+  "cwd": "C:\\t\\c100base",
+  "started_at": "2026-08-28T03:57:52+00:00",
+  "finished_at": "2026-08-28T03:57:54+00:00",
+  "duration_seconds": 1.858553000001848,
+  "timeout_seconds": 300.0,
+  "root_pid": 212716,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 212600,
+      "name": "python.exe",
+      "ppid": 212716
+    }
+  ],
+  "descendants_terminated": [
+    212600
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 124156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 130040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212908,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212948,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/c100/docs/pwml_recovery_sprint/evidence/g11/C-100/08-g9-base-final.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\c100base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\c100base",
+    "repo_head": "f7dc223235e535f5f6aca5a7de7d58c269e8db00",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

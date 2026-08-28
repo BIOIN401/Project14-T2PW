@@ -284,7 +284,50 @@
       ],
       "min_connected_reactions": 3,
       "unknown_backed_proteins_acceptable": true,
-      "unknown_backed_rationale": "The paper legitimately discusses proteins that will not cleanly resolve: LapA (formerly YciS), LapB (formerly YciM), Ght (N. meningitidis), LabP (C. sakazakii), LpxG, YhcB, and the generic 'lipoprotein'. Penalising those would penalise faithful extraction. The tolerance does NOT extend to the nine core Raetz enzymes, which are unambiguous.",
+      "unknown_backed_rationale": "The paper legitimately discusses proteins that will not cleanly resolve: LapA (formerly YciS), LapB (formerly YciM), Ght (N. meningitidis), LabP (C. sakazakii), LpxG, YhcB, and the generic 'lipoprotein'. Penalising those would penalise faithful extraction. 'unknown_backed_tolerated_entities' below lists exactly those seven, so the scorer enforces this sentence instead of merely carrying it. The tolerance does NOT extend to the eight expected core Raetz enzymes -- LpxA, LpxC, LpxD, LpxB, LpxK, WaaA, LpxL, LpxM -- which are unambiguous. Eight expected, nine steps, and both statements true: the Raetz pathway has nine enzymatic steps, but the ninth, the removal of UMP, is organism-dependent ('subsequent removal of UMP by LpxH, LpxI, or LpxG depending on the organism'), so this paper expects no single enzyme for it and LpxH -- aliases LpxI, LpxG -- is filed under acceptable_enzymes rather than expected_enzymes. LpxG is therefore simultaneously an alias of the acceptable LpxH and a tolerated entity in its own right; both hold.",
+      "unknown_backed_tolerated_entities": [
+        {
+          "name": "LapA",
+          "aliases": [
+            "YciS"
+          ],
+          "quote": "LapA (formerly YciS) is encoded in a dicistron with LapB and was also shown to copurify with LapB",
+          "role": "Old and new names of one protein, declared as an alias so LapA/YciS is matched exactly rather than fuzzily."
+        },
+        {
+          "name": "LapB",
+          "aliases": [
+            "YciM"
+          ],
+          "quote": "LapB (lipopolysaccharide assembly protein B; formerly called YciM)",
+          "role": "Old and new names of one protein, declared as an alias so LapB/YciM is matched exactly rather than fuzzily."
+        },
+        {
+          "name": "Ght",
+          "quote": "the N. meningitidis LapB homolog Ght was suggested to regulate LpxC through an FtsH-independent mechanism",
+          "role": "A N. meningitidis protein in an E. coli-scoped request; it has no E. coli identity to resolve to."
+        },
+        {
+          "name": "LabP",
+          "quote": "In the gammaproteobacterium Cronobacter sakazakii , LpxA was found to interact with LabP",
+          "role": "A C. sakazakii protein in an E. coli-scoped request; it has no E. coli identity to resolve to."
+        },
+        {
+          "name": "LpxG",
+          "quote": "subsequent removal of UMP by LpxH, LpxI, or LpxG depending on the organism",
+          "role": "The organism-dependent ninth-step enzyme. It is ALSO an alias of the acceptable LpxH, and both facts hold at once: LpxG is tolerated by name here, while a row named LpxH is not, because in E. coli LpxH is the resolvable enzyme for that step."
+        },
+        {
+          "name": "YhcB",
+          "quote": "strains with mutations in yhcB , which encodes a transmembrane protein that has been shown to copurify with LapB",
+          "role": "An accessory transmembrane protein, discussed only through its mutant phenotype."
+        },
+        {
+          "name": "lipoprotein",
+          "quote": "",
+          "role": "DELIBERATELY UNQUOTED. The token 'lipoprotein' does not occur anywhere in the cached full text (0 occurrences across all 15 archived copies of 01_source_text.txt, each 82,340 characters), so no verbatim span can support it and inventing one would be exactly the fabrication the quote field exists to prevent. It is a generic class name the EXTRACTOR produces, measured once at runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/merged_payload.json as an entity literally named 'lipoprotein'. D-071 tolerates it as a generic, and it is recorded here with its real provenance rather than with a fabricated one."
+        }
+      ],
       "expected_export": "partial_only",
       "export_rationale": "The enzyme roster and reaction order are fully extractable, but a complete ID-resolvable pathway cannot be built from this paper: it contains zero UniProt, EC, b-number, ChEBI or KEGG identifiers; six of nine intermediates are never chemically named in the body; acyl chain lengths and the Kdo count are left unspecified. The chemistry lives in Figure 1B, which is not in the cached text.",
       "notes": "The body ends near character offset 54734 ('Conflict of interest'); everything after is the reference list. The correct E. coli LpxA/LpxC intermediate names appear ONLY there, so an extraction containing them is mining the bibliography. Text rendering inserts spaces inside chemical tokens ('lipid IV A', 'R -3-hydroxymyristoyl-ACP', 'sigma 32'). The MurA-activates-LpxC mechanism is P. aeruginosa only.",

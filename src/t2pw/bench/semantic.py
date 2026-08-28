@@ -1388,6 +1388,7 @@ def _check_placeholder_identity(
     }
     findings: List[Dict[str, Any]] = []
     placeholder_backed = 0
+    tolerated = 0
 
     for bucket in ("proteins", "protein_complexes"):
         for index, row in enumerate(entities.get(bucket, [])):
@@ -1414,18 +1415,37 @@ def _check_placeholder_identity(
                         "reason": f"placeholder is indistinguishable from a real mapping ({claim})",
                     }
                 )
-            elif not case.unknown_backed_proteins_acceptable:
+            elif not case.tolerates_unknown_backed(name):
+                # Two different refusals, and the report has to say which. A case
+                # with no tolerance at all is not making the same statement as a
+                # case that tolerates a NAMED set and finds this row outside it --
+                # reporting the first wording for the second would assert an
+                # expectation the gold case does not hold.
+                if case.unknown_backed_proteins_acceptable:
+                    reason = (
+                        "this case tolerates Unknown-backed rows only for the entities it "
+                        f"names one by one; '{name}' is not one of them"
+                    )
+                else:
+                    reason = (
+                        "this case expects every protein to resolve to a real identity; "
+                        f"'{name}' is Unknown-backed"
+                    )
                 findings.append(
                     {
                         "pointer": pointer,
                         "name": name,
                         "kind": "unknown_backed_protein_not_acceptable",
-                        "reason": (
-                            "this case expects every protein to resolve to a real identity; "
-                            f"'{name}' is Unknown-backed"
-                        ),
+                        "reason": reason,
                     }
                 )
+            else:
+                # Counted so the SUMMARY can report what actually happened rather
+                # than re-deriving it from the case-wide Boolean. `False` and
+                # "tolerated by scope instead" are not the same fact, and a summary
+                # keyed on the Boolean cannot tell them apart: it would stop
+                # disclosing acceptance for exactly the cases a scope creates.
+                tolerated += 1
 
     # The summary is CONSTRUCTED FROM THE THREE COUNTS, never asserted.
     #
@@ -1450,8 +1470,18 @@ def _check_placeholder_identity(
         )
     elif total == 0:
         summary = "no protein rows to audit"
-    elif placeholder_backed and case.unknown_backed_proteins_acceptable:
-        summary = f"{breakdown}; placeholders are correctly marked and this case accepts them"
+    elif placeholder_backed and tolerated:
+        # Keyed on what HAPPENED, not on the case-wide Boolean. A case that accepts
+        # Unknown-backed rows only for named entities has a `False`-shaped answer to
+        # "does this case accept them?" and a `True`-shaped answer to "were any
+        # accepted?"; keying on the Boolean would silently drop the acceptance
+        # disclosure for precisely those cases, which is under-reporting rather
+        # than mis-reporting and is the quieter of the two failures.
+        scoped = " (each one named by the case)" if case.unknown_backed_tolerated_entities else ""
+        summary = (
+            f"{breakdown}; placeholders are correctly marked and this case accepts "
+            f"{tolerated} of them{scoped}"
+        )
     elif unresolved:
         summary = (
             f"{breakdown}; no placeholder forged an identity, but {unresolved} row(s) carry no "
