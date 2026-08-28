@@ -7669,6 +7669,32 @@ degraded `lpp`.
 protein/protein_complex rows; no such row is ever named `lipoprotein`. It can never fire. It is
 defensive, and it is not excusing a lost identity.
 
+### Confirmed on a wider population, and the reviewer records its own error
+
+The reviewer re-ran the question over **245 payload files** carrying entities — twelve times the
+orchestrator's 20:
+
+```
+payload files carrying entities                              245
+protein / protein_complex rows named exactly "lipoprotein"     0
+payload files with "lipoprotein" anywhere in processes         4
+lowercase lpp in 01_source_text.txt                        1
+```
+
+**Zero protein rows across 245 files.** Inert is confirmed on a population large enough to settle it,
+and the four hits sit in `processes`, consistent with the `Lnt acyl transfer` reading.
+
+**The reviewer asked for its own error to be recorded here under its name**, rather than left as a
+near-miss, and it is right that it belongs beside the others: *"'the extractor degraded `Lpp` into a
+generic protein row' was my own leap, and there is no such row in the corpus. I inferred a mechanism
+from a coincidence of vocabulary and did not check whether the thing I was theorising about existed —
+the same error I have spent eight rounds finding in other people's work."*
+
+Three readers, three accounts, each wrong in part, and **none of them wrong about a number**. The
+author's zero was right and its provenance was not; the reviewer's `lpp` was right and its mechanism
+was not; the orchestrator's control passed and its question was wrong. **That is the wave lesson in
+its purest form.**
+
 **Kept, not removed** — removing a gold entry needs its own source evidence, and an inert entry
 harms nothing. The `quote: ""` stands: the author **refused to fabricate a span** for a token the
 paper does not contain, which is exactly right and is the one thing the quote field exists to
