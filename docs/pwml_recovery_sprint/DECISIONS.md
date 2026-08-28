@@ -4884,3 +4884,34 @@ counts to the author's path length reproduces their figures exactly, four for fo
 bytes is the F6 rename: `coverage_reconciliation_corpus` is exactly 7 characters longer than
 `coverage_reconciliation`. **Report byte sizes are not portable between worktrees**; quote the tree
 they were measured in.
+
+---
+
+## D-084 — a mutation restore must replay SAVED BYTES, not a checkout and not a text write · 2026-08-28 · LOCKED
+
+**Three sessions walked into this during C-103's mutation work — the author once and the reviewer
+twice — and the two failure directions are opposites, which is why neither obvious fix is safe.**
+
+Mutation testing is now a required practice on every card (**D-078**, **F-144**). It is only sound if
+the restore is exact. Two restore idioms are in common use and **both are wrong**:
+
+| Idiom | How it fails | Observed |
+|---|---|---|
+| `git checkout -- <file>` | **Reverts MORE than it mutated.** On a file the card also legitimately edits, it discards the card's own *uncommitted* work along with the mutation | C-103's Mutation D ran mutated production against an **uncorrected fixture** — ~20 failures, mostly `KeyError`, that looked like a result |
+| `write_text(..., newline="")` or a heredoc | **Reverts LESS than byte-exactly.** Silently rewrites CRLF as LF, or the shell collapses `\r\n` in a literal | REV-103 left `M src/t2pw/pipeline/release_status.py` after a "restore"; a second attempt died to a heredoc doing the same thing |
+
+**The rule: save the file's bytes before mutating and write those exact bytes back.** Read binary,
+write binary. Then **verify** — `git status --porcelain` empty for the mutated path, and re-run the
+suite to confirm it returns to its unmutated result. A restore that has not been verified is not a
+restore.
+
+**Recognising the failure when it happens.** A restore fault presents as a *large* number of failures
+in an *unrelated* shape — `KeyError` on fixture keys, or import/collection errors — rather than the
+targeted assertion the mutation was aimed at. **That is the tell.** It joins the standing set of
+measurement failures that wear the costume of results: the missing `--basetemp` parent (which
+reported **382 instead of 453**), the wrong interpreter (**F-143**, 35 spurious errors), and now the
+over- or under-reverting restore. **None of the three is a test result.**
+
+**Both C-103 and REV-103 caught their own instance, kept the invalidated run beside the corrected
+one, and said so.** That is the behaviour that makes the practice trustworthy — the invalid run is
+what proves the corrected one was checked rather than assumed.
