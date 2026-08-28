@@ -6221,3 +6221,119 @@ repeatedly had to withdraw.
 no T-107 leg was run, and no live model credit was spent this wave. The cohort's result is unchanged
 and re-running it would re-measure a known answer.
 
+
+---
+
+# F-135 — REFRAMED, and C-098c REFUSED. The finding is not what I registered.
+
+**Superseding correction, appended rather than rewritten in place.** The F-135 registration above
+stands as written; **its central claim is the wrong description of the mechanism** and this entry
+replaces it. Established by C-098b's measurement of a second refusal point, then followed into the
+exporter by the Lead Orchestrator.
+
+## What C-098b found
+
+`run_pwml_export` has **two** refusal points before any XML exists. C-098b clears the first — the
+strict Stage-3 post-normalization gate. The second refuses the same payload on the same fact:
+
+* `stage_contracts.validate_pre_export` → `ir.validate_required_pwml_contract`, code
+  **`protein_complex_missing_species`**, returning `{"ok": False, "output_path": ""}`.
+
+So the 25-shape moves from `diagnostic_only` to a **run FAIL**. Both are no-PWML states. C-098's
+§ 7.1 target — *"`review_required` **with PWML**"* — is **not reached by the gate arm**, and C-098b
+says so rather than claiming success.
+
+**C-098b corrected its own earlier measurement to find this.** Its first probe measured only the
+first refusal point and reported `pathway.review_required.pwml`; it had already reported that to me
+as met, and I had acted on it. It caught the error itself, committed **both** the wrong measurement
+(`C-098b/03-g9-tip`) and the corrected one (`06-g9-tip-corrected`) side by side, and made the suite
+**assert the shortfall** (`required_field_gate_ok is False`, `exporter_would_build_xml is False`) so
+it fails loudly if anyone later assumes the gap is closed. The clause that caught it was § 7.9,
+which required running a test that could contradict the card and reporting what it actually did.
+
+## Why C-098c is refused
+
+`validate_required_pwml_contract`'s own docstring: *"Pre-export contract validator … Checks **every
+required field defined by the PWML-ready contract**"*. Species on a protein complex is a **required
+field of the export format**, raised as an `err`, not a `warn`.
+
+And the decisive fact, checked one layer further down. `pwml/writer.py` resolves a record's species
+from a long candidate chain — `species`, `organism`, `species_id`, `pathbank_species_id`,
+`taxonomy_id`, `species_ref.*`, `mapping_meta.*` — and when none resolves it ends at:
+
+```python
+return default_species_id
+```
+
+**The writer silently assigns a default species.** So a C-098c that punched through the
+required-field gate would replace a false *Arabidopsis* stamped at mapping time with a **false
+default stamped at export time** — the fix recreating the original defect one stage later, inside
+the exporter. That is `PRODUCT_CONTRACT` § 5 and merge rule 8, and it is the single failure pattern
+this sprint has caught most often (C-092 shipped it; C-093 shipped it one level up).
+
+**C-098c is not chartered. § 7.1 of `C-098.md` was an unreachable requirement and is withdrawn.**
+
+## The reframing — this is the part that matters
+
+F-135 as registered says C-094 *"turns a leg that would have produced a PWML into one that produces
+none"*. True as an observation, **wrong as a description of the mechanism**, and the wrong framing
+led me to charter a gate exemption chain.
+
+**Three independent gates require species on a protein complex** — the strict Stage-3 gate, the
+PWML-ready contract, and the writer's own resolution. Those 25 wrappers were therefore **never
+legitimately exportable**. The only thing that ever carried them through the format contract was the
+**fabricated *Arabidopsis* species**.
+
+> **C-094 does not drop pathways. It stops fabricating the field that made unexportable entities
+> look exportable.**
+
+`PRODUCT_CONTRACT` § 1 is explicit on both halves: the system *"must **never invent** … identities …
+merely to guarantee a PWML file"*, and *"a smaller supported pathway is preferable to a larger
+contaminated one."* On that reading C-094 **is the contract being enforced**, and the leg-level
+consequence is a product decision rather than a regression C-094 introduces.
+
+## What is left is § 13's standing disagreement, and it is escalated
+
+`PRODUCT_CONTRACT` § 13 makes `placeholder_backed_proteins` a **standing disagreement, not a
+defect** — the pipeline treats `Unknown`-backed export as legitimate biology preservation, and **no
+agent may "fix" it. Escalate.** Three cards into a gate-exemption chain is exactly the fixing § 13
+forbids, and I am stopping.
+
+The question for the product owner: **what should happen to an entity that is preserved as biology
+but cannot satisfy the export format without a fabricated field?** Three coherent answers, none of
+which an orchestrator may choose:
+
+| | Outcome | Cost |
+|---|---|---|
+| **Quarantine the entity, export the rest** | the pathway ships smaller and honest — `PRODUCT_CONTRACT` § 1's *"smaller supported pathway"* | the reaction loses its actor, and the wrapper exists precisely because the importer refuses a bare protein as an enzyme, so this may cascade |
+| **Block the leg** | no contaminated output; today's behaviour after C-094 | a valid pathway core is suppressed because one peripheral actor is unresolved — § 1's own unacceptable-blocker list |
+| **Keep the placeholder species** | today's behaviour before C-094 | a fabricated organism in a released payload; F-134 |
+
+**No option is free, and that is why it is a ruling and not an implementation.**
+
+## Disposition of the three branches
+
+| Branch | Tip | Disposition |
+|---|---|---|
+| `card/C-094-f134` | `53eaf24` | **Correct on its own merits.** On the measured corpus it costs **zero** PWML — the single PWML-producing leg is in the 6-shape and is *improved*, recovering *Homo sapiens*. Under independent review; merges on its own if approved |
+| `card/C-098a-cap` | `8cfa33e` | **Held.** Inert and harmless, but merging it alone adds capability with no producer. Held with C-098b so the pair stays coherent for whatever is ruled |
+| `card/C-098b-gate` | `b589821` | **Held, and not merged.** It converts `diagnostic_only` into a run FAIL — no PWML either way — while costing four baseline moves. It does not achieve its goal and its cost is real |
+
+**Four baseline moves are NOT authorized**, since nothing they belong to is merging. C-098b did not
+edit any of them. For the record they were: `test_c094_placeholder_species.py::test_the_existing_stage3_gate_observes_a_wrapper_with_no_species`
+(C-094's own seam-B test, which asserts the very blocking C-098b removes), and three
+`test_c011_freeze_seam_golden_equivalence.py` goldens whose diff is exactly
+`Extra items in the left set: 'review_findings'`.
+
+## Two things from C-098a/b that survive the refusal and are worth keeping
+
+**A cross-module contract that armed itself.** C-098a's `test_rule_name_matches_the_gate_arm_once_it_exists`
+asserts its restated `GATE_REVIEW_SEVERITY` and rule name equal `process_normalizer`'s. It **skipped**
+while the gate arm was absent and went **SKIP → PASS** the moment C-098b landed. The two halves could
+not drift apart and nobody had to remember to add the check. That is a pattern worth reusing.
+
+**A G9 harness that runs on both trees.** C-098b's `evidence/c098b_g9_base_vs_tip.py` imports **only
+base-existing symbols**, so it executes at base as well as tip. A suite importing the new constants
+would have died at base with an `ImportError` — and symbol absence dressed as a base failure is
+exactly what G9 forbids.
+

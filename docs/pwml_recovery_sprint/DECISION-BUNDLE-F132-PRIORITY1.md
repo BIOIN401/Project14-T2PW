@@ -250,3 +250,75 @@ rather than the pipeline.
    correct outcome rather than a delay.**
 
 **C-091 remains explicitly not for merge unless the ruling authorises its direction.**
+
+---
+
+# ADDENDUM — a second, independent ruling is now requested: F-135, the placeholder-species question
+
+Added 2026-08-27. **This is a separate question from the Priority-1 contradiction above and can be
+ruled on independently.** It arrived from engineering rather than from the benchmark.
+
+## The question
+
+**What should happen to an entity that is preserved as biology but cannot satisfy the export format
+without a fabricated field?**
+
+## How it arose
+
+C-094 stops PathBank's `Unknown` sentinel record (protein 9659, species *Arabidopsis thaliana*)
+lending its own organism to the generated wrapper built around it. Measured across all 92 committed
+legs: 31 Unknown-backed wrappers, **6** with a correct species surviving underneath, **25** with
+nothing.
+
+Investigating what happens to those 25 revealed that **three independent gates require species on a
+protein complex**: the strict Stage-3 post-normalization gate; `ir.validate_required_pwml_contract`,
+whose docstring calls it the **PWML-ready contract** and which raises `protein_complex_missing_species`
+as an error; and `pwml/writer.py`, whose species-resolution chain ends at `return default_species_id`.
+
+So those 25 entities were **never legitimately exportable**. The fabricated *Arabidopsis* was the only
+thing carrying them through the format contract.
+
+**A fourth card to punch through the second gate was refused**, because the writer would then silently
+stamp `default_species_id` — replacing a false species at mapping time with a false one at export
+time, inside the exporter, which `PRODUCT_CONTRACT` § 5 and merge rule 8 forbid.
+
+## Why this is yours and not ours
+
+`PRODUCT_CONTRACT` § 13 makes `placeholder_backed_proteins` a **standing disagreement, not a defect**,
+and says **no agent may "fix" it — escalate.** Three cards into a gate-exemption chain is that fixing.
+We stopped.
+
+## The three coherent answers
+
+| | Outcome | Cost |
+|---|---|---|
+| **A — quarantine the entity, export the rest** | the pathway ships smaller and honest; `PRODUCT_CONTRACT` § 1's *"a smaller supported pathway is preferable to a larger contaminated one"* | the reaction loses its actor, and the wrapper exists **because** the PathWhiz importer refuses a bare protein as an enzyme, so the loss may cascade into the reaction |
+| **B — block the leg** | no contaminated output; this is today's behaviour with C-094 applied | a valid pathway core is suppressed because one peripheral actor is unresolved — which § 1's own unacceptable-terminal-blockers list names |
+| **C — keep the placeholder species** | today's behaviour without C-094 | a fabricated organism in a **released** payload. Measured: `runs_verify/2026-08-04_1754/papers/PMC12856317/strict` shipped `pathway.pwml` — a `release_ready` artifact — carrying *Arabidopsis thaliana* on a human ALAS2 wrapper |
+
+## Recommendation
+
+**Adopt A, and merge C-094 now regardless of which is chosen.**
+
+C-094 is correct under any of the three: § 1 forbids inventing an identity *"merely to guarantee a
+PWML file"*, and on the measured corpus C-094 costs **zero** PWML — the single PWML-producing leg
+carrying an Unknown-backed wrapper is one of the 6, and it is *improved*, recovering *Homo sapiens*
+in place of *Arabidopsis*.
+
+A is recommended because it is the only option that keeps both halves of § 1: no invented biology,
+and no valid core suppressed. Its cascade risk is real and would need its own measured card — that is
+the work the ruling would authorise, not something to assume away.
+
+**C is not recommended and should be rejected explicitly if you disagree**, because it is the only
+option that puts a fabricated organism in a released file.
+
+## What follows from each ruling
+
+* **A** — charter the quarantine-and-export-the-rest path, with the reaction-actor cascade measured
+  first. `card/C-098a-cap` (`8cfa33e`) and `card/C-098b-gate` (`b589821`) are held and would be
+  reassessed against it, not merged as they stand.
+* **B** — merge C-094 alone and close F-135 as *working as intended*. Both C-098 arms are discarded.
+* **C** — C-094 does not merge, F-134 is downgraded to a standing disagreement, and the released
+  *Arabidopsis* payload stands.
+
+**Nothing here is applied. No card is merged pending this.**
