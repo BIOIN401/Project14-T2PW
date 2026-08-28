@@ -1,0 +1,40 @@
+worktree            : C:\t\c102
+.env present        : False
+.venv present       : False
+PATHBANK_DB_HOST      : '<unset>'
+PATHBANK_DB_USER      : '<unset>'
+PATHBANK_DB_PASSWORD  : '<unset>'
+PATHBANK_DB_SCHEMA    : '<unset>'
+PATHBANK_ID_SOURCE    : '<unset>'
+T2PW_OFFLINE_CURATOR: <unset>
+pymysql importable  : True
+offline name index  : True
+VERDICT: no .env and no .venv in this worktree and no PATHBANK_DB_* in the
+environment, so no live PathBank DB was reachable. Every measurement in this
+card is offline, from committed artifacts and the pinned gold set.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\c102\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0b111e2c379256b7cc89f3bbba6e52d115f7825e  [git, worktree dirty=False]
+label                   : c102-db-state-probe
+command                 : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/Users/Angad/AppData/Local/Temp/claude/c--Users-Angad-Desktop-SummerBIOIN-Project14-T2PW/b0c20949-81f5-48e7-b90e-46074a63d153/scratchpad/dbprobe.py
+cwd                     : C:\t\c102
+root PID / process group: 499272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  499380:python.exe
+descendants terminated  : 1  499380
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\c102\docs\pwml_recovery_sprint\evidence\g11\C-102\14-db-state-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
